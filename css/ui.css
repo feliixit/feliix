@@ -1,0 +1,300 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@100;300;400;500;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,300,400,500,700,900&subset=chinese-traditional');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,300,400,500,700,900&subset=chinese-traditional');
+/* Google Material icons */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+:root{
+    
+    --pri01a:#F0502F; /* primary orange-red a */
+    --pri01b:#F37058; /* primary orange-red b */
+    --pri01c:#FCDBD5; /* primary orange-red c */
+    
+    --sec01:#FDB72F; /* second yellow */
+    --sec02:#2F9A57; /* second green */
+    --sec03:#4882C3; /* second blue */
+    
+    --gray01:#E2E2E2; /* light */
+    --gray02:#C3C3C3; /* light gray */
+    --gray03:#707071; /* normal gray */
+    --gray04:#414042; /* dark gray */
+    --gray05:#000000; /* black */
+    
+
+}
+
+input.alone[type=checkbox]::before,
+input[type=checkbox]+Label::before,
+input.alone[type=radio]::before,
+input[type=radio]+Label::before,
+.before-micons::before,
+.after-micons::after,
+.micons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+/*  transition:font-size .5s;*/
+  vertical-align: middle;
+}
+
+.before-micons.alert::before {content: 'volume_up';}
+.before-micons.add::before {content: 'add';}
+.before-micons.del::before {content: 'delete';}
+.before-micons.edit::before {content: 'edit';}
+.before-micons.logout::before {content: 'exit_to_app';}
+.before-micons.alert.off::before {content: 'volume_off';}
+.before-micons.tagpulldown::before {content: 'keyboard_arrow_up';}
+.before-micons.tagpulldown.close::before {content: 'keyboard_arrow_down';}
+.before-micons.allon::before {content: 'keyboard_arrow_down';}
+.before-micons.alloff::before {content: 'keyboard_arrow_up';}
+.before-micons.online::before {content: 'link';}
+.before-micons.offline::before {content: 'link_off';}
+.before-micons.search::before {content: 'search';}
+.before-micons.detail::before {content: 'library_books';}
+.before-micons.name::before {content: 'verified_user';}
+.before-micons.locate::before {content: 'my_location';}
+.before-micons.time::before {content: 'access_time';}
+.before-micons.reload::before {content: 'replay';}
+.before-micons.check::before {content: 'check_box_outline_blank';}
+.before-micons.check.on::before {content: 'check_box';}
+.before-micons.close::before {content: 'close';}
+.before-micons.setting::before {content: 'settings_applications';}
+.before-micons.mouse::before {content: 'mouse';}
+.before-micons.menu::before {content: 'notes';}
+
+a.before-micons::before{ transition: none;}
+
+
+*, *::before, *::after{ box-sizing: border-box;}
+a ,a:link{color:#000; display: inline-block;}
+a:hover{color:#333;}
+ul, li, dl, dd, dt{ margin: 0; padding: 0; list-style: none;}
+
+/* init CSS */
+html, body{ width:100%; /*height:100%; 有需要再打開 */}
+body{font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif; font-weight: 300;}
+header{}
+footer{}
+
+.bodybox{overflow:hidden; min-height:100%; position: relative;}
+.mainContent {min-height:100%;}
+
+.svg-icon{width: 30px; height: 30px; background: url(../Images/ui/icon.svg) no-repeat -30px -30px; background-size: 1000%;}
+
+/* mobile menu */
+a.mobilemenu,
+a.mobilemenu > span{ display:none;}
+
+a.mobilemenu{ width:44px; height:44px; border:3px solid #FFF; border-radius: 50px; padding:0; background-color:rgba(0, 0, 0, 0.6);position:absolute; top:10px; right:20px;}
+a.mobilemenu:hover{ background-color:rgba(145, 145, 145, 0.8);}
+
+a.mobilemenu b, 
+a.mobilemenu b::before, 
+a.mobilemenu b::after{ content:""; display:block; width:22px; border-bottom:solid 2px #FFF; position:absolute; left:50%; margin-left:-11px; top:50%; margin-top:-1px; transition: all .5s;}
+a.mobilemenu b::before{ margin-top:-7px;}
+a.mobilemenu b::after{ margin-top:7px;}
+
+body.MobileMenuOn a.mobilemenu b{width:0px; margin-left:0;}
+body.MobileMenuOn a.mobilemenu b::before{
+	margin-top:0;
+	transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);}
+body.MobileMenuOn a.mobilemenu b::after{
+	margin-top:0; 
+	transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -o-transform: rotate(45deg);}
+
+/* 共用style */
+h1,h2,h3,h4,h5,h6{font-weight:normal; transition:font-size .5s;}
+h1{font-size:64px;}
+h2{font-size:56px;}
+h3{font-size:48px;}
+h4{font-size:40px;}
+h5{font-size:32px;}
+h6{font-size:24px;}
+
+a.btn{padding:8px 24px; background-color:var(--pri01a); font-size:18px; color:#FFF; font-weight: 700; transition:.5s; border-radius: 10px;}
+a.btn:hover{background-color:var(--pri01b);}
+
+a.btn.small{ font-size: 14px; padding: 5px 8px;}
+a.btn.small::before,
+a.btn.small::after{ font-size: 20px; vertical-align: bottom;}
+a.btn:hover{background-color:var(--pri01b); }
+
+.btngroup{ display: inline-block;}
+.btngroup a.btn{ border-radius: 0; border-right: 1px solid #CCC; padding: 5px 12px; font-size: 16px;}
+.btngroup a.btn:first-child{ border-top-left-radius: 5px; border-bottom-left-radius: 5px; }
+.btngroup a.btn:last-child{ border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-right: none;}
+
+.btnbox{ width: 100%; display: inline-block; text-align: center; padding: 20px;}
+.btnbox .btn{margin: 0 15px;}
+
+/* tablebox / formbox */
+.tablebox,
+.tablebox2{ display: table;}
+.tablebox > ul,
+.tablebox2 > ul{ display: table-row;}
+.tablebox > ul > li,
+.tablebox2 > ul > li{ display: table-cell;}
+
+/* html編輯器 style */
+.htmleditor img{ max-width: 100%;}
+.htmleditor h1 img{ width: 100%;}
+.htmleditor h1{ font-size: 29px;}
+.htmleditor h2{ font-size: 24px;}
+.htmleditor h3{ font-size: 22px;}
+.htmleditor h4{ font-size: 20px;}
+.htmleditor h5{ font-size: 18px;}
+.htmleditor h6{ font-size: 14px;}
+.htmleditor strong{ font-weight: 700;}
+.htmleditor pre{}
+.htmleditor address{}
+.htmleditor blockquote{}
+.htmleditor ol li{margin-left: 1em; list-style: decimal;}
+.htmleditor ul li{margin-left: 1em; list-style: disc;}
+
+
+
+/* form style IE,Edge部分無效 */
+textarea{resize: none;}
+input,
+button,
+textarea,
+select,
+input[type=checkbox]+Label,
+input[type=radio]+Label{ font-size:18px; font-family: Lato, Arial, Helvetica, 'Noto Sans TC', 'LiHei Pro', "微軟正黑體", "新細明體", 'Microsoft JhengHei',  sans-serif; font-weight: 500;display: inline-block;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; outline:0 none;}
+
+input[type=range],
+input[type=text],
+input[type=password],
+input[type=file],
+input[type=number],
+input[type=url],
+input[type=email],
+input[type=tel],
+input[list],
+input[type=button],
+input[type=submit],
+button,
+textarea,
+select,
+output{ /*box-sizing:border-box;*/ border:2px solid var(--pri01a);  background-color:transparent; padding:8px; vertical-align:middle;}
+
+input[type=range]{ overflow: hidden; background: none;}
+/*input[type=range]::-webkit-slider-runnable-track{ background-color: #eee;}*/
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  position: relative; width:10px; height:10px; background-color:#333; border-radius:50%; transition:.2s;
+}
+input[type=range]::-webkit-slider-thumb::before,
+input[type=range]::-webkit-slider-thumb::after{ content:""; display: block; position: absolute; top: 3px; width: 2000px; height: 4px;  pointer-events: none; transition:.2s;}
+input[type=range]::-webkit-slider-thumb::before{ left: -1997px; background-color: #f22;}
+input[type=range]::-webkit-slider-thumb::after { left: 10px; background-color: #edc;}
+
+input[type=button],
+input[type=submit],
+input[type=checkbox]+Label,
+input[type=radio]+Label,
+button {cursor:pointer;vertical-align:middle;}
+
+input:focus,
+button:focus,
+select:focus { border-color:#333; /*box-shadow:0 0 6px rgba(0,0,0,0.4); */outline:0 none;}
+
+input:disabled, button:disabled {opacity:0.5; cursor: default;}
+
+input[type=number] { -moz-appearance:textfield; }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+
+input[type=checkbox], input[type=radio]{display: none;}
+input[type=checkbox]:focus, input[type=radio]:focus{border:none; box-shadow:none;}
+
+input.alone[type=checkbox]::before,
+input[type=checkbox]+Label::before,
+input[type=radio]+Label::before{font-size:25px; transition: font-size .5s;}
+
+input[type=checkbox]+Label::before{content:"check_box_outline_blank";}
+input[type=checkbox]:checked+Label::before{content:"check_box";}
+input[type=radio]+Label::before{content:"radio_button_unchecked";}
+input[type=radio]:checked+Label::before{content:"radio_button_checked";}
+
+select {
+    background-image: url(../images/ui/icon_form_select_arrow.svg);
+    background-size: auto 100%;
+    background-position: 100% center;
+    background-repeat: no-repeat;
+	padding-right:35px;
+	padding-left:15px;
+	background-image:none \9;
+	padding:6px 10px 6px 10px \9;
+}
+select::-ms-expand {display:none;}
+select option[disabled], select option:disabled {color:#999;}
+
+input.alone[type=radio],
+input.alone[type=checkbox] {display: inline-block; width: auto !important; cursor: pointer;}
+input.alone[type=checkbox]::before {content: "check_box_outline_blank";}
+input.alone[type=checkbox]:checked::before {content: "check_box";}
+input.alone[type=radio]::before{content:"radio_button_unchecked";}
+input.alone[type=radio]:checked::before{content:"radio_button_checked";}
+
+input.alone[type=radio]::before,
+input.alone[type=checkbox]::before,
+input[type=checkbox]+Label::before,
+input[type=radio]+Label::before{ color: var(--pri01a);}
+
+/* -------------------------- */
+/* body.second Style (Yellow) */
+/* -------------------------- */
+body.second input.alone[type=radio]::before,
+body.second input.alone[type=checkbox]::before,
+body.second input[type=checkbox]+Label::before,
+body.second input[type=radio]+Label::before{ color: var(--sec01);}
+
+body.second input[type=range],
+body.second input[type=text],
+body.second input[type=password],
+body.second input[type=file],
+body.second input[type=number],
+body.second input[type=url],
+body.second input[type=email],
+body.second input[type=tel],
+body.second input[list],
+body.second input[type=button],
+body.second input[type=submit],
+body.second button,
+body.second textarea,
+body.second select,
+body.second output{ border-color: var(--sec01);}
+
+body.second select {background-image: url(../images/ui/icon_form_select_arrow_yellow.svg);}
+
+body.second a.btn{background-color:var(--sec01); }
+body.second a.btn:hover{background-color:var(--gray02);}

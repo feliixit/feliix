@@ -1,0 +1,149 @@
+/* -------------------------- */
+/* body.primary Style (Red) */
+/* -------------------------- */
+hr{width: 100%; border: 0; background-color: #707070; height: 1px;}
+
+header{ position: relative; overflow: auto; height: auto;}
+header .headerbox{ width: 100%; height: 178px; padding-top: 98px; background-color: var(--pri01a); text-align: center;}
+body.primary header > .headerbox{background-color: var(--pri01a);}
+body.second  header > .headerbox{background-color: var(--sec01);}
+
+header .logo{ display: inline-block; width: 188px; height: 43px; background-image: url(../images/ui/logo_light.svg);  background-size: contain; background-repeat: no-repeat; background-position: center;}
+header > .headerbox .logo{ margin-left: calc(-37px - 21px);}
+header > .headerbox .menu{ float: left; margin-left: 37px;}
+header > .headerbox .menu::before{ font-size: 43px; color: #FFF;}
+
+header nav{ position: absolute; display: block; width: 100%; height: 100vh; top: 0; left: -100%; transition: .2s; background-color: #FFF;}
+body.MenuOn header{ height: 100vh;}
+body.MenuOn header nav{ left: 0;}
+header nav .headerbox{background-color: #E2E2E2;}
+header nav .logo{background-image: url(../images/ui/logo_light.svg);}
+header nav .footer{ display: inline-block; width: 100%; height: 158px; padding-top: 36px; text-align: center; font-size: 26px; color: #404041; background-color: #E2E2E2; font-weight: 500;}
+header nav .footer .logout{ font-size: 26px; color: #FFFFFF; font-weight: 500;}
+
+header nav .middle{ display: block; padding: 30px 70px; font-size: 26px; min-height: calc(100vh - 178px - 158px); font-size: 0;}
+header nav .info{ display: inline-block; width: 100%;}
+header nav .info li{ float: left;}
+header nav .info::after{ content: ''; display: table; clear: both;}
+header nav .info li.photo{ width: 110px; height: 110px; background-image: url(../images/ui/avatar.svg); background-repeat: no-repeat; background-size: cover; border-radius: 90px; display: inline-block; background-color: var(--gray03); margin-right: 20px;}
+header nav .info li.name{ font-size: 36px; font-weight: 700;}
+header nav .info li.position{ font-size: 26px; font-weight: 500;}
+header nav .middle ul.menu{display: inline-block; background-color: #FFF; width: calc(50% - 10px); min-height: 210px; margin: 20px 0 0; vertical-align: top;}
+header nav .middle ul.menu:last-child{margin-left:20px;}
+
+header nav .middle ul.menu li{ display: inline-block; width: 100%; min-height: 140px; padding: 20px; border: 3px solid var(--sec01); border-radius: 18px; margin-bottom: 20px;}
+
+header nav .middle ul.menu li::before{ content: ''; display: inline-block; width: 40px; height: 40px; background: url(../images/ui/icon.svg) no-repeat 0px 0px; background-size: 1000%; margin: -5px 0 5px -5px;}
+
+header nav .middle ul.menu li.sec01{border-color: var(--sec01);}
+header nav .middle ul.menu li.sec02{border-color: var(--sec02);}
+header nav .middle ul.menu li.sec03{border-color: var(--sec03);}
+header nav .middle ul.menu li.gray02{border-color: var(--gray02);}
+header nav .middle ul.menu li.gray05{border-color: var(--gray05);}
+header nav .middle ul.menu li.pri01a{border-color: var(--pri01a);}
+
+header nav .middle ul.menu li a{ display: block; font-size: 24px; font-weight: 700; line-height: 28px;}
+header nav .middle ul.menu li a.list{ font-size: 20px; font-weight: 500; display: none;}
+header nav .middle ul.menu li a.list:nth-of-type(2){ margin-top: 20px;}
+header nav .middle ul.menu li a.list::before{ content: '•'; display: inline-block; margin-right: 5px;}
+header nav .middle ul.menu li.focus a.list{ display: block;}
+
+
+/* Content */
+.mainContent{ padding:30px 12px; width: 100%; min-height: 100vh; }
+.mainContent > .tags{}
+.mainContent > .tags a{ font-size: 18px; font-weight: 700; padding: 8px 16px; background-color: var(--pri01c); border-top-left-radius: 10px; border-top-right-radius: 10px; border: 2px solid var(--pri01a); border-bottom: 0; }
+.mainContent > .tags a.focus{ color: #FFF;background-color: var(--pri01a);}
+.mainContent > .block{display: none; width: 100%; border: 2px solid var(--pri01a);}
+.mainContent > .block.focus{ display: block; margin-bottom: 40px;}
+
+.block h6{ font-size: 36px; font-weight: 700; color: var(--pri01a); border-bottom: 2px solid var(--pri01a); padding: 10px 20px;}
+.block .box-content{ padding: 20px 40px 30px;}
+.block i.hit{ display: block; font-style: normal; font-weight: 500; font-size: 14px; margin: 8px 0;}
+.block i.hit b{ font-weight: 900;}
+.block .title{ margin: 5px 0;}
+.block .title::after{ content: ''; display: table; clear: both;}
+.block .title:nth-of-type(n+2){margin-top: 20px;}
+.block .title b{ font-size: 17px; font-weight: 800; }
+.block .function{display: inline-block; float: right; font-size: 14px; color: #000;  font-weight: 500;}
+.block .function select{font-size: 13px; font-weight: 700; text-align: left; margin-left: 10px;}
+.block h6 .function{ margin-top: 15px;}
+.block .title .function input+Label{ font-size: 15px;}
+.block .title .function input[type=radio]+Label::before{ font-size: 20px;}
+
+.block .tablebox{ border-top: 2px solid var(--pri01a); border-left: 2px solid var(--pri01a); width: 100%;}
+.block .tablebox > ul > li{text-align: center; padding: 10px; border-bottom: 2px solid var(--pri01a); border-right: 2px solid var(--pri01a); font-weight: 500; font-size: 16px; vertical-align: middle;}
+.block .tablebox ul.head,
+.block .formbox li.head{ background-color: var(--pri01c); font-weight: 800;}
+.block .tablebox ul.head li{ font-weight: 800;}
+
+.block .tablebox2{width: 100%;}
+.block .tablebox2 ul.head li{font-weight: 800;}
+.block .tablebox2 ul li{ font-size: 18px; padding: 10px; font-weight: 500; text-align: center; border-bottom: 1px solid #707070; vertical-align: middle;}
+
+.block .formbox{border: 2px solid var(--pri01a); padding: 20px; width: 100%;}
+.block .formbox ul{border: 2px solid var(--pri01a); display: block; border-radius: 10px; margin-top: 15px}
+.block .formbox > ul:first-child{margin-top: 0;}
+.block .formbox ul > li{display: inline-block; padding: 10px; font-size: 16px; font-weight: 500; border-right: 2px solid var(--pri01a);}
+.block .formbox ul > li:last-child{ border-right: none;}
+.block .formbox li.head{ width: 150px;}
+
+.block .formbox .group ul{ border-radius: 0;}
+.block .formbox .group ul:nth-of-type(n+2){ border-top: none; margin-top: 0;}
+
+.block .formbox .group ul:first-child{ border-top-left-radius: 15px; border-top-right-radius: 15px; }
+.block .formbox .group ul:last-child{  border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;}
+
+.block .formbox dl,
+.block .formbox dt,
+.block .formbox dd{ width: 100%; display: block;}
+.block .formbox dt{ font-size: 17px; font-weight: 700; margin-top: 12px; padding-bottom: 8px}
+.block .formbox dd{ border: 2px solid var(--pri01a); border-radius: 10px; margin-bottom: 20px;}
+
+.block .formbox dd input,
+.block .formbox dd textarea,
+.block .formbox dd select,
+.block .formbox2 input,
+.block .formbox2 textarea,
+.block .formbox2 select{ width: 100%; border: none; }
+.block .formbox2 input,
+.block .formbox2 textarea,
+.block .formbox2 select{ padding: 0px;}
+
+.block .formbox2{width: 100%;}
+.block .formbox2 ul li.head{font-weight: 800;border-bottom: none;}
+.block .formbox2 ul li{ font-size: 18px; padding: 10px 0; font-weight: 500; text-align: left; border-bottom: 1px solid #707070; vertical-align: middle;}
+.block .formbox2 ul li span{display: block;}
+.block .formbox2 ul li img{max-width: 100%; max-height: 300px;}
+
+b.light{ width: 36px; height: 36px; display: inline-block; background: url(../images/ui/bullet_green.svg) no-repeat center; background-size: contain; vertical-align: middle;}
+b.light.green{ background-image: url(../images/ui/bullet_green.svg);}
+b.light.blue{ background-image: url(../images/ui/bullet_blue.svg);}
+b.light.ungreen{ background-image: url(../images/ui/bullet_ungreen.svg);}
+b.light.unblue{ background-image: url(../images/ui/bullet_unblue.svg);}
+
+.block input[type=radio]+Label::before{ vertical-align: sub; margin-left: 10px;}
+body input.alone.green[type=radio]::before,
+.block input.green[type=radio]+Label::before{ font-size: 25px; color: var(--sec02);}
+body input.alone.blue[type=radio]::before,
+.block input.blue[type=radio]+Label::before{ font-size: 25px; color: var(--sec03);}
+
+/* -------------------------- */
+/* body.second Style (Yellow) */
+/* -------------------------- */
+
+body.second .mainContent > .block,
+body.second .mainContent > .block h6,
+body.second .mainContent > .block .tablebox,
+body.second .mainContent > .block .tablebox > ul > li,
+body.second .mainContent > .block .tablebox2,
+body.second .mainContent > .block .formbox,
+body.second .mainContent > .block .formbox dd,
+body.second .mainContent > .tags a{ border-color: var(--sec01);}
+
+body.second .mainContent > .block h6{ color: var(--sec01);}
+
+body.second .mainContent > .block .tablebox > ul.head > li,
+body.second .mainContent > .tags a{ background-color:#EFEFEF;}
+body.second .mainContent > .tags a.focus{background-color:var(--sec01);}
+

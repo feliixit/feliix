@@ -1,0 +1,205 @@
+<?php include 'check.php';?>
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 共用資料 -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover"/>
+
+<!-- favicon.ico iOS icon 152x152px -->
+<link rel="shortcut icon" href="../images/favicon.ico" />
+<link rel="Bookmark" href="../images/favicon.ico" />
+<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
+<link rel="apple-touch-icon" href="../images/iosicon.png"/>
+
+<!-- SEO -->
+<title>FELIIX template</title>
+<meta name="keywords" content="FELIIX">
+<meta name="Description" content="FELIIX">
+<meta name="robots" content="all" />
+<meta name="author" content="FELIIX" />
+
+<!-- Open Graph protocol -->
+<meta property="og:site_name" content="FELIIX" />
+<!--<meta property="og:url" content="分享網址" />-->
+<meta property="og:type" content="website" />
+<meta property="og:description" content="FELIIX" />
+<!--<meta property="og:image" content="分享圖片(1200×628)" />-->
+<!-- Google Analytics -->
+
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="../css/default.css"/>
+<link rel="stylesheet" type="text/css" href="../css/ui.css"/>
+<link rel="stylesheet" type="text/css" href="../css/case.css"/>
+<link rel="stylesheet" type="text/css" href="../css/mediaqueries.css"/>
+
+<!-- jQuery和js載入 -->
+<script type="text/javascript" src="../js/rm/jquery-3.4.1.min.js" ></script>
+<script type="text/javascript" src="../js/rm/realmediaScript.js"></script>
+<script type="text/javascript" src="../js/main.js" defer></script>
+
+<!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
+<script>
+$(function(){
+    $('header').load('include/header.php');
+})
+</script>
+
+</head>
+
+<body class="primary">
+ 	
+<div class="bodybox">
+    <!-- header -->
+	<header>header</header>
+    <!-- header end -->
+    <div class="mainContent" id="mainContent">
+        <!-- tags js在 main.js -->
+        <div class="tags">
+            <a class="tag A focus">User</a>
+            <a class="tag B" href="department">Department</a>
+            <a class="tag C" href="position">Postion</a>
+        </div>
+        <!-- Blocks -->
+        <div class="block A focus">
+            <h6>User Management</h6>
+            <div class="box-content">
+                <div class="box-content"  v-if="!isEditing">
+                    <div class="title">
+                        <b>Employee Name</b><div class="function"><input type="text" v-model="username" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" size="80"></div>
+                    </div>
+                    <div class="title">
+                        <b>Email</b><div class="function"><input type="email" v-model="email" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" size="80"></div>
+                    </div>
+                    <div class="title">
+                        <b>Password</b><div class="function"><input type="password" v-model="password" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" size="80"></div>
+                    </div>
+                    <div class="title">
+                        <b>Comfirm Password</b><div class="function"><input type="password" v-model="password1" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" size="80"></div>
+                    </div>
+                    <div class="title">
+                        <b>Department</b> 
+                        <select v-model="apartment_id">
+                        <option v-for="item in departments" :value="item.id" :key="item.department">
+                            {{ item.department }}
+                        </option>
+                        </select>
+                    </div>
+
+                    <div class="title">
+                        <b>Position</b>
+                        <select v-model="title_id">
+                        <option v-for="item in positons" :value="item.id" :key="item.title">
+                            {{ item.title }}
+                        </option>
+                        </select>
+                       
+                    </div>
+                    <div class="title">
+                        <input  type="checkbox" name="status" id="status" :true-value="1" v-model:checked="status" @change="updateStatus">
+                        <label for="status">Enabled</label>
+                    </div>
+                    <div class="title">
+                        <input  type="checkbox" name="is_admin" id="is_admin" :true-value="1" v-model:checked="is_admin" @change="updateIsAdmin">
+                        <label for="is_admin">Is Admin</label>
+                    </div>
+                    <div class="title">
+                        <input type="checkbox" name="need_punch" id="need_punch" :true-value="1" v-model:checked="need_punch" @change="updateNeedPunch">
+                        <label for="need_punch">Need Punch</label>
+                    </div>
+                    <div>
+                        <div>
+                            <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
+                            <button type="button" @click="createReceiveRecord()"><p>ADD</p></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-content" v-else>
+                    <div class="title">
+                        <b>Employee Name</b><div class="function"><input type="text" v-model="record.username" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" size="80"></div>
+                    </div>
+                    <div class="title">
+                        <b>Email</b><div class="function"><input type="email" v-model="record.email" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" size="80"></div>
+                    </div>
+
+                    <div class="title">
+                        <b>Department</b> 
+                        <select v-model="ed_apartment_id">
+                        <option v-for="item in departments" :value="item.id" :key="item.department">
+                            {{ item.department }}
+                        </option>
+                        </select>
+                    </div>
+
+                    <div class="title">
+                        <b>Position</b>
+                        <select v-model="record.title_id">
+                        <option v-for="item in positons" :value="item.id" :key="item.title">
+                            {{ item.title }}
+                        </option>
+                        </select>
+                       
+                    </div>
+                    <div class="title">
+                        <input  type="checkbox" name="status" id="status" :true-value="1" v-model:checked="record.status" @change="updateStatus">
+                        <label for="status">Enabled</label>
+                    </div>
+                    <div class="title">
+                        <input  type="checkbox" name="is_admin" id="is_admin" :true-value="1" v-model:checked="record.is_admin" @change="updateIsAdmin">
+                        <label for="is_admin">Is Admin</label>
+                    </div>
+                    <div class="title">
+                        <input type="checkbox" name="need_punch" id="need_punch" :true-value="1" v-model:checked="record.need_punch" @change="updateNeedPunch">
+                        <label for="need_punch">Need Punch</label>
+                    </div>
+                    <div>
+                        <div>
+                            <button type="button" @click="cancelReceiveRecord($event)"><p>CANCEL</p></button>
+                            <button type="button" @click="editReceiveRecord($event)"><p>SAVE</p></button>
+                        </div>
+                    </div>
+                </div>
+
+                    
+
+                <div class="tablebox">
+                    <ul class="head">
+                    <li><i class="micons">view_list</i></li>
+                        <li>Employee Name</li>
+                        <li>Email</li>
+                        <li>Department</li>
+                        <li>Position</li>
+                        <li>Enabled</li>
+                        <li>Is Admin</li>
+                        <li>Need Punch</li>
+                        
+                    </ul>
+                    <ul v-for='(record, index) in displayedPosts' :key="index">
+                        <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
+                        <li>{{record.username}}</li>
+                        <li>{{record.email}}</li>
+                        <li>{{record.department}}</li>
+                        <li>{{record.title}}</li>
+                        <li>{{ (record.status == 1) ? "是 (yes)" : "否 (no)" }}</li>
+                        <li>{{ (record.is_admin == '1') ? "是 (yes)" : "否 (no)" }}</li>
+                        <li>{{ (record.need_punch == 1) ? "是 (yes)" : "否 (no)" }}</li>
+                        
+                    </ul>
+                    
+                </div>
+                <div class="btnbox">
+                    <a class="btn" @click="editRecord()">Modify</a>
+                    <a class="btn" @click="deleteRecord()">Delete</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+</body>
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="../js/axios.min.js"></script> 
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="../js/admin/user.js"></script>
+</html>
