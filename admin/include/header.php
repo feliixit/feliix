@@ -46,7 +46,7 @@ try {
         <ul class="info">
             <!-- 大頭照可由此處style修改 -->
             <li class="photo" style="background-image: url(../images/iosicon.png)"></li>
-            <li class="name"><?= $username ?> <br /> <b style="font-size: 26px;"><?= $position ?></b></li>
+            <li class="name"><?= ($username != "") ? $username : "" ?> <br /> <b style="font-size: 26px;"><?= ($position != "") ? $position : "" ?></b></li>
         </ul>
         <ul class="menu">
             <li class="sec01">

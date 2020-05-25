@@ -48,7 +48,12 @@ var app = new Vue({
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(this.showPosition);
       } else { 
-        x.innerHTML = "Geolocation is not supported by this browser.";
+        Swal.fire({
+          text: 'Geolocation is not supported by this browser.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+
       }
     },
 
@@ -167,6 +172,30 @@ var app = new Vue({
               {
                 Swal.fire({
                   text: 'Choose Punch location',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+                })
+                  //this.err_msg = 'Choose Punch location';
+                  //$(window).scrollTop(0);
+                  return false;
+              } 
+
+              if (this.latitude == 0 || this.lngitude == 0) 
+              {
+                Swal.fire({
+                  text: 'Please turn on the function of GPS information acquiring in your camera or choose the existing photo with GPS information.',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+                })
+                  //this.err_msg = 'Choose Punch location';
+                  //$(window).scrollTop(0);
+                  return false;
+              } 
+
+              if ((this.piclatitude == 0 || this.piclongitude == 0) && !this.$refs.file == undefined) 
+              {
+                Swal.fire({
+                  text: 'Please turn on the function of GPS information acquiring in your camera or choose the existing photo with GPS information.',
                   icon: 'error',
                   confirmButtonText: 'OK'
                 })

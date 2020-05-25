@@ -126,10 +126,15 @@ class OnDuty
             if ($stmt->execute()) {
                 $last_id = $this->conn->lastInsertId();
             }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+            }
         }
         catch (Exception $e)
         {
-            print_r($e->getMessage());
+            error_log($e->getMessage());
         }
 
 

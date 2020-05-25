@@ -10,6 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // files needed to connect to database
 include_once 'config/database.php';
 include_once 'objects/user.php';
+include_once 'config/conf.inc';
  
 // get database connection
 $database = new Database();
@@ -51,13 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recaptcha_response'])
 $filename = "";
 
 if(isset($_FILES['file']['name'])) {
+    $conf = new Conf();
     $key = "myKey";
     $time = time();
     $hash = hash_hmac('sha256', $time, $key);
     $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
     $filename = $time . $hash . "." . $ext;
-    // if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/img/" . $filename)) {
-    if (move_uploaded_file($_FILES["file"]["tmp_name"], "C:/xampp/htdocs/feliix/img/" . $filename)) {
+    
+    if (move_uploaded_file($_FILES["file"]["tmp_name"], $conf::$upload_path . $filename)) {
         $user->pic_url = $filename;
     }
 }
