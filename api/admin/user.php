@@ -153,14 +153,8 @@ else
                     $user->delete();
                 }
 
-                if($query){
-                    $out['message'] = "Member Deleted Successfully";
-                }
-                else{
-                    $out['error'] = true;
-                    $out['message'] = "Could not delete Member";
-                }
-               
+                $out['message'] = "Member Deleted Successfully";
+                
                 break;
             }
 
