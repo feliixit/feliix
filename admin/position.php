@@ -63,7 +63,7 @@ $(function(){
         <!-- Blocks -->
         <div class="block C focus">
             <h6>Position Management
-                <div class="function">
+                <div class="function" style="padding-top:10px;">
                     Choose Apartment: <select v-model="department_id">
                         <option v-for="item in departments" :value="item.id" :key="item.department">
                             {{ item.department }}
@@ -74,11 +74,12 @@ $(function(){
             
             <div class="box-content">
                 <div class="box-content"  v-if="!isEditing">
-                    <div class="title">
-                        <b>Position Name</b><div class="function"><input type="text" v-model="title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" size="80"></div>
-                    </div>
+                    <ul>
+                        <li><b>Position Name</b></li>
+                        <li><input type="text" v-model="title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%"></li>
+                    </ul>
                     
-                    <div>
+                    <div style="padding-top:10px;">
                         <div>
                             <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
                             <button type="button" @click="createReceiveRecord()"><p>ADD</p></button>
@@ -87,11 +88,12 @@ $(function(){
                 </div>
 
                 <div class="box-content" v-else>
-                    <div class="title">
-                        <b>Position Name</b><div class="function"><input type="text" v-model="record.title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" size="80"></div>
-                    </div>
+                    <ul>
+                        <li><b>Position Name</b></li>
+                        <li><div class="function"><input type="text" v-model="record.title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%"></li>
+                    </ul>
                     
-                    <div>
+                    <div style="padding-top:10px;">
                         <div>
                             <button type="button" @click="cancelReceiveRecord($event)"><p>CANCEL</p></button>
                             <button type="button" @click="editReceiveRecord($event)"><p>SAVE</p></button>

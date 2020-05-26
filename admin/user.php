@@ -47,6 +47,16 @@ $(function(){
 
 </head>
 
+<style>
+   @media screen and (min-width: 0px) and (max-width: 767px) {
+    #my-content { display: none; }  /* hide it on small screens */
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+    #my-content { display: block; }   /* show it elsewhere */
+    }
+</style>
+
 <body class="primary">
  	
 <div class="bodybox">
@@ -65,48 +75,45 @@ $(function(){
             <h6>User Management</h6>
             <div class="box-content">
                 <div class="box-content"  v-if="!isEditing">
-                    <div class="title">
-                        <b>Employee Name</b><div class="function"><input type="text" v-model="username" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" size="80"></div>
-                    </div>
-                    <div class="title">
-                        <b>Email</b><div class="function"><input type="email" v-model="email" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" size="80"></div>
-                    </div>
-                    <div class="title">
-                        <b>Password</b><div class="function"><input type="password" v-model="password" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" size="80"></div>
-                    </div>
-                    <div class="title">
-                        <b>Comfirm Password</b><div class="function"><input type="password" v-model="password1" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" size="80"></div>
-                    </div>
-                    <div class="title">
-                        <b>Department</b> 
-                        <select v-model="apartment_id">
-                        <option v-for="item in departments" :value="item.id" :key="item.department">
-                            {{ item.department }}
-                        </option>
-                        </select>
-                    </div>
+                    <ul>
+                        <li><b>Employee Name</b></li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="username" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%" ></li>
+                        <li><b>Email</b></li>
+                        <li style="padding-bottom:10px;"><input type="email" v-model="email" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" style="width:100%"></li>
+                        <li><b>Password</b></li>
+                        <li style="padding-bottom:10px;"><input type="password" v-model="password" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" style="width:100%"></li>
+                        <li><b>Comfirm Password</b></li>
+                        <li style="padding-bottom:10px;"><input type="password" v-model="password1" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" style="width:100%"></li>
+                        <li><b>Department</b> </li>
+                        <li style="padding-bottom:10px;">
+                            <select v-model="apartment_id">
+                            <option v-for="item in departments" :value="item.id" :key="item.department">
+                                {{ item.department }}
+                            </option>
+                            </select>
+                        </li>
+                        <li><b>Position</b></li>
+                        <li style="padding-bottom:10px;">
+                            <select v-model="title_id">
+                            <option v-for="item in positons" :value="item.id" :key="item.title">
+                                {{ item.title }}
+                            </option>
+                            </select>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input  type="checkbox" name="status" id="status" :true-value="1" v-model:checked="status" @change="updateStatus">
+                            <label for="status">Enabled</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input  type="checkbox" name="is_admin" id="is_admin" :true-value="1" v-model:checked="is_admin" @change="updateIsAdmin">
+                            <label for="is_admin">Is Admin</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="need_punch" id="need_punch" :true-value="1" v-model:checked="need_punch" @change="updateNeedPunch">
+                            <label for="need_punch">Need Punch</label>
+                        </li>
+                    </ul>
 
-                    <div class="title">
-                        <b>Position</b>
-                        <select v-model="title_id">
-                        <option v-for="item in positons" :value="item.id" :key="item.title">
-                            {{ item.title }}
-                        </option>
-                        </select>
-                       
-                    </div>
-                    <div class="title">
-                        <input  type="checkbox" name="status" id="status" :true-value="1" v-model:checked="status" @change="updateStatus">
-                        <label for="status">Enabled</label>
-                    </div>
-                    <div class="title">
-                        <input  type="checkbox" name="is_admin" id="is_admin" :true-value="1" v-model:checked="is_admin" @change="updateIsAdmin">
-                        <label for="is_admin">Is Admin</label>
-                    </div>
-                    <div class="title">
-                        <input type="checkbox" name="need_punch" id="need_punch" :true-value="1" v-model:checked="need_punch" @change="updateNeedPunch">
-                        <label for="need_punch">Need Punch</label>
-                    </div>
                     <div>
                         <div>
                             <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
@@ -116,43 +123,53 @@ $(function(){
                 </div>
 
                 <div class="box-content" v-else>
-                    <div class="title">
-                        <b>Employee Name</b><div class="function"><input type="text" v-model="record.username" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" size="80"></div>
-                    </div>
-                    <div class="title">
-                        <b>Email</b><div class="function"><input type="email" v-model="record.email" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" size="80"></div>
-                    </div>
-
-                    <div class="title">
-                        <b>Department</b> 
-                        <select v-model="ed_apartment_id">
-                        <option v-for="item in departments" :value="item.id" :key="item.department">
-                            {{ item.department }}
-                        </option>
-                        </select>
-                    </div>
-
-                    <div class="title">
-                        <b>Position</b>
-                        <select v-model="record.title_id">
-                        <option v-for="item in positons" :value="item.id" :key="item.title">
-                            {{ item.title }}
-                        </option>
-                        </select>
+                    <ul>
+                        <li>
+                            <b>Employee Name</b>
+                        </li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="record.username" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width: 100%"></li>
+                        
+                        <li>
+                            <b>Email</b>
+                        </li>
+                        <li style="padding-bottom:10px;"><input type="email" v-model="record.email" required onfocus="this.placeholder = ''" onblur="this.placeholder = ''" maxlength="255" style="width: 100%"></li>
                        
-                    </div>
-                    <div class="title">
-                        <input  type="checkbox" name="status" id="status" :true-value="1" v-model:checked="record.status" @change="updateStatus">
-                        <label for="status">Enabled</label>
-                    </div>
-                    <div class="title">
-                        <input  type="checkbox" name="is_admin" id="is_admin" :true-value="1" v-model:checked="record.is_admin" @change="updateIsAdmin">
-                        <label for="is_admin">Is Admin</label>
-                    </div>
-                    <div class="title">
-                        <input type="checkbox" name="need_punch" id="need_punch" :true-value="1" v-model:checked="record.need_punch" @change="updateNeedPunch">
-                        <label for="need_punch">Need Punch</label>
-                    </div>
+                        <li>
+                            <b>Department</b> 
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <select v-model="ed_apartment_id">
+                            <option v-for="item in departments" :value="item.id" :key="item.department">
+                                {{ item.department }}
+                            </option>
+                            </select>
+                        </li>
+
+                        <li>
+                            <b>Position</b>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <select v-model="record.title_id">
+                            <option v-for="item in positons" :value="item.id" :key="item.title">
+                                {{ item.title }}
+                            </option>
+                            </select>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input  type="checkbox" name="status" id="status" :true-value="1" v-model:checked="record.status" @change="updateStatus">
+                            <label for="status">Enabled</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input  type="checkbox" name="is_admin" id="is_admin" :true-value="1" v-model:checked="record.is_admin" @change="updateIsAdmin">
+                            <label for="is_admin">Is Admin</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="need_punch" id="need_punch" :true-value="1" v-model:checked="record.need_punch" @change="updateNeedPunch">
+                            <label for="need_punch">Need Punch</label>
+                        </li>
+
+                    </ul>
+
                     <div>
                         <div>
                             <button type="button" @click="cancelReceiveRecord($event)"><p>CANCEL</p></button>
@@ -166,24 +183,19 @@ $(function(){
                 <div class="tablebox">
                     <ul class="head">
                     <li><i class="micons">view_list</i></li>
-                        <li>Employee Name</li>
-                        <li>Email</li>
-                        <li>Department</li>
-                        <li>Position</li>
-                        <li>Enabled</li>
-                        <li>Is Admin</li>
-                        <li>Need Punch</li>
-                        
+                        <li style="font-size:10px;">Employee Name</li>
+                        <li style="font-size:10px;">Email</li>
+                        <li style="font-size:10px;">Department</li>
+                        <li style="font-size:10px;">Position</li>
+                        <li style="font-size:10px;">Status</li>
                     </ul>
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
-                        <li>{{record.username}}</li>
-                        <li>{{record.email}}</li>
-                        <li>{{record.department}}</li>
-                        <li>{{record.title}}</li>
-                        <li>{{ (record.status == 1) ? "是 (yes)" : "否 (no)" }}</li>
-                        <li>{{ (record.is_admin == '1') ? "是 (yes)" : "否 (no)" }}</li>
-                        <li>{{ (record.need_punch == 1) ? "是 (yes)" : "否 (no)" }}</li>
+                        <li style="font-size:10px;">{{record.username}}</li>
+                        <li style="font-size:10px;">{{record.email}}</li>
+                        <li style="font-size:10px;">{{record.department}}</li>
+                        <li style="font-size:10px;">{{record.title}}</li>
+                        <li style="font-size:10px;">{{ (record.status == 1) ? "Y" : "N" }}/{{ (record.is_admin == '1') ? "Y" : "N" }}/{{ (record.need_punch == 1) ? "Y" : "N" }}</li>
                         
                     </ul>
                     
