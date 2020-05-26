@@ -11,12 +11,15 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once 'config/database.php';
 include_once 'objects/user.php';
 include_once 'objects/login_history.php';
+include_once 'config/conf.inc';
 
 $database = new Database();
 $db = $database->getConnection();
 
 $user = new User($db);
 $login_history = new LoginHistory($db);
+
+$conf = new Conf();
 
 $username = (isset($_POST['username']) ?  $_POST['username'] : "");
 $password = (isset($_POST['password']) ?  $_POST['password'] : "");
@@ -25,11 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recaptcha_response'])
 
     // Build POST request:
     $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-    $recaptcha_secret = '6Le2uvQUAAAAAEtH76v-4KS_joDZ0ettksO6d1nz';
     $recaptcha_response = $_POST['recaptcha_response'];
 
     // Make and decode POST request:
-    $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
+    $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $conf::$recaptcha_secret . '&response=' . $recaptcha_response);
     $recaptcha = json_decode($recaptcha);
 
     // Take action based on the score returned:

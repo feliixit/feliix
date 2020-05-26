@@ -18,6 +18,7 @@ $db = $database->getConnection();
  
 // instantiate product object
 $user = new User($db);
+$conf = new Conf();
  
 // get posted data
 //$data = json_decode(file_get_contents("php://input"));
@@ -36,11 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recaptcha_response'])
 
     // Build POST request:
     $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-    $recaptcha_secret = '6Le2uvQUAAAAAEtH76v-4KS_joDZ0ettksO6d1nz';
     $recaptcha_response = $_POST['recaptcha_response'];
 
     // Make and decode POST request:
-    $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
+    $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $conf::$recaptcha_secret . '&response=' . $recaptcha_response);
     $recaptcha = json_decode($recaptcha);
 
     // Take action based on the score returned:
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recaptcha_response'])
 $filename = "";
 
 if(isset($_FILES['file']['name'])) {
-    $conf = new Conf();
+    
     $key = "myKey";
     $time = time();
     $hash = hash_hmac('sha256', $time, $key);
