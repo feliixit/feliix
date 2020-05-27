@@ -103,14 +103,15 @@ else
             // instantiate product object
             $user = new User($db);
 
-            $username = stripslashes($_POST["username"]);
-            $email = stripslashes($_POST["email"]);
-            $password = stripslashes($_POST["password"]);
-            $status = stripslashes($_POST["status"]);
-            $is_admin = stripslashes($_POST["is_admin"]);
-            $need_punch = stripslashes($_POST["need_punch"]);
-            $apartment_id = stripslashes($_POST["apartment_id"]);
-            $title_id = stripslashes($_POST["title_id"]);
+            $username = stripslashes(isset($_POST["username"]) ? $_POST["username"] : "" );
+            $email = stripslashes(isset($_POST["email"]) ? $_POST["email"] : "" );
+            $password = stripslashes(isset($_POST["password"]) ? $_POST["password"] : "" );
+            $status = stripslashes(isset($_POST["status"]) ? ($_POST["status"] == "1" ? 1 : 0)  : 0 );
+
+            $is_admin = stripslashes(isset($_POST["is_admin"]) ? ($_POST["is_admin"] == "1" ? "1" : "") : "" );
+            $need_punch = stripslashes(isset($_POST["need_punch"]) ? ($_POST["need_punch"] == "1" ? 1 : 0)  : 0);
+            $apartment_id = stripslashes(isset($_POST["apartment_id"]) ? $_POST["apartment_id"] : "" );
+            $title_id = stripslashes(isset($_POST["title_id"]) ? $_POST["title_id"] : "" );
 
             $crud = $_POST["crud"];
             $id = $_POST["id"];

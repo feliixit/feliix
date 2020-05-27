@@ -51,7 +51,7 @@ else
 
       switch ($method) {
           case 'GET':
-            $sql = "SELECT id, department FROM user_department";
+            $sql = "SELECT id, department FROM user_department where status <> -1";
 
             $merged_results = array();
 

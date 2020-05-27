@@ -429,15 +429,15 @@ var app = new Vue({
                 .then(function(response) {
                     //handle success
                     console.log(response)
-                    if (response.data !== "")
-                    {
+                    //if (response.data !== "")
+                    //{
                         //const index = app.user_records.findIndex((e) => e.id === this.record.id);
                         //if (index !== -1) 
                         //    app.user_records[index] = this.record;
                         
                         app.resetForm();
                       
-                  }
+                  //}
                 })
                 .catch(function(response) {
                     //handle error
