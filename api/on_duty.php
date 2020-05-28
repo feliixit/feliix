@@ -29,7 +29,7 @@ include_once 'libs/php-jwt-master/src/JWT.php';
 
 include_once 'config/database.php';
 include_once 'objects/on_duty.php';
-include_once 'config/conf.inc';
+include_once 'config/conf.php';
 
 $database = new Database();
 $db = $database->getConnection();

@@ -11,7 +11,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once 'config/database.php';
 include_once 'objects/user.php';
 include_once 'objects/login_history.php';
-include_once 'config/conf.inc';
+include_once 'config/conf.php';
 
 $database = new Database();
 $db = $database->getConnection();

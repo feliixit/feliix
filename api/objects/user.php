@@ -272,6 +272,11 @@ class User{
         if($stmt->execute()){
             return true;
         }
+        else
+        {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+        }
     
         return false;
     }
