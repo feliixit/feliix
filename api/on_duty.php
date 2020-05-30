@@ -73,6 +73,8 @@ else
                     $s_lng = (is_float($result['longitude']) ? $result['longitude'] : 0.0);
                     $s_time = $result['time'];
                 }
+
+                compress_image($conf::$upload_path . $filename, $conf::$upload_path . $filename, 60);
             }
         }catch (Exception $e){
 
@@ -188,4 +190,14 @@ function triphoto_getGPS($fileName)
 
     return $result;
 
+}
+
+function compress_image($source_url, $destination_url, $quality)
+{
+    $info = getimagesize($source_url);
+    if ($info['mime'] == 'image/jpeg') $image = imagecreatefromjpeg($source_url);
+    elseif ($info['mime'] == 'image/gif') $image = imagecreatefromgif($source_url);
+    elseif ($info['mime'] == 'image/png') $image = imagecreatefrompng($source_url);
+    imagejpeg($image, $destination_url, $quality);
+    //echo "Image uploaded successfully.";
 }
