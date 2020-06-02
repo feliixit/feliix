@@ -12,11 +12,23 @@ var app = new Vue({
     reason : '',
     receive_records: [],
     submit: false,
+
+    al_credit: 0,
+    al_taken: 0,
+    al_approval: 0,
+
+    sl_credit: 0,
+    sl_taken: 0,
+    sl_approval: 0,
+
+    pl_taken: 0,
+    pl_approval: 0,
   },
 
   created () {
     this.getRecords();
     this.getUserName();
+    this.getLeaveCredit();
   },
 
   computed: {
@@ -41,6 +53,14 @@ var app = new Vue({
 
       apply_start () {
         this.setPeriod();
+      },
+
+      month1 () {
+        this.getLeaveCredit();
+      },
+
+      month2 () {
+        this.getLeaveCredit();
       },
   },
 
@@ -128,10 +148,10 @@ var app = new Vue({
           var form_Data = new FormData();
           let _this = this;
 
-          var sdate = this.sliceDate(this.apply_start);
+          var sdate = this.sliceDate(this.apply_start).replace(/-/g,"");
           var stime = this.sliceTime(this.apply_start);
 
-          var edate = this.sliceDate(this.apply_end);
+          var edate = this.sliceDate(this.apply_end).replace(/-/g,"");
           var etime = this.sliceTime(this.apply_end)
 
           form_Data.append('jwt', token);
@@ -212,6 +232,57 @@ var app = new Vue({
                 console.log(error);
             });
     },
+
+    getLeaveCredit: function() {
+      let _this = this;
+
+      if (this.month1 === undefined && this.month2 === undefined)
+        return;
+
+      if (this.month1 === '' && this.month2 === '')
+        return;
+
+        var sdate1 = '';
+        var edate1 = '';
+
+        var sdate2 = '';
+        var edate2 = '';
+
+      if(this.month1)
+      {
+        var d1 = new Date(this.month1);
+        sdate1 = d1.toISOString().slice(0,10).replace(/-/g,"");
+        var newDate1 = new Date(d1.setMonth(d1.getMonth()+1));
+        edate1 = newDate1.toISOString().slice(0,10).replace(/-/g,"");
+      }
+
+      if(this.month2)
+      {
+        var d2 = new Date(this.month2);
+        sdate2 = d2.toISOString().slice(0,10).replace(/-/g,"");
+        var newDate2 = new Date(d2.setMonth(d2.getMonth()+1));
+        edate2 = newDate2.toISOString().slice(0,10).replace(/-/g,"");
+      }
+
+      axios.get('api/leave_credit?sdate1=' + sdate1 + '&edate1=' + edate1 + '&sdate2=' + sdate2 + '&edate2=' + edate2)
+          .then(function(response) {
+              console.log(response.data);
+              _this.al_credit = response.data[0].al_credit;
+              _this.al_taken = response.data[0].al_taken;
+              _this.al_approval = response.data[0].al_approval;
+              
+              _this.sl_credit = response.data[0].sl_credit;
+              _this.sl_taken = response.data[0].sl_taken;
+              _this.sl_approval = response.data[0].sl_approval;
+
+              _this.pl_taken = response.data[0].pl_taken;
+              _this.pl_approval = response.data[0].pl_approval;
+
+          })
+          .catch(function(error) {
+              console.log(error);
+          });
+  },
 
     getUserName: function() {
         var token = localStorage.getItem('token');

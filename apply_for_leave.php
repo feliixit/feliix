@@ -90,31 +90,31 @@ $(function(){
                 <div class="tablebox">
                     <ul class="head">
                         <li>Leave Type</li>
-                        <li>Available</li>
+                        <li>Yearly Credits</li>
                         <li>Taken</li>
-                        <li>Frozen</li>
-                        <li>Balance</li>
+                        <li>Waiting for Approval</li>
+      
                     </ul>
                     <ul>
                         <li>Annual Leave</li>
-                        <li>176 Hrs.</li>
-                        <li>48 Hrs.</li>
-                        <li>0 Hr.</li>
-                        <li>128 Hrs.</li>
+                        <li>{{ al_credit }} Days</li>
+                        <li>{{ al_taken }} Days</li>
+                        <li>{{ al_approval }} Days</li>
+                  
                     </ul>
                     <ul>
-                        <li>Paid Sick Leave</li>
-                        <li>40 Hrs.</li>
-                        <li>8 Hrs.</li>
-                        <li>8 Hrs.</li>
-                        <li>24 Hrs.</li>
+                        <li>Sick Leave</li>
+                        <li>{{ sl_credit }} Days</li>
+                        <li>{{ sl_taken }} Days</li>
+                        <li>{{ sl_approval }} Days</li>
+                
                     </ul>
                     <ul>
                         <li>Personal Leave</li>
-                        <li>-</li>
-                        <li>48 Hrs.</li>
-                        <li>0 Hr.</li>
-                        <li>-</li>
+                        <li>--</li>
+                        <li>{{ pl_taken }} Days</li>
+                        <li>{{ pl_approval }} Days</li>
+                
                     </ul>
                 </div>
                 <!-- 表單樣式 -->
