@@ -62,7 +62,7 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A focus">Apply for Leave</a>
-            <a class="tag B">Leave Record</a>
+            <a class="tag B" href="leave_record">Leave Record</a>
         </div>
         <!-- Blocks -->
         <div class="block A focus">
@@ -123,11 +123,11 @@ $(function(){
                 </div>
                 <div class="formbox">
                     <ul>
-                        <li class="head">Employee Name</li>
+                        <li class="head" style="margin-left: 5px;">Employee Name</li>
                         <li>{{ name }}</li>
                     </ul>
                     <ul>
-                        <li class="head">Leave Type</li>
+                        <li class="head" style="margin-left: 5px;">Leave Type</li>
                         <li>
                             <select name="" id="" v-model="leave_type">
                                 <option value="A">Annual Leave</option>
@@ -144,24 +144,24 @@ $(function(){
                     
                     <div class="group">
                         <ul>
-                            <li class="head">Start Time</li>
+                            <li class="head" style="margin-left: 5px;">Start Time</li>
                             <li>
                             <input type="datetime-local" v-model="apply_start" />
                             </li>
                         </ul>
                         <ul>
-                            <li class="head">End Time</li>
+                            <li class="head" style="margin-left: 5px;">End Time</li>
                             <li>
                             <input type="datetime-local" v-model="apply_end" />
                             </li>
                         </ul>
                     </div>
                     <ul>
-                        <li class="head">Leave Length</li>
+                        <li class="head" style="margin-left: 5px;">Leave Length</li>
                         <li>{{ period }}</li>
                     </ul>
                     <ul>
-                        <li class="head">Reason</li>
+                        <li class="head" style="margin-left: 5px;">Reason</li>
                         <li>
                             <textarea name="message" rows="3" cols="20" v-model="reason" >
                 
@@ -177,54 +177,7 @@ $(function(){
                 <!-- 表單樣式 -->
             </div>
         </div>
-        <div class="block B">
-            <h6>Leave Records</h6>
-            <div class="box-content">
-                <div class="title">
-                    <b>Employee Name</b>
-                    <div class="function">
-                       <input name="Foodb" type="radio" value="A" id="A" class="green"><label for="A">All</label>
-                   <input name="Foodb2" type="radio" value="A2" id="A2" class="blue"><label for="A2">Waiting for Approval</label>
-<!--
-                        <b class="light green"></b>All
-                        <b class="light blue"></b>Waiting for Approval
--->
-                        <select name="" id="">
-                            <option value="">MAR / 2020</option>
-                            <option value="">FEB / 2020</option>
-                            <option value="">JAN / 2020</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="tablebox">
-                    <ul class="head">
-                        <li><i class="micons">view_list</i></li>
-                        <li>Status</li>
-                        <li>Type</li>
-                        <li>Leave Time</li>
-                    </ul>
-                    <ul>
-                        <li><input name="Foodb2" type="radio" value="A2" id="B2" class="alone blue"></li>
-                        <li>Waiting for Approval</li>
-                        <li>Annual Leave</li>
-                        <li>2020/01/07 9:30 - 2020/01/11 18:30</li>
-                    </ul>
-                    <ul>
-                        <li><input name="Foodb2" type="radio" value="A2" id="B2" class="alone blue"></li>
-                        <li>Approval</li>
-                        <li>Annual Leave</li>
-                        <li>2020/01/07 9:30 - 2020/01/11 18:30</li>
-                    </ul>
-                    <ul>
-                        <li><input name="Foodb2" type="radio" value="A2" id="B2" class="alone blue"></li>
-                        <li>Approval</li>
-                        <li>Sick Leave</li>
-                        <li>2020/01/07 9:30 - 2020/01/11 18:30</li>
-                    </ul>
-                </div>
-            </div>
-            
-        </div>
+        
     </div>
 </div>
 </body>

@@ -69,6 +69,22 @@ if($sdate1 == '' && $sdate2 == '')
     die();
 }
 
+// leave credit!
+
+$al_credit = 0;
+$sl_credit = 0;
+
+$query = "SELECT annual_leave, sick_leave from user where id = " . $user_id ;
+
+$stmt = $db->prepare( $query );
+$stmt->execute();
+
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $al_credit = $row['annual_leave'];
+    $sl_credit = $row['sick_leave'];
+}
+
+
 /* fetch data */
 if($sdate2 != "")
     $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate2 . "' and status = '' and uid = " . $user_id . " group by leave_type,  CASE WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
@@ -78,8 +94,7 @@ else
 $stmt = $db->prepare( $query );
 $stmt->execute();
 
-$al_credit = 10;
-$sl_credit = 10;
+
 
 $al_taken = 0;
 $al_approval = 0;

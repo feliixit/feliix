@@ -23,6 +23,8 @@ var app = new Vue({
 
     pl_taken: 0,
     pl_approval: 0,
+
+    is_manager: 0,
   },
 
   created () {
@@ -76,6 +78,15 @@ var app = new Vue({
     sliceTime: function(str) {
         var mdy = str.slice(-5);
         return mdy;
+    },
+
+    IsAm: function(str) {
+        var mdy = str.slice(-5).replace(/:/g,"");;
+
+        if(mdy >= '1230')
+          return "P";
+        else
+          return "A";
     },
 
     sliceDate: function(str) {
@@ -204,10 +215,39 @@ var app = new Vue({
       if (this.apply_start === '' || this.apply_end === '')
         return;
 
-      var timeStart = this.parseDate(this.apply_start);
-      var timeEnd = this.parseDate(this.apply_end);
+      if(this.is_manager)
+      {
+        var timeStart = this.parseDate(this.apply_start);
 
-      var days = Math.round((timeEnd-timeStart)/(1000*60*60*24)) + 1;
+        var amStart = this.IsAm(this.apply_start);
+
+        var timeEnd = this.parseDate(this.apply_end);
+
+        var amEnd = this.IsAm(this.apply_end);
+
+        var days = Math.round((timeEnd-timeStart)/(1000*60*60*24)) + 1;
+
+      if(!isNaN(days) && days > 0)
+      {
+        if(amStart === amEnd)
+          this.period = days - .5;
+        else
+          this.period = days;
+      }
+        
+
+
+      }
+      else
+      {
+        var timeStart = this.parseDate(this.apply_start);
+        var timeEnd = this.parseDate(this.apply_end);
+
+        var days = Math.round((timeEnd-timeStart)/(1000*60*60*24)) + 1;
+
+        if(!isNaN(days) && days > 0)
+        this.period = days;
+      }
 
       //var timeStart = new Date(app.apply_start);
       //var timeEnd = new Date(app.apply_end);
@@ -217,8 +257,7 @@ var app = new Vue({
       //var minutes = diff % 60;
      //var hours = (diff - minutes) / 60;
 
-      if(!isNaN(days) && days > 0)
-        this.period = days;
+      
     },
 
     getRecords: function(keyword) {
@@ -302,6 +341,7 @@ var app = new Vue({
         .then(function(response) {
             //handle success
             _this.name = response.data.username;
+            _this.is_manager = response.data.is_manager;
 
         })
         .catch(function(response) {

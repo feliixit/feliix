@@ -76,6 +76,12 @@ if($user_exists && password_verify($password, $user->password)  && $user->status
            "is_admin" => $user->is_admin,
            "department" => $user->department,
            "position" => $user->position,
+           "annual_leave" => $user->position,
+           "sick_leave" => $user->sick_leave,
+           "head_of_department" => $user->head_of_department,
+           "is_manager" => $user->is_manager,
+           "title_id" => $user->title_id,
+           "apartment_id" => $user->apartment_id,
        )
     );
 

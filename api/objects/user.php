@@ -19,6 +19,10 @@ class User{
     public $title_id;
     public $department;
     public $position;
+    public $head_of_department;
+    public $annual_leave;
+    public $sick_leave;
+    public $is_manager;
  
     // constructor
     public function __construct($db){
@@ -123,7 +127,7 @@ class User{
     function userCanLogin(){
         // query to check if email exists
         $query = "SELECT user.id, username, password, user.status, is_admin, need_punch, COALESCE(department, '') department, 
-                apartment_id, title_id, COALESCE(title, '') title 
+                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, is_manager, user_title.head_of_department
                 FROM " . $this->table_name . "
                 LEFT JOIN user_department ON user.apartment_id = user_department.id 
                 LEFT JOIN user_title ON user.title_id = user_title.id
@@ -159,6 +163,12 @@ class User{
             $this->is_admin = $row['is_admin'];
             $this->department = $row['department'];
             $this->position = $row['title'];
+            $this->head_of_department = $row['head_of_department'];
+            $this->sick_leave = $row['sick_leave'];
+            $this->annual_leave = $row['annual_leave'];
+            $this->title_id = $row['title_id'];
+            $this->apartment_id = $row['apartment_id'];
+            $this->is_manager = $row['is_manager'];
             // return true because email exists in the database
             return true;
         }
