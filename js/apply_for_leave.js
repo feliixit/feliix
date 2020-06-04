@@ -229,9 +229,12 @@ var app = new Vue({
 
       if(!isNaN(days) && days > 0)
       {
-        if(amStart === amEnd)
-          this.period = days - .5;
-        else
+        if(amStart === "P")
+          days = days - .5;
+        
+        if(amEnd === "A")
+            days = days - .5;
+
           this.period = days;
       }
         
