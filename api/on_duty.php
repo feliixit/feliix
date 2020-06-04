@@ -85,11 +85,11 @@ else
         }
 
         $onduty->uid = $user_id;
-        $onduty->duty_date = $today;
+        $onduty->duty_date = date("Y/m/d");
         $onduty->duty_type = $type;
         $onduty->location = $location;
         $onduty->remark = $remark;
-        $onduty->duty_time = $duty_time;
+        $onduty->duty_time = date("h:i:sa");
         $onduty->explain = $explan;
         $onduty->pic_url = $filename;
         $onduty->pic_time = $photo_time;
@@ -162,12 +162,12 @@ function triphoto_getGPS($fileName)
     }
 
     //get the GPS data
-    $gps['LatDegree']=$exif["GPSLatitude"][0];
-    $gps['LatMinute']=$exif["GPSLatitude"][1];
-    $gps['LatgSeconds']=$exif["GPSLatitude"][2];
-    $gps['LongDegree']=$exif["GPSLongitude"][0];
-    $gps['LongMinute']=$exif["GPSLongitude"][1];
-    $gps['LongSeconds']=$exif["GPSLongitude"][2];
+    $gps['LatDegree']=(isset($exif["GPSLatitude"][0]) ? $exif["GPSLatitude"][0] : 0.0);
+    $gps['LatMinute']=(isset($exif["GPSLatitude"][1]) ? $exif["GPSLatitude"][1] : 0.0);
+    $gps['LatgSeconds']=(isset($exif["GPSLatitude"][2]) ? $exif["GPSLatitude"][2] : 0.0);
+    $gps['LongDegree']=(isset($exif["GPSLongitude"][0]) ? $exif["GPSLongitude"][0] : 0.0);
+    $gps['LongMinute']=(isset($exif["GPSLongitude"][1]) ? $exif["GPSLongitude"][1] : 0.0);
+    $gps['LongSeconds']=(isset($exif["GPSLongitude"][2]) ? $exif["GPSLongitude"][2] : 0.0);
 
     //convert strings to numbers
     foreach($gps as $key => $value)

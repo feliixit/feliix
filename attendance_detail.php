@@ -73,7 +73,7 @@ $(function(){
                             <li class="head">Punch-In Location</li>
                             <li>{{ record.location_detail }}</li>
                         </ul>
-                        <ul v-if="record.location == 'D' || record.location == 'E'">
+                        <ul v-if="record.location == 'D' || record.location == 'E' || record.location == 'F' ">
                             <li class="head">Further Explanation</li>
                             <li>{{ record.duty_explain }}</li>
                             <li class="head"><span>Photo</span>
@@ -95,7 +95,7 @@ $(function(){
                             <li class="head">Punch-Out Location</li>
                             <li>{{ record.location_detail }}</li>
                         </ul>
-                        <ul v-if="record.location == 'D' || record.location == 'E'">
+                        <ul v-if="record.location == 'D' || record.location == 'E' || record.location == 'F' ">
                             <li class="head">Further Explanation</li>
                             <li>{{ record.duty_explain }}</li>
                             <li class="head"><span>Photo</span>

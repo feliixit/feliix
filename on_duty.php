@@ -102,6 +102,7 @@ $(function(){
                                 <option value="C">Caloocan Warehouse</option>
                                 <option value="D">Installation</option>
                                 <option value="E">Client Meeting</option>
+                                <option value="F">Others</option>
                             </select>
                         </dd>
 

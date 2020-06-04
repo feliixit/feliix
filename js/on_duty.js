@@ -32,7 +32,7 @@ var app = new Vue({
 
   computed: {
     showExtra: function(){
-      return (this.location=='D' || this.location=='E');
+      return (this.location=='D' || this.location=='E' || this.location=='F');
     }
   },
 

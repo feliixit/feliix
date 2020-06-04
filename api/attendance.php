@@ -122,6 +122,9 @@ function GetLocation($loc)
         case "E":
             $location = "Client Meeting";
             break;
+            case "F":
+                $location = "Others";
+                break;
     }
 
     return $location;
