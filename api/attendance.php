@@ -57,7 +57,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         $mdate = date("Y/m/d");
         //$mdate = "2020/05/11";
         $subquery = " SELECT user.id, username, duty_date, duty_time, location FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE  duty_date = '" . $mdate . "' AND on_duty.duty_type = 'A' and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
-        //$subquery = " SELECT user.id, username, duty_date, duty_time, location FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE duty_date = '2020/05/11' AND on_duty.duty_type = 'A' and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
+        //$subquery = " SELECT user.id, username, duty_date, duty_time, location FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE duty_date = '2020/05/11' AND on_duty.duty_type = 'A' and on_duty.uid = 1 ORDER BY on_duty.created_at ";
 
         $stmt1 = $db->prepare( $subquery );
         $stmt1->execute();
@@ -72,7 +72,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         while($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
             $row_id = $row1['id'];
             $row_name = $row1['username'];
-            $row_date .= $row1['duty_date'] . " " . $row1['duty_time'] . "<br>";
+
+            $dateObject = new DateTime($row1['duty_date'] . " " . $row1['duty_time']);
+
+            $row_date .= $row1['duty_date'] . " " . $dateObject->format('h:i A') . "<br>";
 
             $row_location .= GetLocation($row1['location']) . "<br>";
 
@@ -117,13 +120,13 @@ function GetLocation($loc)
             $location = "Caloocan Warehouse";
             break;
         case "D":
-            $location = "Installation";
+            $location = "Installation       ";
             break;
         case "E":
             $location = "Client Meeting";
             break;
             case "F":
-                $location = "Others";
+                $location = "Others          ";
                 break;
     }
 
