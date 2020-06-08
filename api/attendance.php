@@ -75,7 +75,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 
             $dateObject = new DateTime($row1['duty_date'] . " " . $row1['duty_time']);
 
-            $row_date .= $row1['duty_date'] . " " . $dateObject->format('h:i A') . "<br>";
+            $row_date .= $dateObject->format('h:i A') . "<br>";
 
             $row_location .= GetLocation($row1['location']) . "<br>";
 
@@ -120,13 +120,13 @@ function GetLocation($loc)
             $location = "Caloocan Warehouse";
             break;
         case "D":
-            $location = "Installation       ";
+            $location = "Installation";
             break;
         case "E":
             $location = "Client Meeting";
             break;
             case "F":
-                $location = "Others          ";
+                $location = "Others";
                 break;
     }
 

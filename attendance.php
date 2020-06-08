@@ -47,6 +47,18 @@ $(function(){
 
 </head>
 
+<style type="text/css"> 
+
+li.a
+{ 
+overflow-x:hidden;
+white-space:nowrap; 
+height: 1em;
+width: 100%;
+display:inline; 
+}       
+    </style>
+    
 <body class="second">
  	
 <div class="bodybox">
@@ -82,8 +94,8 @@ $(function(){
                     <ul v-for='(record, index) in displayedRecord'>
                         <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
                         <li>{{ record.username }}</li>
-                        <li><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
-                        <li><p v-html="record.location.split('<br>').join('<br />')"></p></li>
+                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
+                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
                         <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
                     </ul>
                     
