@@ -169,6 +169,8 @@ function triphoto_getGPS($fileName)
     $gps['LongMinute']=(isset($exif["GPSLongitude"][1]) ? $exif["GPSLongitude"][1] : 0.0);
     $gps['LongSeconds']=(isset($exif["GPSLongitude"][2]) ? $exif["GPSLongitude"][2] : 0.0);
 
+    $DateTimeOriginal = (isset($exif["DateTimeOriginal"]) ? $exif["DateTimeOriginal"] : "");
+
     //convert strings to numbers
     foreach($gps as $key => $value)
     {
@@ -186,7 +188,7 @@ function triphoto_getGPS($fileName)
     //calculate the decimal degree
     $result['latitude'] = $LatM * ($gps['LatDegree'] + ($gps['LatMinute'] / 60) + ($gps['LatgSeconds'] / 3600));
     $result['longitude'] = $LongM * ($gps['LongDegree'] + ($gps['LongMinute'] / 60) + ($gps['LongSeconds'] / 3600));
-    $result['time'] = $exif["DateTimeOriginal"];
+    $result['time'] = $DateTimeOriginal;
 
     return $result;
 
