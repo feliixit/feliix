@@ -137,26 +137,18 @@ function triphoto_getGPS($fileName)
         return $result;
     }
 
-    try{
-        if($exif["GPSLatitudeRef"] == 'S')
-        {
-            $es=1;
-        }
-    }catch (Exception $e)
-    {
-        $result['latitude'] = 0.0;
-        $result['longitude'] = 0.0;
-        $result['time'] = "";
-        return $result;
-    }
+    $GPSLatitudeRef = (isset($exif["GPSLatitudeRef"]) ? $exif["GPSLatitudeRef"] : "");
+    $GPSLongitudeRef = (isset($exif["GPSLongitudeRef"]) ? $exif["GPSLongitudeRef"] : "");
+    $LatM = 1; $LongM = 1;
+
 
     //get the Hemisphere multiplier
-    $LatM = 1; $LongM = 1;
-    if($exif["GPSLatitudeRef"] == 'S')
+
+    if($GPSLatitudeRef == 'S')
     {
         $LatM = -1;
     }
-    if($exif["GPSLongitudeRef"] == 'W')
+    if($GPSLongitudeRef == 'W')
     {
         $LongM = -1;
     }
