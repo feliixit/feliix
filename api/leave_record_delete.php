@@ -41,34 +41,17 @@ include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$uid = (isset($_GET['uid']) ?  $_GET['uid'] : '');
-$sdate1 = (isset($_GET['sdate1']) ?  $_GET['sdate1'] : '');
-$edate1 = (isset($_GET['edate1']) ?  $_GET['edate1'] : '');
+$id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 
-$type = (isset($_GET['type']) ?  $_GET['type'] : '');
 
-$merged_results = array();
-
-if($sdate1 == '')
-{
-    echo json_encode($merged_results, JSON_UNESCAPED_SLASHES); 
-    die();
-}
-
-if($type == 'A')
-    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate1 . "' and status <> -1 and uid = " . $user_id ;
-else {
-    # code...
-    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate1 . "' and status <> -1 and uid = " . $user_id . " and approval_id = 0";
-}
+$query = "update apply_for_leave set status = -1, updated_at = now() where id in ($id) and uid = $user_id";
 
 $stmt = $db->prepare( $query );
-$stmt->execute();
 
-
-
-while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $merged_results[] = $row;
+if (!$stmt->execute())
+{
+    $arr = $stmt->errorInfo();
+    error_log($arr[2]);
 }
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
