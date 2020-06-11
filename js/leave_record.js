@@ -6,11 +6,12 @@ var app = new Vue({
     month1:'',
 
     picked:'A',
+    view_detail:false,
 
     submit: false,
 
     receive_records: [],
-
+    record: {},
 
   },
 
@@ -153,6 +154,35 @@ var app = new Vue({
                 });
         },
 
+        detail: function() {
+          let _this = this;
+
+        let favorite = [];
+          
+          for (i = 0; i < this.receive_records.length; i++) 
+            {
+              if(this.receive_records[i].is_checked == 1)
+                favorite.push(this.receive_records[i].id);
+            }
+
+            if (favorite.length != 1) {
+              Swal.fire({
+                text: 'Please select row to see the detail!.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                this.view_detail = false;
+                return;
+            }
+
+            this.record = this.shallowCopy(this.receive_records.find(element => element.id == favorite));
+
+            this.view_detail = true;
+
+        },
+
     apply: function() {
 
       let _this = this;
@@ -207,6 +237,15 @@ var app = new Vue({
 
           this.receive_records = [];
 
+        },
+
+        shallowCopy(obj) {
+          console.log("shallowCopy");
+            var result = {};
+            for (var i in obj) {
+                result[i] = obj[i];
+            }
+            return result;
         },
 
 

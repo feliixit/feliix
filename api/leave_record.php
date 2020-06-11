@@ -56,10 +56,10 @@ if($sdate1 == '')
 }
 
 if($type == 'A')
-    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate1 . "' and status <> -1 and uid = " . $user_id ;
+    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval, reason FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate1 . "' and status <> -1 and uid = " . $user_id ;
 else {
     # code...
-    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate1 . "' and status <> -1 and uid = " . $user_id . " and approval_id = 0";
+    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval, reason FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate1 . "' and status <> -1 and uid = " . $user_id . " and approval_id = 0";
 }
 
 $stmt = $db->prepare( $query );

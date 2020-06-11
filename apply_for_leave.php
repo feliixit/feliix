@@ -70,7 +70,7 @@ $(function(){
             <div class="box-content">
                 <!-- 表格樣式 -->
                 <div class="title">
-                    <b>Employee Name</b>
+                
                     <div class="function">
                         <el-date-picker
                             v-model="month1"
@@ -96,21 +96,21 @@ $(function(){
       
                     </ul>
                     <ul>
-                        <li>Annual Leave</li>
+                        <li>Vacation Leave</li>
                         <li>{{ al_credit }} Days</li>
                         <li>{{ al_taken }} Days</li>
                         <li>{{ al_approval }} Days</li>
                   
                     </ul>
                     <ul>
-                        <li>Sick Leave</li>
+                        <li>Emerency/Sick Leave</li>
                         <li>{{ sl_credit }} Days</li>
                         <li>{{ sl_taken }} Days</li>
                         <li>{{ sl_approval }} Days</li>
                 
                     </ul>
                     <ul>
-                        <li>Personal Leave</li>
+                        <li>Absence</li>
                         <li>--</li>
                         <li>{{ pl_taken }} Days</li>
                         <li>{{ pl_approval }} Days</li>
@@ -130,9 +130,9 @@ $(function(){
                         <li class="head" style="margin-left: 5px;">Leave Type</li>
                         <li>
                             <select name="" id="" v-model="leave_type">
-                                <option value="A">Annual Leave</option>
-                                <option value="B">Sick Leave</option>
-                                <option value="C">Period Leave</option>
+                                <option value="A">Vacation Leave</option>
+                                <option value="B">Emerency/Sick Leave</option>
+                                <option value="C">Absence</option>
                             </select>
                         </li>
                     </ul>

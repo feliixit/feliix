@@ -69,7 +69,7 @@ $(function(){
             <h6>Leave Records</h6>
             <div class="box-content">
                 <div class="title">
-                    <b>Employee Name</b>
+                    
                     <div class="function">
                        <input name="LeaveType" type="radio" value="A" id="A" class="green" checked v-model="picked"><label for="A">All</label>
                         <input name="LeaveType" type="radio" value="P" id="A2" class="blue"  v-model="picked"><label for="A2">Waiting for Approval</label>
@@ -94,16 +94,39 @@ $(function(){
                           
                         </li>
                         <li>{{ (record.approval == 'P') ? "Waiting for Approval" : "Approval" }}</li>
-                        <li>{{ (record.leave_type == 'A') ? "Annual Leave" : ((record.leave_type == 'B') ? "Sick Leave" : 'Personal Leave') }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : 'Absence') }}</li>
                         <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
                     </ul>
                 </div>
 
                 <div class="btnbox">
-  
+                    <a class="btn" @click="detail">Detail</a>
                     <a class="btn" @click="apply" :disabled="submit">Redraw</a>
                 </div>
             </div>
+
+            <div class="tablebox" v-if="view_detail">
+                    <ul class="head">
+                        <li class="head">Leave Type</li>
+                        <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : 'Absence') }}</li>
+                    </ul>
+                    <ul>
+                        <li class="head">Start Time</li>
+                        <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} </li>
+                    </ul>
+                    <ul>
+                        <li class="head">End Time</li>
+                        <li>{{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
+                    </ul>
+                    <ul>
+                        <li class="head">Leave</li>
+                        <li>{{ record.le }} </li>
+                    </ul>
+                    <ul>
+                        <li class="head">Reason</li>
+                        <li>{{ record.reason }}</li>
+                    </ul>
+                </div>
             
         </div>
     </div>
