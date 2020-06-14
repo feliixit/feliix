@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+//error_reporting(0);
 //header("Access-Control-Allow-Origin: https://feliix.myvnc.com");
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -74,7 +74,6 @@ else
 
         $afl->uid = $user_id;
         $afl->leave_type = $leave_type;
-        $afl->type = $type;
         $afl->start_date = $start_date;
         $afl->start_time = $start_time;
         $afl->end_date = $end_date;

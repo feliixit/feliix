@@ -7,6 +7,7 @@ header{ position: relative; overflow: auto; height: auto;}
 header .headerbox{ width: 100%; height: 178px; padding-top: 98px; background-color: var(--pri01a); text-align: center;}
 body.primary header > .headerbox{background-color: var(--pri01a);}
 body.second  header > .headerbox{background-color: var(--sec01);}
+body.third  header > .headerbox{background-color: var(--sec03);}
 
 header .logo{ display: inline-block; width: 188px; height: 43px; background-image: url(../images/ui/logo_light.svg);  background-size: contain; background-repeat: no-repeat; background-position: center;}
 header > .headerbox .logo{ margin-left: calc(-37px - 21px);}
