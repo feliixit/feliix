@@ -59,6 +59,10 @@ var app = new Vue({
       this.getUserPeriod();
     },
 
+    leave_type (){
+      this.getUserPeriod();
+    },
+
     month1 () {
       this.getLeaveCredit();
     },
@@ -341,19 +345,19 @@ var app = new Vue({
 
     if(this.is_manager)
     {
-      var timeStart = this.parseDate(this.apply_start);
+      var timeStart = this.apply_start.slice(0, 10);
 
       var amStart = this.IsAm(this.apply_start);
 
-      var timeEnd = this.parseDate(this.apply_end);
+      var timeEnd = this.apply_end.slice(0, 10);
 
       var amEnd = this.IsAm(this.apply_end);
 
     }
     else
     {
-      var timeStart = this.parseDate(this.apply_start);
-      var timeEnd = this.parseDate(this.apply_end);
+      var timeStart = this.apply_start.slice(0, 10);
+      var timeEnd = this.apply_end.slice(0, 10);
     }
 
     var token = localStorage.getItem('token');
@@ -385,8 +389,8 @@ var app = new Vue({
             //handle error
             _this.period = 0;
             Swal.fire({
-              text: JSON.stringify(response),
-              icon: 'error',
+              text: JSON.stringify(response.data.message),
+              icon: 'warning',
               confirmButtonText: 'OK'
             })
           });

@@ -49,7 +49,12 @@ $amStart = (isset($_POST['amStart']) ?  $_POST['amStart'] : '');
 $timeEnd = (isset($_POST['timeEnd']) ?  $_POST['timeEnd'] : '');
 $amEnd = (isset($_POST['amEnd']) ?  $_POST['amEnd'] : '');
 
-$merged_results = array();
+$leave_type = (isset($_POST['leave_type']) ?  $_POST['leave_type'] : '');
+
+
+$leaves = array();
+$applied = array();
+$holiday = array();
 
 if($timeStart == '' && $timeEnd == '')
 {
@@ -58,8 +63,14 @@ if($timeStart == '' && $timeEnd == '')
     die();
 }
 
-// leave credit!
+if($timeEnd > $timeStart)
+{
+    http_response_code(401);
+    echo json_encode(array("message" => "Apply Date not valid."));
+    die();
+}
 
+// leave credit!
 $al_credit = 0;
 $sl_credit = 0;
 
@@ -69,69 +80,71 @@ $stmt = $db->prepare( $query );
 $stmt->execute();
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $is_manager = $row['is_manager'];
     $al_credit = $row['annual_leave'];
     $sl_credit = $row['sick_leave'];
 }
 
-
-/* fetch data */
-if($sdate2 != "")
-    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate2 . "' and status = '' and uid = " . $user_id . " group by leave_type,  CASE WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
-else
-    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate1 . "' and status = '' and uid = " . $user_id . " group by leave_type,  CASE WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
-
-$stmt = $db->prepare( $query );
-$stmt->execute();
+// 1. Check if history have the same day
+$begin = new DateTime($timeStart);
+$end = new DateTime($timeEnd);
 
 
+$interval = DateInterval::createFromDateString('1 day');
+$period = new DatePeriod($begin, $interval, $end);
 
-$al_taken = 0;
-$al_approval = 0;
-
-$sl_taken = 0;
-$sl_approval = 0;
-
-$pl_taken = 0;
-$pl_approval = 0;
-
-while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $le = $row['le'];
-    $leave_type = $row['leave_type'];
-    $approval = $row['approval'];
-
-    switch ($leave_type) {
-        case "A":
-            if($approval == 'A')
-                $al_taken += $le;
-            else
-                $al_approval += $le;
-            break;
-        case "B":
-            if($approval == 'A')
-                $sl_taken += $le;
-            else
-                $sl_approval += $le;
-            break;
-        case "C":
-            if($approval == 'A')
-                $pl_taken += $le;
-            else
-                $pl_approval += $le;
-            break;
-    }
+foreach ($period as $dt) {
+    array_push($leaves, $dt->format("Ymd") . " A");
+    array_push($leaves, $dt->format("Ymd") . " P");
 }
 
-$merged_results[] = array(
-    "al_credit" => $al_credit,
-    "al_taken" => $al_taken,
-    "al_approval" => $al_approval,
+array_push($leaves, $end->format("Ymd") . " A");
 
-    "sl_credit" => $sl_credit,
-    "sl_taken" => $sl_taken,
-    "sl_approval" => $sl_approval,
+if($is_manager == "1")
+{
+    if($amStart == "P")
+        unset($leaves[0]);
 
-    "pl_taken" => $pl_taken,
-    "pl_approval" => $pl_approval,
-);
+    if($amEnd == "P")
+        array_push($leaves, $end->format("Ymd") . " P");
+}
+else
+{
+    array_push($leaves, $end->format("Ymd") . " P");
+}
 
-echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+$query = "SELECT apply_date, apply_period  from `leave` where uid = " . $user_id . " and status = 0";
+$stmt = $db->prepare( $query );
+$stmt->execute();
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $apply_date = $row['apply_date'];
+    $apply_period = $row['apply_period'];
+
+    array_push($applied, $apply_date . " " . $apply_period);
+}
+
+$inter = array_intersect($leaves, $applied);
+if(count($inter) > 0)
+{
+    http_response_code(405);
+
+    echo json_encode(array("message" => "Duplicate apply."));
+    die();
+}
+
+// 2. over credit
+$query = "SELECT from_date FROM holiday";
+$stmt = $db->prepare( $query );
+$stmt->execute();
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $from_date = $row['from_date'];
+
+    array_push($holiday, $from_date . " A");
+    array_push($holiday, $from_date . " P");
+}
+
+// 3. exclude holiday
+$result = array_diff($leaves, $holiday);
+
+
+

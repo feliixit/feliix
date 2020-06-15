@@ -382,14 +382,16 @@ INSERT INTO `holiday` (`from_date`,  `year`) VALUES
 ('20201224', '2020'),
 ('20201225', '2020'),
 ('20201230', '2020'),
-('20201231', '2020')
+('20201231', '2020');
 
 
 
 CREATE TABLE IF NOT EXISTS `leave` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) unsigned NOT NULL,
   `apply_id` bigint(20) unsigned NOT NULL,
   `apply_date` varchar(20) COLLATE utf8mb4_unicode_ci default '',
+  `apply_period` varchar(10) COLLATE utf8mb4_unicode_ci default '',
   `leave_type` varchar(10) COLLATE utf8mb4_unicode_ci default '',
   `duration` decimal(10, 2) default 0.0,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -397,3 +399,5 @@ CREATE TABLE IF NOT EXISTS `leave` (
   `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+

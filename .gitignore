@@ -1,3 +1,4 @@
 conf.inc  
 **/config  
 **/libs
+schema.sql
