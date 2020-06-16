@@ -54,4 +54,14 @@ if (!$stmt->execute())
     error_log($arr[2]);
 }
 
+$query = "update `leave` set status = -1, updated_at = now() where apply_id in ($id) and uid = $user_id";
+
+$stmt = $db->prepare( $query );
+
+if (!$stmt->execute())
+{
+    $arr = $stmt->errorInfo();
+    error_log($arr[2]);
+}
+
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);

@@ -59,7 +59,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT 0 as is_checked, user.id, username, email, user.status, COALESCE(is_admin, '0') is_admin, need_punch, COALESCE(department, '') department, apartment_id, title_id, COALESCE(title, '') title FROM user LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id where user.status <> -1 ".($id ? " and id=$id" : '');
+            $sql = "SELECT 0 as is_checked, user.id, username, email, user.status, COALESCE(is_admin, '0') is_admin, need_punch, COALESCE(department, '') department, apartment_id, title_id, COALESCE(title, '') title, head_of_department, annual_leave, sick_leave, is_manager FROM user LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id where user.status <> -1 ".($id ? " and id=$id" : '');
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -113,6 +113,11 @@ else
             $apartment_id = stripslashes(isset($_POST["apartment_id"]) ? $_POST["apartment_id"] : "" );
             $title_id = stripslashes(isset($_POST["title_id"]) ? $_POST["title_id"] : "" );
 
+            $head_of_department = stripslashes(isset($_POST["head_of_department"]) ? ($_POST["head_of_department"] == "1" ? 1 : 0)  : 0);
+            $annual_leave = stripslashes(isset($_POST["annual_leave"]) ? ($_POST["annual_leave"] == "1" ? 1 : 0)  : 0);
+            $is_manager = stripslashes(isset($_POST["is_manager"]) ? ($_POST["is_manager"] == "1" ? 1 : 0)  : 0);
+            $sick_leave = stripslashes(isset($_POST["sick_leave"]) ? ($_POST["sick_leave"] == "1" ? 1 : 0)  : 0);
+
             $crud = $_POST["crud"];
             $id = $_POST["id"];
 
@@ -127,6 +132,12 @@ else
                 $user->is_admin = $is_admin;
                 $user->title_id = $title_id;
                   $user->need_punch = $need_punch;
+
+                  $user->head_of_department = $head_of_department;
+                  $user->annual_leave = $annual_leave;
+                  $user->is_manager = $is_manager;
+                  $user->sick_leave = $sick_leave;
+
                   $user->apartment_id = $apartment_id;
 
                 $user->create();
@@ -140,6 +151,13 @@ else
                     $user->is_admin = $is_admin;
                 $user->title_id = $title_id;
                 $user->need_punch = $need_punch;
+
+                $user->head_of_department = $head_of_department;
+                  $user->annual_leave = $annual_leave;
+                  $user->is_manager = $is_manager;
+                  $user->sick_leave = $sick_leave;
+
+                  
                 $user->apartment_id = $apartment_id;
                     $user->id = $id;
 

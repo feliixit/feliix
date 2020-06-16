@@ -112,6 +112,18 @@ $(function(){
                             <input type="checkbox" name="need_punch" id="need_punch" :true-value="1" v-model:checked="need_punch" @change="updateNeedPunch">
                             <label for="need_punch">Need Punch</label>
                         </li>
+                        <li><b>Yearly Vacation</b></li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="annual_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
+                        <li><b>Yearly Sick Leave</b></li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="sick_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="is_manager" id="is_manager" :true-value="1" v-model:checked="is_manager" @change="updateIsManager">
+                            <label for="is_manager">Is Manager</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="head_of_department" @change="updateHeadOfDepartment">
+                            <label for="head_of_department">Head of Department</label>
+                        </li>
                     </ul>
 
                     <div>
@@ -167,7 +179,18 @@ $(function(){
                             <input type="checkbox" name="need_punch" id="need_punch" :true-value="1" v-model:checked="record.need_punch" @change="updateNeedPunch">
                             <label for="need_punch">Need Punch</label>
                         </li>
-
+                        <li><b>Yearly Vacation</b></li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="record.annual_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
+                        <li><b>Yearly Sick Leave</b></li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="record.sick_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="is_manager" id="is_manager" :true-value="1" v-model:checked="record.is_manager" @change="updateIsManager">
+                            <label for="is_manager">Is Manager</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="record.head_of_department" @change="updateHeadOfDepartment">
+                            <label for="head_of_department">Head of Department</label>
+                        </li>
                     </ul>
 
                     <div>

@@ -40,6 +40,10 @@ class User{
                     password = :password,
                     status = :status,
                     need_punch = :need_punch,
+                    head_of_department = :head_of_department,
+                    annual_leave = :annual_leave,
+                    sick_leave = :sick_leave,
+                    is_manager = :is_manager,
                     apartment_id = :apartment_id,
                     title_id = :title_id,
                     pic_url = :pic_url,
@@ -54,6 +58,12 @@ class User{
         $this->password=htmlspecialchars(strip_tags($this->password));
         $this->status = ($this->status ? $this->status : 0);
         $this->need_punch = ($this->need_punch ? $this->need_punch : 0);
+
+        $this->head_of_department = ($this->head_of_department ? $this->head_of_department : 0);
+        $this->annual_leave = ($this->annual_leave ? $this->annual_leave : 0);
+        $this->sick_leave = ($this->sick_leave ? $this->sick_leave : 0);
+        $this->is_manager = ($this->is_manager ? $this->is_manager : 0);
+
         $this->is_admin = ($this->is_admin ? $this->is_admin : '0');
         $this->apartment_id = ($this->apartment_id ? $this->apartment_id : '0');
         $this->title_id = ($this->title_id ? $this->title_id : '0');
@@ -65,6 +75,12 @@ class User{
         $stmt->bindParam(':pic_url', $this->pic_url);
         $stmt->bindParam(':is_admin', $this->is_admin);
         $stmt->bindParam(':need_punch', $this->need_punch);
+
+        $stmt->bindParam(':head_of_department', $this->head_of_department);
+        $stmt->bindParam(':annual_leave', $this->annual_leave);
+        $stmt->bindParam(':sick_leave', $this->sick_leave);
+        $stmt->bindParam(':is_manager', $this->is_manager);
+
         $stmt->bindParam(':apartment_id', $this->apartment_id);
         $stmt->bindParam(':title_id', $this->title_id);
     
@@ -252,6 +268,12 @@ class User{
                     username = :username,
                     email = :email,
                     need_punch = :need_punch,
+
+                    head_of_department = :head_of_department,
+                    annual_leave = :annual_leave,
+                    is_manager = :is_manager,
+                    sick_leave = :sick_leave,
+
                     apartment_id = :apartment_id,
                     title_id = :title_id,
                     status = :status,
@@ -271,6 +293,12 @@ class User{
         $stmt->bindParam(':username', $this->username);
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':need_punch', $this->need_punch);
+
+        $stmt->bindParam(':head_of_department', $this->head_of_department);
+        $stmt->bindParam(':annual_leave', $this->annual_leave);
+        $stmt->bindParam(':is_manager', $this->is_manager);
+        $stmt->bindParam(':sick_leave', $this->sick_leave);
+        
         $stmt->bindParam(':apartment_id', $this->apartment_id);
         $stmt->bindParam(':title_id', $this->title_id);
 

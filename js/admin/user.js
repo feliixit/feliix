@@ -20,6 +20,11 @@ let mainState = {
     is_admin: '',
     need_punch: 0,
 
+    head_of_department: 0,
+    annual_leave: 0,
+    sick_leave: 0,
+    is_manager: 0,
+
     ed_apartment_id: 0,
 
         // paging
@@ -354,6 +359,28 @@ var app = new Vue({
             }
         },
 
+        updateIsManager: function(event) {
+        
+            let checked = event.target.checked;
+            let value = event.target.value;
+            if (checked) {
+                this.is_manager = 1;
+            } else {
+                this.is_manager = 0;
+            }
+        },
+
+        updateHeadOfDepartment: function(event) {
+      
+            let checked = event.target.checked;
+            let value = event.target.value;
+            if (checked) {
+                this.head_of_department = 1;
+            } else {
+                this.head_of_department = 0;
+            }
+        },
+
         updateIsAdmin: function(event) {
           console.log("updateIsAdmin");
             let checked = event.target.checked;
@@ -408,8 +435,16 @@ var app = new Vue({
             formData.append('status', this.record.status)
             formData.append('is_admin', this.record.is_admin)
             formData.append('need_punch', this.record.need_punch)
+
+            formData.append('head_of_department', this.record.head_of_department)
+            formData.append('annual_leave', this.record.annual_leave)
+            formData.append('sick_leave', this.record.sick_leave)
+            formData.append('is_manager', this.record.is_manager)
+
             formData.append('apartment_id', this.ed_apartment_id)
             formData.append('title_id', this.record.title_id)
+
+            formData.append('al_credit')
            
             formData.append('crud', "update");
             formData.append('id', this.record.id);
@@ -520,6 +555,12 @@ var app = new Vue({
             formData.append('status', this.status)
             formData.append('is_admin', this.is_admin)
             formData.append('need_punch', this.need_punch)
+            
+            formData.append('head_of_department', this.head_of_department)
+            formData.append('annual_leave', this.annual_leave)
+            formData.append('sick_leave', this.sick_leave)
+            formData.append('is_manager', this.is_manager)
+
             formData.append('apartment_id', this.apartment_id)
             formData.append('title_id', this.title_id)
             formData.append('crud', 'insert')
@@ -558,6 +599,13 @@ var app = new Vue({
             this.status = 0;
             this.is_admin = '';
             this.need_punch = 0;
+
+            this.head_of_department = 0;
+            this.annual_leave = 0;
+            this.sick_leave = 0;
+            this.is_manager = 0;
+
+
             this.isEditing = false;
             this.record = {};
 
