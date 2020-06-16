@@ -161,6 +161,29 @@ var app = new Vue({
 
           this.submit = true;
 
+
+          var timeStart = '';
+          var amStart = 'A';
+          var timeEnd = '';
+          var amEnd = 'P';
+
+          if(this.is_manager)
+          {
+            var timeStart = this.apply_start.slice(0, 10);
+
+            var amStart = this.IsAm(this.apply_start);
+
+            var timeEnd = this.apply_end.slice(0, 10);
+
+            var amEnd = this.IsAm(this.apply_end);
+
+          }
+          else
+          {
+            var timeStart = this.apply_start.slice(0, 10);
+            var timeEnd = this.apply_end.slice(0, 10);
+          }
+
           var token = localStorage.getItem('token');
           var form_Data = new FormData();
           let _this = this;
@@ -180,6 +203,13 @@ var app = new Vue({
           form_Data.append('file', this.file);
           form_Data.append('leave', this.period);
           form_Data.append('reason', this.reason);
+
+            form_Data.append('is_manager', this.is_manager);
+            form_Data.append('timeStart', timeStart);
+            form_Data.append('amStart', amStart);
+            form_Data.append('timeEnd', timeEnd);
+            form_Data.append('amEnd', amEnd);
+
 
           axios({
             method: 'post',
@@ -203,8 +233,8 @@ var app = new Vue({
           .catch(function(error) {
                   //handle error
                   Swal.fire({
-                    text: JSON.stringify(error),
-                    icon: 'error',
+                    text: JSON.stringify(response.data.message),
+                    icon: 'warning',
                     confirmButtonText: 'OK'
                   })
                 });
@@ -342,6 +372,7 @@ var app = new Vue({
     var amStart = 'A';
     var timeEnd = '';
     var amEnd = 'P';
+
 
     if(this.is_manager)
     {

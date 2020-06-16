@@ -63,10 +63,20 @@ if($timeStart == '' && $timeEnd == '')
     die();
 }
 
-if($timeEnd > $timeStart)
+if($timeStart > $timeEnd)
 {
     http_response_code(401);
     echo json_encode(array("message" => "Apply Date not valid."));
+    die();
+}
+
+$startYear = substr($timeStart, 0, 4);
+$endYear = substr($timeEnd, 0, 4);
+
+if($startYear != $endYear)
+{
+    http_response_code(401);
+    echo json_encode(array("message" => "Leave accross years should be divided into 2 leave applications, leave this year and leave next year."));
     die();
 }
 
@@ -113,12 +123,18 @@ else
     array_push($leaves, $end->format("Ymd") . " P");
 }
 
-$query = "SELECT apply_date, apply_period  from `leave` where uid = " . $user_id . " and status = 0";
+$query = "SELECT apply_date, apply_period, leave_type  from `leave` where uid = " . $user_id . " and status = 0 and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
 $stmt = $db->prepare( $query );
 $stmt->execute();
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $apply_date = $row['apply_date'];
     $apply_period = $row['apply_period'];
+
+    if($row['leave_type'] == 'A')
+        $al_credit -= 0.5;
+
+    if($row['leave_type'] == 'B')
+        $sl_credit -= 0.5;
 
     array_push($applied, $apply_date . " " . $apply_period);
 }
@@ -126,7 +142,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 $inter = array_intersect($leaves, $applied);
 if(count($inter) > 0)
 {
-    http_response_code(405);
+    http_response_code(401);
 
     echo json_encode(array("message" => "Duplicate apply."));
     die();
@@ -146,5 +162,19 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 // 3. exclude holiday
 $result = array_diff($leaves, $holiday);
 
+if($leave_type == 'A')
+    $al_credit - count($result) * 0.5;
+if($leave_type == 'B')
+    $sl_credit - count($result) * 0.5;
+
+if($sl_credit < 0 || $al_credit < 0)
+{
+    http_response_code(401);
+
+    echo json_encode(array("message" => "Apply over yearly credit."));
+    die();
+}
+
+echo json_encode(array("period" => count($result) * 0.5));
 
 

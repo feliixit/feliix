@@ -17,6 +17,14 @@ $end_time = (isset($_POST['end_time']) ?  $_POST['end_time'] : '');
 $leave = (isset($_POST['leave']) ?  $_POST['leave'] : 0);
 $reason = (isset($_POST['reason']) ?  $_POST['reason'] : '');
 
+// parameter for check
+$is_manager = (isset($_POST['is_manager']) ?  $_POST['is_manager'] : '');
+$timeStart = (isset($_POST['timeStart']) ?  $_POST['timeStart'] : '');
+$amStart = (isset($_POST['amStart']) ?  $_POST['amStart'] : '');
+$timeEnd = (isset($_POST['timeEnd']) ?  $_POST['timeEnd'] : '');
+$amEnd = (isset($_POST['amEnd']) ?  $_POST['amEnd'] : '');
+$leave_type = (isset($_POST['leave_type']) ?  $_POST['leave_type'] : '');
+
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -25,13 +33,14 @@ include_once 'libs/php-jwt-master/src/JWT.php';
 
 include_once 'config/database.php';
 include_once 'objects/apply_for_leave.php';
+include_once 'objects/leave.php';
 include_once 'config/conf.php';
 
 $database = new Database();
 $db = $database->getConnection();
 
 $afl = new ApplyForLeave($db);
-
+$le = new Leave($db);
 
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
@@ -48,6 +57,132 @@ else
 
         $user_id = $decoded->data->id;
 
+        $leaves = array();
+        $applied = array();
+        $holiday = array();
+
+        if($timeStart == '' && $timeEnd == '')
+        {
+            http_response_code(401);
+            echo json_encode(array("message" => "Apply Date not valid."));
+            die();
+        }
+
+        if($timeStart > $timeEnd)
+        {
+            http_response_code(401);
+            echo json_encode(array("message" => "Apply Date not valid."));
+            die();
+        }
+
+        $startYear = substr($timeStart, 0, 4);
+        $endYear = substr($timeEnd, 0, 4);
+
+        if($startYear != $endYear)
+        {
+            http_response_code(401);
+            echo json_encode(array("message" => "Leave accross years should be divided into 2 leave applications, leave this year and leave next year."));
+            die();
+        }
+
+        // leave credit!
+        $al_credit = 0;
+        $sl_credit = 0;
+
+        $query = "SELECT is_manager, annual_leave, sick_leave from user where id = " . $user_id ;
+
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $is_manager = $row['is_manager'];
+            $al_credit = $row['annual_leave'];
+            $sl_credit = $row['sick_leave'];
+        }
+
+        // 1. Check if history have the same day
+        $begin = new DateTime($timeStart);
+        $end = new DateTime($timeEnd);
+
+
+        $interval = DateInterval::createFromDateString('1 day');
+        $period = new DatePeriod($begin, $interval, $end);
+
+        foreach ($period as $dt) {
+            array_push($leaves, $dt->format("Ymd") . " A");
+            array_push($leaves, $dt->format("Ymd") . " P");
+        }
+
+        array_push($leaves, $end->format("Ymd") . " A");
+
+        if($is_manager == "1")
+        {
+            if($amStart == "P")
+                unset($leaves[0]);
+
+            if($amEnd == "P")
+                array_push($leaves, $end->format("Ymd") . " P");
+        }
+        else
+        {
+            array_push($leaves, $end->format("Ymd") . " P");
+        }
+
+        $query = "SELECT apply_date, apply_period, leave_type  from `leave` where uid = " . $user_id . " and status = 0 and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $apply_date = $row['apply_date'];
+            $apply_period = $row['apply_period'];
+
+            if($row['leave_type'] == 'A')
+                $al_credit -= 0.5;
+
+            if($row['leave_type'] == 'B')
+                $sl_credit -= 0.5;
+
+            array_push($applied, $apply_date . " " . $apply_period);
+        }
+
+        $inter = array_intersect($leaves, $applied);
+        if(count($inter) > 0)
+        {
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Duplicate apply."));
+            die();
+        }
+
+        // 2. over credit
+        $query = "SELECT from_date FROM holiday";
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $from_date = $row['from_date'];
+
+            array_push($holiday, $from_date . " A");
+            array_push($holiday, $from_date . " P");
+        }
+
+        // 3. exclude holiday
+        $result = array_diff($leaves, $holiday);
+
+        if($leave_type == 'A')
+            $al_credit - count($result) * 0.5;
+        if($leave_type == 'B')
+            $sl_credit - count($result) * 0.5;
+
+        if($sl_credit < 0 || $al_credit < 0)
+        {
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Apply over yearly credit."));
+            die();
+        }
+
+        $leave = count($result) * 0.5;
+
+        // now you can apply
         $filename = "";
 
         try {
@@ -91,6 +226,23 @@ else
             echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
         }else
         {
+            foreach ($result as &$value) {
+                $leaf = explode(" ", $value);
+
+                $le->uid = $user_id;
+                $le->apply_id = $id;
+                $le->apply_date = $leaf[0];
+                $le->apply_period = $leaf[1];
+                $le->duration = 0.5;
+                $le->leave_type = $leave_type;
+                $res = $le->create();
+                if(empty($res))
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+            }
+
             http_response_code(200);
             echo json_encode(array("message" => "Apply Success at " . date("Y-m-d") . " " . date("h:i:sa")));
         }
@@ -104,82 +256,4 @@ else
         echo json_encode(array("message" => "Access denied."));
 
     }
-}
-
-function triphoto_getGPS($fileName)
-{
-    //get the EXIF
-    try{
-        $exif = exif_read_data($fileName);
-    }catch (Exception $e)
-    {
-        $result['latitude'] = 0.0;
-        $result['longitude'] = 0.0;
-        $result['time'] = "";
-        return $result;
-    }
-
-    try{
-        if($exif["GPSLatitudeRef"] == 'S')
-        {
-            $es=1;
-        }
-    }catch (Exception $e)
-    {
-        $result['latitude'] = 0.0;
-        $result['longitude'] = 0.0;
-        $result['time'] = "";
-        return $result;
-    }
-
-    //get the Hemisphere multiplier
-    $LatM = 1; $LongM = 1;
-    if($exif["GPSLatitudeRef"] == 'S')
-    {
-        $LatM = -1;
-    }
-    if($exif["GPSLongitudeRef"] == 'W')
-    {
-        $LongM = -1;
-    }
-
-    //get the GPS data
-    $gps['LatDegree']=$exif["GPSLatitude"][0];
-    $gps['LatMinute']=$exif["GPSLatitude"][1];
-    $gps['LatgSeconds']=$exif["GPSLatitude"][2];
-    $gps['LongDegree']=$exif["GPSLongitude"][0];
-    $gps['LongMinute']=$exif["GPSLongitude"][1];
-    $gps['LongSeconds']=$exif["GPSLongitude"][2];
-
-    //convert strings to numbers
-    foreach($gps as $key => $value)
-    {
-        $pos = strpos($value, '/');
-        if($pos !== false)
-        {
-            $temp = explode('/',$value);
-            if(!is_null($temp[1]) && $temp[1] != 0)
-                $gps[$key] = $temp[0] / $temp[1];
-            else
-                $gps[$key] = 0.0;
-        }
-    }
-
-    //calculate the decimal degree
-    $result['latitude'] = $LatM * ($gps['LatDegree'] + ($gps['LatMinute'] / 60) + ($gps['LatgSeconds'] / 3600));
-    $result['longitude'] = $LongM * ($gps['LongDegree'] + ($gps['LongMinute'] / 60) + ($gps['LongSeconds'] / 3600));
-    $result['time'] = $exif["DateTimeOriginal"];
-
-    return $result;
-
-}
-
-function compress_image($source_url, $destination_url, $quality)
-{
-    $info = getimagesize($source_url);
-    if ($info['mime'] == 'image/jpeg') $image = imagecreatefromjpeg($source_url);
-    elseif ($info['mime'] == 'image/gif') $image = imagecreatefromgif($source_url);
-    elseif ($info['mime'] == 'image/png') $image = imagecreatefrompng($source_url);
-    imagejpeg($image, $destination_url, $quality);
-    //echo "Image uploaded successfully.";
 }
