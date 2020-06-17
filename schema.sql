@@ -192,6 +192,9 @@ ADD COLUMN `sick_leave`  int(11) DEFAULT 0 after is_admin;
 ALTER TABLE user
 ADD COLUMN `is_manager`  int(11) DEFAULT 0 after is_admin;
 
+ALTER TABLE user
+ADD COLUMN `head_of_department`  int(11) DEFAULT 0 after is_admin;
+
 
 alter table on_duty change `pic_lat` `pic_lat` decimal(24, 12) default 0.0;
 

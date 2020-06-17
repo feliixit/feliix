@@ -443,8 +443,6 @@ var app = new Vue({
 
             formData.append('apartment_id', this.ed_apartment_id)
             formData.append('title_id', this.record.title_id)
-
-            formData.append('al_credit')
            
             formData.append('crud', "update");
             formData.append('id', this.record.id);
