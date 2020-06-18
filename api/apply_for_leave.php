@@ -168,9 +168,9 @@ else
         $result = array_diff($leaves, $holiday);
 
         if($leave_type == 'A')
-            $al_credit - count($result) * 0.5;
+            $al_credit -= count($result) * 0.5;
         if($leave_type == 'B')
-            $sl_credit - count($result) * 0.5;
+            $sl_credit -= count($result) * 0.5;
 
         if($sl_credit < 0 || $al_credit < 0)
         {

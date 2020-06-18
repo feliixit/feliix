@@ -162,10 +162,12 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 // 3. exclude holiday
 $result = array_diff($leaves, $holiday);
 
-if($leave_type == 'A')
-    $al_credit - count($result) * 0.5;
-if($leave_type == 'B')
-    $sl_credit - count($result) * 0.5;
+if($leave_type == 'A') {
+    $al_credit = $al_credit - count($result) * 0.5;
+}
+if($leave_type == 'B') {
+    $sl_credit = $sl_credit - count($result) * 0.5;
+}
 
 if($sl_credit < 0 || $al_credit < 0)
 {
