@@ -218,7 +218,7 @@ $(function(){
                         <li style="font-size:10px;">{{record.email}}</li>
                         <li style="font-size:10px;">{{record.department}}</li>
                         <li style="font-size:10px;">{{record.title}}</li>
-                        <li style="font-size:10px;">{{ (record.status == 1) ? "Y" : "N" }}/{{ (record.is_admin == '1') ? "Y" : "N" }}/{{ (record.need_punch == 1) ? "Y" : "N" }}</li>
+                        <li style="font-size:10px;">{{ (record.status == 1) ? "Y" : "N" }}/{{ (record.is_admin == '1') ? "Y" : "N" }}/{{ (record.need_punch == 1) ? "Y" : "N" }}/{{ (record.is_manager == 1) ? "Y" : "N" }}/{{ (record.head_of_department == 1) ? "Y" : "N" }}</li>
                         
                     </ul>
                     

@@ -86,10 +86,23 @@ var app = new Vue({
       return mdy;
     },
 
-    IsAm: function(str) {
-      var mdy = str.slice(-5).replace(/:/g,"");;
+    normalize: function(str) {
+      var mdy = str.slice(-5).replace(/:/g,"");
 
-      if(mdy >= '1230')
+      if(mdy < '0830')
+        return str.slice(0, 10) + "T08:30";
+      
+      if(mdy > '1730')
+        return str.slice(0, 10) + "T17:30";
+
+      return str;
+
+    },
+
+    IsAm: function(str) {
+      var mdy = str.slice(-5).replace(/:/g,"");
+
+      if(mdy > '1230')
         return "P";
       else
         return "A";
@@ -166,6 +179,9 @@ var app = new Vue({
           var amStart = 'A';
           var timeEnd = '';
           var amEnd = 'P';
+
+          this.apply_start = this.normalize(this.apply_start);
+          this.apply_end = this.normalize(this.apply_end);
 
           if(this.is_manager)
           {
@@ -367,6 +383,19 @@ var app = new Vue({
 
     if(this.leave_type == "")
       return;
+
+    if(this.apply_start > this.apply_end)
+    {
+      Swal.fire({
+        text: JSON.stringify("Apply time no valid."),
+        icon: 'warning',
+        confirmButtonText: 'OK'
+      })
+      return;
+    }
+
+    this.apply_start = this.normalize(this.apply_start);
+    this.apply_end = this.normalize(this.apply_end);
 
     var timeStart = '';
     var amStart = 'A';
