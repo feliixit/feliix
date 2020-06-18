@@ -56,7 +56,7 @@ class ApplyForLeave
             $this->end_time = htmlspecialchars(strip_tags($this->end_time));
             $this->leave_type = htmlspecialchars(strip_tags($this->leave_type));
 
-            $this->leave = (int) $this->leave;
+            $this->leave = (float) $this->leave;
            
             $this->pic_url = htmlspecialchars(strip_tags($this->pic_url));
             $this->reason = htmlspecialchars(strip_tags($this->reason));
