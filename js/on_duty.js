@@ -15,6 +15,8 @@ var app = new Vue({
     piclatitude: 0,
     piclongitude: 0,
 
+    file: '',
+
     isCameraOpen: false,
     imageCapture: {},
     photo_time:'',

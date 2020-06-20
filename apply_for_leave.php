@@ -175,7 +175,7 @@ $(function(){
 
                     <ul v-if="showExtra">
                         <li class="head" v-if="showExtra">Certificate of Diagnosis</li>
-                        <li v-if="showExtra"><input type="file" id="file" ref="file" accept="image/*" capture="camera"></li>
+                        <li v-if="showExtra"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera"></li>
                     </ul>
                     
                     <div class="group">

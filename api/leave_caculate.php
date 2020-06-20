@@ -83,8 +83,9 @@ if($startYear != $endYear)
 // leave credit!
 $al_credit = 0;
 $sl_credit = 0;
+$manager_leave = 0;
 
-$query = "SELECT is_manager, annual_leave, sick_leave from user where id = " . $user_id ;
+$query = "SELECT is_manager, annual_leave, sick_leave, manager_leave from user where id = " . $user_id;
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -93,6 +94,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $is_manager = $row['is_manager'];
     $al_credit = $row['annual_leave'];
     $sl_credit = $row['sick_leave'];
+    $manager_leave = $row['manager_leave'];
 }
 
 // 1. Check if history have the same day
@@ -136,6 +138,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($row['leave_type'] == 'B')
         $sl_credit -= 0.5;
 
+    if($is_manager == "1")
+        $manager_leave -= 0.5;
+
     array_push($applied, $apply_date . " " . $apply_period);
 }
 
@@ -169,7 +174,18 @@ if($leave_type == 'B') {
     $sl_credit = $sl_credit - count($result) * 0.5;
 }
 
-if($sl_credit < 0 || $al_credit < 0)
+if($is_manager == "1")
+        $manager_leave -= count($result) * 0.5;
+
+if($is_manager == "1" && $manager_leave < 0 && $leave_type != 'C')
+{
+    http_response_code(401);
+
+    echo json_encode(array("message" => "Apply over yearly credit."));
+    die();
+}
+
+if($is_manager != "1" && $leave_type != 'C' && ($sl_credit < 0 || $al_credit < 0))
 {
     http_response_code(401);
 

@@ -101,7 +101,7 @@ $(function(){
 
                 <div class="btnbox">
                     <a class="btn" @click="detail">Detail</a>
-                    <a class="btn" @click="apply" :disabled="submit">Redraw</a>
+                    <a class="btn" @click="apply" :disabled="submit">Withdraw</a>
                 </div>
             </div>
 
@@ -109,6 +109,10 @@ $(function(){
                     <ul class="head">
                         <li class="head">Leave Type</li>
                         <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : 'Absence') }}</li>
+                    </ul>
+                    <ul>
+                        <li class="head">Application Time</li>
+                        <li>{{ record.created_at.replace(/-/g,"/").substring(0, 16) }}</li>
                     </ul>
                     <ul>
                         <li class="head">Start Time</li>
@@ -119,12 +123,16 @@ $(function(){
                         <li>{{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
                     </ul>
                     <ul>
-                        <li class="head">Leave</li>
+                        <li class="head">Length</li>
                         <li>{{ record.le }} </li>
                     </ul>
                     <ul>
                         <li class="head">Reason</li>
                         <li>{{ record.reason }}</li>
+                    </ul>
+                    <ul v-if="record.pic_url != ''">
+                        <li class="head">Certificate of Diagnosis</li>
+                        <li><a v-bind:href="'img/' + record.pic_url"><i class="fas fa-image"></i></a></li>
                     </ul>
                 </div>
             
@@ -139,6 +147,7 @@ $(function(){
 <script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
 <script src="//unpkg.com/element-ui"></script>
 <script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
 
 <script>
   ELEMENT.locale(ELEMENT.lang.en)

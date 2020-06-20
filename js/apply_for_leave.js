@@ -27,6 +27,8 @@ var app = new Vue({
     manager_leave: 0,
 
     is_manager: 0,
+
+    file: '',
   },
 
   created () {
@@ -101,14 +103,24 @@ var app = new Vue({
 
     },
 
-    IsAm: function(str) {
+    IsAm: function(str, is_apply_start) {
       var mdy = str.slice(-5).replace(/:/g,"");
+
+      if(is_apply_start && mdy === '1230')
+        return "P";
+
+      if(!is_apply_start && mdy === '1230')
+        return "A";
 
       if(mdy > '1230')
         return "P";
       else
         return "A";
     },
+
+    onChangeFileUpload() {
+          this.file = this.$refs.file.files[0];
+      },
 
     sliceDate: function(str) {
       var mdy = str.slice(0, 10);
@@ -189,11 +201,11 @@ var app = new Vue({
           {
             var timeStart = this.apply_start.slice(0, 10);
 
-            var amStart = this.IsAm(this.apply_start);
+            var amStart = this.IsAm(this.apply_start, true);
 
             var timeEnd = this.apply_end.slice(0, 10);
 
-            var amEnd = this.IsAm(this.apply_end);
+            var amEnd = this.IsAm(this.apply_end, false);
 
           }
           else
@@ -272,11 +284,11 @@ var app = new Vue({
           {
             var timeStart = this.parseDate(this.apply_start);
 
-            var amStart = this.IsAm(this.apply_start);
+            var amStart = this.IsAm(this.apply_start, true);
 
             var timeEnd = this.parseDate(this.apply_end);
 
-            var amEnd = this.IsAm(this.apply_end);
+            var amEnd = this.IsAm(this.apply_end, false);
 
             var days = Math.round((timeEnd-timeStart)/(1000*60*60*24)) + 1;
 
@@ -411,11 +423,11 @@ var app = new Vue({
     {
       var timeStart = this.apply_start.slice(0, 10);
 
-      var amStart = this.IsAm(this.apply_start);
+      var amStart = this.IsAm(this.apply_start, true);
 
       var timeEnd = this.apply_end.slice(0, 10);
 
-      var amEnd = this.IsAm(this.apply_end);
+      var amEnd = this.IsAm(this.apply_end, false);
 
     }
     else
@@ -480,6 +492,9 @@ var app = new Vue({
             //handle success
             _this.name = response.data.username;
             _this.is_manager = response.data.is_manager;
+            _this.manager_leave = response.data.manager_leave;
+            _this.al_credit = response.data.annual_leave;
+            _this.sl_credit = response.data.sick_leave;
 
           })
     .catch(function(response) {

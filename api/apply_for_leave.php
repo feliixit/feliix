@@ -88,8 +88,9 @@ else
         // leave credit!
         $al_credit = 0;
         $sl_credit = 0;
+        $manager_leave = 0;
 
-        $query = "SELECT is_manager, annual_leave, sick_leave from user where id = " . $user_id ;
+        $query = "SELECT is_manager, annual_leave, sick_leave, manager_leave from user where id = " . $user_id;
 
         $stmt = $db->prepare( $query );
         $stmt->execute();
@@ -98,6 +99,7 @@ else
             $is_manager = $row['is_manager'];
             $al_credit = $row['annual_leave'];
             $sl_credit = $row['sick_leave'];
+            $manager_leave = $row['manager_leave'];
         }
 
         // 1. Check if history have the same day
@@ -141,6 +143,9 @@ else
             if($row['leave_type'] == 'B')
                 $sl_credit -= 0.5;
 
+            if($is_manager == "1")
+                $manager_leave -= 0.5;
+
             array_push($applied, $apply_date . " " . $apply_period);
         }
 
@@ -171,8 +176,18 @@ else
             $al_credit -= count($result) * 0.5;
         if($leave_type == 'B')
             $sl_credit -= count($result) * 0.5;
+        if($is_manager == "1")
+                $manager_leave -= count($result) * 0.5;
 
-        if($sl_credit < 0 || $al_credit < 0)
+        if($is_manager == "1" && $manager_leave < 0 && $leave_type != 'C')
+        {
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Apply over yearly credit."));
+            die();
+        }
+
+        if($is_manager != "1" && $leave_type != 'C' && ($sl_credit < 0 || $al_credit < 0))
         {
             http_response_code(401);
 
@@ -194,7 +209,7 @@ else
                 $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
                 $filename = $time . $hash . "." . $ext;
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $conf::$upload_path . $filename)) {
-                        echo "done";
+                    //    echo "done";
                 }
                 // certificate doesn't need compress.
                 // compress_image($conf::$upload_path . $filename, $conf::$upload_path . $filename, 60);
