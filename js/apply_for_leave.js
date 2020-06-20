@@ -24,6 +24,8 @@ var app = new Vue({
     pl_taken: 0,
     pl_approval: 0,
 
+    manager_leave: 0,
+
     is_manager: 0,
   },
 
@@ -367,6 +369,8 @@ var app = new Vue({
 
       _this.pl_taken = response.data[0].pl_taken;
       _this.pl_approval = response.data[0].pl_approval;
+
+      _this.manager_leave = response.data[0].manager_leave;
 
     })
     .catch(function(error) {

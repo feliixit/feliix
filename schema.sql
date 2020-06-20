@@ -366,4 +366,6 @@ CREATE TABLE IF NOT EXISTS `leave` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
-
+-- 20200620 for manager leave credit
+ALTER TABLE user
+ADD COLUMN `manager_leave`  int(11) DEFAULT 0 after is_admin;

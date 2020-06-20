@@ -74,7 +74,10 @@ if($sdate1 == '' && $sdate2 == '')
 $al_credit = 0;
 $sl_credit = 0;
 
-$query = "SELECT annual_leave, sick_leave from user where id = " . $user_id ;
+$manager_leave = 0;
+$is_manager = 0;
+
+$query = "SELECT annual_leave, sick_leave, manager_leave, is_manager from user where id = " . $user_id ;
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -82,6 +85,9 @@ $stmt->execute();
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $al_credit = $row['annual_leave'];
     $sl_credit = $row['sick_leave'];
+
+    $manager_leave = $row['manager_leave'];
+    $is_manager = $row['is_manager'];
 }
 
 
@@ -143,6 +149,8 @@ $merged_results[] = array(
 
     "pl_taken" => $pl_taken,
     "pl_approval" => $pl_approval,
+
+    "manager_leave" => $manager_leave,
 );
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);

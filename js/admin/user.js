@@ -23,6 +23,7 @@ let mainState = {
     head_of_department: 0,
     annual_leave: 0,
     sick_leave: 0,
+    manager_leave: 0,
     is_manager: 0,
 
     ed_apartment_id: 0,
@@ -439,6 +440,7 @@ var app = new Vue({
             formData.append('head_of_department', this.record.head_of_department)
             formData.append('annual_leave', this.record.annual_leave)
             formData.append('sick_leave', this.record.sick_leave)
+            formData.append('manager_leave', this.record.manager_leave)
             formData.append('is_manager', this.record.is_manager)
 
             formData.append('apartment_id', this.ed_apartment_id)
@@ -557,6 +559,7 @@ var app = new Vue({
             formData.append('head_of_department', this.head_of_department)
             formData.append('annual_leave', this.annual_leave)
             formData.append('sick_leave', this.sick_leave)
+            formData.append('manager_leave', this.manager_leave)
             formData.append('is_manager', this.is_manager)
 
             formData.append('apartment_id', this.apartment_id)
@@ -601,6 +604,7 @@ var app = new Vue({
             this.head_of_department = 0;
             this.annual_leave = 0;
             this.sick_leave = 0;
+            this.manager_leave = 0;
             this.is_manager = 0;
 
 

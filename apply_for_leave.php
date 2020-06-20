@@ -50,6 +50,14 @@ $(function(){
 })
 </script>
 
+<style type="text/css">
+    .box-content  table {border-top: 2px solid var(--pri01a);
+    border-left: 2px solid var(--pri01a);
+    width: 100%;}
+    .box-content  table  tr   th { background-color: var(--pri01c); font-weight: 800; border-bottom: 2px solid var(--pri01a); border-right: 2px solid var(--pri01a);text-align: center; padding: 10px;}
+    .box-content   table   tr   td { font-weight: 800; border-bottom: 2px solid var(--pri01a); border-right: 2px solid var(--pri01a);text-align: center; padding: 10px;}
+</style>
+
 </head>
 
 <body class="primary">
@@ -87,7 +95,35 @@ $(function(){
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="tablebox">
+
+                <table v-if="is_manager">
+                  <tr>
+                    <th>Leave Type</th>
+                    <th>Yearly Credits</th>
+                    <th>Taken</th>
+                    <th>Waiting for Approval</th>
+                  </tr>
+                  <tr>
+                    <td>Vacation Leave</td>
+                    <td rowspan="2">{{ manager_leave }} Days</td>
+                    <td>{{ al_taken }} Days</td>
+                    <td>{{ al_approval }} Days</td>
+                  </tr>
+                  <tr>
+                    <td>Emerency/Sick Leave</td>
+               
+                    <td>{{ sl_taken }} Days</td>
+                    <td>{{ sl_approval }} Days</td>
+                  </tr>
+                  <tr>
+                    <td>Absence</td>
+                    <td>--</td>
+                    <td>{{ pl_taken }} Days</td>
+                    <td>{{ pl_approval }} Days</td>
+                  </tr>
+                </table>
+
+                <div class="tablebox" v-else>
                     <ul class="head">
                         <li>Leave Type</li>
                         <li>Yearly Credits</li>

@@ -116,6 +116,8 @@ $(function(){
                         <li style="padding-bottom:10px;"><input type="text" v-model="annual_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
                         <li><b>Yearly Sick Leave</b></li>
                         <li style="padding-bottom:10px;"><input type="text" v-model="sick_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
+                        <li><b>Manager Leave</b></li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="manager_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="is_manager" id="is_manager" :true-value="1" v-model:checked="is_manager" @change="updateIsManager">
                             <label for="is_manager">Is Manager</label>
@@ -183,6 +185,8 @@ $(function(){
                         <li style="padding-bottom:10px;"><input type="text" v-model="record.annual_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
                         <li><b>Yearly Sick Leave</b></li>
                         <li style="padding-bottom:10px;"><input type="text" v-model="record.sick_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
+                        <li><b>Manager Leave</b></li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="record.manager_leave" required onfocus="this.placeholder = ''"  maxlength="5" onblur="this.placeholder = ''" style="width:100%" ></li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="is_manager" id="is_manager" :true-value="1" v-model:checked="record.is_manager" @change="updateIsManager">
                             <label for="is_manager">Is Manager</label>

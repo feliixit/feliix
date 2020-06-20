@@ -22,6 +22,7 @@ class User{
     public $head_of_department;
     public $annual_leave;
     public $sick_leave;
+    public $manager_leave;
     public $is_manager;
  
     // constructor
@@ -43,6 +44,7 @@ class User{
                     head_of_department = :head_of_department,
                     annual_leave = :annual_leave,
                     sick_leave = :sick_leave,
+                    manager_leave = :manager_leave,
                     is_manager = :is_manager,
                     apartment_id = :apartment_id,
                     title_id = :title_id,
@@ -62,6 +64,7 @@ class User{
         $this->head_of_department = ($this->head_of_department ? $this->head_of_department : 0);
         $this->annual_leave = ($this->annual_leave ? $this->annual_leave : 0);
         $this->sick_leave = ($this->sick_leave ? $this->sick_leave : 0);
+        $this->manager_leave = ($this->manager_leave ? $this->manager_leave : 0);
         $this->is_manager = ($this->is_manager ? $this->is_manager : 0);
 
         $this->is_admin = ($this->is_admin ? $this->is_admin : '0');
@@ -79,6 +82,7 @@ class User{
         $stmt->bindParam(':head_of_department', $this->head_of_department);
         $stmt->bindParam(':annual_leave', $this->annual_leave);
         $stmt->bindParam(':sick_leave', $this->sick_leave);
+        $stmt->bindParam(':manager_leave', $this->manager_leave);
         $stmt->bindParam(':is_manager', $this->is_manager);
 
         $stmt->bindParam(':apartment_id', $this->apartment_id);
@@ -143,7 +147,7 @@ class User{
     function userCanLogin(){
         // query to check if email exists
         $query = "SELECT user.id, username, password, user.status, is_admin, need_punch, COALESCE(department, '') department, 
-                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, is_manager, user_title.head_of_department
+                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, is_manager, manager_leave, user_title.head_of_department
                 FROM " . $this->table_name . "
                 LEFT JOIN user_department ON user.apartment_id = user_department.id 
                 LEFT JOIN user_title ON user.title_id = user_title.id
@@ -181,6 +185,7 @@ class User{
             $this->position = $row['title'];
             $this->head_of_department = $row['head_of_department'];
             $this->sick_leave = $row['sick_leave'];
+            $this->manager_leave = $row['manager_leave'];
             $this->annual_leave = $row['annual_leave'];
             $this->title_id = $row['title_id'];
             $this->apartment_id = $row['apartment_id'];
@@ -273,6 +278,7 @@ class User{
                     annual_leave = :annual_leave,
                     is_manager = :is_manager,
                     sick_leave = :sick_leave,
+                    manager_leave = :manager_leave,
 
                     apartment_id = :apartment_id,
                     title_id = :title_id,
@@ -298,6 +304,8 @@ class User{
         $stmt->bindParam(':annual_leave', $this->annual_leave);
         $stmt->bindParam(':is_manager', $this->is_manager);
         $stmt->bindParam(':sick_leave', $this->sick_leave);
+
+        $stmt->bindParam(':manager_leave', $this->manager_leave);
         
         $stmt->bindParam(':apartment_id', $this->apartment_id);
         $stmt->bindParam(':title_id', $this->title_id);
