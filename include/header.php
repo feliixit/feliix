@@ -65,7 +65,7 @@ try {
                 <a class="uni">Employee<br>Attendance</a>
                 <a class="list" href="on_duty">Punch In/Out</a>
                 <a class="list" href="apply_for_leave">Leave</a>
-                <a class="list">Query/Ammend</a>
+                <a class="list" href="ammend">Query/Ammend</a>
             </li>
             <li class="sec03">
                 <a class="uni">Payment<br>Request/Claim</a>

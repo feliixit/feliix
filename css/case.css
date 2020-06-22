@@ -148,3 +148,28 @@ body.second .mainContent > .block .tablebox > ul.head > li,
 body.second .mainContent > .tags a{ background-color:#EFEFEF;}
 body.second .mainContent > .tags a.focus{background-color:var(--sec01);}
 
+
+/* -------------------------- */
+/* body.third Style (Blue) */
+/* -------------------------- */
+
+body.third .mainContent > .block,
+body.third .mainContent > .block h6,
+body.third .mainContent > .block .tablebox,
+body.third .mainContent > .block .tablebox > ul > li,
+body.third .mainContent > .block .tablebox2,
+body.third .mainContent > .block .formbox,
+body.third .mainContent > .block .formbox dd,
+body.third .mainContent > .tags a{ border-color: var(--sec03);}
+
+body.third .mainContent > .block h6{ color: var(--sec03);}
+
+body.third .mainContent > .block .tablebox > ul.head > li,
+body.third .mainContent > .tags a{ background-color:#EFEFEF;}
+body.third .mainContent > .tags a.focus{background-color:var(--sec03);}
+
+body.third .mainContent > .block .tablebox{ border-top: 2px solid var(--sec03); border-left: 2px solid var(--sec03); width: 100%;}
+body.third .mainContent > .block .tablebox > ul > li{text-align: center; padding: 10px; border-bottom: 2px solid var(--sec03); border-right: 2px solid var(--sec03); font-weight: 500; font-size: 16px; vertical-align: middle;}
+body.third .mainContent > .block .tablebox ul.head,
+body.third .mainContent > .block .formbox li.head{ background-color: var(--sec03); font-weight: 800;}
+body.third .mainContent > .block .tablebox ul.head li{ font-weight: 800;}

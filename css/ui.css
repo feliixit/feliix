@@ -298,3 +298,33 @@ body.second select {background-image: url(../images/ui/icon_form_select_arrow_ye
 
 body.second a.btn{background-color:var(--sec01); }
 body.second a.btn:hover{background-color:var(--gray02);}
+
+
+/* -------------------------- */
+/* body.third Style (Yellow) */
+/* -------------------------- */
+body.third input.alone[type=radio]::before,
+body.third input.alone[type=checkbox]::before,
+body.third input[type=checkbox]+Label::before,
+body.third input[type=radio]+Label::before{ color: var(--sec03);}
+
+body.third input[type=range],
+body.third input[type=text],
+body.third input[type=password],
+body.third input[type=file],
+body.third input[type=number],
+body.third input[type=url],
+body.third input[type=email],
+body.third input[type=tel],
+body.third input[list],
+body.third input[type=button],
+body.third input[type=submit],
+body.third button,
+body.third textarea,
+body.third select,
+body.third output{ border-color: var(--sec03);}
+
+body.third select {background-image: url(../images/ui/icon_form_select_arrow_blue.svg);}
+
+body.third a.btn{background-color:var(--sec03); }
+body.third a.btn:hover{background-color:var(--gray02);}

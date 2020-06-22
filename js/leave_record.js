@@ -16,7 +16,7 @@ var app = new Vue({
   },
 
   created () {
-    this.getLeaveCredit();
+    
     this.getUserName();
 
   },
@@ -29,14 +29,16 @@ var app = new Vue({
   },
 
   mounted(){
-   
+   var d1 = new Date();
+    this.month1 = d1;
+
+    $('#start').val(d1.toISOString().slice(0,7).replace(/-/g,"-"));
+
+    this.getLeaveCredit();
+    
   },
 
   watch: {
-
-      month1 () {
-        this.getLeaveCredit();
-      },
 
       picked () {
         this.getLeaveCredit();
@@ -51,18 +53,19 @@ var app = new Vue({
     getLeaveCredit: function() {
       let _this = this;
 
-      if (this.month1 === undefined)
+
+      if ($('#start').val()  === undefined)
         return;
 
-      if (this.month1 === '')
+      if ($('#start').val() === '')
         return;
 
         var sdate1 = '';
         var edate1 = '';
 
-      if(this.month1)
+      if($('#start').val())
       {
-        var d1 = new Date(this.month1);
+        var d1 = new Date($('#start').val() + '-01');
         sdate1 = d1.toISOString().slice(0,10).replace(/-/g,"");
         var newDate1 = new Date(d1.setMonth(d1.getMonth()+1));
         edate1 = newDate1.toISOString().slice(0,10).replace(/-/g,"");
@@ -72,6 +75,7 @@ var app = new Vue({
           .then(function(response) {
               console.log(response.data);
               _this.receive_records = response.data;
+
 
           })
           .catch(function(error) {
@@ -119,6 +123,15 @@ var app = new Vue({
           //$(".alone").prop("checked", false);
           //this.clicked = false;
         },
+
+      showPic(pic)
+      {
+        Swal.fire({
+          title: 'Certificate of Diagnosis',
+          text: 'Click to close',
+          imageUrl: 'img/' + pic,
+        })
+      },
 
       delReceiveRecord: function(id) {
             let _this = this;

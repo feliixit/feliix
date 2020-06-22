@@ -74,7 +74,7 @@ $(function(){
                        <input name="LeaveType" type="radio" value="A" id="A" class="green" checked v-model="picked"><label for="A">All</label>
                         <input name="LeaveType" type="radio" value="P" id="A2" class="blue"  v-model="picked"><label for="A2">Waiting for Approval</label>
             
-                        <input type="month" id="start" name="start" v-model="month1">
+                        <input type="month" id="start" name="start" @change="getLeaveCredit()">
 
                     </div>
 
@@ -103,9 +103,8 @@ $(function(){
                     <a class="btn" @click="detail">Detail</a>
                     <a class="btn" @click="apply" :disabled="submit">Withdraw</a>
                 </div>
-            </div>
 
-            <div class="tablebox" v-if="view_detail">
+                <div class="tablebox" v-if="view_detail">
                     <ul class="head">
                         <li class="head">Leave Type</li>
                         <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : 'Absence') }}</li>
@@ -123,8 +122,8 @@ $(function(){
                         <li>{{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
                     </ul>
                     <ul>
-                        <li class="head">Length</li>
-                        <li>{{ record.le }} </li>
+                        <li class="head">Leave Length</li>
+                        <li>{{ record.le }} Days</li>
                     </ul>
                     <ul>
                         <li class="head">Reason</li>
@@ -132,9 +131,12 @@ $(function(){
                     </ul>
                     <ul v-if="record.pic_url != ''">
                         <li class="head">Certificate of Diagnosis</li>
-                        <li><a v-bind:href="'img/' + record.pic_url"><i class="fas fa-image"></i></a></li>
+                        <li><i class="fas fa-image"  @click="showPic(record.pic_url)"></i></li>
                     </ul>
                 </div>
+            </div>
+
+            
             
         </div>
     </div>
