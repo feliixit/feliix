@@ -41,6 +41,8 @@ include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
+$merged_results = [];
+
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 
 

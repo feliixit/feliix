@@ -179,7 +179,7 @@ else
         if($is_manager == "1")
                 $manager_leave -= count($result) * 0.5;
 
-        if($is_manager == "1" && $manager_leave < 0 && $leave_type != 'C')
+        if($is_manager == "1" && $manager_leave < 0 && $leave_type != 'C' && $leave_type != 'D')
         {
             http_response_code(401);
 
@@ -187,7 +187,7 @@ else
             die();
         }
 
-        if($is_manager != "1" && $leave_type != 'C' && ($sl_credit < 0 || $al_credit < 0))
+        if($is_manager != "1" && $leave_type != 'C' && $leave_type != 'D' && ($sl_credit < 0 || $al_credit < 0))
         {
             http_response_code(401);
 
@@ -252,6 +252,24 @@ else
                 $le->leave_type = $leave_type;
                 $res = $le->create();
                 if(empty($res))
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+            }
+
+            if($leave_type == 'D')
+            {
+                $ret = false;
+                $ret = $afl->approval($id, $user_id);
+                if(!$ret)
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+
+                $ret = $afl->re_approval($id, $user_id);
+                if(!$ret)
                 {
                     http_response_code(401);
                     echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));

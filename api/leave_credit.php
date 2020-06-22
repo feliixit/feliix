@@ -63,6 +63,9 @@ if($sdate1 == '' && $sdate2 == '')
 
         "pl_taken" => 0,
         "pl_approval" => 0,
+
+        "ab_taken" => 0,
+        "ab_approval" => 0,
     );
 
     echo json_encode($merged_results, JSON_UNESCAPED_SLASHES); 
@@ -92,10 +95,10 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 /* fetch data */
-if($sdate2 != "")
-    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate2 . "' and status = '' and uid = " . $user_id . " group by leave_type,  CASE WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
+if($edate2 != "")
+    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate2 . "' and status = '' and uid = " . $user_id . " group by leave_type,  CASE WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
 else
-    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date > '" . $sdate1 . "' AND end_date < '" . $edate1 . "' and status = '' and uid = " . $user_id . " group by leave_type,  CASE WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
+    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate1 . "' and status = '' and uid = " . $user_id . " group by leave_type,  CASE WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -110,6 +113,9 @@ $sl_approval = 0;
 
 $pl_taken = 0;
 $pl_approval = 0;
+
+$ab_taken = 0;
+$ab_approval = 0;
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $le = $row['le'];
@@ -135,6 +141,10 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             else
                 $pl_approval += $le;
             break;
+        case "D":
+                $ab_taken += $le;
+                $ab_approval += $le;
+            break;
     }
 }
 
@@ -149,6 +159,9 @@ $merged_results[] = array(
 
     "pl_taken" => $pl_taken,
     "pl_approval" => $pl_approval,
+
+    "ab_taken" => $ab_taken,
+    "ab_approval" => $ab_approval,
 
     "manager_leave" => $manager_leave,
 );

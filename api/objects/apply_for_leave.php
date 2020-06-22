@@ -34,6 +34,68 @@ class ApplyForLeave
         $this->conn = $db;
     }
 
+    function approval($id, $uid)
+    {
+        $query = "UPDATE " . $this->table_name . "
+                set approval_id = :uid, approval_at = now() where id = :id";
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':uid', $uid);
+        $stmt->bindParam(':id', $id);
+
+    try {
+        // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+                return true;
+            }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                return false;
+            }
+        }
+        catch (Exception $e)
+        {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    function re_approval($id, $uid)
+    {
+        $query = "UPDATE " . $this->table_name . "
+                set re_approval_id = :uid, re_approval_at = now() where id = :id";
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':uid', $uid);
+        $stmt->bindParam(':id', $id);
+
+    try {
+        // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+                return true;
+            }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                return false;
+            }
+        }
+        catch (Exception $e)
+        {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
     // create new user record
     function create()
     {

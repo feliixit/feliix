@@ -177,7 +177,7 @@ if($leave_type == 'B') {
 if($is_manager == "1")
         $manager_leave -= count($result) * 0.5;
 
-if($is_manager == "1" && $manager_leave < 0 && $leave_type != 'C')
+if($is_manager == "1" && $manager_leave < 0 && $leave_type != 'C' && $leave_type != 'D')
 {
     http_response_code(401);
 
@@ -185,7 +185,7 @@ if($is_manager == "1" && $manager_leave < 0 && $leave_type != 'C')
     die();
 }
 
-if($is_manager != "1" && $leave_type != 'C' && ($sl_credit < 0 || $al_credit < 0))
+if($is_manager != "1" && $leave_type != 'C' && $leave_type != 'D' && ($sl_credit < 0 || $al_credit < 0))
 {
     http_response_code(401);
 

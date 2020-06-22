@@ -3,8 +3,7 @@ var app = new Vue({
   el: '#app',
   data:{
     name: "",
-    month1:'',
-    month2:'',
+
     apply_start:'',
     apply_end:'',
     period : 0,
@@ -24,6 +23,9 @@ var app = new Vue({
     pl_taken: 0,
     pl_approval: 0,
 
+    ab_taken: 0,
+    ab_approval: 0,
+
     manager_leave: 0,
 
     is_manager: 0,
@@ -34,7 +36,6 @@ var app = new Vue({
   created () {
     this.getRecords();
     this.getUserName();
-    this.getLeaveCredit();
   },
 
   computed: {
@@ -48,7 +49,15 @@ var app = new Vue({
   },
 
   mounted(){
+    var d1 = new Date();
 
+    var today = new Date();
+      var d2 =  new Date(today.getFullYear(), today.getMonth()+1, 0);
+
+    $('#start').val(d1.toISOString().slice(0,4) + "-01");
+    $('#end').val(d2.toISOString().slice(0,7));
+
+    this.getLeaveCredit();
   },
 
   watch: {
@@ -67,13 +76,6 @@ var app = new Vue({
       this.getUserPeriod();
     },
 
-    month1 () {
-      this.getLeaveCredit();
-    },
-
-    month2 () {
-      this.getLeaveCredit();
-    },
   },
 
 
@@ -197,6 +199,7 @@ var app = new Vue({
           this.apply_start = this.normalize(this.apply_start);
           this.apply_end = this.normalize(this.apply_end);
 
+
           if(this.is_manager)
           {
             var timeStart = this.apply_start.slice(0, 10);
@@ -272,59 +275,6 @@ var app = new Vue({
           this.submit = false;
         },
 
-        setPeriod: function() {
-
-          if (this.apply_start === undefined || this.apply_end === undefined)
-            return;
-
-          if (this.apply_start === '' || this.apply_end === '')
-            return;
-
-          if(this.is_manager)
-          {
-            var timeStart = this.parseDate(this.apply_start);
-
-            var amStart = this.IsAm(this.apply_start, true);
-
-            var timeEnd = this.parseDate(this.apply_end);
-
-            var amEnd = this.IsAm(this.apply_end, false);
-
-            var days = Math.round((timeEnd-timeStart)/(1000*60*60*24)) + 1;
-
-            if(!isNaN(days) && days > 0)
-            {
-              if(amStart === "P")
-                days = days - .5;
-
-              if(amEnd === "A")
-                days = days - .5;
-
-              this.period = days;
-            }
-          }
-          else
-          {
-            var timeStart = this.parseDate(this.apply_start);
-            var timeEnd = this.parseDate(this.apply_end);
-
-            var days = Math.round((timeEnd-timeStart)/(1000*60*60*24)) + 1;
-
-            if(!isNaN(days) && days > 0)
-              this.period = days;
-          }
-
-      //var timeStart = new Date(app.apply_start);
-      //var timeEnd = new Date(app.apply_end);
-
-      //var diff = (timeEnd - timeStart) / 60000; //dividing by seconds and milliseconds
-
-      //var minutes = diff % 60;
-     //var hours = (diff - minutes) / 60;
-
-
-   },
-
    getRecords: function(keyword) {
     axios.get('api/attendance')
     .then(function(response) {
@@ -340,11 +290,18 @@ var app = new Vue({
   getLeaveCredit: function() {
     let _this = this;
 
-    if (this.month1 === undefined && this.month2 === undefined)
-      return;
+    if ($('#start').val()  === undefined)
+        return;
 
-    if (this.month1 === '' && this.month2 === '')
-      return;
+      if ($('#start').val() === '')
+        return;
+
+      if ($('#end').val()  === undefined)
+        return;
+
+      if ($('#end').val() === '')
+        return;
+
 
     var sdate1 = '';
     var edate1 = '';
@@ -352,20 +309,22 @@ var app = new Vue({
     var sdate2 = '';
     var edate2 = '';
 
-    if(this.month1)
+    if($('#start').val())
     {
-      var d1 = new Date(this.month1);
+      var d1 = new Date($('#start').val() + '-01');
       sdate1 = d1.toISOString().slice(0,10).replace(/-/g,"");
       var newDate1 = new Date(d1.setMonth(d1.getMonth()+1));
       edate1 = newDate1.toISOString().slice(0,10).replace(/-/g,"");
     }
 
-    if(this.month2)
+    if($('#end').val())
     {
-      var d2 = new Date(this.month2);
-      sdate2 = d2.toISOString().slice(0,10).replace(/-/g,"");
-      var newDate2 = new Date(d2.setMonth(d2.getMonth()+1));
-      edate2 = newDate2.toISOString().slice(0,10).replace(/-/g,"");
+      var today = new Date($('#end').val());
+      var d2 = new Date(today.getFullYear(), today.getMonth()+1, 0);
+
+      sdate2 = today.toISOString().slice(0,10).replace(/-/g,"");
+    
+      edate2 = this.formatDate(d2).replace(/-/g,"");
     }
 
     axios.get('api/leave_credit?sdate1=' + sdate1 + '&edate1=' + edate1 + '&sdate2=' + sdate2 + '&edate2=' + edate2)
@@ -382,6 +341,9 @@ var app = new Vue({
       _this.pl_taken = response.data[0].pl_taken;
       _this.pl_approval = response.data[0].pl_approval;
 
+      _this.ab_taken = response.data[0].ab_taken;
+      _this.ab_approval = response.data[0].ab_approval;
+
       _this.manager_leave = response.data[0].manager_leave;
 
     })
@@ -389,6 +351,20 @@ var app = new Vue({
       console.log(error);
     });
   },
+
+   formatDate: function(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+},
 
   getUserPeriod: function() {
     if (this.apply_start === undefined || this.apply_end === undefined)
@@ -412,6 +388,12 @@ var app = new Vue({
 
     this.apply_start = this.normalize(this.apply_start);
     this.apply_end = this.normalize(this.apply_end);
+
+    if(this.apply_start === this.apply_end)
+    {
+      this.period = 0;
+      return;
+    }
 
     var timeStart = '';
     var amStart = 'A';
@@ -509,8 +491,7 @@ var app = new Vue({
 
   reset: function() {
 
-    this.month1 = '';
-    this.month2 = '';
+
     this.apply_start = '';
     this.apply_end = '';
     this.period = 0;

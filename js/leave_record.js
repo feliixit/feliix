@@ -243,12 +243,13 @@ var app = new Vue({
 
       resetForm: function() {
           
-            this.month1 = '';
-
             this.submit = false;
-            this.picked ='A';
+            this.view_detail = false;
 
           this.receive_records = [];
+          this.record = {};
+
+          this.getLeaveCredit();
 
         },
 

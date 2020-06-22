@@ -369,3 +369,10 @@ CREATE TABLE IF NOT EXISTS `leave` (
 -- 20200620 for manager leave credit
 ALTER TABLE user
 ADD COLUMN `manager_leave`  int(11) DEFAULT 0 after is_admin;
+
+-- 20200622 add reject id for apply_for_leave
+ALTER TABLE apply_for_leave
+ADD COLUMN `reject_id`  int(11) DEFAULT 0 after approval_at;
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `re_reject_id`  int(11) DEFAULT 0 after re_approval_at;

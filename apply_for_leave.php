@@ -80,19 +80,9 @@ $(function(){
                 <div class="title">
                 
                     <div class="function">
-                        <el-date-picker
-                            v-model="month1"
-                            type="month"
-                            format="yyyy MMM"
-                            placeholder="Pick a Month">
-                        </el-date-picker>
+                        <input type="month" id="start" name="start" @change="getLeaveCredit()">
 
-                        <el-date-picker
-                            v-model="month2"
-                            type="month"
-                            format="yyyy MMM"
-                            placeholder="Pick a Month">
-                        </el-date-picker>
+                        <input type="month" id="end" name="end" @change="getLeaveCredit()">
                     </div>
                 </div>
 
@@ -116,10 +106,17 @@ $(function(){
                     <td>{{ sl_approval }} Days</td>
                   </tr>
                   <tr>
-                    <td>Absence</td>
+                    <td>Unpaid Leave</td>
                     <td>--</td>
                     <td>{{ pl_taken }} Days</td>
                     <td>{{ pl_approval }} Days</td>
+                  </tr>
+
+                  <tr>
+                    <td>Absence</td>
+                    <td>--</td>
+                    <td>{{ ab_taken }} Days</td>
+                    <td>{{ ab_approval }} Days</td>
                   </tr>
                 </table>
 
@@ -146,10 +143,18 @@ $(function(){
                 
                     </ul>
                     <ul>
-                        <li>Absence</li>
+                        <li>Unpaid Leave</li>
                         <li>--</li>
                         <li>{{ pl_taken }} Days</li>
                         <li>{{ pl_approval }} Days</li>
+                
+                    </ul>
+
+                    <ul>
+                        <li>Absence</li>
+                        <li>--</li>
+                        <li>{{ ab_taken }} Days</li>
+                        <li>{{ ab_approval }} Days</li>
                 
                     </ul>
                 </div>
@@ -168,7 +173,8 @@ $(function(){
                             <select name="" id="" v-model="leave_type">
                                 <option value="A">Vacation Leave</option>
                                 <option value="B">Emerency/Sick Leave</option>
-                                <option value="C">Absence</option>
+                                <option value="C">Unpaid Leave</option>
+                                <option value="D">Absence</option>
                             </select>
                         </li>
                     </ul>
