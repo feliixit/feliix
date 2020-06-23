@@ -87,12 +87,10 @@ $(function(){
                         <li>Leave Time</li>
                     </ul>
                     <ul v-for='(record, index) in displayedRecord' :key="index">
-                        <li v-if="record.approval == 'P'">
+                        <li>
                             <input type="checkbox" name="record_id" class="alone blue" :value="record.index" :true-value="1" v-model:checked="record.is_checked">
                         </li>
-                        <li v-else>
-                          
-                        </li>
+                       
                         <li>{{ (record.approval == 'P') ? "Waiting for Approval" : (record.approval == 'R') ? "Reject" : "Approval" }}</li>
                         <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
                         <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>

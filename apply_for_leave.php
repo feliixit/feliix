@@ -86,7 +86,7 @@ $(function(){
                     </div>
                 </div>
 
-                <table v-if="is_manager">
+                <table v-if="is_manager === '1'">
                   <tr>
                     <th>Leave Type</th>
                     <th>Yearly Credits</th>

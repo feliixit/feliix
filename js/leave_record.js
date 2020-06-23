@@ -201,10 +201,45 @@ var app = new Vue({
       let _this = this;
 
         let favorite = [];
+
+        var approve_record = false;
           
           for (i = 0; i < this.receive_records.length; i++) 
             {
               if(this.receive_records[i].is_checked == 1)
+                if(this.receive_records[i].approval === 'R')
+                {
+                  Swal.fire({
+                    text: 'Rejected data cannot be redrawn by user! Please contact Admin or IT staffs.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                  });
+
+                  return;
+                }
+
+                if(this.receive_records[i].approval === 'A' && this.receive_records[i].leave_type === 'D')
+                {
+                  Swal.fire({
+                    text: 'Absence data cannot be redrawn by user! Please contact Admin or IT staffs.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                  });
+
+                  return;
+                }
+
+                if(this.receive_records[i].approval === 'A')
+                {
+                  Swal.fire({
+                    text: 'Approved data cannot be redrawn by user! Please contact Admin or IT staffs.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                  });
+
+                  return;
+                }
+
                 favorite.push(this.receive_records[i].id);
             }
 

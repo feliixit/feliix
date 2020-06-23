@@ -14,6 +14,13 @@ include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
+
+include_once 'config/database.php';
+include_once 'objects/user.php';
+
+
+
+
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
     http_response_code(401);
@@ -27,18 +34,26 @@ else
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
 
-        $user = $decoded->data->username;
+        $database = new Database();
+        $db = $database->getConnection();
+
+        $user = new User($db);
+
+        $user->email = $decoded->data->email;
+        $user_exists = $user->userCanLogin();
+
+        //$user = $decoded->data->username;
         $department = $decoded->data->department;
         $title = $decoded->data->position;
-        $is_manager = $decoded->data->is_manager;
-        $sick_leave = $decoded->data->sick_leave;
-        $annual_leave = $decoded->data->annual_leave;
-        $manager_leave = $decoded->data->manager_leave;
-        $head_of_department = $decoded->data->head_of_department;
+        $is_manager = $user->is_manager;
+        $sick_leave = $user->sick_leave;
+        $annual_leave = $user->annual_leave;
+        $manager_leave = $user->manager_leave;
+        $head_of_department = $user->head_of_department;
 
         //echo json_encode(array("username" => $user, "department" => $department, "title" => $title));
 
-        echo json_encode(array("username" => $user, "department" => $department, "title" => $title, "is_manager" => $is_manager, "sick_leave" => $sick_leave, "annual_leave" => $annual_leave, "manager_leave" => $manager_leave,  "head_of_department" => $head_of_department));
+        echo json_encode(array("username" => $user->username, "department" => $department, "title" => $title, "is_manager" => $is_manager, "sick_leave" => $sick_leave, "annual_leave" => $annual_leave, "manager_leave" => $manager_leave,  "head_of_department" => $head_of_department));
 
     }
         // if decode fails, it means jwt is invalid
