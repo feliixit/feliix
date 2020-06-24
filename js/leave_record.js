@@ -207,10 +207,11 @@ var app = new Vue({
           for (i = 0; i < this.receive_records.length; i++) 
             {
               if(this.receive_records[i].is_checked == 1)
+              {
                 if(this.receive_records[i].approval === 'R')
                 {
                   Swal.fire({
-                    text: 'Rejected data cannot be redrawn by user! Please contact Admin or IT staffs.',
+                    text: 'Rejected data cannot be withdrawn by user! Please contact Admin or IT staffs.',
                     icon: 'warning',
                     confirmButtonText: 'OK'
                   });
@@ -221,7 +222,7 @@ var app = new Vue({
                 if(this.receive_records[i].approval === 'A' && this.receive_records[i].leave_type === 'D')
                 {
                   Swal.fire({
-                    text: 'Absence data cannot be redrawn by user! Please contact Admin or IT staffs.',
+                    text: 'Absence data cannot be withdrawn by user! Please contact Admin or IT staffs.',
                     icon: 'warning',
                     confirmButtonText: 'OK'
                   });
@@ -232,7 +233,7 @@ var app = new Vue({
                 if(this.receive_records[i].approval === 'A')
                 {
                   Swal.fire({
-                    text: 'Approved data cannot be redrawn by user! Please contact Admin or IT staffs.',
+                    text: 'Approved data cannot be withdrawn by user! Please contact Admin or IT staffs.',
                     icon: 'warning',
                     confirmButtonText: 'OK'
                   });
@@ -241,11 +242,12 @@ var app = new Vue({
                 }
 
                 favorite.push(this.receive_records[i].id);
+              }
             }
 
             if (favorite.length < 1) {
               Swal.fire({
-                text: 'Please select rows to redraw!.',
+                text: 'Please select rows to withdraw!.',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })
@@ -257,8 +259,8 @@ var app = new Vue({
           
 
           Swal.fire({
-            title: 'Are you sure to redraw?',
-            text: "Are you sure to redraw apply?",
+            title: 'Are you sure to withdraw?',
+            text: "Are you sure to withdraw apply?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
