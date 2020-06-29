@@ -113,6 +113,9 @@ function GetLocation($loc)
         case "A":
             $location = "Antel Office";
             break;
+        case "T":
+            $location = "Taiwan Office";
+            break;
         case "B":
             $location = "Shangri-La Store";
             break;

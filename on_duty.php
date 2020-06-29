@@ -98,6 +98,7 @@ $(function(){
                         <dd>
                             <select name="" id="" v-model="location">
                                 <option value="A">Antel Office</option>
+                                <option value="T">Taiwan Office</option>
                                 <option value="B">Shangri-La Store</option>
                                 <option value="C">Caloocan Warehouse</option>
                                 <option value="D">Installation</option>
