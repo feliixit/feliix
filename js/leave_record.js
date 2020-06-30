@@ -180,7 +180,7 @@ var app = new Vue({
 
             if (favorite.length != 1) {
               Swal.fire({
-                text: 'Please select row to see the detail!.',
+                text: 'Please select row to see the detail!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })
@@ -247,7 +247,7 @@ var app = new Vue({
 
             if (favorite.length < 1) {
               Swal.fire({
-                text: 'Please select rows to withdraw!.',
+                text: 'Please select rows to withdraw!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })

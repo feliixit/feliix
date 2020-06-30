@@ -134,14 +134,15 @@ $(function(){
                        
                         <li>{{ record.created_at }}</li>
                         <li>{{ record.username }}</li>
-                        <li>{{ record.type }}</li>
-                        <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }} }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
                     </ul>
                 </div>
 
                 <div class="btnbox">
                     <a class="btn" @click="detail">Detail</a>
-                    <a class="btn" @click="apply" :disabled="submit">Withdraw</a>
+                    <a class="btn" @click="approve" :disabled="submit">Approve</a>
+                    <a class="btn" @click="reject" :disabled="submit">Reject</a>
                 </div>
 
                 <div class="tablebox" v-if="view_detail">
