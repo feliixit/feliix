@@ -376,3 +376,16 @@ ADD COLUMN `reject_id`  int(11) DEFAULT 0 after approval_at;
 
 ALTER TABLE apply_for_leave
 ADD COLUMN `re_reject_id`  int(11) DEFAULT 0 after re_approval_at;
+
+
+CREATE TABLE IF NOT EXISTS `leave_flow` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) unsigned NOT NULL,
+  `apartment_id` bigint(20) unsigned NOT NULL,
+  `flow` bigint(20) default 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `status` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
