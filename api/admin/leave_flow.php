@@ -1,144 +1,126 @@
-<?php include 'check.php';?>
-<!DOCTYPE html>
-<html>
-<head>
-<!-- 共用資料 -->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover"/>
+<?php
 
-<!-- favicon.ico iOS icon 152x152px -->
-<link rel="shortcut icon" href="../images/favicon.ico" />
-<link rel="Bookmark" href="../images/favicon.ico" />
-<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
-<link rel="apple-touch-icon" href="../images/iosicon.png"/>
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+include_once '../config/core.php';
+include_once '../libs/php-jwt-master/src/BeforeValidException.php';
+include_once '../libs/php-jwt-master/src/ExpiredException.php';
+include_once '../libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once '../libs/php-jwt-master/src/JWT.php';
+use \Firebase\JWT\JWT;
 
-<!-- SEO -->
-<title>FELIIX template</title>
-<meta name="keywords" content="FELIIX">
-<meta name="Description" content="FELIIX">
-<meta name="robots" content="all" />
-<meta name="author" content="FELIIX" />
+$method = $_SERVER['REQUEST_METHOD'];
 
-<!-- Open Graph protocol -->
-<meta property="og:site_name" content="FELIIX" />
-<!--<meta property="og:url" content="分享網址" />-->
-<meta property="og:type" content="website" />
-<meta property="og:description" content="FELIIX" />
-<!--<meta property="og:image" content="分享圖片(1200×628)" />-->
-<!-- Google Analytics -->
 
-<!-- CSS -->
-<link rel="stylesheet" type="text/css" href="../css/default.css"/>
-<link rel="stylesheet" type="text/css" href="../css/ui.css"/>
-<link rel="stylesheet" type="text/css" href="../css/case.css"/>
-<link rel="stylesheet" type="text/css" href="../css/mediaqueries.css"/>
+if ( !isset( $jwt ) ) {
+    http_response_code(401);
 
-<!-- jQuery和js載入 -->
-<script type="text/javascript" src="../js/rm/jquery-3.4.1.min.js" ></script>
-<script type="text/javascript" src="../js/rm/realmediaScript.js"></script>
-<script type="text/javascript" src="../js/main.js" defer></script>
+    echo json_encode(array("message" => "Access denied."));
+    die();
+}
+else
+{
+    try {
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+        if(!$decoded->data->is_admin)
+        {
+            http_response_code(401);
 
-<!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
-<script>
-$(function(){
-    $('header').load('include/header.php');
-})
-</script>
+            echo json_encode(array("message" => "Access denied."));
+            die();
+        }
+    }
+        // if decode fails, it means jwt is invalid
+    catch (Exception $e){
 
-</head>
+        http_response_code(401);
 
-<body class="primary">
- 	
-<div class="bodybox">
-    <!-- header -->
-	<header>header</header>
-    <!-- header end -->
-    <div class="mainContent" id="mainContent">
-        <!-- tags js在 main.js -->
-        <div class="tags">
-            <a class="tag A" href="user">User</a>
-            <a class="tag B" href="department">Department</a>
-            <a class="tag C" href="position">Postion</a>
-            <a class="tag D focus">Leave Flow</a>
-        </div>
-        <!-- Blocks -->
-        <div class="block C focus">
-            <h6>Leave Flow Management
-                <div class="function" style="padding-top:10px;">
-                    Choose Apartment: <select v-model="department_id">
-                        <option v-for="item in departments" :value="item.id" :key="item.department">
-                            {{ item.department }}
-                        </option>
-                    </select>
-                </div>
-            </h6>
-            
-            <div class="box-content">
-                <div class="box-content"  v-if="!isEditing">
-                    <ul>
+        echo json_encode(array("message" => "Access denied."));
+        die();
+    }
+}
 
-                        <div class="function" style="padding-top:10px;">
-                            Choose User: <select v-model="user_id">
-                                <option v-for="item in users" :value="item.id" :key="item.name">
-                                    {{ item.name }}
-                                </option>
-                            </select>
-                        </div>
+header('Access-Control-Allow-Origin: *');
 
-                        <li><b>Position Name</b></li>
-                        <li><input type="text" v-model="title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%"></li>
-                    </ul>
-                    
-                    <div style="padding-top:10px;">
-                        <div>
-                            <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
-                            <button type="button" @click="createReceiveRecord()"><p>ADD</p></button>
-                        </div>
-                    </div>
-                </div>
+include_once '../config/database.php';
+include_once '../objects/leave_flow.php';
 
-                <div class="box-content" v-else>
-                    <ul>
-                        <li><b>Position Name</b></li>
-                        <li><div class="function"><input type="text" v-model="record.title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%"></li>
-                    </ul>
-                    
-                    <div style="padding-top:10px;">
-                        <div>
-                            <button type="button" @click="cancelReceiveRecord($event)"><p>CANCEL</p></button>
-                            <button type="button" @click="editReceiveRecord($event)"><p>SAVE</p></button>
-                        </div>
-                    </div>
-                </div>
 
-                    
 
-                <div class="tablebox">
-                    <ul class="head">
-                    <li><i class="micons">view_list</i></li>
-                        <li>Position Name</li>
-                     
-                        
-                    </ul>
-                    <ul v-for='(record, index) in displayedPosts' :key="index">
-                        <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
-                        <li>{{record.title}}</li>
-                        
-                        
-                    </ul>
-                    
-                </div>
-                <div class="btnbox">
-                    <a class="btn" @click="editRecord()">Modify</a>
-                    <a class="btn" @click="deleteRecord()">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
-<script defer src="../js/axios.min.js"></script> 
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="../js/admin/position.js"></script>
-</html>
+$database = new Database();
+$db = $database->getConnection();
+
+switch ($method) {
+    case 'GET':
+
+        $pid  = (isset($_GET['pid']) ?  $_GET['pid'] : 0);
+
+        $sql = "SELECT 0 as is_checked, f.id, username, flow FROM `leave_flow` f LEFT JOIN `user` u ON f.uid = u.id WHERE f.apartment_id = $pid AND u.`status` = 1 ";
+
+        $sql = $sql . " ORDER BY id ";
+
+        $merged_results = array();
+
+        $stmt = $db->prepare( $sql );
+        $stmt->execute();
+
+
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $merged_results[] = $row;
+        }
+
+        echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
+        break;
+
+    case 'POST':
+        // get database connection
+
+        // instantiate product object
+        $user = new LeaveFlow($db);
+        $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
+        $uid = (isset($_POST['uid']) ?  $_POST['uid'] : 0);
+        $flow = (isset($_POST['flow']) ?  $_POST['flow'] : 0);
+
+        $crud = (isset($_POST['crud']) ?  $_POST['crud'] : 0);
+        $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
+
+        switch ($crud)
+        {
+            case 'insert':
+                /* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
+                $user->apartment_id = (int) $pid;
+                $user->uid = (int) $uid;
+                $user->flow = (int) $flow;
+
+                $user->create();
+
+                break;
+
+
+            case 'del':
+                $ids = explode(",", $id);
+                foreach($ids as $item) {
+                    $user->id = trim($item);
+                    $user->delete();
+                }
+
+                if($query){
+                    $out['message'] = "Member Deleted Successfully";
+                }
+                else{
+                    $out['error'] = true;
+                    $out['message'] = "Could not delete Member";
+                }
+
+                break;
+        }
+
+        break;
+}
+
+
+
+?>

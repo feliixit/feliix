@@ -63,9 +63,9 @@ $(function(){
         </div>
         <!-- Blocks -->
         <div class="block C focus">
-            <h6>Position Management
+            <h6>Leave Flow Management
                 <div class="function" style="padding-top:10px;">
-                    Choose Apartment: <select v-model="department_id">
+                    Choose Department: <select v-model="department_id">
                         <option v-for="item in departments" :value="item.id" :key="item.department">
                             {{ item.department }}
                         </option>
@@ -74,10 +74,31 @@ $(function(){
             </h6>
             
             <div class="box-content">
-                <div class="box-content"  v-if="!isEditing">
+                <div class="box-content">
                     <ul>
-                        <li><b>Position Name</b></li>
-                        <li><input type="text" v-model="title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%"></li>
+
+                        <li><b>User Name</b></li>
+                        <li>
+                            <div class="function" style="padding-top:10px;">
+                                Choose User: <select v-model="user_id">
+                                    <option v-for="item in user_list" :value="item.id" :key="item.username">
+                                        {{ item.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </li>
+
+                        <li><b>Flow Type</b></li>
+                        <li>
+                            <select v-model="flow_type">
+                                    <option value="1">
+                                        First Authority
+                                    </option>
+                                    <option value="2">
+                                        Second Authority
+                                    </option>
+                                </select>
+                        </li>
                     </ul>
                     
                     <div style="padding-top:10px;">
@@ -88,39 +109,23 @@ $(function(){
                     </div>
                 </div>
 
-                <div class="box-content" v-else>
-                    <ul>
-                        <li><b>Position Name</b></li>
-                        <li><div class="function"><input type="text" v-model="record.title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%"></li>
-                    </ul>
-                    
-                    <div style="padding-top:10px;">
-                        <div>
-                            <button type="button" @click="cancelReceiveRecord($event)"><p>CANCEL</p></button>
-                            <button type="button" @click="editReceiveRecord($event)"><p>SAVE</p></button>
-                        </div>
-                    </div>
-                </div>
-
-                    
 
                 <div class="tablebox">
                     <ul class="head">
                     <li><i class="micons">view_list</i></li>
-                        <li>Position Name</li>
-                     
+                        <li>Name</li>
+                     	<li>Flow Type</li>
                         
                     </ul>
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
-                        <li>{{record.title}}</li>
-                        
+                        <li>{{record.username}}</li>
+                        <li>{{ (record.flow == 1) ? "First to Approval" : (record.flow == 2) ? "Second to Approval" : "" }}</li>
                         
                     </ul>
                     
                 </div>
                 <div class="btnbox">
-                    <a class="btn" @click="editRecord()">Modify</a>
                     <a class="btn" @click="deleteRecord()">Delete</a>
                 </div>
             </div>

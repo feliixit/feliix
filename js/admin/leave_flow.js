@@ -15,6 +15,8 @@ let mainState = {
     department_id: 0,
     title_id:0,
     user_id:0,
+    flow_type:0,
+
 
         // paging
     page: 1,
@@ -33,6 +35,7 @@ let mainState = {
     user_records: [],
     users: {},
     record: {},
+    user_list: {},
     departments: {},
    
 };
@@ -80,9 +83,9 @@ var app = new Vue({
             let _this = this;
             let token = localStorage.getItem('accessToken');
             const params = {
-                department_id: department_id
+                pid: department_id
             };
-            axios.get('../api/admin/position', { params, headers: {"Authorization" : `Bearer ${token}`} })
+            axios.get('../api/admin/leave_flow', { params, headers: {"Authorization" : `Bearer ${token}`} })
             .then(
                 (res) => {
                     _this.user_records = res.data;
@@ -119,7 +122,7 @@ var app = new Vue({
             let token = localStorage.getItem('accessToken');
       
             axios
-                .get('../api/admin/getdepartments.php', { headers: {"Authorization" : `Bearer ${token}`} })
+                .get('../api/admin/getdepartments', { headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
                     _this.departments = res.data;
@@ -140,10 +143,10 @@ var app = new Vue({
             let token = localStorage.getItem('accessToken');
       
             axios
-                .get('../api/admin/getdepartments.php', { headers: {"Authorization" : `Bearer ${token}`} })
+                .get('../api/admin/user', { headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
-                    _this.departments = res.data;
+                    _this.user_list = res.data;
                 },
                 (err) => {
                     alert(err.response.data.msg);
@@ -164,7 +167,7 @@ var app = new Vue({
           let token = localStorage.getItem('accessToken');
       
           axios
-              .get('../api/admin/getpositions.php', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .get('../api/admin/getpositions', { params, headers: {"Authorization" : `Bearer ${token}`} })
               .then(
               (res) => {
                   _this.positons = res.data;
@@ -280,7 +283,6 @@ var app = new Vue({
             //targetId = this.record.id;
             let formData = new FormData();
             //console.log(document.querySelector("input[name=datepicker1]").value)
- 
             formData.append('crud', "del");
             formData.append('id', id);
 
@@ -292,7 +294,7 @@ var app = new Vue({
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     },
-                    url: '../api/admin/position',
+                    url: '../api/admin/leave_flow',
                     data: formData
                 })
                 .then(function(response) {
@@ -414,7 +416,7 @@ var app = new Vue({
             if (this.department_id == 0) 
             {
               Swal.fire({
-                text: '部門名稱需輸入 (department name required)',
+                text: 'Choose Department',
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -423,10 +425,22 @@ var app = new Vue({
               return false;
             } 
 
-            if (this.title == '') 
+            if (this.flow_type == 0) 
             {
               Swal.fire({
-                text: '名稱需輸入 (position name required)',
+                text: 'Choose Flow Type',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+         
+              $(window).scrollTop(0);
+              return false;
+            } 
+
+            if (this.user_id == 0) 
+            {
+              Swal.fire({
+                text: 'Choose User Name',
                 icon: 'error',
                 confirmButtonText: 'OK'
               });
@@ -436,8 +450,9 @@ var app = new Vue({
             } 
 
 
-            formData.append('department_id', this.department_id)
-            formData.append('title', this.title)
+            formData.append('pid', this.department_id)
+            formData.append('uid', this.user_id)
+            formData.append('flow', this.flow_type)
            
             formData.append('crud', 'insert')
 
@@ -449,7 +464,7 @@ var app = new Vue({
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
-                    url: '../api/admin/position',
+                    url: '../api/admin/leave_flow',
                     data: formData
                 })
                 .then(function(response) {

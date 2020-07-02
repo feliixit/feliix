@@ -181,7 +181,7 @@ var app = new Vue({
                   //$(window).scrollTop(0);
                   return false;
               } 
-
+/*
               if (this.latitude == 0 || this.lngitude == 0) 
               {
                 Swal.fire({
@@ -193,7 +193,7 @@ var app = new Vue({
                   //$(window).scrollTop(0);
                   return false;
               } 
-
+*/
               if ((this.piclatitude == 0 || this.piclongitude == 0) && !this.$refs.file == undefined) 
               {
                 Swal.fire({

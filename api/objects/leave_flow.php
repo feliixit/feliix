@@ -1,6 +1,6 @@
 <?php
 // 'user' object
-class UseTitle{
+class LeaveFlow{
  
     // database connection and table name
     private $conn;
@@ -26,7 +26,7 @@ class UseTitle{
         $query = "INSERT INTO " . $this->table_name . "
                 SET
                     uid = :uid,
-                    flow = :flow
+                    flow = :flow,
                     apartment_id = :apartment_id
                   ";
     
@@ -46,6 +46,11 @@ class UseTitle{
         // execute the query, also check if query was successful
         if($stmt->execute()){
             return true;
+        }
+        else
+        {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
         }
     
         return false;
