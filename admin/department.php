@@ -57,8 +57,9 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A" href="user">User</a>
-            <a class="tag B focus" >Department</a>
+            <a class="tag B focus">Department</a>
             <a class="tag C" href="position">Postion</a>
+            <a class="tag D" href="leave_flow">Leave Flow</a>
         </div>
         <!-- Blocks -->
         <div class="block B focus">

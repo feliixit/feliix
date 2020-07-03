@@ -69,6 +69,7 @@ $(function(){
             <a class="tag A focus">User</a>
             <a class="tag B" href="department">Department</a>
             <a class="tag C" href="position">Postion</a>
+            <a class="tag D" href="leave_flow">Leave Flow</a>
         </div>
         <!-- Blocks -->
         <div class="block A focus">

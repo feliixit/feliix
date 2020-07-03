@@ -64,22 +64,37 @@ $(function(){
         <!-- Blocks -->
         <div class="block C focus">
             <h6>Leave Flow Management
-                <div class="function" style="padding-top:10px;">
-                    Choose Department: <select v-model="department_id">
-                        <option v-for="item in departments" :value="item.id" :key="item.department">
-                            {{ item.department }}
-                        </option>
-                    </select>
-                </div>
+                
             </h6>
             
             <div class="box-content">
                 <div class="box-content">
                     <ul>
-
-                        <li><b>User Name</b></li>
                         <li>
-                            <div class="function" style="padding-top:10px;">
+                            <div class="function" style="float:left; margin-right:10px;">
+                                Choose Department: <select v-model="department_id">
+                                    <option v-for="item in departments" :value="item.id" :key="item.department">
+                                        {{ item.department }}
+                                    </option>
+                                </select>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="function" style="float:left; margin-right:10px;">
+                                Choose Role: <select v-model="flow_type">
+                                    <option value="1">
+                                        1st Approver
+                                    </option>
+                                    <option value="2">
+                                        2nd Approver
+                                    </option>
+                                </select>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="function" style="float:left; margin-right:10px;">
                                 Choose User: <select v-model="user_id">
                                     <option v-for="item in user_list" :value="item.id" :key="item.username">
                                         {{ item.username }}
@@ -88,25 +103,18 @@ $(function(){
                             </div>
                         </li>
 
-                        <li><b>Flow Type</b></li>
+                    </ul>
+             
+                    <ul>
                         <li>
-                            <select v-model="flow_type">
-                                    <option value="1">
-                                        First Authority
-                                    </option>
-                                    <option value="2">
-                                        Second Authority
-                                    </option>
-                                </select>
+                            <div style="padding-top:80px;">
+                                <div>
+                                    <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
+                                    <button type="button" @click="createReceiveRecord()"><p>ADD</p></button>
+                                </div>
+                            </div>
                         </li>
                     </ul>
-                    
-                    <div style="padding-top:10px;">
-                        <div>
-                            <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
-                            <button type="button" @click="createReceiveRecord()"><p>ADD</p></button>
-                        </div>
-                    </div>
                 </div>
 
 
@@ -120,7 +128,7 @@ $(function(){
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
                         <li>{{record.username}}</li>
-                        <li>{{ (record.flow == 1) ? "First to Approval" : (record.flow == 2) ? "Second to Approval" : "" }}</li>
+                        <li>{{ (record.flow == 1) ? "1st Approver" : (record.flow == 2) ? "2nd Approver" : "" }}</li>
                         
                     </ul>
                     
