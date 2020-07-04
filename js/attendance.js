@@ -3,10 +3,12 @@ var app = new Vue({
   el: '#app',
   data:{
     receive_records: [],
+    leave_records:{},
   },
 
   created () {
     this.getRecords();
+    this.getLeaveRecords();
   },
 
   computed: {
@@ -25,6 +27,18 @@ var app = new Vue({
             .then(function(response) {
                 console.log(response.data);
                 app.receive_records = response.data;
+
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    },
+
+    getLeaveRecords: function(keyword) {
+        axios.get('api/leave')
+            .then(function(response) {
+                console.log(response.data);
+                app.leave_records = response.data;
 
             })
             .catch(function(error) {

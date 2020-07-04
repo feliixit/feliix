@@ -118,52 +118,23 @@ display:inline;
             </h6>
             <div class="box-content">
                 <!-- 表單樣式 -->
-                <!--
                 <div class="tablebox2">
                     <ul class="head">
                         <li>Name</li>
-                        <li>Reason</li>
-                        <li>Start</li>
-                        <li>End</li>
+                        <li>Leave Time</li>
+                        <li>Type</li>
+                        <li>Status</li>
+                   
                     </ul>
-                    <ul>
-                        <li>Jaycee Villareal</li>
-                        <li>Absent</li>
-                        <li>1/01/2020 8:30AM</li>
-                        <li>1/01/2020 8:30AM</li>
+                    <ul v-for='(record, index) in leave_records'>
+                        <li>{{ record.username }}</li>
+                        <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li>{{ (record.approval == 'P') ? "Waiting for Approval" : (record.approval == 'R') ? "Reject" : "Approval" }}</li>
+                   
                     </ul>
-                    <ul>
-                        <li>Kristel Tan</li>
-                        <li>Absent</li>
-                        <li>1/01/2020 8:30AM</li>
-                        <li>1/01/2020 8:30AM</li>
-                    </ul>
-                    <ul>
-                        <li>Wren Benzon</li>
-                        <li>Sick Leave</li>
-                        <li>1/01/2020 8:30AM</li>
-                        <li>1/01/2020 8:30AM</li>
-                    </ul>
-                    <ul>
-                        <li>Argel Argana</li>
-                        <li>Sick Leave</li>
-                        <li>1/01/2020 8:30AM</li>
-                        <li>1/01/2020 8:30AM</li>
-                    </ul>
-                    <ul>
-                        <li>Kuan Lu</li>
-                        <li>Vacation Leave</li>
-                        <li>1/01/2020 8:30AM</li>
-                        <li>1/01/2020 8:30AM</li>
-                    </ul>
-                    <ul>
-                        <li>Juan Dela Cruz</li>
-                        <li>AWOL</li>
-                        <li>1/01/2020 8:30AM</li>
-                        <li>1/01/2020 8:30AM</li>
-                    </ul>
+                    
                 </div>
-                -->
                 <!-- 表單樣式 -->
             </div>
         </div>

@@ -56,6 +56,7 @@ else
         $decoded = JWT::decode($jwt, $key, array('HS256'));
 
         $user_id = $decoded->data->id;
+        $apartment_id = $decoded->data->apartment_id;
 
         $leaves = array();
         $applied = array();
@@ -269,6 +270,28 @@ else
                 }
 
                 $ret = $afl->re_approval($id, $user_id);
+                if(!$ret)
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+            }
+
+            // first approver goes to second approver
+            $query = "select * from leave_flow where flow = 1 and apartment_id = " . $apartment_id . " and id = " . $user_id;
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+            $first_approver = 0;
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $first_approver = 1;
+            }
+
+            if($first_approver == 1)
+            {
+                $ret = false;
+                $ret = $afl->approval($id, $user_id);
                 if(!$ret)
                 {
                     http_response_code(401);

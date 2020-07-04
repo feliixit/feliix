@@ -45,10 +45,26 @@ $db = $database->getConnection();
 $merged_results = array();
 
 
-if($apartment_id == 6)
-    $query = "SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE  WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, a.pic_url, a.created_at FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id WHERE a.STATUS <> -1 AND approval_id = 0 AND reject_id = 0 and uid in ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM user WHERE id = " . $user_id . " and head_of_department = 1) AND id = " . $user_id . ") " ;
-else
-    $query = "SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE  WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, a.pic_url, a.created_at FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id WHERE a.STATUS <> -1 AND approval_id = 0 AND reject_id = 0 and uid in ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM user WHERE id = " . $user_id . " and head_of_department = 1) AND id = " . $user_id . ") " ;
+
+$query = "
+    SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, 
+        CASE  WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
+        reason, a.pic_url, a.created_at 
+        FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
+        WHERE a.STATUS <> -1 AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
+        and uid IN 
+        ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 1)) 
+
+        UNION ALL
+
+        SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, 
+        CASE  WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
+        reason, a.pic_url, a.created_at 
+        FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
+        WHERE a.STATUS <> -1 AND approval_id <> 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
+        and uid IN 
+        ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 2))  " ;
+
 
 $stmt = $db->prepare( $query );
 $stmt->execute();

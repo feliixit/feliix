@@ -135,7 +135,7 @@ var app = new Vue({
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     },
-                    url: 'api/leave_record_approve',
+                    url: 'api/leave_record_approval',
                     data: form_Data
                 })
                 .then(function(response) {
@@ -169,7 +169,7 @@ var app = new Vue({
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     },
-                    url: 'api/leave_record_approve',
+                    url: 'api/leave_record_reject',
                     data: form_Data
                 })
                 .then(function(response) {
