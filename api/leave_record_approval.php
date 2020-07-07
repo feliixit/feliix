@@ -45,13 +45,14 @@ $merged_results = [];
 
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 
+
 $query = "
     update apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
     set approval_id = " . $user_id . ", approval_at = NOW()
     WHERE a.STATUS <> -1 AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
     and uid IN 
     ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 1))
-    AND a.id = " . $id . "
+    AND a.id in(" . $id . ")
 ";
 
 $stmt = $db->prepare( $query );
@@ -69,7 +70,7 @@ $query = "
     and `leave` <= 2
     and uid IN 
     ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 1))
-    AND a.id = " . $id . "
+    AND a.id in (" . $id . ")
 ";
 
 $stmt = $db->prepare( $query );
@@ -87,7 +88,7 @@ $query = "
     WHERE a.STATUS <> -1 AND approval_id <> 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
     and uid IN 
     ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 2))
-    AND a.id = " . $id . "
+    AND a.id in (" . $id . ")
 ";
 
 $stmt = $db->prepare( $query );
@@ -97,5 +98,44 @@ if (!$stmt->execute())
     $arr = $stmt->errorInfo();
     error_log($arr[2]);
 }
+
+
+
+
+$subquery = "SELECT GROUP_CONCAT(uid) uid FROM leave_flow WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 2) AND uid <> " . $user_id . " ";
+//$subquery = " SELECT user.id, username, duty_date, duty_time, location FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE duty_date = '2020/05/11' AND on_duty.duty_type = 'A' and on_duty.uid = 1 ORDER BY on_duty.created_at ";
+
+$stmt1 = $db->prepare( $subquery );
+$stmt1->execute();
+
+$row_id = "";
+
+while($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+    $row_id = $row1['uid'];
+}
+
+if($row_id != "")
+{
+    $query = "
+        update apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
+        set approval_id = " . $user_id . ", approval_at = NOW(),
+        re_approval_id = " . $user_id . ", re_approval_at = NOW()
+        WHERE a.STATUS <> -1 AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
+        and uid IN 
+        (" . $row_id . ")
+        AND a.id in(" . $id . ")
+    ";
+
+    $stmt = $db->prepare( $query );
+
+    if (!$stmt->execute())
+    {
+        $arr = $stmt->errorInfo();
+        error_log($arr[2]);
+    }
+}
+
+
+
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);

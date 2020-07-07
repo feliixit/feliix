@@ -147,7 +147,7 @@ class User{
     function userCanLogin(){
         // query to check if email exists
         $query = "SELECT user.id, username, password, user.status, is_admin, need_punch, COALESCE(department, '') department, 
-                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, is_manager, manager_leave, user_title.head_of_department
+                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, COALESCE(is_manager, 0) is_manager, manager_leave, user_title.head_of_department
                 FROM " . $this->table_name . "
                 LEFT JOIN user_department ON user.apartment_id = user_department.id 
                 LEFT JOIN user_title ON user.title_id = user_title.id
