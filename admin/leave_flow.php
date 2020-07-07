@@ -120,13 +120,15 @@ $(function(){
 
                 <div class="tablebox">
                     <ul class="head">
-                    <li><i class="micons">view_list</i></li>
+                        <li><i class="micons">view_list</i></li>
+                        <li>Department</li>
                         <li>Name</li>
-                     	<li>Flow Type</li>
+                     	<li>Role</li>
                         
                     </ul>
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
+                        <li>{{record.department}}</li>
                         <li>{{record.username}}</li>
                         <li>{{ (record.flow == 1) ? "1st Approver" : (record.flow == 2) ? "2nd Approver" : "" }}</li>
                         
