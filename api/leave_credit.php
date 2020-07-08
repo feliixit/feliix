@@ -96,9 +96,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 /* fetch data */
 if($edate2 != "")
-    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate2 . "' and status = 0 and uid = " . $user_id . " group by leave_type,  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
+    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate2 . "' and status = 0 and uid = " . $user_id . " group by leave_type,  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
 else
-    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE and start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate1 . "' and status = 0 and uid = " . $user_id . " group by leave_type,  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN approval_id = 0 THEN 'P' END";
+    $query = "SELECT SUM(`leave`) le, leave_type, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE and start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate1 . "' and status = 0 and uid = " . $user_id . " group by leave_type,  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -142,7 +142,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $pl_approval += $le;
             break;
         case "D":
+            if($approval == 'A')
                 $ab_taken += $le;
+            else
                 $ab_approval += $le;
             break;
     }

@@ -56,10 +56,10 @@ if($sdate1 == '')
 }
 
 if($type == 'A')
-    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, pic_url, created_at FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' and start_date < '" . $edate1 . "' and status <> -1 and uid = " . $user_id ;
+    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE when STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, pic_url, created_at FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' and start_date < '" . $edate1 . "' and   uid = " . $user_id ;
 else {
     # code...
-    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, pic_url, created_at FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' and start_date < '" . $edate1 . "' and status <> -1 and uid = " . $user_id . " and approval_id * re_approval_id = 0 and reject_id + re_reject_id = 0 ";
+    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE when STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, pic_url, created_at FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' and start_date < '" . $edate1 . "' and status = 0 and uid = " . $user_id . " and approval_id * re_approval_id = 0 and reject_id + re_reject_id = 0 ";
 }
 
 $stmt = $db->prepare( $query );

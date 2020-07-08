@@ -47,7 +47,7 @@ $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 
 $query = "
     update apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
-    set reject_id = " . $user_id . ", reject_at = NOW()
+    set reject_id = " . $user_id . ", reject_at = NOW(), a.STATUS = -2
     WHERE a.STATUS <> -1 AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
     and uid IN 
     ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 1))
@@ -64,7 +64,7 @@ if (!$stmt->execute())
 
 $query = "
     update apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
-    set re_reject_id = " . $user_id . ", re_reject_at = NOW()
+    set re_reject_id = " . $user_id . ", re_reject_at = NOW(), a.STATUS = -2
     WHERE a.STATUS <> -1 AND approval_id <> 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
     and uid IN 
     ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 2))

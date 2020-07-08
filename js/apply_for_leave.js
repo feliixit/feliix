@@ -498,6 +498,7 @@ var app = new Vue({
     this.leave_type = '';
     this.reason = '';
     this.submit = false;
+    this.getLeaveCredit();
     this.getRecords();
   },
 

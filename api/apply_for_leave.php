@@ -131,7 +131,7 @@ else
             array_push($leaves, $end->format("Ymd") . " P");
         }
 
-        $query = "SELECT apply_date, apply_period, leave_type  from `leave` where uid = " . $user_id . " and status = 0 and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
+        $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id WHERE a.uid = " . $user_id . " and a.status = 0 and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
         $stmt = $db->prepare( $query );
         $stmt->execute();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -278,7 +278,7 @@ else
             }
 
             // first approver goes to second approver
-            $query = "select * from leave_flow where flow = 1 and apartment_id = " . $apartment_id . " and id = " . $user_id;
+            $query = "select * from leave_flow where flow = 1 and apartment_id = " . $apartment_id . " and uid = " . $user_id;
 
             $stmt = $db->prepare( $query );
             $stmt->execute();
