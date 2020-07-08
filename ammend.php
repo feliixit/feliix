@@ -185,7 +185,7 @@ $(function(){
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script src="js/axios.min.js"></script> 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
+<script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
 <script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
 <script src="//unpkg.com/element-ui"></script>
 <script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
