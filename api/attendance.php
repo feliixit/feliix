@@ -56,7 +56,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 
         $mdate = date("Y/m/d");
         //$mdate = "2020/05/11";
-        $subquery = " SELECT user.id, username, duty_date, duty_time, location FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE  duty_date = '" . $mdate . "' AND on_duty.duty_type = 'A' and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
+        $subquery = " SELECT user.id, username, duty_date, duty_time, location, duty_type FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE  duty_date = '" . $mdate . "' AND on_duty.duty_type in('A', 'B') and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
         //$subquery = " SELECT user.id, username, duty_date, duty_time, location FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE duty_date = '2020/05/11' AND on_duty.duty_type = 'A' and on_duty.uid = 1 ORDER BY on_duty.created_at ";
 
         $stmt1 = $db->prepare( $subquery );
@@ -75,7 +75,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 
             $dateObject = new DateTime($row1['duty_date'] . " " . $row1['duty_time']);
 
-            $row_date .= $dateObject->format('h:i A') . "<br>";
+            if($row1['duty_type'] == 'A')
+                $row_date .= "<div style='color:green; display:inline;'>" . $dateObject->format('h:i A') . "</div><br>";
+            if($row1['duty_type'] == 'B')
+                $row_date .= "<div style='color:grey; display:inline;'>" . $dateObject->format('h:i A') . "</div><br>";
 
             $row_location .= GetLocation($row1['location']) . "<br>";
 
