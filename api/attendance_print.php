@@ -32,6 +32,9 @@ $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $apply_start = (isset($_POST['apply_start']) ?  $_POST['apply_start'] : '');
 $apply_end = (isset($_POST['apply_end']) ?  $_POST['apply_end'] : '');
 
+$apply_start = str_replace('-', '/', $apply_start);
+$apply_end = str_replace('-', '/', $apply_end);
+
 // if jwt is not empty
 if($jwt){
  
