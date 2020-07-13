@@ -56,7 +56,12 @@ try {
                 <a class="uni">Process<br>Management</a>
             </li>
             <li class="gray05">
-                <a class="uni" href="user">Admin<br>Section</a>
+                <a class="uni">Admin<br>Section</a>
+                <a class="list" href="../ammend">Query and Amend</a>
+                <a class="list" href="../query_export">Query and Export</a>
+            </li>
+            <li class="gray02">
+                <a class="uni" href="user">System<br>Section</a>
             </li>
         </ul>
         <ul class="menu">

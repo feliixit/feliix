@@ -57,7 +57,12 @@ try {
                 <a class="uni">Process<br>Management</a>
             </li>
             <li class="gray05">
-                <a class="uni" href="admin/user">Admin<br>Section</a>
+                <a class="uni">Admin<br>Section</a>
+                <a class="list" href="ammend">Query and Amend</a>
+                <a class="list" href="query_export">Query and Export</a>
+            </li>
+            <li class="gray02">
+                <a class="uni" href="admin/user">System<br>Section</a>
             </li>
         </ul>
         <ul class="menu">
@@ -65,7 +70,7 @@ try {
                 <a class="uni">Employee<br>Attendance</a>
                 <a class="list" href="on_duty">Punch In/Out</a>
                 <a class="list" href="apply_for_leave">Leave</a>
-                <a class="list" href="ammend">Query/Ammend</a>
+                <a class="list" href="">Query/Ammend</a>
             </li>
             <li class="sec03">
                 <a class="uni">Payment<br>Request/Claim</a>
@@ -73,6 +78,7 @@ try {
             <li class="gray02">
                 <a class="uni">Profile<br>Section</a>
             </li>
+            
         </ul>
     </div>
     <!--  menu list  -->
