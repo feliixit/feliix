@@ -90,8 +90,9 @@ else
         $al_credit = 0;
         $sl_credit = 0;
         $manager_leave = 0;
+        $head_of_department = 0; // leave apply without approval
 
-        $query = "SELECT is_manager, annual_leave, sick_leave, manager_leave from user where id = " . $user_id;
+        $query = "SELECT is_manager, annual_leave, sick_leave, manager_leave, head_of_department from user where id = " . $user_id;
 
         $stmt = $db->prepare( $query );
         $stmt->execute();
@@ -101,6 +102,7 @@ else
             $al_credit = $row['annual_leave'];
             $sl_credit = $row['sick_leave'];
             $manager_leave = $row['manager_leave'];
+            $head_of_department  = $row['head_of_department'];
         }
 
         // 1. Check if history have the same day
@@ -259,7 +261,8 @@ else
                 }
             }
 
-            if($leave_type == 'D')
+            // Apply without approval
+            if($leave_type == 'D' || $head_of_department == 1)
             {
                 $ret = false;
                 $ret = $afl->approval($id, $user_id);

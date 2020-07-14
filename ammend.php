@@ -56,12 +56,18 @@ $(function(){
     <div id="app" class="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A" href="query_export">Attendance</a>
+            <a class="tag A">Attendance</a>
             <a class="tag B focus">Leaves</a>
         </div>
         <!-- Blocks -->
         <div class="block A">
+            <h6></h6>
+            <div class="box-content">
+             
 
+                
+            </div>
+            
         </div>
         <div class="block B focus">
             <h6>Leave Applications</h6>

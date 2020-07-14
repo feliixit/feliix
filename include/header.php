@@ -58,7 +58,7 @@ try {
             </li>
             <li class="gray05">
                 <a class="uni">Admin<br>Section</a>
-                <a class="list" href="ammend">Query and Amend</a>
+                <a class="list" href="ammend">Verify and Review</a>
                 <a class="list" href="query_export">Query and Export</a>
             </li>
             <li class="gray02">

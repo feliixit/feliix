@@ -57,7 +57,7 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A focus">Attendance</a>
-            <a class="tag B" href="ammend">Leaves</a>
+            <a class="tag B">Leaves</a>
         </div>
         <!-- Blocks -->
         <div class="block A focus">
@@ -96,7 +96,39 @@ $(function(){
             </div>
         </div>
         <div class="block B">
-            
+            <h6>Leave 
+                
+                <div class="function">
+                    <!--
+                   <input type="radio" value="0" class="green" checked=""><label for="B">All</label>
+                   <input type="radio" value="1" class="blue"><label for="B">Same Dpt.</label>
+                    -->
+<!--
+                    <b class="light green"></b>All
+                    <b class="light blue"></b>Same Dpt.
+-->
+                </div>
+            </h6>
+
+
+            <div class="box-content">
+                <div class="title">
+                    <b>Select Period</b>
+                    <div class="function">
+                        <input type="date" id="apply_start" />
+                       <input type="date" id="apply_end" />
+<!--
+                        <b class="light green"></b>All
+                        <b class="light blue"></b>Waiting for Approval
+-->
+                    </div>
+                </div>
+      
+                <div class="btnbox">
+                    <a class="btn">Export</a>
+                
+                </div>
+            </div>
             
         </div>
     </div>

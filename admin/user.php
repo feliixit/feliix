@@ -125,7 +125,7 @@ $(function(){
                         </li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="head_of_department" @change="updateHeadOfDepartment">
-                            <label for="head_of_department">Head of Department</label>
+                            <label for="head_of_department">Leave w/o Approval</label>
                         </li>
                     </ul>
 
@@ -194,7 +194,7 @@ $(function(){
                         </li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="record.head_of_department" @change="updateHeadOfDepartment">
-                            <label for="head_of_department">Head of Department</label>
+                            <label for="head_of_department">Leave w/o Approval</label>
                         </li>
                     </ul>
 

@@ -49,7 +49,7 @@ if($jwt){
 
             $merged_results = array();
 
-            $sql = "SELECT username, duty_date, duty_type, location, duty_time, `explain` FROM on_duty LEFT JOIN user ON on_duty.uid = user.id WHERE 1=1 ";
+            $sql = "SELECT username, duty_date, duty_type, location, duty_time, `explain`, on_duty.pic_url  FROM on_duty LEFT JOIN user ON on_duty.uid = user.id WHERE 1=1 ";
 
             if(!empty($apply_start)) {
                 $sql = $sql . " and duty_date >= '$apply_start' ";
@@ -97,6 +97,7 @@ if($jwt){
             $sheet->setCellValue('D1', 'Duty Time');
             $sheet->setCellValue('E1', 'Location');
             $sheet->setCellValue('F1', 'explain');
+            $sheet->setCellValue('G1', 'Photo');
 
 
             $i = 2;
@@ -109,14 +110,23 @@ if($jwt){
                 $sheet->setCellValue('E' . $i, GetLocation($row['location']));
                 $sheet->setCellValue('F' . $i, $row['explain']);
 
+                if($row['pic_url'] != '')
+                {
+                    $link = 'https://feliix.myvnc.com/img/' . $row['pic_url'];
+                    $sheet->setCellValue('G' . $i, 'Photo');
+                    $sheet->getCellByColumnAndRow(7,$i)->getHyperlink()->setUrl($link);
+                }
+                else
+                    $sheet->setCellValue('G' . $i, '');
 
-                $sheet->getStyle('A'. $i. ':' . 'K' . $i)->applyFromArray($styleArray);
+
+                $sheet->getStyle('A'. $i. ':' . 'G' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'K1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'K' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'G1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'G' . --$i)->applyFromArray($styleArray);
 
 
            
