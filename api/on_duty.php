@@ -63,7 +63,7 @@ else
                 $conf = new Conf();
                 $key = "myKey";
                 $time = time();
-                $hash = hash_hmac('sha256', $time, $key);
+                $hash = hash_hmac('sha256', $time . rand(1, 65536), $key);
                 $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
                 $filename = $time . $hash . "." . $ext;
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $conf::$upload_path . $filename)) {
