@@ -57,7 +57,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         $mdate = date("Ymd");
 
 
-        $subquery = "SELECT u.id, u.username, l.start_date, l.start_time, l.end_date, l.end_time, l.leave_type, CASE when l.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval FROM user u LEFT JOIN apply_for_leave l ON u.id = l.uid WHERE  start_date <= '" . $mdate . "' and end_date >= '" . $mdate . "' AND l.status <> -1 and l.uid = " . $row['id'];
+        $subquery = "SELECT u.id, u.username, l.start_date, l.start_time, l.end_date, l.end_time, l.leave_type, CASE when l.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval FROM user u LEFT JOIN apply_for_leave l ON u.id = l.uid WHERE  start_date <= '" . $mdate . "' and end_date >= '" . $mdate . "' AND l.uid = " . $row['id'];
 
         $stmt1 = $db->prepare( $subquery );
         $stmt1->execute();

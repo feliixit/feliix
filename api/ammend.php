@@ -62,7 +62,7 @@ $query = "
         CASE when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
         reason, a.pic_url, a.created_at 
         FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
-        WHERE a.STATUS <> -1 AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
+        WHERE a.STATUS not in (-1, -2, 1) AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
         and uid IN 
         ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 1)) 
         and a.uid <> " . $user_id . "
@@ -74,7 +74,7 @@ $query = "
         CASE when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
         reason, a.pic_url, a.created_at 
         FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
-        WHERE a.STATUS <> -1 AND approval_id <> 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
+        WHERE a.STATUS not in (-1, -2, 1) AND approval_id <> 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
         and uid IN 
         ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 2))  
         and a.uid <> " . $user_id . "  ";
@@ -89,7 +89,7 @@ if($row_id != "")
         CASE when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
         reason, a.pic_url, a.created_at 
         FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
-        WHERE a.STATUS <> -1 AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
+        WHERE a.STATUS not in (-1, -2, 1)  AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
         and a.uid IN 
         (" . $row_id .")  
 

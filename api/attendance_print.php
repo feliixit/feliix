@@ -136,10 +136,10 @@ if($jwt){
 
             $sql = "SELECT t4.username, t4.duty_date, t4.duty_type, t4.duty_time, t4.location, t4.explain, t4.remark, t4.pic_url 
                     FROM 
-                    (SELECT *, ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date, t3.duty_type  ORDER BY t3.duty_time) AS rank1
-                    , ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date, t3.duty_type  ORDER BY t3.duty_time DESC) AS rank2
+                    (SELECT *, ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date, t3.duty_type  ORDER BY t3.id) AS rank1
+                    , ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date, t3.duty_type  ORDER BY t3.id DESC) AS rank2
                         FROM
-                    (SELECT t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url 
+                    (SELECT t1.id, t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url 
 
              FROM feliix.on_duty AS t1 LEFT JOIN feliix.user AS t2 ON t1.uid = t2.id WHERE t1.duty_date >= '$apply_start'
                        AND t1.duty_date <= '$apply_end') AS t3
@@ -207,10 +207,10 @@ if($jwt){
 
             $sql = "SELECT t4.username, t4.duty_date, t4.duty_type, t4.duty_time, t4.location, t4.explain, t4.remark, t4.pic_url 
                 FROM 
-                    (SELECT *, ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date ORDER BY t3.duty_time) AS rank1
-                             , ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date ORDER BY t3.duty_time DESC) AS rank2
+                    (SELECT *, ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date ORDER BY t3.id) AS rank1
+                             , ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date ORDER BY t3.id DESC) AS rank2
                      FROM
-                        (SELECT t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url 
+                        (SELECT t1.id, t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url 
                          FROM feliix.on_duty AS t1 LEFT JOIN feliix.user AS t2 ON t1.uid = t2.id WHERE t1.duty_date >= '$apply_start'
                                        AND t1.duty_date <= '$apply_end') AS t3
                     ) AS t4

@@ -133,7 +133,7 @@ else
             array_push($leaves, $end->format("Ymd") . " P");
         }
 
-        $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id WHERE a.uid = " . $user_id . " and a.status = 0 and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
+        $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id WHERE a.uid = " . $user_id . " and a.status in (0, 1) and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
         $stmt = $db->prepare( $query );
         $stmt->execute();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -301,6 +301,43 @@ else
                     echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
                 }
             }
+
+            // send mail to first approver
+            $first_name = '';
+            $first_email = '';
+            $first_uid = 0;
+
+            $second_name = '';
+            $second_email = '';
+            $second_uid = 0;
+
+            $query = "select uid, username, email, flow from leave_flow lf LEFT JOIN user u ON lf.uid = u.id where u.STATUS = 1 and lf.apartment_id = " . $apartment_id . " order by flow";
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if($row['flow'] == 1)
+                {
+                    $first_name = $row['username'];
+                    $first_email = $row['email'];
+                    $first_uid = $row['uid'];
+                }
+
+                if($row['flow'] == 2)
+                {
+                    $second_name = $row['username'];
+                    $second_email = $row['email'];
+                    $second_uid = $row['uid'];
+                }
+            }
+
+            // if first approver leave
+            $query = "select uid, username, email, flow from leave_flow lf LEFT JOIN user u ON lf.uid = u.id where u.STATUS = 1 and lf.apartment_id = " . $apartment_id . " order by flow";
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+
 
             http_response_code(200);
             echo json_encode(array("message" => "Apply Success at " . date("Y-m-d") . " " . date("h:i:sa")));
