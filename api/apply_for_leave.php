@@ -36,6 +36,8 @@ include_once 'objects/apply_for_leave.php';
 include_once 'objects/leave.php';
 include_once 'config/conf.php';
 
+include_once 'mail.php';
+
 $database = new Database();
 $db = $database->getConnection();
 
@@ -57,6 +59,9 @@ else
 
         $user_id = $decoded->data->id;
         $apartment_id = $decoded->data->apartment_id;
+
+        $user_name = $decoded->data->username;
+        $user_department = $decoded->data->department;
 
         $leaves = array();
         $applied = array();
@@ -234,6 +239,8 @@ else
         $afl->pic_url = $filename;
         $afl->leave = $leave;
         $afl->reason = $reason;
+
+        $leav_msg = "[" . $user_department . "] " . $user_name . " apply leave from " . $start_date . " " . $start_time . " to " . $end_date . " " . $end_time;
        
 
         $id = $afl->create();
@@ -302,7 +309,11 @@ else
                 }
             }
 
-            // send mail to first approver
+            // send mail to approver
+            $mail_name = '';
+            $mail_email = '';
+            $mail_id = '';
+
             $first_name = '';
             $first_email = '';
             $first_uid = 0;
@@ -332,11 +343,32 @@ else
             }
 
             // if first approver leave
-            $query = "select uid, username, email, flow from leave_flow lf LEFT JOIN user u ON lf.uid = u.id where u.STATUS = 1 and lf.apartment_id = " . $apartment_id . " order by flow";
+            $query = "SELECT * FROM `leave` WHERE apply_date >= DATE_FORMAT(NOW(), '%Y%m%d') AND apply_date <=  DATE_FORMAT(NOW(), '%Y%m%d') AND uid = " . $first_uid . " AND STATUS <> -1 limit 1";
 
             $stmt = $db->prepare( $query );
             $stmt->execute();
 
+
+            $mail_name = $first_name;
+            $mail_email = $first_email;
+            $mail_id = $first_uid;
+
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $mail_name = $second_name;
+                $mail_email = $second_email;
+                $mail_id = $second_uid;
+            }
+
+            $date = new DateTime();
+
+            $par_approve = "leave_id=". $id . "&uid=" . $mail_id. "&action=approve&time=" . $date->getTimestamp();
+            $par_reject = "leave_id=". $id . "&uid=" . $mail_id. "&action=reject&time" . $date->getTimestamp();
+
+            $appove_hash = "https://127.0.0.1/feliix/api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_approve));
+            $reject_hash = "https://127.0.0.1/feliix/api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_reject));
+
+            sendMail($mail_name, $mail_email, $appove_hash, $reject_hash, $leav_msg);
 
 
             http_response_code(200);

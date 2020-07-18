@@ -56,6 +56,26 @@ class LeaveFlow{
         return false;
     }
 
+    function update_leaves($apply_id){
+        $query = "UPDATE " . $this->table_name . "
+
+                WHERE apply_id = :apply_id";
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // bind the values from the form
+        // unique ID of record to be edited
+        $stmt->bindParam(':apply_id', $this->apply_id);
+
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+
+        return false;
+    }
+
 
     // update a user record
     public function delete(){
