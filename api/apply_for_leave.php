@@ -365,8 +365,10 @@ else
             $par_approve = "leave_id=". $id . "&uid=" . $mail_id. "&action=approve&time=" . $date->getTimestamp();
             $par_reject = "leave_id=". $id . "&uid=" . $mail_id. "&action=reject&time" . $date->getTimestamp();
 
-            $appove_hash = "https://127.0.0.1/feliix/api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_approve));
-            $reject_hash = "https://127.0.0.1/feliix/api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_reject));
+            $conf = new Conf();
+
+            $appove_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_approve));
+            $reject_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_reject));
 
             sendMail($mail_name, $mail_email, $appove_hash, $reject_hash, $leav_msg);
 
