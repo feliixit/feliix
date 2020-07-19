@@ -285,7 +285,14 @@ else
                     http_response_code(401);
                     echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
                 }
+
+                http_response_code(200);
+                echo json_encode(array("message" => "Apply Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+                die();
             }
+
+            // now decide who get mail
+            $who_get_mail = 1;
 
             // first approver goes to second approver
             $query = "select * from leave_flow where flow = 1 and apartment_id = " . $apartment_id . " and uid = " . $user_id;
@@ -307,6 +314,8 @@ else
                     http_response_code(401);
                     echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
                 }
+
+                $who_get_mail = 2;
             }
 
             // send mail to approver
@@ -355,6 +364,21 @@ else
 
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $mail_name = $second_name;
+                $mail_email = $second_email;
+                $mail_id = $second_uid;
+
+                $ret = false;
+                $ret = $afl->approval($id, $user_id);
+                if(!$ret)
+                {
+                    http_response_code(401);
+                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                }
+
+            }
+
+            if($who_get_mail == 2){
                 $mail_name = $second_name;
                 $mail_email = $second_email;
                 $mail_id = $second_uid;

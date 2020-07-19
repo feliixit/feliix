@@ -37,6 +37,9 @@ else
     }
 }
 
+
+include_once 'mail.php';
+
 include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
@@ -136,6 +139,66 @@ if($row_id != "")
 }
 
 
+// send mail
+$mail_name = '';
+$mail_email = '';
+$mail_uid = 0;
+
+$query = "SELECT u.id, u.username, u.email FROM leave_flow l left join user u ON l.uid = u.id WHERE l.apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . ") AND flow = 2 AND l.uid <> " . $user_id . "";
+
+$stmt = $db->prepare( $query );
+$stmt->execute();
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $mail_name = $row['username'];
+    $mail_email = $row['email'];
+    $mail_uid = $row['id'];
+}
+
+$need_mail = 0;
+
+$leav_msg = "";
+$username = "";
+$start_date = "";
+$start_time = "";
+$end_date = "";
+$end_time = "";
+
+$query = "
+    select username, start_date, start_time, end_date, end_time from apply_for_leave a LEFT join user u ON a.uid = u.id
+    WHERE a.STATUS <> -1 AND approval_id  = " . $user_id . " AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
+    AND a.id in (" . $id . ")
+";
+
+$stmt = $db->prepare( $query );
+$stmt->execute();
+
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $need_mail = 1;
+    $username = $row["username"];
+    $start_date = $row["start_date"];
+    $start_time = $row["start_time"];
+    $end_date = $row["end_date"];
+    $end_time = $row["end_time"];
+
+    $leav_msg =  $username . " apply leave from " . $start_date . " " . $start_time . " to " . $end_date . " " . $end_time;
+}
+
+
+
+if($need_mail == 1 && $mail_uid <> 0)
+{
+    $date = new DateTime();
+
+    $par_approve = "leave_id=". $id . "&uid=" . $mail_uid. "&action=approve&time=" . $date->getTimestamp();
+    $par_reject = "leave_id=". $id . "&uid=" . $mail_uid. "&action=reject&time" . $date->getTimestamp();
+
+    $conf = new Conf();
+
+    $appove_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_approve));
+    $reject_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_reject));
+
+    sendMail($mail_name, $mail_email, $appove_hash, $reject_hash, $leav_msg);
+}
 
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
