@@ -386,6 +386,34 @@ else
 
             $date = new DateTime();
 
+            $leaver = "";
+            $department = "";
+            $app_time = "";
+            $leave_type = "";
+            $start_time = "";
+            $end_time = "";
+            $leave_length = 0;
+            $reason = "";
+            $imgurl = "";
+
+            // first approver goes to second approver
+            $query = "SELECT u.username, d.department, a.created_at, a.leave_type, a.`leave`, a.start_date, a.start_time, a.end_date, a.end_time, a.reason, a.pic_url  from `user` u LEFT JOIN `apply_for_leave` a ON u.id = a.uid LEFT JOIN user_department d ON d.id = u.apartment_id WHERE a.id = ". $id . " AND u.`status` <> -1 ";
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $leaver = $row['username'];
+                $department = $row['department'];
+                $app_time = $row['created_at'];
+                $leave_type = getLeaveType($row['leave_type']);
+                $start_time = formateDate($row['start_date']) . " " . $row['start_time'];
+                $end_time = formateDate($row['end_date']) . " " . $row['end_time'];
+                $leave_length = $row['leave'];
+                $reason = $row['reason'];
+                $imgurl = $row['pic_url'];
+            }
+
             $par_approve = "leave_id=". $id . "&uid=" . $mail_id. "&action=approve&time=" . $date->getTimestamp();
             $par_reject = "leave_id=". $id . "&uid=" . $mail_id. "&action=reject&time" . $date->getTimestamp();
 
@@ -394,7 +422,7 @@ else
             $appove_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_approve));
             $reject_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_reject));
 
-            sendMail($mail_name, $mail_email, $appove_hash, $reject_hash, $leav_msg);
+            sendMail($mail_name, $mail_email, $appove_hash, $reject_hash, $leav_msg, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl);
 
 
             http_response_code(200);
@@ -410,4 +438,24 @@ else
         echo json_encode(array("message" => "Access denied."));
 
     }
+}
+
+
+function getLeaveType($type){
+    $leave_type = '';
+
+    if($type =="A")
+        $leave_type = "Vacation Leave";
+    if($type =="B")
+        $leave_type = "Emerency/Sick Leave";
+    if($type =="C")
+        $leave_type = "Unpaid Leave";
+    if($type =="D")
+        $leave_type = "Absence";
+    
+    return $leave_type;
+}
+
+function formateDate($_date){
+    return substr($_date, 0, 4)."/".substr($_date, 4, 2)."/".substr($_date, 6, 2);
 }

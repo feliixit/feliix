@@ -215,7 +215,7 @@ if($jwt){
                                        AND t1.duty_date <= '$apply_end') AS t3
                     ) AS t4
                 WHERE (t4.rank1=1) OR (t4.rank2=1) 
-                ORDER BY t4.username, t4.duty_date, t4.duty_time";
+                ORDER BY t4.username, t4.duty_date, t4.id";
 
 
             $stmt = $db->prepare( $sql );

@@ -158,14 +158,19 @@ $need_mail = 0;
 
 $leav_msg = "";
 $username = "";
-$start_date = "";
+$leaver = "";
+$department = "";
+$app_time = "";
+$leave_type = "";
 $start_time = "";
-$end_date = "";
 $end_time = "";
+$leave_length = 0;
+$reason = "";
+$imgurl = "";
 
 $query = "
-    select username, start_date, start_time, end_date, end_time from apply_for_leave a LEFT join user u ON a.uid = u.id
-    WHERE a.STATUS <> -1 AND approval_id  = " . $user_id . " AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
+    SELECT u.username, d.department, a.created_at, a.leave_type, a.`leave`, a.start_date, a.start_time, a.end_date, a.end_time, a.reason, a.pic_url  from `user` u LEFT JOIN `apply_for_leave` a ON u.id = a.uid LEFT JOIN user_department d ON d.id = u.apartment_id 
+    WHERE a.STATUS <> -1 AND a.approval_id  = " . $user_id . " AND a.reject_id = 0 AND a.re_approval_id = 0 AND a.re_reject_id = 0 
     AND a.id in (" . $id . ")
 ";
 
@@ -174,16 +179,22 @@ $stmt->execute();
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $need_mail = 1;
-    $username = $row["username"];
-    $start_date = $row["start_date"];
-    $start_time = $row["start_time"];
-    $end_date = $row["end_date"];
-    $end_time = $row["end_time"];
+    $leaver = $row['username'];
+    $department = $row['department'];
+    $app_time = $row['created_at'];
+    $leave_type = getLeaveType($row['leave_type']);
+    $start_time = formateDate($row['start_date']) . " " . $row['start_time'];
+    $end_time = formateDate($row['end_date']) . " " . $row['end_time'];
+    $leave_length = $row['leave'];
+    $reason = $row['reason'];
+    $imgurl = $row['pic_url'];
 
     $leav_msg =  $username . " apply leave from " . $start_date . " " . $start_time . " to " . $end_date . " " . $end_time;
+
+    sendMail($mail_name, $mail_email, '', '', '', $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl);
 }
 
-
+/*
 
 if($need_mail == 1 && $mail_uid <> 0)
 {
@@ -197,8 +208,30 @@ if($need_mail == 1 && $mail_uid <> 0)
     $appove_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_approve));
     $reject_hash = $conf::$mail_ip . "api/leave_record_approval_hash?p=" . base64url_encode(passport_encrypt($par_reject));
 
-    sendMail($mail_name, $mail_email, $appove_hash, $reject_hash, $leav_msg);
+    sendMail($mail_name, $mail_email, $appove_hash, $reject_hash, $leav_msg, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl);
 }
-
+*/
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
+
+
+function getLeaveType($type){
+    $leave_type = '';
+
+    if($type =="A")
+        $leave_type = "Vacation Leave";
+    if($type =="B")
+        $leave_type = "Emerency/Sick Leave";
+    if($type =="C")
+        $leave_type = "Unpaid Leave";
+    if($type =="D")
+        $leave_type = "Absence";
+    
+    return $leave_type;
+}
+
+function formateDate($_date){
+    return substr($_date, 0, 4)."/".substr($_date, 4, 2)."/".substr($_date, 6, 2);
+}
+

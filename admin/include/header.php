@@ -10,6 +10,7 @@ include_once '../../api/libs/php-jwt-master/src/BeforeValidException.php';
 include_once '../../api/libs/php-jwt-master/src/ExpiredException.php';
 include_once '../../api/libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once '../../api/libs/php-jwt-master/src/JWT.php';
+include_once '../../api/config/database.php';
 use \Firebase\JWT\JWT;
 
 try {
@@ -19,6 +20,26 @@ try {
         $username = $decoded->data->username;
         $position = $decoded->data->position;
         $department = $decoded->data->department;
+
+        $user_id = $decoded->data->id;
+            
+        // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
+        $access1 = false;
+        $database = new Database();
+        $db = $database->getConnection();
+
+        $query = "SELECT * FROM leave_flow WHERE uid = " . $user_id;
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $access1 = true;
+        }
+
+        // 2. 針對 Query and Export的內容，只有 Glendon Wendell Co 和 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到
+        $access2 = false;
+        if($user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
+            $access2 = true;
+
 
         //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
         //    header( 'location:index.php' );
@@ -55,11 +76,18 @@ try {
             <li class="sec02">
                 <a class="uni">Process<br>Management</a>
             </li>
+            <?php 
+                if($access1 == true || $access2 == true)
+                {
+            ?>
             <li class="gray05">
                 <a class="uni">Admin<br>Section</a>
-                <a class="list" href="../ammend">Verify and Review</a>
-                <a class="list" href="../query_export">Query and Export</a>
+                <?=($access1 == true) ? '<a class="list" href="../ammend">Verify and Review</a>' : '' ?>
+                <?=($access2 == true) ? '<a class="list" href="../query_export">Query and Export</a>' : '' ?>
             </li>
+            <?php 
+                }
+            ?>
             <li class="gray02">
                 <a class="uni" href="user">System<br>Section</a>
             </li>
