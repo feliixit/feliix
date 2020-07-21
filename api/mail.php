@@ -9,6 +9,45 @@ require '../PHPMailer-master/src/SMTP.php';
 
 include_once 'config/core.php';
 include_once 'config/conf.php';
+include_once 'config/database.php';
+
+function logMail($email, $content){
+
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $query = "INSERT INTO mail_log
+                (`approve`, `content`) 
+                VALUES (:approve, :content)";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        $content_b = addslashes($content);
+
+            $stmt->bindParam(':approve', $email);
+            $stmt->bindParam(':content', $content_b);
+            
+
+        try {
+            // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+                $last_id = $db->lastInsertId();
+            }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+            }
+        }
+        catch (Exception $e)
+        {
+            error_log($e->getMessage());
+        }
+
+
+        return $last_id;
+}
 
 function sendMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl) {
     $conf = new Conf();
@@ -53,11 +92,13 @@ function sendMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leave
     $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
 
     $mail->MsgHTML($content);
-    if(!$mail->Send()) {
+    if($mail->Send()) {
+        logMail($email, $content);
         return true;
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
+        logMail($email, $mail->ErrorInfo);
         return false;
 //        echo "Email sent successfully";
     }

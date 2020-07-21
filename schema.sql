@@ -389,3 +389,12 @@ CREATE TABLE IF NOT EXISTS `leave_flow` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
+
+-- 信件歷史
+CREATE TABLE IF NOT EXISTS `mail_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `approve` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `login_time` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
