@@ -143,7 +143,7 @@ $(function(){
             </div>
         </div>
         <div class="block B">
-            <h6>Leave 
+            <h6>Leave Application
                 
                 <div class="function">
                     <!--
@@ -162,8 +162,8 @@ $(function(){
                 <div class="title">
                     <b>Select Period</b>
                     <div class="function">
-                        <input type="date" id="apply_start" />
-                       <input type="date" id="apply_end" />
+                        <input type="date" v-model="leave_start" />
+                       <input type="date" v-model="leave_end" />
 <!--
                         <b class="light green"></b>All
                         <b class="light blue"></b>Waiting for Approval
@@ -172,7 +172,7 @@ $(function(){
                 </div>
       
                 <div class="btnbox">
-                    <a class="btn">Export</a>
+                    <a class="btn" @click="leave" :disabled="submit">Export</a>
                 
                 </div>
             </div>

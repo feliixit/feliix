@@ -9,6 +9,9 @@ include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
+
+include_once 'config/conf.php';
+
 use \Firebase\JWT\JWT;
  
 // files needed to connect to database
@@ -34,6 +37,8 @@ $apply_end = (isset($_POST['apply_end']) ?  $_POST['apply_end'] : '');
 
 $apply_start = str_replace('-', '/', $apply_start);
 $apply_end = str_replace('-', '/', $apply_end);
+
+$conf = new Conf();
 
 // if jwt is not empty
 if($jwt){
@@ -100,6 +105,8 @@ if($jwt){
             $sheet->setCellValue('G1', 'Photo');
             $sheet->setCellValue('H1', 'Remark');
 
+            
+
 
             $i = 2;
             foreach($merged_results as $row)
@@ -113,7 +120,7 @@ if($jwt){
 
                 if($row['pic_url'] != '')
                 {
-                    $link = 'https://feliix.myvnc.com/img/' . $row['pic_url'];
+                    $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
                     $sheet->setCellValue('G' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(7,$i)->getHyperlink()->setUrl($link);
                 }
@@ -171,6 +178,8 @@ if($jwt){
             $sheet->setCellValue('H1', 'Remark');
 
 
+
+
             $i = 2;
             foreach($merged_results as $row)
             {
@@ -183,7 +192,7 @@ if($jwt){
 
                 if($row['pic_url'] != '')
                 {
-                    $link = 'https://feliix.myvnc.com/img/' . $row['pic_url'];
+                    $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
                     $sheet->setCellValue('G' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(7,$i)->getHyperlink()->setUrl($link);
                 }
@@ -253,7 +262,7 @@ if($jwt){
 
                 if($row['pic_url'] != '')
                 {
-                    $link = 'https://feliix.myvnc.com/img/' . $row['pic_url'];
+                    $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
                     $sheet->setCellValue('G' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(7,$i)->getHyperlink()->setUrl($link);
                 }
