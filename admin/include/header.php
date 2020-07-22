@@ -13,6 +13,9 @@ include_once '../../api/libs/php-jwt-master/src/JWT.php';
 include_once '../../api/config/database.php';
 use \Firebase\JWT\JWT;
 
+$access1 = false;
+$access2 = false;
+
 try {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -24,7 +27,7 @@ try {
         $user_id = $decoded->data->id;
             
         // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
-        $access1 = false;
+        
         $database = new Database();
         $db = $database->getConnection();
 
