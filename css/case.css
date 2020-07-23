@@ -8,6 +8,8 @@ header .headerbox{ width: 100%; height: 178px; padding-top: 98px; background-col
 body.primary header > .headerbox{background-color: var(--pri01a);}
 body.second  header > .headerbox{background-color: var(--sec01);}
 body.third  header > .headerbox{background-color: var(--sec03);}
+body.black  header > .headerbox{background-color: var(--black01);}
+body.cyan header > .headerbox{background-color: var(--cyan01);}
 
 header .logo{ display: inline-block; width: 188px; height: 43px; background-image: url(../images/ui/logo_light.svg);  background-size: contain; background-repeat: no-repeat; background-position: center;}
 header > .headerbox .logo{ margin-left: calc(-37px - 21px);}
@@ -173,3 +175,48 @@ body.third .mainContent > .block .tablebox > ul > li{text-align: center; padding
 body.third .mainContent > .block .tablebox ul.head,
 body.third .mainContent > .block .formbox li.head{ background-color: var(--sec03); font-weight: 800;}
 body.third .mainContent > .block .tablebox ul.head li{ font-weight: 800;}
+
+/* -------------------------- */
+/* body.black Style (Blue) */
+/* -------------------------- */
+
+body.black .mainContent > .block,
+body.black .mainContent > .block h6,
+body.black .mainContent > .block .tablebox,
+body.black .mainContent > .block .tablebox > ul > li,
+body.black .mainContent > .block .tablebox2,
+body.black .mainContent > .block .formbox,
+body.black .mainContent > .block .formbox dd,
+body.black .mainContent > .tags a{ border-color: var(--black01);}
+
+body.black .mainContent > .block h6{ color: var(--black01);}
+
+body.black .mainContent > .block .tablebox > ul.head > li,
+body.black .mainContent > .tags a{ background-color:#EFEFEF;}
+body.black .mainContent > .tags a.focus{background-color:var(--black01);}
+
+body.black .mainContent > .block .tablebox{ border-top: 2px solid var(--black01); border-left: 2px solid var(--black01); width: 100%;}
+body.black .mainContent > .block .tablebox > ul > li{text-align: center; padding: 10px; border-bottom: 2px solid var(--black01); border-right: 2px solid var(--black01); font-weight: 500; font-size: 16px; vertical-align: middle;}
+body.black .mainContent > .block .tablebox ul.head,
+body.black .mainContent > .block .formbox li.head{ background-color: var(--black01); font-weight: 800;}
+body.black .mainContent > .block .tablebox ul.head li{ font-weight: 800;}
+
+
+/* -------------------------- */
+/* body.second Style (Yellow) */
+/* -------------------------- */
+
+body.cyan .mainContent > .block,
+body.cyan .mainContent > .block h6,
+body.cyan .mainContent > .block .tablebox,
+body.cyan .mainContent > .block .tablebox > ul > li,
+body.cyan .mainContent > .block .tablebox2,
+body.cyan .mainContent > .block .formbox,
+body.cyan .mainContent > .block .formbox dd,
+body.cyan .mainContent > .tags a{ border-color: var(--cyan01);}
+
+body.cyan .mainContent > .block h6{ color: var(--cyan01);}
+
+body.cyan .mainContent > .block .tablebox > ul.head > li,
+body.cyan .mainContent > .tags a{ background-color:var(--cyan03);}
+body.cyan .mainContent > .tags a.focus{background-color:var(--cyan01);}

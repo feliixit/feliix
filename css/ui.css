@@ -20,6 +20,11 @@
     --gray04:#414042; /* dark gray */
     --gray05:#000000; /* black */
     
+    --black01:#000000;
+
+    --cyan01:#18BAC7;
+    --cyan02:#45C8D2;
+    --cyan03:#D2F1F4;
 
 }
 
@@ -328,3 +333,65 @@ body.third select {background-image: url(../images/ui/icon_form_select_arrow_blu
 
 body.third a.btn{background-color:var(--sec03); }
 body.third a.btn:hover{background-color:var(--gray02);}
+
+
+
+
+/* -------------------------- */
+/* body.black Style (Yellow) */
+/* -------------------------- */
+body.black input.alone[type=radio]::before,
+body.black input.alone[type=checkbox]::before,
+body.black input[type=checkbox]+Label::before,
+body.black input[type=radio]+Label::before{ color: var(--black01);}
+
+body.black input[type=range],
+body.black input[type=text],
+body.black input[type=password],
+body.black input[type=file],
+body.black input[type=number],
+body.black input[type=url],
+body.black input[type=email],
+body.black input[type=tel],
+body.black input[list],
+body.black input[type=button],
+body.black input[type=submit],
+body.black button,
+body.black textarea,
+body.black select,
+body.black output{ border-color: var(--black01);}
+
+body.black select {background-image: url(../images/ui/icon_form_select_arrow_black.svg);}
+
+body.black a.btn{background-color:var(--black01); }
+body.black a.btn:hover{background-color:var(--gray02);}
+
+
+/* -------------------------- */
+/* body.cyan Style (Yellow) */
+/* -------------------------- */
+body.cyan input.alone[type=radio]::before,
+body.cyan input.alone[type=checkbox]::before,
+body.cyan input[type=checkbox]+Label::before,
+body.cyan input[type=radio]+Label::before{ color: var(--cyan01);}
+
+body.cyan input[type=range],
+body.cyan input[type=text],
+body.cyan input[type=password],
+body.cyan input[type=file],
+body.cyan input[type=number],
+body.cyan input[type=url],
+body.cyan input[type=email],
+body.cyan input[type=tel],
+body.cyan input[list],
+body.cyan input[type=button],
+body.cyan input[type=submit],
+body.cyan button,
+body.cyan textarea,
+body.cyan select,
+body.cyan output{ border-color: var(--cyan01);}
+
+body.cyan select {background-image: url(../images/ui/icon_form_select_arrow_cyan.svg);}
+
+body.cyan a.btn{background-color:var(--cyan01); }
+body.cyan a.btn:hover{background-color:var(--cyan02);}

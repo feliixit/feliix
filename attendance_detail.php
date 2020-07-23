@@ -64,7 +64,8 @@ $(function(){
                         <li class="head">Department</li>
                         <li>{{ department }}</li>
                     </ul>
-                    <div style="border-style: dotted; border-color: #fdb72f; padding:5px;" v-for='(record, index) in displayedRecord'>
+                    <!-- <div style="border-style: dotted; border-color: #fdb72f; padding:5px;" v-for='(record, index) in displayedRecord'> -->
+                    <div v-for='(record, index) in displayedRecord'>
                         <ul v-if="record.duty_type === 'A'">
                             <li class="head">On-Duty Time</li>
                             <li>{{ record.duty_date }}  {{ record.duty_time }}</li>
@@ -90,7 +91,8 @@ $(function(){
                         <br />
                         <br />
                     </div>
-                    <div style="border-style: dotted; border-color: gray; padding:5px;" v-for='(record, index) in displayedLeaveRecord'>
+                    <!-- <div style="border-style: dotted; border-color: gray; padding:5px;" v-for='(record, index) in displayedLeaveRecord'> -->
+                    <div v-for='(record, index) in displayedLeaveRecord'>
                         <ul>
                             <li class="head">Off-Duty Time</li>
                             <li>{{ record.duty_date }} {{ record.duty_time }}</li>

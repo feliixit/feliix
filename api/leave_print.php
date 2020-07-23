@@ -154,7 +154,7 @@ if($jwt){
                 {
                     $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
                     $sheet->setCellValue('H' . $i, 'Photo');
-                    $sheet->getCellByColumnAndRow(7,$i)->getHyperlink()->setUrl($link);
+                    $sheet->getCellByColumnAndRow(8,$i)->getHyperlink()->setUrl($link);
                 }
                 else
                     $sheet->setCellValue('H' . $i, '');

@@ -94,7 +94,7 @@ $(function(){
 
 </head>
 
-<body class="third">
+<body class="black">
  	
 <div class="bodybox">
     <!-- header -->

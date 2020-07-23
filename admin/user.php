@@ -57,7 +57,7 @@ $(function(){
     }
 </style>
 
-<body class="primary">
+<body class="cyan">
  	
 <div class="bodybox">
     <!-- header -->
