@@ -61,7 +61,7 @@ $(function(){
         <img src="images/wear_mask.png" height="auto" width="33%" /><img src="images/wash_hands.png" height="auto" width="33%" /><img src="images/dont_touch_face.png" height="auto" width="33%"  />
         <div></div>
        <div style="font-size:5vw;; font-weight: bold;">COVID-19 Hotlines</div>
-       <div style="font-size:5vw;; font-weight: bold;">155 and 02-894-COVID (26843)</div>
+       <div style="font-size:5vw;; font-weight: bold;">1555 and 02-894-COVID (26843)</div>
     </div>
 </div>
 </body>
