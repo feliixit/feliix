@@ -53,9 +53,15 @@ $(function(){
     <!-- header -->
 	<header>header</header>
     <!-- header end -->
-    <div class="mainContent">
+    <div class="mainContent" style="text-align: center;">
         <!-- mainContent為動態內容包覆的內容區塊 -->
-       
+        <div style="font-size:5vw; font-weight: bold;">Wear Mask</div>
+        <div style="font-size:5vw;; font-weight: bold;">Wash Hands</div>
+        <div style="font-size:5vw;; font-weight: bold;">Don't Touch Face</div>
+        <img src="images/wear_mask.png" height="auto" width="33%" /><img src="images/wash_hands.png" height="auto" width="33%" /><img src="images/dont_touch_face.png" height="auto" width="33%"  />
+        <div></div>
+       <div style="font-size:5vw;; font-weight: bold;">COVID-19 Hotlines</div>
+       <div style="font-size:5vw;; font-weight: bold;">155 and 02-894-COVID (26843)</div>
     </div>
 </div>
 </body>
