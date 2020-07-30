@@ -4,20 +4,9 @@
 }
 @media screen and (max-width: 640px) {
 	/* width */
-}
-@media screen and (orientation:portrait) {
-	/* 直式瀏覽 */
-}
-@media screen and (orientation:landscape) {
-	/* 橫式瀏覽 */
-}
-
-
-@media screen and (max-width: 640px) and (orientation:portrait) {
-	/* 行動裝置直式瀏覽 */
-
-}
-@media screen and (max-width: 640px) and (orientation:landscape) {
-	/* 行動裝置橫式瀏覽 */
-
+    header .headerbox{height: 178px; padding-top: 98px; }
+    header > .headerbox .logo{ margin-left: calc(-37px - 21px); float: none;}
+    header > .headerbox i{ display: none;}
+    
+    .mainContent{ padding-top: 200px;}
 }

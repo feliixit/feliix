@@ -14,6 +14,16 @@
     --sec02:#2F9A57; /* second green */
     --sec03:#4882C3; /* second blue */
     
+    --fth01:#1e6ba8; /* fourth blue */
+    --fth02:#e4f1f6; /* fourth light blue */
+    --fth03:#14456c; /* dark blue */
+    --fth04:#00811e; /* green */
+    
+    --cat01:#fa2013; /* red */
+    --cat02:#fba52a; /* orange */
+    --cat03:#0a8019; /* green */
+    --cat04:#808080; /* gray */
+    
     --gray01:#E2E2E2; /* light */
     --gray02:#C3C3C3; /* light gray */
     --gray03:#707071; /* normal gray */
@@ -96,7 +106,7 @@ body{font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體",
 header{}
 footer{}
 
-.bodybox{overflow:hidden; min-height:100%; position: relative;}
+.bodybox{overflow:hidden; min-height:100vh; position: relative;}
 .mainContent {min-height:100%;}
 
 .svg-icon{width: 30px; height: 30px; background: url(../Images/ui/icon.svg) no-repeat -30px -30px; background-size: 1000%;}
@@ -153,7 +163,9 @@ a.btn:hover{background-color:var(--pri01b); }
 .btngroup a.btn:last-child{ border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-right: none;}
 
 .btnbox{ width: 100%; display: inline-block; text-align: center; padding: 20px;}
-.btnbox .btn{margin: 0 15px;}
+.btnbox .btn{margin: 0 8px;}
+
+a.btn.green{background-color:var(--thd04);}
 
 /* tablebox / formbox */
 .tablebox,
@@ -232,7 +244,7 @@ input:focus,
 button:focus,
 select:focus { border-color:#333; /*box-shadow:0 0 6px rgba(0,0,0,0.4); */outline:0 none;}
 
-input:disabled, button:disabled {opacity:0.5; cursor: default;}
+input:disabled, button:disabled {opacity:0.3; cursor: default;}
 
 input[type=number] { -moz-appearance:textfield; }
 input[type=number]::-webkit-inner-spin-button,
@@ -251,7 +263,7 @@ input[type=radio]+Label::before{content:"radio_button_unchecked";}
 input[type=radio]:checked+Label::before{content:"radio_button_checked";}
 
 select {
-    background-image: url(../images/ui/icon_form_select_arrow.svg);
+    background-image: url(../Images/ui/icon_form_select_arrow.svg);
     background-size: auto 100%;
     background-position: 100% center;
     background-repeat: no-repeat;
@@ -299,7 +311,7 @@ body.second textarea,
 body.second select,
 body.second output{ border-color: var(--sec01);}
 
-body.second select {background-image: url(../images/ui/icon_form_select_arrow_yellow.svg);}
+body.second select {background-image: url(../Images/ui/icon_form_select_arrow_yellow.svg);}
 
 body.second a.btn{background-color:var(--sec01); }
 body.second a.btn:hover{background-color:var(--gray02);}
