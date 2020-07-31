@@ -226,13 +226,20 @@ body.cyan .mainContent > .tags a.focus{background-color:var(--cyan01);}
 /*   body.fourth Style (Blue)  */
 /* -------------------------- */
 
-body.fourth .mainContent > .block{ border: none; display: block; margin-bottom: 40px;}
+body.fourth .mainContent { font-size: 0;}
+body.fourth .mainContent > .block{ border: none; display: inline-block; overflow: auto; margin-bottom: 40px;}
 
 body.fourth .mainContent > .block .tablebox,
 body.fourth .mainContent > .block .tablebox > ul > li,
 body.fourth .mainContent > .block .tablebox2{ border-color: var(--fth03); background-color:var(--fth02);}
 body.fourth .mainContent > .block .tablebox > ul.head > li{background-color:var(--fth01); color: #FFF;}
 body.fourth .mainContent > .block .tablebox{ margin: 15px 0;}
+
+.block.left{ width: 40%;}
+.block.right{ width: 60%;}
+
+
+
 
 .list_function{ display: block; width: 100%;}
 .list_function::after{ content: ''; display: table; clear: both;}
@@ -290,8 +297,9 @@ body.fourth .mainContent > .block .tablebox{ margin: 15px 0;}
 .tablebox.lv1 li:nth-of-type(10){ color:var(--fth01);}
 
 
-/* table list tag color */
+/* table list tag color define */
 .tablebox.lv1 i{ font-style: normal; color: #FFF; display: inline-block; border-radius: 5px; padding: 5px; white-space: nowrap; width: 100%;}
+
 /* Client Type */
 .tablebox.lv1 i.ct01{ background-color: #fa6e23;}
 .tablebox.lv1 i.ct02{ background-color: #f9541e;}
@@ -307,7 +315,16 @@ body.fourth .mainContent > .block .tablebox{ margin: 15px 0;}
 .tablebox.lv1 i.pt03{ background-color: #01ab8e;}
 .tablebox.lv1 i.pt04{ background-color: #f93e2b;}
 .tablebox.lv1 i.pt05{ background-color: #e22627;}
-/*  */
+/* Task Status */
 .tablebox.lv1 i.st01{ background-color: #02ab8a;}
 .tablebox.lv1 i.st02{ background-color: #f93e2b;}
 .tablebox.lv1 i.st03{ background-color: #222;}
+
+
+
+
+
+
+
+
+
