@@ -62,8 +62,7 @@ $(function(){
         <div class="block">
             <div class="list_function">
                 <div class="new_project">
-                    
-                    <a class="add">+</a>
+                    <a class="add"></a>
                     <div class="dialog">
                         <h6>Create New Project:</h6>
                         <div class="formbox">
