@@ -82,7 +82,7 @@ try {
                 if($access1 == true || $access2 == true)
                 {
             ?>
-            <li class="gray05" style="border: 3px solid var(--black01);">
+            <li class="gray05">
                 <a class="uni">Admin<br>Section</a>
                 <?=($access1 == true) ? '<a class="list" href="ammend">Verify and Review</a>' : '' ?>
                 <?=($access2 == true) ? '<a class="list" href="query_export">Query and Export</a>' : '' ?>
@@ -90,7 +90,7 @@ try {
             <?php 
                 }
             ?>
-            <li class="cyan01" style="border: 3px solid var(--cyan01);" >
+            <li class="gray02">
                 <a class="uni" href="admin/user">System<br>Section</a>
             </li>
         </ul>
