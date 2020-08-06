@@ -48,7 +48,7 @@ $merged_results = array();
 
 /* fetch data */
 
-$query = " SELECT on_duty.id, username, COALESCE(department, '') department, COALESCE(title, '') title, duty_date, duty_time, location, COALESCE(on_duty.pic_url, '') pic_url, COALESCE(remark, '') remark, COALESCE(`explain`, '') exp FROM user LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id LEFT JOIN on_duty ON user.id = on_duty.uid WHERE duty_date = '" . $date . "' AND on_duty.duty_type = 'B' and on_duty.uid = " . $uid . " ORDER BY on_duty.created_at ";
+$query = " SELECT on_duty.id, username, COALESCE(department, '') department, COALESCE(title, '') title, duty_date, duty_time, location, COALESCE(on_duty.pic_url, '') pic_url, COALESCE(remark, '') remark, COALESCE(`explain`, '') exp, on_duty.duty_type FROM user LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id LEFT JOIN on_duty ON user.id = on_duty.uid WHERE duty_date = '" . $date . "' AND on_duty.duty_type = 'B' and on_duty.uid = " . $uid . " ORDER BY on_duty.created_at ";
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -65,6 +65,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $row_explain = $row['exp'];
     $row_department = $row['department'];
     $row_title = $row['title'];
+    $row_duty_type = $row['duty_type'];
     $row_location_detail = GetLocation($row['location']);
 
     $merged_results[] = array( "id" => $row_id,
@@ -77,6 +78,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "title" => $row_title,
                                 "remark" => $row_remark,
                                 "duty_explain" => $row_explain,
+                                "duty_type" => $row_duty_type,
                                 "location_detail" => $row_location_detail
     );
 

@@ -45,7 +45,7 @@ $subquery = "";
 
 $merged_results = array();
 
-$mdate = date("Ymd");
+$mdate = date('Ymd', strtotime(date('Y-m-d H:i:s'). ' - 6 days'));
 $edate = date('Ymd', strtotime(date('Y-m-d H:i:s'). ' + 6 days'));
 
 $subquery = "SELECT u.id, u.username, l.start_date, l.start_time, l.end_date, l.end_time, l.leave_type, CASE when l.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval FROM user u LEFT JOIN apply_for_leave l ON u.id = l.uid WHERE  start_date >= '" . $mdate . "' and end_date <= '" . $edate . "' AND l.STATUS <> -1 AND l.STATUS <> -2 ORDER BY u.username, l.start_date ";
