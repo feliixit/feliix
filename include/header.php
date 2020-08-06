@@ -90,7 +90,7 @@ try {
             <?php 
                 }
             ?>
-            <li class="gray02">
+            <li class="cyan01" style="border: 3px solid var(--cyan01);">
                 <a class="uni" href="admin/user">System<br>Section</a>
             </li>
         </ul>
