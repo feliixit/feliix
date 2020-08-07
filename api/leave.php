@@ -48,7 +48,7 @@ $merged_results = array();
 $mdate = date('Ymd', strtotime(date('Ymd'). ' + 0 days'));
 $edate = date('Ymd', strtotime(date('Ymd'). ' + 6 days'));
 
-$subquery = "SELECT u.id, u.username, l.start_date, l.start_time, l.end_date, l.end_time, l.leave_type, CASE when l.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval FROM user u LEFT JOIN apply_for_leave l ON u.id = l.uid WHERE  l.start_date between '" . $mdate . "' and '" . $edate . "' or  l.end_date between '" . $mdate . "' and '" . $edate . "' AND l.STATUS <> -1 AND l.STATUS <> -2 ORDER BY u.username, l.start_date ";
+$subquery = "SELECT u.id, u.username, l.start_date, l.start_time, l.end_date, l.end_time, l.leave_type, CASE when l.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval FROM user u LEFT JOIN apply_for_leave l ON u.id = l.uid WHERE  (l.start_date between '" . $mdate . "' and '" . $edate . "' or  l.end_date between '" . $mdate . "' and '" . $edate . "' or '" . $mdate . "' between l.start_date and l.end_date) AND l.STATUS <> -1 AND l.STATUS <> -2 ORDER BY u.username, l.start_date ";
 
 $stmt1 = $db->prepare( $subquery );
 $stmt1->execute();
