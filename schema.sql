@@ -400,9 +400,9 @@ CREATE TABLE IF NOT EXISTS `mail_log` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
 
-CREATE TABLE IF NOT EXISTS `project_catagory` (
+CREATE TABLE IF NOT EXISTS `project_category` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `catagory` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `category` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `status` int(11) DEFAULT 0,
