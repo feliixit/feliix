@@ -457,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `project_main` (
   `create_id` int(11) DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_id` int(11) DEFAULT 0,
-  `updated_at` timestamp DEFAULT NULL,
+  `updated_at` timestamp NULL,
   `period_start` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `period_end` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `stage_id` int(11) DEFAULT 0,
