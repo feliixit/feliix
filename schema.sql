@@ -447,10 +447,12 @@ CREATE TABLE IF NOT EXISTS `project_stage` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
 CREATE TABLE IF NOT EXISTS `project_main` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `catagory_id` bigint(20) unsigned NOT NULL,
-  `client_type` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `priority` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `catagory_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `client_type_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `priority_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `project_status_id` bigint(20)  DEFAULT 0 not null,
+  `stage_id` bigint(20)  DEFAULT 0  not null,
   `project_name` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `status` int(11) DEFAULT 0,
   `estimate_close_prob` int(11) DEFAULT 0,
@@ -460,6 +462,6 @@ CREATE TABLE IF NOT EXISTS `project_main` (
   `updated_at` timestamp NULL,
   `period_start` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `period_end` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `stage_id` int(11) DEFAULT 0,
+  `close_reason` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
