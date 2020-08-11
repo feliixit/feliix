@@ -412,6 +412,7 @@ CREATE TABLE IF NOT EXISTS `project_category` (
 CREATE TABLE IF NOT EXISTS `project_client_type` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `client_type` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `class_name`varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `status` int(11) DEFAULT 0,
@@ -421,6 +422,7 @@ CREATE TABLE IF NOT EXISTS `project_client_type` (
 CREATE TABLE IF NOT EXISTS `project_priority` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `priority` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `class_name`varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `status` int(11) DEFAULT 0,

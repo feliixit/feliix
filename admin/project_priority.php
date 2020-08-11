@@ -82,7 +82,11 @@ $(function(){
                         <li style="padding-bottom:10px;"><input type="text" v-model="priority" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%" ></li>
                         
                     </ul>
-
+                    <ul>
+                        <li><b>Class</b></li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="class_name" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%" ></li>
+                        
+                    </ul>
                     <div>
                         <div>
                             <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
@@ -99,7 +103,13 @@ $(function(){
                         <li style="padding-bottom:10px;"><input type="text" v-model="record.priority" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width: 100%"></li>
                         
                     </ul>
-
+                    <ul>
+                        <li>
+                            <b>Class</b>
+                        </li>
+                        <li style="padding-bottom:10px;"><input type="text" v-model="record.class_name" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width: 100%"></li>
+                        
+                    </ul>
                     <div>
                         <div>
                             <button type="button" @click="cancelReceiveRecord($event)"><p>CANCEL</p></button>
@@ -114,12 +124,12 @@ $(function(){
                     <ul class="head">
                     <li><i class="micons">view_list</i></li>
                         <li style="font-size:10px;">Project Priority</li>
-   
+                        <li style="font-size:10px;">Class</li>
                     </ul>
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
                         <li style="font-size:10px;">{{record.priority}}</li>
-                       
+                        <li style="font-size:10px;">{{record.class_name}}</li>
                     </ul>
                     
                 </div>

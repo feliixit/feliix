@@ -59,7 +59,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT 0 as is_checked, id, client_type FROM project_client_type  where status <> -1 ".($id ? " and id=$id" : '');
+            $sql = "SELECT 0 as is_checked, id, client_type, class_name FROM project_client_type  where status <> -1 ".($id ? " and id=$id" : '');
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -104,7 +104,7 @@ else
             $user = new ProjectClientType($db);
 
             $client_type = stripslashes($_POST["client_type"]);
-            
+            $class_name = stripslashes($_POST["class_name"]);
 
             $crud = isset($_POST["crud"]) ? $_POST["crud"] : "";
             $id = isset($_POST["id"]) ? $_POST["id"] : 0;
@@ -114,14 +114,16 @@ else
               case 'insert':
             /* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
                 $user->client_type = $client_type;
-               
+                $user->class_name = $class_name;
+
                 $user->create();
 
                 break;
 
             case "update":
                 $user->client_type = $client_type;
-              
+                $user->class_name = $class_name;
+                
                     $user->id = $id;
 
                     $user->updateStatus();

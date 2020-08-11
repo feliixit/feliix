@@ -9,6 +9,7 @@ class ProjectPriority{
     // object properties
     public $id;
     public $priority;
+    public $class_name;
     public $status;
  
  
@@ -23,7 +24,8 @@ class ProjectPriority{
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
                 SET
-                    priority = :priority
+                    priority = :priority,
+                    class_name = :class_name
                   ";
     
         // prepare the query
@@ -34,7 +36,7 @@ class ProjectPriority{
      
         // bind the values
         $stmt->bindParam(':priority', $this->priority);
-     
+        $stmt->bindParam(':class_name', $this->class_name);
 
     
         // execute the query, also check if query was successful
@@ -81,7 +83,8 @@ class ProjectPriority{
 
         $query = "UPDATE " . $this->table_name . "
                 SET
-                    priority = :priority
+                    priority = :priority,
+                    class_name = :class_name
                 WHERE id = :id";
     
         // prepare the query
@@ -93,7 +96,7 @@ class ProjectPriority{
     
         // bind the values from the form
         $stmt->bindParam(':priority', $this->priority);
-       
+        $stmt->bindParam(':class_name', $this->class_name);
 
         // unique ID of record to be edited
         $stmt->bindParam(':id', $this->id);

@@ -9,6 +9,7 @@ class ProjectClientType{
     // object properties
     public $id;
     public $client_type;
+    public $class_name;
     public $status;
  
  
@@ -23,7 +24,8 @@ class ProjectClientType{
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
                 SET
-                    client_type = :client_type
+                    client_type = :client_type,
+                    class_name = :class_name
                   ";
     
         // prepare the query
@@ -34,7 +36,7 @@ class ProjectClientType{
      
         // bind the values
         $stmt->bindParam(':client_type', $this->client_type);
-     
+        $stmt->bindParam(':class_name', $this->class_name);
 
     
         // execute the query, also check if query was successful
@@ -81,7 +83,8 @@ class ProjectClientType{
 
         $query = "UPDATE " . $this->table_name . "
                 SET
-                    client_type = :client_type
+                    client_type = :client_type,
+                    class_name = :class_name
                 WHERE id = :id";
     
         // prepare the query
@@ -93,7 +96,7 @@ class ProjectClientType{
     
         // bind the values from the form
         $stmt->bindParam(':client_type', $this->client_type);
-       
+        $stmt->bindParam(':class_name', $this->class_name);
 
         // unique ID of record to be edited
         $stmt->bindParam(':id', $this->id);

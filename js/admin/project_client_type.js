@@ -11,6 +11,7 @@ let mainState = {
     is_checked: false,
     id: 0,
     client_type: '',
+    class_name: '',
    
         // paging
     page: 1,
@@ -300,7 +301,7 @@ var app = new Vue({
             } 
 
             formData.append('client_type', this.record.client_type)
-           
+            formData.append('class_name', this.record.class_name)
             formData.append('crud', "update");
             formData.append('id', this.record.id);
 
@@ -356,7 +357,7 @@ var app = new Vue({
 
 
             formData.append('client_type', this.client_type)
-           
+            formData.append('class_name', this.class_name)
             formData.append('crud', 'insert')
 
 
@@ -393,6 +394,7 @@ var app = new Vue({
             this.resetError();
 
             this.client_type = '';
+            this.class_name = '';
             
             if(!$('.block.record').hasClass('show')) 
               $('.block.record').addClass('show');

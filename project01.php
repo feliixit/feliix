@@ -1,3 +1,4 @@
+<?php include 'check.php';?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,7 +58,7 @@ $(function(){
     <!-- header -->
 	<header>header</header>
     <!-- header end -->
-    <div class="mainContent">
+    <div id="app" class="mainContent">
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="block">
             <div class="list_function">
@@ -71,23 +72,19 @@ $(function(){
                                 <dd><input type="text" placeholder=""></dd>
                                 <dt>Project Category</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">Office Systems</option>
-                                        <option value="">Lighting</option>
+                                    <select v-model="project_category">
+                                      <option v-for="item in categorys" :value="item.id" :key="item.category">
+                                          {{ item.category }}
+                                      </option>
                                     </select>
                                 </dd>
                                 <div class="half">
                                     <dt>Client Type</dt>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">A - Architect/Designer</option>
-                                            <option value="">B - Architect/Designer</option>
-                                            <option value="">C - Architect/Designer</option>
-                                            <option value="">A - End User</option>
-                                            <option value="">B - End User</option>
-                                            <option value="">C - End User</option>
-                                            <option value="">A - Contractor</option>
-                                            <option value="">B - Contractor</option>
+                                        <select v-model="client_type">
+                                          <option v-for="item in client_types" :value="item.id" :key="item.client_type">
+                                              {{ item.client_type }}
+                                          </option>
                                         </select>
                                     </dd>
                                 </div>
@@ -324,4 +321,8 @@ $(function(){
     </div>
 </div>
 </body>
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/axios.min.js"></script> 
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/project01.js"></script>
 </html>
