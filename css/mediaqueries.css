@@ -5,8 +5,12 @@
 @media screen and (max-width: 640px) {
 	/* width */
     header .headerbox{height: 178px; padding-top: 98px; }
-    header > .headerbox .logo{ margin-left: calc(-37px - 21px); float: none;}
+    header > .headerbox .logo{ margin-left: calc(-37px - 21px); width: 188px; height: 43px; float: none;}
     header > .headerbox i{ display: none;}
-    
+    header > .headerbox .menu::before{ font-size: 43px;}
+    header nav .logo{width: 188px; height: 43px; }
     .mainContent{ padding-top: 200px;}
+    
+    .block.left,
+    .block.right{ width: 100%;}
 }

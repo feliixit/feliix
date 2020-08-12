@@ -13,6 +13,8 @@ var app = new Vue({
     fil_client_type : '',
     fil_priority: '',
     fil_status : '',
+    fil_stage : '',
+
 
     receive_records: [],
     record: {},
@@ -21,6 +23,7 @@ var app = new Vue({
     client_types : {},
     priorities : {},
     statuses : {},
+    stages : {},
 
     submit : false,
     // paging
@@ -35,7 +38,7 @@ var app = new Vue({
       {name: '100', id: 100},
       {name: 'All', id: 10000}
     ],
-    perPage: 20,
+    perPage: 5,
 
   },
 
@@ -45,6 +48,7 @@ var app = new Vue({
     this.getClientTypes();
     this.getPrioritys();
     this.getStatuses();
+    this.getStages();
   },
 
   computed: {
@@ -61,10 +65,21 @@ var app = new Vue({
 
   watch: {
 
-      receive_records () {
-
-        this.setPages();
-      }
+    fil_project_category (value) {
+        this.getRecords(value);
+        },
+    fil_client_type (value) {
+        this.getRecords(value);
+        },
+    fil_priority (value) {
+        this.getRecords(value);
+        },
+    fil_status (value) {
+        this.getRecords(value);
+        },
+    fil_stage (value) {
+        this.getRecords(value);
+        },
   },
 
 
@@ -98,16 +113,34 @@ var app = new Vue({
         },
 
     getRecords: function(keyword) {
-        axios.get('api/project01')
-            .then(function(response) {
-                console.log(response.data);
-                app.receive_records = response.data;
+      let _this = this;
 
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-    },
+      const params = {
+                fpc: _this.fil_project_category,
+                fct: _this.fil_client_type,
+                fp: _this.fil_priority,
+                fs: _this.fil_status,
+                fcs: _this.fil_stage,
+            };
+
+      
+    
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project01', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.receive_records = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
 
     getProjectCategorys () {
 
@@ -177,12 +210,35 @@ var app = new Vue({
           let _this = this;
     
           let token = localStorage.getItem('accessToken');
+
+          
     
           axios
               .get('api/admin/project_status', { headers: {"Authorization" : `Bearer ${token}`} })
               .then(
               (res) => {
                   _this.statuses = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
+      getStages () {
+
+          let _this = this;
+    
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/admin/project_stage', { headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.stages = res.data;
               },
               (err) => {
                   alert(err.response);
@@ -327,97 +383,21 @@ var app = new Vue({
 
       },
 
-      reject: function() {
-
-      let _this = this;
-
-        let favorite = [];
-
-        var approve_record = false;
-          
-          for (i = 0; i < this.receive_records.length; i++) 
-            {
-              if(this.receive_records[i].is_checked == 1)
-              {
-                if(this.receive_records[i].approval === 'R')
-                {
-                  Swal.fire({
-                    text: 'Rejected data cannot be rejected again! Please contact Admin or IT staffs.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                  });
-
-                  return;
-                }
-
-                if(this.receive_records[i].approval === 'A')
-                {
-                  Swal.fire({
-                    text: 'Approved data cannot be rejected! Please contact Admin or IT staffs.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                  });
-
-                  return;
-                }
-
-                favorite.push(this.receive_records[i].id);
-              }
-            }
-
-            if (favorite.length < 1) {
-              Swal.fire({
-                text: 'Please select rows to reject!',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-              })
-                
-                //$(window).scrollTop(0);
-                return;
-            }
-
-          
-
-          Swal.fire({
-            title: 'Are you sure to reject?',
-            text: "Are you sure to reject apply?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-          }).then((result) => {
-            if (result.value) {
-              _this.submit = true;
-              _this.rejectReceiveRecord(favorite.join(", "));
-
-              _this.resetForm();
-              _this.unCheckCheckbox();
-            }
-          })
-
-      },
-
       clear: function() {
-        project_name = '';
-        project_category = '';
-        client_type = '';
-        priority = '';
-        status = '';
-        reason = '';
+        this.project_name = '';
+        this.project_category = '';
+        this.client_type = '';
+        this.priority = '';
+        this.status = '';
+        this.reason = '';
+        
+        document.getElementById('insert_dialog').classList.remove("show");
+
+        this.getRecords();
+        this.receive_records = [];
+
       },
 
-      resetForm: function() {
-          
-            this.submit = false;
-            this.view_detail = false;
-
-          this.receive_records = [];
-          this.record = {};
-
-          this.getLeaveCredit();
-
-        },
 
         shallowCopy(obj) {
           console.log("shallowCopy");

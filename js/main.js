@@ -24,4 +24,26 @@ $(function(){
         $('.block').removeClass('focus');
         $('.block.D').addClass('focus');
     })
+    //
+    
 })
+// 第二階段新增
+function dialogclear(){
+        console.log('dialogclear');
+        $('.list_function .dialog').removeClass('show');
+        $('.list_function a').removeClass('focus');
+        $('.list_function.main .block.fn a').removeClass('focus');        
+}
+function dialogshow($me,$target){
+    $me.click(function(){
+        if ($me.hasClass('focus')){
+            dialogclear();
+        } else {
+            dialogclear();
+            $me.addClass('focus');
+            $target.addClass('show');
+        }
+    })
+}
+//
+console.log('main.js is loaded.');

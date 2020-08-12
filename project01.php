@@ -64,7 +64,7 @@ $(function(){
             <div class="list_function">
                 <div class="new_project">
                     <a class="add"></a>
-                    <div class="dialog">
+                    <div id="insert_dialog" class="dialog">
                         <h6>Create New Project:</h6>
                         <div class="formbox">
                             <dl>
@@ -148,16 +148,11 @@ $(function(){
                             {{ item.project_status }}
                         </option>
                     </select>
-                    <select name="" id="">
+                    <select name="" id="" v-model="fil_stage">
                         <option value="">Current Stage</option>
-                        <option value="C">Client</option>
-                        <option value="P">Proposal</option>
-                        <option value="AC">A Meeting / Close Deal</option>
-                        <option value="O">Order</option>
-                        <option value="E">Execution Plan</option>
-                        <option value="D">Delivery</option>
-                        <option value="I">Installation</option>
-                        <option value="CA">Client Feedback / After Service</option>
+                        <option v-for="item in stages" :value="item.id" :key="item.stage">
+                            {{ item.stage }}
+                        </option>
                     </select>
                 </div>
                 <!-- 分頁 -->
@@ -185,8 +180,8 @@ $(function(){
                </ul>
                <ul v-for='(receive_record, index) in displayedPosts'>
                    <li>{{ receive_record.category }}</li>
-                   <li><i class="ct01">{{ receive_record.client_type }}</i></li>
-                   <li><i class="pt01">{{ receive_record.priority }}</i></li>
+                   <li><i v-bind:class="receive_record.pct_class">{{ receive_record.client_type }}</i></li>
+                   <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
                    <li>{{ receive_record.project_name }}</li>
                    <li>{{ receive_record.project_status }}</li>
                    <li>{{ receive_record.estimate_close_prob }}</li>
