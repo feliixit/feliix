@@ -467,3 +467,6 @@ CREATE TABLE IF NOT EXISTS `project_main` (
   `close_reason` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+ALTER TABLE project_main
+ADD COLUMN `special_note` varchar(128) DEFAULT '' AFTER project_status_id;

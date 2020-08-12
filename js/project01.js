@@ -8,6 +8,7 @@ var app = new Vue({
     status : '',
     reason : '',
     project_name : '',
+    special_note: '',
 
     fil_project_category : '',
     fil_client_type : '',
@@ -15,6 +16,7 @@ var app = new Vue({
     fil_status : '',
     fil_stage : '',
 
+    probability : 0,
 
     receive_records: [],
     record: {},
@@ -38,7 +40,7 @@ var app = new Vue({
       {name: '100', id: 100},
       {name: 'All', id: 10000}
     ],
-    perPage: 5,
+    perPage: 20,
 
   },
 
@@ -55,6 +57,10 @@ var app = new Vue({
     displayedPosts () {
       this.setPages();
         return this.paginate(this.receive_records);
+    },
+
+    showExtra: function(){
+      return (this.status==10);
     },
   },
 
@@ -355,7 +361,8 @@ var app = new Vue({
             form_Data.append('priority', this.priority);
             form_Data.append('status', this.status);
             form_Data.append('reason', this.reason);
-      
+            form_Data.append('probability', this.probability);
+            form_Data.append('special_note', this.special_note);
 
             const token = sessionStorage.getItem('token');
 
@@ -390,6 +397,8 @@ var app = new Vue({
         this.priority = '';
         this.status = '';
         this.reason = '';
+        this.probability = '';
+        this.special_note = '';
         
         document.getElementById('insert_dialog').classList.remove("show");
 

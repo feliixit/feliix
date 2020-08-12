@@ -110,8 +110,24 @@ $(function(){
                                 </div>
                                 <div class="half">
                                     <dt></dt>
-                                    <dd><input type="text" placeholder="" disabled></dd>
+                                    <dd v-if="showExtra"><input type="text" placeholder="" v-model="special_note"></dd>
                                 </div>
+                                <dt>Estimated Closing Probability</dt>
+                                <dd>
+                                    <select v-model="probability">
+                                      <option value="0">0</option>
+                                      <option value="10">10</option>
+                                      <option value="20">20</option>
+                                      <option value="30">30</option>
+                                      <option value="40">40</option>
+                                      <option value="50">50</option>
+                                      <option value="60">60</option>
+                                      <option value="70">70</option>
+                                      <option value="80">80</option>
+                                      <option value="90">90</option>
+                                      <option value="100">100</option>
+                                    </select>
+                                </dd>
                                 <dt>Reason for Estimated Closing Probability</dt>
                                 <dd><textarea placeholder="" v-model="reason"></textarea></dd>
                             </dl>

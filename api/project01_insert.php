@@ -50,7 +50,8 @@ $client_type = (isset($_POST['client_type']) ?  $_POST['client_type'] : '');
 $priority = (isset($_POST['priority']) ?  $_POST['priority'] : '');
 $status = (isset($_POST['status']) ?  $_POST['status'] : '');
 $reason = (isset($_POST['reason']) ?  $_POST['reason'] : '');
-
+$probability = (isset($_POST['probability']) ?  $_POST['probability'] : '');
+$special_note = (isset($_POST['special_note']) ?  $_POST['special_note'] : '');
 
 $query = "INSERT INTO project_main
                 SET
@@ -60,6 +61,8 @@ $query = "INSERT INTO project_main
                     project_status_id = :project_status_id,
                     project_name = :project_name,
                     close_reason = :close_reason,
+                    special_note = :special_note,
+                    estimate_close_prob = :probability,
                     create_id = :create_id,
                     created_at = now()";
     
@@ -68,7 +71,8 @@ $query = "INSERT INTO project_main
     
         // sanitize
         $project_name=htmlspecialchars(strip_tags($project_name));
-        $close_reason=htmlspecialchars(strip_tags($close_reason));
+        $close_reason=htmlspecialchars(strip_tags($reason));
+        $special_note=htmlspecialchars(strip_tags($special_note));
        
         // bind the values
         $stmt->bindParam(':catagory_id', $project_category);
@@ -76,14 +80,16 @@ $query = "INSERT INTO project_main
         $stmt->bindParam(':priority_id', $priority);
         $stmt->bindParam(':project_status_id', $status);
         $stmt->bindParam(':project_name', $project_name);
-        $stmt->bindParam(':close_reason', $close_reason);
+        $stmt->bindParam(':close_reason', $reason);
+        $stmt->bindParam(':special_note', $special_note);
+        $stmt->bindParam(':probability', $probability);
         $stmt->bindParam(':create_id', $user_id);
 
         // execute the query, also check if query was successful
         try {
             // execute the query, also check if query was successful
             if ($stmt->execute()) {
-                $last_id = $this->conn->lastInsertId();
+                $last_id = $db->lastInsertId();
             }
             else
             {
