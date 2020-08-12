@@ -4,49 +4,110 @@ var app = new Vue({
   data:{
     project_category : '',
     client_type : '',
+    priority: '',
+    status : '',
+    reason : '',
+    project_name : '',
+
+    fil_project_category : '',
+    fil_client_type : '',
+    fil_priority: '',
+    fil_status : '',
 
     receive_records: [],
     record: {},
 
     categorys : {},
     client_types : {},
+    priorities : {},
+    statuses : {},
+
+    submit : false,
+    // paging
+    page: 1,
+    //perPage: 10,
+    pages: [],
+
+    inventory: [
+      {name: '10', id: 10},
+      {name: '25', id: 25},
+      {name: '50', id: 50},
+      {name: '100', id: 100},
+      {name: 'All', id: 10000}
+    ],
+    perPage: 20,
 
   },
 
   created () {
-    
+    this.getRecords();
     this.getProjectCategorys();
     this.getClientTypes();
-
+    this.getPrioritys();
+    this.getStatuses();
   },
 
   computed: {
-    displayedRecord () {
-      return this.receive_records;
+    displayedPosts () {
+      this.setPages();
+        return this.paginate(this.receive_records);
     },
-
   },
 
   mounted(){
-   var d1 = new Date();
-    this.month1 = d1;
-
-    $('#start').val(d1.toISOString().slice(0,7).replace(/-/g,"-"));
-
-    this.getLeaveCredit();
+ 
     
   },
 
   watch: {
 
-      picked () {
-        this.getLeaveCredit();
-      },
+      receive_records () {
+
+        this.setPages();
+      }
   },
 
 
 
   methods:{
+
+    setPages () {
+          console.log('setPages');
+          this.pages = [];
+          let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+
+          if(numberOfPages == 1)
+            this.page = 1;
+          for (let index = 1; index <= numberOfPages; index++) {
+            this.pages.push(index);
+          }
+        },
+
+        paginate: function (posts) {
+          console.log('paginate');
+          if(this.page < 1)
+            this.page = 1;
+          if(this.page > this.pages.length)
+            this.page = this.pages.length;
+
+          let page = this.page;
+          let perPage = this.perPage;
+          let from = (page * perPage) - perPage;
+          let to = (page * perPage);
+          return  this.receive_records.slice(from, to);
+        },
+
+    getRecords: function(keyword) {
+        axios.get('api/project01')
+            .then(function(response) {
+                console.log(response.data);
+                app.receive_records = response.data;
+
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    },
 
     getProjectCategorys () {
 
@@ -89,7 +150,48 @@ var app = new Vue({
                   
               });
       },
+
+      getPrioritys () {
+
+          let _this = this;
     
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/admin/project_priority', { headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.priorities = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+    
+      getStatuses () {
+
+          let _this = this;
+    
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/admin/project_status', { headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.statuses = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
 
     
     getLeaveCredit: function() {
@@ -138,163 +240,15 @@ var app = new Vue({
         });
       },
 
-      unCheckCheckbox()
-        {
-            for (i = 0; i < this.receive_records.length; i++) 
-            {
-              this.receive_records[i].is_checked = false;
-            }
-          //$(".alone").prop("checked", false);
-          //this.clicked = false;
-        },
 
-      showPic(pic)
-      {
-        Swal.fire({
-          title: 'Certificate of Diagnosis',
-          text: 'Click to close',
-          imageUrl: 'img/' + pic,
-        })
-      },
-
-      approveReceiveRecord: function(id) {
-            let _this = this;
-            //targetId = this.record.id;
-            var form_Data = new FormData();
-
-            form_Data.append('crud', "app");
-            form_Data.append('id', id);
-
-            var params = {
-                'id': id
-            }
-
-            const token = sessionStorage.getItem('token');
-
-            axios({
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${token}`
-                    },
-                    url: 'api/leave_record_approval',
-                    data: form_Data
-                })
-                .then(function(response) {
-                    //handle success
-                    //this.$forceUpdate();
-                    _this.resetForm();
-                })
-                .catch(function(response) {
-                    //handle error
-                    console.log(response)
-                });
-        },
-
-        rejectReceiveRecord: function(id) {
-            let _this = this;
-            //targetId = this.record.id;
-            var form_Data = new FormData();
-
-            form_Data.append('crud', "rej");
-            form_Data.append('id', id);
-
-            var params = {
-                'id': id
-            }
-
-            const token = sessionStorage.getItem('token');
-
-            axios({
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${token}`
-                    },
-                    url: 'api/leave_record_reject',
-                    data: form_Data
-                })
-                .then(function(response) {
-                    //handle success
-                    //this.$forceUpdate();
-                    _this.resetForm();
-                })
-                .catch(function(response) {
-                    //handle error
-                    console.log(response)
-                });
-        },
-
-        detail: function() {
-          let _this = this;
-
-        let favorite = [];
-          
-          for (i = 0; i < this.receive_records.length; i++) 
-            {
-              if(this.receive_records[i].is_checked == 1)
-                favorite.push(this.receive_records[i].id);
-            }
-
-            if (favorite.length != 1) {
-              Swal.fire({
-                text: 'Please select row to see the detail!',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-              })
-                
-                //$(window).scrollTop(0);
-                this.view_detail = false;
-                return;
-            }
-
-            this.record = this.shallowCopy(this.receive_records.find(element => element.id == favorite));
-
-            this.view_detail = true;
-
-        },
 
     approve: function() {
 
       let _this = this;
 
-        let favorite = [];
-
-        var approve_record = false;
-          
-          for (i = 0; i < this.receive_records.length; i++) 
-            {
-              if(this.receive_records[i].is_checked == 1)
-              {
-                if(this.receive_records[i].approval === 'R')
-                {
-                  Swal.fire({
-                    text: 'Rejected data cannot be approved! Please contact Admin or IT staffs.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                  });
-
-                  return;
-                }
-
-                if(this.receive_records[i].approval === 'A')
-                {
-                  Swal.fire({
-                    text: 'Approved data cannot be approved again! Please contact Admin or IT staffs.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                  });
-
-                  return;
-                }
-
-                favorite.push(this.receive_records[i].id);
-              }
-            }
-
-            if (favorite.length < 1) {
+            if (this.project_name.trim() == '') {
               Swal.fire({
-                text: 'Please select rows to approve!',
+                text: 'Please enter Project Name!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })
@@ -303,25 +257,73 @@ var app = new Vue({
                 return;
             }
 
-          
-
-          Swal.fire({
-            title: 'Are you sure to approve?',
-            text: "Are you sure to approve apply?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-          }).then((result) => {
-            if (result.value) {
-              _this.submit = true;
-              _this.approveReceiveRecord(favorite.join(", "));
-
-              _this.resetForm();
-              _this.unCheckCheckbox();
+            if (this.project_category.trim() == '') {
+              Swal.fire({
+                text: 'Please select Project Category!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
             }
-          })
+
+            if (this.client_type.trim() == '') {
+              Swal.fire({
+                text: 'Please select Client Type!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.priority.trim() == '') {
+              Swal.fire({
+                text: 'Please select Priority!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('project_name', this.project_name);
+            form_Data.append('project_category', this.project_category);
+            form_Data.append('client_type', this.client_type);
+            form_Data.append('priority', this.priority);
+            form_Data.append('status', this.status);
+            form_Data.append('reason', this.reason);
+      
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project01_insert',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.resetForm();
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+
+              _this.clear();
+     
 
       },
 
@@ -394,6 +396,15 @@ var app = new Vue({
             }
           })
 
+      },
+
+      clear: function() {
+        project_name = '';
+        project_category = '';
+        client_type = '';
+        priority = '';
+        status = '';
+        reason = '';
       },
 
       resetForm: function() {

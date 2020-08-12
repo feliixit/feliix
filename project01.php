@@ -69,7 +69,7 @@ $(function(){
                         <div class="formbox">
                             <dl>
                                 <dt>Project Name / Client Name</dt>
-                                <dd><input type="text" placeholder=""></dd>
+                                <dd><input type="text" placeholder="" v-model="project_name"></dd>
                                 <dt>Project Category</dt>
                                 <dd>
                                     <select v-model="project_category">
@@ -91,29 +91,20 @@ $(function(){
                                 <div class="half">
                                     <dt>Priority</dt>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">No Priority</option>
-                                            <option value="">Low</option>
-                                            <option value="">Normal</option>
-                                            <option value="">High</option>
-                                            <option value="">Urgent</option>
+                                        <select v-model="priority">
+                                          <option v-for="item in priorities" :value="item.id" :key="item.priority">
+                                              {{ item.priority }}
+                                          </option>
                                         </select>
                                     </dd>
                                 </div>
                                 <div class="half">
                                     <dt>Project Status</dt>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">Planning</option>
-                                            <option value="">Pending Review</option>
-                                            <option value="">Pending Approval</option>
-                                            <option value="">For Revision</option>
-                                            <option value="">On Hold</option>
-                                            <option value="">Disapproved</option>
-                                            <option value="">Approved</option>
-                                            <option value="">On Progress</option>
-                                            <option value="">Completed</option>
-                                            <option value="">Special</option>
+                                        <select v-model="status">
+                                          <option v-for="item in statuses" :value="item.id" :key="item.project_status">
+                                              {{ item.project_status }}
+                                          </option>
                                         </select>
                                     </dd>
                                 </div>
@@ -122,75 +113,60 @@ $(function(){
                                     <dd><input type="text" placeholder="" disabled></dd>
                                 </div>
                                 <dt>Reason for Estimated Closing Probability</dt>
-                                <dd><textarea placeholder=""></textarea></dd>
+                                <dd><textarea placeholder="" v-model="reason"></textarea></dd>
                             </dl>
                             <div class="btnbox">
-                                <a class="btn small">Cancel</a>
-                                <a class="btn small green">Create</a>
+                                <a class="btn small" @click="clear">Cancel</a>
+                                <a class="btn small green" @click="approve">Create</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Filter -->
                 <div class="filter">
-                    <select name="" id="">
+                    <select name="" id="" v-model="fil_project_category">
                         <option value="">Project Category</option>
-                        <option value="">Office Systems</option>
-                        <option value="">Lighting</option>
+                        <option v-for="item in priorities" :value="item.id" :key="item.priority">
+                            {{ item.priority }}
+                        </option>
                     </select>
-                    <select name="" id="">
+                    <select name="" id="" v-model="fil_client_type">
                         <option value="">Client Type</option>
-                        <option value="">A - Architect/Designer</option>
-                        <option value="">B - Architect/Designer</option>
-                        <option value="">C - Architect/Designer</option>
-                        <option value="">A - End User</option>
-                        <option value="">B - End User</option>
-                        <option value="">C - End User</option>
-                        <option value="">A - Contractor</option>
-                        <option value="">B - Contractor</option>
+                        <option v-for="item in client_types" :value="item.id" :key="item.client_type">
+                            {{ item.client_type }}
+                        </option>
                     </select>
-                    <select name="" id="">
+                    <select name="" id="" v-model="fil_priority">
                         <option value="">Priority</option>
-                        <option value="">No Priority</option>
-                        <option value="">Low</option>
-                        <option value="">Normal</option>
-                        <option value="">High</option>
-                        <option value="">Urgent</option>
+                        <option v-for="item in priorities" :value="item.id" :key="item.priority">
+                            {{ item.priority }}
+                        </option>
                     </select>
-                    <select name="" id="">
+                    <select name="" id="" v-model="fil_status">
                         <option value="">Status</option>
-                        <option value="">Planning</option>
-                        <option value="">Pending Review</option>
-                        <option value="">Pending Approval</option>
-                        <option value="">For Revision</option>
-                        <option value="">On Hold</option>
-                        <option value="">Disapproved</option>
-                        <option value="">Approved</option>
-                        <option value="">On Progress</option>
-                        <option value="">Completed</option>
-                        <option value="">Special</option>
+                        <option v-for="item in statuses" :value="item.id" :key="item.project_status">
+                            {{ item.project_status }}
+                        </option>
                     </select>
                     <select name="" id="">
                         <option value="">Current Stage</option>
-                        <option value="">Client</option>
-                        <option value="">Proposal</option>
-                        <option value="">A Meeting / Close Deal</option>
-                        <option value="">Order</option>
-                        <option value="">Execution Plan</option>
-                        <option value="">Delivery</option>
-                        <option value="">Installation</option>
-                        <option value="">Client Feedback / After Service</option>
+                        <option value="C">Client</option>
+                        <option value="P">Proposal</option>
+                        <option value="AC">A Meeting / Close Deal</option>
+                        <option value="O">Order</option>
+                        <option value="E">Execution Plan</option>
+                        <option value="D">Delivery</option>
+                        <option value="I">Installation</option>
+                        <option value="CA">Client Feedback / After Service</option>
                     </select>
                 </div>
                 <!-- 分頁 -->
                 <div class="pagenation">
-                    <a class="prev">Previous</a>
-                    <a class="page">1</a>
-                    <a class="page">2</a>
-                    <a class="page">3</a>
-                    <b>...</b>
-                    <a class="page">12</a>
-                    <a class="next">Next</a>
+                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                  
+                    <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                  
+                    <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                 </div>
             </div>
             <!-- list -->
@@ -207,115 +183,28 @@ $(function(){
                    <li>Current Stage</li>
                    <li>Recent Message</li>
                </ul>
-               <ul>
-                   <li>Office Systems</li>
-                   <li><i class="ct01">A - Architect/Designer</i></li>
-                   <li><i class="pt01">No Priority</i></li>
-                   <li>Feliix Antel Office</li>
-                   <li>Pending Approval</li>
-                   <li>80</li>
-                   <li>Marion</li>
-                   <li>2019/12/17 ~ 2020/01/17</li>
-                   <li>Client Feedback / After Service</li>
-                   <li>2020/03/31 17:21 Wren</li>
+               <ul v-for='(receive_record, index) in displayedPosts'>
+                   <li>{{ receive_record.category }}</li>
+                   <li><i class="ct01">{{ receive_record.client_type }}</i></li>
+                   <li><i class="pt01">{{ receive_record.priority }}</i></li>
+                   <li>{{ receive_record.project_name }}</li>
+                   <li>{{ receive_record.project_status }}</li>
+                   <li>{{ receive_record.estimate_close_prob }}</li>
+                   <li>{{ receive_record.username }}</li>
+                   <li>{{ receive_record.created_at }} ~ </li>
+                   <li></li>
+                   <li></li>
                </ul>
-               <ul>
-                   <li>Lighting</li>
-                   <li><i class="ct02">B - Architect/Designer</i></li>
-                   <li><i class="pt02">Low</i></li>
-                   <li>Feliix Antel Office</li>
-                   <li>Pending Approval</li>
-                   <li>80</li>
-                   <li>Marion</li>
-                   <li>2019/12/17 ~ 2020/01/17</li>
-                   <li>Client Feedback / After Service</li>
-                   <li>2020/03/31 17:21 Wren</li>
-               </ul>
-               <ul>
-                   <li>Lighting</li>
-                   <li><i class="ct03">C - Architect/Designer</i></li>
-                   <li><i class="pt03">Normal</i></li>
-                   <li>Feliix Antel Office</li>
-                   <li>Pending Approval</li>
-                   <li>80</li>
-                   <li>Marion</li>
-                   <li>2019/12/17 ~ 2020/01/17</li>
-                   <li>Client Feedback / After Service</li>
-                   <li>2020/03/31 17:21 Wren</li>
-               </ul>
-               <ul>
-                   <li>Lighting</li>
-                   <li><i class="ct04">A - End User</i></li>
-                   <li><i class="pt04">High</i></li>
-                   <li>Feliix Antel Office</li>
-                   <li>Pending Approval</li>
-                   <li>80</li>
-                   <li>Marion</li>
-                   <li>2019/12/17 ~ 2020/01/17</li>
-                   <li>Client Feedback / After Service</li>
-                   <li>2020/03/31 17:21 Wren</li>
-               </ul>
-               <ul>
-                   <li>Lighting</li>
-                   <li><i class="ct05">B - End User</i></li>
-                   <li><i class="pt05">Urgent</i></li>
-                   <li>Feliix Antel Office</li>
-                   <li>Pending Approval</li>
-                   <li>80</li>
-                   <li>Marion</li>
-                   <li>2019/12/17 ~ 2020/01/17</li>
-                   <li>Client Feedback / After Service</li>
-                   <li>2020/03/31 17:21 Wren</li>
-               </ul>
-               <ul>
-                   <li>Lighting</li>
-                   <li><i class="ct06">C - End User</i></li>
-                   <li><i class="pt01">No Priority</i></li>
-                   <li>Feliix Antel Office</li>
-                   <li>Pending Approval</li>
-                   <li>80</li>
-                   <li>Marion</li>
-                   <li>2019/12/17 ~ 2020/01/17</li>
-                   <li>Client Feedback / After Service</li>
-                   <li>2020/03/31 17:21 Wren</li>
-               </ul>
-               <ul>
-                   <li>Lighting</li>
-                   <li><i class="ct07">A - Contractor</i></li>
-                   <li><i class="pt01">No Priority</i></li>
-                   <li>Feliix Antel Office</li>
-                   <li>Pending Approval</li>
-                   <li>80</li>
-                   <li>Marion</li>
-                   <li>2019/12/17 ~ 2020/01/17</li>
-                   <li>Client Feedback / After Service</li>
-                   <li>2020/03/31 17:21 Wren</li>
-               </ul>
-               <ul>
-                   <li>Lighting</li>
-                   <li><i class="ct08">B - Contractor</i></li>
-                   <li><i class="pt01">No Priority</i></li>
-                   <li>Feliix Antel Office</li>
-                   <li>Pending Approval</li>
-                   <li>80</li>
-                   <li>Marion</li>
-                   <li>2019/12/17 ~ 2020/01/17</li>
-                   <li>Client Feedback / After Service</li>
-                   <li>2020/03/31 17:21 Wren</li>
-               </ul>
+              
            </div>
            <!-- list end -->
            <div class="list_function">
                <!-- 分頁 -->
                <div class="pagenation">
-                   <a class="prev">Previous</a>
-                   <a class="page">1</a>
-                   <a class="page">2</a>
-                   <a class="page">3</a>
-                   <b>...</b>
-                   <a class="page">12</a>
-                   <a class="next">Next</a>
-               </div>
+                  <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                  <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                  <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+              </div>
            </div>
         </div>
     </div>
