@@ -203,7 +203,7 @@ $(function(){
                    <li>{{ receive_record.estimate_close_prob }}</li>
                    <li>{{ receive_record.username }}</li>
                    <li>{{ receive_record.created_at }} ~ </li>
-                   <li></li>
+                   <li>{{ receive_record.stage }}</li>
                    <li></li>
                </ul>
               
