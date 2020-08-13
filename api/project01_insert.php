@@ -53,6 +53,17 @@ $reason = (isset($_POST['reason']) ?  $_POST['reason'] : '');
 $probability = (isset($_POST['probability']) ?  $_POST['probability'] : 0);
 $special_note = (isset($_POST['special_note']) ?  $_POST['special_note'] : '');
 
+if(trim($project_category) == "")
+    $project_category = 0;
+if(trim($client_type) == "")
+    $client_type = 0;
+if(trim($priority) == "")
+    $priority = 0;
+if(trim($status) == "")
+    $status = 0;
+if(trim($probability) == "")
+    $probability = 0;
+
 $query = "INSERT INTO project_main
                 SET
                     catagory_id = :catagory_id,
@@ -85,6 +96,7 @@ $query = "INSERT INTO project_main
         $stmt->bindParam(':probability', $probability);
         $stmt->bindParam(':create_id', $user_id);
 
+        $last_id = 0;
         // execute the query, also check if query was successful
         try {
             // execute the query, also check if query was successful
