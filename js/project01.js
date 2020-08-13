@@ -71,6 +71,11 @@ var app = new Vue({
 
   watch: {
 
+    receive_records () {
+        console.log('Vue watch receive_records');
+        this.setPages();
+      },
+
     fil_project_category (value) {
         this.getRecords(value);
         },
@@ -403,7 +408,7 @@ var app = new Vue({
         document.getElementById('insert_dialog').classList.remove("show");
 
         this.receive_records = [];
-        
+
         this.getRecords();
         
 
