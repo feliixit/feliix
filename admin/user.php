@@ -124,6 +124,10 @@ $(function(){
                             <label for="is_manager">Is Manager</label>
                         </li>
                         <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="test_manager" id="test_manager" :true-value="1" v-model:checked="test_manager" @change="updateTestManager">
+                            <label for="test_manager">TEST Manager</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
                             <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="head_of_department" @change="updateHeadOfDepartment">
                             <label for="head_of_department">Leave w/o Approval</label>
                         </li>
@@ -191,6 +195,10 @@ $(function(){
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="is_manager" id="is_manager" :true-value="1" v-model:checked="record.is_manager" @change="updateIsManager">
                             <label for="is_manager">Is Manager</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="test_manager" id="test_manager" :true-value="1" v-model:checked="record.test_manager" @change="updateTestManager">
+                            <label for="test_manager">TEST Manager</label>
                         </li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="record.head_of_department" @change="updateHeadOfDepartment">

@@ -18,6 +18,7 @@ let mainState = {
     title_id:0,
     status: 0,
     is_admin: '',
+    test_manager: '0',
     need_punch: 0,
 
     head_of_department: 0,
@@ -371,6 +372,17 @@ var app = new Vue({
             }
         },
 
+        updateTestManager: function(event) {
+        
+            let checked = event.target.checked;
+            let value = event.target.value;
+            if (checked) {
+                this.test_manager = '1';
+            } else {
+                this.test_manager = '0';
+            }
+        },
+
         updateHeadOfDepartment: function(event) {
       
             let checked = event.target.checked;
@@ -442,6 +454,7 @@ var app = new Vue({
             formData.append('sick_leave', this.record.sick_leave)
             formData.append('manager_leave', this.record.manager_leave)
             formData.append('is_manager', this.record.is_manager)
+            formData.append('test_manager', this.record.test_manager)
 
             formData.append('apartment_id', this.ed_apartment_id)
             formData.append('title_id', this.record.title_id)
@@ -561,6 +574,7 @@ var app = new Vue({
             formData.append('sick_leave', this.sick_leave)
             formData.append('manager_leave', this.manager_leave)
             formData.append('is_manager', this.is_manager)
+            formData.append('test_manager', this.test_manager)
 
             formData.append('apartment_id', this.apartment_id)
             formData.append('title_id', this.title_id)
@@ -606,6 +620,7 @@ var app = new Vue({
             this.sick_leave = 0;
             this.manager_leave = 0;
             this.is_manager = 0;
+            this.test_manager = 0;
 
 
             this.isEditing = false;

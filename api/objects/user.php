@@ -24,6 +24,7 @@ class User{
     public $sick_leave;
     public $manager_leave;
     public $is_manager;
+    public $test_manger;
  
     // constructor
     public function __construct($db){
@@ -46,6 +47,7 @@ class User{
                     sick_leave = :sick_leave,
                     manager_leave = :manager_leave,
                     is_manager = :is_manager,
+                    test_manager = :test_manager,
                     apartment_id = :apartment_id,
                     title_id = :title_id,
                     pic_url = :pic_url,
@@ -84,6 +86,7 @@ class User{
         $stmt->bindParam(':sick_leave', $this->sick_leave);
         $stmt->bindParam(':manager_leave', $this->manager_leave);
         $stmt->bindParam(':is_manager', $this->is_manager);
+        $stmt->bindParam(':test_manager', $this->test_manager);
 
         $stmt->bindParam(':apartment_id', $this->apartment_id);
         $stmt->bindParam(':title_id', $this->title_id);
@@ -147,7 +150,7 @@ class User{
     function userCanLogin(){
         // query to check if email exists
         $query = "SELECT user.id, username, password, user.status, is_admin, need_punch, COALESCE(department, '') department, 
-                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, COALESCE(is_manager, 0) is_manager, manager_leave, user_title.head_of_department
+                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, COALESCE(is_manager, 0) is_manager, COALESCE(test_manager, '0') test_manager, manager_leave, user_title.head_of_department
                 FROM " . $this->table_name . "
                 LEFT JOIN user_department ON user.apartment_id = user_department.id 
                 LEFT JOIN user_title ON user.title_id = user_title.id
@@ -190,6 +193,7 @@ class User{
             $this->title_id = $row['title_id'];
             $this->apartment_id = $row['apartment_id'];
             $this->is_manager = $row['is_manager'];
+            $this->test_manager = $row['test_manager'];
             // return true because email exists in the database
             return true;
         }
@@ -277,6 +281,7 @@ class User{
                     head_of_department = :head_of_department,
                     annual_leave = :annual_leave,
                     is_manager = :is_manager,
+                    test_manager = :test_manager,
                     sick_leave = :sick_leave,
                     manager_leave = :manager_leave,
 
@@ -303,6 +308,7 @@ class User{
         $stmt->bindParam(':head_of_department', $this->head_of_department);
         $stmt->bindParam(':annual_leave', $this->annual_leave);
         $stmt->bindParam(':is_manager', $this->is_manager);
+        $stmt->bindParam(':test_manager', $this->test_manager);
         $stmt->bindParam(':sick_leave', $this->sick_leave);
 
         $stmt->bindParam(':manager_leave', $this->manager_leave);

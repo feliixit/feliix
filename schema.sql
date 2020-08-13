@@ -470,3 +470,6 @@ CREATE TABLE IF NOT EXISTS `project_main` (
 
 ALTER TABLE project_main
 ADD COLUMN `special_note` varchar(128) DEFAULT '' AFTER project_status_id;
+
+ALTER TABLE user
+ADD COLUMN `test_manager` varchar(1)  DEFAULT '' AFTER is_admin;
