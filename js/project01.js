@@ -402,8 +402,10 @@ var app = new Vue({
         
         document.getElementById('insert_dialog').classList.remove("show");
 
-        this.getRecords();
         this.receive_records = [];
+        
+        this.getRecords();
+        
 
       },
 
