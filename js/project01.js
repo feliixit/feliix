@@ -383,16 +383,12 @@ var app = new Vue({
                 .then(function(response) {
                     //handle success
                     //this.$forceUpdate();
-                    _this.resetForm();
+                    _this.clear();
                 })
                 .catch(function(response) {
                     //handle error
                     console.log(response)
                 });
-
-              _this.clear();
-     
-
       },
 
       clear: function() {
