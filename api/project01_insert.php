@@ -45,12 +45,12 @@ $db = $database->getConnection();
 
 $uid = $user_id;
 $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
-$project_category = (isset($_POST['project_category']) ?  $_POST['project_category'] : '');
-$client_type = (isset($_POST['client_type']) ?  $_POST['client_type'] : '');
-$priority = (isset($_POST['priority']) ?  $_POST['priority'] : '');
-$status = (isset($_POST['status']) ?  $_POST['status'] : '');
+$project_category = (isset($_POST['project_category']) ?  $_POST['project_category'] : 0);
+$client_type = (isset($_POST['client_type']) ?  $_POST['client_type'] : 0);
+$priority = (isset($_POST['priority']) ?  $_POST['priority'] : 0);
+$status = (isset($_POST['status']) ?  $_POST['status'] : 0);
 $reason = (isset($_POST['reason']) ?  $_POST['reason'] : '');
-$probability = (isset($_POST['probability']) ?  $_POST['probability'] : '');
+$probability = (isset($_POST['probability']) ?  $_POST['probability'] : 0);
 $special_note = (isset($_POST['special_note']) ?  $_POST['special_note'] : '');
 
 $query = "INSERT INTO project_main
