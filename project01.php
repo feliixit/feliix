@@ -142,8 +142,8 @@ $(function(){
                 <div class="filter">
                     <select name="" id="" v-model="fil_project_category">
                         <option value="">Project Category</option>
-                        <option v-for="item in priorities" :value="item.id" :key="item.priority">
-                            {{ item.priority }}
+                        <option v-for="item in categorys" :value="item.id" :key="item.category">
+                            {{ item.category }}
                         </option>
                     </select>
                     <select name="" id="" v-model="fil_client_type">
