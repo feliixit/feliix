@@ -1,3 +1,4 @@
+<?php include 'check.php';?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +40,7 @@
 
 <script>
 $(function(){
-    $('header').load('include/header.htm');
+    $('header').load('include/header.php');
     //
 
     dialogshow($('.list_function a.add'),$('.list_function .dialog.d-add'));
@@ -74,7 +75,7 @@ $(function(){
     <!-- header -->
 	<header>header</header>
     <!-- header end -->
-    <div class="mainContent">
+    <div id="app" class="mainContent">
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="list_function main">
             <div class="block">
@@ -397,10 +398,10 @@ $(function(){
                     <li>Project Creator</li>
                 </ul>
                 <ul>
-                    <li>Office Systems</li>
-                    <li>A - Architect/Designer</li>
-                    <li>Urgent</li>
-                    <li>Stan</li>
+                    <li>{{ category }}</li>
+                    <li>{{ client_type }}</li>
+                    <li>{{ priority }}</li>
+                    <li>{{ username }}</li>
                 </ul>
             </div>
             <div class="tablebox lv2a b-3">
@@ -465,13 +466,11 @@ $(function(){
             <div class="list_function">
                 <!-- 分頁 -->
                 <div class="pagenation">
-                    <a class="prev">Previous</a>
-                    <a class="page">1</a>
-                    <a class="page">2</a>
-                    <a class="page">3</a>
-                    <b>...</b>
-                    <a class="page">12</a>
-                    <a class="next">Next</a>
+                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                  
+                    <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                  
+                    <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                 </div>
             </div>
             <!-- list -->
@@ -485,47 +484,23 @@ $(function(){
                    <li>Post/Reply</li>
                    <li>Recent Message</li>
                </ul>
-               <ul>
-                   <li>1</li>
-                   <li>A Meeting / Close Deal</li>
-                   <li>Close</li>
-                   <li>2020/03/11 ~ 2020/03/13</li>
-                   <li>2020/03/11 11:03 STAN</li>
-                   <li>2/29</li>
-                   <li>2020/03/12 17:21 Wren</li>
+               <ul v-for='(receive_record, index) in displayedStagePosts'>
+                   <li>{{ receive_record.sequence }}</li>
+                   <li>{{ receive_record.stage }}</li>
+                   <li>{{ receive_record.stages_status }}</li>
+                   <li>{{ receive_record.start }} ~  </li>
+                   <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
+                   <li>{{ receive_record.replies }}/{{ receive_record.post }}</li>
+                   <li>{{ receive_record.recent }}</li>
                </ul>
-               <ul>
-                   <li>2</li>
-                   <li>Proposal</li>
-                   <li>Ongoing</li>
-                   <li>2020/03/11 ~ 2020/03/13</li>
-                   <li>2020/03/11 11:03 STAN</li>
-                   <li>2/29</li>
-                   <li>2020/03/12 17:21 Wren</li>
-               </ul>
-               <ul>
-                   <li>3</li>
-                   <li>Client</li>
-                   <li>Ongoing</li>
-                   <li>2020/03/11 ~ 2020/03/13</li>
-                   <li>2020/03/11 11:03 STAN</li>
-                   <li>2/29</li>
-                   <li>2020/03/12 17:21 Wren</li>
-               </ul>
-               <ul>
-                   <li>4</li>
-                   <li>A Meeting / Close Deal</li>
-                   <li>Ongoing</li>
-                   <li>2020/03/11 ~ 2020/03/13</li>
-                   <li>2020/03/11 11:03 STAN</li>
-                   <li>2/29</li>
-                   <li>2020/03/12 17:21 Wren</li>
-               </ul>
-              
            </div>
            <!-- list end -->
         </div>
     </div>
 </div>
 </body>
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/axios.min.js"></script> 
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/project02.js"></script>
 </html>

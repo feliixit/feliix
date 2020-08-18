@@ -473,3 +473,85 @@ ADD COLUMN `special_note` varchar(128) DEFAULT '' AFTER project_status_id;
 
 ALTER TABLE user
 ADD COLUMN `test_manager` varchar(1)  DEFAULT '' AFTER is_admin;
+
+--2020/08/18
+ALTER TABLE project_main
+ADD COLUMN `location` varchar(1024) DEFAULT '' AFTER estimate_close_prob;
+
+ALTER TABLE project_main
+ADD COLUMN `contactor` varchar(256) DEFAULT '' AFTER location;
+
+ALTER TABLE project_main
+ADD COLUMN `contact_number` varchar(256) DEFAULT '' AFTER contactor;
+
+ALTER TABLE project_main
+ADD COLUMN `edit_reason` varchar(256) DEFAULT '' AFTER contact_number;
+
+CREATE TABLE IF NOT EXISTS `project_comments` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `comment` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `project_probability` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `probability` int(11) DEFAULT 0,
+  `reason` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `project_detail` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `type_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `description` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `doc_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `project_proof` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `remark` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `doc_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `project_stages` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `sequence` bigint(20)  DEFAULT 0 NOT NULL,
+  `stage_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `stages_status` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
