@@ -546,7 +546,7 @@ CREATE TABLE IF NOT EXISTS `project_stages` (
   `project_id` bigint(20)  DEFAULT 0 NOT NULL,
   `sequence` bigint(20)  DEFAULT 0 NOT NULL,
   `stage_id` bigint(20)  DEFAULT 0 NOT NULL,
-  `stages_status` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `stages_status_id` bigint(20)  DEFAULT 0,
   `status` int(11) DEFAULT 0,
   `create_id` int(11) DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,

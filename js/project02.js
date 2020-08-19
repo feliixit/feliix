@@ -12,10 +12,24 @@ var app = new Vue({
     statuses : {},
     stages : {},
 
+    project_status:'',
     category: '',
     client_type : '',
     priority:'',
     username:'',
+    stage:'',
+    created_at:'',
+    end_at:'',
+    location:'',
+    contactor:'',
+    contact_number:'',
+    edit_reason:'',
+
+    // + sign
+    stage_sequence:'',
+    project_stage:'',
+    stage_status:'',
+
 
     submit : false,
     // paging
@@ -50,6 +64,8 @@ var app = new Vue({
         _this.getProject(_this.project_id);
       });
     }
+
+    this.getStages();
   },
 
   computed: {
@@ -155,6 +171,9 @@ var app = new Vue({
                   _this.client_type = res.data[0].client_type;
                   _this.priority = res.data[0].priority;
                   _this.username = res.data[0].username;
+                  _this.stage = res.data[0].stage;
+                  _this.project_status = res.data[0].project_status;
+
               },
               (err) => {
                   alert(err.response);
@@ -416,6 +435,87 @@ var app = new Vue({
                 result[i] = obj[i];
             }
             return result;
+        },
+
+        stage_clear() {
+            this.stage_sequence = '';
+            this.project_stage = '';
+            this.stage_status = '';
+            
+            
+            document.getElementById('stage_dialog').classList.remove("show");
+
+            this.receive_stage_records = [];
+
+            this.getRecordsStage(this.project_id);
+        },
+
+
+        stage_add() {
+          let _this = this;
+
+            if (this.stage_sequence.trim() == '') {
+              Swal.fire({
+                text: 'Please enter Stage Sequence!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.project_stage.trim() == '') {
+              Swal.fire({
+                text: 'Please select Project Stage!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.stage_status.trim() == '') {
+              Swal.fire({
+                text: 'Please select Stage Status!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('pid', this.project_id);
+            form_Data.append('stage_sequence', this.stage_sequence);
+            form_Data.append('project_stage', this.project_stage);
+            form_Data.append('stage_status', this.stage_status);
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project02_insert_stage',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.stage_clear();
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
         },
 
 

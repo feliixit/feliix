@@ -82,37 +82,32 @@ $(function(){
                 <!-- add -->
                 <div class="popupblock">
                     <a class="add"></a>
-                    <div class="dialog d-add">
+                    <div id="stage_dialog" class="dialog d-add">
                         <h6>Add New Stage:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt>Sequence:</dt>
-                                <dd><input type="text" placeholder=""></dd>
+                                <dd><input type="text" placeholder="" v-model="stage_sequence"></dd>
                                 <dt>Stage:</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">Client</option>
-                                        <option value="">Proposal</option>
-                                        <option value="">A Meeting / Close Deal</option>
-                                        <option value="">Order</option>
-                                        <option value="">Execution Plan</option>
-                                        <option value="">Delivery</option>
-                                        <option value="">Installation</option>
-                                        <option value="">Client Feedback / After Service</option>
+                                    <select v-model="project_stage">
+                                      <option v-for="item in stages" :value="item.id" :key="item.stage">
+                                          {{ item.stage }}
+                                      </option>
                                     </select>
                                 </dd>
                                 <dt>Stage Status:</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">Ongoing</option>
-                                        <option value="">Pending</option>
-                                        <option value="">Close</option>
+                                    <select name="" id="" v-model="stage_status">
+                                        <option value="1">Ongoing</option>
+                                        <option value="2">Pending</option>
+                                        <option value="3">Close</option>
                                     </select>
                                 </dd>
                             </dl>
                             <div class="btnbox">
-                                <a class="btn small">Cancel</a>
-                                <a class="btn small green">Create</a>
+                                <a class="btn small" @click="stage_clear">Cancel</a>
+                                <a class="btn small green" @click="stage_add">Create</a>
                             </div>
                         </div>
                     </div>
@@ -411,9 +406,9 @@ $(function(){
                     <li>Project Execution Period</li>
                 </ul>
                 <ul>
-                    <li>Pending Approval</li>
-                    <li>A Meeting / Close Deal</li>
-                    <li>2020/03/11 ~ / /</li>
+                    <li>{{ project_status }}</li>
+                    <li>{{ stage }}</li>
+                    <li>{{ created_at }} ~  {{ end_at }}</li>
                 </ul>
                 <ul class="head">
                     <li>Project Location</li>
@@ -421,9 +416,9 @@ $(function(){
                     <li>Contact Number</li>
                 </ul>
                 <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
+                    <li>{{ location }}</li>
+                    <li>{{ contactor }}</li>
+                    <li>{{ contact_number }}</li>
                 </ul>
             </div>
             <div class="tablebox lv2a b-2">
@@ -487,7 +482,7 @@ $(function(){
                <ul v-for='(receive_record, index) in displayedStagePosts'>
                    <li>{{ receive_record.sequence }}</li>
                    <li>{{ receive_record.stage }}</li>
-                   <li>{{ receive_record.stages_status }}</li>
+                   <li>{{ receive_record.stages_status_id }}</li>
                    <li>{{ receive_record.start }} ~  </li>
                    <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
                    <li>{{ receive_record.replies }}/{{ receive_record.post }}</li>

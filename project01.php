@@ -15,6 +15,8 @@ include_once 'api/config/database.php';
 
 use \Firebase\JWT\JWT;
 
+$test_manager = "0";
+
 try {
         // decode jwt
         try {
@@ -109,7 +111,7 @@ $(function(){
                     <a class="add"></a>
                     
 <?php 
-  if ($test_manager == "1")
+  if ($test_manager  == "1")
   {
 ?>
                     <div id="insert_dialog" class="dialog">
@@ -250,7 +252,7 @@ $(function(){
                    <li>{{ receive_record.category }}</li>
                    <li><i v-bind:class="receive_record.pct_class">{{ receive_record.client_type }}</i></li>
                    <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
-                   <li>{{ receive_record.project_name }}</li>
+                   <li><a v-bind:href="'project02?p='+ receive_record.id">{{ receive_record.project_name }}</a></li>
                    <li>{{ receive_record.project_status }}</li>
                    <li>{{ receive_record.estimate_close_prob }}</li>
                    <li>{{ receive_record.username }}</li>
