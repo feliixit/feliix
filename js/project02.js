@@ -12,7 +12,7 @@ var app = new Vue({
     statuses : {},
     stages : {},
 
-    project_status:'',
+
     category: '',
     client_type : '',
     priority:'',
@@ -29,6 +29,13 @@ var app = new Vue({
     stage_sequence:'',
     project_stage:'',
     stage_status:'',
+
+
+    // Change Project Status
+    project_status:'',
+    project_status_edit:'',
+    project_status_reason:'',
+
 
 
     submit : false,
@@ -66,6 +73,7 @@ var app = new Vue({
     }
 
     this.getStages();
+    this.getStatuses();
   },
 
   computed: {
@@ -420,6 +428,7 @@ var app = new Vue({
         
         document.getElementById('insert_dialog').classList.remove("show");
 
+
         this.receive_stage_records = [];
 
         this.getRecords();
@@ -444,10 +453,77 @@ var app = new Vue({
             
             
             document.getElementById('stage_dialog').classList.remove("show");
+            document.getElementById('stage_fn1').classList.remove("focus");
 
             this.receive_stage_records = [];
 
             this.getRecordsStage(this.project_id);
+        },
+
+        status_clear() {
+            this.project_status_edit = '';
+            this.project_status_reason = '';
+      
+            document.getElementById('status_dialog').classList.remove("show");
+            document.getElementById('status_fn1').classList.remove("focus");
+            //this.receive_stage_records = [];
+
+            //this.getRecordsStage(this.project_id);
+        },
+
+        status_create() {
+            let _this = this;
+
+            if (this.project_status_reason.trim() == '') {
+              Swal.fire({
+                text: 'Please enter Stage Sequence!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.project_status_edit.trim() == '') {
+              Swal.fire({
+                text: 'Please select Project Status!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('pid', this.project_id);
+            form_Data.append('project_status_edit', this.project_status_edit);
+            form_Data.append('project_status_reason', this.project_status_reason.trim());
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project02_insert_status',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.status_clear();
+                    _this.getProject(_this.project_id);
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
         },
 
 

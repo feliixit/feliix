@@ -81,7 +81,7 @@ $(function(){
             <div class="block">
                 <!-- add -->
                 <div class="popupblock">
-                    <a class="add"></a>
+                    <a id="stage_fn1" class="add"></a>
                     <div id="stage_dialog" class="dialog d-add">
                         <h6>Add New Stage:</h6>
                         <div class="formbox">
@@ -196,25 +196,26 @@ $(function(){
             </div>
             <div class="block fn">
                 <div class="popupblock">
-                    <a class="fn1">Change Project Status</a>
-                    <div class="dialog fn1">
+                    <a id="status_fn1" class="fn1">Change Project Status</a>
+                    <div id="status_dialog" class="dialog fn1">
                         <h6>Change Project Status:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Current Status:</dt>
-                                <dd><input type="text"></dd>
+                                <dd><input type="text" v-model="project_status" readonly="true"></dd>
                                 <dt>Change to:</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select v-model="project_status_edit">
+                                      <option v-for="item in statuses" :value="item.id" :key="item.project_status">
+                                          {{ item.project_status }}
+                                      </option>
                                     </select>
                                 </dd>
                                 <dt>Reason:</dt>
-                                <dd><textarea name="" id="" ></textarea></dd>
+                                <dd><textarea name="" id="" v-model="project_status_reason"></textarea></dd>
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Create</a>
+                                    <a class="btn small" @click="status_clear">Cancel</a>
+                                    <a class="btn small green" @click="status_create">Create</a>
                                 </div>
                             </dl>
                         </div>
