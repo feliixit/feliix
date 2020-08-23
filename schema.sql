@@ -566,3 +566,28 @@ CREATE TABLE IF NOT EXISTS `project_statuses` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `price_record` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `account` int default 0,
+  `category` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `sub_category` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `related_account` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `details` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `payee` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `paid_date` timestamp NULL DEFAULT NULL,
+  `cash_in` bigint(20) default 0,
+  `cash_out` bigint(20) default 0,
+  `remarks` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `is_locked` bool default false,
+  `is_enabled` bool default false,
+  `is_marked` bool default false,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+ALTER TABLE user
+ADD COLUMN `is_viewer` bool  DEFAULT false AFTER is_admin;
+
