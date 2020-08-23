@@ -6,16 +6,23 @@ var app = new Vue({
     receive_stage_records: [],
     record: {},
 
+    project_comments: {},
+    project_probs: {},
+
     categorys : {},
     client_types : {},
     priorities : {},
     statuses : {},
     stages : {},
+    users : {},
 
 
     category: '',
+    category_id:0,
     client_type : '',
+    client_type_id:0,
     priority:'',
+    priority_id:0,
     username:'',
     stage:'',
     created_at:'',
@@ -36,6 +43,27 @@ var app = new Vue({
     project_status_edit:'',
     project_status_reason:'',
 
+    // Edit Project Info
+    edit_category:'',
+    edit_client_type:'',
+    edit_priority: '',
+    edit_contactor:'',
+    edit_contact_number:'',
+    edit_location:'',
+    edit_project_reason:'',
+
+    //  Action to Comments
+    comment : '',
+    file1: '',
+    file2: '',
+
+    //Acton to Est. Closing Prob.
+    probability : 0,
+    prob_reason :'',
+
+    // Acton to Project Details
+    detail_type: '',
+    detail_desc: '',
 
 
     submit : false,
@@ -69,11 +97,21 @@ var app = new Vue({
         _this.project_id = tmp[1];
         _this.getRecordsStage(_this.project_id);
         _this.getProject(_this.project_id);
+        _this.getProjectComments(_this.project_id);
+        _this.getProjectProbs(_this.project_id);
       });
     }
 
-    this.getStages();
+    this.getProjectCategorys();
+    this.getClientTypes();
+    this.getPrioritys();
     this.getStatuses();
+    this.getStages();
+
+    this.getUsers();
+
+    
+
   },
 
   computed: {
@@ -89,7 +127,7 @@ var app = new Vue({
 
   mounted(){
  
-    
+
   },
 
   watch: {
@@ -158,6 +196,60 @@ var app = new Vue({
               });
       },
 
+      getProjectComments: function(keyword) {
+      let _this = this;
+
+      if(keyword == 0)
+        return;
+
+      const params = {
+              pid : keyword,
+            };
+
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project_comments', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.project_comments = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
+      getProjectProbs: function(keyword) {
+      let _this = this;
+
+      if(keyword == 0)
+        return;
+
+      const params = {
+              pid : keyword,
+            };
+
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project_est_prob', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.project_probs = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
       getProject: function(keyword) {
 
           let _this = this;
@@ -182,6 +274,20 @@ var app = new Vue({
                   _this.stage = res.data[0].stage;
                   _this.project_status = res.data[0].project_status;
 
+                  _this.category_id = res.data[0].category_id;
+                  _this.client_type_id = res.data[0].client_type_id;
+                  _this.priority_id = res.data[0].priority_id;
+                  _this.contactor = res.data[0].contactor;
+                  _this.location = res.data[0].location;
+                  _this.contact_number = res.data[0].contact_number;
+
+                  _this.edit_category = res.data[0].category_id;
+                  _this.edit_client_type = res.data[0].client_type_id;
+                  _this.edit_priority = res.data[0].priority_id;
+                  _this.edit_contactor = res.data[0].contactor;
+                  _this.edit_location = res.data[0].location;
+                  _this.edit_contact_number = res.data[0].contact_number;
+
               },
               (err) => {
                   alert(err.response);
@@ -203,6 +309,27 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.categorys = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
+      getUsers () {
+
+          let _this = this;
+    
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project02_user', { headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.users = res.data;
               },
               (err) => {
                   alert(err.response);
@@ -332,89 +459,14 @@ var app = new Vue({
         });
       },
 
+      onChangeFile1Upload() {
+            this.file1 = this.$refs.file1.files[0];
+        },
 
+        onChangeFile2Upload() {
+            this.file2 = this.$refs.file2.files[0];
+        },
 
-    approve: function() {
-
-      let _this = this;
-
-            if (this.project_name.trim() == '') {
-              Swal.fire({
-                text: 'Please enter Project Name!',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-              })
-                
-                //$(window).scrollTop(0);
-                return;
-            }
-
-            if (this.project_category.trim() == '') {
-              Swal.fire({
-                text: 'Please select Project Category!',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-              })
-                
-                //$(window).scrollTop(0);
-                return;
-            }
-
-            if (this.client_type.trim() == '') {
-              Swal.fire({
-                text: 'Please select Client Type!',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-              })
-                
-                //$(window).scrollTop(0);
-                return;
-            }
-
-            if (this.priority.trim() == '') {
-              Swal.fire({
-                text: 'Please select Priority!',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-              })
-                
-                //$(window).scrollTop(0);
-                return;
-            }
-
-            _this.submit = true;
-            var form_Data = new FormData();
-
-            form_Data.append('project_name', this.project_name);
-            form_Data.append('project_category', this.project_category);
-            form_Data.append('client_type', this.client_type);
-            form_Data.append('priority', this.priority);
-            form_Data.append('status', this.status);
-            form_Data.append('reason', this.reason);
-            form_Data.append('probability', this.probability);
-            form_Data.append('special_note', this.special_note);
-
-            const token = sessionStorage.getItem('token');
-
-            axios({
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${token}`
-                    },
-                    url: 'api/project01_insert',
-                    data: form_Data
-                })
-                .then(function(response) {
-                    //handle success
-                    //this.$forceUpdate();
-                    _this.clear();
-                })
-                .catch(function(response) {
-                    //handle error
-                    console.log(response)
-                });
-      },
 
       clear: function() {
         this.project_name = '';
@@ -446,6 +498,61 @@ var app = new Vue({
             return result;
         },
 
+        comment_clear() {
+            this.comment = '';
+            this.file1 = '';
+            this.$refs.file2.value = null;
+            this.file2 = '';
+            this.$refs.file1.value = null;
+
+            this.getProjectComments(this.project_id);
+
+            document.getElementById('comment_dialog').classList.remove("show");
+            document.getElementById('project_fn3').classList.remove("focus");
+        },
+
+
+        detail_clear() {
+
+            this.probability = 0;
+            this.prob_reason = '';
+
+            this.file3 = '';
+            this.$refs.file3.value = null;
+            this.file4 = '';
+            this.$refs.file4.value = null;
+
+            this.getProjectDetail(this.project_id);
+            
+            document.getElementById('detail_dialog').classList.remove("show");
+            document.getElementById('status_fn5').classList.remove("focus");
+        },
+
+
+        prob_clear() {
+
+            this.probability = 0;
+            this.prob_reason = '';
+
+            this.getProjectProbs(this.project_id);
+            
+            document.getElementById('prob_dialog').classList.remove("show");
+            document.getElementById('status_fn4').classList.remove("focus");
+        },
+
+        project_clear() {
+
+            this.edit_category = this.category_id;
+            this.edit_client_type = this.client_type_id;
+            this.edit_priority = this.priority_id;
+            this.edit_contactor = this.contactor;
+            this.edit_location = this.location;
+            this.edit_contact_number = this.contact_number;
+            
+            document.getElementById('project_dialog').classList.remove("show");
+            document.getElementById('project_fn2').classList.remove("focus");
+        },
+
         stage_clear() {
             this.stage_sequence = '';
             this.project_stage = '';
@@ -469,6 +576,168 @@ var app = new Vue({
             //this.receive_stage_records = [];
 
             //this.getRecordsStage(this.project_id);
+        },
+
+        prob_create() {
+            let _this = this;
+
+            if (this.prob_reason.trim() == '') {
+              Swal.fire({
+                text: 'Please enter probability reason!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('pid', this.project_id);
+            form_Data.append('probability', this.probability);
+            form_Data.append('prob_reason', this.prob_reason.trim());
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project_est_prob',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.prob_clear();
+                    _this.getProject(_this.project_id);
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
+        comment_create() {
+            let _this = this;
+
+            if (this.comment.trim() == '') {
+              Swal.fire({
+                text: 'Please input Comment!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('pid', this.project_id);
+            form_Data.append('comment', this.comment);
+            form_Data.append('file1', this.file1);
+            form_Data.append('file2', this.file2);
+            
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project02_action_comment',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.comment_clear();
+                    _this.getProject(_this.project_id);
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
+        project_create() {
+            let _this = this;
+
+            if (this.edit_category.trim() == 0) {
+              Swal.fire({
+                text: 'Please select Project Category!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.edit_client_type.trim() == 0) {
+              Swal.fire({
+                text: 'Please select Client Type!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.edit_priority.trim() == 0) {
+              Swal.fire({
+                text: 'Please select Priority!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('pid', this.project_id);
+            form_Data.append('edit_category', this.edit_category);
+            form_Data.append('edit_client_type', this.edit_client_type);
+            form_Data.append('edit_priority', this.edit_priority);
+            form_Data.append('edit_contactor', this.edit_contactor);
+            form_Data.append('edit_location', this.edit_location);
+            form_Data.append('edit_contact_number', this.edit_contact_number);
+            form_Data.append('edit_project_reason', this.edit_project_reason);
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project02_edit_project_info',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.project_clear();
+                    _this.getProject(_this.project_id);
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
         },
 
         status_create() {
