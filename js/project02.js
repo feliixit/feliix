@@ -623,6 +623,51 @@ var app = new Vue({
                 });
         },
 
+        detail_create() {
+            let _this = this;
+
+            if (this.prob_reason.trim() == '') {
+              Swal.fire({
+                text: 'Please enter probability reason!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('pid', this.project_id);
+            form_Data.append('probability', this.probability);
+            form_Data.append('prob_reason', this.prob_reason.trim());
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project_est_prob',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.prob_clear();
+                    _this.getProject(_this.project_id);
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
         comment_create() {
             let _this = this;
 
