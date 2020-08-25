@@ -24,9 +24,10 @@ $remarks = (isset($_POST['remarks']) ?  $_POST['remarks'] : '');
 $is_locked = (isset($_POST['is_locked']) ?  (int)$_POST['is_locked'] : 0);
 $is_enabled = (isset($_POST['is_enabled']) ?  (int)$_POST['is_enabled'] : 1);
 $is_marked = (isset($_POST['is_marked']) ?  (int)$_POST['is_marked'] : 0);
-$created_at = (isset($_POST['create_at']) ?  $_POST['create_at'] : '');
-$updated_at = (isset($_POST['update_at']) ?  $_POST['update_at'] : '');
-$start_date = (isset($_POST['start_date']) ?  $_POST['start_date'] : '2020/08/08');
+$created_by = (isset($_POST['created_by']) ?  $_POST['created_by'] : '');
+$updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
+$deleted_by = (isset($_POST['deleted_by']) ?  $_POST['deleted_by'] : '');
+$start_date = (isset($_POST['start_date']) ?  $_POST['start_date'] : '');
 $end_date = (isset($_POST['end_date']) ?  $_POST['end_date'] : '');
 $merged_results = array();
 include_once 'config/core.php';
@@ -93,8 +94,7 @@ else
             $priceRecord->is_locked = $is_locked;
             $priceRecord->is_enabled = $is_enabled;
             $priceRecord->is_marked = $is_marked;
-            $priceRecord->created_at = $created_at;
-            $priceRecord->updated_at = $updated_at;
+            $priceRecord->created_by = $created_by;
             $arr = $priceRecord->create();
 
             http_response_code(200);
@@ -129,8 +129,7 @@ else
             $priceRecord->is_locked = $is_locked;
             $priceRecord->is_enabled = $is_enabled;
             $priceRecord->is_marked = $is_marked;
-            $priceRecord->created_at = $created_at;
-            $priceRecord->updated_at = $updated_at;
+            $priceRecord->updated_by = $updated_by;
             $arr = $priceRecord->update();
 
             http_response_code(200);
@@ -208,6 +207,27 @@ else
             http_response_code(401);
 
             echo json_encode(array("message" => ".$e."));
+        }
+    }else if($action == 7){
+        //delete
+        try {
+            // decode jwt
+            //$key = 'myKey';
+            //$decoded = JWT::decode($jwt, $key, array('HS256'));
+            $priceRecord->id = $id;
+            $priceRecord->deleted_by = $deleted_by;
+            $arr = $priceRecord->delete();
+
+            http_response_code(200);
+            echo json_encode(array($arr));
+            echo json_encode(array("message" => " Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
+
+        } // if decode fails, it means jwt is invalid
+        catch (Exception $e) {
+
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Access denied."));
         }
     }
 }

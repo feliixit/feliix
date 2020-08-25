@@ -585,6 +585,11 @@ CREATE TABLE IF NOT EXISTS `price_record` (
   `is_marked` bool default false,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `updated_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `deleted_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 

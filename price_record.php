@@ -428,7 +428,7 @@
 
 
                  <td class="text-nowrap" v-if="is_viewer == '1'">
-                     <button><i class="fas fa-lock" :class="[item.is_locked == '1'? red:''] v-on:click="update(item.id,1,1)""></i></button>
+                     <button><i class="fas fa-lock" :class="[item.is_locked == '1'? red:''] v-on:click="update(item.id,1)""></i></button>
                  </td>
                  <td class="text-nowrap" v-else-if="!item.is_locked == '0'">
                      <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
@@ -442,7 +442,7 @@
 
 
 
-                     <button><i class="fas fa-times" v-on:click="update(item.id,0,0)"></i></button>
+                     <button v-on:click="deleteRecord(item.id)"><i class="fas fa-times"></i></button>
 
                  </td>
                  <td class="text-nowrap" v-else>
@@ -534,7 +534,7 @@
 
 
                 <td class="text-nowrap" v-if="is_viewer == '1'">
-                    <button><i class="fas fa-lock" :class="[item.is_locked == '1'? red:''] v-on:click="update(item.id,1,1)""></i></button>
+                    <button><i class="fas fa-lock" :class="[item.is_locked == '1'? red:''] v-on:click="update(item.id,1)""></i></button>
                 </td>
                 <td class="text-nowrap" v-else-if="item.is_locked == '0'">
                     <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
@@ -548,7 +548,7 @@
 
 
 
-                    <button><i class="fas fa-times" v-on:click="update(item.id,0,0)"></i></button>
+                    <button v-on:click="deleteRecord(item.id)"><i class="fas fa-times" ></i></button>
 
                 </td>
                 <td class="text-nowrap" v-else>

@@ -22,6 +22,10 @@ class PriceRecord
     public $is_marked;
     public $created_at;
     public $updated_at;
+    public $deleted_at;
+    public $created_by;
+    public $updated_by;
+    public $deleted_by;
     // constructor
     public function __construct($db)
     {
@@ -31,7 +35,7 @@ class PriceRecord
     function update()
     {
         $query = "UPDATE " . $this->table_name . "
-                set account = :account, category = :category, sub_category = :sub_category, related_account = :related_account, details = :details, pic_url = :pic_url , payee = :payee, cash_in = :cash_in, cash_out = :cash_out, remarks = :remarks, is_locked = :is_locked, is_enabled = : is_enabled, is_marked = :is_marked, update_at = now() where id = :id";
+                set account = :account, category = :category, sub_category = :sub_category, related_account = :related_account, details = :details, pic_url = :pic_url , payee = :payee, cash_in = :cash_in, cash_out = :cash_out, remarks = :remarks, is_locked = :is_locked, is_enabled = : is_enabled, is_marked = :is_marked, update_at = now(), updated_by = :updated_by where id = :id";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -49,6 +53,7 @@ class PriceRecord
         $this->cash_in = (int)$this->cash_in;
         $this->cash_out = (int)$this->cash_out;
         $this->remarks = htmlspecialchars(strip_tags($this->remarks));
+        $this->updated_by = htmlspecialchars(strip_tags($this->updated_by));
         $locked = filter_var($this->is_locked,FILTER_VALIDATE_BOOLEAN);
         $enabled = filter_var($this->is_enabled,FILTER_VALIDATE_BOOLEAN);
         $marked = filter_var($this->is_marked,FILTER_VALIDATE_BOOLEAN);
@@ -73,6 +78,7 @@ class PriceRecord
         $stmt->bindParam(':is_locked', $locked);
         $stmt->bindParam(':is_enabled', $enabled);
         $stmt->bindParam(':is_marked', $marked);
+        $stmt->bindParam(':updated_by', $this->updated_by);
 
     try {
         // execute the query, also check if query was successful
@@ -93,15 +99,15 @@ class PriceRecord
         }
     }
 
-    // create new user record
+    // create new price record
     function create()
     {
 
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`account`,`category`, `sub_category`, `related_account`, `details`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`) 
-                VALUES (:account,:category, :sub_category, :related_account, :details, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, :is_enabled,:is_marked, now())";
+                (`account`,`category`, `sub_category`, `related_account`, `details`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
+                VALUES (:account,:category, :sub_category, :related_account, :details, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, :is_enabled,:is_marked, now(),:created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -122,6 +128,7 @@ class PriceRecord
             $locked = filter_var($this->is_locked,FILTER_VALIDATE_INT );
             $enabled = filter_var($this->is_enabled,FILTER_VALIDATE_INT );
             $marked = filter_var($this->is_marked,FILTER_VALIDATE_INT);
+        $this->created_by = htmlspecialchars(strip_tags($this->created_by));
 
            
             // bind the values
@@ -142,6 +149,7 @@ class PriceRecord
             $stmt->bindParam(':is_locked', $locked);
             $stmt->bindParam(':is_enabled', $enabled);
             $stmt->bindParam(':is_marked',  $marked);
+        $stmt->bindParam(':created_by', $this->created_by);
             
 
         try {
@@ -164,5 +172,42 @@ class PriceRecord
 
         return $last_id;
 
+    }
+    function delete()
+    {
+        $query = "UPDATE " . $this->table_name . "
+                set is_enabled = 0, deleted_at = now(), deleted_by = :deleted_by where id = :id";
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // bind the values
+        $this->id = (int)$this->id;
+        $this->deleted_by = htmlspecialchars(strip_tags($this->deleted_by));
+
+
+
+        // bind the values
+        $stmt->bindParam(':id', $this->id);
+
+        $stmt->bindParam(':deleted_by', $this->deleted_by);
+
+        try {
+            // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+                return true;
+            }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                return false;
+            }
+        }
+        catch (Exception $e)
+        {
+            error_log($e->getMessage());
+            return false;
+        }
     }
 }
