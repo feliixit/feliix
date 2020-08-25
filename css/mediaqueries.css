@@ -2,6 +2,10 @@
 @media screen and (max-height: 660px) {
 	/* NB height */
 }
+@media screen and (max-width: 1000px) {
+    .block.left,
+    .block.right{ width: 100%;}
+}
 @media screen and (max-width: 640px) {
 	/* width */
     header .headerbox{height: 178px; padding-top: 98px; }
@@ -10,7 +14,4 @@
     header > .headerbox .menu::before{ font-size: 43px;}
     header nav .logo{width: 188px; height: 43px; }
     .mainContent{ padding-top: 200px;}
-    
-    .block.left,
-    .block.right{ width: 100%;}
 }

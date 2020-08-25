@@ -292,7 +292,11 @@ $(function(){
                                 <dt>Pictures:</dt>
                                 <dd>
                                     <div class="browser_group"><input type="file" accept="image/*" id="file1" ref="file1" style="color: black;" v-on:change="onChangeFile1Upload()"></div>
+                                    
                                 </dd>
+                                <dt>
+                                        {{ startValue }}
+                                    </dt>
                                 <dt>Files:</dt>
                                 <dd>
                                     <div class="browser_group"><input type="file"  id="file2" ref="file2" style="color: black;" v-on:change="onChangeFile2Upload()"></div>
@@ -362,7 +366,7 @@ $(function(){
                                 <dd><textarea name="" id="" v-model="detail_desc"></textarea></dd>
                                 <dt>Pictures:</dt>
                                 <dd>
-                                    <div class="browser_group"><input type="text"><button >Choose</button></div>
+                                    <div class="browser_group"><input type="file" ref="file" multiple="multiple"></div>
                                 </dd>
                                 <dt>Files:</dt>
                                 <dd>

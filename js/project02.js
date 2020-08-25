@@ -57,6 +57,8 @@ var app = new Vue({
     file1: '',
     file2: '',
 
+    startValue: 0,
+
     //Acton to Est. Closing Prob.
     probability : 0,
     prob_reason :'',
@@ -697,6 +699,13 @@ var app = new Vue({
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
+                    },
+                    onUploadProgress(progressEvent){
+                      if (progressEvent.lengthComputable) {
+                        let val = (progressEvent.loaded / progressEvent.total * 100).toFixed(0);
+            
+                        _this.startValue = parseInt(val)
+                      }
                     },
                     url: 'api/project02_action_comment',
                     data: form_Data
