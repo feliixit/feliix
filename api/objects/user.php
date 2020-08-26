@@ -25,6 +25,7 @@ class User{
     public $manager_leave;
     public $is_manager;
     public $test_manger;
+    public $is_viewer;
  
     // constructor
     public function __construct($db){
@@ -150,7 +151,7 @@ class User{
     function userCanLogin(){
         // query to check if email exists
         $query = "SELECT user.id, username, password, user.status, is_admin, need_punch, COALESCE(department, '') department, 
-                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, COALESCE(is_manager, 0) is_manager, COALESCE(test_manager, '0') test_manager, manager_leave, user_title.head_of_department
+                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, COALESCE(is_manager, 0) is_manager, COALESCE(test_manager, '0') test_manager, manager_leave, user_title.head_of_department,user.is_viewer
                 FROM " . $this->table_name . "
                 LEFT JOIN user_department ON user.apartment_id = user_department.id 
                 LEFT JOIN user_title ON user.title_id = user_title.id
@@ -194,6 +195,7 @@ class User{
             $this->apartment_id = $row['apartment_id'];
             $this->is_manager = $row['is_manager'];
             $this->test_manager = $row['test_manager'];
+            $this->is_viewer = $row['is_viewer'];
             // return true because email exists in the database
             return true;
         }
