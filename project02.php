@@ -223,55 +223,58 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a class="fn2">Edit Project Info</a>
-                    <div class="dialog fn2">
+                    <a id="project_fn2" class="fn2">Edit Project Info</a>
+                    <div id="project_dialog" class="dialog fn2">
                         <h6>Edit Project Info:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Project Category:</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select v-model="edit_category">
+                                      <option v-for="item in categorys" :value="item.id" :key="item.category">
+                                          {{ item.category }}
+                                      </option>
                                     </select>
                                 </dd>
                                 <div class="half">
                                     <dt>Client Type:</dt>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                        <select v-model="edit_client_type">
+                                          <option v-for="item in client_types" :value="item.id" :key="item.client_type">
+                                              {{ item.client_type }}
+                                          </option>
                                         </select>
                                     </dd>
                                 </div>
                                 <div class="half">
                                     <dt>Priority</dt>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                        <select v-model="edit_priority">
+                                          <option v-for="item in priorities" :value="item.id" :key="item.priority">
+                                              {{ item.priority }}
+                                          </option>
                                         </select>
                                     </dd>
                                 </div>
                                 <dt>Project Creator:</dt>
                                 <dd>
-                                    <div class="browser_group"><input type="text"><button disabled>Browser</button></div>
+                                    <div class="browser_group"><input type="text" v-model="username" readonly="true"><button disabled>Browser</button></div>
                                 </dd>
                                 <dt>Contact Person:</dt>
-                                <dd><input type="text"></dd>
+                                <dd><input type="text" v-model="edit_contactor"></dd>
                                 <div class="half">
                                     <dt>Project Location:</dt>
-                                    <dd><input type="text"></dd>
+                                    <dd><input type="text" v-model="edit_location"></dd>
                                 </div>
                                 <div class="half">
                                     <dt>Contact Number:</dt>
-                                    <dd><input type="text"></dd>
+                                    <dd><input type="text" v-model="edit_contact_number"></dd>
                                 </div>
                                 <dt>Reason for Editing Project Info:</dt>
-                                <dd><textarea name="" id="" cols="30" rows="10"></textarea></dd>
+                                <dd><textarea name="" id="" cols="30" rows="10" v-model="edit_project_reason"></textarea></dd>
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Save</a>
+                                    <a class="btn small" @click="project_clear">Cancel</a>
+                                    <a class="btn small green" @click="project_create">Save</a>
                                 </div>
                             </dl>
                         </div>
@@ -279,24 +282,28 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a class="fn3">Action to Comments</a>
-                    <div class="dialog fn3">
+                    <a id="project_fn3" class="fn3">Action to Comments</a>
+                    <div id="comment_dialog" class="dialog fn3">
                         <h6>Action to Comments:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Comment:</dt>
-                                <dd><textarea name="" id="" ></textarea></dd>
+                                <dd><textarea name="" id="" v-model="comment"></textarea></dd>
                                 <dt>Pictures:</dt>
                                 <dd>
-                                    <div class="browser_group"><input type="text"><button >Choose</button></div>
+                                    <div class="browser_group"><input type="file" accept="image/*" id="file1" ref="file1" style="color: black;" v-on:change="onChangeFile1Upload()"></div>
+                                    
                                 </dd>
+                                <dt>
+                                        {{ startValue }}
+                                    </dt>
                                 <dt>Files:</dt>
                                 <dd>
-                                    <div class="browser_group"><input type="text"><button >Choose</button></div>
+                                    <div class="browser_group"><input type="file"  id="file2" ref="file2" style="color: black;" v-on:change="onChangeFile2Upload()"></div>
                                 </dd>
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Save</a>
+                                    <a class="btn small" @click="comment_clear">Cancel</a>
+                                    <a class="btn small green" @click="comment_create">Save</a>
                                 </div>
                             </dl>
                         </div>
@@ -304,23 +311,32 @@ $(function(){
                 </div>
 
                 <div class="popupblock">
-                    <a class="fn4">Acton to Est. Closing Prob.</a>
-                    <div class="dialog fn4">
+                    <a id="status_fn4" class="fn4">Acton to Est. Closing Prob.</a>
+                    <div id="prob_dialog" class="dialog fn4">
                         <h6>Acton to Est. Closing Prob.:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Estimated Closing Probability:</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select v-model="probability">
+                                      <option value="0">0</option>
+                                      <option value="10">10</option>
+                                      <option value="20">20</option>
+                                      <option value="30">30</option>
+                                      <option value="40">40</option>
+                                      <option value="50">50</option>
+                                      <option value="60">60</option>
+                                      <option value="70">70</option>
+                                      <option value="80">80</option>
+                                      <option value="90">90</option>
+                                      <option value="100">100</option>
                                     </select>
                                 </dd>
                                 <dt class="head">Reason for Estimated Closing Probability:</dt>
-                                <dd><textarea name="" id="" ></textarea></dd>
+                                <dd><textarea name="" id="" v-model="prob_reason" ></textarea></dd>
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Save</a>
+                                    <a class="btn small" @click="prob_clear">Cancel</a>
+                                    <a class="btn small green" @click="prob_create">Save</a>
                                 </div>
                             </dl>
                         </div>
@@ -328,31 +344,37 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a class="fn5">Acton to Project Details</a>
-                    <div class="dialog fn5">
+                    <a id="status_fn5" class="fn5">Acton to Project Details</a>
+                    <div id="detail_dialog" class="dialog fn5">
                         <h6>Acton to Project Details:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Detail Type:</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select name="" id="" v-model="detail_type">
+                                        <option value="1">Requirements</option>
+                                        <option value="2">Submittals</option>
+                                        <option value="3">Discount</option>
+                                        <option value="4">Client Details</option>
+                                        <option value="5">Competitors</option>
+                                        <option value="6">Lead Time</option>
+                                        <option value="7">Warranty</option>
+                                        <option value="8">Other</option>
                                     </select>
                                 </dd>
                                 <dt class="head">Description:</dt>
-                                <dd><textarea name="" id="" ></textarea></dd>
+                                <dd><textarea name="" id="" v-model="detail_desc"></textarea></dd>
                                 <dt>Pictures:</dt>
                                 <dd>
-                                    <div class="browser_group"><input type="text"><button >Choose</button></div>
+                                    <div class="browser_group"><input type="file" ref="file" multiple="multiple"></div>
                                 </dd>
                                 <dt>Files:</dt>
                                 <dd>
                                     <div class="browser_group"><input type="text"><button >Choose</button></div>
                                 </dd>
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Save</a>
+                                    <a class="btn small" @click="detail_clear">Cancel</a>
+                                    <a class="btn small green" @click="detail_create">Save</a>
                                 </div>
                             </dl>
                         </div>
@@ -429,19 +451,16 @@ $(function(){
                 </ul>
                 <ul>
                     <li>
-                        • We didn’t get the deal at the first time A-Meeting because xxxxxxx (Kristel at 2020/03/24 17:15) <br>
-                        • New feedbacks from client are <br>
-                         1. xxxxxxxxxxxxxx, <br>
-                         2. xxxxxxxxxxxxxxx, <br>
-                         3. xxxxxxxxxxxxxxxxxx, <br>
-                         4. xxxxxxxxxxxxxxxxxxxxxxx. <br>
-                         (Kristel at 2020/03/25 11:21)
+                        <div v-for='(receive_record, index) in project_comments'>• {{ receive_record.comment }} <br>
+
+                         ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
                     </li>
                     <li>
-                        • 50: My reason is xxxxxxxxxxxxxx <br>
-                        (Stan at 2020/03/11 11:03) <br>
-                        • 70: Client gave feedbacks xxxxxxxxxxxxxx <br>
-                        (Kristel at 2020/03/15 15:49)
+                        <div v-for='(receive_record, index) in project_probs'>• Prob Est: {{ receive_record.prob }} - {{ receive_record.comment }} <br>
+
+                         ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
                     </li>
                 </ul>
             </div>

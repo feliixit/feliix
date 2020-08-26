@@ -235,32 +235,34 @@ $(function(){
                 </div>
             </div>
             <!-- list -->
-            <div class="tablebox lv1">
-               <ul class="head">
-                   <li>Project Category</li>
-                   <li>Client Type</li>
-                   <li>Priority</li>
-                   <li>Project Name</li>
-                   <li>Status</li>
-                   <li>Estimated Closing Prob.</li>
-                   <li>Project Creator</li>
-                   <li>Execution Period</li>
-                   <li>Current Stage</li>
-                   <li>Recent Message</li>
-               </ul>
-               <ul v-for='(receive_record, index) in displayedPosts'>
-                   <li>{{ receive_record.category }}</li>
-                   <li><i v-bind:class="receive_record.pct_class">{{ receive_record.client_type }}</i></li>
-                   <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
-                   <li><a v-bind:href="'project02?p='+ receive_record.id">{{ receive_record.project_name }}</a></li>
-                   <li>{{ receive_record.project_status }}</li>
-                   <li>{{ receive_record.estimate_close_prob }}</li>
-                   <li>{{ receive_record.username }}</li>
-                   <li>{{ receive_record.created_at }} ~ </li>
-                   <li>{{ receive_record.stage }}</li>
-                   <li></li>
-               </ul>
-              
+            <div class="tableframe">
+              <div class="tablebox lv1">
+                 <ul class="head">
+                     <li>Project Category</li>
+                     <li>Client Type</li>
+                     <li>Priority</li>
+                     <li>Project Name</li>
+                     <li>Status</li>
+                     <li>Estimated Closing Prob.</li>
+                     <li>Project Creator</li>
+                     <li>Execution Period</li>
+                     <li>Current Stage</li>
+                     <li>Recent Message</li>
+                 </ul>
+                 <ul v-for='(receive_record, index) in displayedPosts'>
+                     <li>{{ receive_record.category }}</li>
+                     <li><i v-bind:class="receive_record.pct_class">{{ receive_record.client_type }}</i></li>
+                     <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
+                     <li><a v-bind:href="'project02?p='+ receive_record.id">{{ receive_record.project_name }}</a></li>
+                     <li>{{ receive_record.project_status }}</li>
+                     <li>{{ receive_record.estimate_close_prob }}</li>
+                     <li>{{ receive_record.username }}</li>
+                     <li>{{ receive_record.created_at }} ~ </li>
+                     <li>{{ receive_record.stage }}</li>
+                     <li></li>
+                 </ul>
+                
+             </div>
            </div>
            <!-- list end -->
            <div class="list_function">
