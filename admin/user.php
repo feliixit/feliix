@@ -131,6 +131,10 @@ $(function(){
                             <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="head_of_department" @change="updateHeadOfDepartment">
                             <label for="head_of_department">Leave w/o Approval</label>
                         </li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="is_viewer" id="is_viewer" :true-value="1" v-model:checked="is_viewer" @change="updateIsViewer">
+                            <label for="is_viewer">Is Viewer</label>
+                        </li>
                     </ul>
 
                     <div>
@@ -203,6 +207,10 @@ $(function(){
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="record.head_of_department" @change="updateHeadOfDepartment">
                             <label for="head_of_department">Leave w/o Approval</label>
+                        </li>
+                        <li style="padding-bottom:10px;">
+                            <input type="checkbox" name="is_viewer" id="is_viewer" :true-value="1" v-model:checked="record.is_viewer" @change="updateIsViewer">
+                            <label for="is_viewer">Is Viewer</label>
                         </li>
                     </ul>
 
