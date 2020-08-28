@@ -25,6 +25,8 @@ var app = new Vue({
     action:0,
     items:[],
     payees:[],
+    fileArray:[],
+    filename:'',
     edd:0,
 
     start_date:'',
@@ -49,6 +51,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -67,6 +70,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -85,6 +89,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -103,6 +108,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -121,6 +127,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -198,8 +205,6 @@ var app = new Vue({
           let _this = this;
           var paidat = this.sliceDate(this.paid_date).replace(/-/g,"/");
           var payee = this.payee.toString();
-         // var pic_url = this.filename;
-          //var pic_url =  this.$refs.file.files[0].filename;
           if(edd == 1){
               this.update(this.id,0);
           }else {
@@ -215,7 +220,7 @@ var app = new Vue({
                   form_Data.append('sub_category', this.sub_category);
                   form_Data.append('related_account', this.related_account);
                   form_Data.append('details', this.details);
-                  form_Data.append('pic_url', pic_url);
+                  form_Data.append('pic_url', this.filename);
                   form_Data.append('payee', payee);
                   form_Data.append('paid_date', paidat);
                   form_Data.append('cash_in', this.cash_in);
@@ -247,7 +252,9 @@ var app = new Vue({
                               confirmButtonText: 'OK'
                           })
                       });
+                      this.upload();
                   this.reset();
+                  this.getRecords();
               } else {
                   this.spa.push(this.split1);
                   this.spa.push(this.split2);
@@ -268,7 +275,7 @@ var app = new Vue({
                           form_Data.append('sub_category', this.spa[i].sub_category);
                           form_Data.append('related_account', this.related_account);
                           form_Data.append('details', this.spa[i].details);
-                          form_Data.append('pic_url', this.spa[i].pic_url);
+                          form_Data.append('pic_url', this.spa[i].filename);
                           form_Data.append('payee', this.spa[i].payee.toString());
                           form_Data.append('paid_date', paidat);
                           form_Data.append('cash_in', this.spa[i].cash_in);
@@ -304,8 +311,9 @@ var app = new Vue({
                       }
                       form_Data = new FormData();
                   }
-                  this.spa = [];
+                  this.upload();
                   this.reset();
+                  this.getRecords();
               }
           }
         },
@@ -329,7 +337,7 @@ var app = new Vue({
                     form_Data.append('sub_category', this.sub_category);
                     form_Data.append('related_account', this.related_account);
                     form_Data.append('details', this.details);
-                    form_Data.append('pic_url', this.pic_url);
+                    form_Data.append('pic_url', this.filename);
                     form_Data.append('payee', payee);
                     form_Data.append('paid_date', paidat);
                     form_Data.append('cash_in', this.cash_in);
@@ -361,7 +369,9 @@ var app = new Vue({
                                 confirmButtonText: 'OK'
                             })
                         });
+                        this.upload();
                     this.reset();
+                    this.getRecords();
 
         },
         selectByDate:function(){
@@ -551,18 +561,31 @@ var app = new Vue({
               });
 
       },
-      onChangeFileUpload:function(e) {
+      onChangeFileUpload:function(e,record) {
           const image = e.target.files[0];
-          this.filename = e.target.files[0].name;
-          $upload_path = 'img/'.this.filename;
-          if(move_uploaded_file($_FILES['file']['tmp_name'], $upload_path))
-        {
+          if(record == 1){
+            this.split1.filename = e.target.files[0].name;
+          }else if(record == 2){
+            this.split2.filename = e.target.files[0].name;
+          }else if(record == 3){
+            this.split3.filename = e.target.files[0].name;
+          }else if(record == 4){
+            this.split4.filename = e.target.files[0].name;
+          }else if(record == 5){
+            this.split5.filename = e.target.files[0].name;
+          }else{
+            this.filename = e.target.files[0].name;
+          }
+          this.fileArray.push(image);
           //const reader = new FileReader();
           //reader.readAsDataURL(image);
           //reader.onload = e=>{
               //this.filename = e.target.result;
-              console.log(upload_path);
-          };
+          //console.log(this.filename);
+          //console.log(this.split1.filename);
+          //console.log(this.split2.filename);
+          //console.log(this.fileArray);
+          //};
       },
       setPages:function () {
           console.log('setPages');
@@ -578,7 +601,7 @@ var app = new Vue({
       },
 
       paginate: function (posts) {
-          console.log('paginate');
+          //console.log('paginate');
           if(this.page < 1)
               this.page = 1;
           if(this.page > this.pages.length)
@@ -626,8 +649,35 @@ var app = new Vue({
           this.setPages();
           return this.paginate(this.items);
       },
-
-
+      upload:function(){
+        var myArr = this.fileArray;
+        var vm = this;
+        myArr.forEach((element, index) => {
+          var config = {
+            headers: { "Content-Type": "multipart/form-data" }
+          }
+            var data = myArr[index];
+          var myForm = new FormData();
+          myForm.append("file", data);
+ 
+          // axios.defaults.headers.post["token"] = token;
+          axios
+            .post("api/upload_price_record", myForm, config)
+            .then(function(res) {
+              if (res.data.code == 0) {
+                //后端返回成功，将进度置为100%
+                myArr[index].progress = 1;
+                vm.$set(vm.fileArray, index, myArr[index]);
+                console.log(vm.fileArray, index);
+              } else {
+                alert(JSON.stringify(res.data));
+              }
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
+        });
+      },
   getUserName: function() {
     var token = localStorage.getItem('token');
     var form_Data = new FormData();
@@ -679,12 +729,16 @@ var app = new Vue({
       this.cash_in=0;
       this.cash_out=0;
       this.remarks='';
+      this.filename = '';
 
       this.is_locked= 0;
       this.is_enabled= 1;
       this.is_marked=0;
       this.action=0;
       this.edd = 0;
+      
+      this.spa = [];
+      this.fileArray=[];
   },
 
 }
