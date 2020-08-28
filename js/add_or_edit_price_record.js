@@ -554,11 +554,14 @@ var app = new Vue({
       onChangeFileUpload:function(e) {
           const image = e.target.files[0];
           this.filename = e.target.files[0].name;
-          const reader = new FileReader();
-          reader.readAsDataURL(image);
-          reader.onload = e=>{
+          $upload_path = 'img/'.this.filename;
+          if(move_uploaded_file($_FILES['file']['tmp_name'], $upload_path))
+        {
+          //const reader = new FileReader();
+          //reader.readAsDataURL(image);
+          //reader.onload = e=>{
               //this.filename = e.target.result;
-              console.log(this.filename);
+              console.log(upload_path);
           };
       },
       setPages:function () {

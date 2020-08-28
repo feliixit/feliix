@@ -204,7 +204,7 @@
 
                             <td style="text-align: left;">
 
-                                <div class="form-control" style="width:15vw;">
+                                <div class="" style="width:15vw;">
                                     <v-select v-model="payee"
                                               :options="payees"
                                               attach
