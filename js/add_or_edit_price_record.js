@@ -660,12 +660,12 @@ var app = new Vue({
           var myForm = new FormData();
           myForm.append("file", data);
  
-          // axios.defaults.headers.post["token"] = token;
+
           axios
             .post("api/upload_price_record", myForm, config)
             .then(function(res) {
               if (res.data.code == 0) {
-                //后端返回成功，将进度置为100%
+
                 myArr[index].progress = 1;
                 vm.$set(vm.fileArray, index, myArr[index]);
                 console.log(vm.fileArray, index);
