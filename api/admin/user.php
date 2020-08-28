@@ -120,6 +120,7 @@ else
             $sick_leave = stripslashes(isset($_POST["sick_leave"]) ? $_POST["sick_leave"] : 0);
             $manager_leave = stripslashes(isset($_POST["manager_leave"]) ? $_POST["manager_leave"] : 0);
 
+            $is_viewer = stripslashes(isset($_POST["is_viewer"]) ? ($_POST["is_viewer"] == "1" ? 1 : 0)  : 0);
             $crud = $_POST["crud"];
             $id = $_POST["id"];
 
@@ -142,6 +143,7 @@ else
                   $user->sick_leave = $sick_leave;
 
                   $user->manager_leave = $manager_leave;
+                  $user->is_viewer = $is_viewer;
 
                   $user->apartment_id = $apartment_id;
 
@@ -165,6 +167,7 @@ else
 
                   $user->manager_leave = $manager_leave;
                   
+                   $user->is_viewer = $is_viewer;
                 $user->apartment_id = $apartment_id;
                     $user->id = $id;
 

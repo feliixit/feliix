@@ -25,11 +25,14 @@ var app = new Vue({
     action:0,
     items:[],
     payees:[],
+    fileArray:[],
+    filename:'',
     edd:0,
 
     start_date:'',
     end_date:'',
 
+    name:'',
     is_viewer:0,
     mail_ip:'https://feliix.myvnc.com',
 
@@ -48,6 +51,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -66,6 +70,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -84,6 +89,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -102,6 +108,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -120,6 +127,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
+        filename:'',
 
         is_locked: false,
         is_enabled: true,
@@ -197,10 +205,8 @@ var app = new Vue({
           let _this = this;
           var paidat = this.sliceDate(this.paid_date).replace(/-/g,"/");
           var payee = this.payee.toString();
-         // var pic_url = this.filename;
-          //var pic_url =  this.$refs.file.files[0].filename;
           if(edd == 1){
-              this.update(this.id,1,0);
+              this.update(this.id,0);
           }else {
               if (range == 1) {
                   if (this.operation_type == 1) {
@@ -214,7 +220,7 @@ var app = new Vue({
                   form_Data.append('sub_category', this.sub_category);
                   form_Data.append('related_account', this.related_account);
                   form_Data.append('details', this.details);
-                  form_Data.append('pic_url', pic_url);
+                  form_Data.append('pic_url', this.filename);
                   form_Data.append('payee', payee);
                   form_Data.append('paid_date', paidat);
                   form_Data.append('cash_in', this.cash_in);
@@ -224,6 +230,7 @@ var app = new Vue({
                   form_Data.append('is_enabled', this.is_enabled);
                   form_Data.append('is_marked', this.is_marked);
                   form_Data.append('action', this.action);
+                  form_Data.append('created_by', this.name);
                   axios({
                       method: 'post',
                       headers: {
@@ -245,7 +252,9 @@ var app = new Vue({
                               confirmButtonText: 'OK'
                           })
                       });
+                      this.upload();
                   this.reset();
+                  this.getRecords();
               } else {
                   this.spa.push(this.split1);
                   this.spa.push(this.split2);
@@ -266,7 +275,7 @@ var app = new Vue({
                           form_Data.append('sub_category', this.spa[i].sub_category);
                           form_Data.append('related_account', this.related_account);
                           form_Data.append('details', this.spa[i].details);
-                          form_Data.append('pic_url', this.spa[i].pic_url);
+                          form_Data.append('pic_url', this.spa[i].filename);
                           form_Data.append('payee', this.spa[i].payee.toString());
                           form_Data.append('paid_date', paidat);
                           form_Data.append('cash_in', this.spa[i].cash_in);
@@ -276,6 +285,7 @@ var app = new Vue({
                           form_Data.append('is_enabled', this.is_enabled);
                           form_Data.append('is_marked', this.spa[i].is_marked);
                           form_Data.append('action', this.action);
+                          form_Data.append('created_by', this.name);
                           axios({
                               method: 'post',
                               headers: {
@@ -288,7 +298,7 @@ var app = new Vue({
                                   //handle success
                                   //_this.items = response.data
                                   //console.log(_this.items)
-                                  this.update(this.id,0,0);
+                                  this.update(this.id,0);
                               })
                               .catch(function (response) {
                                   //handle error
@@ -301,12 +311,13 @@ var app = new Vue({
                       }
                       form_Data = new FormData();
                   }
-                  this.spa = [];
+                  this.upload();
                   this.reset();
+                  this.getRecords();
               }
           }
         },
-        update:function(id,enable,locked){
+        update:function(id,locked){
           this.action = 3;//update
             var token = localStorage.getItem('token');
             var form_Data = new FormData();
@@ -326,16 +337,17 @@ var app = new Vue({
                     form_Data.append('sub_category', this.sub_category);
                     form_Data.append('related_account', this.related_account);
                     form_Data.append('details', this.details);
-                    form_Data.append('pic_url', this.pic_url);
+                    form_Data.append('pic_url', this.filename);
                     form_Data.append('payee', payee);
                     form_Data.append('paid_date', paidat);
                     form_Data.append('cash_in', this.cash_in);
                     form_Data.append('cash_out', this.cash_out);
                     form_Data.append('remarks', this.remarks);
                     form_Data.append('is_locked', locked);
-                    form_Data.append('is_enabled', enable);
+                    form_Data.append('is_enabled', this.is_enabled);
                     form_Data.append('is_marked', this.is_marked);
                     form_Data.append('action', this.action);
+                    form_Data.append('updated_by', this.name);
                     axios({
                         method: 'post',
                         headers: {
@@ -357,7 +369,9 @@ var app = new Vue({
                                 confirmButtonText: 'OK'
                             })
                         });
+                        this.upload();
                     this.reset();
+                    this.getRecords();
 
         },
         selectByDate:function(){
@@ -478,6 +492,40 @@ var app = new Vue({
                   })
               });
       },
+       deleteRecord:function(id){
+          this.action = 7;//delete
+          var token = localStorage.getItem('token');
+          var form_Data = new FormData();
+          let _this = this;
+
+          form_Data.append('jwt', token);
+          form_Data.append('id', id);
+          form_Data.append('action', _this.action);
+          form_Data.append('deleted_by',_this.name);
+          axios({
+              method: 'post',
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+              },
+              url: 'api/add_or_edit_price_record',
+              data: form_Data
+          })
+              .then(function (response) {
+                  //handle success
+                  //_this.items = response.data
+                  console.log(response.data)
+              })
+              .catch(function (response) {
+                  //handle error
+                  Swal.fire({
+                      text: JSON.stringify(response),
+                      icon: 'error',
+                      confirmButtonText: 'OK'
+                  })
+              });
+          this.reset();
+
+      },
     sliceDate: function(str) {
       var mdy = str.slice(0, 10);
       return mdy;
@@ -513,50 +561,31 @@ var app = new Vue({
               });
 
       },
-      onChangeFileUpload:function() {
-          const _this = this;
-          this.file = this.$refs.file.files[0];
-
-
-          EXIF.getData(this.$refs.file.files[0], function() {
-
-              var result = EXIF.pretty(this);
-
-              // Calculate latitude decima
-              try{
-                  var latDegree = this.exifdata.GPSLatitude[0].numerator;
-                  var latMinute = this.exifdata.GPSLatitude[1].numerator;
-                  var latSecond = this.exifdata.GPSLatitude[2].numerator;
-                  var latDirection = this.exifdata.GPSLatitudeRef;
-
-                  var latFinal = _this.ConvertDMSToDD(latDegree, latMinute, latSecond, latDirection);
-
-
-                  // Calculate longitude decimal
-                  var lonDegree = this.exifdata.GPSLongitude[0].numerator;
-                  var lonMinute = this.exifdata.GPSLongitude[1].numerator;
-                  var lonSecond = this.exifdata.GPSLongitude[2].numerator;
-                  var lonDirection = this.exifdata.GPSLongitudeRef;
-
-                  var lonFinal = _this.ConvertDMSToDD(lonDegree, lonMinute, lonSecond, lonDirection);
-
-
-                  _this.photo_time = this.exifdata.DateTimeOriginal;
-
-                  _this.photo_gps = latFinal+','+lonFinal;
-
-                  _this.piclatitude = latFinal;
-                  _this.piclongitude = lonFinal;
-
-                  document.getElementById('map-link').innerHTML = '<a href="http://www.google.com/maps/place/'+latFinal+','+lonFinal+'" target="_blank">Check on Google Maps</a>';
-              }
-              catch(err) {
-                  _this.msg  = err.message;
-                  return;
-              }
-
-              _this.msg  = result;
-          });
+      onChangeFileUpload:function(e,record) {
+          const image = e.target.files[0];
+          if(record == 1){
+            this.split1.filename = e.target.files[0].name;
+          }else if(record == 2){
+            this.split2.filename = e.target.files[0].name;
+          }else if(record == 3){
+            this.split3.filename = e.target.files[0].name;
+          }else if(record == 4){
+            this.split4.filename = e.target.files[0].name;
+          }else if(record == 5){
+            this.split5.filename = e.target.files[0].name;
+          }else{
+            this.filename = e.target.files[0].name;
+          }
+          this.fileArray.push(image);
+          //const reader = new FileReader();
+          //reader.readAsDataURL(image);
+          //reader.onload = e=>{
+              //this.filename = e.target.result;
+          //console.log(this.filename);
+          //console.log(this.split1.filename);
+          //console.log(this.split2.filename);
+          //console.log(this.fileArray);
+          //};
       },
       setPages:function () {
           console.log('setPages');
@@ -572,7 +601,7 @@ var app = new Vue({
       },
 
       paginate: function (posts) {
-          console.log('paginate');
+          //console.log('paginate');
           if(this.page < 1)
               this.page = 1;
           if(this.page > this.pages.length)
@@ -620,8 +649,35 @@ var app = new Vue({
           this.setPages();
           return this.paginate(this.items);
       },
+      upload:function(){
+        var myArr = this.fileArray;
+        var vm = this;
+        myArr.forEach((element, index) => {
+          var config = {
+            headers: { "Content-Type": "multipart/form-data" }
+          }
+            var data = myArr[index];
+          var myForm = new FormData();
+          myForm.append("file", data);
+ 
 
+          axios
+            .post("api/upload_price_record", myForm, config)
+            .then(function(res) {
+              if (res.data.code == 0) {
 
+                myArr[index].progress = 1;
+                vm.$set(vm.fileArray, index, myArr[index]);
+                console.log(vm.fileArray, index);
+              } else {
+                alert(JSON.stringify(res.data));
+              }
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
+        });
+      },
   getUserName: function() {
     var token = localStorage.getItem('token');
     var form_Data = new FormData();
@@ -673,12 +729,16 @@ var app = new Vue({
       this.cash_in=0;
       this.cash_out=0;
       this.remarks='';
+      this.filename = '';
 
       this.is_locked= 0;
       this.is_enabled= 1;
       this.is_marked=0;
       this.action=0;
       this.edd = 0;
+      
+      this.spa = [];
+      this.fileArray=[];
   },
 
 }

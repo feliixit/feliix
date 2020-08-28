@@ -27,6 +27,8 @@ let mainState = {
     manager_leave: 0,
     is_manager: 0,
 
+    is_viewer:0,
+    
     ed_apartment_id: 0,
 
         // paging
@@ -455,6 +457,7 @@ var app = new Vue({
             formData.append('manager_leave', this.record.manager_leave)
             formData.append('is_manager', this.record.is_manager)
             formData.append('test_manager', this.record.test_manager)
+            formData.append('is_viewer', this.record.is_viewer)
 
             formData.append('apartment_id', this.ed_apartment_id)
             formData.append('title_id', this.record.title_id)
@@ -575,6 +578,7 @@ var app = new Vue({
             formData.append('manager_leave', this.manager_leave)
             formData.append('is_manager', this.is_manager)
             formData.append('test_manager', this.test_manager)
+            formData.append('is_viewer', this.is_viewer)
 
             formData.append('apartment_id', this.apartment_id)
             formData.append('title_id', this.title_id)
@@ -621,6 +625,7 @@ var app = new Vue({
             this.manager_leave = 0;
             this.is_manager = 0;
             this.test_manager = 0;
+            this.is_viewer = 0;
 
 
             this.isEditing = false;
@@ -647,7 +652,18 @@ var app = new Vue({
             } else {
                 this.record.is_admin = "0";
             }
-        }
+         },
+        
+        updateIsViewer: function(event) {
+        
+            let checked = event.target.checked;
+            let value = event.target.value;
+            if (checked) {
+                this.is_viewer = 1;
+            } else {
+                this.is_viewer = 0;
+            }
+        },
  
 	}
 });

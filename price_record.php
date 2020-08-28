@@ -105,7 +105,7 @@
 
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:15vw;" v-model="account">
-                                    <option>----------------------------------</option>
+                                    
                                     <option value="1">Security Bank</option>
                                     <option value="2">Office Petty Cash</option>
                                 </select>
@@ -120,7 +120,7 @@
 
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:15vw;" v-model="operation_type">
-                                    <option>----------------------------------</option>
+                                    
                                     <option value="1">Cash In</option>
                                     <option value="2">Cash Out</option>
                                 </select>
@@ -204,7 +204,7 @@
 
                             <td style="text-align: left;">
 
-                                <div class="form-control" style="width:15vw;">
+                                <div class="" style="width:15vw;">
                                     <v-select v-model="payee"
                                               :options="payees"
                                               attach
@@ -239,7 +239,7 @@
 
                         </tr>
 
-                        <tr>Fund Transfer
+                        <tr>
                             <td>
                                 <label>Details</label>
                             </td>
@@ -266,7 +266,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,0)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -288,10 +288,11 @@
 
                     <div style="margin-left:6vw; margin-top:2vh; margin-bottom:1.5vh;">
 
-                        <button class="btn btn-secondary" style="width:10vw; font-weight:700" v-on:click="reset(1)">Reset
+                        <button class="btn btn-secondary" style="width:10vw; font-weight:700" v-on:click="reset()">Reset
                         </button>
 
-                        <button class="btn btn-secondary" style="width:10vw; font-weight:700; margin-left:2vw;" href="#collapseOne" v-on:click="reset(2)">Cancel
+                        <button class="btn btn-secondary" style="width:10vw; font-weight:700; margin-left:2vw;" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                       aria-expanded="true" aria-controls="collapseOne" v-on:click="reset()">Cancel
                         </button>
 
                         <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;" v-on:click="add(1,edd)" >Save
@@ -827,7 +828,7 @@
 
                         <td style="text-align: left;">
 
-                            <div class="form-control" style="width:15vw;">
+                            <div class="" style="width:15vw;">
                                 <v-select v-model="split1.payee"
                                           :options="payees"
                                           attach
@@ -878,7 +879,7 @@
                             <label>Photos</label>
                         </td>
 
-                        <td style="text-align: left;"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera">
+                        <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,1)" accept="image/*" capture="camera">
                         </td>
 
                     </tr>
@@ -962,7 +963,7 @@
 
                             <td style="text-align: left;">
 
-                                <div class="form-control" style="width:15vw;">
+                                <div class="" style="width:15vw;">
                                     <v-select v-model="split2.payee"
                                               :options="payees"
                                               attach
@@ -1013,7 +1014,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,2)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -1097,7 +1098,7 @@
 
                             <td style="text-align: left;">
 
-                                <div class="form-control" style="width:15vw;">
+                                <div class="" style="width:15vw;">
                                     <v-select v-model="split3.payee"
                                               :options="payees"
                                               attach
@@ -1148,7 +1149,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,3)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -1232,7 +1233,7 @@
 
                             <td style="text-align: left;">
 
-                                <div class="form-control" style="width:15vw;">
+                                <div class="" style="width:15vw;">
                                     <v-select v-model="split4.payee"
                                               :options="payees"
                                               attach
@@ -1283,7 +1284,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,4)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -1367,7 +1368,7 @@
 
                             <td style="text-align: left;">
 
-                                <div class="form-control" style="width:15vw;">
+                                <div class="" style="width:15vw;">
                                     <v-select v-model="split5.payee"
                                               :options="payees"
                                               attach
@@ -1418,7 +1419,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,5)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -1437,11 +1438,11 @@
                     </table>
                 <div style="margin-left:6vw; margin-top:2vh; margin-bottom:1.5vh;">
 
-                    <button class="btn btn-secondary" style="width:10vw; font-weight:700; margin-left:2vw;"
-                            >Cancel
+                    <button class="btn btn-secondary" style="width:10vw; font-weight:700; margin-left:2vw;" aria-label="Close"
+                            v-on:click="reset()">Cancel
                     </button>
 
-                    <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;"
+                    <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;" aria-label="Close"
                              v-on:click="add(2)">Confirm
                     </button>
 

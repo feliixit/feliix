@@ -636,3 +636,4 @@ CREATE TABLE IF NOT EXISTS `project_est_prob` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
+ALTER TABLE price_record MODIFY COLUMN paid_date Date;
