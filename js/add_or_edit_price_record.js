@@ -19,9 +19,9 @@ var app = new Vue({
     cash_out: 0,
     remarks: '',
 
-    is_locked: 0,
-    is_enabled: 1,
-    is_marked:0,
+    is_locked: false,
+    is_enabled: true,
+    is_marked:false,
     action:0,
     items:[],
     payees:[],
@@ -35,6 +35,18 @@ var app = new Vue({
     name:'',
     is_viewer:0,
     mail_ip:'https://feliix.myvnc.com',
+    
+    allCashIn:0,
+    allCashOut:0,
+    allBalance:0,
+    
+    accountOneCashIn:0,
+    accountOneCashOut:0,
+    accountOneBalance:0,
+    
+    accountTwoCashIn:0,
+    accountTwoCashOut:0,
+    accountTwoBalance:0,
 
     index:0,
       spa:[],
@@ -243,6 +255,7 @@ var app = new Vue({
                           //handle success
                           //_this.items = response.data
                           //console.log(_this.items)
+                          
                       })
                       .catch(function (response) {
                           //handle error
@@ -253,8 +266,11 @@ var app = new Vue({
                           })
                       });
                       this.upload();
-                  this.reset();
-                  this.getRecords();
+                      setTimeout(function(){
+                            _this.reset();
+                            _this.getRecords();
+                        },1000
+                      )
               } else {
                   this.spa.push(this.split1);
                   this.spa.push(this.split2);
@@ -264,7 +280,7 @@ var app = new Vue({
                   console.log(this.spa);
                   for (var i = 0; i < this.spa.length; i++) {
                       if (this.spa[i].amount != 0) {
-                          if (this.operation_typer == 1) {
+                          if (this.cash_in != 0) {
                               this.spa[i].cash_in = this.spa[i].amount;
                           } else {
                               this.spa[i].cash_out = this.spa[i].amount;
@@ -298,7 +314,7 @@ var app = new Vue({
                                   //handle success
                                   //_this.items = response.data
                                   //console.log(_this.items)
-                                  this.update(this.id,0);
+                                  this.deleteRecord(this.id);
                               })
                               .catch(function (response) {
                                   //handle error
@@ -311,13 +327,16 @@ var app = new Vue({
                       }
                       form_Data = new FormData();
                   }
-                  this.upload();
-                  this.reset();
-                  this.getRecords();
+                      this.upload();
+                      setTimeout(function(){
+                            _this.reset();
+                            _this.getRecords();
+                        },1000
+                      )
               }
           }
         },
-        update:function(id,locked){
+        update:function(id){
           this.action = 3;//update
             var token = localStorage.getItem('token');
             var form_Data = new FormData();
@@ -326,10 +345,12 @@ var app = new Vue({
             var payee = this.payee.toString();
 
                     if (this.operation_type == 1) {
-                        this.cash_in = this.amount;
-                    } else {
-                        this.cash_out = this.amount;
-                    }
+                      this.cash_in = this.amount;
+                      this.cash_out = 0;
+                  } else {
+                      this.cash_out = this.amount;
+                      this.cash_in = 0;
+                  }
                     form_Data.append('jwt', token);
                     form_Data.append('id', id);
                     form_Data.append('account', this.account);
@@ -343,8 +364,6 @@ var app = new Vue({
                     form_Data.append('cash_in', this.cash_in);
                     form_Data.append('cash_out', this.cash_out);
                     form_Data.append('remarks', this.remarks);
-                    form_Data.append('is_locked', locked);
-                    form_Data.append('is_enabled', this.is_enabled);
                     form_Data.append('is_marked', this.is_marked);
                     form_Data.append('action', this.action);
                     form_Data.append('updated_by', this.name);
@@ -363,16 +382,19 @@ var app = new Vue({
                         })
                         .catch(function (response) {
                             //handle error
-                            Swal.fire({
-                                text: JSON.stringify(response),
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            })
+                            //Swal.fire({
+                                //text: JSON.stringify(response),
+                                //icon: 'error',
+                                //confirmButtonText: 'OK'
+                            //})
                         });
                         this.upload();
-                    this.reset();
-                    this.getRecords();
-
+                        setTimeout(function(){
+                            _this.reset();
+                            _this.getRecords();
+                        },1000
+                        )
+                    
         },
         selectByDate:function(){
           this.action = 4;//select by date
@@ -480,7 +502,11 @@ var app = new Vue({
                   _this.remarks = response.data[0].remarks;
                   _this.is_locked = response.data[0].is_locked;
                   _this.is_enabled = response.data[0].is_enabled;
-                  _this.is_marked = response.data[0].is_marked;
+                  if(response.data[0].is_marked == 0){
+                    _this.is_marked = false;
+                  }else{
+                      _this.is_marked = true;
+                  }
                   console.log(response.data[0]);
               })
               .catch(function(response) {
@@ -513,7 +539,6 @@ var app = new Vue({
               .then(function (response) {
                   //handle success
                   //_this.items = response.data
-                  console.log(response.data)
               })
               .catch(function (response) {
                   //handle error
@@ -523,7 +548,57 @@ var app = new Vue({
                       confirmButtonText: 'OK'
                   })
               });
-          this.reset();
+              setTimeout(function(){
+                            _this.reset();
+                            _this.getRecords();
+                        },1000
+                        )
+
+      },
+      lockRecord:function(id){
+          let _this = this;
+          _this.edit(id);
+          _this.action = 8;//lock
+          var token = localStorage.getItem('token');
+          var form_Data = new FormData();
+          
+          setTimeout(function(){
+              if(_this.is_locked == 0){
+              $locked = 1
+          }else{
+              $locked = 0
+          }
+          form_Data.append('jwt', token);
+          form_Data.append('id', id);
+          form_Data.append('action', _this.action);
+          form_Data.append('updated_by',_this.name);
+          form_Data.append('is_locked',$locked);
+          axios({
+              method: 'post',
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+              },
+              url: 'api/add_or_edit_price_record',
+              data: form_Data
+          })
+              .then(function (response) {
+                  //handle success
+                  //_this.items = response.data
+                  console.log(response.data)
+              })
+              .catch(function (response) {
+                  //handle error
+                  Swal.fire({
+                      text: JSON.stringify(response),
+                      icon: 'error',
+                      confirmButtonText: 'OK'
+                  })
+          });},1000)
+              setTimeout(function(){
+                            _this.reset();
+                            _this.getRecords();
+                        },2000
+                        )
 
       },
     sliceDate: function(str) {
@@ -588,7 +663,7 @@ var app = new Vue({
           //};
       },
       setPages:function () {
-          console.log('setPages');
+          //console.log('setPages');
           this.pages = [];
           let numberOfPages = Math.ceil(this.items.length / this.perPage);
 
@@ -635,6 +710,26 @@ var app = new Vue({
                   (res) => {
                       _this.items = res.data;
                       console.log(_this.items)
+                      res.data.forEach((element,index)=>{
+                          if(index< this.perPage){
+                            if(element.is_enabled == 1){
+                                if(element.account == 1 || element.account == 2){
+                                _this.allCashIn += parseInt(element.cash_in);
+                                _this.allCashOut += parseInt(element.cash_out);
+                                }
+                                if(element.account==1){
+                                    _this.accountOneCashIn += parseInt(element.cash_in);
+                                    _this.accountOneCashOut += parseInt(element.cash_out);
+                                }else if(element.account==2){
+                                    _this.accountTwoCashIn += parseInt(element.cash_in);
+                                    _this.accountTwoCashOut += parseInt(element.cash_out);
+                                }
+                            }
+                          }
+                      });
+                      _this.allBalance = _this.allCashIn - _this.allCashOut;
+                      _this.accountOneBalance = _this.accountOneCashIn - _this.accountOneCashOut;
+                      _this.accountTwoBalance = _this.accountTwoCashIn - _this.accountTwoCashOut;
                       this.displayedPosts();
                   },
                   (err) => {

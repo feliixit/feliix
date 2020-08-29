@@ -23,7 +23,7 @@ $cash_out = (isset($_POST['cash_out']) ?  $_POST['cash_out'] : 0);
 $remarks = (isset($_POST['remarks']) ?  $_POST['remarks'] : '');
 $is_locked = (isset($_POST['is_locked']) ?  (int)$_POST['is_locked'] : 0);
 $is_enabled = (isset($_POST['is_enabled']) ?  (int)$_POST['is_enabled'] : 1);
-$is_marked = (isset($_POST['is_marked']) ?  (int)$_POST['is_marked'] : 0);
+$is_marked = (isset($_POST['is_marked']) && $_POST['is_marked'] === "true"?  1 : 0);
 $created_by = (isset($_POST['created_by']) ?  $_POST['created_by'] : '');
 $updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
 $deleted_by = (isset($_POST['deleted_by']) ?  $_POST['deleted_by'] : '');
@@ -75,6 +75,7 @@ else
         }
     }
     else if($action == 2) {
+        //add
         try {
             // decode jwt
             //$key = 'myKey';
@@ -116,6 +117,7 @@ else
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
             $priceRecord->id = $id;
+            $priceRecord->account = $account;
             $priceRecord->category = $category;
             $priceRecord->sub_category = $sub_category;
             $priceRecord->related_account = $related_account;
@@ -126,8 +128,6 @@ else
             $priceRecord->cash_in = $cash_in;
             $priceRecord->cash_out = $cash_out;
             $priceRecord->remarks = $remarks;
-            $priceRecord->is_locked = $is_locked;
-            $priceRecord->is_enabled = $is_enabled;
             $priceRecord->is_marked = $is_marked;
             $priceRecord->updated_by = $updated_by;
             $arr = $priceRecord->update();
@@ -217,6 +217,29 @@ else
             $priceRecord->id = $id;
             $priceRecord->deleted_by = $deleted_by;
             $arr = $priceRecord->delete();
+
+            http_response_code(200);
+            echo json_encode(array($arr));
+            echo json_encode(array("message" => " Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
+
+        } // if decode fails, it means jwt is invalid
+        catch (Exception $e) {
+
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Access denied."));
+        }
+    }
+    else if($action == 8){
+        //lock
+        try {
+            // decode jwt
+            //$key = 'myKey';
+            //$decoded = JWT::decode($jwt, $key, array('HS256'));
+            $priceRecord->id = $id;
+            $priceRecord->updated_by = $updated_by;
+            $priceRecord->is_locked = $is_locked;
+            $arr = $priceRecord->lock();
 
             http_response_code(200);
             echo json_encode(array($arr));
