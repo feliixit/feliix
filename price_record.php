@@ -295,7 +295,8 @@
                        aria-expanded="true" aria-controls="collapseOne" v-on:click="reset()">Cancel
                         </button>
 
-                        <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;" v-on:click="add(1,edd)" >Save
+                        <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                       aria-expanded="true" aria-controls="collapseOne" v-on:click="add(1,edd)" >Save
                         </button>
 
                     </div>
@@ -410,7 +411,7 @@
              <tr v-for='item in items' v-if="item.account == 1" :class="[item.is_marked == '1' ? 'red' : '']">
                 <td>{{item.paid_date}}</td>
 
-                <td>{{item.category}}</td>
+                <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
 
                 <td style="text-align: left;">{{item.details}}</td>
 
@@ -428,8 +429,8 @@
                 <td style="text-align: left;">{{item.remarks}}</td>
 
 
-                 <td class="text-nowrap" v-if="is_viewer == '1'">
-                     <button><i class="fas fa-lock" :class="[item.is_locked == '1'? red:''] v-on:click="update(item.id,1)""></i></button>
+                 <td class="text-nowrap"  v-if="is_viewer == '1'">
+                     <button><i class="fas fa-lock" :class="[item.is_locked == '1'? 'red' : '']" v-on:click="lockRecord(item.id)"></i></button>
                  </td>
                  <td class="text-nowrap" v-else-if="!item.is_locked == '0'">
                      <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
@@ -456,11 +457,11 @@
 
             <tr>
                 <th colspan="4">Total</th>
-                <th style="text-align: center;" colspan="2">Beginning Balance: 0.00</th>
-                <th style="text-align: right;">600,000.00</th>
-                <th style="text-align: right;">390,954.31</th>
+                <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
+                <th style="text-align: right;">{{accountOneCashIn}}</th>
+                <th style="text-align: right;">{{accountOneCashOut}}</th>
                 <th style="text-align: center;" colspan="2">
-                Ending Balance: 209,045.69</th>
+                Ending Balance: {{accountOneBalance}}</th>
             </tr>
 
             </thead>
@@ -535,7 +536,7 @@
 
 
                 <td class="text-nowrap" v-if="is_viewer == '1'">
-                    <button><i class="fas fa-lock" :class="[item.is_locked == '1'? red:''] v-on:click="update(item.id,1)""></i></button>
+                    <button><i class="fas fa-lock" :class="[item.is_locked == '1'? 'red' : '']" v-on:click="lockRecord(item.id)"></i></button>
                 </td>
                 <td class="text-nowrap" v-else-if="item.is_locked == '0'">
                     <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
@@ -562,11 +563,11 @@
 
             <tr>
                 <th colspan="4">Total</th>
-                <th style="text-align: center;" colspan="2">Beginning Balance: 0.00</th>
-                <th style="text-align: right;">600,000.00</th>
-                <th style="text-align: right;">390,954.31</th>
+                <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
+                <th style="text-align: right;">{{accountTwoCashIn}}</th>
+                <th style="text-align: right;">{{accountTwoCashOut}}</th>
                 <th style="text-align: center;" colspan="2">
-                    Ending Balance: 209,045.69</th>
+                    Ending Balance: {{accountTwoBalance}}</th>
             </tr>
 
             </thead>
@@ -581,11 +582,11 @@
 
             <tr>
                 <th style="width:25vw; font-size:larger;">All Accounts</th>
-                <th style="text-align: center; width:18vw; font-size:larger;">Beginning Balance: 0.00</th>
-                <th style="text-align: center; width:18vw; font-size:larger;">Cash In: 1,000,000.00</th>
-                <th style="text-align: center; width:18vw; font-size:larger;">Cash Out: 487,428.31</th>
+                <th style="text-align: center; width:18vw; font-size:larger;"><!--Beginning Balance: 0.00--></th>
+                <th style="text-align: center; width:18vw; font-size:larger;">Cash In: {{allCashIn}}</th>
+                <th style="text-align: center; width:18vw; font-size:larger;">Cash Out: {{allCashOut}}</th>
                 <th style="text-align: center; width:18vw; font-size:larger;">
-                Ending Balance: 512,571.69</th>
+                Ending Balance: {{allBalance}}</th>
             </tr>
 
             </thead>
@@ -1438,11 +1439,11 @@
                     </table>
                 <div style="margin-left:6vw; margin-top:2vh; margin-bottom:1.5vh;">
 
-                    <button class="btn btn-secondary" style="width:10vw; font-weight:700; margin-left:2vw;" aria-label="Close"
+                    <button class="btn btn-secondary" style="width:10vw; font-weight:700; margin-left:2vw;" aria-label="Close" data-dismiss="modal"
                             v-on:click="reset()">Cancel
                     </button>
 
-                    <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;" aria-label="Close"
+                    <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;" aria-label="Close" data-dismiss="modal"
                              v-on:click="add(2)">Confirm
                     </button>
 
