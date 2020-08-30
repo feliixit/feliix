@@ -630,6 +630,7 @@ var app = new Vue({
 
                   document.body.appendChild(link);
                   link.click();
+                  console.log(response)
               })
               .catch(function(response) {
                   console.log(response)
