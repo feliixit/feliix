@@ -278,12 +278,13 @@ var app = new Vue({
                   this.spa.push(this.split4);
                   this.spa.push(this.split5);
                   console.log(this.spa);
+                  console.log(_this.operation_type);
                   for (var i = 0; i < this.spa.length; i++) {
                       if (this.spa[i].amount != 0) {
-                          if (this.cash_in != 0) {
-                              this.spa[i].cash_in = this.spa[i].amount;
-                          } else {
-                              this.spa[i].cash_out = this.spa[i].amount;
+                          if (_this.operation_type == 1) {
+                            this.spa[i].cash_in = this.spa[i].amount;
+                          }else{
+                            this.spa[i].cash_out = this.spa[i].amount;
                           }
                           form_Data.append('jwt', token);
                           form_Data.append('account', this.account);
@@ -314,20 +315,20 @@ var app = new Vue({
                                   //handle success
                                   //_this.items = response.data
                                   //console.log(_this.items)
-                                  this.deleteRecord(this.id);
                               })
                               .catch(function (response) {
                                   //handle error
-                                  Swal.fire({
-                                      text: JSON.stringify(response),
-                                      icon: 'error',
-                                      confirmButtonText: 'OK'
-                                  })
+                                  //Swal.fire({
+                                  //    text: JSON.stringify(response),
+                                  //    icon: 'error',
+                                  //    confirmButtonText: 'OK'
+                                  //})
                               });
                       }
                       form_Data = new FormData();
                   }
-                      this.upload();
+                      _this.upload();
+                      _this.deleteRecord(_this.id);
                       setTimeout(function(){
                             _this.reset();
                             _this.getRecords();
@@ -834,6 +835,96 @@ var app = new Vue({
       
       this.spa = [];
       this.fileArray=[];
+      
+      this.split1.account=0;
+      this.split1.category= '';
+      this.split1.sub_category= '';
+      this.split1.related_account= 0;
+      this.split1.details= '';
+      this.split1.pic_url= '';
+      this.split1.payee= [];
+      this.split1.paid_date= '';
+      this.split1.amount=0;
+      this.split1.cash_in= 0;
+      this.split1.cash_out= 0;
+      this.split1.remarks= '';
+      this.split1.filename='';
+      
+      this.split1.is_locked= false;
+      this.split1.is_enabled= true;
+      this.split1.is_marked= false;
+      
+      this.split2.account=0;
+      this.split2.category= '';
+      this.split2.sub_category= '';
+      this.split2.related_account= 0;
+      this.split2.details= '';
+      this.split2.pic_url= '';
+      this.split2.payee= [];
+      this.split2.paid_date= '';
+      this.split2.amount=0;
+      this.split2.cash_in= 0;
+      this.split2.cash_out= 0;
+      this.split2.remarks= '';
+      this.split2.filename='';
+                
+      this.split2.is_locked= false;
+      this.split2.is_enabled= true;
+      this.split2.is_marked= false;
+      
+      this.split3.account=0;
+      this.split3.category= '';
+      this.split3.sub_category= '';
+      this.split3.related_account= 0;
+      this.split3.details= '';
+      this.split3.pic_url= '';
+      this.split3.payee= [];
+      this.split3.paid_date= '';
+      this.split3.amount=0;
+      this.split3.cash_in= 0;
+      this.split3.cash_out= 0;
+      this.split3.remarks= '';
+      this.split3.filename='';
+                
+      this.split3.is_locked= false;
+      this.split3.is_enabled= true;
+      this.split3.is_marked= false;
+      
+      this.split4.account=0;
+      this.split4.category= '';
+      this.split4.sub_category= '';
+      this.split4.related_account= 0;
+      this.split4.details= '';
+      this.split4.pic_url= '';
+      this.split4.payee= [];
+      this.split4.paid_date= '';
+      this.split4.amount=0;
+      this.split4.cash_in= 0;
+      this.split4.cash_out= 0;
+      this.split4.remarks= '';
+      this.split4.filename='';
+                
+      this.split4.is_locked= false;
+      this.split4.is_enabled= true;
+      this.split4.is_marked= false;
+      
+      this.split5.account=0;
+      this.split5.category= '';
+      this.split5.sub_category= '';
+      this.split5.related_account= 0;
+      this.split5.details= '';
+      this.split5.pic_url= '';
+      this.split5.payee= [];
+      this.split5.paid_date= '';
+      this.split5.amount=0;
+      this.split5.cash_in= 0;
+      this.split5.cash_out= 0;
+      this.split5.remarks= '';
+      this.split5.filename='';
+                
+      this.split5.is_locked= false;
+      this.split5.is_enabled= true;
+      this.split5.is_marked= false;
   },
 
 }
