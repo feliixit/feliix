@@ -18,6 +18,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
  
+ include_once 'config/conf.php';
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -127,6 +128,7 @@ if($jwt){
                 $sheet->setCellValue('D' . $i, $row['details']);
                 if($row['pic_url'] != '')
                 {
+                    $conf = new Conf();
                     $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
                     $sheet->setCellValue('E' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($link);
