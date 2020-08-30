@@ -637,3 +637,36 @@ CREATE TABLE IF NOT EXISTS `project_est_prob` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
 ALTER TABLE price_record MODIFY COLUMN paid_date Date;
+
+
+-- 20200830 add for project_action_detail
+CREATE TABLE IF NOT EXISTS `project_action_detail` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `detail_type` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `detail_desc` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+-- 20200830 add for gcp storage
+CREATE TABLE IF NOT EXISTS `gcp_storage_file` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `batch_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `batch_type` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `bucketname` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT 'feliiximg',
+  `filename` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `gcp_name` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `gcp_msg` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) DEFAULT 0,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';

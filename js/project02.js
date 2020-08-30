@@ -66,6 +66,9 @@ var app = new Vue({
     // Acton to Project Details
     detail_type: '',
     detail_desc: '',
+    fileArray: [],
+    canSub: true,
+    finish: false,
 
 
     submit : false,
@@ -139,11 +142,76 @@ var app = new Vue({
         this.setPages();
       },
 
+  fileArray: {
+      handler(newValue, oldValue) {
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.fileArray.length) {
+          this.finish = true;
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          });
+          this.detail_clear();
+        }
+      }
+    }
+
   },
 
 
 
   methods:{
+
+    deleteFile(index) {
+      this.fileArray.splice(index, 1);
+      var fileTarget = this.$refs.file;
+      fileTarget.value = "";
+    },
+
+    changeFile() {
+      var fileTarget = this.$refs.file;
+      /*
+      if (this.fileArray.length >= 10) {
+        Swal.fire({
+          text: "ten files",
+          type: "success",
+          duration: 1 * 1000,
+          customClass: "message-box",
+          iconClass: "message-icon"
+        });
+        fileTarget.value = "";
+      } else {
+        if (fileTarget.files[0].size > 31457280) {
+          Swal.fire({
+            text: "30M",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          });
+          fileTarget.value = "";
+        } else {
+            
+        */
+        for (i = 0; i < fileTarget.files.length; i++) {
+            // remove duplicate
+            if (
+              this.fileArray.indexOf(fileTarget.files[i]) == -1 ||
+              this.fileArray.length == 0
+            ) {
+              var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+              this.fileArray.push(fileItem);
+            }else{
+              fileTarget.value = "";
+            }
+          }
+    },
 
     setPages () {
         console.log('setPages');
@@ -516,15 +584,12 @@ var app = new Vue({
 
         detail_clear() {
 
-            this.probability = 0;
-            this.prob_reason = '';
+            this.detail_type = '';
+            this.detail_desc = '';
 
-            this.file3 = '';
-            this.$refs.file3.value = null;
-            this.file4 = '';
-            this.$refs.file4.value = null;
+            this.fileArray = [];
 
-            this.getProjectDetail(this.project_id);
+            //this.getProjectDetail(this.project_id);
             
             document.getElementById('detail_dialog').classList.remove("show");
             document.getElementById('status_fn5').classList.remove("focus");
@@ -628,9 +693,20 @@ var app = new Vue({
         detail_create() {
             let _this = this;
 
-            if (this.prob_reason.trim() == '') {
+            if (this.detail_type.trim() == '') {
               Swal.fire({
-                text: 'Please enter probability reason!',
+                text: 'Please select detail type!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.detail_desc.trim() == '') {
+              Swal.fire({
+                text: 'Please enter detail description!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })
@@ -644,8 +720,8 @@ var app = new Vue({
             var form_Data = new FormData();
 
             form_Data.append('pid', this.project_id);
-            form_Data.append('probability', this.probability);
-            form_Data.append('prob_reason', this.prob_reason.trim());
+            form_Data.append('detail_type', this.detail_type);
+            form_Data.append('detail_desc', this.detail_desc.trim());
 
             const token = sessionStorage.getItem('token');
 
@@ -655,11 +731,15 @@ var app = new Vue({
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     },
-                    url: 'api/project_est_prob',
+                    url: 'api/project_action_detail',
                     data: form_Data
                 })
                 .then(function(response) {
                     //handle success
+                    if(response.data['batch_id'] != 0)
+                    {
+                        _this.upload(response.data['batch_id']);
+                    }
                     //this.$forceUpdate();
                     _this.prob_clear();
                     _this.getProject(_this.project_id);
@@ -669,6 +749,58 @@ var app = new Vue({
                     console.log(response)
                 });
         },
+
+
+        upload(batch_id) {
+            
+              this.canSub = false;
+              var myArr = this.fileArray;
+              var vm = this;
+             
+              //循环文件数组挨个上传
+              myArr.forEach((element, index) => {
+                var config = {
+                  headers: { "Content-Type": "multipart/form-data" },
+                  onUploadProgress: function(e) {
+         
+                    if (e.lengthComputable) {
+                      var rate = e.loaded / e.total; 
+                      console.log(index, e.loaded, e.total, rate);
+                      if (rate < 1) {
+                        
+                        myArr[index].progress = rate;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      } else {
+                        myArr[index].progress = 0.99;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      }
+                    }
+                  }
+                };
+                var data = myArr[index];
+                var myForm = new FormData();
+                myForm.append('batch_type', 'action_detail');
+                myForm.append('batch_id', batch_id);
+                myForm.append("file", data);
+       
+                axios
+                  .post("api/uploadFile_gcp", myForm, config)
+                  .then(function(res) {
+                    if (res.data.code == 0) {
+                 
+                      myArr[index].progress = 1;
+                      vm.$set(vm.fileArray, index, myArr[index]);
+                      console.log(vm.fileArray, index);
+                    } else {
+                      alert(JSON.stringify(res.data));
+                    }
+                  })
+                  .catch(function(err) {
+                    console.log(err);
+                  });
+              });
+            
+          },
 
         comment_create() {
             let _this = this;
@@ -916,6 +1048,8 @@ var app = new Vue({
                     console.log(response)
                 });
         },
+
+
 
 
   }
