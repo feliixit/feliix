@@ -590,6 +590,7 @@ var app = new Vue({
             this.fileArray = [];
 
             //this.getProjectDetail(this.project_id);
+            this.canSub = true;
             
             document.getElementById('detail_dialog').classList.remove("show");
             document.getElementById('status_fn5').classList.remove("focus");
