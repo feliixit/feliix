@@ -39,7 +39,7 @@ $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 
 // if jwt is not empty
-if($jwt){
+if($jwt){ 
  
     // if decode succeed, show user details
     try {
@@ -54,20 +54,20 @@ if($jwt){
 
             $sql = "SELECT * from price_record where is_enabled = true";
 
-            if(!empty($start_date)) {
+            if($start_date != '') {
                 $sql = $sql . " and paid_date >= '$start_date' ";
             }
 
-            if(!empty($end_date)) {
+            if($end_date != '') {
                 $sql = $sql . " and paid_date <= '$end_date' ";
             }
             
-            if(!empty($category)) {
-                $sql = $sql . " and category <= '$category' ";
+            if($category != '') {
+                $sql = $sql . " and category = '$category' ";
             }
             
-            if(!empty($sub_category)) {
-                $sql = $sql . " and sub_category <= '$sub_category' ";
+            if($sub_category != '') {
+                $sql = $sql . " and sub_category = '$sub_category' ";
             }
 
             //$sql = $sql . " ORDER BY duty_date, uid, duty_type  ";
@@ -162,7 +162,6 @@ if($jwt){
             header('Pragma: public'); // HTTP/1.0
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $writer->save('php://output');
-
 
             exit;
     }
