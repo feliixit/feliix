@@ -111,8 +111,8 @@ $(function(){
                         <dt v-if="showExtra">Further Explanation</dt>
                         <dd v-if="showExtra"><input type="text" placeholder="" v-model="explanation"></dd>
                         
-                        <dt v-if="showExtra">Location Photo</dt>
-                        <dd v-if="showExtra"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera"></dd>
+                        <dt v-if="showPhoto">Location Photo</dt>
+                        <dd v-if="showPhoto"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera"></dd>
 
                         <dt>Remarks</dt>
                         <dd><textarea placeholder="" v-model="remark"></textarea></dd>
@@ -120,11 +120,11 @@ $(function(){
                         <dt>Time In</dt>
                         <dd><input type="text" placeholder="" v-model="time" :readonly="true"></dd>  -->
                         <hr>
-                        <dt v-if="showExtra">Photo Taken Time</dt>
-                        <dd v-if="showExtra"><input type="text" placeholder="" v-model="photo_time" :readonly="true"></dd>
-                        <dt v-if="showExtra">Photo Taken GPS</dt>
-                        <dd v-if="showExtra"><input type="text" placeholder="" v-model="photo_gps" :readonly="true"></dd>
-                        <p id="map-link" style="font-size: 20px; font-weight: 500;" v-if="showExtra"></p>
+                        <dt v-if="showPhoto">Photo Taken Time</dt>
+                        <dd v-if="showPhoto"><input type="text" placeholder="" v-model="photo_time" :readonly="true"></dd>
+                        <dt v-if="showPhoto">Photo Taken GPS</dt>
+                        <dd v-if="showPhoto"><input type="text" placeholder="" v-model="photo_gps" :readonly="true"></dd>
+                        <p id="map-link" style="font-size: 20px; font-weight: 500;" v-if="showPhoto"></p>
                     </dl>
                     <div class="btnbox">
                         <a class="btn" @click="reset">Reset</a>
