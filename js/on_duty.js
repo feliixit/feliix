@@ -35,6 +35,10 @@ var app = new Vue({
   computed: {
     showExtra: function(){
       return (this.location=='D' || this.location=='E' || this.location=='F');
+    },
+
+    showPhoto: function(){
+      return (this.location=='A' || this.location=='B' || this.location=='C' || this.location=='D' || this.location=='E' || this.location=='F');
     }
   },
 
@@ -218,7 +222,7 @@ var app = new Vue({
                   return false;
               }
 
-              if (this.showExtra && !this.$refs.file.files[0])
+              if (this.showPhoto && !this.$refs.file.files[0])
               {
                 Swal.fire({
                   text: 'Location Photo required',
