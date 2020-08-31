@@ -110,7 +110,7 @@ class PriceRecord
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
                 (`account`,`category`, `sub_category`, `related_account`, `details`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
-                VALUES (:account,:category, :sub_category, :related_account, :details, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, :is_enabled,:is_marked, now(),:created_by)";
+                VALUES (:account,:category, :sub_category, :related_account, :details, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -129,7 +129,6 @@ class PriceRecord
             $this->cash_out = (int)$this->cash_out;
             $this->remarks = htmlspecialchars(strip_tags($this->remarks));
             $locked = filter_var($this->is_locked,FILTER_VALIDATE_INT );
-            $enabled = filter_var($this->is_enabled,FILTER_VALIDATE_INT );
             $marked = filter_var($this->is_marked,FILTER_VALIDATE_INT);
         $this->created_by = htmlspecialchars(strip_tags($this->created_by));
 
@@ -150,7 +149,6 @@ class PriceRecord
             $stmt->bindParam(':cash_out', $this->cash_out);
             $stmt->bindParam(':remarks', $this->remarks);
             $stmt->bindParam(':is_locked', $locked);
-            $stmt->bindParam(':is_enabled', $enabled);
             $stmt->bindParam(':is_marked',  $marked);
         $stmt->bindParam(':created_by', $this->created_by);
             

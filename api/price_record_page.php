@@ -47,14 +47,14 @@ $start_date = (isset($_GET['start_date']) ?  $_GET['start_date'] : '');
 $end_date = (isset($_GET['end_date']) ?  $_GET['end_date'] : '');
 
 $page = (isset($_GET['page']) ?  $_GET['page'] : "");
-$size = (isset($_GET['size']) ?  $_GET['size'] : "");
+//$size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
 
 $merged_results = array();
 
 
 
-$query = "SELECT * from price_record where is_enabled = true ";
+$query = "SELECT * from price_record where is_enabled = true and account =1";
             if(!empty($start_date)) {
                 $query = $query . " and paid_date >= '$start_date' ";
             }
@@ -80,16 +80,16 @@ if(!empty($_GET['page'])) {
 
 //$query = $query . " order by created_at desc ";
 
-if(!empty($_GET['size'])) {
-    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
-    if(false === $size) {
-        $size = 10;
-    }
-
-    $offset = ($page - 1) * $size;
-
-    $query = $query . " LIMIT " . $offset . "," . $size;
-}
+//if(!empty($_GET['size'])) {
+//    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
+//    if(false === $size) {
+//        $size = 10;
+//    }
+//
+//    $offset = ($page - 1) * $size;
+//
+//    $query = $query . " LIMIT " . $offset . "," . $size;
+//}
 
 
 $stmt = $db->prepare( $query );
@@ -99,6 +99,53 @@ $stmt->execute();
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $merged_results[] = $row;
+}
+
+$query = "SELECT * from price_record where is_enabled = true and account =2";
+            if(!empty($start_date)) {
+                $query = $query . " and paid_date >= '$start_date' ";
+            }
+
+            if(!empty($end_date)) {
+                $query = $query . " and paid_date <= '$end_date' ";
+            }
+            
+            if(!empty($category)) {
+                $query = $query . " and category = '$category' ";
+            }
+            
+            if(!empty($sub_category)) {
+                $query = $query . " and sub_category = '$sub_category' ";
+            }
+
+if(!empty($_GET['page'])) {
+    $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+    if(false === $page) {
+        $page = 1;
+    }
+}
+
+//$query = $query . " order by created_at desc ";
+
+//if(!empty($_GET['size'])) {
+//    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
+//    if(false === $size) {
+//        $size = 10;
+//    }
+//
+//    $offset = ($page - 1) * $size;
+//
+//    $query = $query . " LIMIT " . $offset . "," . $size;
+//}
+
+
+$stmt = $db->prepare( $query );
+$stmt->execute();
+
+
+
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    array_push($merged_results,$row);
 }
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);

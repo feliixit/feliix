@@ -106,8 +106,8 @@
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:15vw;" v-model="account">
                                     
-                                    <option value="1">Security Bank</option>
-                                    <option value="2">Office Petty Cash</option>
+                                    <option value="1">Office Petty Cash</option>
+                                    <option value="2">Security Bank</option>
                                 </select>
                             </td>
 
@@ -190,8 +190,8 @@
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:15vw;" v-model="related_account">
                                     <option value="None">None</option>
-                                    <option>Security Bank</option>
                                     <option>Office Petty Cash</option>
+                                    <option>Security Bank</option>
                                 </select>
                             </td>
 
@@ -415,8 +415,12 @@
 
                 <td style="text-align: left;">{{item.details}}</td>
 
-                 <td><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a></td>
-
+                <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                </td>
+                
+                <td v-else><i class="fas fa-image fa-lg" ></i>
+                 </td>
+                
                 <td>{{item.payee}}</td>
 
                 <td>{{item.paid_date}}</td>
@@ -519,8 +523,10 @@
 
                 <td style="text-align: left;">{{item.details}}</td>
 
-                <td style="text-align: left;">
-                    <a :href="`${mail_ip}/img/${pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                </td>
+                
+                <td v-else><i class="fas fa-image fa-lg" ></i>
                 </td>
 
                 <td>{{item.payee}}</td>

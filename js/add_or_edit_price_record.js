@@ -154,7 +154,7 @@ var app = new Vue({
       ],
       page:1,
       pages: [],
-      perPage:10,
+      perPage:10000,
   },
 
   created () {
@@ -692,7 +692,15 @@ var app = new Vue({
       },
       getRecords: function() {
           let _this = this;
-
+          _this.allCashIn = 0;
+          _this.allCashOut = 0;
+          _this.allBalance = 0;
+          _this.accountOneCashIn = 0;
+          _this.accountOneCashOut = 0;
+          _this.accountOneBalance = 0;
+          _this.accountTwoCashIn = 0;
+          _this.accountTwoCashOut = 0;
+          _this.accountTwoBalance = 0;
           const params = {
               category: _this.category,
               sub_category: _this.sub_category,

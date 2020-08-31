@@ -22,7 +22,7 @@ $cash_in = (isset($_POST['cash_in']) ?  $_POST['cash_in'] : 0);
 $cash_out = (isset($_POST['cash_out']) ?  $_POST['cash_out'] : 0);
 $remarks = (isset($_POST['remarks']) ?  $_POST['remarks'] : '');
 $is_locked = (isset($_POST['is_locked']) ?  (int)$_POST['is_locked'] : 0);
-$is_enabled = (isset($_POST['is_enabled']) ?  (int)$_POST['is_enabled'] : 1);
+$is_enabled = (isset($_POST['is_enabled']) && $_POST['is_enabled'] === "true"? 1 : 0);
 $is_marked = (isset($_POST['is_marked']) && $_POST['is_marked'] === "true"?  1 : 0);
 $created_by = (isset($_POST['created_by']) ?  $_POST['created_by'] : '');
 $updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
