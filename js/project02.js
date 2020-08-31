@@ -8,6 +8,7 @@ var app = new Vue({
 
     project_comments: {},
     project_probs: {},
+    project_action_detials: {},
 
     categorys : {},
     client_types : {},
@@ -15,6 +16,8 @@ var app = new Vue({
     statuses : {},
     stages : {},
     users : {},
+
+    baseURL:'https://storage.cloud.google.com/feliiximg/',
 
 
     category: '',
@@ -71,6 +74,8 @@ var app = new Vue({
     finish: false,
 
 
+
+
     submit : false,
     // paging
     page: 1,
@@ -104,6 +109,7 @@ var app = new Vue({
         _this.getProject(_this.project_id);
         _this.getProjectComments(_this.project_id);
         _this.getProjectProbs(_this.project_id);
+        _this.getProjectActionDetails(_this.project_id);
       });
     }
 
@@ -310,6 +316,33 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.project_probs = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
+      getProjectActionDetails: function(keyword) {
+      let _this = this;
+
+      if(keyword == 0)
+        return;
+
+      const params = {
+              pid : keyword,
+            };
+
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project_action_detail', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.project_action_detials = res.data;
               },
               (err) => {
                   alert(err.response);

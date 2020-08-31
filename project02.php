@@ -515,9 +515,14 @@ $(function(){
                 </ul>
                 <ul>
                     <li>
-                        • Requirements: xxxxxxxxxxxxxxxxxx; requirement.jpg; spec.jpg  quotation.pdf; spec.pdf <br>
-                        (Stan at 2020/03/11 11:03) <br>
-                        • Discount: 20% (Kristel at 2020/03/15 15:49)
+                        <div v-for='(receive_record, index) in project_action_detials'>• {{ receive_record.detail_type }} : {{ receive_record.detail_desc }}  <br>
+                        <span v-for="item in receive_record.items">
+                            <a :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>&nbsp&nbsp
+                        </span>
+                        <br>
+                         ({{ receive_record.username }} at {{ receive_record.created_at }})
+                         <br>
+                        </div>
                     </li>
                 </ul>
             </div>
