@@ -1,4 +1,13 @@
-<?php include 'check.php';?>
+<?php 
+
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$p = (isset($_GET['p']) ?  $_GET['p'] : 0);
+if (  $p < 1 || !is_numeric($p)) {
+  header( 'location:project01' );
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
