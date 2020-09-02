@@ -52,7 +52,8 @@ class User{
                     apartment_id = :apartment_id,
                     title_id = :title_id,
                     pic_url = :pic_url,
-                    is_admin = :is_admin";
+                    is_admin = :is_admin,
+                    is_viewer = :is_viewer";
     
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -73,6 +74,7 @@ class User{
         $this->is_admin = ($this->is_admin ? $this->is_admin : '0');
         $this->apartment_id = ($this->apartment_id ? $this->apartment_id : '0');
         $this->title_id = ($this->title_id ? $this->title_id : '0');
+        $this->is_viewer = ($this->is_viewer ? $this->is_viewer : '0');
     
         // bind the values
         $stmt->bindParam(':username', $this->username);
@@ -91,6 +93,7 @@ class User{
 
         $stmt->bindParam(':apartment_id', $this->apartment_id);
         $stmt->bindParam(':title_id', $this->title_id);
+        $stmt->bindParam(':is_viewer', $this->is_viewer);
     
         // hash the password before saving to database
         $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
@@ -290,7 +293,8 @@ class User{
                     apartment_id = :apartment_id,
                     title_id = :title_id,
                     status = :status,
-                    is_admin = :is_admin
+                    is_admin = :is_admin,
+                    is_viewer = :is_viewer
                 WHERE id = :id";
     
         // prepare the query
@@ -317,7 +321,7 @@ class User{
         
         $stmt->bindParam(':apartment_id', $this->apartment_id);
         $stmt->bindParam(':title_id', $this->title_id);
-
+        $stmt->bindParam(':is_viewer', $this->is_viewer);
         // unique ID of record to be edited
         $stmt->bindParam(':id', $this->id);
     
