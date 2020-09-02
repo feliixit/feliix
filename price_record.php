@@ -28,6 +28,9 @@
         .red{
             color: #ff0000;
         }
+        .hide{
+            display:none;
+        }
 
     </style>
 
@@ -50,7 +53,7 @@
 
     <span style="margin-left:1vw; font-weight:700; font-size:xx-large; color: white;">FELIIX</span>
 
-    <button style="border: none; margin-left:0.5vw; font-weight:700; font-size:x-large; background-color:rgb(2,106,167); color: white; padding: 0.5rem 0.5rem 0.5rem 0.5rem; float:right; margin-right:1rem;"
+    <button :class="[is_viewer == '1'? 'hide' : '']" style="border: none; margin-left:0.5vw; font-weight:700; font-size:x-large; background-color:rgb(2,106,167); color: white; padding: 0.5rem 0.5rem 0.5rem 0.5rem; float:right; margin-right:1rem;"
             data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
                        aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-plus-square fa-lg"></i></button>
 
