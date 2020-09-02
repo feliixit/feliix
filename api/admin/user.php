@@ -59,7 +59,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT 0 as is_checked, user.id, username, email, user.status, COALESCE(is_admin, '0') is_admin, need_punch, COALESCE(department, '') department, apartment_id, title_id, COALESCE(title, '') title, user.head_of_department, annual_leave, sick_leave, manager_leave, is_manager, test_manager FROM user LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id where user.status <> -1 ".($id ? " and id=$id" : '');
+            $sql = "SELECT 0 as is_checked, user.id, username, email, user.status, COALESCE(is_admin, '0') is_admin, need_punch, COALESCE(department, '') department, apartment_id, title_id, COALESCE(title, '') title, user.head_of_department, annual_leave, sick_leave, manager_leave, is_manager, test_manager, is_viewer FROM user LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id where user.status <> -1 ".($id ? " and id=$id" : '');
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
