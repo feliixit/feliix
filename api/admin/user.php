@@ -134,18 +134,18 @@ else
                 $user->status = $status;
                 $user->is_admin = $is_admin;
                 $user->title_id = $title_id;
-                  $user->need_punch = $need_punch;
+                $user->need_punch = $need_punch;
 
-                  $user->head_of_department = $head_of_department;
-                  $user->annual_leave = $annual_leave;
-                  $user->is_manager = $is_manager;
-                  $user->test_manager = $test_manager;
-                  $user->sick_leave = $sick_leave;
+                $user->head_of_department = $head_of_department;
+                $user->annual_leave = $annual_leave;
+                $user->is_manager = $is_manager;
+                $user->test_manager = $test_manager;
+                $user->sick_leave = $sick_leave;
 
-                  $user->manager_leave = $manager_leave;
-                  $user->is_viewer = $is_viewer;
+                $user->manager_leave = $manager_leave;
+                $user->is_viewer = $is_viewer;
 
-                  $user->apartment_id = $apartment_id;
+                $user->apartment_id = $apartment_id;
 
                 $user->create();
 
@@ -154,24 +154,24 @@ else
             case "update":
                 $user->username = $username;
                 $user->email = $email;
-                    $user->status = $status;
-                    $user->is_admin = $is_admin;
+                $user->status = $status;
+                $user->is_admin = $is_admin;
                 $user->title_id = $title_id;
                 $user->need_punch = $need_punch;
 
                 $user->head_of_department = $head_of_department;
-                  $user->annual_leave = $annual_leave;
-                  $user->is_manager = $is_manager;
-                  $user->test_manager = $test_manager;
-                  $user->sick_leave = $sick_leave;
+                $user->annual_leave = $annual_leave;
+                $user->is_manager = $is_manager;
+                $user->test_manager = $test_manager;
+                $user->sick_leave = $sick_leave;
 
-                  $user->manager_leave = $manager_leave;
+                $user->manager_leave = $manager_leave;
                   
-                   $user->is_viewer = $is_viewer;
+                $user->is_viewer = $is_viewer;
                 $user->apartment_id = $apartment_id;
-                    $user->id = $id;
+                $user->id = $id;
 
-                    $user->updateStatus();
+                $user->updateStatus();
 
                 break;
 
