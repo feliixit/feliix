@@ -48,6 +48,8 @@ var app = new Vue({
     accountTwoCashOut:0,
     accountTwoBalance:0,
 
+    myVar : null,
+    lockVar : null,
     index:0,
       spa:[],
       split1: {
@@ -266,74 +268,71 @@ var app = new Vue({
                           })
                       });
                       this.upload();
-                      setTimeout(function(){
-                            _this.reset();
-                            _this.getRecords();
-                        },1000
-                      )
+                      this.reload();
               } else {
                   this.spa.push(this.split1);
                   this.spa.push(this.split2);
                   this.spa.push(this.split3);
                   this.spa.push(this.split4);
                   this.spa.push(this.split5);
-                  console.log(this.spa);
-                  console.log(_this.operation_type);
-                  for (var i = 0; i < this.spa.length; i++) {
-                      if (this.spa[i].amount != 0) {
-                          if (_this.operation_type == 1) {
-                            this.spa[i].cash_in = this.spa[i].amount;
-                          }else{
-                            this.spa[i].cash_out = this.spa[i].amount;
-                          }
-                          form_Data.append('jwt', token);
-                          form_Data.append('account', this.account);
-                          form_Data.append('category', this.spa[i].category);
-                          form_Data.append('sub_category', this.spa[i].sub_category);
-                          form_Data.append('related_account', this.related_account);
-                          form_Data.append('details', this.spa[i].details);
-                          form_Data.append('pic_url', this.spa[i].filename);
-                          form_Data.append('payee', this.spa[i].payee.toString());
-                          form_Data.append('paid_date', paidat);
-                          form_Data.append('cash_in', this.spa[i].cash_in);
-                          form_Data.append('cash_out', this.spa[i].cash_out);
-                          form_Data.append('remarks', this.spa[i].remarks);
-                          form_Data.append('is_locked', this.is_locked);
-                          form_Data.append('is_enabled', this.is_enabled);
-                          form_Data.append('is_marked', this.spa[i].is_marked);
-                          form_Data.append('action', this.action);
-                          form_Data.append('created_by', this.name);
-                          axios({
-                              method: 'post',
-                              headers: {
-                                  'Content-Type': 'multipart/form-data',
-                              },
-                              url: 'api/add_or_edit_price_record',
-                              data: form_Data
-                          })
-                              .then(function (response) {
-                                  //handle success
-                                  //_this.items = response.data
-                                  //console.log(_this.items)
-                              })
-                              .catch(function (response) {
-                                  //handle error
-                                  //Swal.fire({
-                                  //    text: JSON.stringify(response),
-                                  //    icon: 'error',
-                                  //    confirmButtonText: 'OK'
-                                  //})
-                              });
-                      }
-                      form_Data = new FormData();
+                  this.spa_total_amount = parseInt(this.split1.amount) + parseInt(this.split2.amount) + parseInt(this.split3.amount) + parseInt(this.split4.amount) + parseInt(this.split5.amount); 
+                  if(this.spa_total_amount != this.amount){
+                      alert('Total amount is not correct.');
+                      _this.reset();
+                  }else{
+                    for (var i = 0; i < this.spa.length; i++) {
+                        if(this.spa[i].amount != 0) {
+                            if (_this.operation_type == 1) {
+                                this.spa[i].cash_in = this.spa[i].amount;
+                            }else{
+                                this.spa[i].cash_out = this.spa[i].amount;
+                            }
+                            form_Data.append('jwt', token);
+                            form_Data.append('account', this.account);
+                            form_Data.append('category', this.spa[i].category);
+                            form_Data.append('sub_category', this.spa[i].sub_category);
+                            form_Data.append('related_account', this.related_account);
+                            form_Data.append('details', this.spa[i].details);
+                            form_Data.append('pic_url', this.spa[i].filename);
+                            form_Data.append('payee', this.spa[i].payee.toString());
+                            form_Data.append('paid_date', paidat);
+                            form_Data.append('cash_in', this.spa[i].cash_in);
+                            form_Data.append('cash_out', this.spa[i].cash_out);
+                            form_Data.append('remarks', this.spa[i].remarks);
+                            form_Data.append('is_locked', this.is_locked);
+                            form_Data.append('is_enabled', this.is_enabled);
+                            form_Data.append('is_marked', this.spa[i].is_marked);
+                            form_Data.append('action', this.action);
+                            form_Data.append('created_by', this.name);
+                            axios({
+                                method: 'post',
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                },
+                                url: 'api/add_or_edit_price_record',
+                                data: form_Data
+                            })
+                                .then(function (response) {
+                                    //handle success
+                                    //_this.items = response.data
+                                    //console.log(_this.items)
+                                })
+                                .catch(function (response) {
+                                    //handle error
+                                    //Swal.fire({
+                                    //    text: JSON.stringify(response),
+                                    //    icon: 'error',
+                                    //    confirmButtonText: 'OK'
+                                    //})
+                                });
+                        }
+                        form_Data = new FormData();
+                    }
+                    _this.upload();
+                    _this.deleteRecord(_this.id);
+                    _this.reload();
                   }
-                      _this.upload();
-                      _this.deleteRecord(_this.id);
-                      setTimeout(function(){
-                            _this.reset();
-                            _this.getRecords();
-                        },1000
-                      )
+                      
               }
           }
         },
@@ -390,11 +389,7 @@ var app = new Vue({
                             //})
                         });
                         this.upload();
-                        setTimeout(function(){
-                            _this.reset();
-                            _this.getRecords();
-                        },1000
-                        )
+                        this.reload();
                     
         },
         selectByDate:function(){
@@ -549,21 +544,18 @@ var app = new Vue({
                       confirmButtonText: 'OK'
                   })
               });
-              setTimeout(function(){
-                            _this.reset();
-                            _this.getRecords();
-                        },1000
-                        )
+              _this.reload();
 
       },
       lockRecord:function(id){
           let _this = this;
+          _this.clear();
           _this.edit(id);
           _this.action = 8;//lock
           var token = localStorage.getItem('token');
           var form_Data = new FormData();
           
-          setTimeout(function(){
+          _this.lockVar = setTimeout(function(){
               if(_this.is_locked == 0){
               $locked = 1
           }else{
@@ -594,12 +586,8 @@ var app = new Vue({
                       icon: 'error',
                       confirmButtonText: 'OK'
                   })
-          });},1000)
-              setTimeout(function(){
-                            _this.reset();
-                            _this.getRecords();
-                        },2000
-                        )
+          });},500)
+              _this.reload();
 
       },
     sliceDate: function(str) {
@@ -692,6 +680,7 @@ var app = new Vue({
       },
       getRecords: function() {
           let _this = this;
+          _this.clear();
           _this.allCashIn = 0;
           _this.allCashOut = 0;
           _this.allBalance = 0;
@@ -934,6 +923,19 @@ var app = new Vue({
       this.split5.is_enabled= true;
       this.split5.is_marked= false;
   },
+  reload : function(){
+      let _this = this;
+      _this.myVar = setTimeout(function(){
+                            _this.reset();
+                            _this.getRecords();
+                        },1000
+                      )
+  },
+  clear : function(){
+      let _this = this;
+      clearTimeout(_this.myVar)
+      clearTimeout(_this.lockVar)
+  }
 
 }
 });
