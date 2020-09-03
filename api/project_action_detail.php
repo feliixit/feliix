@@ -122,12 +122,15 @@ else
                                  'gcp_name' => $gcp_name );
             }
 
-            $merged_results[] = array( "detail_type" => $detail_type,
-                                            "detail_desc" => $detail_desc,
-                                            "items" => $items,
-                                            "username" => $username,
-                                            "created_at" => $created_at
-                    );
+            if($id != 0)
+            {
+                $merged_results[] = array( "detail_type" => $detail_type,
+                                                "detail_desc" => $detail_desc,
+                                                "items" => $items,
+                                                "username" => $username,
+                                                "created_at" => $created_at
+                        );
+            }
 
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 

@@ -50,11 +50,15 @@ $merged_results = array();
 
 
 
-$query = "SELECT `sequence`, pst.`stage`, `stages_status_id`, DATE_FORMAT(pm.created_at, '%Y-%m-%d') start, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d %h:%m:%s') created_at, 0 replies, 0 post, '' recent FROM project_stages pm LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
+$query = "SELECT `sequence`, pst.`stage`, (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status_id`, DATE_FORMAT(pm.created_at, '%Y-%m-%d') start, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d %r') created_at, 0 replies, 0 post, '' recent FROM project_stages pm LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
 
 if($pid != 0)
 {
     $query = $query . " and pm.project_id = " . $pid . " ";
+}
+else {
+    # code...
+    $query = $query . " and 1 = 0 ";
 }
 
 

@@ -17,6 +17,9 @@ var app = new Vue({
     stages : {},
     users : {},
 
+    uid:0,
+    org_uid:0,
+
     baseURL:'https://storage.cloud.google.com/feliiximg/',
 
 
@@ -110,6 +113,7 @@ var app = new Vue({
         _this.getProjectComments(_this.project_id);
         _this.getProjectProbs(_this.project_id);
         _this.getProjectActionDetails(_this.project_id);
+        _this.getUsers();
       });
     }
 
@@ -119,7 +123,7 @@ var app = new Vue({
     this.getStatuses();
     this.getStages();
 
-    this.getUsers();
+    
 
     
 
@@ -299,6 +303,51 @@ var app = new Vue({
               });
       },
 
+      change_project_creator: function() {
+
+      let _this = this;
+
+      if(this.uid == this.org_uid)
+        return;
+
+       var form_Data = new FormData();
+
+       form_Data.append('pid', this.project_id);
+        form_Data.append('new_id', this.uid);
+      
+        const token = sessionStorage.getItem('token');
+
+        axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                },
+                url: 'api/project_change_creator',
+                data: form_Data
+            })
+            .then(function(response) {
+                //handle success
+                //this.$forceUpdate();
+                
+
+                if(response.data['batch_id'] != 0)
+                {
+                  _this.org_uid = _this.uid;
+                  
+                    Swal.fire({
+                      text: "user changed",
+                      icon: 'success',
+                      confirmButtonText: 'OK'
+                    })
+                }
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+      },
+
       getProjectProbs: function(keyword) {
       let _this = this;
 
@@ -373,6 +422,8 @@ var app = new Vue({
                   _this.category = res.data[0].category;
                   _this.client_type = res.data[0].client_type;
                   _this.priority = res.data[0].priority;
+                  _this.uid = res.data[0].uid;
+                  _this.org_uid = res.data[0].uid;
                   _this.username = res.data[0].username;
                   _this.stage = res.data[0].stage;
                   _this.project_status = res.data[0].project_status;
@@ -775,8 +826,8 @@ var app = new Vue({
                         _this.upload(response.data['batch_id']);
                     }
                     //this.$forceUpdate();
-                    _this.prob_clear();
-                    _this.getProject(_this.project_id);
+                    _this.detail_clear();
+                    _this.getProjectActionDetails(_this.project_id);
                 })
                 .catch(function(response) {
                     //handle error

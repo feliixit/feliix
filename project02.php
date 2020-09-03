@@ -267,7 +267,13 @@ $(function(){
                                 </div>
                                 <dt>Project Creator:</dt>
                                 <dd>
-                                    <div class="browser_group"><input type="text" v-model="username" readonly="true"><button disabled>Browser</button></div>
+                                    <div class="browser_group">
+                                        <select v-model="uid" style="width: 75%!important; margin: 0!important;">
+                                          <option v-for="item in users" :value="item.id" :key="item.username">
+                                              {{ item.username }}
+                                          </option>
+                                        </select>
+                                        <button @click="change_project_creator">Change</button></div>
                                 </dd>
                                 <dt>Contact Person:</dt>
                                 <dd><input type="text" v-model="edit_contactor"></dd>
@@ -320,9 +326,9 @@ $(function(){
                 </div>
 
                 <div class="popupblock">
-                    <a id="status_fn4" class="fn4">Acton to Est. Closing Prob.</a>
+                    <a id="status_fn4" class="fn4">Action to Est. Closing Prob.</a>
                     <div id="prob_dialog" class="dialog fn4">
-                        <h6>Acton to Est. Closing Prob.:</h6>
+                        <h6>Action to Est. Closing Prob.:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Estimated Closing Probability:</dt>
@@ -353,9 +359,9 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a id="status_fn5" class="fn5">Acton to Project Details</a>
+                    <a id="status_fn5" class="fn5">Action to Project Details</a>
                     <div id="detail_dialog" class="dialog fn5">
-                        <h6>Acton to Project Details:</h6>
+                        <h6>Action to Project Details:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Detail Type:</dt>
@@ -500,8 +506,8 @@ $(function(){
             </div>
             <div class="tablebox lv2a b-2">
                 <ul class="head">
-                    <li>Comments</li>
-                    <li>Estimated Closing Probability</li>
+                    <li style="text-align: center !important;">Comments</li>
+                    <li style="text-align: center !important;">Estimated Closing Probability</li>
                 </ul>
                 <ul>
                     <li>
@@ -520,7 +526,7 @@ $(function(){
             </div>
             <div class="tablebox lv2a">
                 <ul class="head">
-                    <li>Project Details</li>
+                    <li style="text-align: center !important;">Project Details</li>
                 </ul>
                 <ul>
                     <li>
