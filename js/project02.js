@@ -878,6 +878,7 @@ var app = new Vue({
 
         project_clear() {
 
+            this.uid = this.org_uid;
             this.edit_category = this.category_id;
             this.edit_client_type = this.client_type_id;
             this.edit_priority = this.priority_id;
