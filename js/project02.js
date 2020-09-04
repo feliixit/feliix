@@ -20,6 +20,8 @@ var app = new Vue({
     uid:0,
     org_uid:0,
 
+    stage_id_to_edit:0,
+
     baseURL:'https://storage.cloud.google.com/feliiximg/',
 
 
@@ -471,6 +473,68 @@ var app = new Vue({
               .finally(() => {
                   
               });
+      },
+
+      stage_delete () {
+        if(this.stage_id_to_edit != 0)
+        {
+          e.preventDefault(); // <--- prevent form from submitting
+
+          Swal.fire({
+              title: "Delete",
+              text: "Are you sure to delete?",
+              icon: "warning",
+              buttons: [
+                'No',
+                'Yes'
+              ],
+              dangerMode: true,
+            }).then(function(isConfirm) {
+              if (isConfirm) {
+                Swal.fire({
+                  title: 'Deleted!',
+                  text: 'Stage successfully deleted!',
+                  icon: 'success'
+                }).then(function() {
+                  do_stage_delete(); // <--- submit form programmatically
+                });
+              } else {
+                // swal("Cancelled", "Your imaginary file is safe :)", "error");
+              }
+            });
+        }
+      },
+
+      do_stage_delete() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+
+        form_Data.append('jwt', token);
+        form_Data.append('pid', this.project_id);
+        form_Data.append('stage_id_to_edit', this.stage_id_to_edit);
+
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/project02_delete_stage',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            
+
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
       },
 
       getUsers () {

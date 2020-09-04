@@ -141,11 +141,12 @@ $(function(){
                             <ul>
                                 <li class="head">Target Sequence:</li>
                                 <li>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select name="" id="" v-model="stage_id_to_edit">
+                                        <option v-for="item in receive_stage_records" :value="item.id" :key="item.sequence">
+                                          {{ item.sequence }}
+                                      </option>
                                     </select>
-                                    <a class="btn small">Delete</a>
+                                    <a class="btn small" @click="stage_delete">Delete</a>
                                 </li>
                             </ul>
                         </div>
@@ -153,11 +154,12 @@ $(function(){
                             <ul>
                                 <li class="head">Target Sequence:</li>
                                 <li>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select name="" id="" v-model="stage_id_to_edit">
+                                        <option v-for="item in receive_stage_records" :value="item.id" :key="item.sequence">
+                                          {{ item.sequence }}
+                                      </option>
                                     </select>
-                                    <a class="btn small green">Load</a>
+                                    <a class="btn small green" @click="stage_load">Load</a>
                                 </li>
                             </ul>
                             <ul>
