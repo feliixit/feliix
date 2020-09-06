@@ -64,6 +64,9 @@ var app = new Vue({
     comment : '',
     file1: '',
     file2: '',
+    comm_fileArray: [],
+    comm_canSub: true,
+    comm_finish: false,
 
     startValue: 0,
 
@@ -81,6 +84,12 @@ var app = new Vue({
     // Edit/Delete Stage
     record : {},
     stage_edit_reason:'',
+
+    // Downpayment Proof
+    prof_remark:'',
+    prof_fileArray: [],
+    prof_canSub: true,
+    prof_finish: false,
 
     submit : false,
     // paging
@@ -169,7 +178,47 @@ var app = new Vue({
           this.detail_clear();
         }
       }
-    }
+    },
+
+    prof_fileArray: {
+      handler(newValue, oldValue) {
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.prof_fileArray.length) {
+          this.prof_finish = true;
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          });
+          this.prof_clear();
+        }
+      }
+    },
+
+    comm_fileArray: {
+      handler(newValue, oldValue) {
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.comm_fileArray.length) {
+          this.comm_finish = true;
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          });
+          this.comment_clear();
+        }
+      }
+    },
 
   },
 
@@ -181,6 +230,52 @@ var app = new Vue({
       this.fileArray.splice(index, 1);
       var fileTarget = this.$refs.file;
       fileTarget.value = "";
+    },
+
+    prof_deleteFile(index) {
+      this.prof_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.prof_file;
+      fileTarget.value = "";
+    },
+
+    prof_changeFile() {
+      var fileTarget = this.$refs.prof_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+          // remove duplicate
+          if (
+            this.prof_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+            this.prof_fileArray.length == 0
+          ) {
+            var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+            this.prof_fileArray.push(fileItem);
+          }else{
+            fileTarget.value = "";
+          }
+        }
+    },
+
+    comm_deleteFile(index) {
+      this.comm_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.comm_file;
+      fileTarget.value = "";
+    },
+
+    comm_changeFile() {
+      var fileTarget = this.$refs.comm_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+          // remove duplicate
+          if (
+            this.comm_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+            this.comm_fileArray.length == 0
+          ) {
+            var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+            this.comm_fileArray.push(fileItem);
+          }else{
+            fileTarget.value = "";
+          }
+        }
     },
 
     changeFile() {
@@ -700,13 +795,6 @@ var app = new Vue({
         });
       },
 
-      onChangeFile1Upload() {
-            this.file1 = this.$refs.file1.files[0];
-        },
-
-        onChangeFile2Upload() {
-            this.file2 = this.$refs.file2.files[0];
-        },
 
 
       clear: function() {
@@ -741,10 +829,6 @@ var app = new Vue({
 
         comment_clear() {
             this.comment = '';
-            this.file1 = '';
-            this.$refs.file2.value = null;
-            this.file2 = '';
-            this.$refs.file1.value = null;
 
             this.getProjectComments(this.project_id);
 
@@ -765,6 +849,19 @@ var app = new Vue({
             
             document.getElementById('detail_dialog').classList.remove("show");
             document.getElementById('status_fn5').classList.remove("focus");
+        },
+
+
+        prof_clear() {
+
+            this.prof_remark = '';
+            this.prof_fileArray = [];
+
+            //this.getProjectDetail(this.project_id);
+            this.prof_canSub = true;
+            
+            document.getElementById('prof_dialog').classList.remove("show");
+            document.getElementById('status_fn6').classList.remove("focus");
         },
 
 
@@ -872,6 +969,56 @@ var app = new Vue({
                 });
         },
 
+
+        prof_create() {
+            let _this = this;
+
+
+            if (this.prof_remark.trim() == '') {
+              Swal.fire({
+                text: 'Please enter remark!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('pid', this.project_id);
+            form_Data.append('remark', this.prof_remark.trim());
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project_proof',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    if(response.data['batch_id'] != 0)
+                    {
+                        _this.prof_upload(response.data['batch_id']);
+                    }
+                    //this.$forceUpdate();
+                    _this.prof_clear();
+                    _this.getProjectActionDetails(_this.project_id);
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
         detail_create() {
             let _this = this;
 
@@ -932,6 +1079,112 @@ var app = new Vue({
                 });
         },
 
+        prof_upload(batch_id) {
+            
+              this.prof_canSub = false;
+              var myArr = this.prof_fileArray;
+              var vm = this;
+             
+              //循环文件数组挨个上传
+              myArr.forEach((element, index) => {
+                var config = {
+                  headers: { "Content-Type": "multipart/form-data" },
+                  onUploadProgress: function(e) {
+         
+                    if (e.lengthComputable) {
+                      var rate = e.loaded / e.total; 
+                      console.log(index, e.loaded, e.total, rate);
+                      if (rate < 1) {
+                        
+                        myArr[index].progress = rate;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      } else {
+                        myArr[index].progress = 0.99;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      }
+                    }
+                  }
+                };
+                var data = myArr[index];
+                var myForm = new FormData();
+                myForm.append('batch_type', 'proof');
+                myForm.append('batch_id', batch_id);
+                myForm.append("file", data);
+       
+                axios
+                  .post("api/uploadFile_gcp", myForm, config)
+                  .then(function(res) {
+                    if (res.data.code == 0) {
+                 
+                      myArr[index].progress = 1;
+                      vm.$set(vm.fileArray, index, myArr[index]);
+                      console.log(vm.fileArray, index);
+                    } else {
+                      alert(JSON.stringify(res.data));
+                    }
+                  })
+                  .catch(function(err) {
+                    console.log(err);
+                  });
+              });
+
+              this.prof_canSub = true;
+            
+          },
+
+          comm_upload(batch_id) {
+            
+              this.comm_canSub = false;
+              var myArr = this.comm_fileArray;
+              var vm = this;
+             
+              //循环文件数组挨个上传
+              myArr.forEach((element, index) => {
+                var config = {
+                  headers: { "Content-Type": "multipart/form-data" },
+                  onUploadProgress: function(e) {
+         
+                    if (e.lengthComputable) {
+                      var rate = e.loaded / e.total; 
+                      console.log(index, e.loaded, e.total, rate);
+                      if (rate < 1) {
+                        
+                        myArr[index].progress = rate;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      } else {
+                        myArr[index].progress = 0.99;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      }
+                    }
+                  }
+                };
+                var data = myArr[index];
+                var myForm = new FormData();
+                myForm.append('batch_type', 'comment');
+                myForm.append('batch_id', batch_id);
+                myForm.append("file", data);
+       
+                axios
+                  .post("api/uploadFile_gcp", myForm, config)
+                  .then(function(res) {
+                    if (res.data.code == 0) {
+                 
+                      myArr[index].progress = 1;
+                      vm.$set(vm.fileArray, index, myArr[index]);
+                      console.log(vm.fileArray, index);
+                    } else {
+                      alert(JSON.stringify(res.data));
+                    }
+                  })
+                  .catch(function(err) {
+                    console.log(err);
+                  });
+              });
+
+              this.comm_canSub = true;
+            
+          },
+
 
         upload(batch_id) {
             
@@ -981,7 +1234,8 @@ var app = new Vue({
                     console.log(err);
                   });
               });
-            
+              
+              this.canSub = true;
           },
 
         comment_create() {
@@ -1003,8 +1257,7 @@ var app = new Vue({
 
             form_Data.append('pid', this.project_id);
             form_Data.append('comment', this.comment);
-            form_Data.append('file1', this.file1);
-            form_Data.append('file2', this.file2);
+  
             
             const token = sessionStorage.getItem('token');
 
@@ -1014,19 +1267,18 @@ var app = new Vue({
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     },
-                    onUploadProgress(progressEvent){
-                      if (progressEvent.lengthComputable) {
-                        let val = (progressEvent.loaded / progressEvent.total * 100).toFixed(0);
-            
-                        _this.startValue = parseInt(val)
-                      }
-                    },
+                    
                     url: 'api/project02_action_comment',
                     data: form_Data
                 })
                 .then(function(response) {
                     //handle success
                     //this.$forceUpdate();
+                    if(response.data['batch_id'] != 0)
+                    {
+                        _this.comm_upload(response.data['batch_id']);
+                    }
+
                     _this.comment_clear();
                     _this.getProject(_this.project_id);
                 })

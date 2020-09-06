@@ -302,18 +302,49 @@ $(function(){
                             <dl>
                                 <dt class="head">Comment:</dt>
                                 <dd><textarea name="" id="" v-model="comment"></textarea></dd>
-                                <dt>Pictures:</dt>
-                                <dd>
-                                    <div class="browser_group"><input type="file" accept="image/*" id="file1" ref="file1" style="color: black;" v-on:change="onChangeFile1Upload()"></div>
-                                    
+                                <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            name="comm_file"
+                                            value
+                                            placeholder="choose file"
+                                            ref="comm_file"
+                                            v-show="comm_canSub"
+                                            @change="comm_changeFile()"
+                                            multiple
+                                          />
+                                    </div>
+                                  </div>
                                 </dd>
-                                <dt>
-                                        {{ startValue }}
-                                    </dt>
-                                <dt>Files:</dt>
-                                <dd>
-                                    <div class="browser_group"><input type="file"  id="file2" ref="file2" style="color: black;" v-on:change="onChangeFile2Upload()"></div>
-                                </dd>
+
+                                <div class="file-list">
+                                  <div class="file-item" v-for="(item,index) in comm_fileArray" :key="index">
+                                    <p>
+                                      {{item.name}}
+                                      <span
+                                        @click="comm_deleteFile(index)"
+                                        v-show="item.progress==0"
+                                        class="upload-delete"
+                                      ><i class="fas fa-backspace"></i>
+                                        </span>
+                                    </p>
+                                    <div class="progress-container" v-show="item.progress!=0">
+                                      <div class="progress-wrapper">
+                                        <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                      </div>
+                                      <div class="progress-rate">
+                                        <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                        <span v-else><i class="fas fa-check-circle"></i></span>  
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
                                 <div class="btnbox">
                                     <a class="btn small" @click="comment_clear">Cancel</a>
                                     <a class="btn small green" @click="comment_create">Save</a>
@@ -440,24 +471,60 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a class="fn6">Submit Downpayment Proof</a>
-                    <div class="dialog fn6">
+                    <a id="status_fn6" class="fn6">Submit Downpayment Proof</a>
+                    <div id="prof_dialog" class="dialog fn6">
                         <h6>Submit Downpayment Proof:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt>Pictures:</dt>
-                                <dd>
-                                    <div class="browser_group"><input type="text"><button >Choose</button></div>
-                                </dd>
-                                <dt>Files:</dt>
-                                <dd>
-                                    <div class="browser_group"><input type="text"><button >Choose</button></div>
+                               
+                                <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            name="prof_file"
+                                            value
+                                            placeholder="choose file"
+                                            ref="prof_file"
+                                            v-show="canSub"
+                                            @change="prof_changeFile()"
+                                            multiple
+                                          />
+                                    </div>
+                                  </div>
                                 </dd>
                                 <dt class="head">Remarks:</dt>
-                                <dd><textarea name="" id="" ></textarea></dd>
+                                <dd><textarea name="" id="" v-model="prof_remark"></textarea></dd>
+
+                                <div class="file-list">
+                                  <div class="file-item" v-for="(item,index) in prof_fileArray" :key="index">
+                                    <p>
+                                      {{item.name}}
+                                      <span
+                                        @click="prof_deleteFile(index)"
+                                        v-show="item.progress==0"
+                                        class="upload-delete"
+                                      ><i class="fas fa-backspace"></i>
+                                        </span>
+                                    </p>
+                                    <div class="progress-container" v-show="item.progress!=0">
+                                      <div class="progress-wrapper">
+                                        <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                      </div>
+                                      <div class="progress-rate">
+                                        <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                        <span v-else><i class="fas fa-check-circle"></i></span>  
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Submit</a>
+                                    <a class="btn small" @click="prof_clear">Cancel</a>
+                                    <a class="btn small green" @click="prof_create">Submit</a>
                                 </div>
                             </dl>
                         </div>

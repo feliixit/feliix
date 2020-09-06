@@ -50,39 +50,11 @@ $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
 
 $comment = (isset($_POST['comment']) ?  $_POST['comment'] : '');
 
-$filename1 = "";
-
-if(isset($_FILES['file1']['name'])) {
-    $key = "myKey";
-    $time = time();
-    $hash = hash_hmac('sha256', $time, $key);
-    $ext = pathinfo($_FILES['file1']['name'], PATHINFO_EXTENSION);
-    $filename1 = $time . $hash . "." . $ext;
-    if (move_uploaded_file($_FILES["file1"]["tmp_name"], $conf::$upload_path . $filename1)) {
-        echo "done";
-    }
-}
-
-$filename2 = "";
-
-if(isset($_FILES['file2']['name'])) {
-    $key = "myKey";
-    $time = time();
-    $hash = hash_hmac('sha256', $time, $key);
-    $ext = pathinfo($_FILES['file2']['name'], PATHINFO_EXTENSION);
-    $filename2 = $time . $hash . "." . $ext;
-    if (move_uploaded_file($_FILES["file2"]["tmp_name"], $conf::$upload_path . $filename2)) {
-        echo "done";
-    }
-}
-
 
 $query = "INSERT INTO project_action_comment
                 SET
                     project_id = :project_id,
                     comment = :comment,
-                    picname1 = :filename1,
-                    picname2 = :filename2,
                     create_id = :create_id,
                     created_at = now()";
     
@@ -92,8 +64,6 @@ $query = "INSERT INTO project_action_comment
         // bind the values
         $stmt->bindParam(':project_id', $pid);
         $stmt->bindParam(':comment', $comment);
-        $stmt->bindParam(':filename1', $filename1);
-        $stmt->bindParam(':filename2', $filename2);
         $stmt->bindParam(':create_id', $user_id);
 
         $last_id = 0;
@@ -116,5 +86,8 @@ $query = "INSERT INTO project_action_comment
         }
 
 
-        return $last_id;
+        $returnArray = array('batch_id' => $last_id);
+        $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+        echo $jsonEncodedReturnArray;
 
