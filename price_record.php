@@ -597,7 +597,7 @@
                 <th style="text-align: center; width:18vw; font-size:larger;">Cash In: {{allCashIn}}</th>
                 <th style="text-align: center; width:18vw; font-size:larger;">Cash Out: {{allCashOut}}</th>
                 <th style="text-align: center; width:18vw; font-size:larger;">
-                Ending Balance: {{allBalance}}</th>
+                Net Cash Flow: {{allBalance}}</th>
             </tr>
 
             </thead>
