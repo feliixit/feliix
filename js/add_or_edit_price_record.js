@@ -157,10 +157,12 @@ var app = new Vue({
       page:1,
       pages: [],
       perPage:10000,
+      dismiss:''
   },
 
   created () {
-    this.getUserName();
+      this.getMonthDay();
+      this.getUserName();
       this.getRecords();
       this.getPayees();
   },
@@ -270,16 +272,20 @@ var app = new Vue({
                       this.upload();
                       this.reload();
               } else {
-                  this.spa.push(this.split1);
-                  this.spa.push(this.split2);
-                  this.spa.push(this.split3);
-                  this.spa.push(this.split4);
-                  this.spa.push(this.split5);
-                  this.spa_total_amount = parseInt(this.split1.amount) + parseInt(this.split2.amount) + parseInt(this.split3.amount) + parseInt(this.split4.amount) + parseInt(this.split5.amount); 
+                  _this.spa.push(_this.split1);
+                  _this.spa.push(_this.split2);
+                  _this.spa.push(_this.split3);
+                  _this.spa.push(_this.split4);
+                  _this.spa.push(_this.split5);
+                  _this.spa_total_amount = parseInt(_this.split1.amount) + parseInt(_this.split2.amount) + parseInt(_this.split3.amount) + parseInt(_this.split4.amount) + parseInt(_this.split5.amount); 
                   if(this.spa_total_amount != this.amount){
+                      _this.dismiss = '';
                       alert('Total amount is not correct.');
-                      _this.reset();
+                      _this.spa=[];
+                      //_this.reset();
                   }else{
+                      _this.dismiss = 'modal';
+                      _this.clear();
                     for (var i = 0; i < this.spa.length; i++) {
                         if(this.spa[i].amount != 0) {
                             if (_this.operation_type == 1) {
@@ -358,7 +364,11 @@ var app = new Vue({
                     form_Data.append('sub_category', this.sub_category);
                     form_Data.append('related_account', this.related_account);
                     form_Data.append('details', this.details);
-                    form_Data.append('pic_url', this.filename);
+                    if(this.filename!=''){
+                        form_Data.append('pic_url', this.filename);
+                    }else{
+                        form_Data.append('pic_url', this.pic_url);
+                    }
                     form_Data.append('payee', payee);
                     form_Data.append('paid_date', paidat);
                     form_Data.append('cash_in', this.cash_in);
@@ -482,8 +492,11 @@ var app = new Vue({
                   _this.account = response.data[0].account;
                   _this.category = response.data[0].category;
                   _this.sub_category = response.data[0].sub_category;
+                  if(response.data[0].related_account != '0'){
                   _this.related_account = response.data[0].related_account;
+                  }
                   _this.details = response.data[0].details;
+                  _this.pic_url = response.data[0].pic_url;
                   _this.payee = response.data[0].payee.split(',');
                   _this.paid_date = response.data[0].paid_date;
 
@@ -935,7 +948,25 @@ var app = new Vue({
       let _this = this;
       clearTimeout(_this.myVar)
       clearTimeout(_this.lockVar)
+  },
+  formatOperationType:function(type){
+      if(type == 1){
+          return 'Cash In';
+      }else if(type == 2){
+          return 'Cash Out';
+      }
+  },
+  getMonthDay:function(){
+      let _this = this;
+      var today = new Date();
+      var first = new Date();
+    var dd = ("0" + (today.getDate())).slice(-2);
+    var mm = ("0" + (today.getMonth() + 1)).slice(-2);
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    first = yyyy + '-' + mm + '-01';
+    _this.start_date = first;
+    _this.end_date = today;
   }
-
 }
 });
