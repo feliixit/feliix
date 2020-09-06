@@ -670,3 +670,16 @@ CREATE TABLE IF NOT EXISTS `gcp_storage_file` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20200905 add for project_edit_stage
+CREATE TABLE IF NOT EXISTS `project_edit_stage` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `stage_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `reason` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';

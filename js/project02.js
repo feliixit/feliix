@@ -78,8 +78,9 @@ var app = new Vue({
     canSub: true,
     finish: false,
 
-
-
+    // Edit/Delete Stage
+    record : {},
+    stage_edit_reason:'',
 
     submit : false,
     // paging
@@ -124,10 +125,6 @@ var app = new Vue({
     this.getPrioritys();
     this.getStatuses();
     this.getStages();
-
-    
-
-    
 
   },
 
@@ -475,29 +472,40 @@ var app = new Vue({
               });
       },
 
-      stage_delete () {
+      stage_load () {
         if(this.stage_id_to_edit != 0)
         {
-          e.preventDefault(); // <--- prevent form from submitting
+          this.record = {};
+          this.record = this.shallowCopy(this.receive_stage_records.find(element => element.id == this.stage_id_to_edit));
+        }
+      },
 
+      shallowCopy(obj) {
+          console.log("shallowCopy");
+            var result = {};
+            for (var i in obj) {
+                result[i] = obj[i];
+            }
+            return result;
+        },
+
+      stage_delete () {
+        let _this = this;
+        if(this.stage_id_to_edit != 0)
+        {
           Swal.fire({
               title: "Delete",
               text: "Are you sure to delete?",
               icon: "warning",
-              buttons: [
-                'No',
-                'Yes'
-              ],
-              dangerMode: true,
-            }).then(function(isConfirm) {
-              if (isConfirm) {
-                Swal.fire({
-                  title: 'Deleted!',
-                  text: 'Stage successfully deleted!',
-                  icon: 'success'
-                }).then(function() {
-                  do_stage_delete(); // <--- submit form programmatically
-                });
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+              if (result.value) {
+               
+                  _this.do_stage_delete(); // <--- submit form programmatically
+                
               } else {
                 // swal("Cancelled", "Your imaginary file is safe :)", "error");
               }
@@ -524,7 +532,20 @@ var app = new Vue({
         })
         .then(function(response) {
             //handle success
-            
+            if(response.data['ret'] != 0)
+            {
+              _this.org_uid = _this.uid;
+              
+                Swal.fire({
+                  text: "Deleted",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                })
+
+                _this.getRecordsStage(_this.project_id);
+            }
+
+            _this.edit_stage_clear();
 
         })
         .catch(function(response) {
@@ -533,7 +554,9 @@ var app = new Vue({
               text: JSON.stringify(response),
               icon: 'error',
               confirmButtonText: 'OK'
-            })
+            });
+
+            _this.edit_stage_clear();
         });
       },
 
@@ -783,6 +806,16 @@ var app = new Vue({
             this.getRecordsStage(this.project_id);
         },
 
+        edit_stage_clear() {
+
+            this.record = {};
+            this.stage_edit_reason = '';
+            document.getElementById('edit_stage_dialog').classList.remove("show");
+            document.getElementById('edit_stage_fn1').classList.remove("focus");
+
+        
+        },
+
         status_clear() {
             this.project_status_edit = '';
             this.project_status_reason = '';
@@ -1003,6 +1036,91 @@ var app = new Vue({
                 });
         },
 
+
+        save_edit_stage() {
+            let _this = this;
+
+            if(this.stage_id_to_edit == 0)
+              return;
+
+            if (this.record.sequence.trim() == '') {
+              Swal.fire({
+                text: 'Please edit Statge Sequence!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.record.project_stage_id.trim() == 0) {
+              Swal.fire({
+                text: 'Please select Stage!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.record.stages_status_id.trim() == 0) {
+              Swal.fire({
+                text: 'Please select Stage Status!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.stage_edit_reason.trim() == '') {
+              Swal.fire({
+                text: 'Please input edit reason!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('stage_id', this.stage_id_to_edit);
+            form_Data.append('sequence', this.record.sequence);
+            form_Data.append('project_stage_id', this.record.project_stage_id);
+            form_Data.append('stages_status_id', this.record.stages_status_id);
+            form_Data.append('stage_edit_reason', this.stage_edit_reason);
+           
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project02_edit_project_stage',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.getRecordsStage(_this.project_id);
+                    _this.edit_stage_clear();
+
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
         project_create() {
             let _this = this;
 
@@ -1048,6 +1166,7 @@ var app = new Vue({
             form_Data.append('edit_client_type', this.edit_client_type);
             form_Data.append('edit_priority', this.edit_priority);
             form_Data.append('edit_contactor', this.edit_contactor);
+            form_Data.append('creator', this.uid);
             form_Data.append('edit_location', this.edit_location);
             form_Data.append('edit_contact_number', this.edit_contact_number);
             form_Data.append('edit_project_reason', this.edit_project_reason);

@@ -70,7 +70,11 @@ function take_snapshot() {
 
     }
 
-    document.getElementById('photo_time') = 
+    if(document.getElementById('photo_gps') !== null)
+        document.getElementById('photo_gps').value = app.latitude + ',' + app.longitude;
+
+    if(document.getElementById('photo_time') !== null)
+        document.getElementById('photo_time').value = app.today + ' ' + app.time;
 
     Webcam.snap(function(data_uri) {
     document.getElementById('results').innerHTML = '<img id="base64image" src="'+data_uri+'"/>';
@@ -199,9 +203,9 @@ $(function(){
                         <dd><input type="text" placeholder="" v-model="time" :readonly="true"></dd>  -->
                         <hr>
                         <dt v-if="showPhoto">Photo Taken Time</dt>
-                        <dd v-if="showPhoto"><input type="text" id="photo_time" placeholder="" v-model="photo_time" :readonly="true"></dd>
+                        <dd v-if="showPhoto"><input type="text" id="photo_time" placeholder="" :readonly="true"></dd>
                         <dt v-if="showPhoto">Photo Taken GPS</dt>
-                        <dd v-if="showPhoto"><input type="text" id="photo_gps" placeholder="" v-model="photo_gps" :readonly="true"></dd>
+                        <dd v-if="showPhoto"><input type="text" id="photo_gps" placeholder="" :readonly="true"></dd>
                         <p id="map-link" style="font-size: 20px; font-weight: 500;" v-if="showPhoto"></p>
                     </dl>
                     <div class="btnbox">

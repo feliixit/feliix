@@ -297,14 +297,14 @@ var app = new Vue({
           form_Data.append('location', this.location);
           form_Data.append('explan', this.explanation);
           form_Data.append('remark', this.remark);
-          form_Data.append('time', this.$refs[""]);
+          form_Data.append('time', this.time);
           form_Data.append('base64image', file);
           form_Data.append('latitude', this.latitude);
           form_Data.append('longitude', this.longitude);
-          form_Data.append('piclatitude', this.piclatitude);
-          form_Data.append('piclongitude', this.piclongitude);
-          form_Data.append('photo_time', this.photo_time.split(':').join(''));
-          form_Data.append('photo_gps', this.photo_gps);
+          form_Data.append('piclatitude', this.latitude);
+          form_Data.append('piclongitude', this.longitude);
+          form_Data.append('photo_time', this.today.split('/').join('') + ' ' + this.time.split(':').join(''));
+          form_Data.append('photo_gps', this.latitude+','+this.longitude);
 
           axios({
                   method: 'post',

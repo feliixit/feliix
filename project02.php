@@ -100,14 +100,14 @@ $(function(){
                                 <dt>Stage:</dt>
                                 <dd>
                                     <select v-model="project_stage">
-                                      <option v-for="item in stages" :value="item.id" :key="item.stage">
+                                      <option v-for="(item, index) in stages" :value="item.id" :key="item.stage">
                                           {{ item.stage }}
                                       </option>
                                     </select>
                                 </dd>
                                 <dt>Stage Status:</dt>
                                 <dd>
-                                    <select name="" id="" v-model="stage_status">
+                                    <select  v-model="stage_status">
                                         <option value="1">Ongoing</option>
                                         <option value="2">Pending</option>
                                         <option value="3">Close</option>
@@ -123,14 +123,14 @@ $(function(){
                 </div>
                 <!-- edit -->
                 <div class="popupblock">
-                    <a class="edit"></a>
-                    <div class="dialog d-edit">
+                    <a id="edit_stage_fn1" class="edit"></a>
+                    <div id="edit_stage_dialog" class="dialog d-edit">
                         <h6>Edit/Delete Stage:</h6>
                         <div class="tablebox s1">
                             <ul>
                                 <li class="head">Operation Type:</li>
                                 <li>
-                                    <select name="" id="opType">
+                                    <select  id="opType">
                                         <option value="edit">Edit Existing Stage</option>
                                         <option value="del">Delete Existing Stage</option>
                                     </select>
@@ -141,8 +141,8 @@ $(function(){
                             <ul>
                                 <li class="head">Target Sequence:</li>
                                 <li>
-                                    <select name="" id="" v-model="stage_id_to_edit">
-                                        <option v-for="item in receive_stage_records" :value="item.id" :key="item.sequence">
+                                    <select  v-model="stage_id_to_edit">
+                                        <option v-for="(item, index) in receive_stage_records" :value="item.id" >
                                           {{ item.sequence }}
                                       </option>
                                     </select>
@@ -154,8 +154,8 @@ $(function(){
                             <ul>
                                 <li class="head">Target Sequence:</li>
                                 <li>
-                                    <select name="" id="" v-model="stage_id_to_edit">
-                                        <option v-for="item in receive_stage_records" :value="item.id" :key="item.sequence">
+                                    <select  v-model="stage_id_to_edit">
+                                        <option v-for="(item, index) in receive_stage_records" :value="item.id" >
                                           {{ item.sequence }}
                                       </option>
                                     </select>
@@ -164,39 +164,35 @@ $(function(){
                             </ul>
                             <ul>
                                 <li class="head">Sequence:</li>
-                                <li><input type="text" placeholder=""></li>
+                                <li><input type="text" placeholder="" v-model="record.sequence"></li>
                             </ul>
                             <ul>
                                 <li class="head">Stage:</li>
                                 <li>
-                                    <select name="" id="">
-                                        <option value="">Client</option>
-                                        <option value="">Proposal</option>
-                                        <option value="">A Meeting / Close Deal</option>
-                                        <option value="">Order</option>
-                                        <option value="">Execution Plan</option>
-                                        <option value="">Delivery</option>
-                                        <option value="">Installation</option>
-                                        <option value="">Client Feedback / After Service</option>
+                                    <select v-model="record.project_stage_id">
+                                      <option v-for="(item, index) in stages" :value="item.id" :key="item.stage">
+                                          {{ item.stage }}
+                                      </option>
                                     </select>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Stage Status:</li>
                                 <li>
-                                    <select name="" id="">
-                                        <option value=""></option>
-                                        <option value=""></option>
+                                    <select v-model="record.stages_status_id">
+                                      <option value="1">Ongoing</option>
+                                        <option value="2">Pending</option>
+                                        <option value="3">Close</option>
                                     </select>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Reason for Editing:</li>
-                                <li><textarea placeholder=""></textarea></li>
+                                <li><textarea placeholder="" v-model="stage_edit_reason"></textarea></li>
                             </ul>
                             <div class="btnbox">
-                                <a class="btn small">Cancel</a>
-                                <a class="btn small green">Save</a>
+                                <a class="btn small" @click="edit_stage_clear">Cancel</a>
+                                <a class="btn small green" @click="save_edit_stage">Save</a>
                             </div>
                         </div>
                     </div>
@@ -217,7 +213,7 @@ $(function(){
                                 <dt>Change to:</dt>
                                 <dd>
                                     <select v-model="project_status_edit">
-                                      <option v-for="item in statuses" :value="item.id" :key="item.project_status">
+                                      <option v-for="(item, index) in statuses" :value="item.id" :key="item.project_status">
                                           {{ item.project_status }}
                                       </option>
                                     </select>
@@ -242,7 +238,7 @@ $(function(){
                                 <dt class="head">Project Category:</dt>
                                 <dd>
                                     <select v-model="edit_category">
-                                      <option v-for="item in categorys" :value="item.id" :key="item.category">
+                                      <option v-for="(item, index) in categorys" :value="item.id" :key="item.category">
                                           {{ item.category }}
                                       </option>
                                     </select>
@@ -251,7 +247,7 @@ $(function(){
                                     <dt>Client Type:</dt>
                                     <dd>
                                         <select v-model="edit_client_type">
-                                          <option v-for="item in client_types" :value="item.id" :key="item.client_type">
+                                          <option v-for="(item, index) in client_types" :value="item.id" :key="item.client_type">
                                               {{ item.client_type }}
                                           </option>
                                         </select>
@@ -261,7 +257,7 @@ $(function(){
                                     <dt>Priority</dt>
                                     <dd>
                                         <select v-model="edit_priority">
-                                          <option v-for="item in priorities" :value="item.id" :key="item.priority">
+                                          <option v-for="(item, index) in priorities" :value="item.id" :key="item.priority">
                                               {{ item.priority }}
                                           </option>
                                         </select>
@@ -270,12 +266,12 @@ $(function(){
                                 <dt>Project Creator:</dt>
                                 <dd>
                                     <div class="browser_group">
-                                        <select v-model="uid" style="width: 75%!important; margin: 0!important;">
-                                          <option v-for="item in users" :value="item.id" :key="item.username">
+                                        <select v-model="uid">
+                                          <option v-for="(item, index) in users" :value="item.id" :key="item.username">
                                               {{ item.username }}
                                           </option>
                                         </select>
-                                        <button @click="change_project_creator">Change</button></div>
+                                       <!-- <button @click="change_project_creator">Change</button> --></div>
                                 </dd>
                                 <dt>Contact Person:</dt>
                                 <dd><input type="text" v-model="edit_contactor"></dd>
@@ -368,7 +364,7 @@ $(function(){
                             <dl>
                                 <dt class="head">Detail Type:</dt>
                                 <dd>
-                                    <select name="" id="" v-model="detail_type">
+                                    <select  v-model="detail_type">
                                         <option value="1">Requirements</option>
                                         <option value="2">Submittals</option>
                                         <option value="3">Discount</option>
@@ -569,7 +565,7 @@ $(function(){
                <ul v-for='(receive_record, index) in displayedStagePosts'>
                    <li>{{ receive_record.sequence }}</li>
                    <li>{{ receive_record.stage }}</li>
-                   <li>{{ receive_record.stages_status_id }}</li>
+                   <li>{{ receive_record.stages_status }}</li>
                    <li>{{ receive_record.start }} ~  </li>
                    <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
                    <li>{{ receive_record.replies }}/{{ receive_record.post }}</li>

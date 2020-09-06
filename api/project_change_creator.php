@@ -9,7 +9,6 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 include_once 'config/core.php';
-include_once 'config/conf.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
@@ -43,35 +42,31 @@ else
 include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
-$conf = new Conf();
 
 $uid = $user_id;
-
-$stage_id_to_edit = (isset($_POST['stage_id_to_edit']) ?  $_POST['stage_id_to_edit'] : '');
-
+$pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
+$new_id = (isset($_POST['new_id']) ?  $_POST['new_id'] : 0);
 
 try{
-    $query = "update project_stages
+    $query = "update project_main
     SET
-        status = -1,
-        updated_id = :updated_id,
-        updated_at = now()
-    where id = :id ";
+        create_id = :new_id
+    where id = :project_id ";
 
     // prepare the query
-    $stmt = $db->prepare($query);
+    $stmt1 = $db->prepare($query);
 
-    $stmt->bindParam(':updated_id', $uid);
-    $stmt->bindParam(':id', $stage_id_to_edit);
+    $stmt1->bindParam(':project_id', $pid);
+    $stmt1->bindParam(':new_id', $new_id);
 
     $jsonEncodedReturnArray = "";
-    if ($stmt->execute()) {
-        $returnArray = array('ret' => $stage_id_to_edit);
+    if ($stmt1->execute()) {
+        $returnArray = array('batch_id' => 1);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
     }
     else
     {
-        $arr = $stmt->errorInfo();
+        $arr = $stmt1->errorInfo();
         error_log($arr[2]);
     }
 

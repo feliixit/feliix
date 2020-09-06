@@ -44,20 +44,16 @@ $database = new Database();
 $db = $database->getConnection();
 
 $uid = $user_id;
-$pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
-$edit_category = (isset($_POST['edit_category']) ?  $_POST['edit_category'] : 0);
-$edit_client_type = (isset($_POST['edit_client_type']) ?  $_POST['edit_client_type'] : 0);
-$edit_priority = (isset($_POST['edit_priority']) ?  $_POST['edit_priority'] : 0);
-$edit_contactor = (isset($_POST['edit_contactor']) ?  $_POST['edit_contactor'] : '');
-$edit_location = (isset($_POST['edit_location']) ?  $_POST['edit_location'] : '');
-$creator = (isset($_POST['creator']) ?  $_POST['creator'] : 0);
-$edit_contact_number = (isset($_POST['edit_contact_number']) ?  $_POST['edit_contact_number'] : '');
-$edit_project_reason = (isset($_POST['edit_project_reason']) ?  $_POST['edit_project_reason'] : '');
+$stage_id = (isset($_POST['stage_id']) ?  $_POST['stage_id'] : 0);
+$project_stage_id = (isset($_POST['project_stage_id']) ?  $_POST['project_stage_id'] : 0);
+$stages_status_id = (isset($_POST['stages_status_id']) ?  $_POST['stages_status_id'] : 0);
+$sequence = (isset($_POST['sequence']) ?  $_POST['sequence'] : '');
+$stage_edit_reason = (isset($_POST['stage_edit_reason']) ?  $_POST['stage_edit_reason'] : '');
 
 
-$query = "INSERT INTO project_edit_info
+$query = "INSERT INTO project_edit_stage
                 SET
-                    project_id = :project_id,
+                    stage_id = :stage_id,
                     reason = :reason,
                    
                     create_id = :create_id,
@@ -67,9 +63,9 @@ $query = "INSERT INTO project_edit_info
         $stmt = $db->prepare($query);
     
         // bind the values
-        $stmt->bindParam(':project_id', $pid);
-        $stmt->bindParam(':reason', $edit_project_reason);
-        $stmt->bindParam(':create_id', $user_id);
+        $stmt->bindParam(':stage_id', $stage_id);
+        $stmt->bindParam(':reason', $stage_edit_reason);
+        $stmt->bindParam(':create_id', $uid);
 
         $last_id = 0;
         // execute the query, also check if query was successful
@@ -78,33 +74,34 @@ $query = "INSERT INTO project_edit_info
             if ($stmt->execute()) {
                 $last_id = $db->lastInsertId();
 
-                $query = "update project_main
+                $query = "update project_stages
                 SET
-                    catagory_id = :edit_category,
-                    client_type_id = :edit_client_type,
-                    priority_id = :edit_priority,
-                    contactor = :edit_contactor,
-                    location = :edit_location,
-                    create_id = :create_id,
-                    contact_number = :edit_contact_number,
-                    edit_reason = :edit_project_reason
+                    sequence = :sequence,
+                    stage_id = :stage_id,
+                    stages_status_id = :stages_status_id,
+                    updated_id = :create_id,
+                    updated_at = now()
                 
-                where id = :project_id ";
+                where id = :id ";
     
                 // prepare the query
                 $stmt1 = $db->prepare($query);
 
-                $stmt1->bindParam(':project_id', $pid);
-                $stmt1->bindParam(':edit_category', $edit_category);
-                $stmt1->bindParam(':edit_client_type', $edit_client_type);
-                $stmt1->bindParam(':edit_priority', $edit_priority);
-                $stmt1->bindParam(':edit_contactor', $edit_contactor);
-                $stmt1->bindParam(':create_id', $creator);
-                $stmt1->bindParam(':edit_location', $edit_location);
-                $stmt1->bindParam(':edit_contact_number', $edit_contact_number);
-                $stmt1->bindParam(':edit_project_reason', $edit_project_reason);
+                $stmt1->bindParam(':sequence', $sequence);
+                $stmt1->bindParam(':stage_id', $project_stage_id);
+                $stmt1->bindParam(':stages_status_id', $stages_status_id);
+                $stmt1->bindParam(':create_id', $uid);
+                $stmt1->bindParam(':id', $stage_id);
 
-                $stmt1->execute();
+                if ($stmt1->execute()) {
+                    $returnArray = array('ret' => $stage_id_to_edit);
+                    $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+                }
+                else
+                {
+                    $arr = $stmt1->errorInfo();
+                    error_log($arr[2]);
+                }
 
             }
             else
@@ -117,7 +114,4 @@ $query = "INSERT INTO project_edit_info
         {
             error_log($e->getMessage());
         }
-
-
-        return $last_id;
 
