@@ -58,7 +58,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.id, pm.detail_type, pm.detail_desc, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at FROM project_action_detail pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'action_detail' where project_id = " . $pid . " and pm.status <> -1 ";
+            $sql = "SELECT pm.id, pm.remark, u.username, pm.created_at FROM project_proof pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -1 ";
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -86,50 +86,8 @@ else
             $stmt->execute();
 
 
-            $id = 0;
-            $detail_type = "";
-            $detail_desc = "";
-            $filename = "";
-            $gcp_name = "";
-            $username = "";
-            $created_at = "";
-            $items = [];
-
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
-                if($id != $row['id'] && $id != 0)
-                {
-                    $merged_results[] = array( "detail_type" => $detail_type,
-                                            "detail_desc" => $detail_desc,
-                                            "items" => $items,
-                                            "username" => $username,
-                                            "created_at" => $created_at
-                    );
-
-                    $items = [];
-
-                }
-
-                $id = $row['id'];
-                $created_at = $row['created_at'];
-                $username = $row['username'];
-                $gcp_name = $row['gcp_name'];
-                $filename = $row['filename'];
-                $detail_desc = $row['detail_desc'];
-                $detail_type = GetDetailType($row['detail_type']);
-
-                $items[] = array('filename' => $filename,
-                                 'gcp_name' => $gcp_name );
-            }
-
-            if($id != 0)
-            {
-                $merged_results[] = array( "detail_type" => $detail_type,
-                                                "detail_desc" => $detail_desc,
-                                                "items" => $items,
-                                                "username" => $username,
-                                                "created_at" => $created_at
-                        );
+                $merged_results[] = $row;
             }
 
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
@@ -140,16 +98,13 @@ else
               // get database connection
             $uid = $user_id;
             $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
-            $detail_type = (isset($_POST['detail_type']) ?  $_POST['detail_type'] : '');
-            $detail_desc = (isset($_POST['detail_desc']) ?  $_POST['detail_desc'] : '');
-
-             
-            $query = "INSERT INTO project_action_detail
+            $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
+                         
+            $query = "INSERT INTO project_proof
                 SET
                     project_id = :project_id,
-                    detail_type = :detail_type,
-                    detail_desc = :detail_desc,
-                  
+                    remark = :remark,
+
                     create_id = :create_id,
                     created_at = now()";
     
@@ -158,8 +113,7 @@ else
             
                 // bind the values
                 $stmt->bindParam(':project_id', $pid);
-                $stmt->bindParam(':detail_type', $detail_type);
-                $stmt->bindParam(':detail_desc', $detail_desc);
+                $stmt->bindParam(':remark', $remark);
       
                 $stmt->bindParam(':create_id', $user_id);
 
@@ -182,46 +136,15 @@ else
                     error_log($e->getMessage());
                 }
 
-                $returnArray = array('batch_id' => $last_id);
-                $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
-                
-                echo $jsonEncodedReturnArray;
+              $returnArray = array('batch_id' => $last_id);
+              $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+              echo $jsonEncodedReturnArray;
                 
                 break;
 
       }
 
-function GetDetailType($loc)
-{
-    $location = "";
-    switch ($loc) {
-        case "1":
-            $location = "Requirements";
-            break;
-        case "2":
-            $location = "Submittals";
-            break;
-        case "3":
-            $location = "Discount";
-            break;
-        case "4":
-            $location = "Client Details";
-            break;
-        case "5":
-            $location = "Competitors";
-            break;
-        case "6":
-            $location = "Lead Time";
-            break;
-        case "7":
-            $location = "Warranty";
-            break;
-        case "8":
-            $location = "Other";
-            break;
-    }
 
-    return $location;
-}
 
 ?>

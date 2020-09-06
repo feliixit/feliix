@@ -100,14 +100,14 @@ $(function(){
                                 <dt>Stage:</dt>
                                 <dd>
                                     <select v-model="project_stage">
-                                      <option v-for="item in stages" :value="item.id" :key="item.stage">
+                                      <option v-for="(item, index) in stages" :value="item.id" :key="item.stage">
                                           {{ item.stage }}
                                       </option>
                                     </select>
                                 </dd>
                                 <dt>Stage Status:</dt>
                                 <dd>
-                                    <select name="" id="" v-model="stage_status">
+                                    <select  v-model="stage_status">
                                         <option value="1">Ongoing</option>
                                         <option value="2">Pending</option>
                                         <option value="3">Close</option>
@@ -123,14 +123,14 @@ $(function(){
                 </div>
                 <!-- edit -->
                 <div class="popupblock">
-                    <a class="edit"></a>
-                    <div class="dialog d-edit">
+                    <a id="edit_stage_fn1" class="edit"></a>
+                    <div id="edit_stage_dialog" class="dialog d-edit">
                         <h6>Edit/Delete Stage:</h6>
                         <div class="tablebox s1">
                             <ul>
                                 <li class="head">Operation Type:</li>
                                 <li>
-                                    <select name="" id="opType">
+                                    <select  id="opType">
                                         <option value="edit">Edit Existing Stage</option>
                                         <option value="del">Delete Existing Stage</option>
                                     </select>
@@ -141,11 +141,12 @@ $(function(){
                             <ul>
                                 <li class="head">Target Sequence:</li>
                                 <li>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select  v-model="stage_id_to_edit">
+                                        <option v-for="(item, index) in receive_stage_records" :value="item.id" >
+                                          {{ item.sequence }}
+                                      </option>
                                     </select>
-                                    <a class="btn small">Delete</a>
+                                    <a class="btn small" @click="stage_delete">Delete</a>
                                 </li>
                             </ul>
                         </div>
@@ -153,48 +154,45 @@ $(function(){
                             <ul>
                                 <li class="head">Target Sequence:</li>
                                 <li>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select  v-model="stage_id_to_edit">
+                                        <option v-for="(item, index) in receive_stage_records" :value="item.id" >
+                                          {{ item.sequence }}
+                                      </option>
                                     </select>
-                                    <a class="btn small green">Load</a>
+                                    <a class="btn small green" @click="stage_load">Load</a>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Sequence:</li>
-                                <li><input type="text" placeholder=""></li>
+                                <li><input type="text" placeholder="" v-model="record.sequence"></li>
                             </ul>
                             <ul>
                                 <li class="head">Stage:</li>
                                 <li>
-                                    <select name="" id="">
-                                        <option value="">Client</option>
-                                        <option value="">Proposal</option>
-                                        <option value="">A Meeting / Close Deal</option>
-                                        <option value="">Order</option>
-                                        <option value="">Execution Plan</option>
-                                        <option value="">Delivery</option>
-                                        <option value="">Installation</option>
-                                        <option value="">Client Feedback / After Service</option>
+                                    <select v-model="record.project_stage_id">
+                                      <option v-for="(item, index) in stages" :value="item.id" :key="item.stage">
+                                          {{ item.stage }}
+                                      </option>
                                     </select>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Stage Status:</li>
                                 <li>
-                                    <select name="" id="">
-                                        <option value=""></option>
-                                        <option value=""></option>
+                                    <select v-model="record.stages_status_id">
+                                      <option value="1">Ongoing</option>
+                                        <option value="2">Pending</option>
+                                        <option value="3">Close</option>
                                     </select>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Reason for Editing:</li>
-                                <li><textarea placeholder=""></textarea></li>
+                                <li><textarea placeholder="" v-model="stage_edit_reason"></textarea></li>
                             </ul>
                             <div class="btnbox">
-                                <a class="btn small">Cancel</a>
-                                <a class="btn small green">Save</a>
+                                <a class="btn small" @click="edit_stage_clear">Cancel</a>
+                                <a class="btn small green" @click="save_edit_stage">Save</a>
                             </div>
                         </div>
                     </div>
@@ -215,7 +213,7 @@ $(function(){
                                 <dt>Change to:</dt>
                                 <dd>
                                     <select v-model="project_status_edit">
-                                      <option v-for="item in statuses" :value="item.id" :key="item.project_status">
+                                      <option v-for="(item, index) in statuses" :value="item.id" :key="item.project_status">
                                           {{ item.project_status }}
                                       </option>
                                     </select>
@@ -240,7 +238,7 @@ $(function(){
                                 <dt class="head">Project Category:</dt>
                                 <dd>
                                     <select v-model="edit_category">
-                                      <option v-for="item in categorys" :value="item.id" :key="item.category">
+                                      <option v-for="(item, index) in categorys" :value="item.id" :key="item.category">
                                           {{ item.category }}
                                       </option>
                                     </select>
@@ -249,7 +247,7 @@ $(function(){
                                     <dt>Client Type:</dt>
                                     <dd>
                                         <select v-model="edit_client_type">
-                                          <option v-for="item in client_types" :value="item.id" :key="item.client_type">
+                                          <option v-for="(item, index) in client_types" :value="item.id" :key="item.client_type">
                                               {{ item.client_type }}
                                           </option>
                                         </select>
@@ -259,7 +257,7 @@ $(function(){
                                     <dt>Priority</dt>
                                     <dd>
                                         <select v-model="edit_priority">
-                                          <option v-for="item in priorities" :value="item.id" :key="item.priority">
+                                          <option v-for="(item, index) in priorities" :value="item.id" :key="item.priority">
                                               {{ item.priority }}
                                           </option>
                                         </select>
@@ -267,7 +265,13 @@ $(function(){
                                 </div>
                                 <dt>Project Creator:</dt>
                                 <dd>
-                                    <div class="browser_group"><input type="text" v-model="username" readonly="true"><button disabled>Browser</button></div>
+                                    <div class="browser_group">
+                                        <select v-model="uid">
+                                          <option v-for="(item, index) in users" :value="item.id" :key="item.username">
+                                              {{ item.username }}
+                                          </option>
+                                        </select>
+                                       <!-- <button @click="change_project_creator">Change</button> --></div>
                                 </dd>
                                 <dt>Contact Person:</dt>
                                 <dd><input type="text" v-model="edit_contactor"></dd>
@@ -298,18 +302,49 @@ $(function(){
                             <dl>
                                 <dt class="head">Comment:</dt>
                                 <dd><textarea name="" id="" v-model="comment"></textarea></dd>
-                                <dt>Pictures:</dt>
-                                <dd>
-                                    <div class="browser_group"><input type="file" accept="image/*" id="file1" ref="file1" style="color: black;" v-on:change="onChangeFile1Upload()"></div>
-                                    
+                                <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            name="comm_file"
+                                            value
+                                            placeholder="choose file"
+                                            ref="comm_file"
+                                            v-show="comm_canSub"
+                                            @change="comm_changeFile()"
+                                            multiple
+                                          />
+                                    </div>
+                                  </div>
                                 </dd>
-                                <dt>
-                                        {{ startValue }}
-                                    </dt>
-                                <dt>Files:</dt>
-                                <dd>
-                                    <div class="browser_group"><input type="file"  id="file2" ref="file2" style="color: black;" v-on:change="onChangeFile2Upload()"></div>
-                                </dd>
+
+                                <div class="file-list">
+                                  <div class="file-item" v-for="(item,index) in comm_fileArray" :key="index">
+                                    <p>
+                                      {{item.name}}
+                                      <span
+                                        @click="comm_deleteFile(index)"
+                                        v-show="item.progress==0"
+                                        class="upload-delete"
+                                      ><i class="fas fa-backspace"></i>
+                                        </span>
+                                    </p>
+                                    <div class="progress-container" v-show="item.progress!=0">
+                                      <div class="progress-wrapper">
+                                        <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                      </div>
+                                      <div class="progress-rate">
+                                        <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                        <span v-else><i class="fas fa-check-circle"></i></span>  
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
                                 <div class="btnbox">
                                     <a class="btn small" @click="comment_clear">Cancel</a>
                                     <a class="btn small green" @click="comment_create">Save</a>
@@ -320,9 +355,9 @@ $(function(){
                 </div>
 
                 <div class="popupblock">
-                    <a id="status_fn4" class="fn4">Acton to Est. Closing Prob.</a>
+                    <a id="status_fn4" class="fn4">Action to Est. Closing Prob.</a>
                     <div id="prob_dialog" class="dialog fn4">
-                        <h6>Acton to Est. Closing Prob.:</h6>
+                        <h6>Action to Est. Closing Prob.:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Estimated Closing Probability:</dt>
@@ -353,14 +388,14 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a id="status_fn5" class="fn5">Acton to Project Details</a>
+                    <a id="status_fn5" class="fn5">Action to Project Details</a>
                     <div id="detail_dialog" class="dialog fn5">
-                        <h6>Acton to Project Details:</h6>
+                        <h6>Action to Project Details:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Detail Type:</dt>
                                 <dd>
-                                    <select name="" id="" v-model="detail_type">
+                                    <select  v-model="detail_type">
                                         <option value="1">Requirements</option>
                                         <option value="2">Submittals</option>
                                         <option value="3">Discount</option>
@@ -436,24 +471,60 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a class="fn6">Submit Downpayment Proof</a>
-                    <div class="dialog fn6">
+                    <a id="status_fn6" class="fn6">Submit Downpayment Proof</a>
+                    <div id="prof_dialog" class="dialog fn6">
                         <h6>Submit Downpayment Proof:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt>Pictures:</dt>
-                                <dd>
-                                    <div class="browser_group"><input type="text"><button >Choose</button></div>
-                                </dd>
-                                <dt>Files:</dt>
-                                <dd>
-                                    <div class="browser_group"><input type="text"><button >Choose</button></div>
+                               
+                                <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            name="prof_file"
+                                            value
+                                            placeholder="choose file"
+                                            ref="prof_file"
+                                            v-show="canSub"
+                                            @change="prof_changeFile()"
+                                            multiple
+                                          />
+                                    </div>
+                                  </div>
                                 </dd>
                                 <dt class="head">Remarks:</dt>
-                                <dd><textarea name="" id="" ></textarea></dd>
+                                <dd><textarea name="" id="" v-model="prof_remark"></textarea></dd>
+
+                                <div class="file-list">
+                                  <div class="file-item" v-for="(item,index) in prof_fileArray" :key="index">
+                                    <p>
+                                      {{item.name}}
+                                      <span
+                                        @click="prof_deleteFile(index)"
+                                        v-show="item.progress==0"
+                                        class="upload-delete"
+                                      ><i class="fas fa-backspace"></i>
+                                        </span>
+                                    </p>
+                                    <div class="progress-container" v-show="item.progress!=0">
+                                      <div class="progress-wrapper">
+                                        <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                      </div>
+                                      <div class="progress-rate">
+                                        <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                        <span v-else><i class="fas fa-check-circle"></i></span>  
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Submit</a>
+                                    <a class="btn small" @click="prof_clear">Cancel</a>
+                                    <a class="btn small green" @click="prof_create">Submit</a>
                                 </div>
                             </dl>
                         </div>
@@ -500,8 +571,8 @@ $(function(){
             </div>
             <div class="tablebox lv2a b-2">
                 <ul class="head">
-                    <li>Comments</li>
-                    <li>Estimated Closing Probability</li>
+                    <li style="text-align: center !important;">Comments</li>
+                    <li style="text-align: center !important;">Estimated Closing Probability</li>
                 </ul>
                 <ul>
                     <li>
@@ -520,7 +591,7 @@ $(function(){
             </div>
             <div class="tablebox lv2a">
                 <ul class="head">
-                    <li>Project Details</li>
+                    <li style="text-align: center !important;">Project Details</li>
                 </ul>
                 <ul>
                     <li>
@@ -561,7 +632,7 @@ $(function(){
                <ul v-for='(receive_record, index) in displayedStagePosts'>
                    <li>{{ receive_record.sequence }}</li>
                    <li>{{ receive_record.stage }}</li>
-                   <li>{{ receive_record.stages_status_id }}</li>
+                   <li>{{ receive_record.stages_status }}</li>
                    <li>{{ receive_record.start }} ~  </li>
                    <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
                    <li>{{ receive_record.replies }}/{{ receive_record.post }}</li>

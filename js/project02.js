@@ -17,6 +17,11 @@ var app = new Vue({
     stages : {},
     users : {},
 
+    uid:0,
+    org_uid:0,
+
+    stage_id_to_edit:0,
+
     baseURL:'https://storage.cloud.google.com/feliiximg/',
 
 
@@ -59,6 +64,9 @@ var app = new Vue({
     comment : '',
     file1: '',
     file2: '',
+    comm_fileArray: [],
+    comm_canSub: true,
+    comm_finish: false,
 
     startValue: 0,
 
@@ -73,8 +81,15 @@ var app = new Vue({
     canSub: true,
     finish: false,
 
+    // Edit/Delete Stage
+    record : {},
+    stage_edit_reason:'',
 
-
+    // Downpayment Proof
+    prof_remark:'',
+    prof_fileArray: [],
+    prof_canSub: true,
+    prof_finish: false,
 
     submit : false,
     // paging
@@ -110,6 +125,7 @@ var app = new Vue({
         _this.getProjectComments(_this.project_id);
         _this.getProjectProbs(_this.project_id);
         _this.getProjectActionDetails(_this.project_id);
+        _this.getUsers();
       });
     }
 
@@ -118,10 +134,6 @@ var app = new Vue({
     this.getPrioritys();
     this.getStatuses();
     this.getStages();
-
-    this.getUsers();
-
-    
 
   },
 
@@ -166,7 +178,47 @@ var app = new Vue({
           this.detail_clear();
         }
       }
-    }
+    },
+
+    prof_fileArray: {
+      handler(newValue, oldValue) {
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.prof_fileArray.length) {
+          this.prof_finish = true;
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          });
+          this.prof_clear();
+        }
+      }
+    },
+
+    comm_fileArray: {
+      handler(newValue, oldValue) {
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.comm_fileArray.length) {
+          this.comm_finish = true;
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          });
+          this.comment_clear();
+        }
+      }
+    },
 
   },
 
@@ -178,6 +230,52 @@ var app = new Vue({
       this.fileArray.splice(index, 1);
       var fileTarget = this.$refs.file;
       fileTarget.value = "";
+    },
+
+    prof_deleteFile(index) {
+      this.prof_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.prof_file;
+      fileTarget.value = "";
+    },
+
+    prof_changeFile() {
+      var fileTarget = this.$refs.prof_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+          // remove duplicate
+          if (
+            this.prof_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+            this.prof_fileArray.length == 0
+          ) {
+            var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+            this.prof_fileArray.push(fileItem);
+          }else{
+            fileTarget.value = "";
+          }
+        }
+    },
+
+    comm_deleteFile(index) {
+      this.comm_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.comm_file;
+      fileTarget.value = "";
+    },
+
+    comm_changeFile() {
+      var fileTarget = this.$refs.comm_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+          // remove duplicate
+          if (
+            this.comm_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+            this.comm_fileArray.length == 0
+          ) {
+            var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+            this.comm_fileArray.push(fileItem);
+          }else{
+            fileTarget.value = "";
+          }
+        }
     },
 
     changeFile() {
@@ -299,6 +397,51 @@ var app = new Vue({
               });
       },
 
+      change_project_creator: function() {
+
+      let _this = this;
+
+      if(this.uid == this.org_uid)
+        return;
+
+       var form_Data = new FormData();
+
+       form_Data.append('pid', this.project_id);
+        form_Data.append('new_id', this.uid);
+      
+        const token = sessionStorage.getItem('token');
+
+        axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                },
+                url: 'api/project_change_creator',
+                data: form_Data
+            })
+            .then(function(response) {
+                //handle success
+                //this.$forceUpdate();
+                
+
+                if(response.data['batch_id'] != 0)
+                {
+                  _this.org_uid = _this.uid;
+                  
+                    Swal.fire({
+                      text: "user changed",
+                      icon: 'success',
+                      confirmButtonText: 'OK'
+                    })
+                }
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+      },
+
       getProjectProbs: function(keyword) {
       let _this = this;
 
@@ -373,6 +516,8 @@ var app = new Vue({
                   _this.category = res.data[0].category;
                   _this.client_type = res.data[0].client_type;
                   _this.priority = res.data[0].priority;
+                  _this.uid = res.data[0].uid;
+                  _this.org_uid = res.data[0].uid;
                   _this.username = res.data[0].username;
                   _this.stage = res.data[0].stage;
                   _this.project_status = res.data[0].project_status;
@@ -420,6 +565,94 @@ var app = new Vue({
               .finally(() => {
                   
               });
+      },
+
+      stage_load () {
+        if(this.stage_id_to_edit != 0)
+        {
+          this.record = {};
+          this.record = this.shallowCopy(this.receive_stage_records.find(element => element.id == this.stage_id_to_edit));
+        }
+      },
+
+      shallowCopy(obj) {
+          console.log("shallowCopy");
+            var result = {};
+            for (var i in obj) {
+                result[i] = obj[i];
+            }
+            return result;
+        },
+
+      stage_delete () {
+        let _this = this;
+        if(this.stage_id_to_edit != 0)
+        {
+          Swal.fire({
+              title: "Delete",
+              text: "Are you sure to delete?",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+              if (result.value) {
+               
+                  _this.do_stage_delete(); // <--- submit form programmatically
+                
+              } else {
+                // swal("Cancelled", "Your imaginary file is safe :)", "error");
+              }
+            });
+        }
+      },
+
+      do_stage_delete() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+
+        form_Data.append('jwt', token);
+        form_Data.append('pid', this.project_id);
+        form_Data.append('stage_id_to_edit', this.stage_id_to_edit);
+
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/project02_delete_stage',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            if(response.data['ret'] != 0)
+            {
+              _this.org_uid = _this.uid;
+              
+                Swal.fire({
+                  text: "Deleted",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                })
+
+                _this.getRecordsStage(_this.project_id);
+            }
+
+            _this.edit_stage_clear();
+
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+
+            _this.edit_stage_clear();
+        });
       },
 
       getUsers () {
@@ -562,13 +795,6 @@ var app = new Vue({
         });
       },
 
-      onChangeFile1Upload() {
-            this.file1 = this.$refs.file1.files[0];
-        },
-
-        onChangeFile2Upload() {
-            this.file2 = this.$refs.file2.files[0];
-        },
 
 
       clear: function() {
@@ -603,10 +829,6 @@ var app = new Vue({
 
         comment_clear() {
             this.comment = '';
-            this.file1 = '';
-            this.$refs.file2.value = null;
-            this.file2 = '';
-            this.$refs.file1.value = null;
 
             this.getProjectComments(this.project_id);
 
@@ -627,6 +849,19 @@ var app = new Vue({
             
             document.getElementById('detail_dialog').classList.remove("show");
             document.getElementById('status_fn5').classList.remove("focus");
+        },
+
+
+        prof_clear() {
+
+            this.prof_remark = '';
+            this.prof_fileArray = [];
+
+            //this.getProjectDetail(this.project_id);
+            this.prof_canSub = true;
+            
+            document.getElementById('prof_dialog').classList.remove("show");
+            document.getElementById('status_fn6').classList.remove("focus");
         },
 
 
@@ -666,6 +901,16 @@ var app = new Vue({
             this.receive_stage_records = [];
 
             this.getRecordsStage(this.project_id);
+        },
+
+        edit_stage_clear() {
+
+            this.record = {};
+            this.stage_edit_reason = '';
+            document.getElementById('edit_stage_dialog').classList.remove("show");
+            document.getElementById('edit_stage_fn1').classList.remove("focus");
+
+        
         },
 
         status_clear() {
@@ -724,6 +969,56 @@ var app = new Vue({
                 });
         },
 
+
+        prof_create() {
+            let _this = this;
+
+
+            if (this.prof_remark.trim() == '') {
+              Swal.fire({
+                text: 'Please enter remark!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('pid', this.project_id);
+            form_Data.append('remark', this.prof_remark.trim());
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project_proof',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    if(response.data['batch_id'] != 0)
+                    {
+                        _this.prof_upload(response.data['batch_id']);
+                    }
+                    //this.$forceUpdate();
+                    _this.prof_clear();
+                    _this.getProjectActionDetails(_this.project_id);
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
         detail_create() {
             let _this = this;
 
@@ -775,14 +1070,120 @@ var app = new Vue({
                         _this.upload(response.data['batch_id']);
                     }
                     //this.$forceUpdate();
-                    _this.prob_clear();
-                    _this.getProject(_this.project_id);
+                    _this.detail_clear();
+                    _this.getProjectActionDetails(_this.project_id);
                 })
                 .catch(function(response) {
                     //handle error
                     console.log(response)
                 });
         },
+
+        prof_upload(batch_id) {
+            
+              this.prof_canSub = false;
+              var myArr = this.prof_fileArray;
+              var vm = this;
+             
+              //循环文件数组挨个上传
+              myArr.forEach((element, index) => {
+                var config = {
+                  headers: { "Content-Type": "multipart/form-data" },
+                  onUploadProgress: function(e) {
+         
+                    if (e.lengthComputable) {
+                      var rate = e.loaded / e.total; 
+                      console.log(index, e.loaded, e.total, rate);
+                      if (rate < 1) {
+                        
+                        myArr[index].progress = rate;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      } else {
+                        myArr[index].progress = 0.99;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      }
+                    }
+                  }
+                };
+                var data = myArr[index];
+                var myForm = new FormData();
+                myForm.append('batch_type', 'proof');
+                myForm.append('batch_id', batch_id);
+                myForm.append("file", data);
+       
+                axios
+                  .post("api/uploadFile_gcp", myForm, config)
+                  .then(function(res) {
+                    if (res.data.code == 0) {
+                 
+                      myArr[index].progress = 1;
+                      vm.$set(vm.fileArray, index, myArr[index]);
+                      console.log(vm.fileArray, index);
+                    } else {
+                      alert(JSON.stringify(res.data));
+                    }
+                  })
+                  .catch(function(err) {
+                    console.log(err);
+                  });
+              });
+
+              this.prof_canSub = true;
+            
+          },
+
+          comm_upload(batch_id) {
+            
+              this.comm_canSub = false;
+              var myArr = this.comm_fileArray;
+              var vm = this;
+             
+              //循环文件数组挨个上传
+              myArr.forEach((element, index) => {
+                var config = {
+                  headers: { "Content-Type": "multipart/form-data" },
+                  onUploadProgress: function(e) {
+         
+                    if (e.lengthComputable) {
+                      var rate = e.loaded / e.total; 
+                      console.log(index, e.loaded, e.total, rate);
+                      if (rate < 1) {
+                        
+                        myArr[index].progress = rate;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      } else {
+                        myArr[index].progress = 0.99;
+                        vm.$set(vm.fileArray, index, myArr[index]);
+                      }
+                    }
+                  }
+                };
+                var data = myArr[index];
+                var myForm = new FormData();
+                myForm.append('batch_type', 'comment');
+                myForm.append('batch_id', batch_id);
+                myForm.append("file", data);
+       
+                axios
+                  .post("api/uploadFile_gcp", myForm, config)
+                  .then(function(res) {
+                    if (res.data.code == 0) {
+                 
+                      myArr[index].progress = 1;
+                      vm.$set(vm.fileArray, index, myArr[index]);
+                      console.log(vm.fileArray, index);
+                    } else {
+                      alert(JSON.stringify(res.data));
+                    }
+                  })
+                  .catch(function(err) {
+                    console.log(err);
+                  });
+              });
+
+              this.comm_canSub = true;
+            
+          },
 
 
         upload(batch_id) {
@@ -833,7 +1234,8 @@ var app = new Vue({
                     console.log(err);
                   });
               });
-            
+              
+              this.canSub = true;
           },
 
         comment_create() {
@@ -855,8 +1257,7 @@ var app = new Vue({
 
             form_Data.append('pid', this.project_id);
             form_Data.append('comment', this.comment);
-            form_Data.append('file1', this.file1);
-            form_Data.append('file2', this.file2);
+  
             
             const token = sessionStorage.getItem('token');
 
@@ -866,21 +1267,105 @@ var app = new Vue({
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     },
-                    onUploadProgress(progressEvent){
-                      if (progressEvent.lengthComputable) {
-                        let val = (progressEvent.loaded / progressEvent.total * 100).toFixed(0);
-            
-                        _this.startValue = parseInt(val)
-                      }
-                    },
+                    
                     url: 'api/project02_action_comment',
                     data: form_Data
                 })
                 .then(function(response) {
                     //handle success
                     //this.$forceUpdate();
+                    if(response.data['batch_id'] != 0)
+                    {
+                        _this.comm_upload(response.data['batch_id']);
+                    }
+
                     _this.comment_clear();
                     _this.getProject(_this.project_id);
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
+
+        save_edit_stage() {
+            let _this = this;
+
+            if(this.stage_id_to_edit == 0)
+              return;
+
+            if (this.record.sequence.trim() == '') {
+              Swal.fire({
+                text: 'Please edit Statge Sequence!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.record.project_stage_id.trim() == 0) {
+              Swal.fire({
+                text: 'Please select Stage!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.record.stages_status_id.trim() == 0) {
+              Swal.fire({
+                text: 'Please select Stage Status!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+            if (this.stage_edit_reason.trim() == '') {
+              Swal.fire({
+                text: 'Please input edit reason!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
+
+
+            _this.submit = true;
+            var form_Data = new FormData();
+
+            form_Data.append('stage_id', this.stage_id_to_edit);
+            form_Data.append('sequence', this.record.sequence);
+            form_Data.append('project_stage_id', this.record.project_stage_id);
+            form_Data.append('stages_status_id', this.record.stages_status_id);
+            form_Data.append('stage_edit_reason', this.stage_edit_reason);
+           
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project02_edit_project_stage',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.getRecordsStage(_this.project_id);
+                    _this.edit_stage_clear();
+
                 })
                 .catch(function(response) {
                     //handle error
@@ -933,6 +1418,7 @@ var app = new Vue({
             form_Data.append('edit_client_type', this.edit_client_type);
             form_Data.append('edit_priority', this.edit_priority);
             form_Data.append('edit_contactor', this.edit_contactor);
+            form_Data.append('creator', this.uid);
             form_Data.append('edit_location', this.edit_location);
             form_Data.append('edit_contact_number', this.edit_contact_number);
             form_Data.append('edit_project_reason', this.edit_project_reason);

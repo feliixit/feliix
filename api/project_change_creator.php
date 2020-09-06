@@ -9,7 +9,6 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 include_once 'config/core.php';
-include_once 'config/conf.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
@@ -43,51 +42,38 @@ else
 include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
-$conf = new Conf();
 
 $uid = $user_id;
 $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
+$new_id = (isset($_POST['new_id']) ?  $_POST['new_id'] : 0);
 
-$comment = (isset($_POST['comment']) ?  $_POST['comment'] : '');
+try{
+    $query = "update project_main
+    SET
+        create_id = :new_id
+    where id = :project_id ";
 
+    // prepare the query
+    $stmt1 = $db->prepare($query);
 
-$query = "INSERT INTO project_action_comment
-                SET
-                    project_id = :project_id,
-                    comment = :comment,
-                    create_id = :create_id,
-                    created_at = now()";
-    
-        // prepare the query
-        $stmt = $db->prepare($query);
-    
-        // bind the values
-        $stmt->bindParam(':project_id', $pid);
-        $stmt->bindParam(':comment', $comment);
-        $stmt->bindParam(':create_id', $user_id);
+    $stmt1->bindParam(':project_id', $pid);
+    $stmt1->bindParam(':new_id', $new_id);
 
-        $last_id = 0;
-        // execute the query, also check if query was successful
-        try {
-            // execute the query, also check if query was successful
-            if ($stmt->execute()) {
-                $last_id = $db->lastInsertId();
-
-            }
-            else
-            {
-                $arr = $stmt->errorInfo();
-                error_log($arr[2]);
-            }
-        }
-        catch (Exception $e)
-        {
-            error_log($e->getMessage());
-        }
-
-
-        $returnArray = array('batch_id' => $last_id);
+    $jsonEncodedReturnArray = "";
+    if ($stmt1->execute()) {
+        $returnArray = array('batch_id' => 1);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+    }
+    else
+    {
+        $arr = $stmt1->errorInfo();
+        error_log($arr[2]);
+    }
 
-        echo $jsonEncodedReturnArray;
+    echo $jsonEncodedReturnArray;
+}
+catch (Exception $e)
+{
+    error_log($e->getMessage());
+}
 

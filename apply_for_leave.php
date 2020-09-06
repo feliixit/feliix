@@ -164,13 +164,13 @@ $(function(){
                 </div>
                 <div class="formbox">
                     <ul>
-                        <li class="head" style="margin-left: 5px;">Employee Name</li>
+                        <li class="head" style="border-top-left-radius: 7px; border-bottom-left-radius: 7px;">Employee Name</li>
                         <li>{{ name }}</li>
                     </ul>
-                    <ul>
-                        <li class="head" style="margin-left: 5px;">Leave Type</li>
-                        <li>
-                            <select name="" id="" v-model="leave_type">
+                    <ul style="display:flex;">
+                        <li class="head" style="border-top-left-radius: 7px; border-bottom-left-radius: 7px; line-height: 44px;">Leave Type</li>
+                        <li style="flex-grow:1; flex-shrink:1;">
+                            <select name="" id="" v-model="leave_type" style="width: 100%; border: 2px solid var(--pri01a);">
                                 <option value="A">Vacation Leave</option>
                                 <option value="B">Emerency/Sick Leave</option>
                                 <option value="C">Unpaid Leave</option>
@@ -179,33 +179,33 @@ $(function(){
                         </li>
                     </ul>
 
-                    <ul v-if="showExtra">
-                        <li class="head" v-if="showExtra">Certificate of Diagnosis</li>
-                        <li v-if="showExtra"><input type="file" id="file" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera"></li>
+                    <ul v-if="showExtra" style="display:flex;">
+                        <li class="head" v-if="showExtra" style="border-top-left-radius: 7px; border-bottom-left-radius: 7px; line-height: 44px;">Certificate of Diagnosis</li>
+                        <li v-if="showExtra" style="flex-grow:1; flex-shrink:1; flex-basis: 30%; display: flex; align-items: center;"><input type="file" id="file" style="width: 100%;" ref="file" v-on:change="onChangeFileUpload()" accept="image/*" capture="camera"></li>
                     </ul>
                     
                     <div class="group">
-                        <ul>
-                            <li class="head" style="margin-left: 5px;">Start Time</li>
-                            <li>
-                            <input type="datetime-local" v-model="apply_start" />
+                        <ul style="display:flex;">
+                            <li class="head" style="border-top-left-radius: 12px; border-bottom-left-radius: 0px; line-height: 36px;">Start Time</li>
+                            <li style="flex-grow:1; flex-shrink:1;">
+                            <input type="datetime-local" v-model="apply_start" style="width: 100%; border: 2px solid var(--pri01a);" />
                             </li>
                         </ul>
-                        <ul>
-                            <li class="head" style="margin-left: 5px;">End Time</li>
-                            <li>
-                            <input type="datetime-local" v-model="apply_end" />
+                        <ul style="display:flex;">
+                            <li class="head" style="border-top-left-radius: 0px; border-bottom-left-radius: 12px; line-height: 36px;">End Time</li>
+                            <li style="flex-grow:1; flex-shrink:1;">
+                            <input type="datetime-local" v-model="apply_end" style="width: 100%; border: 2px solid var(--pri01a);" />
                             </li>
                         </ul>
                     </div>
                     <ul>
-                        <li class="head" style="margin-left: 5px;">Leave Length</li>
+                        <li class="head" style="border-top-left-radius: 7px; border-bottom-left-radius: 7px;">Leave Length</li>
                         <li>{{ period }}</li>
                     </ul>
-                    <ul>
-                        <li class="head" style="margin-left: 5px;">Reason</li>
-                        <li>
-                            <textarea name="message" rows="3" cols="20" v-model="reason" >
+                    <ul style="display:flex;">
+                        <li class="head" style="border-top-left-radius: 7px; border-bottom-left-radius: 7px; line-height: 88px;">Reason</li>
+                        <li style="flex-grow:1; flex-shrink:1;">
+                            <textarea name="message" rows="3" cols="20" v-model="reason" style="width: 100%;" >
                 
                             </textarea>
                         </li>

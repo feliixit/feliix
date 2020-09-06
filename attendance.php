@@ -67,42 +67,6 @@ display:inline;
     <!-- header end -->
     <div id='app' class="mainContent">
         <!-- Blocks -->
-        <div class="block A focus">
-            <h6>Attendance 
-                
-                <div class="function">
-                    <!--
-                   <input type="radio" value="0" class="green" checked=""><label for="B">All</label>
-                   <input type="radio" value="1" class="blue"><label for="B">Same Dpt.</label>
-                    -->
-<!--
-                    <b class="light green"></b>All
-                    <b class="light blue"></b>Same Dpt.
--->
-                </div>
-            </h6>
-            <div class="box-content">
-                <!-- 表單樣式 -->
-                <div class="tablebox2">
-                    <ul class="head">
-                        <li>Status</li>
-                        <li>Name</li>
-                        <li>Time In</li>
-                        <li>Location</li>
-                        <li>Detail</li>
-                    </ul>
-                    <ul v-for='(record, index) in displayedRecord'>
-                        <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
-                        <li>{{ record.username }}</li>
-                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
-                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
-                        <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
-                    </ul>
-                    
-                </div>
-                <!-- 表單樣式 -->
-            </div>
-        </div>
         <div class="block B focus">
             <h6>On Leave 
                   <div class="function">
@@ -134,6 +98,42 @@ display:inline;
                    
                     </ul>
                     
+                </div>
+                <!-- 表單樣式 -->
+            </div>
+        </div>
+        <div class="block A focus">
+            <h6>Attendance
+
+                <div class="function">
+                    <!--
+                   <input type="radio" value="0" class="green" checked=""><label for="B">All</label>
+                   <input type="radio" value="1" class="blue"><label for="B">Same Dpt.</label>
+                    -->
+<!--
+                    <b class="light green"></b>All
+                    <b class="light blue"></b>Same Dpt.
+-->
+                </div>
+            </h6>
+            <div class="box-content">
+                <!-- 表單樣式 -->
+                <div class="tablebox2">
+                    <ul class="head">
+                        <li>Status</li>
+                        <li>Name</li>
+                        <li>Time In</li>
+                        <li>Location</li>
+                        <li>Detail</li>
+                    </ul>
+                    <ul v-for='(record, index) in displayedRecord'>
+                        <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
+                        <li>{{ record.username }}</li>
+                        <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
+                        <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
+                        <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
+                    </ul>
+
                 </div>
                 <!-- 表單樣式 -->
             </div>

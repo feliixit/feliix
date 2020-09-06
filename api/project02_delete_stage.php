@@ -46,48 +46,39 @@ $db = $database->getConnection();
 $conf = new Conf();
 
 $uid = $user_id;
-$pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
 
-$comment = (isset($_POST['comment']) ?  $_POST['comment'] : '');
-
-
-$query = "INSERT INTO project_action_comment
-                SET
-                    project_id = :project_id,
-                    comment = :comment,
-                    create_id = :create_id,
-                    created_at = now()";
-    
-        // prepare the query
-        $stmt = $db->prepare($query);
-    
-        // bind the values
-        $stmt->bindParam(':project_id', $pid);
-        $stmt->bindParam(':comment', $comment);
-        $stmt->bindParam(':create_id', $user_id);
-
-        $last_id = 0;
-        // execute the query, also check if query was successful
-        try {
-            // execute the query, also check if query was successful
-            if ($stmt->execute()) {
-                $last_id = $db->lastInsertId();
-
-            }
-            else
-            {
-                $arr = $stmt->errorInfo();
-                error_log($arr[2]);
-            }
-        }
-        catch (Exception $e)
-        {
-            error_log($e->getMessage());
-        }
+$stage_id_to_edit = (isset($_POST['stage_id_to_edit']) ?  $_POST['stage_id_to_edit'] : '');
 
 
-        $returnArray = array('batch_id' => $last_id);
+try{
+    $query = "update project_stages
+    SET
+        status = -1,
+        updated_id = :updated_id,
+        updated_at = now()
+    where id = :id ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    $stmt->bindParam(':updated_id', $uid);
+    $stmt->bindParam(':id', $stage_id_to_edit);
+
+    $jsonEncodedReturnArray = "";
+    if ($stmt->execute()) {
+        $returnArray = array('ret' => $stage_id_to_edit);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+    }
+    else
+    {
+        $arr = $stmt->errorInfo();
+        error_log($arr[2]);
+    }
 
-        echo $jsonEncodedReturnArray;
+    echo $jsonEncodedReturnArray;
+}
+catch (Exception $e)
+{
+    error_log($e->getMessage());
+}
 

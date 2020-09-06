@@ -9,7 +9,6 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 include_once 'config/core.php';
-include_once 'config/conf.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
@@ -43,18 +42,20 @@ else
 include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
-$conf = new Conf();
 
 $uid = $user_id;
-$pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
+$stage_id = (isset($_POST['stage_id']) ?  $_POST['stage_id'] : 0);
+$project_stage_id = (isset($_POST['project_stage_id']) ?  $_POST['project_stage_id'] : 0);
+$stages_status_id = (isset($_POST['stages_status_id']) ?  $_POST['stages_status_id'] : 0);
+$sequence = (isset($_POST['sequence']) ?  $_POST['sequence'] : '');
+$stage_edit_reason = (isset($_POST['stage_edit_reason']) ?  $_POST['stage_edit_reason'] : '');
 
-$comment = (isset($_POST['comment']) ?  $_POST['comment'] : '');
 
-
-$query = "INSERT INTO project_action_comment
+$query = "INSERT INTO project_edit_stage
                 SET
-                    project_id = :project_id,
-                    comment = :comment,
+                    stage_id = :stage_id,
+                    reason = :reason,
+                   
                     create_id = :create_id,
                     created_at = now()";
     
@@ -62,9 +63,9 @@ $query = "INSERT INTO project_action_comment
         $stmt = $db->prepare($query);
     
         // bind the values
-        $stmt->bindParam(':project_id', $pid);
-        $stmt->bindParam(':comment', $comment);
-        $stmt->bindParam(':create_id', $user_id);
+        $stmt->bindParam(':stage_id', $stage_id);
+        $stmt->bindParam(':reason', $stage_edit_reason);
+        $stmt->bindParam(':create_id', $uid);
 
         $last_id = 0;
         // execute the query, also check if query was successful
@@ -72,6 +73,35 @@ $query = "INSERT INTO project_action_comment
             // execute the query, also check if query was successful
             if ($stmt->execute()) {
                 $last_id = $db->lastInsertId();
+
+                $query = "update project_stages
+                SET
+                    sequence = :sequence,
+                    stage_id = :stage_id,
+                    stages_status_id = :stages_status_id,
+                    updated_id = :create_id,
+                    updated_at = now()
+                
+                where id = :id ";
+    
+                // prepare the query
+                $stmt1 = $db->prepare($query);
+
+                $stmt1->bindParam(':sequence', $sequence);
+                $stmt1->bindParam(':stage_id', $project_stage_id);
+                $stmt1->bindParam(':stages_status_id', $stages_status_id);
+                $stmt1->bindParam(':create_id', $uid);
+                $stmt1->bindParam(':id', $stage_id);
+
+                if ($stmt1->execute()) {
+                    $returnArray = array('ret' => $stage_id_to_edit);
+                    $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+                }
+                else
+                {
+                    $arr = $stmt1->errorInfo();
+                    error_log($arr[2]);
+                }
 
             }
             else
@@ -84,10 +114,4 @@ $query = "INSERT INTO project_action_comment
         {
             error_log($e->getMessage());
         }
-
-
-        $returnArray = array('batch_id' => $last_id);
-        $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
-
-        echo $jsonEncodedReturnArray;
 

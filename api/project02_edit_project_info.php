@@ -50,6 +50,7 @@ $edit_client_type = (isset($_POST['edit_client_type']) ?  $_POST['edit_client_ty
 $edit_priority = (isset($_POST['edit_priority']) ?  $_POST['edit_priority'] : 0);
 $edit_contactor = (isset($_POST['edit_contactor']) ?  $_POST['edit_contactor'] : '');
 $edit_location = (isset($_POST['edit_location']) ?  $_POST['edit_location'] : '');
+$creator = (isset($_POST['creator']) ?  $_POST['creator'] : 0);
 $edit_contact_number = (isset($_POST['edit_contact_number']) ?  $_POST['edit_contact_number'] : '');
 $edit_project_reason = (isset($_POST['edit_project_reason']) ?  $_POST['edit_project_reason'] : '');
 
@@ -84,6 +85,7 @@ $query = "INSERT INTO project_edit_info
                     priority_id = :edit_priority,
                     contactor = :edit_contactor,
                     location = :edit_location,
+                    create_id = :create_id,
                     contact_number = :edit_contact_number,
                     edit_reason = :edit_project_reason
                 
@@ -97,6 +99,7 @@ $query = "INSERT INTO project_edit_info
                 $stmt1->bindParam(':edit_client_type', $edit_client_type);
                 $stmt1->bindParam(':edit_priority', $edit_priority);
                 $stmt1->bindParam(':edit_contactor', $edit_contactor);
+                $stmt1->bindParam(':create_id', $creator);
                 $stmt1->bindParam(':edit_location', $edit_location);
                 $stmt1->bindParam(':edit_contact_number', $edit_contact_number);
                 $stmt1->bindParam(':edit_project_reason', $edit_project_reason);
