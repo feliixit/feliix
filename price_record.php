@@ -350,7 +350,7 @@
             <option>Transportation</option>
         </select>
 
-        <select v-model="perPage" v-on:change="getRecords(this)">
+        <select class="hide" v-model="perPage" v-on:change="getRecords(this)">
             <option v-for="size in inventory" :value="size.id">{{size.name}}</option>
         </select>
 
@@ -358,7 +358,7 @@
         <button v-on:click="printRecord"><i class="fas fa-file-export"></i></button>&ensp;
 
 
-        <ul class="pagination pagination-sm" style="float:right; margin-right:1.5vw;">
+        <ul class="pagination pagination-sm hide" style="float:right; margin-right:1.5vw;">
                 <li class="page-item" :disabled="page == 1"  @click="page < 1 ? page = 1 : page--" v-on:click="getRecords"><a class="page-link">Previous</a></li>
 
                 <li class="page-item" v-for="pg in pages" @click="page=pg" :class="[page==pg ? 'active':'']" v-on:click="getRecords"><a class="page-link" >{{ pg }}</a></li>
@@ -412,7 +412,8 @@
 
             <tbody >
              <tr v-for='item in items' v-if="item.account == 1" :class="[item.is_marked == '1' ? 'red' : '']">
-                <td>{{item.paid_date}}</td>
+                <td v-if ="item.updated_at =='' || item.updated_at == null">{{item.created_at}}</td>
+                <td v-else>{{item.updated_at}}</td>
 
                 <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
 
@@ -421,7 +422,7 @@
                 <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
                 </td>
                 
-                <td v-else><i class="fas fa-image fa-lg" ></i>
+                <td v-else>
                  </td>
                 
                 <td>{{item.payee}}</td>
@@ -436,26 +437,26 @@
                 <td style="text-align: left;">{{item.remarks}}</td>
 
 
-                 <td class="text-nowrap"  v-if="is_viewer == '1'">
-                     <button><i class="fas fa-lock" :class="[item.is_locked == '1'? 'red' : '']" v-on:click="lockRecord(item.id)"></i></button>
-                 </td>
-                 <td class="text-nowrap" v-else-if="!item.is_locked == '0'">
-                     <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
-                             aria-expanded="true" aria-controls="collapseOne" v-on:click="edit(item.id)"><i class="fas fa-edit"></i>
-                     </button>
+                <td class="text-nowrap" v-if="is_viewer == '1'">
+                    <button><i class="fas fa-lock" :class="[item.is_locked == '1'? 'red' : '']" v-on:click="lockRecord(item.id)"></i></button>
+                </td>
+                <td class="text-nowrap" v-else-if="item.is_locked == '0'">
+                    <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne" v-on:click="edit(item.id)"><i class="fas fa-edit"></i>
+                    </button>
 
 
-                     <button data-toggle="modal"
-                             data-target="#exampleModalScrollable" v-on:click="edit(item.id)"><i class="fas fa-project-diagram"></i>
-                     </button>
+                    <button data-toggle="modal"
+                            data-target="#exampleModalScrollable" v-on:click="edit(item.id)"><i class="fas fa-project-diagram"></i>
+                    </button>
 
 
 
-                     <button v-on:click="deleteRecord(item.id)"><i class="fas fa-times"></i></button>
+                    <button v-on:click="deleteRecord(item.id)"><i class="fas fa-times" ></i></button>
 
-                 </td>
-                 <td class="text-nowrap" v-else>
-                 </td>
+                </td>
+                <td class="text-nowrap" v-else>
+                </td>
 
             </tr>
             </tbody>
@@ -468,7 +469,7 @@
                 <th style="text-align: right;">{{accountOneCashIn}}</th>
                 <th style="text-align: right;">{{accountOneCashOut}}</th>
                 <th style="text-align: center;" colspan="2">
-                Ending Balance: {{accountOneBalance}}</th>
+                Net Cash Flow: {{accountOneBalance}}</th>
             </tr>
 
             </thead>
@@ -520,7 +521,8 @@
 
             <tbody >
             <tr v-for='item in items' v-if="item.account == 2" :class="[item.is_marked == '1' ? 'red' : '']">
-                <td>{{item.paid_date}}</td>
+                <td v-if ="item.updated_at =='' || item.updated_at == null">{{item.created_at}}</td>
+                <td v-else>{{item.updated_at}}</td>
 
                 <td>{{item.category}}</td>
 
@@ -529,7 +531,7 @@
                 <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
                 </td>
                 
-                <td v-else><i class="fas fa-image fa-lg" ></i>
+                <td v-else>
                 </td>
 
                 <td>{{item.payee}}</td>
@@ -576,7 +578,7 @@
                 <th style="text-align: right;">{{accountTwoCashIn}}</th>
                 <th style="text-align: right;">{{accountTwoCashOut}}</th>
                 <th style="text-align: center;" colspan="2">
-                    Ending Balance: {{accountTwoBalance}}</th>
+                    Net Cash Flow: {{accountTwoBalance}}</th>
             </tr>
 
             </thead>
@@ -667,7 +669,7 @@
                         </td>
 
                         <td style="text-align: left;">
-                            <input type="text" class="form-control" style="width:15vw;" readonly v-model="operation_type">
+                            <input type="text" class="form-control" style="width:15vw;" readonly v-model="formatOperationType(operation_type)">
                         </td>
 
                     </tr>
@@ -1452,7 +1454,7 @@
                             v-on:click="reset()">Cancel
                     </button>
 
-                    <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;" aria-label="Close" data-dismiss="modal"
+                    <button class="btn btn-primary" style="width:10vw; font-weight:700; margin-left:2vw;" aria-label="Close" :data-dismiss="dismiss"
                              v-on:click="add(2)">Confirm
                     </button>
 

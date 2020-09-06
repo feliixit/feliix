@@ -71,7 +71,7 @@ if($jwt){
                 $sql = $sql . " and sub_category = '$sub_category' ";
             }
 
-            //$sql = $sql . " ORDER BY duty_date, uid, duty_type  ";
+            $sql = $sql . " order by account , created_at  ";
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();
@@ -106,13 +106,14 @@ if($jwt){
             $sheet->setCellValue('A1', 'Account');
             $sheet->setCellValue('B1', 'Date');
             $sheet->setCellValue('C1', 'Category');
-            $sheet->setCellValue('D1', 'Details');
-            $sheet->setCellValue('E1', 'Photos');
-            $sheet->setCellValue('F1', 'Payee');
-            $sheet->setCellValue('G1', 'Paid/Received Date');
-            $sheet->setCellValue('H1', 'Cash in');
-            $sheet->setCellValue('I1', 'Cash out');
-            $sheet->setCellValue('J1', 'Remarks');
+            $sheet->setCellValue('D1', 'Related Account');
+            $sheet->setCellValue('E1', 'Details');
+            $sheet->setCellValue('F1', 'Photos');
+            $sheet->setCellValue('G1', 'Payee');
+            $sheet->setCellValue('H1', 'Paid/Received Date');
+            $sheet->setCellValue('I1', 'Cash in');
+            $sheet->setCellValue('J1', 'Cash out');
+            $sheet->setCellValue('K1', 'Remarks');
 
 
             $i = 2;
@@ -125,31 +126,32 @@ if($jwt){
                 }else{
                     $sheet->setCellValue('C' . $i, $row['category']);
                 }
-                $sheet->setCellValue('D' . $i, $row['details']);
+                $sheet->setCellValue('D' . $i, $row['related_account']);
+                $sheet->setCellValue('E' . $i, $row['details']);
                 if($row['pic_url'] != '')
                 {
                     $conf = new Conf();
                     $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
-                    $sheet->setCellValue('E' . $i, 'Photo');
+                    $sheet->setCellValue('F' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($link);
                 }
                 else
-                    $sheet->setCellValue('E' . $i, '');
+                    $sheet->setCellValue('F' . $i, '');
 
                 
-                $sheet->setCellValue('F' . $i, $row['payee']);
-                $sheet->setCellValue('G' . $i, $row['paid_date']);
-                $sheet->setCellValue('H' . $i, $row['cash_in']);
-                $sheet->setCellValue('I' . $i, $row['cash_out']);
-                $sheet->setCellValue('J' . $i, $row['remarks']);
+                $sheet->setCellValue('G' . $i, $row['payee']);
+                $sheet->setCellValue('H' . $i, $row['paid_date']);
+                $sheet->setCellValue('I' . $i, $row['cash_in']);
+                $sheet->setCellValue('J' . $i, $row['cash_out']);
+                $sheet->setCellValue('K' . $i, $row['remarks']);
 
-                $sheet->getStyle('A'. $i. ':' . 'J' . $i)->applyFromArray($styleArray);
+                $sheet->getStyle('A'. $i. ':' . 'K' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'J1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'J' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'K1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'K' . --$i)->applyFromArray($styleArray);
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="file.xlsx"');
