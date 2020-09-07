@@ -124,7 +124,7 @@ $(function(){
                 <!-- edit -->
                 <div class="popupblock">
                     <a id="edit_stage_fn1" class="edit"></a>
-                    <div id="edit_stage_dialog" class="dialog d-edit">
+                    <div id="edit_stage_dialog" class="dialog d-edit edit">
                         <h6>Edit/Delete Stage:</h6>
                         <div class="tablebox s1">
                             <ul>
@@ -587,7 +587,7 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <div v-for='(receive_record, index) in project_probs'>• Prob Est: {{ receive_record.prob }} - {{ receive_record.comment }} <br>
+                        <div v-for='(receive_record, index) in project_probs'>• {{ receive_record.prob }} - {{ receive_record.comment }} <br>
 
                          ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>
