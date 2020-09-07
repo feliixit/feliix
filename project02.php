@@ -124,7 +124,7 @@ $(function(){
                 <!-- edit -->
                 <div class="popupblock">
                     <a id="edit_stage_fn1" class="edit"></a>
-                    <div id="edit_stage_dialog" class="dialog d-edit">
+                    <div id="edit_stage_dialog" class="dialog d-edit edit">
                         <h6>Edit/Delete Stage:</h6>
                         <div class="tablebox s1">
                             <ul>
@@ -477,6 +477,10 @@ $(function(){
                         <div class="formbox">
                             <dl>
                                
+                                
+                                <dt class="head">Remarks:</dt>
+                                <dd><textarea name="" id="" v-model="prof_remark"></textarea></dd>
+
                                 <dd style="display: flex; justify-content: flex_start;">
                                     <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
                                     <div class="pub-con" ref="bg">
@@ -496,8 +500,6 @@ $(function(){
                                     </div>
                                   </div>
                                 </dd>
-                                <dt class="head">Remarks:</dt>
-                                <dd><textarea name="" id="" v-model="prof_remark"></textarea></dd>
 
                                 <div class="file-list">
                                   <div class="file-item" v-for="(item,index) in prof_fileArray" :key="index">
@@ -577,12 +579,15 @@ $(function(){
                 <ul>
                     <li>
                         <div v-for='(receive_record, index) in project_comments'>• {{ receive_record.comment }} <br>
-
+                        <span v-for="item in receive_record.items">
+                            <a :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>&nbsp&nbsp
+                        </span>
+                        <br>
                          ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
                     <li>
-                        <div v-for='(receive_record, index) in project_probs'>• Prob Est: {{ receive_record.prob }} - {{ receive_record.comment }} <br>
+                        <div v-for='(receive_record, index) in project_probs'>• {{ receive_record.prob }} - {{ receive_record.comment }} <br>
 
                          ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>

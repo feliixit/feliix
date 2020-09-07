@@ -168,6 +168,8 @@ var app = new Vue({
         });
         if (finish === undefined && this.fileArray.length) {
           this.finish = true;
+          this.getProjectActionDetails(this.project_id);
+          this.getProjectComments(this.project_id);
           Swal.fire({
             text: "upload finished",
             type: "success",
@@ -176,6 +178,8 @@ var app = new Vue({
             iconClass: "message-icon"
           });
           this.detail_clear();
+          this.prof_clear();
+          this.comment_clear();
         }
       }
     },
@@ -208,6 +212,7 @@ var app = new Vue({
         });
         if (finish === undefined && this.comm_fileArray.length) {
           this.comm_finish = true;
+          
           Swal.fire({
             text: "upload finished",
             type: "success",
@@ -830,6 +835,9 @@ var app = new Vue({
         comment_clear() {
             this.comment = '';
 
+            this.comm_fileArray = [];
+            this.$refs.comm_file.value = '';
+
             this.getProjectComments(this.project_id);
 
             document.getElementById('comment_dialog').classList.remove("show");
@@ -843,8 +851,10 @@ var app = new Vue({
             this.detail_desc = '';
 
             this.fileArray = [];
+            this.$refs.file.value = '';
 
             //this.getProjectDetail(this.project_id);
+            this.getProjectActionDetails(this.project_id);
             this.canSub = true;
             
             document.getElementById('detail_dialog').classList.remove("show");
@@ -856,9 +866,12 @@ var app = new Vue({
 
             this.prof_remark = '';
             this.prof_fileArray = [];
+            this.$refs.prof_file.value = '';
 
             //this.getProjectDetail(this.project_id);
             this.prof_canSub = true;
+
+            this.getProjectActionDetails(this.project_id);
             
             document.getElementById('prof_dialog').classList.remove("show");
             document.getElementById('status_fn6').classList.remove("focus");
@@ -878,6 +891,7 @@ var app = new Vue({
 
         project_clear() {
 
+            this.uid = this.org_uid;
             this.edit_category = this.category_id;
             this.edit_client_type = this.client_type_id;
             this.edit_priority = this.priority_id;
@@ -1011,7 +1025,7 @@ var app = new Vue({
                     }
                     //this.$forceUpdate();
                     _this.prof_clear();
-                    _this.getProjectActionDetails(_this.project_id);
+                    
                 })
                 .catch(function(response) {
                     //handle error
@@ -1071,7 +1085,7 @@ var app = new Vue({
                     }
                     //this.$forceUpdate();
                     _this.detail_clear();
-                    _this.getProjectActionDetails(_this.project_id);
+                    
                 })
                 .catch(function(response) {
                     //handle error

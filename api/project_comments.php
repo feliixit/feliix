@@ -57,7 +57,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.comment, u.username, pm.created_at FROM project_action_comment pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -1 ";
+            $sql = "SELECT pm.id, pm.comment, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at FROM project_action_comment pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'comment' where project_id = " . $pid . " and pm.status <> -1 ";
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -83,6 +83,48 @@ else
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();
+
+            $id = 0;
+            $comment = "";
+            $filename = "";
+            $gcp_name = "";
+            $username = "";
+            $created_at = "";
+            $items = [];
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                if($id != $row['id'] && $id != 0)
+                {
+                    $merged_results[] = array( "comment" => $comment,
+                                            "items" => $items,
+                                            "username" => $username,
+                                            "created_at" => $created_at
+                    );
+
+                    $items = [];
+
+                }
+
+                $id = $row['id'];
+                $created_at = $row['created_at'];
+                $username = $row['username'];
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+                $comment = $row['comment'];
+
+                $items[] = array('filename' => $filename,
+                                 'gcp_name' => $gcp_name );
+            }
+
+            if($id != 0)
+            {
+                $merged_results[] = array( "comment" => $comment,
+                                                "items" => $items,
+                                                "username" => $username,
+                                                "created_at" => $created_at
+                        );
+            }
 
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
