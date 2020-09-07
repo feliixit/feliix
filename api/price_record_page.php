@@ -70,6 +70,8 @@ $query = "SELECT * from price_record where is_enabled = true and account =1";
             if(!empty($sub_category)) {
                 $query = $query . " and sub_category = '$sub_category' ";
             }
+            
+            $query = $query . " order by created_at asc";
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -103,11 +105,11 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 $query = "SELECT * from price_record where is_enabled = true and account =2";
             if(!empty($start_date)) {
-                $query = $query . " and paid_date >= '$start_date' ";
+                $query = $query . " and created_at >= '$start_date' ";
             }
 
             if(!empty($end_date)) {
-                $query = $query . " and paid_date <= '$end_date' ";
+                $query = $query . " and created_at <= '$end_date' ";
             }
             
             if(!empty($category)) {
@@ -117,6 +119,7 @@ $query = "SELECT * from price_record where is_enabled = true and account =2";
             if(!empty($sub_category)) {
                 $query = $query . " and sub_category = '$sub_category' ";
             }
+            $query = $query . " order by created_at asc";
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);

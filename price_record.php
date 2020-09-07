@@ -54,7 +54,7 @@
     <span style="margin-left:1vw; font-weight:700; font-size:xx-large; color: white;">FELIIX</span>
 
     <button :class="[is_viewer == '1'? 'hide' : '']" style="border: none; margin-left:0.5vw; font-weight:700; font-size:x-large; background-color:rgb(2,106,167); color: white; padding: 0.5rem 0.5rem 0.5rem 0.5rem; float:right; margin-right:1rem;"
-            data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+            data-toggle="collapse" data-parent="#accordion" href="#collapseOne" @click="reset()"
                        aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-plus-square fa-lg"></i></button>
 
 </div>
@@ -269,7 +269,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,0)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file0" @change="onChangeFileUpload($event,0)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -412,8 +412,7 @@
 
             <tbody >
              <tr v-for='item in items' v-if="item.account == 1" :class="[item.is_marked == '1' ? 'red' : '']">
-                <td v-if ="item.updated_at =='' || item.updated_at == null">{{item.created_at}}</td>
-                <td v-else>{{item.updated_at}}</td>
+                <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
                 <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
 
@@ -521,8 +520,7 @@
 
             <tbody >
             <tr v-for='item in items' v-if="item.account == 2" :class="[item.is_marked == '1' ? 'red' : '']">
-                <td v-if ="item.updated_at =='' || item.updated_at == null">{{item.created_at}}</td>
-                <td v-else>{{item.updated_at}}</td>
+                <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
                 <td>{{item.category}}</td>
 
@@ -891,7 +889,7 @@
                             <label>Photos</label>
                         </td>
 
-                        <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,1)" accept="image/*" capture="camera">
+                        <td style="text-align: left;"><input type="file" ref="file1" @change="onChangeFileUpload($event,1)" accept="image/*" capture="camera">
                         </td>
 
                     </tr>
@@ -1026,7 +1024,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,2)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file2" @change="onChangeFileUpload($event,2)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -1161,7 +1159,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,3)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file3" @change="onChangeFileUpload($event,3)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -1296,7 +1294,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,4)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file4" @change="onChangeFileUpload($event,4)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -1431,7 +1429,7 @@
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file" @change="onChangeFileUpload($event,5)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file5" @change="onChangeFileUpload($event,5)" accept="image/*" capture="camera">
                             </td>
 
                         </tr>
@@ -1505,6 +1503,7 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.21.0/moment.js"></script>
 <script src="js/vue-select.js"></script>
 <script src="js/axios.min.js"></script> 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -1519,6 +1518,6 @@
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/add_or_edit_price_record.js"></script>
+<script src="js/add_or_edit_price_record.js?v=19g90"></script>
 
 </html>

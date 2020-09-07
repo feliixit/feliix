@@ -1,4 +1,7 @@
 Vue.component('v-select', VueSelect.VueSelect)
+Vue.filter('dateString',function(value,format='YYYY-MM-DD HH:mm:ss'){
+    return moment(value).format(format)
+})
 var app = new Vue({
   el: '#app',
   data:{
@@ -469,6 +472,7 @@ var app = new Vue({
       edit:function (id){
           var form_Data = new FormData();
           let _this = this;
+          _this.reset();
           this.action = 6;//select by id
           this.edd = 1;
           form_Data.append('action', this.action);
@@ -935,6 +939,12 @@ var app = new Vue({
       this.split5.is_locked= false;
       this.split5.is_enabled= true;
       this.split5.is_marked= false;
+      this.$refs.file0.value='';
+      this.$refs.file1.value='';
+      this.$refs.file2.value='';
+      this.$refs.file3.value='';
+      this.$refs.file4.value='';
+      this.$refs.file5.value='';
   },
   reload : function(){
       let _this = this;
