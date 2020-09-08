@@ -56,11 +56,11 @@ $merged_results = array();
 
 $query = "SELECT * from price_record where is_enabled = true and account =1";
             if(!empty($start_date)) {
-                $query = $query . " and paid_date >= '$start_date' ";
+                $query = $query . " and created_at >= '$start_date' ";
             }
 
             if(!empty($end_date)) {
-                $query = $query . " and paid_date <= '$end_date' ";
+                $query = $query . " and created_at <= '$end_date' ";
             }
             
             if(!empty($category)) {

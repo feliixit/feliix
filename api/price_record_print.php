@@ -120,7 +120,7 @@ if($jwt){
             foreach($merged_results as $row)
             {
                 $sheet->setCellValue('A' . $i, getAccount($row['account']));
-                $sheet->setCellValue('B' . $i, $row['paid_date']);
+                $sheet->setCellValue('B' . $i, getFormatDate($row['created_at']));
                 if($row['sub_category'] != ''){
                     $sheet->setCellValue('C' . $i, $row['category'] .">>". $row['sub_category']);
                 }else{
@@ -207,5 +207,9 @@ function getAccount($loc)
     }
 
     return $account;
+}
+
+function getFormatDate($date){
+    return date("Y-m-d",$date);
 }
 ?>
