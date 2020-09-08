@@ -284,7 +284,12 @@ var app = new Vue({
 
           this.submit = true;
 
-          var file =  document.getElementById("base64image").src;
+          var file;
+
+          if(document.getElementById("base64image") !== null)
+            file =  document.getElementById("base64image").src;
+          else
+            file = "";
           
 
           var token = localStorage.getItem('token');

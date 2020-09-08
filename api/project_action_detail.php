@@ -118,6 +118,7 @@ else
                 $detail_desc = $row['detail_desc'];
                 $detail_type = GetDetailType($row['detail_type']);
 
+                if($filename != "")
                 $items[] = array('filename' => $filename,
                                  'gcp_name' => $gcp_name );
             }
