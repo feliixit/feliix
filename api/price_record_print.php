@@ -210,6 +210,6 @@ function getAccount($loc)
 }
 
 function getFormatDate($date){
-    return date("Y-m-d",$date);
+    return $date.substring(0,10);
 }
 ?>
