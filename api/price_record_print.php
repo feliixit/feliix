@@ -56,11 +56,11 @@ if($jwt){
             $sql = "SELECT * from price_record where is_enabled = true";
 
             if($start_date != '') {
-                $sql = $sql . " and paid_date >= '$start_date' ";
+                $sql = $sql . " and created_at >= '$start_date' ";
             }
 
             if($end_date != '') {
-                $sql = $sql . " and paid_date <= '$end_date' ";
+                $sql = $sql . " and created_at <= '$end_date' ";
             }
             
             if($category != '') {
