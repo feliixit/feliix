@@ -162,30 +162,35 @@ var app = new Vue({
 
   fileArray: {
       handler(newValue, oldValue) {
+        var _this = this;
         console.log(newValue);
         var finish = newValue.find(function(currentValue, index) {
           return currentValue.progress != 1;
         });
         if (finish === undefined && this.fileArray.length) {
-          this.finish = true;
-          this.getProjectActionDetails(this.project_id);
-          this.getProjectComments(this.project_id);
+          
           Swal.fire({
             text: "upload finished",
             type: "success",
             duration: 1 * 1000,
             customClass: "message-box",
             iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish = true;
+            _this.getProjectActionDetails(_this.project_id);
+
           });
           this.detail_clear();
-          this.prof_clear();
-          this.comment_clear();
+
         }
-      }
+      },
+      deep: true
     },
 
     prof_fileArray: {
       handler(newValue, oldValue) {
+        var _this = this;
         console.log(newValue);
         var finish = newValue.find(function(currentValue, index) {
           return currentValue.progress != 1;
@@ -198,14 +203,21 @@ var app = new Vue({
             duration: 1 * 1000,
             customClass: "message-box",
             iconClass: "message-icon"
-          });
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.prof_finish = true;
+            _this.getProjectActionDetails(_this.project_id);
+
+          });;
           this.prof_clear();
         }
-      }
+      },
+      deep: true
     },
 
     comm_fileArray: {
       handler(newValue, oldValue) {
+        var _this = this;
         console.log(newValue);
         var finish = newValue.find(function(currentValue, index) {
           return currentValue.progress != 1;
@@ -219,10 +231,16 @@ var app = new Vue({
             duration: 1 * 1000,
             customClass: "message-box",
             iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.comm_finish = true;
+
+            _this.getProjectComments(_this.project_id);
           });
           this.comment_clear();
         }
-      }
+      },
+      deep: true
     },
 
   },
@@ -1023,8 +1041,15 @@ var app = new Vue({
                     {
                         _this.prof_upload(response.data['batch_id']);
                     }
-                    //this.$forceUpdate();
-                    _this.prof_clear();
+                    else
+                    {
+                      _this.prof_clear();
+                  
+                    }
+
+                    if(_this.prof_fileArray.length == 0)
+                      _this.prof_clear();
+
                     
                 })
                 .catch(function(response) {
@@ -1083,8 +1108,15 @@ var app = new Vue({
                     {
                         _this.upload(response.data['batch_id']);
                     }
-                    //this.$forceUpdate();
-                    _this.detail_clear();
+                    else
+                    {
+                      _this.detail_clear();
+                  
+                    }
+
+                    if(_this.fileArray.length == 0)
+                      _this.detail_clear();
+                 
                     
                 })
                 .catch(function(response) {
@@ -1111,10 +1143,10 @@ var app = new Vue({
                       if (rate < 1) {
                         
                         myArr[index].progress = rate;
-                        vm.$set(vm.fileArray, index, myArr[index]);
+                        vm.$set(vm.prof_fileArray, index, myArr[index]);
                       } else {
                         myArr[index].progress = 0.99;
-                        vm.$set(vm.fileArray, index, myArr[index]);
+                        vm.$set(vm.prof_fileArray, index, myArr[index]);
                       }
                     }
                   }
@@ -1131,8 +1163,8 @@ var app = new Vue({
                     if (res.data.code == 0) {
                  
                       myArr[index].progress = 1;
-                      vm.$set(vm.fileArray, index, myArr[index]);
-                      console.log(vm.fileArray, index);
+                      vm.$set(vm.prof_fileArray, index, myArr[index]);
+                      console.log(vm.prof_fileArray, index);
                     } else {
                       alert(JSON.stringify(res.data));
                     }
@@ -1164,10 +1196,10 @@ var app = new Vue({
                       if (rate < 1) {
                         
                         myArr[index].progress = rate;
-                        vm.$set(vm.fileArray, index, myArr[index]);
+                        vm.$set(vm.comm_fileArray, index, myArr[index]);
                       } else {
                         myArr[index].progress = 0.99;
-                        vm.$set(vm.fileArray, index, myArr[index]);
+                        vm.$set(vm.comm_fileArray, index, myArr[index]);
                       }
                     }
                   }
@@ -1184,8 +1216,8 @@ var app = new Vue({
                     if (res.data.code == 0) {
                  
                       myArr[index].progress = 1;
-                      vm.$set(vm.fileArray, index, myArr[index]);
-                      console.log(vm.fileArray, index);
+                      vm.$set(vm.comm_fileArray, index, myArr[index]);
+                      console.log(vm.comm_fileArray, index);
                     } else {
                       alert(JSON.stringify(res.data));
                     }
@@ -1291,10 +1323,15 @@ var app = new Vue({
                     if(response.data['batch_id'] != 0)
                     {
                         _this.comm_upload(response.data['batch_id']);
+                    }else
+                    {
+                      _this.comment_clear();
+                      _this.getProject(_this.project_id);
                     }
 
-                    _this.comment_clear();
-                    _this.getProject(_this.project_id);
+                    if(_this.comm_fileArray.length == 0)
+                      _this.comment_clear();
+
                 })
                 .catch(function(response) {
                     //handle error

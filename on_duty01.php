@@ -70,11 +70,9 @@ function take_snapshot() {
 
     }
 
-    if(document.getElementById('photo_gps') !== null)
-        document.getElementById('photo_gps').value = app.latitude + ',' + app.longitude;
+    document.getElementById('photo_gps').value = app.latitude + ',' + app.longitude;
 
-    if(document.getElementById('photo_time') !== null)
-        document.getElementById('photo_time').value = app.today + ' ' + app.time;
+    document.getElementById('photo_time').value = app.today + ' ' + app.time;
 
     Webcam.snap(function(data_uri) {
     document.getElementById('results').innerHTML = '<img id="base64image" src="'+data_uri+'"/>';

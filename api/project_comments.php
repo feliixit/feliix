@@ -113,7 +113,8 @@ else
                 $filename = $row['filename'];
                 $comment = $row['comment'];
 
-                $items[] = array('filename' => $filename,
+                if($filename != "")
+                  $items[] = array('filename' => $filename,
                                  'gcp_name' => $gcp_name );
             }
 
