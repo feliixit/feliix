@@ -35,6 +35,7 @@
 
 <script type="text/javascript" src="js/webcam.js"></script>
 <script language="JavaScript">
+
 function take_snapshot() {
 
     var real_width = document.getElementsByTagName("video")[0].srcObject.getVideoTracks()[0].getSettings().width;
@@ -70,14 +71,22 @@ function take_snapshot() {
 
     }
 
-    document.getElementById('photo_gps').value = app.latitude + ',' + app.longitude;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            if(document.getElementById('photo_gps') !== null)
+                document.getElementById('photo_gps').value = position.coords.latitude + ',' + position.coords.longitude;
+        });
+      }
 
-    document.getElementById('photo_time').value = app.today + ' ' + app.time;
+      if(document.getElementById('photo_time') !== null)
+            document.getElementById('photo_time').value = getToday() + ' ' + getTimeNow();
 
     Webcam.snap(function(data_uri) {
     document.getElementById('results').innerHTML = '<img id="base64image" src="'+data_uri+'"/>';
 });
 }
+
+
 function ShowCam(){
 Webcam.set({
             width: 240,
@@ -93,6 +102,34 @@ function uploadcomplete(event){
     var image_return=event.target.responseText;
     var showup=document.getElementById("uploaded").src=image_return;
 }
+
+
+
+function getToday() {
+
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+
+  return  yyyy + '/' + mm + '/' + dd;
+
+  //setInterval(self.getToday, 1000 * 60)
+}
+
+function getTimeNow() {
+
+  var today = new Date();
+  var hh = String(today.getHours()).padStart(2, '0');
+  var mm = String(today.getMinutes()).padStart(2, '0'); 
+  var ss = String(today.getSeconds()).padStart(2, '0');
+
+  return  hh + ':' + mm + ':' + ss;
+
+  //setInterval(self.getTimeNow, 1000)
+}
+
+
 window.onload= ShowCam;
 </script>
 
