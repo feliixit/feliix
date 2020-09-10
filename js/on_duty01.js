@@ -355,6 +355,7 @@ var app = new Vue({
 
             this.getLocation();
             this.getToday();
+            this.getTimeNow();
             
         },
  
