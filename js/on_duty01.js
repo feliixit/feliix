@@ -292,6 +292,9 @@ var app = new Vue({
           else
             file = "";
 
+          if(!this.showPhoto)
+            file = "";
+
           if(document.getElementById('photo_time') !== null)
           {
             ptime = document.getElementById('photo_time').value;
