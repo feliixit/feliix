@@ -60,7 +60,7 @@ if($jwt){
             }
 
             if($end_date != '') {
-                $sql = $sql . " and created_at <= '$end_date' ";
+                $sql = $sql . " and created_at < date_add('$end_date', interval 1 day)";
             }
             
             if($category != '') {

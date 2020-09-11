@@ -60,7 +60,7 @@ $query = "SELECT * from price_record where is_enabled = true and account =1";
             }
 
             if(!empty($end_date)) {
-                $query = $query . " and created_at <= '$end_date' ";
+                $query = $query . " and created_at < date_add('$end_date', interval 1 day) ";
             }
             
             if(!empty($category)) {
@@ -109,7 +109,7 @@ $query = "SELECT * from price_record where is_enabled = true and account =2";
             }
 
             if(!empty($end_date)) {
-                $query = $query . " and created_at <= '$end_date' ";
+                $query = $query . " and created_at < date_add('$end_date', interval 1 day)";
             }
             
             if(!empty($category)) {

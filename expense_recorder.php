@@ -13,7 +13,7 @@
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
           rel="stylesheet">
-
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 
     <style>
         th {
@@ -311,7 +311,7 @@
 
 
 
-    <div style="margin-top:2vh;">
+    <div style="margin-top:2vh; margin-bottom:1vh;">
 
         <input type="date" v-model="start_date">&nbsp; to &nbsp;<input type="date" v-model="end_date">
 
