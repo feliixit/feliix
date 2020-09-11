@@ -285,12 +285,34 @@ var app = new Vue({
           this.submit = true;
 
           var file;
+          var ptime;
 
           if(document.getElementById("base64image") !== null)
             file =  document.getElementById("base64image").src;
           else
             file = "";
-          
+
+          if(!this.showPhoto)
+            file = "";
+
+          if(document.getElementById('photo_time') !== null)
+          {
+            ptime = document.getElementById('photo_time').value;
+            ptime = ptime.split('/').join('');
+            ptime = ptime.split(':').join('');
+          }
+          else
+            ptime = this.today.split('/').join('') + ' ' + this.time.split(':').join('');
+
+          if(file !== "" && ptime == "")
+          {
+            Swal.fire({
+              text: "Can't get photo time, please take photo again.",
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            });
+            return;
+          }
 
           var token = localStorage.getItem('token');
           var form_Data = new FormData();
@@ -308,7 +330,7 @@ var app = new Vue({
           form_Data.append('longitude', this.longitude);
           form_Data.append('piclatitude', this.latitude);
           form_Data.append('piclongitude', this.longitude);
-          form_Data.append('photo_time', this.today.split('/').join('') + ' ' + this.time.split(':').join(''));
+          form_Data.append('photo_time', ptime);
           form_Data.append('photo_gps', this.latitude+','+this.longitude);
 
           axios({
@@ -355,6 +377,7 @@ var app = new Vue({
 
             this.getLocation();
             this.getToday();
+            this.getTimeNow();
             
         },
  

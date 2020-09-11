@@ -6,10 +6,10 @@
 <meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover"/>
 
 <!-- favicon.ico iOS icon 152x152px -->
-<link rel="shortcut icon" href="Images/favicon.ico" />
-<link rel="Bookmark" href="Images/favicon.ico" />
-<link rel="icon" href="Images/favicon.ico" type="image/x-icon" />
-<link rel="apple-touch-icon" href="Images/iosicon.png"/>
+<link rel="shortcut icon" href="images/favicon.ico" />
+<link rel="Bookmark" href="images/favicon.ico" />
+<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+<link rel="apple-touch-icon" href="images/iosicon.png"/>
 
 <!-- SEO -->
 <title>FELIIX template pc</title>
@@ -27,19 +27,19 @@
 <!-- Google Analytics -->
 
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="Css/default.css"/>
-<link rel="stylesheet" type="text/css" href="Css/ui.css"/>
-<link rel="stylesheet" type="text/css" href="Css/case.css"/>
-<link rel="stylesheet" type="text/css" href="Css/mediaqueries.css"/>
+<link rel="stylesheet" type="text/css" href="css/default.css"/>
+<link rel="stylesheet" type="text/css" href="css/ui.css"/>
+<link rel="stylesheet" type="text/css" href="css/case.css"/>
+<link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
 
 <!-- jQuery和js載入 -->
-<script type="text/javascript" src="Js/rm/jquery-3.4.1.min.js" ></script>
-<script type="text/javascript" src="Js/rm/realmediaScript.js"></script>
-<script type="text/javascript" src="Js/main.js" defer></script>
+<script type="text/javascript" src="js/rm/jquery-3.4.1.min.js" ></script>
+<script type="text/javascript" src="js/rm/realmediaScript.js"></script>
+<script type="text/javascript" src="js/main.js" defer></script>
 
 <script>
 $(function(){
-    $('header').load('Include/header.htm');
+    $('header').load('include/header.htm');
     //
 
     dialogshow($('.tablebox a.add.a1'),$('.tablebox .dialog.a1'));   
