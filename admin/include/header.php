@@ -43,6 +43,11 @@ try {
         if($user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
             $access2 = true;
 
+        $access3 = false;
+        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9)
+            $access3 = true;
+
+
 
         //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
         //    header( 'location:index.php' );
@@ -80,13 +85,14 @@ try {
                 <a class="uni">Process<br>Management</a>
             </li>
             <?php 
-                if($access1 == true || $access2 == true)
+                if($access1 == true || $access2 == true || $access3 == true)
                 {
             ?>
             <li class="gray05" style="border: 3px solid var(--black01);">
                 <a class="uni">Admin<br>Section</a>
                 <?=($access1 == true) ? '<a class="list" href="../ammend">Verify and Review</a>' : '' ?>
                 <?=($access2 == true) ? '<a class="list" href="../query_export">Query and Export</a>' : '' ?>
+                <?=($access3 == true) ? '<a class="list" href="../expense_recorder">Expense Recorder</a>' : '' ?>
             </li>
             <?php 
                 }

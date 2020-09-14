@@ -43,6 +43,10 @@ try {
         if($user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
             $access2 = true;
 
+        // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41)
+        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9)
+            $access3 = true;
+
         //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
         //    header( 'location:index.php' );
     }
@@ -79,13 +83,14 @@ try {
                 <a class="uni">Process<br>Management</a>
             </li>
             <?php 
-                if($access1 == true || $access2 == true)
+                if($access1 == true || $access2 == true || $access3 == true)
                 {
             ?>
             <li class="gray05">
                 <a class="uni">Admin<br>Section</a>
                 <?=($access1 == true) ? '<a class="list" href="ammend">Verify and Review</a>' : '' ?>
                 <?=($access2 == true) ? '<a class="list" href="query_export">Query and Export</a>' : '' ?>
+                <?=($access3 == true) ? '<a class="list" href="expense_recorder">Expense Recorder</a>' : '' ?>
             </li>
             <?php 
                 }
