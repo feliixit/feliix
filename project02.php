@@ -635,7 +635,7 @@ $(function(){
                </ul>
                <ul v-for='(receive_record, index) in displayedStagePosts'>
                    <li>{{ receive_record.sequence }}</li>
-                   <li>{{ receive_record.stage }}</li>
+                   <li><a v-bind:href="'project03_client?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
                    <li>{{ receive_record.stages_status }}</li>
                    <li>{{ receive_record.start }} ~  </li>
                    <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>

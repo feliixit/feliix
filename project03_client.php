@@ -1,3 +1,12 @@
+<?php 
+
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
+if (  $sid < 1 || !is_numeric($sid)) {
+  header( 'location:project02' );
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +48,7 @@
 
 <script>
 $(function(){
-    $('header').load('include/header.htm');
+    $('header').load('include/header.php');
     //
 
     dialogshow($('.tablebox a.add.a1'),$('.tablebox .dialog.a1'));   
@@ -67,7 +76,7 @@ $(function(){
     <!-- header -->
 	<header>header</header>
     <!-- header end -->
-    <div class="mainContent">
+    <div id='app' class="mainContent">
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="block left">
             <div class="tablebox lv2a b-4">
@@ -91,17 +100,20 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li>Referral (Stan at 2020/05/19 10:17)</li>
                     <li>
-                        <a class="add a1"></a>
-                        <div class="dialog a1">
+                        <div v-for='(receive_record, index) in stage_client_venue'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
+                    </li>
+                    <li>
+                        <a id="add_a1" class="add a1"></a>
+                        <div id="dialog_a1" class="dialog a1">
                             <div class="formbox">
                                 <dl>
-                                    <dd><textarea placeholder="Update message here"></textarea></dd>
+                                    <dd><textarea placeholder="" v-model="venue"></textarea></dd>
                                     <dd>
                                         <div class="btnbox">
-                                            <a class="btn small orange">Cancel</a>
-                                            <a class="btn small green">Create</a>
+                                            <a class="btn small orange" @click="venue_clear">Cancel</a>
+                                            <a class="btn small green" @click="venue_create">Create</a>
                                         </div>
                                     </dd>
                                 </dl>
@@ -370,4 +382,9 @@ $(function(){
     </div>
 </div>
 </body>
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/axios.min.js"></script> 
+<script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script type="text/javascript" src="js/project03_client.js" defer></script>
 </html>
