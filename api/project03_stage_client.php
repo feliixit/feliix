@@ -105,13 +105,13 @@ else
              
             $query = "INSERT INTO project_stage_client
                 SET
-                    stage_id = :stage_id,
-                    type = :type,
-                    message = :message,
-                    option = :option,
+                    `stage_id` = :stage_id,
+                    `type` = :type,
+                    `message` = :message,
+                    `option` = :option,
                   
-                    create_id = :create_id,
-                    created_at = now()";
+                    `create_id` = :create_id,
+                    `created_at` = now()";
     
                 // prepare the query
                 $stmt = $db->prepare($query);
