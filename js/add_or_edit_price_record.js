@@ -280,7 +280,7 @@ var app = new Vue({
                   _this.spa.push(_this.split3);
                   _this.spa.push(_this.split4);
                   _this.spa.push(_this.split5);
-                  _this.spa_total_amount = parseInt(_this.split1.amount) + parseInt(_this.split2.amount) + parseInt(_this.split3.amount) + parseInt(_this.split4.amount) + parseInt(_this.split5.amount); 
+                  _this.spa_total_amount = parseFloat(_this.split1.amount) + parseFloat(_this.split2.amount) + parseFloat(_this.split3.amount) + parseFloat(_this.split4.amount) + parseFloat(_this.split5.amount); 
                   if(this.spa_total_amount != this.amount){
                       _this.dismiss = '';
                       alert('Total amount is not correct.');
