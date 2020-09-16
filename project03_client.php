@@ -127,17 +127,24 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li>Marion (Kristel at 2020/05/16 xx:xx)</li>
+                    <li><div v-for='(receive_record, index) in stage_client_sales'>{{ receive_record.salesname }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div></li>
                     <li>
-                        <a class="add a2"></a>
-                        <div class="dialog a2">
+                        <a id="add_a2" class="add a2"></a>
+                        <div id="dialog_a2" class="dialog a2">
                             <div class="formbox">
                                 <dl>
-                                    <dd><textarea placeholder="Update message here"></textarea></dd>
+                                    <dd>
+                                        <select v-model="uid">
+                                          <option v-for="(item, index) in users" :value="item.id" :key="item.username">
+                                              {{ item.username }}
+                                          </option>
+                                        </select>
+                                    </dd>
                                     <dd>
                                         <div class="btnbox">
-                                            <a class="btn small orange">Cancel</a>
-                                            <a class="btn small green">Create</a>
+                                            <a class="btn small orange" @click="sales_clear">Cancel</a>
+                                            <a class="btn small green" @click="sales_create">Create</a>
                                         </div>
                                     </dd>
                                 </dl>
@@ -150,19 +157,19 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li>May 15,2020 (Stan at 2020/05/05 xx:xx) <br>
-                        Decmeber 20, 2020 (Marion at 2020/05/20 xx:xx)
+                    <li><div v-for='(receive_record, index) in stage_client_date'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
                     </li>
                     <li>
-                        <a class="add a3"></a>
-                        <div class="dialog a3">
+                        <a id="add_a3" class="add a3"></a>
+                        <div id="dialog_a3" class="dialog a3">
                             <div class="formbox">
                                 <dl>
-                                    <dd><textarea placeholder="Update message here"></textarea></dd>
+                                    <dd><input type="date" v-model="dt" /></dd>
                                     <dd>
                                         <div class="btnbox">
-                                            <a class="btn small orange">Cancel</a>
-                                            <a class="btn small green">Create</a>
+                                            <a class="btn small orange" @click="date_clear">Cancel</a>
+                                            <a class="btn small green" @click="date_create">Create</a>
                                         </div>
                                     </dd>
                                 </dl>
@@ -175,34 +182,33 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li>Planning (Stan at 2020/04/15 xx:xx) <br>
-                        Approved (Stan at 2020/05/05 xx:xx) <br>
-                        On Hold (Stan at 2020/05/13 xx:xx)
+                    <li><div v-for='(receive_record, index) in stage_client_status'>{{ receive_record.status }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
                     </li>
                     <li>
-                        <a class="add a4"></a>
-                        <div class="dialog a4">
+                        <a id="add_a4" class="add a4"></a>
+                        <div id="dialog_a4" class="dialog a4">
                             <div class="formbox">
                                 <h6>Select Status</h6>
                                 <dl>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">Planning</option>
-                                            <option value="">Pending Review</option>
-                                            <option value="">Pending Approval</option>
-                                            <option value="">For Revision</option>
-                                            <option value="">On Hold</option>
-                                            <option value="">Disapproved</option>
-                                            <option value="">Approved</option>
-                                            <option value="">On Progress</option>
-                                            <option value="">Completed</option>
-                                            <option value="">Special</option>
+                                        <select name="" id="" v-model="status">
+                                            <option value="1">Planning</option>
+                                            <option value="2">Pending Review</option>
+                                            <option value="3">Pending Approval</option>
+                                            <option value="4">For Revision</option>
+                                            <option value="5">On Hold</option>
+                                            <option value="6">Disapproved</option>
+                                            <option value="7">Approved</option>
+                                            <option value="8">On Progress</option>
+                                            <option value="9">Completed</option>
+                                            <option value="10">Special</option>
                                         </select>
                                     </dd>
                                     <dd>
                                         <div class="btnbox">
-                                            <a class="btn small orange">Cancel</a>
-                                            <a class="btn small green">Save</a>
+                                            <a class="btn small orange" @click="status_clear">Cancel</a>
+                                            <a class="btn small green" @click="status_create">Save</a>
                                         </div>
                                     </dd>
                                 </dl>
@@ -215,28 +221,28 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li>High (Stan at 2020/04/10 xx:xx) <br>
-                        Low (Marion at 2020/05/17 xx:xx)
+                    <li><div v-for='(receive_record, index) in stage_client_priority'>{{ receive_record.priority }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
                     </li>
                     <li>
-                        <a class="add a5"></a>
-                        <div class="dialog a5">
+                        <a id="add_a5" class="add a5"></a>
+                        <div id="dialog_a5" class="dialog a5">
                             <div class="formbox">
                                 <h6>Select Priority</h6>
                                 <dl>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">No Priority</option>
-                                            <option value="">Low</option>
-                                            <option value="">Normal</option>
-                                            <option value="">High</option>
-                                            <option value="">Urgent</option>
+                                        <select name="" id="" v-model="priority">
+                                            <option value="1">No Priority</option>
+                                            <option value="2">Low</option>
+                                            <option value="3">Normal</option>
+                                            <option value="4">High</option>
+                                            <option value="5">Urgent</option>
                                         </select>
                                     </dd>
                                     <dd>
                                         <div class="btnbox">
-                                            <a class="btn small orange">Cancel</a>
-                                            <a class="btn small green">Save</a>
+                                            <a class="btn small orange" @click="priority_clear">Cancel</a>
+                                            <a class="btn small green" @click="priority_create">Save</a>
                                         </div>
                                     </dd>
                                 </dl>
@@ -249,17 +255,18 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li>1,000,000 (Stan at 2020/04/10 xx:xx)</li>
+                    <li><div v-for='(receive_record, index) in stage_client_amount'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div></li>
                     <li>
-                        <a class="add a6"></a>
-                        <div class="dialog a6">
+                        <a id="add_a6" class="add a6"></a>
+                        <div id="dialog_a6" class="dialog a6">
                             <div class="formbox">
                                 <dl>
-                                    <dd><textarea placeholder="Update message here"></textarea></dd>
+                                    <dd><input type="number" v-model="amount" /></dd>
                                     <dd>
                                         <div class="btnbox">
-                                            <a class="btn small orange">Cancel</a>
-                                            <a class="btn small green">Save</a>
+                                            <a class="btn small orange" @click="amount_clear">Cancel</a>
+                                            <a class="btn small green" @click="amount_create">Save</a>
                                         </div>
                                     </dd>
                                 </dl>
@@ -272,17 +279,18 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li>Jecams (Stan at 2020/04/10 xx:xx)</li>
+                    <li><div v-for='(receive_record, index) in stage_client_competitor'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        </div></li>
                     <li>
-                        <a class="add a7"></a>
-                        <div class="dialog a7">
+                        <a id="add_a7" class="add a7"></a>
+                        <div id="dialog_a7" class="dialog a7">
                             <div class="formbox">
                                 <dl>
-                                    <dd><textarea placeholder="Update message here"></textarea></dd>
+                                    <dd><textarea placeholder="" v-model="competitor"></textarea></dd>
                                     <dd>
                                         <div class="btnbox">
-                                            <a class="btn small orange">Cancel</a>
-                                            <a class="btn small green">Save</a>
+                                            <a class="btn small orange" @click="competitor_clear">Cancel</a>
+                                            <a class="btn small green" @click="competitor_create">Save</a>
                                         </div>
                                     </dd>
                                 </dl>
