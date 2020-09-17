@@ -280,14 +280,22 @@ var app = new Vue({
     sales_create() {
       let _this = this;
 
-      if(this.uid == this.org_uid)
-        return;
+        if (this.uid.trim() == 0) {
+          Swal.fire({
+            text: 'Please select Sales Assigned!',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+          })
+            
+            //$(window).scrollTop(0);
+            return;
+        }
 
       _this.submit = true;
       var form_Data = new FormData();
 
       form_Data.append('stage_id', this.stage_id);
-      form_Data.append('option', this.uid);
+      form_Data.append('option', this.uid.trim());
       form_Data.append('type', 'sales');
 
       const token = sessionStorage.getItem('token');
@@ -350,6 +358,17 @@ var app = new Vue({
   
       date_create() {
         let _this = this;
+
+        if (this.dt.trim() == '') {
+          Swal.fire({
+            text: 'Please select Target Date of Project!',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+          })
+            
+            //$(window).scrollTop(0);
+            return;
+        }
    
         _this.submit = true;
         var form_Data = new FormData();
@@ -419,12 +438,23 @@ var app = new Vue({
     
         status_create() {
           let _this = this;
+
+          if (this.status.trim() == 0) {
+            Swal.fire({
+              text: 'Please select Project Status!',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+              
+              //$(window).scrollTop(0);
+              return;
+          }
      
           _this.submit = true;
           var form_Data = new FormData();
     
           form_Data.append('stage_id', this.stage_id);
-          form_Data.append('option', this.status);
+          form_Data.append('option', this.status.trim());
           form_Data.append('type', 'status');
     
           const token = sessionStorage.getItem('token');
@@ -488,12 +518,23 @@ var app = new Vue({
       
           priority_create() {
             let _this = this;
+
+            if (this.priority.trim() == 0) {
+              Swal.fire({
+                text: 'Please select Project Priority!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                return;
+            }
        
             _this.submit = true;
             var form_Data = new FormData();
       
             form_Data.append('stage_id', this.stage_id);
-            form_Data.append('option', this.priority);
+            form_Data.append('option', this.priority.trim());
             form_Data.append('type', 'priority');
       
             const token = sessionStorage.getItem('token');
@@ -556,12 +597,23 @@ var app = new Vue({
         
             amount_create() {
               let _this = this;
+
+              if (this.amount.trim() == '') {
+                Swal.fire({
+                  text: 'Please enter Amount!',
+                  icon: 'warning',
+                  confirmButtonText: 'OK'
+                })
+                  
+                  //$(window).scrollTop(0);
+                  return;
+              }
          
               _this.submit = true;
               var form_Data = new FormData();
         
               form_Data.append('stage_id', this.stage_id);
-              form_Data.append('message', this.amount);
+              form_Data.append('message', this.trim());
               form_Data.append('type', 'amount');
         
               const token = sessionStorage.getItem('token');
@@ -624,12 +676,23 @@ var app = new Vue({
           
               competitor_create() {
                 let _this = this;
+
+                if (this.competitor.trim() == '') {
+                  Swal.fire({
+                    text: 'Please enter Competitors!',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                  })
+                    
+                    //$(window).scrollTop(0);
+                    return;
+                }
            
                 _this.submit = true;
                 var form_Data = new FormData();
           
                 form_Data.append('stage_id', this.stage_id);
-                form_Data.append('message', this.competitor);
+                form_Data.append('message', this.competitor.trim());
                 form_Data.append('type', 'competitor');
           
                 const token = sessionStorage.getItem('token');
@@ -711,7 +774,7 @@ var app = new Vue({
                   this.prof_fileArray = [];
                   this.$refs.prof_file.value = '';
 
-                  //this.getProjectDetail(this.project_id);
+                  this.get_stage_client_infomation(this.stage_id);
                   this.prof_canSub = true;
 
 
@@ -740,7 +803,7 @@ var app = new Vue({
                   var form_Data = new FormData();
 
                   form_Data.append('stage_id', this.stage_id);
-                  form_Data.append('message', this.prof_remark);
+                  form_Data.append('message', this.prof_remark.trim());
                   form_Data.append('type', 'additional');
 
                   const token = sessionStorage.getItem('token');
