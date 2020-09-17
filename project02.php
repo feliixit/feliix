@@ -493,7 +493,7 @@ $(function(){
                                             value
                                             placeholder="choose file"
                                             ref="prof_file"
-                                            v-show="canSub"
+                                            v-show="prof_canSub"
                                             @change="prof_changeFile()"
                                             multiple
                                           />

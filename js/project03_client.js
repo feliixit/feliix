@@ -23,6 +23,8 @@ var app = new Vue({
     ],
     perPage: 20,
 
+    baseURL:'https://storage.cloud.google.com/feliiximg/',
+
     // Venue
     venue: '',
     stage_client_venue : {},
@@ -52,6 +54,13 @@ var app = new Vue({
     competitor: '',
     stage_client_competitor : {},
 
+    // Downpayment Proof
+    prof_remark:'',
+    prof_fileArray: [],
+    prof_canSub: true,
+    prof_finish: false,
+    stage_client_infomation : {},
+
   },
 
   created() {
@@ -72,6 +81,7 @@ var app = new Vue({
           _this.get_stage_client_priority(_this.stage_id);
           _this.get_stage_client_amount(_this.stage_id);
           _this.get_stage_client_competitor(_this.stage_id);
+          _this.get_stage_client_infomation(_this.stage_id);
       });
     }
 
@@ -98,6 +108,33 @@ var app = new Vue({
       console.log('Vue watch receive_stage_records');
       this.setPages();
     },
+
+    prof_fileArray: {
+        handler(newValue, oldValue) {
+          var _this = this;
+          console.log(newValue);
+          var finish = newValue.find(function(currentValue, index) {
+            return currentValue.progress != 1;
+          });
+          if (finish === undefined && this.prof_fileArray.length) {
+            this.prof_finish = true;
+            Swal.fire({
+              text: "upload finished",
+              type: "success",
+              duration: 1 * 1000,
+              customClass: "message-box",
+              iconClass: "message-icon"
+            }).then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              _this.prof_finish = true;
+              _this.get_stage_client_infomation(_this.stage_id);
+
+            });;
+            this.prof_clear();
+          }
+        },
+        deep: true
+      },
 
   },
 
@@ -644,6 +681,182 @@ var app = new Vue({
                             
                         });
                 },
+
+                prof_deleteFile(index) {
+                  this.prof_fileArray.splice(index, 1);
+                  var fileTarget = this.$refs.prof_file;
+                  fileTarget.value = "";
+                },
+
+                prof_changeFile() {
+                  var fileTarget = this.$refs.prof_file;
+
+                  for (i = 0; i < fileTarget.files.length; i++) {
+                      // remove duplicate
+                      if (
+                        this.prof_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+                        this.prof_fileArray.length == 0
+                      ) {
+                        var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+                        this.prof_fileArray.push(fileItem);
+                      }else{
+                        fileTarget.value = "";
+                      }
+                    }
+                },
+
+                prof_clear() {
+
+                  this.prof_remark = '';
+                  this.prof_fileArray = [];
+                  this.$refs.prof_file.value = '';
+
+                  //this.getProjectDetail(this.project_id);
+                  this.prof_canSub = true;
+
+
+                  
+                  document.getElementById('dialog_a8').classList.remove("show");
+                  document.getElementById('add_a8').classList.remove("focus");
+              },
+
+              prof_create() {
+                  let _this = this;
+
+
+                  if (this.prof_remark.trim() == '') {
+                    Swal.fire({
+                      text: 'Please enter Additional Information!',
+                      icon: 'warning',
+                      confirmButtonText: 'OK'
+                    })
+                      
+                      //$(window).scrollTop(0);
+                      return;
+                  }
+
+
+                  _this.submit = true;
+                  var form_Data = new FormData();
+
+                  form_Data.append('stage_id', this.stage_id);
+                  form_Data.append('message', this.prof_remark);
+                  form_Data.append('type', 'additional');
+
+                  const token = sessionStorage.getItem('token');
+
+                  axios({
+                          method: 'post',
+                          headers: {
+                              'Content-Type': 'multipart/form-data',
+                              Authorization: `Bearer ${token}`
+                          },
+                          url: 'api/project03_stage_client',
+                          data: form_Data
+                      })
+                      .then(function(response) {
+                          //handle success
+                          if(response.data['batch_id'] != 0)
+                          {
+                              _this.prof_upload(response.data['batch_id']);
+                          }
+                          else
+                          {
+                            _this.prof_clear();
+                        
+                          }
+
+                          if(_this.prof_fileArray.length == 0)
+                            _this.prof_clear();
+
+                          
+                      })
+                      .catch(function(response) {
+                          //handle error
+                          console.log(response)
+                      });
+              },
+
+              prof_upload(batch_id) {
+            
+                this.prof_canSub = false;
+                var myArr = this.prof_fileArray;
+                var vm = this;
+               
+                //循环文件数组挨个上传
+                myArr.forEach((element, index) => {
+                  var config = {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    onUploadProgress: function(e) {
+           
+                      if (e.lengthComputable) {
+                        var rate = e.loaded / e.total; 
+                        console.log(index, e.loaded, e.total, rate);
+                        if (rate < 1) {
+                          
+                          myArr[index].progress = rate;
+                          vm.$set(vm.prof_fileArray, index, myArr[index]);
+                        } else {
+                          myArr[index].progress = 0.99;
+                          vm.$set(vm.prof_fileArray, index, myArr[index]);
+                        }
+                      }
+                    }
+                  };
+                  var data = myArr[index];
+                  var myForm = new FormData();
+                  myForm.append('batch_type', 'additional');
+                  myForm.append('batch_id', batch_id);
+                  myForm.append("file", data);
+         
+                  axios
+                    .post("api/uploadFile_gcp", myForm, config)
+                    .then(function(res) {
+                      if (res.data.code == 0) {
+                   
+                        myArr[index].progress = 1;
+                        vm.$set(vm.prof_fileArray, index, myArr[index]);
+                        console.log(vm.prof_fileArray, index);
+                      } else {
+                        alert(JSON.stringify(res.data));
+                      }
+                    })
+                    .catch(function(err) {
+                      console.log(err);
+                    });
+                });
+
+                this.prof_canSub = true;
+              
+            },
+
+            get_stage_client_infomation: function(stage_id) {
+              let _this = this;
+        
+              if(stage_id == 0)
+                return;
+        
+              const params = {
+                      stage_id : stage_id,
+                      type : 'additional',
+                    };
+        
+                  let token = localStorage.getItem('accessToken');
+            
+                  axios
+                      .get('api/project03_stage_client_infomation', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                      .then(
+                      (res) => {
+                          _this.stage_client_infomation = res.data;
+                      },
+                      (err) => {
+                          alert(err.response);
+                      },
+                      )
+                      .finally(() => {
+                          
+                      });
+              },
 
   }
 });

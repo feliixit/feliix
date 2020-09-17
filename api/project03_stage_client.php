@@ -144,7 +144,10 @@ else
                 }
 
 
-                return $last_id;
+                 $returnArray = array('batch_id' => $last_id);
+                $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+                echo $jsonEncodedReturnArray;
                 
                 break;
 
