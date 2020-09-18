@@ -714,3 +714,8 @@ CREATE TABLE IF NOT EXISTS `project_stage_client_task` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+-- fix cash in out to decimal
+alter table price_record change `cash_in` `cash_in` decimal(10, 2) default 0.0;
+alter table price_record change `cash_out` `cash_out` decimal(10, 2) default 0.0;
