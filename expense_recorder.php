@@ -24,7 +24,7 @@ try {
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
             
-            // ¥i¥H¦s¨úExpense Recorderªº¤H­û¦W³æ¦p¤U¡GDennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41)
+            // å¯ä»¥å­˜å–Expense Recorderçš„äººå“¡åå–®å¦‚ä¸‹ï¼šDennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41)
             if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9)
             {
                 $access3 = true;

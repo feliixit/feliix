@@ -15,6 +15,7 @@ use \Firebase\JWT\JWT;
 
     $access1 = false;
     $access2 = false;
+    $access3 = false;
 
 try {
         // decode jwt
