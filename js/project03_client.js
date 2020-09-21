@@ -9,6 +9,11 @@ var app = new Vue({
 
     submit : false,
 
+    contactor : '',
+    username : '',
+    client_type : '',
+    category : '',
+
     // paging
     page: 1,
     //perPage: 10,
@@ -82,6 +87,8 @@ var app = new Vue({
           _this.get_stage_client_amount(_this.stage_id);
           _this.get_stage_client_competitor(_this.stage_id);
           _this.get_stage_client_infomation(_this.stage_id);
+
+          _this.get_stage_client(_this.stage_id);
       });
     }
 
@@ -186,6 +193,36 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.stage_client_venue = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
+    get_stage_client: function(sid) {
+      let _this = this;
+
+      if(sid == 0)
+        return;
+
+      const params = {
+              sid : sid,
+            };
+
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project03_client_stage_data', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.contactor = res.data[0].contactor;
+                  _this.username = res.data[0].username;
+                  _this.client_type = res.data[0].client_type;
+                  _this.category = res.data[0].category;
               },
               (err) => {
                   alert(err.response);
@@ -613,7 +650,7 @@ var app = new Vue({
               var form_Data = new FormData();
         
               form_Data.append('stage_id', this.stage_id);
-              form_Data.append('message', this.trim());
+              form_Data.append('message', this.amount.trim());
               form_Data.append('type', 'amount');
         
               const token = sessionStorage.getItem('token');
@@ -664,6 +701,190 @@ var app = new Vue({
                       .finally(() => {
                           
                       });
+              },
+
+              dialogshow1() {
+                var me = document.getElementById('add_a1');
+                var diag = document.getElementById('dialog_a1');
+      
+                  if (me.classList.contains('focus')){
+                      diag.classList.remove('show');
+                      me.classList.remove('focus');
+                      
+                  } else {
+                    //this.venue_clear();
+                    this.sales_clear();
+                    this.date_clear();
+                    this.status_clear();
+                    this.priority_clear();
+                    this.amount_clear();
+                    this.competitor_clear();
+                    this.prof_clear();
+
+                    diag.classList.add("show");
+                    me.classList.add('focus')
+                  }
+              },
+
+              dialogshow2() {
+                var me = document.getElementById('add_a2');
+                var diag = document.getElementById('dialog_a2');
+      
+                  if (me.classList.contains('focus')){
+                      diag.classList.remove('show');
+                      me.classList.remove('focus');
+                      
+                  } else {
+                    this.venue_clear();
+                    //this.sales_clear();
+                    this.date_clear();
+                    this.status_clear();
+                    this.priority_clear();
+                    this.amount_clear();
+                    this.competitor_clear();
+                    this.prof_clear();
+
+                    diag.classList.add("show");
+                    me.classList.add('focus')
+                  }
+              },
+
+              dialogshow3() {
+                var me = document.getElementById('add_a3');
+                var diag = document.getElementById('dialog_a3');
+      
+                  if (me.classList.contains('focus')){
+                      diag.classList.remove('show');
+                      me.classList.remove('focus');
+                      
+                  } else {
+                    this.venue_clear();
+                    this.sales_clear();
+                    //this.date_clear();
+                    this.status_clear();
+                    this.priority_clear();
+                    this.amount_clear();
+                    this.competitor_clear();
+                    this.prof_clear();
+
+                    diag.classList.add("show");
+                    me.classList.add('focus')
+                  }
+              },
+
+              dialogshow4() {
+                var me = document.getElementById('add_a4');
+                var diag = document.getElementById('dialog_a4');
+      
+                  if (me.classList.contains('focus')){
+                      diag.classList.remove('show');
+                      me.classList.remove('focus');
+                      
+                  } else {
+                    this.venue_clear();
+                    this.sales_clear();
+                    this.date_clear();
+                    // this.status_clear();
+                    this.priority_clear();
+                    this.amount_clear();
+                    this.competitor_clear();
+                    this.prof_clear();
+
+                    diag.classList.add("show");
+                    me.classList.add('focus')
+                  }
+              },
+
+              dialogshow5() {
+                var me = document.getElementById('add_a5');
+                var diag = document.getElementById('dialog_a5');
+      
+                  if (me.classList.contains('focus')){
+                      diag.classList.remove('show');
+                      me.classList.remove('focus');
+                      
+                  } else {
+                    this.venue_clear();
+                    this.sales_clear();
+                    this.date_clear();
+                    this.status_clear();
+                    // this.priority_clear();
+                    this.amount_clear();
+                    this.competitor_clear();
+                    this.prof_clear();
+
+                    diag.classList.add("show");
+                    me.classList.add('focus')
+                  }
+              },
+
+              dialogshow6() {
+                var me = document.getElementById('add_a6');
+                var diag = document.getElementById('dialog_a6');
+      
+                  if (me.classList.contains('focus')){
+                      diag.classList.remove('show');
+                      me.classList.remove('focus');
+                      
+                  } else {
+                    this.venue_clear();
+                    this.sales_clear();
+                    this.date_clear();
+                    this.status_clear();
+                    this.priority_clear();
+                    //this.amount_clear();
+                    this.competitor_clear();
+                    this.prof_clear();
+
+                    diag.classList.add("show");
+                    me.classList.add('focus')
+                  }
+              },
+
+              dialogshow7() {
+                var me = document.getElementById('add_a7');
+                var diag = document.getElementById('dialog_a7');
+      
+                  if (me.classList.contains('focus')){
+                      diag.classList.remove('show');
+                      me.classList.remove('focus');
+                      
+                  } else {
+                    this.venue_clear();
+                    this.sales_clear();
+                    this.date_clear();
+                    this.status_clear();
+                    this.priority_clear();
+                    this.amount_clear();
+                    //competitor_clear();
+                    this.prof_clear();
+
+                    diag.classList.add("show");
+                    me.classList.add('focus')
+                  }
+              },
+
+              dialogshow8() {
+                var me = document.getElementById('add_a8');
+                var diag = document.getElementById('dialog_a8');
+      
+                  if (me.classList.contains('focus')){
+                      diag.classList.remove('show');
+                      me.classList.remove('focus');
+                      
+                  } else {
+                    this.venue_clear();
+                    this.sales_clear();
+                    this.date_clear();
+                    this.status_clear();
+                    this.priority_clear();
+                    this.amount_clear();
+                    this.competitor_clear();
+                    //prof_clear();
+
+                    diag.classList.add("show");
+                    me.classList.add('focus')
+                  }
               },
 
               competitor_clear() {

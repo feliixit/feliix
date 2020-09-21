@@ -51,14 +51,14 @@ $(function(){
     $('header').load('include/header.php');
     //
 
-    dialogshow($('.tablebox a.add.a1'),$('.tablebox .dialog.a1'));   
-    dialogshow($('.tablebox a.add.a2'),$('.tablebox .dialog.a2'));
-    dialogshow($('.tablebox a.add.a3'),$('.tablebox .dialog.a3'));
-    dialogshow($('.tablebox a.add.a4'),$('.tablebox .dialog.a4'));
-    dialogshow($('.tablebox a.add.a5'),$('.tablebox .dialog.a5'));
-    dialogshow($('.tablebox a.add.a6'),$('.tablebox .dialog.a6'));
-    dialogshow($('.tablebox a.add.a7'),$('.tablebox .dialog.a7'));
-    dialogshow($('.tablebox a.add.a8'),$('.tablebox .dialog.a8'));
+    //dialogshow($('.tablebox a.add.a1'),$('.tablebox .dialog.a1'));   
+    //dialogshow($('.tablebox a.add.a2'),$('.tablebox .dialog.a2'));
+    //dialogshow($('.tablebox a.add.a3'),$('.tablebox .dialog.a3'));
+    // dialogshow($('.tablebox a.add.a4'),$('.tablebox .dialog.a4'));
+    // dialogshow($('.tablebox a.add.a5'),$('.tablebox .dialog.a5'));
+    //dialogshow($('.tablebox a.add.a6'),$('.tablebox .dialog.a6'));
+    //dialogshow($('.tablebox a.add.a7'),$('.tablebox .dialog.a7'));
+    //dialogshow($('.tablebox a.add.a8'),$('.tablebox .dialog.a8'));
     
     $('header').click(function(){dialogclear()});
     $('.block.right').click(function(){dialogclear()});
@@ -87,10 +87,10 @@ $(function(){
                     <li>Project Category</li>
                 </ul>
                 <ul>
-                    <li>Office Systems</li>
-                    <li>A - Architect/Designer</li>
-                    <li>Stan</li>
-                    <li>Office Systems</li>
+                    <li>{{ contactor }}</li>
+                    <li>{{ client_type }}</li>
+                    <li>{{ username }}</li>
+                    <li>{{ category }}</li>
                 </ul>
             </div>
             <div class="tablebox lv3a">
@@ -105,7 +105,7 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a1" class="add a1"></a>
+                        <a id="add_a1" class="add a1" @click="dialogshow1"></a>
                         <div id="dialog_a1" class="dialog a1">
                             <div class="formbox">
                                 <dl>
@@ -130,7 +130,7 @@ $(function(){
                     <li><div v-for='(receive_record, index) in stage_client_sales'>{{ receive_record.salesname }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div></li>
                     <li>
-                        <a id="add_a2" class="add a2"></a>
+                        <a id="add_a2" class="add a2" @click="dialogshow2"></a>
                         <div id="dialog_a2" class="dialog a2">
                             <div class="formbox">
                                 <dl>
@@ -161,7 +161,7 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a3" class="add a3"></a>
+                        <a id="add_a3" class="add a3" @click="dialogshow3"></a>
                         <div id="dialog_a3" class="dialog a3">
                             <div class="formbox">
                                 <dl>
@@ -186,7 +186,7 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a4" class="add a4"></a>
+                        <a id="add_a4" class="add a4" @click="dialogshow4"></a>
                         <div id="dialog_a4" class="dialog a4">
                             <div class="formbox">
                                 <h6>Select Status</h6>
@@ -225,7 +225,7 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a5" class="add a5"></a>
+                        <a id="add_a5" class="add a5" @click="dialogshow5"></a>
                         <div id="dialog_a5" class="dialog a5">
                             <div class="formbox">
                                 <h6>Select Priority</h6>
@@ -258,7 +258,7 @@ $(function(){
                     <li><div v-for='(receive_record, index) in stage_client_amount'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div></li>
                     <li>
-                        <a id="add_a6" class="add a6"></a>
+                        <a id="add_a6" class="add a6" @click="dialogshow6"></a>
                         <div id="dialog_a6" class="dialog a6">
                             <div class="formbox">
                                 <dl>
@@ -282,7 +282,7 @@ $(function(){
                     <li><div v-for='(receive_record, index) in stage_client_competitor'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div></li>
                     <li>
-                        <a id="add_a7" class="add a7"></a>
+                        <a id="add_a7" class="add a7" @click="dialogshow7"></a>
                         <div id="dialog_a7" class="dialog a7">
                             <div class="formbox">
                                 <dl>
@@ -313,7 +313,7 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a8" class="add a8"></a>
+                        <a id="add_a8" class="add a8" @click="dialogshow8"></a>
                         <div id="dialog_a8" class="dialog a8">
                             <div class="formbox">
                                 <dl>
