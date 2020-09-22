@@ -96,7 +96,7 @@ $(function(){
             <div class="tablebox lv3a">
                 <!-- 一組qa -->
                 <ul class="head">
-                    <li>Venue</li>
+                    <li style="text-align: center !important;">Venue</li>
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
@@ -123,7 +123,7 @@ $(function(){
                 </ul>
                 <!-- 一組qa end -->
                 <ul class="head">
-                    <li>Sales Assigned</li>
+                    <li style="text-align: center !important;">Sales Assigned</li>
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
@@ -153,7 +153,7 @@ $(function(){
                     </li>
                 </ul>
                 <ul class="head">
-                    <li>Target Date of Project</li>
+                    <li style="text-align: center !important;">Target Date of Project</li>
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
@@ -178,7 +178,7 @@ $(function(){
                     </li>
                 </ul>
                 <ul class="head">
-                    <li>Project Status</li>
+                    <li style="text-align: center !important;">Project Status</li>
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
@@ -217,7 +217,7 @@ $(function(){
                     </li>
                 </ul>
                 <ul class="head">
-                    <li>Project Priority</li>
+                    <li style="text-align: center !important;">Project Priority</li>
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
@@ -251,7 +251,7 @@ $(function(){
                     </li>
                 </ul>
                 <ul class="head">
-                    <li>Amount</li>
+                    <li style="text-align: center !important;">Amount</li>
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
@@ -275,7 +275,7 @@ $(function(){
                     </li>
                 </ul>
                 <ul class="head">
-                    <li>Competitors</li>
+                    <li style="text-align: center !important;">Competitors</li>
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
@@ -299,7 +299,7 @@ $(function(){
                     </li>
                 </ul>
                 <ul class="head">
-                    <li>Additional Information</li>
+                    <li style="text-align: center !important;">Additional Information</li>
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
@@ -391,7 +391,25 @@ $(function(){
                             <p>Comment … <i class="t">Nestor Rosales at 2020/05/18 13:13</i></p>
                             <p>Comment … <i class="t">Kuan at 2020/05/18 16:11</i></p>
                        </li>
-                       <li><a class="btn small orange cmt">Comment</a></li>
+                       <li style="position:relative;">
+
+                        <a class="btn small orange cmt">Comment</a>
+
+                        <div class="commentbox">
+                            <div class="arrow"></div>
+                            <div class="arrowcover"></div>
+
+                            <div class="commentbody">
+                                <textarea></textarea>
+
+                                <div class="commentfooter">
+                                    <a class="btn small orange btncancel" style="cursor: pointer;">Cancel</a>
+                                    <a class="btn small green btncreate">Create</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
                    </ul>
                    <!-- 一筆Tesk end -->
                    <ul>
@@ -564,4 +582,90 @@ $(function(){
   margin-left: 0;
 }
 </style>
+
+<style>
+        
+        .commentbox {
+            position: absolute;
+            border: 5px solid #00811e;
+            background-color: #FFF;
+            min-width: 500px;
+            padding: 15px 25px 10px 15px;
+            left: -500px;
+            top: -40px;
+            z-index: 1000;
+            
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .arrow {
+            border-color: transparent transparent transparent #00811e;
+            border-style: solid solid solid solid;
+            border-width: 14px 28px;
+            right: -56px;
+            top: 55px;
+            position: absolute;
+            width: 0px;
+            height: 0px;
+            z-index: 1;
+        }
+
+        .arrowcover{
+            border-color: transparent transparent transparent #fff;
+            border-style: solid solid solid solid;
+            border-width: 14px 28px;
+            position: absolute;
+            top: 55px;
+            right: -46px;
+            width: 0px;
+            height: 0px;
+            z-index: 1;
+        }
+
+        .commentbody {
+            border: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .commentbody textarea {
+            border: 1px solid #707070;
+            padding: 1px 3px;
+            font-size: 14px;
+            border-radius: 6px;
+            width: 100%;
+            height: 70px;
+            margin-bottom: 10px;
+        }
+
+        .commentfooter {
+            padding: 0 0 5px;
+            text-align: right;
+            width: 100%;
+            display: inline-block;
+        }
+
+        .btncancel {
+            text-align: center;
+            margin: 0 10px;
+        }
+        
+        .btncreate {
+            text-align: center;
+            margin: 0;
+            margin-left: 10px;
+        }
+        
+        a.btncancel:hover {
+            background-color: #F37058;
+            cursor: pointer;
+        }
+
+        a.btncreate:hover {
+            background-color: #F37058;
+            cursor: pointer;
+        }
+        
+  </style>
 </html>
