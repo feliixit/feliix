@@ -719,3 +719,19 @@ CREATE TABLE IF NOT EXISTS `project_stage_client_task` (
 -- fix cash in out to decimal
 alter table price_record change `cash_in` `cash_in` decimal(10, 2) default 0.0;
 alter table price_record change `cash_out` `cash_out` decimal(10, 2) default 0.0;
+
+
+
+-- 20200923 stage_client_task
+CREATE TABLE IF NOT EXISTS `project_stage_client_task_comment` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `task_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `type` varchar(64) DEFAULT '',
+  `message` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';

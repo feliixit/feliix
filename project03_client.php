@@ -382,29 +382,31 @@ $(function(){
                 <!-- list -->
                 <div class="tablebox lv3b">
                     <!-- 一筆Tesk -->
-                   <ul>
-                       <li><b>1</b></li>
+                   <ul v-for='(receive_record, index) in project03_client_stage_task'>
+                       <li><b>{{ tid }}</b></li>
                        <li class="cmt">
-                            <p>Go to the ??? to check Go to the ??? to check Go to the ??? to check Go to the ??? <br>
-                            to check Go to the  ??? to check <i class="t">Stan at 2020/05/18 09:30</i></p>
-                            
-                            <p>Comment … <i class="t">Nestor Rosales at 2020/05/18 13:13</i></p>
-                            <p>Comment … <i class="t">Kuan at 2020/05/18 16:11</i></p>
+                            <p>{{ receive_record.message }} <i class="t">{{ receive_record.username }} at {{ receive_record.created_at }}</i></p>
+
+                            <br v-if="receive_record.items.length > 0">
+                                <p v-for="item in receive_record.items">
+                                    {{ item.f_message }}
+                                    <i class="t"> {{ item.f_username }} at {{ item.f_created_at }}</i>
+                                </p>
                        </li>
                        <li style="position:relative;">
 
-                        <a class="btn small orange cmt">Comment</a>
+                        <a  class="btn small orange cmt" @click="comment_show(receive_record.id)">Comment</a>
 
-                        <div class="commentbox">
+                        <div :id="'btn' + receive_record.id" :ref="'btn' + receive_record.id" class="commentbox">
                             <div class="arrow"></div>
                             <div class="arrowcover"></div>
 
                             <div class="commentbody">
-                                <textarea></textarea>
+                                <textarea :id="'comment' + receive_record.id" :ref="'comment' + receive_record.id"></textarea>
 
                                 <div class="commentfooter">
-                                    <a class="btn small orange btncancel" style="cursor: pointer;">Cancel</a>
-                                    <a class="btn small green btncreate">Create</a>
+                                    <a class="btn small orange btncancel" style="cursor: pointer;" @click="comment_clear(receive_record.id)">Cancel</a>
+                                    <a class="btn small green btncreate" @click="comment_create(receive_record.id)">Create</a>
                                 </div>
                             </div>
                         </div>
@@ -412,34 +414,13 @@ $(function(){
                     </li>
                    </ul>
                    <!-- 一筆Tesk end -->
-                   <ul>
-                       <li><b>2</b></li>
-                       <li class="cmt">
-                            <p>Go to the ??? to check Go to the ??? to check Go to the ??? to check Go to the ??? <br>
-                            to check Go to the  ??? to check <i class="t">Stan at 2020/05/18 09:30</i></p>
-                            
-                            <p>Comment … <i class="t">Nestor Rosales at 2020/05/18 13:13</i></p>
-                            <p>Comment … <i class="t">Kuan at 2020/05/18 16:11</i></p>
-                       </li>
-                       <li><a class="btn small orange cmt">Comment</a></li>
-                   </ul>
-                   <ul>
-                       <li><b>3</b></li>
-                       <li class="cmt">
-                            <p>Go to the ??? to check Go to the ??? to check Go to the ??? to check Go to the ??? <br>
-                            to check Go to the  ??? to check <i class="t">Stan at 2020/05/18 09:30</i></p>
-                            
-                            <p>Comment … <i class="t">Nestor Rosales at 2020/05/18 13:13</i></p>
-                            <p>Comment … <i class="t">Kuan at 2020/05/18 16:11</i></p>
-                       </li>
-                       <li><a class="btn small orange cmt">Comment</a></li>
-                   </ul>
+                 
                </div>
                 <!-- list end -->
                 <div class="tablebox lv3c">
                     <ul>
-                        <li><textarea name="" id="" placeholder="Create a task here" ></textarea></li>
-                        <li><a class="btn small green">Create</a></li>
+                        <li><textarea name="" id="" placeholder="Create a task here" v-model="stage_task"></textarea></li>
+                        <li><a class="btn small green" @click="task_create">Create</a></li>
                     </ul>
                 </div>
             </div>
@@ -454,6 +435,17 @@ $(function(){
 <script type="text/javascript" src="js/project03_client.js" defer></script>
 <script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
 <style scoped>
+
+input:focus::-webkit-input-placeholder{
+    color: transparent!important;
+}
+input:focus::-moz-placeholder{
+    color: transparent!important;
+}
+input:focus:-moz-placeholder{
+    color: transparent!important;
+}
+
 .extendex-top {
   background: none;
   box-shadow: none;
@@ -595,8 +587,14 @@ $(function(){
             top: -40px;
             z-index: 1000;
             
-            opacity: 1;
-            pointer-events: auto;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .diashow {
+            
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
         
         .arrow {

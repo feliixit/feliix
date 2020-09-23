@@ -5,6 +5,8 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
+    project03_client_stage_task: {},
+
     users : {},
 
     submit : false,
@@ -66,6 +68,10 @@ var app = new Vue({
     prof_finish: false,
     stage_client_infomation : {},
 
+    // Project Task Tracker
+    tid : 0,
+    stage_task : '',
+
   },
 
   created() {
@@ -87,6 +93,7 @@ var app = new Vue({
           _this.get_stage_client_amount(_this.stage_id);
           _this.get_stage_client_competitor(_this.stage_id);
           _this.get_stage_client_infomation(_this.stage_id);
+          _this.get_stage_client_task(_this.stage_id);
 
           _this.get_stage_client(_this.stage_id);
       });
@@ -193,6 +200,33 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.stage_client_venue = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
+      get_stage_client_task: function(stage_id) {
+      let _this = this;
+
+      if(stage_id == 0)
+        return;
+
+      const params = {
+              stage_id : stage_id,
+            };
+
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project03_stage_client_task', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.project03_client_stage_task = res.data;
               },
               (err) => {
                   alert(err.response);
@@ -1002,6 +1036,138 @@ var app = new Vue({
                   
                   document.getElementById('dialog_a8').classList.remove("show");
                   document.getElementById('add_a8').classList.remove("focus");
+              },
+
+
+              comment_show(trackid) {
+
+                var me = document.getElementById('btn'+trackid);
+                 
+                  if (me.classList.contains('diashow')){
+                    
+                      me.classList.remove('diashow');
+                      
+                  } else {
+                    this.venue_clear();
+                    this.sales_clear();
+                    this.date_clear();
+                    this.status_clear();
+                    this.priority_clear();
+                    this.amount_clear();
+                    this.competitor_clear();
+                    this.prof_clear();
+
+                    me.classList.add('diashow')
+                  }
+               },
+
+              comment_clear(trackid) {
+                  
+                  document.getElementById('btn'+trackid).classList.remove("diashow");
+               
+              },
+
+              task_create(){
+
+                let _this = this;
+
+
+                  if (this.stage_task.trim() == '') {
+                    Swal.fire({
+                      text: 'Please enter Task Information!',
+                      icon: 'warning',
+                      confirmButtonText: 'OK'
+                    })
+                      
+                      //$(window).scrollTop(0);
+                      return;
+                  }
+
+
+                  _this.submit = true;
+                  var form_Data = new FormData();
+
+                  form_Data.append('stage_id', this.stage_id);
+                  form_Data.append('message', this.stage_task.trim());
+                  form_Data.append('type', 'task');
+
+                  const token = sessionStorage.getItem('token');
+
+                  axios({
+                          method: 'post',
+                          headers: {
+                              'Content-Type': 'multipart/form-data',
+                              Authorization: `Bearer ${token}`
+                          },
+                          url: 'api/project03_stage_client_task',
+                          data: form_Data
+                      })
+                      .then(function(response) {
+                          //handle success
+                      
+                            _this.stage_task = "";
+                        
+                            _this.get_stage_client_task(_this.stage_id);
+
+                          
+                      })
+                      .catch(function(response) {
+                          //handle error
+                          console.log(response)
+                      });
+
+              },
+
+              comment_create(task_id){
+
+                let _this = this;
+                var comment = this.$refs['comment' + task_id][0].value;
+
+
+                  if (comment.trim() == '') {
+                    Swal.fire({
+                      text: 'Please enter comment!',
+                      icon: 'warning',
+                      confirmButtonText: 'OK'
+                    })
+                      
+                      //$(window).scrollTop(0);
+                      return;
+                  }
+
+
+                  _this.submit = true;
+                  var form_Data = new FormData();
+
+                  form_Data.append('task_id', task_id);
+                  form_Data.append('message', comment.trim());
+                  form_Data.append('type', 'comment');
+
+                  const token = sessionStorage.getItem('token');
+
+                  axios({
+                          method: 'post',
+                          headers: {
+                              'Content-Type': 'multipart/form-data',
+                              Authorization: `Bearer ${token}`
+                          },
+                          url: 'api/project03_stage_client_task_comment',
+                          data: form_Data
+                      })
+                      .then(function(response) {
+                          //handle success
+                      
+                            _this.stage_task = "";
+                        
+                            _this.get_stage_client_task(_this.stage_id);
+
+                          
+                      })
+                      .catch(function(response) {
+                          //handle error
+                          console.log(response)
+                      });
+
               },
 
               prof_create() {
