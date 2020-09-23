@@ -383,11 +383,9 @@ $(function(){
                 <div class="tablebox lv3b">
                     <!-- 一筆Tesk -->
                    <ul v-for='(receive_record, index) in project03_client_stage_task'>
-                       <li><b>{{ tid }}</b></li>
+                       <li><b>{{ receive_record.num }}</b></li>
                        <li class="cmt">
                             <p>{{ receive_record.message }} <i class="t">{{ receive_record.username }} at {{ receive_record.created_at }}</i></p>
-
-                            <br v-if="receive_record.items.length > 0">
                                 <p v-for="item in receive_record.items">
                                     {{ item.f_message }}
                                     <i class="t"> {{ item.f_username }} at {{ item.f_created_at }}</i>
@@ -397,11 +395,11 @@ $(function(){
 
                         <a  class="btn small orange cmt" @click="comment_show(receive_record.id)">Comment</a>
 
-                        <div :id="'btn' + receive_record.id" :ref="'btn' + receive_record.id" class="commentbox">
+                        <div :id="'btn' + receive_record.id" :ref="'dialog' + receive_record.num" class="commentbox">
                             <div class="arrow"></div>
                             <div class="arrowcover"></div>
 
-                            <div class="commentbody">
+                            <div class="commentbody" >
                                 <textarea :id="'comment' + receive_record.id" :ref="'comment' + receive_record.id"></textarea>
 
                                 <div class="commentfooter">

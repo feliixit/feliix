@@ -109,6 +109,8 @@ var app = new Vue({
       return this.paginate(this.receive_records);
     },
 
+
+
   },
 
   mounted() {
@@ -122,6 +124,8 @@ var app = new Vue({
       console.log('Vue watch receive_stage_records');
       this.setPages();
     },
+
+    
 
     prof_fileArray: {
         handler(newValue, oldValue) {
@@ -223,10 +227,11 @@ var app = new Vue({
           let token = localStorage.getItem('accessToken');
     
           axios
-              .get('api/project03_stage_client_task', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .get('api/project03_stage_client_task_comment', { params, headers: {"Authorization" : `Bearer ${token}`} })
               .then(
               (res) => {
                   _this.project03_client_stage_task = res.data;
+                  _this.tid = _this.project03_client_stage_task.length;
               },
               (err) => {
                   alert(err.response);
@@ -756,7 +761,9 @@ var app = new Vue({
                     this.prof_clear();
 
                     diag.classList.add("show");
-                    me.classList.add('focus')
+                    me.classList.add('focus');
+
+                    this.clear_all_diag();
                   }
               },
 
@@ -779,7 +786,9 @@ var app = new Vue({
                     this.prof_clear();
 
                     diag.classList.add("show");
-                    me.classList.add('focus')
+                    me.classList.add('focus');
+
+                    this.clear_all_diag();
                   }
               },
 
@@ -802,7 +811,9 @@ var app = new Vue({
                     this.prof_clear();
 
                     diag.classList.add("show");
-                    me.classList.add('focus')
+                    me.classList.add('focus');
+
+                    this.clear_all_diag();
                   }
               },
 
@@ -825,7 +836,9 @@ var app = new Vue({
                     this.prof_clear();
 
                     diag.classList.add("show");
-                    me.classList.add('focus')
+                    me.classList.add('focus');
+
+                    this.clear_all_diag();
                   }
               },
 
@@ -848,7 +861,9 @@ var app = new Vue({
                     this.prof_clear();
 
                     diag.classList.add("show");
-                    me.classList.add('focus')
+                    me.classList.add('focus');
+
+                    this.clear_all_diag();
                   }
               },
 
@@ -871,7 +886,9 @@ var app = new Vue({
                     this.prof_clear();
 
                     diag.classList.add("show");
-                    me.classList.add('focus')
+                    me.classList.add('focus');
+
+                    this.clear_all_diag();
                   }
               },
 
@@ -894,7 +911,9 @@ var app = new Vue({
                     this.prof_clear();
 
                     diag.classList.add("show");
-                    me.classList.add('focus')
+                    me.classList.add('focus');
+
+                    this.clear_all_diag();
                   }
               },
 
@@ -914,10 +933,13 @@ var app = new Vue({
                     this.priority_clear();
                     this.amount_clear();
                     this.competitor_clear();
+
                     //prof_clear();
 
                     diag.classList.add("show");
-                    me.classList.add('focus')
+                    me.classList.add('focus');
+
+                    this.clear_all_diag();
                   }
               },
 
@@ -1041,6 +1063,8 @@ var app = new Vue({
 
               comment_show(trackid) {
 
+                this.clear_all_diag();
+
                 var me = document.getElementById('btn'+trackid);
                  
                   if (me.classList.contains('diashow')){
@@ -1064,6 +1088,7 @@ var app = new Vue({
               comment_clear(trackid) {
                   
                   document.getElementById('btn'+trackid).classList.remove("diashow");
+                  this.$refs['comment' + trackid][0].value = "";
                
               },
 
@@ -1118,6 +1143,13 @@ var app = new Vue({
 
               },
 
+              clear_all_diag() {
+                for (i = 1; i <= this.tid; i++) {
+                  var me = this.$refs['dialog' + i][0];
+                  me.classList.remove('diashow');
+                }
+              },
+
               comment_create(task_id){
 
                 let _this = this;
@@ -1157,9 +1189,10 @@ var app = new Vue({
                       .then(function(response) {
                           //handle success
                       
-                            _this.stage_task = "";
-                        
+                            _this.$refs['comment' + task_id][0].value = "";
+                            
                             _this.get_stage_client_task(_this.stage_id);
+                            _this.clear_all_diag();
 
                           
                       })

@@ -84,6 +84,7 @@ else
             $stmt = $db->prepare( $sql );
             $stmt->execute();
 
+            $num = 0;
             $id = 0;
             $message = "";
             $username = "";
@@ -98,7 +99,10 @@ else
 
                 if($id != $row['id'] && $id != 0)
                 {
+                    $num = $num + 1;
+
                     $merged_results[] = array( 
+                                            "num" => $num,
                                             "id" => $id,
                                             "message" => $message,
                                             "username" => $username,
@@ -109,6 +113,7 @@ else
                     $items = [];
 
                 }
+
 
                 $id = $row['id'];
                 $f_id = $row['f_id'];
@@ -128,7 +133,10 @@ else
 
             if($id != 0)
             {
+                $num = $num + 1;
+
                 $merged_results[] = array(      
+                                            "num" => $num,
                                             "id" => $id,
                                             "message" => $message,
                                             "username" => $username,
