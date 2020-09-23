@@ -1063,7 +1063,7 @@ var app = new Vue({
 
               comment_show(trackid) {
 
-                this.clear_all_diag();
+                
 
                 var me = document.getElementById('btn'+trackid);
                  
@@ -1080,6 +1080,7 @@ var app = new Vue({
                     this.amount_clear();
                     this.competitor_clear();
                     this.prof_clear();
+                    this.clear_all_diag();
 
                     me.classList.add('diashow')
                   }
