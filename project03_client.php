@@ -581,7 +581,7 @@ input:focus:-moz-placeholder{
             background-color: #FFF;
             min-width: 500px;
             padding: 15px 25px 10px 15px;
-            left: -500px;
+            left: calc(50% - 575px);
             top: -40px;
             z-index: 1000;
             
