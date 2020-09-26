@@ -231,9 +231,11 @@ var app = new Vue({
                   return false;
               }
 
+              var file = "";
+
               if(document.getElementById("base64image") !== null)
                 file =  document.getElementById("base64image").src;
-              
+
               if(this.showPhoto && file === "")
               {
                 Swal.fire({
