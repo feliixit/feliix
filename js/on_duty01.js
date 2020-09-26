@@ -230,6 +230,21 @@ var app = new Vue({
                   //$(window).scrollTop(0);
                   return false;
               }
+
+              if(document.getElementById("base64image") !== null)
+                file =  document.getElementById("base64image").src;
+              
+              if(this.showPhoto && file === "")
+              {
+                Swal.fire({
+                  text: 'Photo required',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+                })
+                  //this.err_msg = 'Location Photo required';
+                  //$(window).scrollTop(0);
+                  return false;
+              }
 /*
               if (this.showPhoto && !this.$refs.file.files[0])
               {
