@@ -13,6 +13,10 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
+    baseURL:'https://storage.cloud.google.com/feliiximg/',
+
+    proof_remark:'',
+
         // paging
     page: 1,
     //perPage: 10,
@@ -156,10 +160,7 @@ var app = new Vue({
 
             form_Data.append('crud', "app");
             form_Data.append('id', id);
-
-            var params = {
-                'id': id
-            }
+            form_Data.append('remark', this.proof_remark);
 
             const token = sessionStorage.getItem('token');
 
@@ -169,7 +170,7 @@ var app = new Vue({
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     },
-                    url: 'api/leave_record_approval',
+                    url: 'api/downpayment_proof_approval',
                     data: form_Data
                 })
                 .then(function(response) {
@@ -190,10 +191,7 @@ var app = new Vue({
 
             form_Data.append('crud', "rej");
             form_Data.append('id', id);
-
-            var params = {
-                'id': id
-            }
+            form_Data.append('remark', this.proof_remark);
 
             const token = sessionStorage.getItem('token');
 
@@ -203,7 +201,7 @@ var app = new Vue({
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     },
-                    url: 'api/leave_record_reject',
+                    url: 'api/downpayment_proof_reject',
                     data: form_Data
                 })
                 .then(function(response) {
@@ -258,7 +256,7 @@ var app = new Vue({
             {
               if(this.receive_records[i].is_checked == 1)
               {
-                if(this.receive_records[i].approval === 'R')
+                if(this.receive_records[i].status === -1)
                 {
                   Swal.fire({
                     text: 'Rejected data cannot be approved! Please contact Admin or IT staffs.',
@@ -269,7 +267,7 @@ var app = new Vue({
                   return;
                 }
 
-                if(this.receive_records[i].approval === 'A')
+                if(this.receive_records[i].status === 1)
                 {
                   Swal.fire({
                     text: 'Approved data cannot be approved again! Please contact Admin or IT staffs.',

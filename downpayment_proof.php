@@ -175,44 +175,41 @@ $(function(){
 
                 <div class="tablebox" v-if="view_detail">
                     <ul class="head">
-                        <li class="head">Leave Type</li>
-                        <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li class="head">Project Name</li>
+                        <li>{{ record.project_name }}</li>
                     </ul>
                     <ul>
-                        <li class="head">Application Time</li>
+                        <li class="head">Submission Time</li>
                         <li>{{ record.created_at.replace(/-/g,"/").substring(0, 16) }}</li>
                     </ul>
                     <ul>
-                        <li class="head">Start Time</li>
-                        <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} </li>
+                        <li class="head">Submitter</li>
+                        <li>{{ record.username }}</li>
                     </ul>
                     <ul>
-                        <li class="head">End Time</li>
-                        <li>{{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
+                        <li class="head">Status</li>
+                        <li>{{ (record.status == 0) ? "Under Checking" : ((record.status == 1) ? "Checked: True" : ((record.status == -1) ? "Checked: False" : 'Under Checking')) }}</li>
                     </ul>
                     <ul>
-                        <li class="head">Leave Length</li>
-                        <li>{{ record.le }} Days</li>
+                        <li class="head">Downpayment Proof</li>
+                        <li>
+                            <span v-for="item in record.items">
+                                <a :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>&nbsp&nbsp
+                            </span>
+                        </li>
                     </ul>
                     <ul>
-                        <li class="head">Reason</li>
-                        <li>{{ record.reason }}</li>
+                        <li class="head">Remark</li>
+                        <li>{{ record.remark }}</li>
                     </ul>
-                    <ul v-if="record.pic_url != ''">
-                        <li class="head">Certificate of Diagnosis</li>
-                        <li><i class="fas fa-image"  @click="showPic(record.pic_url)"></i></li>
-                    </ul>
-
-                    <div>
-                        <div class="btnbox">
-                            <a class="btn" @click="approve" :disabled="submit">Checked: True</a>
-                            <a class="btn" @click="reject" :disabled="submit">Checked: False</a>
-                        </div>
-
-                        <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%;" rows="5"></textarea>
-                    </div>
-
                 </div>
+
+                <div class="btnbox" v-if="view_detail">
+                    <a class="btn" @click="approve" :disabled="submit">Checked: True</a>
+                    <a class="btn" @click="reject" :disabled="submit">Checked: False</a>
+                </div>
+
+                <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%;" rows="5" v-if="view_detail" v-model="proof_remark"></textarea>
 
                 
                 

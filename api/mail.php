@@ -6,6 +6,7 @@ use PHPMailer\PHPMailer\Exception;
 require '../PHPMailer-master/src/Exception.php';
 require '../PHPMailer-master/src/PHPMailer.php';
 require '../PHPMailer-master/src/SMTP.php';
+require '../vendor/autoload.php';
 
 include_once 'config/core.php';
 include_once 'config/conf.php';
@@ -47,6 +48,50 @@ function logMail($email, $content){
 
 
         return $last_id;
+}
+
+function sendGridMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl)
+{
+    $email = new \SendGrid\Mail\Mail();
+    $email->setFrom("feliix.it@gmail.com", "feliix.it");
+    $email->setSubject("Project downpayment proof from " . $leaver);
+    $email->addTo($email, $name);
+
+    $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>" . $leaver . " has applied for downpayment proof, Following are the details:</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Applicant:" . $leaver . "</p>";
+    $content = $content . "<p>Department:" . $department . "</p>";
+    $content = $content . "<p>Applying Time:" . $app_time . "</p>";
+    $content = $content . "<p>Leave Type:" . $leave_type . "</p>";
+    $content = $content . "<p>Starting Time:" . $start_time . "</p>";
+    $content = $content . "<p>Ending Time:" . $end_time . "</p>";
+    $content = $content . "<p>Leave Length:" . $leave_length . "</p>";
+    $content = $content . "<p>Reason:" . $reason . "</p>";
+    if($imgurl != "")
+        $content = $content . "<a href='" . $conf::$mail_ip . "/img/" . $imgurl . "'>Certificate of Diagnosis</a>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to review the leave application.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+    $email->addContent(
+        "text/html", $content
+    );
+
+    $sendgrid = new \SendGrid('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');
+    try {
+        $response = $sendgrid->send($email);
+        //print $response->statusCode() . "\n";
+        //print_r($response->headers());
+        //print $response->body() . "\n";
+
+        logMail($email, $content);
+        return true;
+
+    } catch (Exception $e) {
+        logMail($email, $e->ErrorInfo);
+        return false;
+    }
 }
 
 function sendMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl) {
