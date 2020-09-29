@@ -32,7 +32,9 @@ function dialogclear(){
         console.log('dialogclear');
         $('.list_function .dialog').removeClass('show');
         $('.list_function a').removeClass('focus');
-        $('.list_function.main .block.fn a').removeClass('focus');        
+        $('.list_function.main .block.fn a').removeClass('focus');   
+        $('.tablebox .dialog').removeClass('show');
+        $('.tablebox a').removeClass('focus');
 }
 function dialogshow($me,$target){
     $me.click(function(){

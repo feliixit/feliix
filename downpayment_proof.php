@@ -112,8 +112,8 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A">Attendance</a>
-            <a class="tag B focus">Leaves</a>
-            <a class="tag C" href="downpayment_proof">Project</a>
+            <a class="tag B" href="ammend">Leaves</a>
+            <a class="tag C focus">Project</a>
         </div>
         <!-- Blocks -->
         <div class="block A">
@@ -125,17 +125,26 @@ $(function(){
             </div>
             
         </div>
-        <div class="block B focus">
-            <h6>Leave Applications</h6>
+        <div class="block B">
+            <h6></h6>
+            <div class="box-content">
+             
+
+                
+            </div>
+            
+        </div>
+        <div class="block C focus">
+            <h6>Downpayment Proof</h6>
             <div class="box-content">
              
                 <div class="tablebox">
                     <ul class="head">
                         <li><i class="micons">view_list</i></li>
-                        <li>Application Time</li>
-                        <li>Applicant</li>
-                        <li>Type</li>
-                        <li>Leave Time</li>
+                        <li>Submission Time</li>
+                        <li>Submitter</li>
+                        <li>Project Name</li>
+                        <li>Status</li>
                     </ul>
                     <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
@@ -144,15 +153,24 @@ $(function(){
                        
                         <li>{{ record.created_at }}</li>
                         <li>{{ record.username }}</li>
-                        <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
-                        <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
+                        <li>{{ record.project_name }}</li>
+                        <li>{{ (record.status == 0) ? "Under Checking" : ((record.status == 1) ? "Checked: True" : ((record.status == -1) ? "Checked: False" : 'Under Checking')) }}</li>
                     </ul>
+                </div>
+
+                <div class="list_function">
+                    <!-- 分頁 -->
+                    <div class="pagenation">
+                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                      
+                        <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                      
+                        <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                    </div>
                 </div>
 
                 <div class="btnbox">
                     <a class="btn" @click="detail">Detail</a>
-                    <a class="btn" @click="approve" :disabled="submit">Approve</a>
-                    <a class="btn" @click="reject" :disabled="submit">Reject</a>
                 </div>
 
                 <div class="tablebox" v-if="view_detail">
@@ -184,21 +202,24 @@ $(function(){
                         <li class="head">Certificate of Diagnosis</li>
                         <li><i class="fas fa-image"  @click="showPic(record.pic_url)"></i></li>
                     </ul>
+
+                    <div>
+                        <div class="btnbox">
+                            <a class="btn" @click="approve" :disabled="submit">Checked: True</a>
+                            <a class="btn" @click="reject" :disabled="submit">Checked: False</a>
+                        </div>
+
+                        <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%;" rows="5"></textarea>
+                    </div>
+
                 </div>
+
+                
                 
             </div>
             
         </div>
 
-        <div class="block C">
-            <h6></h6>
-            <div class="box-content">
-             
-
-                
-            </div>
-            
-        </div>
 
     </div>
 </div>
@@ -217,5 +238,5 @@ $(function(){
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/ammend.js"></script>
+<script src="js/downpayment_proof.js"></script>
 </html>

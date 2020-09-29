@@ -735,3 +735,7 @@ CREATE TABLE IF NOT EXISTS `project_stage_client_task_comment` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+ALTER TABLE project_proof
+ADD COLUMN `proof_remark` varchar(2048) DEFAULT '' AFTER status;
