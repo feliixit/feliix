@@ -52,6 +52,7 @@ function logMail($email, $content){
 
 function sendGridMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl)
 {
+    $conf = new Conf();
     $email = new \SendGrid\Mail\Mail();
     $email->setFrom("feliix.it@gmail.com", "feliix.it");
     $email->setSubject("Project downpayment proof from " . $leaver);
@@ -78,7 +79,7 @@ function sendGridMail($name, $email, $appove_hash, $reject_hash, $leave_info, $l
         "text/html", $content
     );
 
-    $sendgrid = new \SendGrid('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');
+    $sendgrid = new \SendGrid($conf::$mail_key);
     try {
         $response = $sendgrid->send($email);
         //print $response->statusCode() . "\n";
