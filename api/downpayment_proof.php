@@ -76,6 +76,7 @@ $stmt = $db->prepare( $query );
 $stmt->execute();
 
 $is_checked = 0;
+$sid = 0;
 $id = 0;
 $project_name = "";
 $filename = "";
@@ -90,9 +91,12 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     if(($id . $status != $row['id'] . $row['status']) && $id != 0)
     {
+        $sid = $sid + 1;
+
         $merged_results[] = array( 
                                 "is_checked" => 0,
                                 "id" => $id,
+                                "sid" => $sid,
                                 "project_name" => $project_name,
                                 "status" => $status,
                                 "remark" => $remark,
@@ -121,8 +125,11 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 if($id != 0)
 {
+    $sid = $sid + 1;
+
     $merged_results[] = array( "is_checked" => 0,
                                 "id" => $id,
+                                "sid" => $sid,
                                 "project_name" => $project_name,
                                 "status" => $status,
                                 "remark" => $remark,

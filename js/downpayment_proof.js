@@ -223,7 +223,7 @@ var app = new Vue({
           for (i = 0; i < this.receive_records.length; i++) 
             {
               if(this.receive_records[i].is_checked == 1)
-                favorite.push(this.receive_records[i].id);
+                favorite.push(this.receive_records[i].sid);
             }
 
             if (favorite.length != 1) {
@@ -238,7 +238,7 @@ var app = new Vue({
                 return;
             }
 
-            this.record = this.shallowCopy(this.receive_records.find(element => element.id == favorite));
+            this.record = this.shallowCopy(this.receive_records.find(element => element.sid == favorite));
 
             this.view_detail = true;
 
