@@ -107,7 +107,7 @@ switch ($method) {
                     $user->delete();
                 }
 
-                if($query){
+                if($id){
                     $out['message'] = "Member Deleted Successfully";
                 }
                 else{
