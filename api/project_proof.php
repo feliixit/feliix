@@ -99,12 +99,23 @@ else
             $uid = $user_id;
             $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
             $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
+
+            $batch_id = 1;
+            $query = "select max(batch_id) + 1 from project_proof";
+            $stmt = $db->prepare( $sql );
+            $stmt->execute();
+
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $batch_id = $row[0];
+            }
+
                          
             $query = "INSERT INTO project_proof
                 SET
                     project_id = :project_id,
                     remark = :remark,
-
+                    batch_id = :batch_id,
                     create_id = :create_id,
                     created_at = now()";
     
@@ -114,7 +125,7 @@ else
                 // bind the values
                 $stmt->bindParam(':project_id', $pid);
                 $stmt->bindParam(':remark', $remark);
-      
+                $stmt->bindParam(':batch_id', $batch_id);
                 $stmt->bindParam(':create_id', $user_id);
 
                 $last_id = 0;

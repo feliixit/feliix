@@ -67,6 +67,42 @@ display:inline;
     <!-- header end -->
     <div id='app' class="mainContent">
         <!-- Blocks -->
+        <div class="block A focus">
+            <h6>Holiday 
+                  <div class="function">
+                      <!--
+                   <input name="Foodb" type="radio" value="A" id="A" class="green"><label for="A">All</label>
+                   <input name="Foodb2" type="radio" value="A2" id="A2" class="blue"><label for="A2">Same Dpt.</label>
+                    -->
+<!--
+                    <b class="light green"></b>All
+                    <b class="light blue"></b>Same Dpt.
+-->
+                </div>
+            </h6>
+            <div class="box-content">
+                <!-- 表單樣式 -->
+                <div class="tablebox2">
+                    <ul class="head">
+                        <li>Date</li>
+                        <li>Location</li>
+                        <li>Holiday Name</li>
+                        
+                   
+                    </ul>
+                    <ul v-for='(record, index) in holiday_records'>
+                        <li>{{ record.holiday }}</li>
+                        <li>{{ record.from_date }}</li>
+                        <li>{{ record.location }}</li>
+                     
+                   
+                    </ul>
+                    
+                </div>
+                <!-- 表單樣式 -->
+            </div>
+        </div>
+
         <div class="block B focus">
             <h6>On Leave 
                   <div class="function">
@@ -102,7 +138,7 @@ display:inline;
                 <!-- 表單樣式 -->
             </div>
         </div>
-        <div class="block A focus">
+        <div class="block C focus">
             <h6>Attendance
 
                 <div class="function">

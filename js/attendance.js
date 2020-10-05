@@ -4,11 +4,13 @@ var app = new Vue({
   data:{
     receive_records: [],
     leave_records:{},
+    holiday_records:{},
   },
 
   created () {
     this.getRecords();
     this.getLeaveRecords();
+    this.getHolidayRecords();
   },
 
   computed: {
@@ -39,6 +41,18 @@ var app = new Vue({
             .then(function(response) {
                 console.log(response.data);
                 app.leave_records = response.data;
+
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    },
+
+    getHolidayRecords: function(keyword) {
+        axios.get('api/holiday')
+            .then(function(response) {
+                console.log(response.data);
+                app.holiday_records = response.data;
 
             })
             .catch(function(error) {

@@ -739,3 +739,11 @@ CREATE TABLE IF NOT EXISTS `project_stage_client_task_comment` (
 
 ALTER TABLE project_proof
 ADD COLUMN `proof_remark` varchar(2048) DEFAULT '' AFTER status;
+
+-- 20201001 add holiday location
+ALTER TABLE holiday
+ADD COLUMN `location` varchar(64) DEFAULT '' AFTER `year`;
+
+-- 20201005 add proof batch
+ALTER TABLE project_proof
+ADD COLUMN `batch_id` int(11) DEFAULT 0 AFTER project_id;
