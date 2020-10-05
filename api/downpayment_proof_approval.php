@@ -53,14 +53,14 @@ $query = "
     update project_proof a 
     set a.updated_id = :updated_id, a.updated_at = NOW(), a.STATUS = 1, a.proof_remark = :proof_remark
     WHERE a.STATUS = 0
-    AND a.project_id = :project_id";
+    AND a.id = :id";
 
 
 $stmt = $db->prepare( $query );
 
 $stmt->bindParam(':updated_id', $user_id);
 $stmt->bindParam(':proof_remark', $remark);
-$stmt->bindParam(':project_id', $id);
+$stmt->bindParam(':id', $id);
 
 
 if (!$stmt->execute())

@@ -256,7 +256,7 @@ var app = new Vue({
             {
               if(this.receive_records[i].is_checked == 1)
               {
-                if(this.receive_records[i].status === -1)
+                if(this.receive_records[i].status === "-1")
                 {
                   Swal.fire({
                     text: 'Rejected data cannot be approved! Please contact Admin or IT staffs.',
@@ -267,7 +267,7 @@ var app = new Vue({
                   return;
                 }
 
-                if(this.receive_records[i].status === 1)
+                if(this.receive_records[i].status === "1")
                 {
                   Swal.fire({
                     text: 'Approved data cannot be approved again! Please contact Admin or IT staffs.',
@@ -327,7 +327,7 @@ var app = new Vue({
             {
               if(this.receive_records[i].is_checked == 1)
               {
-                if(this.receive_records[i].approval === 'R')
+                if(this.receive_records[i].status === "-1")
                 {
                   Swal.fire({
                     text: 'Rejected data cannot be rejected again! Please contact Admin or IT staffs.',
@@ -338,7 +338,7 @@ var app = new Vue({
                   return;
                 }
 
-                if(this.receive_records[i].approval === 'A')
+                if(this.receive_records[i].status === "1")
                 {
                   Swal.fire({
                     text: 'Approved data cannot be rejected! Please contact Admin or IT staffs.',
