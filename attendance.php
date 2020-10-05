@@ -91,9 +91,10 @@ display:inline;
                    
                     </ul>
                     <ul v-for='(record, index) in holiday_records'>
-                        <li>{{ record.holiday }}</li>
+                        
                         <li>{{ record.from_date }}</li>
                         <li>{{ record.location }}</li>
+                        <li>{{ record.holiday }}</li>
                      
                    
                     </ul>
