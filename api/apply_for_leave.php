@@ -167,7 +167,7 @@ else
         }
 
         // 2. over credit
-        $query = "SELECT from_date FROM holiday";
+        $query = "SELECT from_date FROM holiday where location = 'Philippines' ";
         $stmt = $db->prepare( $query );
         $stmt->execute();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
