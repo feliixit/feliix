@@ -50,29 +50,22 @@ function logMail($email, $content){
         return $last_id;
 }
 
-function sendGridMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl)
+function sendGridMail($name, $email,  $leaver, $projectname, $remark)
 {
     $conf = new Conf();
     $email = new \SendGrid\Mail\Mail();
     $email->setFrom("feliix.it@gmail.com", "feliix.it");
-    $email->setSubject("Project downpayment proof from " . $leaver);
+    $email->setSubject("Downpayment Proof Submitted by " . $leaver . "(" . $projectname . ")" );
     $email->addTo($email, $name);
+
+    $baseURL = "https://storage.cloud.google.com/feliiximg/";
 
     $content =  "<p>Dear " . $name . ",</p>";
     $content = $content . "<p>" . $leaver . " has applied for downpayment proof, Following are the details:</p>";
+    $content = $content . "<p>" . $remark . "</p>";
+
     $content = $content . "<p> </p>";
-    $content = $content . "<p>Applicant:" . $leaver . "</p>";
-    $content = $content . "<p>Department:" . $department . "</p>";
-    $content = $content . "<p>Applying Time:" . $app_time . "</p>";
-    $content = $content . "<p>Leave Type:" . $leave_type . "</p>";
-    $content = $content . "<p>Starting Time:" . $start_time . "</p>";
-    $content = $content . "<p>Ending Time:" . $end_time . "</p>";
-    $content = $content . "<p>Leave Length:" . $leave_length . "</p>";
-    $content = $content . "<p>Reason:" . $reason . "</p>";
-    if($imgurl != "")
-        $content = $content . "<a href='" . $conf::$mail_ip . "/img/" . $imgurl . "'>Certificate of Diagnosis</a>";
-    $content = $content . "<p> </p>";
-    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to review the leave application.</p>";
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to review the downpayment proof.</p>";
     $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
 
     $email->addContent(

@@ -1048,9 +1048,36 @@ var app = new Vue({
                     }
 
                     if(_this.prof_fileArray.length == 0)
+                      _this.sendNotifyEmail(response.data['batch_id']);
                       _this.prof_clear();
 
                     
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
+        sendNotifyEmail(batch_id) {
+            var form_Data = new FormData();
+
+            form_Data.append('bid', batch_id);
+           
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/project_proof_mail',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+
                 })
                 .catch(function(response) {
                     //handle error

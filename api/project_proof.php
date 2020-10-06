@@ -101,13 +101,13 @@ else
             $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
             $batch_id = 1;
-            $query = "select max(batch_id) + 1 from project_proof";
-            $stmt = $db->prepare( $sql );
+            $query = "select max(batch_id) + 1 cnt from project_proof";
+            $stmt = $db->prepare( $query );
             $stmt->execute();
 
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $batch_id = $row[0];
+                $batch_id = $row['cnt'];
             }
 
                          
