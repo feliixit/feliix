@@ -92,7 +92,7 @@ display:inline;
                     </ul>
                     <ul v-for='(record, index) in holiday_records'>
                         
-                        <li>{{ record.from_date }}</li>
+                        <li>{{ record.from_date.substring(0, 4) }}/{{ record.from_date.substring(4, 6) }}/{{ record.from_date.substring(6, 8) }}</li>
                         <li>{{ record.location }}</li>
                         <li>{{ record.holiday }}</li>
                      
