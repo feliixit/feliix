@@ -38,6 +38,8 @@ else
 }
 
 include_once 'config/database.php';
+include_once 'mail.php';
+
 $database = new Database();
 $db = $database->getConnection();
 
@@ -63,6 +65,35 @@ if (!$stmt->execute())
     $arr = $stmt->errorInfo();
     error_log($arr[2]);
 }
+else
+{
 
+    // send mail
+    $subquery = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, pm.status, pm.proof_remark  FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $id . " and pm.status <> -1 ";
+
+    $stmt = $db->prepare( $subquery );
+    $stmt->execute();
+
+    $project_name = "";
+    $remark = "";
+    $leaver = "";
+    $subtime = "";
+    $status = 0;
+    $proof_remark = "";
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $project_name = $row['project_name'];
+        $remark = $row['remark'];
+        $leaver = $row['username'];
+        $subtime = $row['created_at'];
+        $status = $row['status'];
+        $proof_remark = $row['proof_remark'];
+    }
+
+    $name1 = "dennis";
+    $email1 = "dennis@feliix.com";
+
+    send_check_notify_mail($name1, $email1, $leaver, $project_name, $remark, $subtime, $proof_remark, "False");
+}
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);

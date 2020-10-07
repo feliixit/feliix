@@ -62,7 +62,6 @@ $stmt->bindParam(':updated_id', $user_id);
 $stmt->bindParam(':proof_remark', $remark);
 $stmt->bindParam(':id', $id);
 
-
 if (!$stmt->execute())
 {
     $arr = $stmt->errorInfo();
@@ -72,27 +71,31 @@ else
 {
 
     // send mail
-    $mail_name = '';
-    $mail_email = '';
-    $mail_uid = 0;
+    $subquery = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, pm.status, pm.proof_remark  FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $id . " and pm.status <> -1 ";
 
+    $stmt = $db->prepare( $subquery );
+    $stmt->execute();
+
+    $project_name = "";
+    $remark = "";
+    $leaver = "";
+    $subtime = "";
+    $status = 0;
+    $proof_remark = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $need_mail = 1;
+        $project_name = $row['project_name'];
+        $remark = $row['remark'];
         $leaver = $row['username'];
-        $department = $row['department'];
-        $app_time = $row['created_at'];
-        $leave_type = getLeaveType($row['leave_type']);
-        $start_time = formateDate($row['start_date']) . " " . $row['start_time'];
-        $end_time = formateDate($row['end_date']) . " " . $row['end_time'];
-        $leave_length = $row['leave'];
-        $reason = $row['reason'];
-        $imgurl = $row['pic_url'];
-
-        $leav_msg =  $username . " apply leave from " . $start_date . " " . $start_time . " to " . $end_date . " " . $end_time;
-
-        sendGridMail($mail_name, $mail_email, '', '', '', $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl);
+        $subtime = $row['created_at'];
+        $status = $row['status'];
+        $proof_remark = $row['proof_remark'];
     }
+
+    $name1 = "dennis";
+    $email1 = "dennis@feliix.com";
+
+    send_check_notify_mail($name1, $email1, $leaver, $project_name, $remark, $subtime, $proof_remark, "True");
 }
 
 /*
@@ -115,22 +118,6 @@ if($need_mail == 1 && $mail_uid <> 0)
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
-
-
-function getLeaveType($type){
-    $leave_type = '';
-
-    if($type =="A")
-        $leave_type = "Vacation Leave";
-    if($type =="B")
-        $leave_type = "Emerency/Sick Leave";
-    if($type =="C")
-        $leave_type = "Unpaid Leave";
-    if($type =="D")
-        $leave_type = "Absence";
-    
-    return $leave_type;
-}
 
 function formateDate($_date){
     return substr($_date, 0, 4)."/".substr($_date, 4, 2)."/".substr($_date, 6, 2);

@@ -80,6 +80,7 @@ var app = new Vue({
     fileArray: [],
     canSub: true,
     finish: false,
+    verified_downpayment: false,
 
     // Edit/Delete Stage
     record : {},
@@ -124,6 +125,7 @@ var app = new Vue({
         _this.getProject(_this.project_id);
         _this.getProjectComments(_this.project_id);
         _this.getProjectProbs(_this.project_id);
+        _this.getProjectProof(_this.project_id);
         _this.getProjectActionDetails(_this.project_id);
         _this.getUsers();
       });
@@ -463,6 +465,34 @@ var app = new Vue({
                 //handle error
                 console.log(response)
             });
+      },
+
+      getProjectProof: function(keyword) {
+      let _this = this;
+
+      if(keyword == 0)
+        return;
+
+      const params = {
+              pid : keyword,
+            };
+
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project_proof_approval', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  if(res.data.length > 0)
+                    _this.verified_downpayment = res.data[0].status;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
       },
 
       getProjectProbs: function(keyword) {

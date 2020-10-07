@@ -50,13 +50,13 @@ function logMail($email, $content){
         return $last_id;
 }
 
-function sendGridMail($name, $email,  $leaver, $projectname, $remark)
+function sendGridMail($name, $email1,  $leaver, $projectname, $remark)
 {
     $conf = new Conf();
     $email = new \SendGrid\Mail\Mail();
     $email->setFrom("feliix.it@gmail.com", "feliix.it");
     $email->setSubject("Downpayment Proof Submitted by " . $leaver . "(" . $projectname . ")" );
-    $email->addTo($email, $name);
+    $email->addTo($email1, $name);
 
     $baseURL = "https://storage.cloud.google.com/feliiximg/";
 
@@ -74,21 +74,23 @@ function sendGridMail($name, $email,  $leaver, $projectname, $remark)
 
     $sendgrid = new \SendGrid($conf::$mail_key);
     try {
-        $response = $sendgrid->send($email);
+        $response = $sendgrid->send($email1);
         //print $response->statusCode() . "\n";
         //print_r($response->headers());
         //print $response->body() . "\n";
 
-        logMail($email, $content);
+        logMail($email1, $content);
         return true;
 
     } catch (Exception $e) {
-        logMail($email, $e->ErrorInfo);
+        logMail($email1, $e->ErrorInfo);
         return false;
     }
 }
 
-function sendMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl) {
+
+function send_check_notify_mail($name, $email1,  $leaver, $projectname, $remark, $subtime, $reason, $status)
+{
     $conf = new Conf();
 
     $mail = new PHPMailer();
@@ -107,7 +109,116 @@ function sendMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leave
     $mail->Password   = $conf::$mail_password;
 
     $mail->IsHTML(true);
-    $mail->AddAddress($email, $name);
+    $mail->AddAddress($email1, $name);
+
+    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
+    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $leaver . "(" . $projectname . ")";
+    $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>" . $leaver . " has applied for downpayment proof, Following are the details:</p>";
+    $content = $content . "<p> </p>";
+    
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Checked:" . $status . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+
+    if($reason != "")
+        $content = $content . "<p>Additional Remark:" . $reason . "</p>";
+
+    $content = $content . "<p> </p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $subtime)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress($email1, $name);
+
+    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
+    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Downpayment Proof Submitted by " . $leaver . "(" . $projectname . ")";
+    $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>" . $leaver . " has applied for downpayment proof, Following are the details:</p>";
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to review the downpayment proof.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+function sendMail($name, $email1, $appove_hash, $reject_hash, $leave_info, $leaver, $department, $app_time, $leave_type, $start_time, $end_time, $leave_length, $reason, $imgurl) {
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress($email1, $name);
     //$mail->Subject = "=?utf-8?B?" . base64_encode("信件標題") . "?=";
     $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
     $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
@@ -132,12 +243,12 @@ function sendMail($name, $email, $appove_hash, $reject_hash, $leave_info, $leave
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
-        logMail($email, $content);
+        logMail($email1, $content);
         return true;
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo);
         return false;
 //        echo "Email sent successfully";
     }

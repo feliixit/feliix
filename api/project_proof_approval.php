@@ -46,42 +46,31 @@ else
       header('Access-Control-Allow-Origin: *');  
 
       include_once 'config/database.php';
-      include_once 'mail.php';
 
 
       $database = new Database();
       $db = $database->getConnection();
 
       switch ($method) {
-          case 'POST':
-            $bid = (isset($_POST['bid']) ?  $_POST['bid'] : "");
+          case 'GET':
+            $pid = (isset($_GET['pid']) ?  $_GET['pid'] : "");
+          
 
-            $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status <> -1 ";
+            $sql = "SELECT pm.status FROM project_proof pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -1 AND pm.`status` > 0 ";
 
             $merged_results = array();
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();
 
-            $project_name = "";
-            $remark = "";
-            $leaver = "";
-            $subtime = "";
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $project_name = $row['project_name'];
-                $remark = $row['remark'];
-                $leaver = $row['username'];
-                $subtime = $row['created_at'];
+                $merged_results[] = $row;
             }
 
-            $name1 = "dennis";
-            $email1 = "dennis@feliix.com";
-
-            send_pay_notify_mail($name1, $email1, $leaver, $project_name, $remark, $subtime);
+            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
             break;
-
 
       }
 
