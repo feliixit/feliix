@@ -100,6 +100,17 @@ $(function(){
 })
 </script>
 
+<style type="text/css">
+    body.black .list_function .pagenation a{
+        color: var(--black01);
+    }
+
+    body.black .list_function .pagenation a:hover{
+        color: white;
+    }
+
+</style>
+
 </head>
 
 <body class="black">
@@ -138,6 +149,17 @@ $(function(){
             <h6>Downpayment Proof</h6>
             <div class="box-content">
              
+                <div class="list_function" style="margin-bottom:5px;">
+                    <!-- 分頁 -->
+                    <div class="pagenation">
+                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                      
+                        <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                      
+                        <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                    </div>
+                </div>
+
                 <div class="tablebox">
                     <ul class="head">
                         <li><i class="micons">view_list</i></li>
@@ -148,7 +170,7 @@ $(function(){
                     </ul>
                     <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
-                            <input type="checkbox" name="record_id" class="alone blue" :value="record.index" :true-value="1" v-model:checked="record.is_checked">
+                            <input type="radio" name="record_id" class="alone black" :value="record.id" v-model="proof_id">
                         </li>
                        
                         <li>{{ record.created_at }}</li>
@@ -158,16 +180,7 @@ $(function(){
                     </ul>
                 </div>
 
-                <div class="list_function">
-                    <!-- 分頁 -->
-                    <div class="pagenation">
-                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
-                      
-                        <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
-                      
-                        <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
-                    </div>
-                </div>
+                
 
                 <div class="btnbox">
                     <a class="btn" @click="detail">Detail</a>
@@ -204,14 +217,14 @@ $(function(){
                     </ul>
                 </div>
 
-                <div class="btnbox" v-if="view_detail">
+                <div class="btnbox" v-if="record.status == 0">
                     <a class="btn" @click="approve" :disabled="submit">Checked: True</a>
                     <a class="btn" @click="reject" :disabled="submit">Checked: False</a>
                 </div>
 
-                <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%;" rows="5" v-if="view_detail" v-model="proof_remark"></textarea>
+                <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%; margin-top:5px;" rows="5" v-if="record.status == 0" v-model="proof_remark"></textarea>
 
-                
+                <textarea style="color:#000; width: 100%; margin-top:5px;" rows="5" v-if="record.proof_remark !== ''" :value="record.proof_remark"></textarea>
                 
             </div>
             

@@ -1078,8 +1078,9 @@ var app = new Vue({
                     }
 
                     if(_this.prof_fileArray.length == 0)
-                      _this.sendNotifyEmail(response.data['batch_id']);
                       _this.prof_clear();
+
+                     _this.sendNotifyEmail(response.data['batch_id']);
 
                     
                 })

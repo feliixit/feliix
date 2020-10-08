@@ -17,6 +17,8 @@ var app = new Vue({
 
     proof_remark:'',
 
+    proof_id: 0,
+
         // paging
     page: 1,
     //perPage: 10,
@@ -218,15 +220,15 @@ var app = new Vue({
         detail: function() {
           let _this = this;
 
-        let favorite = [];
+        //let favorite = [];
           
-          for (i = 0; i < this.receive_records.length; i++) 
-            {
-              if(this.receive_records[i].is_checked == 1)
-                favorite.push(this.receive_records[i].sid);
-            }
+          //for (i = 0; i < this.receive_records.length; i++) 
+            //{
+            //  if(this.receive_records[i].is_checked == 1)
+            //    favorite.push(this.receive_records[i].sid);
+            //}
 
-            if (favorite.length != 1) {
+            if (this.proof_id == 0) {
               Swal.fire({
                 text: 'Please select row to see the detail!',
                 icon: 'warning',
@@ -238,7 +240,7 @@ var app = new Vue({
                 return;
             }
 
-            this.record = this.shallowCopy(this.receive_records.find(element => element.sid == favorite));
+            this.record = this.shallowCopy(this.receive_records.find(element => element.sid == this.proof_id));
 
             this.view_detail = true;
 
@@ -254,7 +256,7 @@ var app = new Vue({
           
           for (i = 0; i < this.receive_records.length; i++) 
             {
-              if(this.receive_records[i].is_checked == 1)
+              if(this.receive_records[i].id == this.proof_id)
               {
                 if(this.receive_records[i].status === "-1")
                 {
@@ -325,7 +327,7 @@ var app = new Vue({
           
           for (i = 0; i < this.receive_records.length; i++) 
             {
-              if(this.receive_records[i].is_checked == 1)
+              if(this.receive_records[i].id == this.proof_id )
               {
                 if(this.receive_records[i].status === "-1")
                 {
@@ -393,6 +395,9 @@ var app = new Vue({
 
           this.receive_records = [];
           this.record = {};
+
+          this.proof_id = 0;
+          this.proof_remark = "";
 
           this.getLeaveCredit();
 

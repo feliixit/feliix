@@ -116,14 +116,16 @@ function send_check_notify_mail($name, $email1,  $leaver, $projectname, $remark,
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
     $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $leaver . "(" . $projectname . ")";
     $content =  "<p>Dear " . $name . ",</p>";
-    $content = $content . "<p>" . $leaver . " has applied for downpayment proof, Following are the details:</p>";
+    $content = $content . "<p>" . $leaver . " has checked downpayment proof, Following are the details:</p>";
+    $content = $content . "<p>Status Checked:" . $status . "</p>";
     $content = $content . "<p> </p>";
-    
+    /*
     $content = $content . "<p>Project Name:" . $projectname . "</p>";
     $content = $content . "<p>Submission Time:" . $subtime . "</p>";
     $content = $content . "<p>Submitter:" . $leaver . "</p>";
     $content = $content . "<p>Checked:" . $status . "</p>";
     $content = $content . "<p>Remark:" . $remark . "</p>";
+    */
 
     if($reason != "")
         $content = $content . "<p>Additional Remark:" . $reason . "</p>";

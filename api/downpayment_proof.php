@@ -49,7 +49,7 @@ $pid = (isset($_GET['pid']) ?  $_GET['pid'] : 0);
 
 $merged_results = array();
 
-$query = "SELECT pp.id, pp.batch_id, pm.project_name, COALESCE(pp.status, 0) status, COALESCE(f.filename, '') filename, pp.remark, COALESCE(f.gcp_name, '') gcp_name, user.username, user.id uid, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:%s') created_at FROM project_proof pp LEFT JOIN project_main pm ON pp.project_id = pm.id LEFT JOIN user ON pp.create_id = user.id LEFT JOIN gcp_storage_file f ON f.batch_id = pp.id AND f.batch_type = 'proof' where 1= 1 ";
+$query = "SELECT pp.id, pp.batch_id, pm.project_name, COALESCE(pp.status, 0) status, COALESCE(f.filename, '') filename, pp.remark, COALESCE(f.gcp_name, '') gcp_name, user.username, user.id uid, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:%s') created_at, pp.proof_remark FROM project_proof pp LEFT JOIN project_main pm ON pp.project_id = pm.id LEFT JOIN user ON pp.create_id = user.id LEFT JOIN gcp_storage_file f ON f.batch_id = pp.id AND f.batch_type = 'proof' where 1= 1 ";
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -58,7 +58,7 @@ if(!empty($_GET['page'])) {
     }
 }
 
-$query = $query . " order by pm.id, status ";
+$query = $query . " order by pp.id, status ";
 
 if(!empty($_GET['size'])) {
     $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
@@ -86,6 +86,7 @@ $remark = "";
 $status = 0;
 $username = "";
 $created_at = "";
+$proof_remark = "";
 $items = [];
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -103,7 +104,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 "remark" => $remark,
                                 "items" => $items,
                                 "username" => $username,
-                                "created_at" => $created_at
+                                "created_at" => $created_at,
+                                "proof_remark" => $proof_remark
         );
 
         $items = [];
@@ -119,6 +121,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $remark = $row['remark'];
     $project_name = $row['project_name'];
     $status = $row['status'];
+    $proof_remark = $row['proof_remark'];
 
     if($filename != "")
       $items[] = array('filename' => $filename,
@@ -137,7 +140,8 @@ if($id != 0)
                                 "remark" => $remark,
                                 "items" => $items,
                                 "username" => $username,
-                                "created_at" => $created_at
+                                "created_at" => $created_at,
+                                "proof_remark" => $proof_remark
             );
 }
 
