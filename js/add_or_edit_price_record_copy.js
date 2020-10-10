@@ -31,7 +31,7 @@ var app = new Vue({
     items:[],
     payees:[],
     fileArray:[],
-    filename:'',
+    filename:[],
     edd:0,
 
     start_date:'',
@@ -60,7 +60,7 @@ var app = new Vue({
     myVar : null,
     lockVar : null,
     index:0,
-      spa:[],
+    spa:[],
       split1: {
         account:0,
         category: '',
@@ -74,7 +74,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
-        filename:'',
+        filename:[],
 
         is_locked: false,
         is_enabled: true,
@@ -93,7 +93,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
-        filename:'',
+        filename:[],
 
         is_locked: false,
         is_enabled: true,
@@ -112,7 +112,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
-        filename:'',
+        filename:[],
 
         is_locked: false,
         is_enabled: true,
@@ -131,7 +131,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
-        filename:'',
+        filename:[],
 
         is_locked: false,
         is_enabled: true,
@@ -150,7 +150,7 @@ var app = new Vue({
         cash_in: 0,
         cash_out: 0,
         remarks: '',
-        filename:'',
+        filename:[],
 
         is_locked: false,
         is_enabled: true,
@@ -650,21 +650,23 @@ var app = new Vue({
 
       },
       onChangeFileUpload:function(e,record) {
-          const image = e.target.files[0];
-          if(record == 1){
-            this.split1.filename = e.target.files[0].name;
-          }else if(record == 2){
-            this.split2.filename = e.target.files[0].name;
-          }else if(record == 3){
-            this.split3.filename = e.target.files[0].name;
-          }else if(record == 4){
-            this.split4.filename = e.target.files[0].name;
-          }else if(record == 5){
-            this.split5.filename = e.target.files[0].name;
-          }else{
-            this.filename = e.target.files[0].name;
+          for(i=0;i<e.target.files.length;i++){
+            const image = e.target.files[i];
+            if(record == 1){
+                this.split1.filename.push('"'+e.target.files[i].name+'"');
+            }else if(record == 2){
+                this.split2.filename.push('"'+e.target.files[i].name+'"');
+            }else if(record == 3){
+                this.split3.filename.push('"'+e.target.files[i].name+'"');
+            }else if(record == 4){
+                this.split4.filename.push('"'+e.target.files[i].name+'"');
+            }else if(record == 5){
+                this.split5.filename.push('"'+e.target.files[i].name+'"');
+            }else{
+                this.filename.push('"'+e.target.files[i].name+'"');
+            }
+            this.fileArray.push(image);
           }
-          this.fileArray.push(image);
           //const reader = new FileReader();
           //reader.readAsDataURL(image);
           //reader.onload = e=>{
@@ -737,6 +739,18 @@ var app = new Vue({
               .then(
                   (res) => {
                       _this.items = res.data;
+                      _this.items.forEach((element)=>{
+                          element.pic_url = element.pic_url.replaceAll('&quot;','"');
+                          if(element.pic_url.indexOf("\"")==0){
+                              element.pic_url = "[" + element.pic_url + "]";
+                              element.pic_url = JSON.parse(element.pic_url);
+                          }else{
+                              element.pic_url = "[\"" + element.pic_url + "\"]";
+                              element.pic_url = JSON.parse(element.pic_url);
+                          }
+                         console.log(element.pic_url);
+                      }
+                      );
                       console.log(_this.items)
                       res.data.forEach((element,index)=>{
                           if(index< this.perPage){
@@ -783,9 +797,11 @@ var app = new Vue({
           var config = {
             headers: { "Content-Type": "multipart/form-data" }
           }
-            var data = myArr[index];
+          var data = myArr[index];
           var myForm = new FormData();
           myForm.append("file", data);
+          myForm.append('batch_type', 'proof');
+          myForm.append('batch_id', 0);
  
 
           axios
@@ -856,7 +872,7 @@ var app = new Vue({
       this.cash_in=0;
       this.cash_out=0;
       this.remarks='';
-      this.filename = '';
+      this.filename = [];
 
       this.is_locked= 0;
       this.is_enabled= 1;
@@ -879,7 +895,7 @@ var app = new Vue({
       this.split1.cash_in= 0;
       this.split1.cash_out= 0;
       this.split1.remarks= '';
-      this.split1.filename='';
+      this.split1.filename=[];
       
       this.split1.is_locked= false;
       this.split1.is_enabled= true;
@@ -897,7 +913,7 @@ var app = new Vue({
       this.split2.cash_in= 0;
       this.split2.cash_out= 0;
       this.split2.remarks= '';
-      this.split2.filename='';
+      this.split2.filename=[];
                 
       this.split2.is_locked= false;
       this.split2.is_enabled= true;
@@ -915,7 +931,7 @@ var app = new Vue({
       this.split3.cash_in= 0;
       this.split3.cash_out= 0;
       this.split3.remarks= '';
-      this.split3.filename='';
+      this.split3.filename=[];
                 
       this.split3.is_locked= false;
       this.split3.is_enabled= true;
@@ -933,7 +949,7 @@ var app = new Vue({
       this.split4.cash_in= 0;
       this.split4.cash_out= 0;
       this.split4.remarks= '';
-      this.split4.filename='';
+      this.split4.filename=[];
                 
       this.split4.is_locked= false;
       this.split4.is_enabled= true;
@@ -951,7 +967,7 @@ var app = new Vue({
       this.split5.cash_in= 0;
       this.split5.cash_out= 0;
       this.split5.remarks= '';
-      this.split5.filename='';
+      this.split5.filename=[];
                 
       this.split5.is_locked= false;
       this.split5.is_enabled= true;
@@ -994,6 +1010,6 @@ var app = new Vue({
     first = yyyy + '-' + mm + '-01';
     _this.start_date = first;
     _this.end_date = today;
-  }
+  },
 }
 });

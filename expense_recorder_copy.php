@@ -323,13 +323,12 @@ try {
                             <td>
                                 <label>Photos</label>
                             </td>
-
-                            <td style="text-align: left;"><input type="file" ref="file0" @change="onChangeFileUpload($event,0)" accept="image/*" capture="camera">
+ 
+                            <td style="text-align: left;"><input type="file" ref="file0" @change="onChangeFileUpload($event,0)" multiple>
                             </td>
-
+                            
                         </tr>
-
-
+                        
                         <tr>
                             <td>
 
@@ -487,7 +486,13 @@ try {
 
                 <td style="text-align: left;">{{item.details}}</td>
 
-                <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                <td v-if="item.pic_url != ''" >
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}/img/${pic}`" target="_blank">
+                        <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
+                        </i>
+                        <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
+                        </i>
+                    </a>
                 </td>
                 
                 <td v-else>
@@ -593,7 +598,13 @@ try {
 
                 <td style="text-align: left;">{{item.details}}</td>
 
-                <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                <td v-if="item.pic_url != ''" >
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}/img/${pic}`" target="_blank">
+                        <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
+                        </i>
+                        <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
+                        </i>
+                    </a>
                 </td>
                 
                 <td v-else>
@@ -699,7 +710,13 @@ try {
 
                 <td style="text-align: left;">{{item.details}}</td>
 
-                <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                <td v-if="item.pic_url != ''" >
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}/img/${pic}`" target="_blank">
+                        <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
+                        </i>
+                        <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
+                        </i>
+                    </a>
                 </td>
                 
                 <td v-else>
@@ -1062,7 +1079,7 @@ try {
                             <label>Photos</label>
                         </td>
 
-                        <td style="text-align: left;"><input type="file" ref="file1" @change="onChangeFileUpload($event,1)" accept="image/*" capture="camera">
+                        <td style="text-align: left;"><input type="file" ref="file1" @change="onChangeFileUpload($event,1)">
                         </td>
 
                     </tr>
@@ -1197,7 +1214,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file2" @change="onChangeFileUpload($event,2)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file2" @change="onChangeFileUpload($event,2)">
                             </td>
 
                         </tr>
@@ -1332,7 +1349,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file3" @change="onChangeFileUpload($event,3)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file3" @change="onChangeFileUpload($event,3)">
                             </td>
 
                         </tr>
@@ -1467,7 +1484,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file4" @change="onChangeFileUpload($event,4)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file4" @change="onChangeFileUpload($event,4)">
                             </td>
 
                         </tr>
@@ -1602,7 +1619,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file5" @change="onChangeFileUpload($event,5)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file5" @change="onChangeFileUpload($event,5)">
                             </td>
 
                         </tr>
@@ -1691,6 +1708,6 @@ try {
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/add_or_edit_price_record_copy.js?v=19g90"></script>
+<script src="js/add_or_edit_price_record_copy.js"></script>
 
 </html>
