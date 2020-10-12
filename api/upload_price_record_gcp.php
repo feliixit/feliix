@@ -81,7 +81,6 @@ if(isset($_FILES['file']['name']))
         {
             $message = 'Uploaded';
             $code = 0;
-            $upload_id = $last_id;
             $image = $image_name;
         }
         else
