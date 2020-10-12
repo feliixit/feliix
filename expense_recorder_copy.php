@@ -25,7 +25,7 @@ try {
             $user_id = $decoded->data->id;
             
             // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41)
-            // 為了測試先加上testmanager by BB
+            // 為了測試先加上testmanager(87) by BB
             if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87)
             {
                 $access3 = true;
@@ -1080,7 +1080,7 @@ try {
                             <label>Photos</label>
                         </td>
 
-                        <td style="text-align: left;"><input type="file" ref="file1" @change="onChangeFileUpload($event,1)">
+                        <td style="text-align: left;"><input type="file" ref="file1" @change="onChangeFileUpload($event,1)" multiple>
                         </td>
 
                     </tr>
@@ -1215,7 +1215,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file2" @change="onChangeFileUpload($event,2)">
+                            <td style="text-align: left;"><input type="file" ref="file2" @change="onChangeFileUpload($event,2)" multiple>
                             </td>
 
                         </tr>
@@ -1350,7 +1350,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file3" @change="onChangeFileUpload($event,3)">
+                            <td style="text-align: left;"><input type="file" ref="file3" @change="onChangeFileUpload($event,3)" multiple>
                             </td>
 
                         </tr>
@@ -1485,7 +1485,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file4" @change="onChangeFileUpload($event,4)">
+                            <td style="text-align: left;"><input type="file" ref="file4" @change="onChangeFileUpload($event,4)" multiple>
                             </td>
 
                         </tr>
@@ -1620,7 +1620,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file5" @change="onChangeFileUpload($event,5)">
+                            <td style="text-align: left;"><input type="file" ref="file5" @change="onChangeFileUpload($event,5)" multiple>
                             </td>
 
                         </tr>
