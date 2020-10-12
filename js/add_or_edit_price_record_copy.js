@@ -653,15 +653,15 @@ var app = new Vue({
           for(i=0;i<e.target.files.length;i++){
             const image = e.target.files[i];
             if(record == 1){
-                this.split1.filename.push('"'+e.target.files[i].name+'"');
+                this.split1.filename.push('&quot;'+e.target.files[i].name+'&quot;');
             }else if(record == 2){
-                this.split2.filename.push('"'+e.target.files[i].name+'"');
+                this.split2.filename.push('&quot;'+e.target.files[i].name+'&quot;');
             }else if(record == 3){
-                this.split3.filename.push('"'+e.target.files[i].name+'"');
+                this.split3.filename.push('&quot;'+e.target.files[i].name+'&quot;');
             }else if(record == 4){
-                this.split4.filename.push('"'+e.target.files[i].name+'"');
+                this.split4.filename.push('&quot;'+e.target.files[i].name+'&quot;');
             }else if(record == 5){
-                this.split5.filename.push('"'+e.target.files[i].name+'"');
+                this.split5.filename.push('&quot;'+e.target.files[i].name+'&quot;');
             }else{
                 this.filename.push('"'+e.target.files[i].name+'"');
             }
