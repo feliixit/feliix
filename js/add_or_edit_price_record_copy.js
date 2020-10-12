@@ -805,7 +805,7 @@ var app = new Vue({
  
 
           axios
-            .post("api/upload_price_record_copy", myForm, config)
+            .post("api/upload_price_record_gcp", myForm, config)
             .then(function(res) {
               if (res.data.code == 0) {
 
