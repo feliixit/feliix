@@ -41,7 +41,7 @@ try {
 
         // 2. 針對 Query and Export的內容，只有 Glendon Wendell Co 和 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到
         
-        if($user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
+        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
             $access2 = true;
 
         // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41)

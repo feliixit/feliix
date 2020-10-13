@@ -224,7 +224,7 @@ $(function(){
 
                 <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%; margin-top:5px;" rows="5" v-if="record.status == 0" v-model="proof_remark"></textarea>
 
-                <textarea style="color:#000; width: 100%; margin-top:5px;" rows="5" v-if="record.proof_remark !== ''" :value="record.proof_remark"></textarea>
+                <textarea style="color:#000; width: 100%; margin-top:5px;" rows="5" v-if="record.proof_remark !== '' && view_detail" :value="record.proof_remark"></textarea>
                 
             </div>
             
