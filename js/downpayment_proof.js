@@ -240,7 +240,7 @@ var app = new Vue({
                 return;
             }
 
-            this.record = this.shallowCopy(this.receive_records.find(element => element.sid == this.proof_id));
+            this.record = this.shallowCopy(this.receive_records.find(element => element.id == this.proof_id));
 
             this.view_detail = true;
 
