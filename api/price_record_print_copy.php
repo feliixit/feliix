@@ -160,7 +160,7 @@ if($jwt){
                 {
                     foreach($pic_urls as explode(",",$row['pic_url'])){
                         $link = $mail_ip . $pic_urls;
-                        $files.push($link);
+                        array_push($files,$link);
                     }
                     $sheet->setCellValue('F' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($files);
