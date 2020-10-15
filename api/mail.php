@@ -89,7 +89,7 @@ function sendGridMail($name, $email1,  $leaver, $projectname, $remark)
 }
 
 
-function send_check_notify_mail($name, $email1,  $leaver, $projectname, $remark, $subtime, $reason, $status)
+function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime, $reason, $status)
 {
     $conf = new Conf();
 
@@ -111,14 +111,26 @@ function send_check_notify_mail($name, $email1,  $leaver, $projectname, $remark,
     $mail->IsHTML(true);
     $mail->AddAddress($email1, $name);
 
+    $mail->AddCC('kuan@feliix.com', 'Kuan');
+    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+
     $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
     $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
-    $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $leaver . "(" . $projectname . ")";
+    $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
     $content =  "<p>Dear " . $name . ",</p>";
-    $content = $content . "<p>" . $leaver . " has checked downpayment proof, Following are the details:</p>";
-    $content = $content . "<p>Status Checked:" . $status . "</p>";
-    $content = $content . "<p> </p>";
+    $content = $content . "<p>Glen has checked downpayment proof, Following are the details:</p>";
+
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+
+
+    $content = $content . "<p>Status: Checked: " . $status . "</p>";
     /*
     $content = $content . "<p>Project Name:" . $projectname . "</p>";
     $content = $content . "<p>Submission Time:" . $subtime . "</p>";
@@ -131,6 +143,9 @@ function send_check_notify_mail($name, $email1,  $leaver, $projectname, $remark,
         $content = $content . "<p>Additional Remark:" . $reason . "</p>";
 
     $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to view the downpayment proof.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
 
 
     $mail->MsgHTML($content);
@@ -168,13 +183,19 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $mail->Password   = $conf::$mail_password;
 
     $mail->IsHTML(true);
-    $mail->AddAddress($email1, $name);
+    $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
+    $mail->AddCC('kuan@feliix.com', 'Kuan');
+    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    $mail->AddCC($email1, $name);
+    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
     $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
     $mail->Subject = "Downpayment Proof Submitted by " . $leaver . "(" . $projectname . ")";
-    $content =  "<p>Dear " . $name . ",</p>";
+    $content =  "<p>Dear Glen,</p>";
     $content = $content . "<p>" . $leaver . " has applied for downpayment proof, Following are the details:</p>";
     $content = $content . "<p> </p>";
 

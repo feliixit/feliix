@@ -82,6 +82,7 @@ else
     $subtime = "";
     $status = 0;
     $proof_remark = "";
+    $email1 = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
@@ -90,12 +91,11 @@ else
         $subtime = $row['created_at'];
         $status = $row['status'];
         $proof_remark = $row['proof_remark'];
+        $email1 = $row['email'];
     }
 
-    $name1 = "dennis";
-    $email1 = "dennis@feliix.com";
 
-    send_check_notify_mail($name1, $email1, $leaver, $project_name, $remark, $subtime, $proof_remark, "True");
+    send_check_notify_mail($leaver, $email1, $project_name, $remark, $subtime, $proof_remark, "True");
 }
 
 /*

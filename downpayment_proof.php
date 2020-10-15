@@ -217,12 +217,12 @@ $(function(){
                     </ul>
                 </div>
 
-                <div class="btnbox" v-if="record.status == 0">
+                <div class="btnbox" v-if="record.status == 0 && is_approval">
                     <a class="btn" @click="approve" :disabled="submit">Checked: True</a>
                     <a class="btn" @click="reject" :disabled="submit">Checked: False</a>
                 </div>
 
-                <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%; margin-top:5px;" rows="5" v-if="record.status == 0" v-model="proof_remark"></textarea>
+                <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%; margin-top:5px;" rows="5" v-if="record.status == 0 && is_approval" v-model="proof_remark"></textarea>
 
                 <textarea style="color:#000; width: 100%; margin-top:5px;" rows="5" v-if="record.proof_remark !== '' && view_detail" :value="record.proof_remark"></textarea>
                 
