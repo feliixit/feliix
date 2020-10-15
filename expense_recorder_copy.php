@@ -715,7 +715,7 @@ try {
                     <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
                         <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
                         </i>
-                        <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
+                        <i v-else class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
                         </i>
                     </a>
                 </td>

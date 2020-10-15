@@ -796,6 +796,7 @@ var app = new Vue({
       upload:function(){
         var myArr = this.fileArray;
         var vm = this;
+        console.log(myArr);
         myArr.forEach((element, index) => {
           var config = {
             headers: { "Content-Type": "multipart/form-data" }
