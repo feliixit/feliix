@@ -656,17 +656,17 @@ var app = new Vue({
           for(i=0;i<e.target.files.length;i++){
             const image = e.target.files[i];
             if(record == 1){
-                this.split1.filename.push(file_day + e.target.files[i].name);
+                this.split1.filename.push(this.file_day + e.target.files[i].name);
             }else if(record == 2){
-                this.split2.filename.push(file_day + e.target.files[i].name);
+                this.split2.filename.push(this.file_day + e.target.files[i].name);
             }else if(record == 3){
-                this.split3.filename.push(file_day + e.target.files[i].name);
+                this.split3.filename.push(this.file_day + e.target.files[i].name);
             }else if(record == 4){
-                this.split4.filename.push(file_day + e.target.files[i].name);
+                this.split4.filename.push(this.file_day + e.target.files[i].name);
             }else if(record == 5){
-                this.split5.filename.push(file_day + e.target.files[i].name);
+                this.split5.filename.push(this.file_day + e.target.files[i].name);
             }else{
-                this.filename.push(file_day + e.target.files[i].name);
+                this.filename.push(this.file_day + e.target.files[i].name);
             }
             this.fileArray.push(image);
           }
@@ -806,6 +806,7 @@ var app = new Vue({
           myForm.append("file", data);
           myForm.append('batch_type', 'proof');
           myForm.append('batch_id', 0);
+          myForm.append('today', vm.file_day);
  
 
           axios
