@@ -53,6 +53,7 @@ $conf = new Conf();
 
 $batch_type = (isset($_POST['batch_type']) ?  $_POST['batch_type'] : '');
 $batch_id = (isset($_POST['batch_id']) ?  $_POST['batch_id'] : 0);
+$today = (isset($_POST['today']) ?  $_POST['today'] : '');
 
 $image = '';
 
@@ -72,7 +73,7 @@ if(isset($_FILES['file']['name']))
 
         $bucket = $storage->bucket('feliiximg');
 
-        $upload_name = pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
+        $upload_name = pathinfo($today.$image_name, PATHINFO_FILENAME) . '.' . $extension;
 
         if($bucket->upload(
           fopen($_FILES['file']['tmp_name'], 'r'),
