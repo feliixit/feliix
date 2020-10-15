@@ -23,7 +23,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 $database = new Database();
 $db = $database->getConnection();
 
- 
+$mail_ip= "https://storage.googleapis.com/feliiximg/";
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
  
@@ -158,10 +158,12 @@ if($jwt){
                 $sheet->setCellValue('E' . $i, $row['details']);
                 if($row['pic_url'] != '')
                 {
-                    $conf = new Conf();
-                    $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
+                    foreach($pic_urls as explode(",",$row['pic_url'])){
+                        $link = $mail_ip . $pic_urls;
+                        $files.push($link);
+                    }
                     $sheet->setCellValue('F' . $i, 'Photo');
-                    $sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($link);
+                    $sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($files);
                 }
                 else
                     $sheet->setCellValue('F' . $i, '');
