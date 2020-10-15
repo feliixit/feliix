@@ -72,7 +72,7 @@ if(isset($_FILES['file']['name']))
 
         $bucket = $storage->bucket('feliiximg');
 
-        $upload_name = time() . '_' . pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
+        $upload_name = pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
 
         if($bucket->upload(
           fopen($_FILES['file']['tmp_name'], 'r'),

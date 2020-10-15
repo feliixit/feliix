@@ -488,7 +488,7 @@ try {
                 <td style="text-align: left;">{{item.details}}</td>
 
                 <td v-if="item.pic_url != ''" >
-                    <a v-for="pic in item.pic_url" :href="`${mail_ip}/img/${pic}`" target="_blank">
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
                         <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
                         </i>
                         <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
@@ -600,7 +600,7 @@ try {
                 <td style="text-align: left;">{{item.details}}</td>
 
                 <td v-if="item.pic_url != ''" >
-                    <a v-for="pic in item.pic_url" :href="`${mail_ip}/img/${pic}`" target="_blank">
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
                         <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
                         </i>
                         <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
@@ -712,7 +712,7 @@ try {
                 <td style="text-align: left;">{{item.details}}</td>
 
                 <td v-if="item.pic_url != ''" >
-                    <a v-for="pic in item.pic_url" :href="`${mail_ip}/img/${pic}`" target="_blank">
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
                         <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
                         </i>
                         <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
@@ -953,7 +953,7 @@ try {
                         </td>
 
                         <td style="text-align: left;">
-                            <a :href="`${mail_ip}/img/${pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                            <a :href="`${mail_ip}${pic}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
                         </td>
 
                     </tr>

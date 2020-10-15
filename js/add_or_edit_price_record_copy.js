@@ -39,7 +39,7 @@ var app = new Vue({
 
     name:'',
     is_viewer:0,
-    mail_ip:'https://feliix.myvnc.com',
+    mail_ip:'https://storage.googleapis.com/feliiximg/',
     
     allCashIn:0,
     allCashOut:0,
@@ -61,6 +61,9 @@ var app = new Vue({
     lockVar : null,
     index:0,
     spa:[],
+    
+    file_day:'',
+    
       split1: {
         account:0,
         category: '',
@@ -653,17 +656,17 @@ var app = new Vue({
           for(i=0;i<e.target.files.length;i++){
             const image = e.target.files[i];
             if(record == 1){
-                this.split1.filename.push(e.target.files[i].name);
+                this.split1.filename.push(file_day + e.target.files[i].name);
             }else if(record == 2){
-                this.split2.filename.push(e.target.files[i].name);
+                this.split2.filename.push(file_day + e.target.files[i].name);
             }else if(record == 3){
-                this.split3.filename.push(e.target.files[i].name);
+                this.split3.filename.push(file_day + e.target.files[i].name);
             }else if(record == 4){
-                this.split4.filename.push(e.target.files[i].name);
+                this.split4.filename.push(file_day + e.target.files[i].name);
             }else if(record == 5){
-                this.split5.filename.push(e.target.files[i].name);
+                this.split5.filename.push(file_day + e.target.files[i].name);
             }else{
-                this.filename.push(e.target.files[i].name);
+                this.filename.push(file_day + e.target.files[i].name);
             }
             this.fileArray.push(image);
           }
@@ -1008,6 +1011,7 @@ var app = new Vue({
     var yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
     first = yyyy + '-' + mm + '-01';
+    _this.file_day = yyyy + mm + dd;
     _this.start_date = first;
     _this.end_date = today;
   },
