@@ -158,7 +158,8 @@ if($jwt){
                 $sheet->setCellValue('E' . $i, $row['details']);
                 if($row['pic_url'] != '')
                 {
-                    foreach($pic_urls as explode(",",$row['pic_url'])){
+                    $aa = explode(",",$row['pic_url']);
+                    foreach($pic_urls as $aa){
                         $link = $mail_ip . $pic_urls;
                         array_push($files,$link);
                     }
