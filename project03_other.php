@@ -1,3 +1,12 @@
+<?php 
+
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
+if (  $sid < 1 || !is_numeric($sid)) {
+  header( 'location:project02' );
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,7 +89,7 @@ $(function(){
     <!-- header -->
 	<header class="dialogclear">header</header>
     <!-- header end -->
-    <div class="mainContent">
+    <div id='app' class="mainContent">
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="list_function main">
             <div class="block">
@@ -844,4 +853,10 @@ $(function(){
     </div>
 </div>
 </body>
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="js/axios.min.js"></script> 
+<script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script type="text/javascript" src="js/project03_other.js" defer></script>
+<script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
 </html>

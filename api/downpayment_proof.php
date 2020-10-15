@@ -58,7 +58,7 @@ if(!empty($_GET['page'])) {
     }
 }
 
-$query = $query . " order by pp.id, status ";
+$query = $query . " order by pp.created_at desc, status ";
 
 if(!empty($_GET['size'])) {
     $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);

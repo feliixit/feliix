@@ -67,18 +67,17 @@ else
             $remark = "";
             $leaver = "";
             $subtime = "";
+            $email1 = "";
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $project_name = $row['project_name'];
                 $remark = $row['remark'];
                 $leaver = $row['username'];
                 $subtime = $row['created_at'];
+                $email1 = $row['email'];
             }
 
-            $name1 = "dennis";
-            $email1 = "dennis@feliix.com";
-
-            send_pay_notify_mail($name1, $email1, $leaver, $project_name, $remark, $subtime);
+            send_pay_notify_mail($leaver, $email1, $leaver, $project_name, $remark, $subtime);
 
             break;
 

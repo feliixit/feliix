@@ -26,6 +26,8 @@ var app = new Vue({
 
     perPage: 5,
 
+    is_approval: false,
+
   },
 
   created () {
@@ -124,6 +126,8 @@ var app = new Vue({
             //handle success
             _this.name = response.data.username;
             _this.is_manager = response.data.is_manager;
+            if(_this.name === "Glendon Wendell Co")
+              _this.is_approval = true;
 
         })
         .catch(function(response) {
@@ -240,7 +244,7 @@ var app = new Vue({
                 return;
             }
 
-            this.record = this.shallowCopy(this.receive_records.find(element => element.sid == this.proof_id));
+            this.record = this.shallowCopy(this.receive_records.find(element => element.id == this.proof_id));
 
             this.view_detail = true;
 
