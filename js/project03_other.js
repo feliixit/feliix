@@ -15,7 +15,6 @@ var app = new Vue({
     username : '',
     client_type : '',
     category : '',
-
     // paging
     page: 1,
     //perPage: 10,
@@ -63,9 +62,9 @@ var app = new Vue({
 
     // Downpayment Proof
     prof_remark:'',
-    prof_fileArray: [],
-    prof_canSub: true,
-    prof_finish: false,
+    fileArray: [],
+    canSub: true,
+    finish: false,
     stage_client_infomation : {},
 
     // Project Task Tracker
@@ -127,38 +126,62 @@ var app = new Vue({
 
     
 
-    prof_fileArray: {
-        handler(newValue, oldValue) {
-          var _this = this;
-          console.log(newValue);
-          var finish = newValue.find(function(currentValue, index) {
-            return currentValue.progress != 1;
-          });
-          if (finish === undefined && this.prof_fileArray.length) {
-            this.prof_finish = true;
-            Swal.fire({
-              text: "upload finished",
-              type: "success",
-              duration: 1 * 1000,
-              customClass: "message-box",
-              iconClass: "message-icon"
-            }).then((result) => {
-              /* Read more about isConfirmed, isDenied below */
-              _this.prof_finish = true;
-              _this.get_stage_client_infomation(_this.stage_id);
+    fileArray: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.fileArray.length) {
+          
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish = true;
+            _this.getProjectActionDetails(_this.project_id);
 
-            });;
-            this.prof_clear();
-          }
-        },
-        deep: true
+          });
+          this.detail_clear();
+
+        }
       },
+      deep: true
+    },
 
   },
 
 
 
   methods: {
+
+    deleteFile(index) {
+      this.fileArray.splice(index, 1);
+      var fileTarget = this.$refs.file;
+      fileTarget.value = "";
+    },
+
+    changeFile() {
+      var fileTarget = this.$refs.file;
+
+        for (i = 0; i < fileTarget.files.length; i++) {
+            // remove duplicate
+            if (
+              this.fileArray.indexOf(fileTarget.files[i]) == -1 ||
+              this.fileArray.length == 0
+            ) {
+              var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+              this.fileArray.push(fileItem);
+            }else{
+              fileTarget.value = "";
+            }
+          }
+    },
 
     setPages() {
       console.log('setPages');
