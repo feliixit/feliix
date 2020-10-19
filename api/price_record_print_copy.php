@@ -25,7 +25,7 @@ $db = $database->getConnection();
 
 $mail_ip= "https://storage.googleapis.com/feliiximg/";
 $files = array();
-$aa = array();
+$explode_row = array();
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
  
@@ -160,9 +160,9 @@ if($jwt){
                 $sheet->setCellValue('E' . $i, $row['details']);
                 if($row['pic_url'] != '')
                 {
-                    $aa = explode(",",$row['pic_url']);
+                    $explode_row = explode(",",$row['pic_url']);
                     $aph = 'L';
-                    foreach($pic_urls as $aa){
+                    foreach($explode_row as $pic_urls){
                         //$sheet->getActiveSheet()->unmergeCells('F'.$i:'F'.$i);
                         $link = $mail_ip . $pic_urls;
                         $sheet->getCell($aph.$i)->getHyperlink()->setUrl($files)->setTooltip('File');
