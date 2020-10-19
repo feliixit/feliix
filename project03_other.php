@@ -1,12 +1,3 @@
-<?php 
-
-$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
-$sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
-if (  $sid < 1 || !is_numeric($sid)) {
-  header( 'location:project02' );
-}
-
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -97,7 +88,7 @@ $(function(){
                 <div class="popupblock">
                     <a class="add red"></a>
                     <!-- dialog -->
-                    <div class="dialog r-add">
+                    <div class="dialog r-add add">
                         <h6>Add/Duplicate Task</h6>
                         <div class="tablebox s1">
                             <ul>
@@ -141,12 +132,56 @@ $(function(){
                                 <dd><textarea placeholder=""></textarea></dd>
                             </dl>
                             <dl>
-                                <dt>Pictures:</dt>
-                                <dd><div class="browser_group"><input type="text"><button >Choose Picture</button></div></dd>
+                                <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            name="file"
+                                            value
+                                            placeholder="choose file"
+                                            ref="file"
+                                            v-show="canSub"
+                                            @change="changeFile()"
+                                            multiple
+                                          />
+                                    </div>
+                                  </div>
+                                </dd>
                             </dl>
                             <dl>
                                 <dt>Files:</dt>
-                                <dd><div class="browser_group"><input type="text"><button >Choose File</button></div></dd>
+                                <dd>
+                                    <div class="browser_group">
+
+                                        <div class="pad">
+                                            <div class="file-list">
+                                              <div class="file-item" v-for="(item,index) in fileArray" :key="index">
+                                                <p>
+                                                  {{item.name}}
+                                                  <span
+                                                    @click="deleteFile(index)"
+                                                    v-show="item.progress==0"
+                                                    class="upload-delete"
+                                                  ><i class="fas fa-backspace"></i>
+                                                    </span>
+                                                </p>
+                                                <div class="progress-container" v-show="item.progress!=0">
+                                                  <div class="progress-wrapper">
+                                                    <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                                  </div>
+                                                  <div class="progress-rate">
+                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                    <span v-else><i class="fas fa-check-circle"></i></span>  
+                                                  </div>
+                                                </div>
+                                              </div>
+                                       
+                                    </div>
+                                </dd>
                             </dl>
                             <div class="btnbox">
                                 <a class="btn small">Cancel</a>
@@ -859,4 +894,133 @@ $(function(){
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript" src="js/project03_other.js" defer></script>
 <script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
+<style scoped>
+.extendex-top {
+  background: none;
+  box-shadow: none;
+}
+.bg-whi {
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+.top-box {
+
+  background-size: 100%;
+}
+.pub-con {
+  box-sizing: border-box;
+  background-size: 100%;
+  text-align: center;
+  position: relative;
+}
+.input-zone {
+  width: 5rem;
+  background-size: 2.13rem;
+  border-radius: 0.38rem;
+  border: 0.06rem solid rgba(112, 112, 112, 1);
+  position: relative;
+  color: var(--fth04);
+  font-size: 0.88rem;
+  box-sizing: border-box;
+}
+.input {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+.pad {
+  padding: 0.5rem 1.7rem 0 0rem;
+  font-size: 0.88rem;
+}
+.btn-container {
+  margin: 0.69rem auto;
+  text-align: center;
+}
+.btn-container .btn {
+  width: 10.56rem;
+  height: 2.5rem;
+  border-radius: 1.25rem;
+  border: none;
+  color: #ffffff;
+}
+.btn-container .btn.btn-gray {
+  background: rgba(201, 201, 201, 1);
+}
+.btn-container .btn.btn-blue {
+  background: linear-gradient(
+    180deg,
+    rgba(128, 137, 229, 1) 0%,
+    rgba(87, 84, 196, 1) 100%
+  );
+  font-size: 1rem;
+}
+.tips {
+  margin-top: 1.69rem;
+}
+.file-list {
+  font-size: 0.88rem;
+  color: #5a5cc6;
+}
+.file-list .file-item {
+  margin-top: 0.63rem;
+}
+.file-list .file-item p {
+  line-height: 1.25rem;
+  position: relative;
+}
+.file-list img {
+  width: 1.25rem;
+  cursor: pointer;
+}
+.file-list img.upload-delete {
+  position: absolute;
+  bottom: 0;
+  margin: 0 auto;
+  margin-left: 1rem;
+}
+.progress-wrapper {
+  position: relative;
+  height: 0.5rem;
+  border: 0.06rem solid rgba(92, 91, 200, 1);
+  border-radius: 1px;
+  box-sizing: border-box;
+  width: 87%;
+}
+.progress-wrapper .progress-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  border-radius: 1px;
+  background-color: #5c5bc8;
+  z-index: 1;
+}
+.progress-rate {
+  font-size: 14px;
+  height: 100%;
+  z-index: 2;
+  width: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.progress-rate span {
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+}
+.progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.file-list img.upload-success {
+  margin-left: 0;
+}
+</style>
 </html>
