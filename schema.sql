@@ -747,3 +747,24 @@ ADD COLUMN `location` varchar(64) DEFAULT '' AFTER `year`;
 -- 20201005 add proof batch
 ALTER TABLE project_proof
 ADD COLUMN `batch_id` int(11) DEFAULT 0 AFTER project_id;
+
+
+-- 20201019 stage_other_task
+CREATE TABLE IF NOT EXISTS `project_other_task` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `stage_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `title` varchar(256) DEFAULT '',
+  `priority` int(11) DEFAULT 0,
+  `due_date` varchar(10) default '',
+  `assignee` varchar(256) default '',
+  `collaborator` varchar(256) default '',
+  `status` int(11) DEFAULT 0,
+  `type` varchar(64) DEFAULT '',
+  `detail` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+

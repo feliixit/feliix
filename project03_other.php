@@ -70,6 +70,8 @@ $(function(){
     })
 })
 
+
+
 </script>
 
 </head>
@@ -86,9 +88,9 @@ $(function(){
             <div class="block">
                 <!-- add red -->
                 <div class="popupblock">
-                    <a class="add red"></a>
+                    <a id="dialog_a1" class="add red"></a>
                     <!-- dialog -->
-                    <div class="dialog r-add add">
+                    <div id="add_a1" class="dialog r-add add">
                         <h6>Add/Duplicate Task</h6>
                         <div class="tablebox s1">
                             <ul>
@@ -104,32 +106,49 @@ $(function(){
                         <div class="formbox s2 add">
                             <dl>
                                 <dt>Title:</dt>
-                                <dd><input type="text"></dd>
+                                <dd><input type="text" v-model="title"></dd>
                             </dl>
                             <dl>
                                 <dt>Priority:</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                    <select v-model="priority">
+                                        <option value="1">No Priority</option>
+                                        <option value="2">Low</option>
+                                        <option value="3">Normal</option>
+                                        <option value="4">High</option>
+                                        <option value="5">Urgent</option>
                                     </select>
                                 </dd>
                             </dl>
                             <dl>
                                 <dt>Assignee:</dt>
-                                <dd><div class="browser_group"><input type="text"><button >Browse</button></div></dd>
+                                <dd><div class="browser_group">
+                                    <select v-model="assignee" id="assignee">
+                                      <option v-for="(item, index) in users" :value="item.id" :key="item.username">
+                                          {{ item.username }}
+                                      </option>
+                                    </select>
+                                    <button @click="OpenAssignee">Browse</button>
+                                </div></dd>
                             </dl>
                             <dl>
                                 <dt>Collaborator:</dt>
-                                <dd><div class="browser_group"><input type="text"><button >Browse</button></div></dd>
+                                <dd><div class="browser_group">
+                                    <select id="collaborator" v-model="collaborator">
+                                      <option v-for="(item, index) in users" :value="item.id" :key="item.username">
+                                          {{ item.username }}
+                                      </option>
+                                    </select>
+                                    <button @click="OpenCollaborator">Browse</button>
+                                </div></dd>
                             </dl>
                             <dl>
                                 <dt>Due Date:</dt>
-                                <dd><div class="browser_group"><input type="text"><button >Choose Date</button></div></dd>
+                                <dd><div class="browser_group"><input type="date" v-model="due_date"></div></dd>
                             </dl>
                             <dl>
                                 <dt>Task Detail:</dt>
-                                <dd><textarea placeholder=""></textarea></dd>
+                                <dd><textarea placeholder="" v-model="detail"></textarea></dd>
                             </dl>
                             <dl>
                                 <dd style="display: flex; justify-content: flex_start;">
@@ -184,9 +203,9 @@ $(function(){
                                 </dd>
                             </dl>
                             <div class="btnbox">
-                                <a class="btn small">Cancel</a>
+                                <a class="btn small" @click="task_clear">Cancel</a>
                                 <a class="btn small green">Calendar</a>
-                                <a class="btn small green">Create</a>
+                                <a class="btn small green" @click="task_create">Create</a>
                             </div>
                         </div>
                         <div class="tablebox s2 dup">
