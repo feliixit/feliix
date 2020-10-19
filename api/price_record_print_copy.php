@@ -56,7 +56,7 @@ if($jwt){
 
             $merged_results = array();
 
-            $sql = "SELECT * from price_record where is_enabled = true";
+            $sql = "SELECT account, created_at, category, sub_category, related_account, details, pic_url, payee, paid_date, cash_in, cash_out, remarks from price_record where is_enabled = true";
             $sql1 = "";
             $sql2 = "";
             
@@ -160,10 +160,11 @@ if($jwt){
                 {
                     $aa = explode(",",$row['pic_url']);
                     foreach($pic_urls as $aa){
+                        //$sheet->getActiveSheet()->unmergeCells('F'.$i:'F'.$i);
                         $link = $mail_ip . $pic_urls;
                         array_push($files,$link);
                     }
-                    $sheet->setCellValue('F' . $i, $files);
+                    $sheet->fromArray($files, NULL, 'L' . $i);
                     //$sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($files);
                 }
                 else
@@ -233,6 +234,9 @@ function getAccount($loc)
             break;
         case 2:
             $account = "Security Bank";
+            break;
+        case 3:
+            $account = "Online Transactions";
             break;
    
     }
