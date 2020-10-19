@@ -138,12 +138,12 @@ if($jwt){
             $sheet->setCellValue('C1', 'Category');
             $sheet->setCellValue('D1', 'Related Account');
             $sheet->setCellValue('E1', 'Details');
-            $sheet->setCellValue('F1', 'Photos');
-            $sheet->setCellValue('G1', 'Payee');
-            $sheet->setCellValue('H1', 'Paid/Received Date');
-            $sheet->setCellValue('I1', 'Cash in');
-            $sheet->setCellValue('J1', 'Cash out');
-            $sheet->setCellValue('K1', 'Remarks');
+            $sheet->setCellValue('K1', 'Files');
+            $sheet->setCellValue('F1', 'Payee');
+            $sheet->setCellValue('G1', 'Paid/Received Date');
+            $sheet->setCellValue('H1', 'Cash in');
+            $sheet->setCellValue('I1', 'Cash out');
+            $sheet->setCellValue('J1', 'Remarks');
 
 
             $i = 2;
@@ -161,26 +161,28 @@ if($jwt){
                 if($row['pic_url'] != '')
                 {
                     $explode_row = explode(",",$row['pic_url']);
-                    $aph = 'L';
+                    $aph = 'K';
                     foreach($explode_row as $pic_urls){
                         //$sheet->getActiveSheet()->unmergeCells('F'.$i:'F'.$i);
                         $link = $mail_ip . $pic_urls;
-                        $sheet->getCell($aph.$i)->getHyperlink()->setUrl($files)->setTooltip('File');
+                        $sheet->setCellValue($aph.'1', 'Files');
+                        $sheet->setCellValue($aph.$i, 'File');
+                        $sheet->getCell($aph.$i)->getHyperlink()->setUrl($files);
                         $aph++;
-                        array_push($files ,$link);
+                        //array_push($files ,$link);
                     }
-                    $sheet->fromArray($files, NULL, 'F' . $i);
+                    //$sheet->fromArray($files, NULL, 'F' . $i);
                 }
                 else
-                    $sheet->setCellValue('F' . $i, '');
+                    $sheet->setCellValue('K' . $i, '');
 
                 
-                $sheet->setCellValue('G' . $i, $row['payee']);
-                $sheet->setCellValue('H' . $i, $row['paid_date']);
-                $sheet->setCellValue('I' . $i, $row['cash_in']);
-                $sheet->setCellValue('J' . $i, $row['cash_out']);
-                $sheet->setCellValue('K' . $i, $row['remarks']);
-
+                $sheet->setCellValue('F' . $i, $row['payee']);
+                $sheet->setCellValue('G' . $i, $row['paid_date']);
+                $sheet->setCellValue('H' . $i, $row['cash_in']);
+                $sheet->setCellValue('I' . $i, $row['cash_out']);
+                $sheet->setCellValue('J' . $i, $row['remarks']);
+                                      
                 $sheet->getStyle('A'. $i. ':' . 'Z' . $i)->applyFromArray($styleArray);
 
                 $i++;
