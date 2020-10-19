@@ -167,7 +167,7 @@ if($jwt){
                         $link = $mail_ip . $pic_urls;
                         $sheet->setCellValue($aph.'1', 'Files');
                         $sheet->setCellValue($aph.$i, 'File');
-                        $sheet->getCell($aph.$i)->getHyperlink()->setUrl($files);
+                        $sheet->getCell($aph.$i)->getHyperlink()->setUrl($link);
                         $aph++;
                         //array_push($files ,$link);
                     }
