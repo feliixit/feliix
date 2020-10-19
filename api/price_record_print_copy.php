@@ -25,6 +25,7 @@ $db = $database->getConnection();
 
 $mail_ip= "https://storage.googleapis.com/feliiximg/";
 $files = array();
+$aa = array();
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
  
@@ -160,13 +161,15 @@ if($jwt){
                 if($row['pic_url'] != '')
                 {
                     $aa = explode(",",$row['pic_url']);
+                    $aph = 'L';
                     foreach($pic_urls as $aa){
                         //$sheet->getActiveSheet()->unmergeCells('F'.$i:'F'.$i);
                         $link = $mail_ip . $pic_urls;
+                        $sheet->getCell($aph.$i)->getHyperlink()->setUrl($files)->setTooltip('File');
+                        $aph++;
                         array_push($files ,$link);
                     }
-                    $sheet->fromArray($files, NULL, 'L' . $i);
-                    //$sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($files);
+                    $sheet->fromArray($files, NULL, 'F' . $i);
                 }
                 else
                     $sheet->setCellValue('F' . $i, '');
@@ -178,13 +181,13 @@ if($jwt){
                 $sheet->setCellValue('J' . $i, $row['cash_out']);
                 $sheet->setCellValue('K' . $i, $row['remarks']);
 
-                $sheet->getStyle('A'. $i. ':' . 'K' . $i)->applyFromArray($styleArray);
+                $sheet->getStyle('A'. $i. ':' . 'Z' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'K1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'K' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'Z1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'Z' . --$i)->applyFromArray($styleArray);
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="file.xlsx"');
