@@ -24,6 +24,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 $mail_ip= "https://storage.googleapis.com/feliiximg/";
+$files = array();
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
  
@@ -162,7 +163,7 @@ if($jwt){
                     foreach($pic_urls as $aa){
                         //$sheet->getActiveSheet()->unmergeCells('F'.$i:'F'.$i);
                         $link = $mail_ip . $pic_urls;
-                        array_push($files,$link);
+                        array_push($files ,$link);
                     }
                     $sheet->fromArray($files, NULL, 'L' . $i);
                     //$sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($files);
