@@ -131,7 +131,7 @@ switch ($method) {
 
             $task_id = $row['task_id'];
             $title = $row['title'];
-            $priority = $row['priority'];
+            $priority = GetPriority($row['priority']);
             $due_date = $row['due_date'];
             $task_status = $row['task_status'];
             $creator = $row['creator'];
@@ -254,6 +254,30 @@ function GetUserInfo($users, $db)
     return $merged_results;
 }
 
+function GetPriority($loc)
+{
+    $location = "";
+    switch ($loc) {
+        case "1":
+            $location = "No Priority";
+            break;
+        case "2":
+            $location = "Low";
+            break;
+        case "3":
+            $location = "Normal";
+            break;
+        case "4":
+            $location = "High";
+            break;
+        case "5":
+            $location = "Urgent";
+            break;
+        
+    }
+
+    return $location;
+}
 
 function GetMessage($task_id, $db)
 {

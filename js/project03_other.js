@@ -59,6 +59,7 @@ var app = new Vue({
         tmp = v.split('=');
         if (tmp.length == 2)
           _this.stage_id = tmp[1];
+          _this.getProjectOtherTask(_this.stage_id);
 
       });
     }
@@ -174,6 +175,33 @@ var app = new Vue({
       return this.receive_records.slice(from, to);
     },
 
+    getProjectOtherTask(stage_id) {
+      let _this = this;
+
+      if(stage_id == 0)
+        return;
+
+      const params = {
+              stage_id : stage_id,
+           
+            };
+
+          let token = localStorage.getItem('accessToken');
+    
+          axios
+              .get('api/project03_other_task', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.project03_other_task = res.data;
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
 
     getUsers () {
 
