@@ -662,8 +662,29 @@
                         </div>
                         <div class="tablebox lv3c m03 dialogclear">
                             <ul>
-                                <li><textarea name="" id="" placeholder="Write your comment here"></textarea></li>
-                                <li><a class="btn small green">Comment</a></li>
+                                <li><textarea name="" id="" placeholder="Write your comment here"></textarea>
+                                </li>
+                                <li>
+                                    <input class="btn small green" type="file" :ref="'file_task_' + receive_record.task_id" ref="file" @change="changeTaskFile(receive_record.task_id)" multiple />
+                                    <a class="btn small green">Comment</a></li>
+                                <li>
+                                    <div class="file-item" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index">
+                                        <p>
+                                            {{item.name}}
+                                            <span @click="deleteTaskFile(receive_record.task_id, index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
+                                            </span>
+                                        </p>
+                                        <div class="progress-container" v-show="item.progress!=0">
+                                            <div class="progress-wrapper">
+                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                            </div>
+                                            <div class="progress-rate">
+                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                <span v-else><i class="fas fa-check-circle"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>

@@ -42,6 +42,9 @@ var app = new Vue({
 
 
     fileArray: [],
+
+    arrTask: [],
+
     canSub: true,
     finish: false,
 
@@ -143,6 +146,41 @@ var app = new Vue({
             ) {
               var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
               this.fileArray.push(fileItem);
+            }else{
+              fileTarget.value = "";
+            }
+          }
+    },
+
+    taskItems(task_id) {
+      var arr = this.arrTask[task_id];
+      return arr;
+    },
+
+    deleteTaskFile(task_id, index) {
+      this.arrTask[task_id].splice(index, 1);
+      var fileTarget = this.$refs['file_task_' + task_id][0];
+      fileTarget.value = "";
+      Vue.set(this.arrTask, 0, '');
+    },
+
+    changeTaskFile(task_id) {
+
+      var arr = this.arrTask[task_id];
+      if(typeof arr === 'undefined' || arr.length == 0)
+        this.arrTask[task_id] = [];
+
+      var fileTarget = this.$refs['file_task_' + task_id][0];
+
+        for (i = 0; i < fileTarget.files.length; i++) {
+            // remove duplicate
+            if (
+              this.arrTask[task_id].indexOf(fileTarget.files[i]) == -1 ||
+              this.arrTask[task_id].length == 0
+            ) {
+              var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+              this.arrTask[task_id].push(fileItem);
+              Vue.set(this.arrTask, 0, '');
             }else{
               fileTarget.value = "";
             }
