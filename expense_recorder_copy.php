@@ -503,9 +503,9 @@ try {
 
                 <td>{{item.paid_date}}</td>
 
-                <td style="text-align: right;">{{item.cash_in}}</td>
+                <td style="text-align: right;">{{item.cash_in.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
 
-                <td style="text-align: right;">{{item.cash_out}}</td>
+                <td style="text-align: right;">{{item.cash_out.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
 
 
                 <td style="text-align: left;">{{item.remarks}}</td>
@@ -540,10 +540,10 @@ try {
             <tr>
                 <th colspan="4">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
-                <th style="text-align: right;">{{accountOneCashIn}}</th>
-                <th style="text-align: right;">{{accountOneCashOut}}</th>
+                <th style="text-align: right;">{{accountOneCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountOneCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center;" colspan="2">
-                Net Cash Flow: {{accountOneBalance}}</th>
+                Net Cash Flow: {{accountOneBalance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
 
             </thead>
@@ -595,7 +595,7 @@ try {
             <tr v-for='item in items' v-if="item.account == 3" :class="[item.is_marked == '1' ? 'red' : '']">
                 <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
-                <td>{{item.category}}</td>
+                <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
 
                 <td style="text-align: left;">{{item.details}}</td>
 
@@ -615,9 +615,9 @@ try {
 
                 <td>{{item.paid_date}}</td>
 
-                <td style="text-align: right;">{{item.cash_in}}</td>
+                <td style="text-align: right;">{{item.cash_in.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
 
-                <td style="text-align: right;">{{item.cash_out}}</td>
+                <td style="text-align: right;">{{item.cash_out.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
 
 
                 <td style="text-align: left;">{{item.remarks}}</td>
@@ -652,10 +652,10 @@ try {
             <tr>
                 <th colspan="4">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
-                <th style="text-align: right;">{{accountThreeCashIn}}</th>
-                <th style="text-align: right;">{{accountThreeCashOut}}</th>
+                <th style="text-align: right;">{{accountThreeCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountThreeCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center;" colspan="2">
-                    Net Cash Flow: {{accountThreeBalance}}</th>
+                    Net Cash Flow: {{accountThreeBalance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
 
             </thead>
@@ -727,9 +727,9 @@ try {
 
                 <td>{{item.paid_date}}</td>
 
-                <td style="text-align: right;">{{item.cash_in}}</td>
+                <td style="text-align: right;">{{item.cash_in.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
 
-                <td style="text-align: right;">{{item.cash_out}}</td>
+                <td style="text-align: right;">{{item.cash_out.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
 
 
                 <td style="text-align: left;">{{item.remarks}}</td>
@@ -764,10 +764,10 @@ try {
             <tr>
                 <th colspan="4">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
-                <th style="text-align: right;">{{accountTwoCashIn}}</th>
-                <th style="text-align: right;">{{accountTwoCashOut}}</th>
+                <th style="text-align: right;">{{accountTwoCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountTwoCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center;" colspan="2">
-                    Net Cash Flow: {{accountTwoBalance}}</th>
+                    Net Cash Flow: {{accountTwoBalance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
 
             </thead>
@@ -783,10 +783,10 @@ try {
             <tr>
                 <th style="width:25vw; font-size:larger;">All Accounts</th>
                 <th style="text-align: center; width:18vw; font-size:larger;"><!--Beginning Balance: 0.00--></th>
-                <th style="text-align: center; width:18vw; font-size:larger;">Cash In: {{allCashIn}}</th>
-                <th style="text-align: center; width:18vw; font-size:larger;">Cash Out: {{allCashOut}}</th>
+                <th style="text-align: center; width:18vw; font-size:larger;">Cash In: {{allCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: center; width:18vw; font-size:larger;">Cash Out: {{allCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center; width:18vw; font-size:larger;">
-                Net Cash Flow: {{allBalance}}</th>
+                Net Cash Flow: {{allBalance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
 
             </thead>
