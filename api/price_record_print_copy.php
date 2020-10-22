@@ -61,6 +61,7 @@ if($jwt){
             $sql = "SELECT account, created_at, category, sub_category, related_account, details, pic_url, payee, paid_date, cash_in, cash_out, remarks from price_record where is_enabled = true";
             $sql1 = "";
             $sql2 = "";
+            $sql3 = "";
             
             if($account!=0) {
                 $sql1 = $sql1 . " and account = '$account' ";
@@ -97,11 +98,12 @@ if($jwt){
             }
             
             if($keyword!= '') {
-                $sql2 = "or remarks like '%$keyword%'".$sql1;
+                $sql2 = "or remarks like '%$keyword%' and is_enabled = true".$sql1;
+                $sql3 = "or payee like '%$keyword%' and is_enabled = true".$sql1;
                 $sql1 = $sql1 . " and details like '%$keyword%'";
             }
 
-            $sql = $sql .$sql1 . $sql2. " order by account , created_at  ";
+            $sql = $sql .$sql1 . $sql2. $sql3 . " order by account , created_at  ";
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();
