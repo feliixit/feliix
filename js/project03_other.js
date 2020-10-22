@@ -117,7 +117,7 @@ var app = new Vue({
             //_this.getProjectActionDetails(_this.project_id);
 
           });
-          //this.detail_clear();
+          this.comment_clear(_this.current_task_id);
 
         }
       },
@@ -142,10 +142,10 @@ var app = new Vue({
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish = true;
-            _this.getProjectActionDetails(_this.project_id);
+            _this.getProjectOtherTask(_this.stage_id);
 
           });
-          this.detail_clear();
+          this.task_clear();
 
         }
       },
@@ -182,8 +182,6 @@ var app = new Vue({
     },
 
     taskItems(task_id) {
-      this.current_task_id = task_id;
-
       var arr = this.arrTask[task_id];
       return arr;
     },
@@ -315,7 +313,8 @@ var app = new Vue({
 
     comment_clear(task_id) {
       this.current_task_id = task_id;
-
+      this.arrTask[task_id] = [];
+      //Vue.set(this.arrTask, 0, '');
       this.$refs['comment_task_' + task_id][0].value = "";
     },
 
@@ -508,9 +507,11 @@ var app = new Vue({
                   
                   myArr[index].progress = rate;
                   _this.$set(_this.arrTask[task_id], index, myArr[index]);
+                  Vue.set(_this.arrTask, 0, '');
                 } else {
                   myArr[index].progress = 0.99;
                   _this.$set(_this.arrTask[task_id], index, myArr[index]);
+                  Vue.set(_this.arrTask, 0, '');
                 }
               }
             }
@@ -529,6 +530,7 @@ var app = new Vue({
                 myArr[index].progress = 1;
                 _this.$set(_this.arrTask[task_id], index, myArr[index]);
                 console.log(_this.arrTask[task_id], index);
+                Vue.set(_this.arrTask, 0, '');
               } else {
                 alert(JSON.stringify(res.data));
               }

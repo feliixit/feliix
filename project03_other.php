@@ -28,6 +28,7 @@
     <!-- Google Analytics -->
 
     <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="js/fancyBox/jquery.fancybox.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/default.css" />
     <link rel="stylesheet" type="text/css" href="css/ui.css" />
     <link rel="stylesheet" type="text/css" href="css/case.css" />
@@ -37,6 +38,7 @@
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
+    <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js" ></script>
 
     <script>
         $(function() {
@@ -71,6 +73,13 @@
                 var f = $("#opType3").val();
                 $('.dialog.r-add').removeClass('add').removeClass('dup').addClass(f);
             })
+
+            $('.selectbox').on('click', function() {
+                $.fancybox.open({
+                    src  : '#pop-multiSelect',
+                    type : 'inline'
+                });
+            });
         })
     </script>
 
@@ -129,7 +138,7 @@
                                                     {{ item.username }}
                                                 </option>
                                             </select>
-                                            <button @click="OpenAssignee">Browse</button>
+                                            <button @click="OpenAssignee">Browse</button><button class="selectbox">Browse</button>
                                         </div>
                                     </dd>
                                 </dl>
@@ -662,10 +671,16 @@
                         </div>
                         <div class="tablebox lv3c m03 dialogclear">
                             <ul>
-                                <li><textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
+                                <li>
+                                    <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
+                                    <div class="filebox">
+                                        <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index">{{item.name}}</a>
+                                       
+                                    </div>
                                 </li>
                                 <li>
                                     <input class="btn small green" type="file" :ref="'file_task_' + receive_record.task_id"  @change="changeTaskFile(receive_record.task_id)" multiple />
+                                    <a class="btn small green">File</a>
                                     <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a></li>
                                 <li>
                                     <div class="file-item" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index">
@@ -961,6 +976,26 @@
         </div>
     </div>
 </body>
+
+<!-- lightbox -->
+<div id="pop-multiSelect">
+    <h3>Choose</h3>
+    <ul>
+        <li><input type="checkbox" id="a1"><label for="a1"><span>選項1</span></label></li>
+        <li><input type="checkbox" id="a2"><label for="a2"><span>選項2</span></label></li>
+        <li><input type="checkbox" id="a3"><label for="a3"><span>選項3</span></label></li>
+        <li><input type="checkbox" id="a4"><label for="a4"><span>選項4</span></label></li>
+        <li><input type="checkbox" id="a5"><label for="a5"><span>選項5選項5選項5選項5選項5選項5</span></label></li>
+        <li><input type="checkbox" id="a6"><label for="a6"><span>選項6</span></label></li>
+        <li><input type="checkbox" id="a7"><label for="a7"><span>選項7</span></label></li>
+    </ul>
+    <div class="btnbox">
+        <a class="btn small">Cancel</a>
+        <a class="btn small green">Done</a>
+    </div>
+</div>
+
+
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
