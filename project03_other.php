@@ -662,11 +662,11 @@
                         </div>
                         <div class="tablebox lv3c m03 dialogclear">
                             <ul>
-                                <li><textarea name="" id="" placeholder="Write your comment here"></textarea>
+                                <li><textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
                                 </li>
                                 <li>
-                                    <input class="btn small green" type="file" :ref="'file_task_' + receive_record.task_id" ref="file" @change="changeTaskFile(receive_record.task_id)" multiple />
-                                    <a class="btn small green">Comment</a></li>
+                                    <input class="btn small green" type="file" :ref="'file_task_' + receive_record.task_id"  @change="changeTaskFile(receive_record.task_id)" multiple />
+                                    <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a></li>
                                 <li>
                                     <div class="file-item" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index">
                                         <p>

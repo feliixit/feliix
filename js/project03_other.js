@@ -44,6 +44,9 @@ var app = new Vue({
     fileArray: [],
 
     arrTask: [],
+    taskCanSub: [],
+    taskFinish:[],
+    current_task_id:0,
 
     canSub: true,
     finish: false,
@@ -93,7 +96,33 @@ var app = new Vue({
       this.setPages();
     },
 
-    
+    arrTask: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue[_this.current_task_id].find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.arrTask[_this.current_task_id].length) {
+          
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish[_this.current_task_id] = true;
+            //_this.getProjectActionDetails(_this.project_id);
+
+          });
+          //this.detail_clear();
+
+        }
+      },
+      deep: true
+    },
 
     fileArray: {
       handler(newValue, oldValue) {
@@ -153,11 +182,15 @@ var app = new Vue({
     },
 
     taskItems(task_id) {
+      this.current_task_id = task_id;
+
       var arr = this.arrTask[task_id];
       return arr;
     },
 
     deleteTaskFile(task_id, index) {
+      this.current_task_id = task_id;
+
       this.arrTask[task_id].splice(index, 1);
       var fileTarget = this.$refs['file_task_' + task_id][0];
       fileTarget.value = "";
@@ -165,6 +198,7 @@ var app = new Vue({
     },
 
     changeTaskFile(task_id) {
+      this.current_task_id = task_id;
 
       var arr = this.arrTask[task_id];
       if(typeof arr === 'undefined' || arr.length == 0)
@@ -279,6 +313,12 @@ var app = new Vue({
       document.getElementById('add_a1').classList.remove("show");
     },
 
+    comment_clear(task_id) {
+      this.current_task_id = task_id;
+
+      this.$refs['comment_task_' + task_id][0].value = "";
+    },
+
     task_create() {
       let _this = this;
 
@@ -376,6 +416,119 @@ var app = new Vue({
                 myArr[index].progress = 1;
                 vm.$set(vm.fileArray, index, myArr[index]);
                 console.log(vm.fileArray, index);
+              } else {
+                alert(JSON.stringify(res.data));
+              }
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
+        });
+
+        this.canSub = true;
+      
+    },
+
+
+    comment_create(task_id) {
+      this.current_task_id = task_id;
+
+      let _this = this;
+
+      var comment = this.$refs['comment_task_' + task_id][0];
+
+      if (comment.value.trim() == '') {
+        Swal.fire({
+          text: 'Please enter comment!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      form_Data.append('task_id', task_id);
+      form_Data.append('message', comment.value.trim());
+
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project_other_task_message',
+        data: form_Data
+      })
+        .then(function (response) {
+          if(response.data['batch_id'] != 0)
+          {
+              _this.comment_upload(task_id, response.data['batch_id']);
+          }
+          else
+          {
+            _this.comment_clear(task_id);
+        
+          }
+
+          if(_this.arrTask[task_id].length == 0)
+            _this.comment_clear(task_id);
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () {_this.comment_clear(task_id)});
+    },
+
+    comment_upload(task_id, batch_id) {
+
+      this.current_task_id = task_id;
+    
+        this.canSub = false;
+        var myArr = this.arrTask[task_id];
+        var _this = this;
+       
+        //循环文件数组挨个上传
+        myArr.forEach((element, index) => {
+          var config = {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: function(e) {
+   
+              if (e.lengthComputable) {
+                var rate = e.loaded / e.total; 
+                console.log(index, e.loaded, e.total, rate);
+                if (rate < 1) {
+                  
+                  myArr[index].progress = rate;
+                  _this.$set(_this.arrTask[task_id], index, myArr[index]);
+                } else {
+                  myArr[index].progress = 0.99;
+                  _this.$set(_this.arrTask[task_id], index, myArr[index]);
+                }
+              }
+            }
+          };
+          var data = myArr[index];
+          var myForm = new FormData();
+          myForm.append('batch_type', 'other_task_msg');
+          myForm.append('batch_id', batch_id);
+          myForm.append("file", data);
+ 
+          axios
+            .post("api/uploadFile_gcp", myForm, config)
+            .then(function(res) {
+              if (res.data.code == 0) {
+           
+                myArr[index].progress = 1;
+                _this.$set(_this.arrTask[task_id], index, myArr[index]);
+                console.log(_this.arrTask[task_id], index);
               } else {
                 alert(JSON.stringify(res.data));
               }
