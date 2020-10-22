@@ -18,8 +18,8 @@ var app = new Vue({
     paid_date: '',
     amount:0,
     operation_type:0,
-    cash_in: 0,
-    cash_out: 0,
+    cash_in: 0.0,
+    cash_out: 0.0,
     remarks: '',
     keyword:'',
     select_date_type:0,
@@ -41,21 +41,21 @@ var app = new Vue({
     is_viewer:0,
     mail_ip:'https://storage.googleapis.com/feliiximg/',
     
-    allCashIn:0,
-    allCashOut:0,
-    allBalance:0,
+    allCashIn:0.0,
+    allCashOut:0.0,
+    allBalance:0.0,
     
-    accountOneCashIn:0,
-    accountOneCashOut:0,
-    accountOneBalance:0,
+    accountOneCashIn:0.0,
+    accountOneCashOut:0.0,
+    accountOneBalance:0.0,
     
-    accountTwoCashIn:0,
-    accountTwoCashOut:0,
-    accountTwoBalance:0,
+    accountTwoCashIn:0.0,
+    accountTwoCashOut:0.0,
+    accountTwoBalance:0.0,
 
-    accountThreeCashIn:0,
-    accountThreeCashOut:0,
-    accountThreeBalance:0,
+    accountThreeCashIn:0.0,
+    accountThreeCashOut:0.0,
+    accountThreeBalance:0.0,
     
     myVar : null,
     lockVar : null,
@@ -73,9 +73,9 @@ var app = new Vue({
         pic_url: '',
         payee: [],
         paid_date: '',
-        amount:0,
-        cash_in: 0,
-        cash_out: 0,
+        amount:0.0,
+        cash_in: 0.0,
+        cash_out: 0.0,
         remarks: '',
         filename:[],
 
@@ -92,9 +92,9 @@ var app = new Vue({
         pic_url: '',
         payee: [],
         paid_date: '',
-        amount:0,
-        cash_in: 0,
-        cash_out: 0,
+        amount:0.0,
+        cash_in: 0.0,
+        cash_out: 0.0,
         remarks: '',
         filename:[],
 
@@ -111,9 +111,9 @@ var app = new Vue({
         pic_url: '',
         payee: [],
         paid_date: '',
-        amount:0,
-        cash_in: 0,
-        cash_out: 0,
+        amount:0.0,
+        cash_in: 0.0,
+        cash_out: 0.0,
         remarks: '',
         filename:[],
 
@@ -130,9 +130,9 @@ var app = new Vue({
         pic_url: '',
         payee: [],
         paid_date: '',
-        amount:0,
-        cash_in: 0,
-        cash_out: 0,
+        amount:0.0,
+        cash_in: 0.0,
+        cash_out: 0.0,
         remarks: '',
         filename:[],
 
@@ -149,9 +149,9 @@ var app = new Vue({
         pic_url: '',
         payee: [],
         paid_date: '',
-        amount:0,
-        cash_in: 0,
-        cash_out: 0,
+        amount:0.0,
+        cash_in: 0.0,
+        cash_out: 0.0,
         remarks: '',
         filename:[],
 
@@ -289,7 +289,7 @@ var app = new Vue({
                   _this.spa.push(_this.split3);
                   _this.spa.push(_this.split4);
                   _this.spa.push(_this.split5);
-                  _this.spa_total_amount = parseInt(_this.split1.amount) + parseInt(_this.split2.amount) + parseInt(_this.split3.amount) + parseInt(_this.split4.amount) + parseInt(_this.split5.amount); 
+                  _this.spa_total_amount = parseFloat(_this.split1.amount) + parseFloat(_this.split2.amount) + parseFloat(_this.split3.amount) + parseFloat(_this.split4.amount) + parseFloat(_this.split5.amount);  
                   if(this.spa_total_amount != this.amount){
                       _this.dismiss = '';
                       alert('Total amount is not correct.');
@@ -710,18 +710,22 @@ var app = new Vue({
       getRecords: function() {
           let _this = this;
           _this.clear();
-          _this.allCashIn = 0;
-          _this.allCashOut = 0;
-          _this.allBalance = 0;
-          _this.accountOneCashIn = 0;
-          _this.accountOneCashOut = 0;
-          _this.accountOneBalance = 0;
-          _this.accountTwoCashIn = 0;
-          _this.accountTwoCashOut = 0;
-          _this.accountTwoBalance = 0;
-          _this.accountThreeCashIn = 0;
-          _this.accountThreeCashOut = 0;
-          _this.accountThreeBalance = 0;
+          _this.allCashIn = 0.0;
+          _this.allCashOut = 0.0;
+          _this.allBalance = 0.0;
+          _this.accountOneCashIn = 0.0;
+          _this.accountOneCashOut = 0.0;
+          _this.accountOneBalance = 0.0;
+          _this.accountTwoCashIn = 0.0;
+          _this.accountTwoCashOut = 0.0;
+          _this.accountTwoBalance = 0.0;
+          _this.accountThreeCashIn = 0.0;
+          _this.accountThreeCashOut = 0.0;
+          _this.accountThreeBalance = 0.0;
+          if(_this.category != 'Marketing' && _this.category != 'Office Needs' && _this.category != 'Others' && _this.category !=  'Projects' && _this.category != 'Store')
+          {
+              _this.sub_category = '';
+          }
           const params = {
               category: _this.category,
               sub_category: _this.sub_category,
@@ -759,18 +763,18 @@ var app = new Vue({
                           if(index< this.perPage){
                             if(element.is_enabled == 1){
                                 if(element.account == 1 || element.account == 2 || element.account == 3){
-                                _this.allCashIn += parseInt(element.cash_in);
-                                _this.allCashOut += parseInt(element.cash_out);
+                                _this.allCashIn += parseFloat(element.cash_in);
+                                _this.allCashOut += parseFloat(element.cash_out);
                                 }
                                 if(element.account==1){
-                                    _this.accountOneCashIn += parseInt(element.cash_in);
-                                    _this.accountOneCashOut += parseInt(element.cash_out);
+                                    _this.accountOneCashIn += parseFloat(element.cash_in);
+                                    _this.accountOneCashOut += parseFloat(element.cash_out);
                                 }else if(element.account==2){
-                                    _this.accountTwoCashIn += parseInt(element.cash_in);
-                                    _this.accountTwoCashOut += parseInt(element.cash_out);
+                                    _this.accountTwoCashIn += parseFloat(element.cash_in);
+                                    _this.accountTwoCashOut += parseFloat(element.cash_out);
                                 }else if(element.account==3){
-                                    _this.accountThreeCashIn += parseInt(element.cash_in);
-                                    _this.accountThreeCashOut += parseInt(element.cash_out);
+                                    _this.accountThreeCashIn += parseFloat(element.cash_in);
+                                    _this.accountThreeCashOut += parseFloat(element.cash_out);
                                 }
                             }
                           }
@@ -872,10 +876,10 @@ var app = new Vue({
       this.pic_url = '';
       this.payee= '';
       this.paid_date= '';
-      this.amount=0;
+      this.amount=0.0;
       this.operation_type=0;
-      this.cash_in=0;
-      this.cash_out=0;
+      this.cash_in=0.0;
+      this.cash_out=0.0;
       this.remarks='';
       this.filename = [];
 
@@ -896,9 +900,9 @@ var app = new Vue({
       this.split1.pic_url= '';
       this.split1.payee= [];
       this.split1.paid_date= '';
-      this.split1.amount=0;
-      this.split1.cash_in= 0;
-      this.split1.cash_out= 0;
+      this.split1.amount=0.0;
+      this.split1.cash_in= 0.0;
+      this.split1.cash_out= 0.0;
       this.split1.remarks= '';
       this.split1.filename=[];
       
@@ -914,9 +918,9 @@ var app = new Vue({
       this.split2.pic_url= '';
       this.split2.payee= [];
       this.split2.paid_date= '';
-      this.split2.amount=0;
-      this.split2.cash_in= 0;
-      this.split2.cash_out= 0;
+      this.split2.amount=0.0;
+      this.split2.cash_in= 0.0;
+      this.split2.cash_out= 0.0;
       this.split2.remarks= '';
       this.split2.filename=[];
                 
@@ -932,9 +936,9 @@ var app = new Vue({
       this.split3.pic_url= '';
       this.split3.payee= [];
       this.split3.paid_date= '';
-      this.split3.amount=0;
-      this.split3.cash_in= 0;
-      this.split3.cash_out= 0;
+      this.split3.amount=0.0;
+      this.split3.cash_in= 0.0;
+      this.split3.cash_out= 0.0;
       this.split3.remarks= '';
       this.split3.filename=[];
                 
@@ -950,9 +954,9 @@ var app = new Vue({
       this.split4.pic_url= '';
       this.split4.payee= [];
       this.split4.paid_date= '';
-      this.split4.amount=0;
-      this.split4.cash_in= 0;
-      this.split4.cash_out= 0;
+      this.split4.amount=0.0;
+      this.split4.cash_in= 0.0;
+      this.split4.cash_out= 0.0;
       this.split4.remarks= '';
       this.split4.filename=[];
                 
@@ -968,9 +972,9 @@ var app = new Vue({
       this.split5.pic_url= '';
       this.split5.payee= [];
       this.split5.paid_date= '';
-      this.split5.amount=0;
-      this.split5.cash_in= 0;
-      this.split5.cash_out= 0;
+      this.split5.amount=0.0;
+      this.split5.cash_in= 0.0;
+      this.split5.cash_out= 0.0;
       this.split5.remarks= '';
       this.split5.filename=[];
                 
