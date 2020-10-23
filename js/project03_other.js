@@ -114,7 +114,7 @@ var app = new Vue({
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish[_this.current_task_id] = true;
-            //_this.getProjectActionDetails(_this.project_id);
+            _this.getProjectOtherTask(_this.stage_id);
 
           });
           this.comment_clear(_this.current_task_id);
@@ -366,8 +366,11 @@ var app = new Vue({
         
           }
 
-          if(_this.prof_fileArray.length == 0)
+          if(_this.fileArray.length == 0)
+          {
+            _this.getProjectOtherTask(_this.stage_id);
             _this.task_clear();
+          }
         })
         .catch(function (response) {
           //handle error
@@ -478,7 +481,10 @@ var app = new Vue({
           }
 
           if(_this.arrTask[task_id].length == 0)
+          {
+            _this.getProjectOtherTask(_this.stage_id);
             _this.comment_clear(task_id);
+          }
         })
         .catch(function (response) {
           //handle error
@@ -540,7 +546,7 @@ var app = new Vue({
             });
         });
 
-        this.canSub = true;
+        this.taskCanSub[task_id] = true;
       
     },
 

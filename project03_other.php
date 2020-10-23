@@ -674,32 +674,25 @@
                                 <li>
                                     <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
                                     <div class="filebox">
-                                        <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index">{{item.name}}</a>
+                                        <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index" @click="deleteTaskFile(receive_record.task_id, index)">{{item.name}}</a>
                                        
                                     </div>
                                 </li>
                                 <li>
-                                    <input class="btn small green" type="file" :ref="'file_task_' + receive_record.task_id"  @change="changeTaskFile(receive_record.task_id)" multiple />
-                                    <a class="btn small green">File</a>
-                                    <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a></li>
-                                <li>
-                                    <div class="file-item" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index">
-                                        <p>
-                                            {{item.name}}
-                                            <span @click="deleteTaskFile(receive_record.task_id, index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
-                                            </span>
-                                        </p>
-                                        <div class="progress-container" v-show="item.progress!=0">
-                                            <div class="progress-wrapper">
-                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                            </div>
-                                            <div class="progress-rate">
-                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                                <span v-else><i class="fas fa-check-circle"></i></span>
-                                            </div>
-                                        </div>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            :ref="'file_task_' + receive_record.task_id" 
+                                            placeholder="choose file"
+                                            @change="changeTaskFile(receive_record.task_id)"
+                                            multiple
+                                          />
                                     </div>
-                                </li>
+                                    <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a></li>
+                             
                             </ul>
                         </div>
                     </div>
@@ -976,24 +969,6 @@
         </div>
     </div>
 </body>
-
-<!-- lightbox -->
-<div id="pop-multiSelect">
-    <h3>Choose</h3>
-    <ul>
-        <li><input type="checkbox" id="a1"><label for="a1"><span>選項1</span></label></li>
-        <li><input type="checkbox" id="a2"><label for="a2"><span>選項2</span></label></li>
-        <li><input type="checkbox" id="a3"><label for="a3"><span>選項3</span></label></li>
-        <li><input type="checkbox" id="a4"><label for="a4"><span>選項4</span></label></li>
-        <li><input type="checkbox" id="a5"><label for="a5"><span>選項5選項5選項5選項5選項5選項5</span></label></li>
-        <li><input type="checkbox" id="a6"><label for="a6"><span>選項6</span></label></li>
-        <li><input type="checkbox" id="a7"><label for="a7"><span>選項7</span></label></li>
-    </ul>
-    <div class="btnbox">
-        <a class="btn small">Cancel</a>
-        <a class="btn small green">Done</a>
-    </div>
-</div>
 
 
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
