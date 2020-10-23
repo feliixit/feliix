@@ -60,6 +60,7 @@ $merged_results = array();
 $query = "SELECT * from price_record where is_enabled = true ";
 $sql = "";
 $sql2 = "";
+$sql3 = "";
             if($account!=0) {
                 $sql = $sql . " and account = '$account' ";
             }else{
@@ -97,11 +98,12 @@ $sql2 = "";
             }
             
             if(!empty($keyword)) {
-                $sql2 = "or remarks like '%$keyword%'".$sql;
+                $sql2 = "or remarks like '%$keyword%' and is_enabled = true".$sql;
+                $sql3 = "or payee like '%$keyword%' and is_enabled = true".$sql;
                 $sql = $sql . " and details like '%$keyword%'";
             }
             
-            $query = $query.$sql.$sql2." order by created_at asc";;
+            $query = $query.$sql.$sql2.$sql3." order by created_at asc";
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);

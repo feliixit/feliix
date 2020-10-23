@@ -57,8 +57,8 @@ class PriceRecord
         $this->pic_url = htmlspecialchars(strip_tags($this->pic_url));
         $this->payee = htmlspecialchars(strip_tags($this->payee));
         $this->paid_date = htmlspecialchars(strip_tags($this->paid_date));
-        $this->cash_in = (int)$this->cash_in;
-        $this->cash_out = (int)$this->cash_out;
+        $this->cash_in = (float)$this->cash_in;
+        $this->cash_out = (float)$this->cash_out;
         $this->remarks = htmlspecialchars(strip_tags($this->remarks));
         $marked = filter_var($this->is_marked,FILTER_VALIDATE_INT);
         $this->updated_by = htmlspecialchars(strip_tags($this->updated_by));
@@ -125,8 +125,8 @@ class PriceRecord
             $this->details = htmlspecialchars(strip_tags($this->details));
             $this->pic_url = htmlspecialchars(strip_tags($this->pic_url));
             $this->payee = htmlspecialchars(strip_tags($this->payee));
-            $this->cash_in = (int)$this->cash_in;
-            $this->cash_out = (int)$this->cash_out;
+            $this->cash_in = (float)$this->cash_in;
+            $this->cash_out = (float)$this->cash_out;
             $this->remarks = htmlspecialchars(strip_tags($this->remarks));
             $locked = filter_var($this->is_locked,FILTER_VALIDATE_INT );
             $marked = filter_var($this->is_marked,FILTER_VALIDATE_INT);
