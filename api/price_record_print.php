@@ -23,7 +23,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 $database = new Database();
 $db = $database->getConnection();
 
- 
+$mail_ip= "https://storage.googleapis.com/feliiximg/";
+$files = array();
+$explode_row = array();
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
  
@@ -39,6 +41,9 @@ $end_date = str_replace('-', '/', $end_date);
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 
+$account = (isset($_POST['account']) ?  $_POST['account'] : 0);
+$keyword = (isset($_POST['keyword']) ?  $_POST['keyword'] : '');
+$select_date_type =(isset($_POST['select_date_type']) ?  $_POST['select_date_type'] : 0);
 // if jwt is not empty
 if($jwt){ 
  
@@ -53,25 +58,52 @@ if($jwt){
 
             $merged_results = array();
 
-            $sql = "SELECT * from price_record where is_enabled = true";
-
-            if($start_date != '') {
-                $sql = $sql . " and created_at >= '$start_date' ";
+            $sql = "SELECT account, created_at, category, sub_category, related_account, details, pic_url, payee, paid_date, cash_in, cash_out, remarks from price_record where is_enabled = true";
+            $sql1 = "";
+            $sql2 = "";
+            $sql3 = "";
+            
+            if($account!=0) {
+                $sql1 = $sql1 . " and account = '$account' ";
+            }else{
+                $sql1 = $sql1 . " and account !=0 ";
             }
-
-            if($end_date != '') {
-                $sql = $sql . " and created_at < date_add('$end_date', interval 1 day)";
+            
+            if($select_date_type == 0){
+                if($start_date != '') {
+                    $sql1 = $sql1 . " and created_at >= '$start_date' ";
+                }
+    
+                if($end_date != '') {
+                    $sql1 = $sql1 . " and created_at < date_add('$end_date', interval 1 day)";
+                }
+            }
+            
+            if($select_date_type == 1){
+                if($start_date != '') {
+                    $sql1 = $sql1 . " and paid_date >= '$start_date' ";
+                }
+    
+                if($end_date != '') {
+                    $sql1 = $sql1 . " and paid_date < date_add('$end_date', interval 1 day)";
+                }
             }
             
             if($category != '') {
-                $sql = $sql . " and category = '$category' ";
+                $sql1 = $sql1 . " and category = '$category' ";
             }
             
             if($sub_category != '') {
-                $sql = $sql . " and sub_category = '$sub_category' ";
+                $sql1 = $sql1 . " and sub_category = '$sub_category' ";
+            }
+            
+            if($keyword!= '') {
+                $sql2 = "or remarks like '%$keyword%' and is_enabled = true".$sql1;
+                $sql3 = "or payee like '%$keyword%' and is_enabled = true".$sql1;
+                $sql1 = $sql1 . " and details like '%$keyword%'";
             }
 
-            $sql = $sql . " order by account , created_at  ";
+            $sql = $sql .$sql1 . $sql2. $sql3 . " order by account , created_at  ";
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();
@@ -108,12 +140,12 @@ if($jwt){
             $sheet->setCellValue('C1', 'Category');
             $sheet->setCellValue('D1', 'Related Account');
             $sheet->setCellValue('E1', 'Details');
-            $sheet->setCellValue('F1', 'Photos');
-            $sheet->setCellValue('G1', 'Payee');
-            $sheet->setCellValue('H1', 'Paid/Received Date');
-            $sheet->setCellValue('I1', 'Cash in');
-            $sheet->setCellValue('J1', 'Cash out');
-            $sheet->setCellValue('K1', 'Remarks');
+            $sheet->setCellValue('K1', 'Files');
+            $sheet->setCellValue('F1', 'Payee');
+            $sheet->setCellValue('G1', 'Paid/Received Date');
+            $sheet->setCellValue('H1', 'Cash in');
+            $sheet->setCellValue('I1', 'Cash out');
+            $sheet->setCellValue('J1', 'Remarks');
 
 
             $i = 2;
@@ -130,28 +162,36 @@ if($jwt){
                 $sheet->setCellValue('E' . $i, $row['details']);
                 if($row['pic_url'] != '')
                 {
-                    $conf = new Conf();
-                    $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
-                    $sheet->setCellValue('F' . $i, 'Photo');
-                    $sheet->getCellByColumnAndRow(5,$i)->getHyperlink()->setUrl($link);
+                    $explode_row = explode(",",$row['pic_url']);
+                    $aph = 'K';
+                    foreach($explode_row as $pic_urls){
+                        //$sheet->getActiveSheet()->unmergeCells('F'.$i:'F'.$i);
+                        $link = $mail_ip . $pic_urls;
+                        $sheet->setCellValue($aph.'1', 'Files');
+                        $sheet->setCellValue($aph.$i, 'File');
+                        $sheet->getCell($aph.$i)->getHyperlink()->setUrl($link);
+                        $aph++;
+                        //array_push($files ,$link);
+                    }
+                    //$sheet->fromArray($files, NULL, 'F' . $i);
                 }
                 else
-                    $sheet->setCellValue('F' . $i, '');
+                    $sheet->setCellValue('K' . $i, '');
 
                 
-                $sheet->setCellValue('G' . $i, $row['payee']);
-                $sheet->setCellValue('H' . $i, $row['paid_date']);
-                $sheet->setCellValue('I' . $i, $row['cash_in']);
-                $sheet->setCellValue('J' . $i, $row['cash_out']);
-                $sheet->setCellValue('K' . $i, $row['remarks']);
-
-                $sheet->getStyle('A'. $i. ':' . 'K' . $i)->applyFromArray($styleArray);
+                $sheet->setCellValue('F' . $i, $row['payee']);
+                $sheet->setCellValue('G' . $i, $row['paid_date']);
+                $sheet->setCellValue('H' . $i, $row['cash_in']);
+                $sheet->setCellValue('I' . $i, $row['cash_out']);
+                $sheet->setCellValue('J' . $i, $row['remarks']);
+                                      
+                $sheet->getStyle('A'. $i. ':' . 'Z' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'K1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'K' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'Z1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'Z' . --$i)->applyFromArray($styleArray);
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="file.xlsx"');
@@ -202,6 +242,9 @@ function getAccount($loc)
             break;
         case 2:
             $account = "Security Bank";
+            break;
+        case 3:
+            $account = "Online Transactions";
             break;
    
     }

@@ -41,10 +41,13 @@ include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
+$account = (isset($_GET['account']) ?  $_GET['account'] : 0);
 $category = (isset($_GET['category']) ?  $_GET['category'] : '');
 $sub_category = (isset($_GET['sub_category']) ?  $_GET['sub_category'] : '');
 $start_date = (isset($_GET['start_date']) ?  $_GET['start_date'] : '');
 $end_date = (isset($_GET['end_date']) ?  $_GET['end_date'] : '');
+$keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : '');
+$select_date_type =(isset($_GET['select_date_type']) ?  $_GET['select_date_type'] : 0);
 
 $page = (isset($_GET['page']) ?  $_GET['page'] : "");
 //$size = (isset($_GET['size']) ?  $_GET['size'] : "");
@@ -54,24 +57,53 @@ $merged_results = array();
 
 
 
-$query = "SELECT * from price_record where is_enabled = true and account =1";
+$query = "SELECT * from price_record where is_enabled = true ";
+$sql = "";
+$sql2 = "";
+$sql3 = "";
+            if($account!=0) {
+                $sql = $sql . " and account = '$account' ";
+            }else{
+                $sql = $sql . " and account !=0 ";
+            }
+            
+            if($select_date_type == 0){
+                
             if(!empty($start_date)) {
-                $query = $query . " and created_at >= '$start_date' ";
+                $sql = $sql . " and created_at >= '$start_date' ";
             }
 
             if(!empty($end_date)) {
-                $query = $query . " and created_at < date_add('$end_date', interval 1 day) ";
+                $sql = $sql . " and created_at < date_add('$end_date', interval 1 day) ";
+            }
+            }
+            
+            if($select_date_type == 1){
+                
+            if(!empty($start_date)) {
+                $sql = $sql . " and paid_date >= '$start_date' ";
+            }
+
+            if(!empty($end_date)) {
+                $sql = $sql . " and paid_date < date_add('$end_date', interval 1 day) ";
+            }
             }
             
             if(!empty($category)) {
-                $query = $query . " and category = '$category' ";
+                $sql = $sql . " and category = '$category' ";
             }
             
             if(!empty($sub_category)) {
-                $query = $query . " and sub_category = '$sub_category' ";
+                $sql = $sql . " and sub_category = '$sub_category' ";
             }
             
-            $query = $query . " order by created_at asc";
+            if(!empty($keyword)) {
+                $sql2 = "or remarks like '%$keyword%' and is_enabled = true".$sql;
+                $sql3 = "or payee like '%$keyword%' and is_enabled = true".$sql;
+                $sql = $sql . " and details like '%$keyword%'";
+            }
+            
+            $query = $query.$sql.$sql2.$sql3." order by created_at asc";
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -80,7 +112,6 @@ if(!empty($_GET['page'])) {
     }
 }
 
-//$query = $query . " order by created_at desc ";
 
 //if(!empty($_GET['size'])) {
 //    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
@@ -98,57 +129,13 @@ $stmt = $db->prepare( $query );
 $stmt->execute();
 
 
+
+//while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//    array_push($merged_results,$row);
+//}
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $merged_results[] = $row;
-}
-
-$query = "SELECT * from price_record where is_enabled = true and account =2";
-            if(!empty($start_date)) {
-                $query = $query . " and created_at >= '$start_date' ";
-            }
-
-            if(!empty($end_date)) {
-                $query = $query . " and created_at < date_add('$end_date', interval 1 day)";
-            }
-            
-            if(!empty($category)) {
-                $query = $query . " and category = '$category' ";
-            }
-            
-            if(!empty($sub_category)) {
-                $query = $query . " and sub_category = '$sub_category' ";
-            }
-            $query = $query . " order by created_at asc";
-
-if(!empty($_GET['page'])) {
-    $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
-    if(false === $page) {
-        $page = 1;
-    }
-}
-
-//$query = $query . " order by created_at desc ";
-
-//if(!empty($_GET['size'])) {
-//    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
-//    if(false === $size) {
-//        $size = 10;
-//    }
-//
-//    $offset = ($page - 1) * $size;
-//
-//    $query = $query . " LIMIT " . $offset . "," . $size;
-//}
-
-
-$stmt = $db->prepare( $query );
-$stmt->execute();
-
-
-
-while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    array_push($merged_results,$row);
 }
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);

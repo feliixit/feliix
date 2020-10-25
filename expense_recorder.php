@@ -25,7 +25,8 @@ try {
             $user_id = $decoded->data->id;
             
             // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41)
-            if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9)
+            // 為了測試先加上testmanager(87) by BB
+            if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87)
             {
                 $access3 = true;
             }
@@ -163,6 +164,7 @@ try {
                                 <select class="form-control" style="width:15vw;" v-model="account">
                                     
                                     <option value="1">Office Petty Cash</option>
+                                    <option value="3">Online Transactions</option>
                                     <option value="2">Security Bank</option>
                                 </select>
                             </td>
@@ -247,6 +249,7 @@ try {
                                 <select class="form-control" style="width:15vw;" v-model="related_account">
                                     <option value="None">None</option>
                                     <option>Office Petty Cash</option>
+                                    <option>Online Transactions</option>
                                     <option>Security Bank</option>
                                 </select>
                             </td>
@@ -321,13 +324,12 @@ try {
                             <td>
                                 <label>Photos</label>
                             </td>
-
-                            <td style="text-align: left;"><input type="file" ref="file0" @change="onChangeFileUpload($event,0)" accept="image/*" capture="camera">
+ 
+                            <td style="text-align: left;"><input type="file" ref="file0" @change="onChangeFileUpload($event,0)" multiple>
                             </td>
-
+                            
                         </tr>
-
-
+                        
                         <tr>
                             <td>
 
@@ -367,9 +369,21 @@ try {
     <div style="margin-top:2vh; margin-bottom:1vh;">
 
         <input type="date" v-model="start_date">&nbsp; to &nbsp;<input type="date" v-model="end_date">
-
+        
+        <select style="width:10vw; margin-left:1vw;" v-model="select_date_type">
+            <option value="0" seleted>Date</option>
+            <option value="1">Paid/Received Date</option>
+        </select>
+        
+        <select style="width:10vw; margin-left:1vw;" v-model="account">
+            <option value="0" seleted>All</option>
+            <option value="1">Office Petty Cash</option>
+            <option value="3">Online Transactions</option>
+            <option value="2">Security Bank</option>
+        </select>
 
         <select style="width:10vw; margin-left:1vw;" v-model="category">
+            <option value="" seleted>All</option>
             <option>Accounting and govt payments</option>
             <option>Bills</option>
             <option>Client Refunds</option>
@@ -402,6 +416,8 @@ try {
             <option>Tools and Materials</option>
             <option>Transportation</option>
         </select>
+        
+        <input type="text" v-model="keyword" style="width:15vw; margin-left:1vw;" placeholder="Searching Keyword Here">
 
         <select class="hide" v-model="perPage" v-on:change="getRecords(this)">
             <option v-for="size in inventory" :value="size.id">{{size.name}}</option>
@@ -471,7 +487,13 @@ try {
 
                 <td style="text-align: left;">{{item.details}}</td>
 
-                <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                <td v-if="item.pic_url != ''" >
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
+                        <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
+                        </i>
+                        <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
+                        </i>
+                    </a>
                 </td>
                 
                 <td v-else>
@@ -521,17 +543,127 @@ try {
                 <th style="text-align: right;">{{accountOneCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: right;">{{accountOneCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center;" colspan="2">
-                Net Cash Flow: {{accountOneBalance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                Net Cash Flow: {{accountOneBalance.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
 
             </thead>
 
         </table>
 
-
         <br><br>
 
+        <table class="table table-sm table-bordered table-hover"  style="width:97vw;">
 
+            <thead class="thead-light">
+
+
+
+            <tr>
+
+                <th colspan="10" style="font-size:larger; font-weight:700;">Online Transactions</th>
+            </tr>
+
+            <tr>
+
+
+                <th class="text-nowrap" style="width:6vw;">Date</th>
+
+                <th class="text-nowrap" style="width:10vw;">Category</th>
+
+                <th class="text-nowrap" style="width:20vw;">Details</th>
+
+                <th class="text-nowrap" style="width:4vw;">Photos</th>
+
+                <th class="text-nowrap" style="width:10vw;">Payee</th>
+
+                <th style="width:8vw;">Paid / Received Date</th>
+
+                <th class="text-nowrap" style="width:7vw;">Cash In</th>
+
+                <th class="text-nowrap" style="width:7vw;">Cash Out</th>
+
+                <th class="text-nowrap" style="width:12vw;">Remarks</th>
+
+                <th class="text-nowrap" style="width:6vw;">Actions</th>
+
+
+            </tr>
+
+            </thead>
+
+            <tbody >
+            <tr v-for='item in items' v-if="item.account == 3" :class="[item.is_marked == '1' ? 'red' : '']">
+                <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
+
+                <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
+
+                <td style="text-align: left;">{{item.details}}</td>
+
+                <td v-if="item.pic_url != ''" >
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
+                        <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
+                        </i>
+                        <i v-else="pic.endsWith('.jpg')" class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
+                        </i>
+                    </a>
+                </td>
+                
+                <td v-else>
+                </td>
+
+                <td>{{item.payee}}</td>
+
+                <td>{{item.paid_date}}</td>
+
+                <td style="text-align: right;">{{item.cash_in.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
+
+                <td style="text-align: right;">{{item.cash_out.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
+
+
+                <td style="text-align: left;">{{item.remarks}}</td>
+
+
+                <td class="text-nowrap" v-if="is_viewer == '1'">
+                    <button><i class="fas fa-lock" :class="[item.is_locked == '1'? 'red' : '']" v-on:click="lockRecord(item.id)"></i></button>
+                </td>
+                <td class="text-nowrap" v-else-if="item.is_locked == '0'">
+                    <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne" v-on:click="edit(item.id)"><i class="fas fa-edit"></i>
+                    </button>
+
+
+                    <button data-toggle="modal"
+                            data-target="#exampleModalScrollable" v-on:click="edit(item.id)"><i class="fas fa-project-diagram"></i>
+                    </button>
+
+
+
+                    <button v-on:click="deleteRecord(item.id)"><i class="fas fa-times" ></i></button>
+
+                </td>
+                <td class="text-nowrap" v-else>
+                </td>
+
+            </tr>
+            </tbody>
+
+            <thead class="thead-light">
+
+            <tr>
+                <th colspan="4">Total</th>
+                <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
+                <th style="text-align: right;">{{accountThreeCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountThreeCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: center;" colspan="2">
+                    Net Cash Flow: {{accountThreeBalance.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+            </tr>
+
+            </thead>
+
+        </table>
+
+        <br><br>
+        
         <table class="table table-sm table-bordered table-hover"  style="width:97vw;">
 
             <thead class="thead-light">
@@ -579,7 +711,13 @@ try {
 
                 <td style="text-align: left;">{{item.details}}</td>
 
-                <td v-if="item.pic_url != ''"><a :href="`${mail_ip}/img/${item.pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                <td v-if="item.pic_url != ''" >
+                    <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
+                        <i v-if="pic.endsWith('.jpg') || pic.endsWith('.png') || pic.endsWith('.jpeg')" class="fas fa-image fa-lg" style="display:block; margin: 0.5em;">
+                        </i>
+                        <i v-else class="fas fa-file fa-lg" style="display:block; margin: 0.5em;" >
+                        </i>
+                    </a>
                 </td>
                 
                 <td v-else>
@@ -629,7 +767,7 @@ try {
                 <th style="text-align: right;">{{accountTwoCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: right;">{{accountTwoCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center;" colspan="2">
-                    Net Cash Flow: {{accountTwoBalance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                    Net Cash Flow: {{accountTwoBalance.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
 
             </thead>
@@ -648,7 +786,7 @@ try {
                 <th style="text-align: center; width:18vw; font-size:larger;">Cash In: {{allCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center; width:18vw; font-size:larger;">Cash Out: {{allCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center; width:18vw; font-size:larger;">
-                Net Cash Flow: {{allBalance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                Net Cash Flow: {{allBalance.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
 
             </thead>
@@ -815,7 +953,7 @@ try {
                         </td>
 
                         <td style="text-align: left;">
-                            <a :href="`${mail_ip}/img/${pic_url}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                            <a :href="`${mail_ip}${pic}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
                         </td>
 
                     </tr>
@@ -942,7 +1080,7 @@ try {
                             <label>Photos</label>
                         </td>
 
-                        <td style="text-align: left;"><input type="file" ref="file1" @change="onChangeFileUpload($event,1)" accept="image/*" capture="camera">
+                        <td style="text-align: left;"><input type="file" ref="file1" @change="onChangeFileUpload($event,1)" multiple>
                         </td>
 
                     </tr>
@@ -1077,7 +1215,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file2" @change="onChangeFileUpload($event,2)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file2" @change="onChangeFileUpload($event,2)" multiple>
                             </td>
 
                         </tr>
@@ -1212,7 +1350,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file3" @change="onChangeFileUpload($event,3)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file3" @change="onChangeFileUpload($event,3)" multiple>
                             </td>
 
                         </tr>
@@ -1347,7 +1485,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file4" @change="onChangeFileUpload($event,4)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file4" @change="onChangeFileUpload($event,4)" multiple>
                             </td>
 
                         </tr>
@@ -1482,7 +1620,7 @@ try {
                                 <label>Photos</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="file" ref="file5" @change="onChangeFileUpload($event,5)" accept="image/*" capture="camera">
+                            <td style="text-align: left;"><input type="file" ref="file5" @change="onChangeFileUpload($event,5)" multiple>
                             </td>
 
                         </tr>
@@ -1571,6 +1709,6 @@ try {
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/add_or_edit_price_record.js?v=19g90"></script>
+<script src="js/add_or_edit_price_record_copy.js"></script>
 
 </html>
