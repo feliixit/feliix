@@ -192,7 +192,6 @@ switch ($method) {
             `stage_id` = :stage_id,
             `title` = :title,
             `priority` = :priority,
-            `priority` = :priority,
             `assignee` = :assignee,
             `collaborator` = :collaborator,
             `due_date` = :due_date,

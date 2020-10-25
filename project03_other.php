@@ -28,6 +28,7 @@
     <!-- Google Analytics -->
 
     <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="js/fancyBox/jquery.fancybox.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/default.css" />
     <link rel="stylesheet" type="text/css" href="css/ui.css" />
     <link rel="stylesheet" type="text/css" href="css/case.css" />
@@ -37,6 +38,7 @@
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
+    <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js" ></script>
 
     <script>
         $(function() {
@@ -71,6 +73,13 @@
                 var f = $("#opType3").val();
                 $('.dialog.r-add').removeClass('add').removeClass('dup').addClass(f);
             })
+
+            $('.selectbox').on('click', function() {
+                $.fancybox.open({
+                    src  : '#pop-multiSelect',
+                    type : 'inline'
+                });
+            });
         })
     </script>
 
@@ -129,7 +138,7 @@
                                                     {{ item.username }}
                                                 </option>
                                             </select>
-                                            <button @click="OpenAssignee">Browse</button>
+                                            <button @click="OpenAssignee">Browse</button><button class="selectbox">Browse</button>
                                         </div>
                                     </dd>
                                 </dl>
@@ -662,29 +671,28 @@
                         </div>
                         <div class="tablebox lv3c m03 dialogclear">
                             <ul>
-                                <li><textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
-                                </li>
                                 <li>
-                                    <input class="btn small green" type="file" :ref="'file_task_' + receive_record.task_id"  @change="changeTaskFile(receive_record.task_id)" multiple />
-                                    <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a></li>
-                                <li>
-                                    <div class="file-item" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index">
-                                        <p>
-                                            {{item.name}}
-                                            <span @click="deleteTaskFile(receive_record.task_id, index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
-                                            </span>
-                                        </p>
-                                        <div class="progress-container" v-show="item.progress!=0">
-                                            <div class="progress-wrapper">
-                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                            </div>
-                                            <div class="progress-rate">
-                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                                <span v-else><i class="fas fa-check-circle"></i></span>
-                                            </div>
-                                        </div>
+                                    <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
+                                    <div class="filebox">
+                                        <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index" @click="deleteTaskFile(receive_record.task_id, index)">{{item.name}}</a>
+                                       
                                     </div>
                                 </li>
+                                <li>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            :ref="'file_task_' + receive_record.task_id" 
+                                            placeholder="choose file"
+                                            @change="changeTaskFile(receive_record.task_id)"
+                                            multiple
+                                          />
+                                    </div>
+                                    <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a></li>
+                             
                             </ul>
                         </div>
                     </div>
@@ -961,6 +969,8 @@
         </div>
     </div>
 </body>
+
+
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
