@@ -49,6 +49,8 @@ try {
         if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87)
             $access3 = true;
 
+        $pic_url = $decoded->data->pic_url;
+
         //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
         //    header( 'location:index.php' );
     }
@@ -74,7 +76,7 @@ try {
     <div class="middle">
         <ul class="info">
             <!-- 大頭照可由此處style修改 -->
-            <li class="photo" style="background-image: url(../images/iosicon.png)"></li>
+            <li class="photo" style="background-image: url(images/man/<?=$pic_url ?>)"></li>
             <li class="name"><?= isset($username) ? $username : "" ?> <br /> <b style="font-size: 26px;"><?= isset($position) ? $position : "" ?></b></li>
         </ul>
         <ul class="menu">

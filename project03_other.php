@@ -514,13 +514,13 @@
                         <div class="tablebox m01">
                             <ul>
                                 <li><b>Creator</b></li>
-                                <li><a class="man" style="background-image: url(images/man/man1.jpg);"></a></li>
+                                <li><a class="man" :style="'background-image: url(images/man/' +  receive_record.creator_pic  + ');'"></a></li>
                             </ul>
                             <ul>
                                 <li><b>Assignee</b></li>
                                 <li>
                                     <i v-for="item in receive_record.assignee">
-                                        <a class="man" style="background-image: url(images/man/man2.jpg);"></a>
+                                        <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
                                     </i>
                                     
                                 </li>
@@ -529,7 +529,7 @@
                                 <li><b>Collaborator</b></li>
                                 <li>
                                     <i v-for="item in receive_record.collaborator">
-                                        <a class="man" style="background-image: url(images/man/man4.jpg);"></a>
+                                        <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
                                     </i>
                                     
                                 </li>
@@ -558,23 +558,22 @@
                         <div class="tableframe">
                             <div class="tablebox m02">
                                 <!-- 1 message -->
-                                <ul>
+                                <ul v-for="item in receive_record.message">
                                     <li class="dialogclear">
-                                        <a class="man" style="background-image: url(images/man/man7.jpg);"></a>
+                                        <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'"></a>
                                         <i class="info">
-                                            <b>Nestor Rosales</b><br>
-                                            2:00 PM<br>
-                                            May 3, 2020
+                                            <b>{{item.messager}}</b><br>
+                                            {{ item.message_date }}
                                         </i>
                                     </li>
                                     <li>
                                         <div class="msg">
                                             <div class="msgbox dialogclear">
-                                                <p>Hi Nestor. Here are the deliverables. Please check. Thank you.</p>
-                                                <a class="attch">building1.jpg</a>
-                                                <a class="attch">building.jpg</a>
-                                                <a class="attch">quotation.pdf</a>
-                                                <a class="attch">rendering.pdf</a>
+                                                <p>{{ item.message }}</p>
+                                                <i v-for="file in item.items">
+                                                    <a class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
+                                                </i>
+                                                <p v-for="reply in item.reply"><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
                                             </div>
                                             <div class="btnbox">
                                                 <a class="btn small green reply r1">Reply</a>
