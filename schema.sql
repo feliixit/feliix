@@ -792,3 +792,7 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20201005 add project_other_task_message reply
+ALTER TABLE project_other_task_message
+ADD COLUMN `parent_id` int(11) DEFAULT 0 AFTER task_id;
