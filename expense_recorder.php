@@ -540,8 +540,8 @@ try {
             <tr>
                 <th colspan="4">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
-                <th style="text-align: right;">{{accountOneCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
-                <th style="text-align: right;">{{accountOneCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountOneCashIn.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountOneCashOut.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center;" colspan="2">
                 Net Cash Flow: {{accountOneBalance.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
@@ -652,8 +652,8 @@ try {
             <tr>
                 <th colspan="4">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
-                <th style="text-align: right;">{{accountThreeCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
-                <th style="text-align: right;">{{accountThreeCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountThreeCashIn.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountThreeCashOut.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center;" colspan="2">
                     Net Cash Flow: {{accountThreeBalance.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
@@ -764,8 +764,8 @@ try {
             <tr>
                 <th colspan="4">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
-                <th style="text-align: right;">{{accountTwoCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
-                <th style="text-align: right;">{{accountTwoCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountTwoCashIn.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: right;">{{accountTwoCashOut.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center;" colspan="2">
                     Net Cash Flow: {{accountTwoBalance.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
@@ -783,8 +783,8 @@ try {
             <tr>
                 <th style="width:25vw; font-size:larger;">All Accounts</th>
                 <th style="text-align: center; width:18vw; font-size:larger;"><!--Beginning Balance: 0.00--></th>
-                <th style="text-align: center; width:18vw; font-size:larger;">Cash In: {{allCashIn.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
-                <th style="text-align: center; width:18vw; font-size:larger;">Cash Out: {{allCashOut.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: center; width:18vw; font-size:larger;">Cash In: {{allCashIn.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
+                <th style="text-align: center; width:18vw; font-size:larger;">Cash Out: {{allCashOut.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: center; width:18vw; font-size:larger;">
                 Net Cash Flow: {{allBalance.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
             </tr>
