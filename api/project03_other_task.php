@@ -61,7 +61,7 @@ switch ($method) {
         from project_other_task pm 
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task'
-        where pm.stage_id = " . $stage_id . " and pm.status <> -1 ";
+        where pm.stage_id = " . $stage_id . " ";
 
         if (!empty($_GET['page'])) {
             $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -285,7 +285,7 @@ function GetMessage($task_id, $db)
             from project_other_task_message pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
             LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg' 
-            where pmsgrp.task_id = " . $task_id . " order by pmsgrp.created_at desc";
+            where pmsgrp.task_id = " . $task_id . " order by pmsgrp.created_at ";
 
     $merged_results = array();
 
@@ -308,16 +308,21 @@ function GetMessage($task_id, $db)
         if ($message_id != $row['message_id'] && $message_id != 0) {
             $merged_results[] = array(
                 "message_id" => $message_id,
+                "ref_id" => 0,
+                "ref_name" => "",
+                "ref_msg" => "",
                 "message" => $message,
                 "message_status" => $message_status,
                 "messager" => $messager,
                 "messager_pic" => $messager_pic,
                 "message_date" => $message_date,
 
-                "reply" => $reply,
-         
+
                 "items" => $items,
             );
+
+            if(!empty($reply))
+                $merged_results = array_merge($merged_results, $reply);
 
             $reply = [];
             $items = [];
@@ -331,7 +336,7 @@ function GetMessage($task_id, $db)
         $message_date = $row['message_date'];
 
         if(empty($reply))
-            $reply = GetReply($row['message_id'], $db);
+            $reply = GetReply($row['message_id'], $db, $message_id, $messager, $message);
      
         $gcp_name = $row['gcp_name'];
         $filename = $row['filename'];
@@ -347,29 +352,33 @@ function GetMessage($task_id, $db)
     if ($message_id != 0) {
         $merged_results[] = array(
             "message_id" => $message_id,
+            "ref_id" => 0,
+            "ref_name" => "",
+            "ref_msg" => "",
             "message" => $message,
             "message_status" => $message_status,
             "messager" => $messager,
             "messager_pic" => $messager_pic,
             "message_date" => $message_date,
-
-            "reply" => $reply,
         
             "items" => $items,
         );
+
+        if(!empty($reply))
+            $merged_results = array_merge($merged_results, $reply);
     }
 
     return $merged_results;
 }
 
-function GetReply($msg_id, $db)
+function GetReply($msg_id, $db, $id, $name, $msg)
 {
     $sql = "select pmsgrp.id replay_id, pmsgrp.message reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, 
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from project_other_task_message_reply pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
             LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_rep' 
-            where pmsgrp.message_id = " . $msg_id . " order by pmsgrp.created_at desc";
+            where pmsgrp.message_id = " . $msg_id . " order by pmsgrp.created_at ";
 
     $merged_results = array();
 
@@ -389,12 +398,15 @@ function GetReply($msg_id, $db)
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if ($replay_id != $row['replay_id'] && $replay_id != 0) {
             $merged_results[] = array(
-                "replay_id" => $replay_id,
-                "reply" => $reply,
-                "reply_status" => $reply_status,
-                "replyer" => $replyer,
-                "replyer_pic" => $replyer_pic,
-                "reply_date" => $reply_date,
+                "message_id" => $replay_id,
+                "ref_id" => $id,
+                "ref_name" => $name,
+                "ref_msg" => $msg,
+                "message" => $reply,
+                "message_status" => $reply_status,
+                "messager" => $replyer,
+                "messager_pic" => $replyer_pic,
+                "message_date" => $reply_date,
          
                 "items" => $items,
             );
@@ -422,12 +434,15 @@ function GetReply($msg_id, $db)
 
     if ($replay_id != 0) {
         $merged_results[] = array(
-            "replay_id" => $replay_id,
-            "reply" => $reply,
-            "reply_status" => $reply_status,
-            "replyer" => $replyer,
-            "replyer_pic" => $replyer_pic,
-            "reply_date" => $reply_date,
+            "message_id" => $replay_id,
+            "ref_id" => $id,
+            "ref_name" => $name,
+            "ref_msg" => $msg,
+            "message" => $reply,
+            "message_status" => $reply_status,
+            "messager" => $replyer,
+            "messager_pic" => $replyer_pic,
+            "message_date" => $reply_date,
         
             "items" => $items,
         );

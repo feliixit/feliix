@@ -28,7 +28,7 @@
     <!-- Google Analytics -->
 
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="js/fancyBox/jquery.fancybox.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/fancyBox/jquery.fancybox.min.css" />
     <link rel="stylesheet" type="text/css" href="css/default.css" />
     <link rel="stylesheet" type="text/css" href="css/ui.css" />
     <link rel="stylesheet" type="text/css" href="css/case.css" />
@@ -38,7 +38,7 @@
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
-    <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js" ></script>
+    <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js"></script>
 
     <script>
         $(function() {
@@ -76,8 +76,8 @@
 
             $('.selectbox').on('click', function() {
                 $.fancybox.open({
-                    src  : '#pop-multiSelect',
-                    type : 'inline'
+                    src: '#pop-multiSelect',
+                    type: 'inline'
                 });
             });
         })
@@ -522,7 +522,7 @@
                                     <i v-for="item in receive_record.assignee">
                                         <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
                                     </i>
-                                    
+
                                 </li>
                             </ul>
                             <ul>
@@ -531,7 +531,7 @@
                                     <i v-for="item in receive_record.collaborator">
                                         <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
                                     </i>
-                                    
+
                                 </li>
                             </ul>
                             <ul>
@@ -548,8 +548,8 @@
                                     <i v-for="item in receive_record.items">
                                         <a class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                     </i>
-                                </p>
                                 </li>
+                                
                             </ul>
                         </div>
                     </div>
@@ -600,6 +600,14 @@
                                                 </div>
                                                 <!-- dialog end -->
                                                 <a class="btn small yellow">Delete</a>
+                                            </div>
+
+                                            <div class="msgbox dialogclear" v-for="reply in item.reply">
+                                                <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
+                                                <i v-for="file in reply.items">
+                                                    <a class="attch" :href="baseURL + reply.gcp_name" target="_blank">{{reply.filename}}</a>
+                                                </i>
+
                                             </div>
                                         </div>
                                     </li>
@@ -674,24 +682,18 @@
                                     <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
                                     <div class="filebox">
                                         <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index" @click="deleteTaskFile(receive_record.task_id, index)">{{item.name}}</a>
-                                       
+
                                     </div>
                                 </li>
                                 <li>
                                     <div class="pub-con" ref="bg">
                                         <div class="input-zone">
-                                          <span class="upload-des">choose file</span>
-                                          <input
-                                            class="input"
-                                            type="file"
-                                            :ref="'file_task_' + receive_record.task_id" 
-                                            placeholder="choose file"
-                                            @change="changeTaskFile(receive_record.task_id)"
-                                            multiple
-                                          />
-                                    </div>
-                                    <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a></li>
-                             
+                                            <span class="upload-des">choose file</span>
+                                            <input class="input" type="file" :ref="'file_task_' + receive_record.task_id" placeholder="choose file" @change="changeTaskFile(receive_record.task_id)" multiple />
+                                        </div>
+                                        <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a>
+                                </li>
+
                             </ul>
                         </div>
                     </div>
