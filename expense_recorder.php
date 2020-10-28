@@ -1709,6 +1709,6 @@ try {
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/add_or_edit_price_record_copy.js?v=20201029"></script>
+<script src="js/add_or_edit_price_record_copy.js?v=20201028"></script>
 
 </html>
