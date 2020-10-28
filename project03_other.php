@@ -584,25 +584,25 @@
                                                 <div class="dialog reply r1" :id="'task_reply_dlg_' + item.message_id + '_' + item.ref_id">
                                                     <div class="formbox">
                                                         <dl>
-                                                            <dd><textarea name="" :id="'task_reply_msg_' + item.message_id + '_' + item.ref_id"></textarea></dd>
+                                                            <dd><textarea name="" :ref="'task_reply_msg_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_' + item.message_id + '_' + item.ref_id"></textarea></dd>
                                                             <dd>
                                                                 <div class="filebox">
-                                                                        <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index" @click="deleteTaskFile(receive_record.task_id, index)">{{item.name}}</a>
+                                                                        <a class="attch" v-for="(it,index) in msgItems(item.message_id + '_' + item.ref_id)" :key="index" @click="deleteMsgFile(item.message_id + '_' + item.ref_id, index)">{{it.name}}</a>
                                                                 </div>
                                                             </dd>
                                                             <dd>
                                                                 <div class="pub-con" ref="bg">
                                                                     <div class="input-zone">
                                                                         <span class="upload-des">choose file</span>
-                                                                        <input class="input" type="file" :ref="'file_task_' + receive_record.task_id" placeholder="choose file" @change="changeTaskFile(receive_record.task_id)" multiple />
+                                                                        <input class="input" type="file" :ref="'file_msg_' + item.message_id + '_' + item.ref_id" placeholder="choose file" @change="changeMsgFile(item.message_id + '_' + item.ref_id)" multiple />
                                                                     </div>
                                                                 </div>
                                                             </dd>
 
                                                             <dd>
                                                                 <div class="btnbox">
-                                                                    <a class="btn small orange">Cancel</a>
-                                                                    <a class="btn small green">Save</a>
+                                                                    <a class="btn small orange" @click="msg_clear(item.message_id + '_' + item.ref_id)">Cancel</a>
+                                                                    <a class="btn small green" @click="msg_create(item.message_id + '_' + item.ref_id, item.message_id)">Save</a>
                                                                 </div>
                                                             </dd>
                                                         </dl>
@@ -1085,6 +1085,7 @@
     .file-list img.upload-success {
         margin-left: 0;
     }
+
 </style>
 
 </html>
