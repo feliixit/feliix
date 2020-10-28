@@ -558,17 +558,20 @@
                         <div class="tableframe">
                             <div class="tablebox m02">
                                 <!-- 1 message -->
-                                <ul v-for="item in receive_record.message">
+                                <ul v-for="item in receive_record.message" :class="{ deleted : item.message_status == -1, dialogclear : item.message_status == -1 }" >
                                     <li class="dialogclear">
                                         <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'"></a>
                                         <i class="info">
                                             <b>{{item.messager}}</b><br>
+                                            {{ item.message_time }}<br>
                                             {{ item.message_date }}
+                                            
                                         </i>
                                     </li>
-                                    <li>
+                                    <li v-if="item.message_status == 0">
                                         <div class="msg">
                                             <div class="msgbox dialogclear">
+                                                <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
                                                 <p>{{ item.message }}</p>
                                                 <i v-for="file in item.items">
                                                     <a class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
@@ -611,69 +614,18 @@
                                             </div>
                                         </div>
                                     </li>
-                                </ul>
-                                <!-- 1 message end -->
-                                <ul class="deleted dialogclear">
-                                    <li>
-                                        <a class="man" style="background-image: url(images/man/man8.jpg);"></a>
-                                        <i class="info">
-                                            <b>Dennis Lin</b><br>
-                                            1:00 PM<br>
-                                            May 30, 2020
-                                        </i>
-                                    </li>
-                                    <li>
+
+                                    <li v-if="item.message_status == -1">
                                         <div class="msg">
                                             <div class="msgbox">
-                                                <p>Deleted by <a href="" class="tag_name">@Nestor Rosales</a> at 2020/04/03 15:47</p>
+                                                <p>Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
                                             </div>
                                         </div>
                                     </li>
+
                                 </ul>
 
-                                <ul>
-                                    <li class="dialogclear">
-                                        <a class="man" style="background-image: url(images/man/man9.jpg);"></a>
-                                        <i class="info">
-                                            <b>Kuan Lu</b><br>
-                                            1:30 PM<br>
-                                            May 30, 2020
-                                        </i>
-                                    </li>
-                                    <li>
-                                        <div class="msg">
-                                            <div class="msgbox dialogclear">
-                                                <p><a href="" class="tag_name">@Dennis Lin</a> I think this task needs to be more careful.</p>
-                                            </div>
-                                            <div class="btnbox">
-                                                <a class="btn small green reply r2">Reply</a>
-                                                <!-- dialog -->
-                                                <div class="dialog reply r2">
-                                                    <div class="formbox">
-                                                        <dl>
-                                                            <dd><textarea name="" id=""></textarea></dd>
-                                                            <dd>
-                                                                <div class="browser_group"><span>Photo:</span><input type="text"><button>Choose</button></div>
-                                                            </dd>
-
-                                                            <dd>
-                                                                <div class="browser_group"><span>File:</span><input type="text"><button>Choose</button></div>
-                                                            </dd>
-                                                            <dd>
-                                                                <div class="btnbox">
-                                                                    <a class="btn small orange">Cancel</a>
-                                                                    <a class="btn small green">Save</a>
-                                                                </div>
-                                                            </dd>
-                                                        </dl>
-                                                    </div>
-                                                </div>
-                                                <!-- dialog end -->
-                                                <a class="btn small yellow">Delete</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                
                             </div>
                         </div>
                         <div class="tablebox lv3c m03 dialogclear">

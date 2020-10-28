@@ -57,7 +57,7 @@ switch ($method) {
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
         $sql = "SELECT pm.id task_id, title, priority, due_date, pm.`status` task_status, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
-        pm.created_at task_date,  COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name
+        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name
         from project_other_task pm 
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task'
@@ -101,6 +101,7 @@ switch ($method) {
         $task_date = "";
         $gcp_name = "";
         $filename = "";
+        
 
         $items = [];
         $message = [];
@@ -121,6 +122,7 @@ switch ($method) {
                     "task_date" => $task_date,
                     "message" => $message,
                     "items" => $items,
+                    
                 );
 
                 $message = [];
@@ -146,6 +148,8 @@ switch ($method) {
             $detail = $row['detail'];
             $task_date = $row['task_date'];
 
+            
+
             if ($filename != "")
                 $items[] = array(
                     'filename' => $filename,
@@ -168,6 +172,7 @@ switch ($method) {
                 "task_date" => $task_date,
                 "message" => $message,
                 "items" => $items,
+
             );
         }
 
@@ -280,10 +285,11 @@ function GetPriority($loc)
 
 function GetMessage($task_id, $db)
 {
-    $sql = "select pmsgrp.id message_id, pmsgrp.message message, pmsgrp.`status` message_status, r.username messager, r.pic_url messager_pic, pmsgrp.created_at message_date, 
+    $sql = "select pmsgrp.id message_id, pmsgrp.message message, pmsgrp.`status` message_status, r.username messager, r.pic_url messager_pic, pmsgrp.created_at message_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from project_other_task_message pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
+            LEFT JOIN user p ON p.id = pmsgrp.updated_id 
             LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg' 
             where pmsgrp.task_id = " . $task_id . " order by pmsgrp.created_at ";
 
@@ -300,6 +306,8 @@ function GetMessage($task_id, $db)
     $message_date = "";
     $gcp_name = "";
     $filename = "";
+    $updator = "";
+    $update_date = "";
 
     $reply = [];
     $items = [];
@@ -315,8 +323,12 @@ function GetMessage($task_id, $db)
                 "message_status" => $message_status,
                 "messager" => $messager,
                 "messager_pic" => $messager_pic,
-                "message_date" => $message_date,
 
+                "message_date" => explode(" ", $message_date)[0],
+                "message_time" => explode(" ", $message_date)[1],
+
+                "updator" => $updator,
+                "update_date" => $update_date,
 
                 "items" => $items,
             );
@@ -334,6 +346,9 @@ function GetMessage($task_id, $db)
         $messager = $row['messager'];
         $messager_pic = $row['messager_pic'];
         $message_date = $row['message_date'];
+
+        $updator = $row['updator'];
+        $update_date = $row['update_date'];
 
         if(empty($reply))
             $reply = GetReply($row['message_id'], $db, $message_id, $messager, $message);
@@ -359,7 +374,12 @@ function GetMessage($task_id, $db)
             "message_status" => $message_status,
             "messager" => $messager,
             "messager_pic" => $messager_pic,
-            "message_date" => $message_date,
+
+            "message_date" => explode(" ", $message_date)[0],
+            "message_time" => explode(" ", $message_date)[1],
+
+            "updator" => $updator,
+            "update_date" => $update_date,
         
             "items" => $items,
         );
@@ -373,10 +393,11 @@ function GetMessage($task_id, $db)
 
 function GetReply($msg_id, $db, $id, $name, $msg)
 {
-    $sql = "select pmsgrp.id replay_id, pmsgrp.message reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, 
+    $sql = "select pmsgrp.id replay_id, pmsgrp.message reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from project_other_task_message_reply pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
+            LEFT JOIN user p ON p.id = pmsgrp.updated_id 
             LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_rep' 
             where pmsgrp.message_id = " . $msg_id . " order by pmsgrp.created_at ";
 
@@ -394,6 +415,8 @@ function GetReply($msg_id, $db, $id, $name, $msg)
     $gcp_name = "";
     $filename = "";
     $items = [];
+    $updator = "";
+    $update_date = "";
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if ($replay_id != $row['replay_id'] && $replay_id != 0) {
@@ -406,7 +429,12 @@ function GetReply($msg_id, $db, $id, $name, $msg)
                 "message_status" => $reply_status,
                 "messager" => $replyer,
                 "messager_pic" => $replyer_pic,
-                "message_date" => $reply_date,
+
+                "message_date" => explode(" ", $reply_date)[0],
+                "message_time" => explode(" ", $reply_date)[1],
+
+                "updator" => $updator,
+                "update_date" => $update_date,
          
                 "items" => $items,
             );
@@ -420,6 +448,9 @@ function GetReply($msg_id, $db, $id, $name, $msg)
         $replyer = $row['replyer'];
         $replyer_pic = $row['replyer_pic'];
         $reply_date = $row['reply_date'];
+
+        $updator = $row['updator'];
+        $update_date = $row['update_date'];
      
         $gcp_name = $row['gcp_name'];
         $filename = $row['filename'];
@@ -442,7 +473,12 @@ function GetReply($msg_id, $db, $id, $name, $msg)
             "message_status" => $reply_status,
             "messager" => $replyer,
             "messager_pic" => $replyer_pic,
-            "message_date" => $reply_date,
+            
+            "message_date" => explode(" ", $reply_date)[0],
+            "message_time" => explode(" ", $reply_date)[1],
+
+            "updator" => $updator,
+            "update_date" => $update_date,
         
             "items" => $items,
         );
