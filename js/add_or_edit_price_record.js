@@ -656,17 +656,17 @@ var app = new Vue({
           for(i=0;i<e.target.files.length;i++){
             const image = e.target.files[i];
             if(record == 1){
-                this.split1.filename.push((this.file_day + e.target.files[i].name).toLowerCase);
+                this.split1.filename.push(this.file_day + e.target.files[i].name.toLowerCase());
             }else if(record == 2){
-                this.split2.filename.push((this.file_day + e.target.files[i].name).toLowerCase);
+                this.split2.filename.push(this.file_day + e.target.files[i].name.toLowerCase());
             }else if(record == 3){
-                this.split3.filename.push((this.file_day + e.target.files[i].name).toLowerCase);
+                this.split3.filename.push(this.file_day + e.target.files[i].name.toLowerCase());
             }else if(record == 4){
-                this.split4.filename.push((this.file_day + e.target.files[i].name).toLowerCase);
+                this.split4.filename.push(this.file_day + e.target.files[i].name.toLowerCase());
             }else if(record == 5){
-                this.split5.filename.push((this.file_day + e.target.files[i].name).toLowerCase);
+                this.split5.filename.push(this.file_day + e.target.files[i].name.toLowerCase());
             }else{
-                this.filename.push((this.file_day + e.target.files[i].name).toLowerCase);
+                this.filename.push(this.file_day + e.target.files[i].name.toLowerCase());
             }
             this.fileArray.push(image);
           }
