@@ -796,3 +796,7 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply` (
 -- 20201005 add project_other_task_message reply
 ALTER TABLE project_other_task_message
 ADD COLUMN `parent_id` int(11) DEFAULT 0 AFTER task_id;
+
+-- 20201028 add project_other_task_message reply
+ALTER TABLE project_other_task_message_reply
+ADD COLUMN `reply_id` int(11) DEFAULT 0 AFTER message_id;

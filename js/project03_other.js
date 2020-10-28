@@ -195,6 +195,11 @@ var app = new Vue({
       Vue.set(this.arrTask, 0, '');
     },
 
+    openTaskMsgDlg(msg_rep) {
+      document.getElementById('task_reply_btn_' + msg_rep).classList.add("focus");
+      document.getElementById('task_reply_dlg_' + msg_rep).classList.add("show");
+    },
+
     changeTaskFile(task_id) {
       this.current_task_id = task_id;
 

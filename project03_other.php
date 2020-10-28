@@ -28,7 +28,7 @@
     <!-- Google Analytics -->
 
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="js/fancyBox/jquery.fancybox.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/fancyBox/jquery.fancybox.min.css" />
     <link rel="stylesheet" type="text/css" href="css/default.css" />
     <link rel="stylesheet" type="text/css" href="css/ui.css" />
     <link rel="stylesheet" type="text/css" href="css/case.css" />
@@ -38,7 +38,7 @@
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
-    <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js" ></script>
+    <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js"></script>
 
     <script>
         $(function() {
@@ -76,8 +76,8 @@
 
             $('.selectbox').on('click', function() {
                 $.fancybox.open({
-                    src  : '#pop-multiSelect',
-                    type : 'inline'
+                    src: '#pop-multiSelect',
+                    type: 'inline'
                 });
             });
         })
@@ -522,7 +522,7 @@
                                     <i v-for="item in receive_record.assignee">
                                         <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
                                     </i>
-                                    
+
                                 </li>
                             </ul>
                             <ul>
@@ -531,7 +531,7 @@
                                     <i v-for="item in receive_record.collaborator">
                                         <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
                                     </i>
-                                    
+
                                 </li>
                             </ul>
                             <ul>
@@ -548,8 +548,8 @@
                                     <i v-for="item in receive_record.items">
                                         <a class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                     </i>
-                                </p>
                                 </li>
+                                
                             </ul>
                         </div>
                     </div>
@@ -558,37 +558,47 @@
                         <div class="tableframe">
                             <div class="tablebox m02">
                                 <!-- 1 message -->
-                                <ul v-for="item in receive_record.message">
+                                <ul v-for="item in receive_record.message" :class="{ deleted : item.message_status == -1, dialogclear : item.message_status == -1 }" >
                                     <li class="dialogclear">
                                         <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'"></a>
                                         <i class="info">
                                             <b>{{item.messager}}</b><br>
+                                            {{ item.message_time }}<br>
                                             {{ item.message_date }}
+                                            
                                         </i>
                                     </li>
-                                    <li>
+                                    <li v-if="item.message_status == 0">
                                         <div class="msg">
                                             <div class="msgbox dialogclear">
+                                                <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
                                                 <p>{{ item.message }}</p>
                                                 <i v-for="file in item.items">
                                                     <a class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                 </i>
-                                                <p v-for="reply in item.reply"><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
+                                                
                                             </div>
                                             <div class="btnbox">
-                                                <a class="btn small green reply r1">Reply</a>
+                                                <a class="btn small green reply r1" :id="'task_reply_btn_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg(item.message_id + '_' + item.ref_id)">Reply</a>
                                                 <!-- dialog -->
-                                                <div class="dialog reply r1">
+                                                <div class="dialog reply r1" :id="'task_reply_dlg_' + item.message_id + '_' + item.ref_id">
                                                     <div class="formbox">
                                                         <dl>
-                                                            <dd><textarea name="" id=""></textarea></dd>
+                                                            <dd><textarea name="" :id="'task_reply_msg_' + item.message_id + '_' + item.ref_id"></textarea></dd>
                                                             <dd>
-                                                                <div class="browser_group"><span>Photo:</span><input type="text"><button>Choose</button></div>
+                                                                <div class="filebox">
+                                                                        <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index" @click="deleteTaskFile(receive_record.task_id, index)">{{item.name}}</a>
+                                                                </div>
+                                                            </dd>
+                                                            <dd>
+                                                                <div class="pub-con" ref="bg">
+                                                                    <div class="input-zone">
+                                                                        <span class="upload-des">choose file</span>
+                                                                        <input class="input" type="file" :ref="'file_task_' + receive_record.task_id" placeholder="choose file" @change="changeTaskFile(receive_record.task_id)" multiple />
+                                                                    </div>
+                                                                </div>
                                                             </dd>
 
-                                                            <dd>
-                                                                <div class="browser_group"><span>File:</span><input type="text"><button>Choose</button></div>
-                                                            </dd>
                                                             <dd>
                                                                 <div class="btnbox">
                                                                     <a class="btn small orange">Cancel</a>
@@ -601,71 +611,28 @@
                                                 <!-- dialog end -->
                                                 <a class="btn small yellow">Delete</a>
                                             </div>
+
+                                            <div class="msgbox dialogclear" v-for="reply in item.reply">
+                                                <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
+                                                <i v-for="file in reply.items">
+                                                    <a class="attch" :href="baseURL + reply.gcp_name" target="_blank">{{reply.filename}}</a>
+                                                </i>
+
+                                            </div>
                                         </div>
                                     </li>
-                                </ul>
-                                <!-- 1 message end -->
-                                <ul class="deleted dialogclear">
-                                    <li>
-                                        <a class="man" style="background-image: url(images/man/man8.jpg);"></a>
-                                        <i class="info">
-                                            <b>Dennis Lin</b><br>
-                                            1:00 PM<br>
-                                            May 30, 2020
-                                        </i>
-                                    </li>
-                                    <li>
+
+                                    <li v-if="item.message_status == -1">
                                         <div class="msg">
                                             <div class="msgbox">
-                                                <p>Deleted by <a href="" class="tag_name">@Nestor Rosales</a> at 2020/04/03 15:47</p>
+                                                <p>Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
                                             </div>
                                         </div>
                                     </li>
+
                                 </ul>
 
-                                <ul>
-                                    <li class="dialogclear">
-                                        <a class="man" style="background-image: url(images/man/man9.jpg);"></a>
-                                        <i class="info">
-                                            <b>Kuan Lu</b><br>
-                                            1:30 PM<br>
-                                            May 30, 2020
-                                        </i>
-                                    </li>
-                                    <li>
-                                        <div class="msg">
-                                            <div class="msgbox dialogclear">
-                                                <p><a href="" class="tag_name">@Dennis Lin</a> I think this task needs to be more careful.</p>
-                                            </div>
-                                            <div class="btnbox">
-                                                <a class="btn small green reply r2">Reply</a>
-                                                <!-- dialog -->
-                                                <div class="dialog reply r2">
-                                                    <div class="formbox">
-                                                        <dl>
-                                                            <dd><textarea name="" id=""></textarea></dd>
-                                                            <dd>
-                                                                <div class="browser_group"><span>Photo:</span><input type="text"><button>Choose</button></div>
-                                                            </dd>
-
-                                                            <dd>
-                                                                <div class="browser_group"><span>File:</span><input type="text"><button>Choose</button></div>
-                                                            </dd>
-                                                            <dd>
-                                                                <div class="btnbox">
-                                                                    <a class="btn small orange">Cancel</a>
-                                                                    <a class="btn small green">Save</a>
-                                                                </div>
-                                                            </dd>
-                                                        </dl>
-                                                    </div>
-                                                </div>
-                                                <!-- dialog end -->
-                                                <a class="btn small yellow">Delete</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                
                             </div>
                         </div>
                         <div class="tablebox lv3c m03 dialogclear">
@@ -674,24 +641,18 @@
                                     <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_' + receive_record.task_id"></textarea>
                                     <div class="filebox">
                                         <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index" @click="deleteTaskFile(receive_record.task_id, index)">{{item.name}}</a>
-                                       
+
                                     </div>
                                 </li>
                                 <li>
                                     <div class="pub-con" ref="bg">
                                         <div class="input-zone">
-                                          <span class="upload-des">choose file</span>
-                                          <input
-                                            class="input"
-                                            type="file"
-                                            :ref="'file_task_' + receive_record.task_id" 
-                                            placeholder="choose file"
-                                            @change="changeTaskFile(receive_record.task_id)"
-                                            multiple
-                                          />
-                                    </div>
-                                    <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a></li>
-                             
+                                            <span class="upload-des">choose file</span>
+                                            <input class="input" type="file" :ref="'file_task_' + receive_record.task_id" placeholder="choose file" @change="changeTaskFile(receive_record.task_id)" multiple />
+                                        </div>
+                                        <a class="btn small green" @click="comment_create(receive_record.task_id)">Comment</a>
+                                </li>
+
                             </ul>
                         </div>
                     </div>
