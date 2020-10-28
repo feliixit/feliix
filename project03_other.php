@@ -576,22 +576,29 @@
                                                 <i v-for="file in item.items">
                                                     <a class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                 </i>
-                                                <p v-for="reply in item.reply"><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
+                                                
                                             </div>
                                             <div class="btnbox">
-                                                <a class="btn small green reply r1">Reply</a>
+                                                <a class="btn small green reply r1" :id="'task_reply_btn_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg(item.message_id + '_' + item.ref_id)">Reply</a>
                                                 <!-- dialog -->
-                                                <div class="dialog reply r1">
+                                                <div class="dialog reply r1" :id="'task_reply_dlg_' + item.message_id + '_' + item.ref_id">
                                                     <div class="formbox">
                                                         <dl>
-                                                            <dd><textarea name="" id=""></textarea></dd>
+                                                            <dd><textarea name="" :id="'task_reply_msg_' + item.message_id + '_' + item.ref_id"></textarea></dd>
                                                             <dd>
-                                                                <div class="browser_group"><span>Photo:</span><input type="text"><button>Choose</button></div>
+                                                                <div class="filebox">
+                                                                        <a class="attch" v-for="(item,index) in taskItems(receive_record.task_id)" :key="index" @click="deleteTaskFile(receive_record.task_id, index)">{{item.name}}</a>
+                                                                </div>
+                                                            </dd>
+                                                            <dd>
+                                                                <div class="pub-con" ref="bg">
+                                                                    <div class="input-zone">
+                                                                        <span class="upload-des">choose file</span>
+                                                                        <input class="input" type="file" :ref="'file_task_' + receive_record.task_id" placeholder="choose file" @change="changeTaskFile(receive_record.task_id)" multiple />
+                                                                    </div>
+                                                                </div>
                                                             </dd>
 
-                                                            <dd>
-                                                                <div class="browser_group"><span>File:</span><input type="text"><button>Choose</button></div>
-                                                            </dd>
                                                             <dd>
                                                                 <div class="btnbox">
                                                                     <a class="btn small orange">Cancel</a>
