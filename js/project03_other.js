@@ -52,7 +52,7 @@ var app = new Vue({
     arrMsg: [],
     msgCanSub: [],
     msgFinish:[],
-    current_msg_id:'',
+    current_msg_item_id:'',
 
 
 
@@ -136,10 +136,10 @@ var app = new Vue({
       handler(newValue, oldValue) {
         var _this = this;
         console.log(newValue);
-        var finish = newValue[_this.current_msg_id].find(function(currentValue, index) {
+        var finish = newValue[_this.current_msg_item_id].find(function(currentValue, index) {
           return currentValue.progress != 1;
         });
-        if (finish === undefined && this.arrMsg[_this.current_msg_id].length) {
+        if (finish === undefined && this.arrMsg[_this.current_msg_item_id].length) {
           
           Swal.fire({
             text: "upload finished",
@@ -149,11 +149,11 @@ var app = new Vue({
             iconClass: "message-icon"
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
-            _this.finish[_this.current_msg_id] = true;
+            _this.finish[_this.current_msg_item_id] = true;
             _this.getProjectOtherTask(_this.stage_id);
 
           });
-          this.comment_clear(_this.current_msg_id);
+          this.msg_clear(_this.current_msg_item_id);
 
         }
       },
@@ -222,8 +222,8 @@ var app = new Vue({
       return arr;
     },
 
-    msgItems(msg_id) {
-      var arr = this.arrMsg[msg_id];
+    msgItems(item_id) {
+      var arr = this.arrMsg[item_id];
       return arr;
     },
 
@@ -236,42 +236,43 @@ var app = new Vue({
       Vue.set(this.arrTask, 0, '');
     },
 
-    deleteMsgFile(msg_id, index) {
-      this.current_msg_id = msg_id;
+    deleteMsgFile(item_id, index) {
+      this.current_msg_item_id = item_id;
 
-      this.arrMsg[msg_id].splice(index, 1);
-      var fileTarget = this.$refs['file_msg_' + msg_id][0];
+      this.arrMsg[item_id].splice(index, 1);
+      var fileTarget = this.$refs['file_msg_' + item_id][0];
       fileTarget.value = "";
       Vue.set(this.arrMsg, 0, '');
     },
 
-    openTaskMsgDlg(msg_rep) {
-      document.getElementById('task_reply_btn_' + msg_rep).classList.add("focus");
-      document.getElementById('task_reply_dlg_' + msg_rep).classList.add("show");
+    openTaskMsgDlg(item_id) {
+      this.current_msg_item_id = item_id;
+      document.getElementById('task_reply_btn_' + item_id).classList.add("focus");
+      document.getElementById('task_reply_dlg_' + item_id).classList.add("show");
     },
 
-    closeTaskMsgDlg(msg_rep) {
-      document.getElementById('task_reply_btn_' + msg_rep).classList.remove("focus");
-      document.getElementById('task_reply_dlg_' + msg_rep).classList.remove("show");
+    closeTaskMsgDlg(item_id) {
+      document.getElementById('task_reply_btn_' + item_id).classList.remove("focus");
+      document.getElementById('task_reply_dlg_' + item_id).classList.remove("show");
     },
 
-    changeMsgFile(msg_id) {
-      this.current_msg_id = msg_id;
+    changeMsgFile(item_id) {
+      this.current_msg_item_id = item_id;
 
-      var arr = this.arrMsg[msg_id];
+      var arr = this.arrMsg[item_id];
       if(typeof arr === 'undefined' || arr.length == 0)
-        this.arrMsg[msg_id] = [];
+        this.arrMsg[item_id] = [];
 
-      var fileTarget = this.$refs['file_msg_' + msg_id][0];
+      var fileTarget = this.$refs['file_msg_' + item_id][0];
 
         for (i = 0; i < fileTarget.files.length; i++) {
             // remove duplicate
             if (
-              this.arrMsg[msg_id].indexOf(fileTarget.files[i]) == -1 ||
-              this.arrMsg[msg_id].length == 0
+              this.arrMsg[item_id].indexOf(fileTarget.files[i]) == -1 ||
+              this.arrMsg[item_id].length == 0
             ) {
               var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
-              this.arrMsg[msg_id].push(fileItem);
+              this.arrMsg[item_id].push(fileItem);
               Vue.set(this.arrMsg, 0, '');
             }else{
               fileTarget.value = "";
@@ -395,18 +396,18 @@ var app = new Vue({
       document.getElementById('add_a1').classList.remove("show");
     },
 
-    msg_clear(msg_rep) {
+    msg_clear(item_id) {
       
-      this.$refs['task_reply_msg_' + msg_rep][0].value = "";
+      this.$refs['task_reply_msg_' + item_id][0].value = "";
 
-      document.getElementById('task_reply_btn_' + msg_rep).classList.remove("focus");
-      document.getElementById('task_reply_dlg_' + msg_rep).classList.remove("show");
+      document.getElementById('task_reply_btn_' + item_id).classList.remove("focus");
+      document.getElementById('task_reply_dlg_' + item_id).classList.remove("show");
     },
 
     comment_clear(task_id) {
       this.current_task_id = task_id;
       this.arrTask[task_id] = [];
-      //Vue.set(this.arrTask, 0, '');
+      Vue.set(this.arrTask, 0, '');
       this.$refs['comment_task_' + task_id][0].value = "";
     },
 
@@ -643,7 +644,7 @@ var app = new Vue({
     },
   
     msg_create(item_id, msg_id) {
-      this.current_msg_id = msg_id;
+      this.current_msg_item_id = item_id;
 
       let _this = this;
 
@@ -681,32 +682,32 @@ var app = new Vue({
         .then(function (response) {
           if(response.data['batch_id'] != 0)
           {
-              _this.msg_upload(msg_id, response.data['batch_id']);
+              _this.msg_upload(item_id, msg_id, response.data['batch_id']);
           }
           else
           {
-            _this.msg_clear(msg_id);
+            _this.msg_clear(item_id);
         
           }
 
-          if(_this.arrMsg[msg_id].length == 0)
+          if(_this.arrMsg[item_id].length == 0)
           {
             _this.getProjectOtherTask(_this.stage_id);
-            _this.msg_clear(msg_id);
+            _this.msg_clear(item_id);
           }
         })
         .catch(function (response) {
           //handle error
           console.log(response)
-        }).finally(function () {_this.msg_clear(msg_id)});
+        }).finally(function () {_this.msg_clear(item_id)});
     },
 
-    msg_upload(msg_id, batch_id) {
+    msg_upload(item_id, msg_id, batch_id) {
 
-      this.current_msg_id = msg_id;
+      this.current_msg_item_id = item_id;
     
         this.canSub = false;
-        var myArr = this.arrMsg[msg_id];
+        var myArr = this.arrMsg[item_id];
         var _this = this;
       
         //循环文件数组挨个上传
@@ -721,19 +722,19 @@ var app = new Vue({
                 if (rate < 1) {
                   
                   myArr[index].progress = rate;
-                  _this.$set(_this.arrMsg[msg_id], index, myArr[index]);
+                  _this.$set(_this.arrMsg[item_id], index, myArr[index]);
                   Vue.set(_this.arrMsg, 0, '');
                 } else {
                   myArr[index].progress = 0.99;
-                  _this.$set(_this.arrMsg[msg_id], index, myArr[index]);
+                  _this.$set(_this.arrMsg[item_id], index, myArr[index]);
                   Vue.set(_this.arrMsg, 0, '');
                 }
               }
             }
-          };
+          }; 
           var data = myArr[index];
           var myForm = new FormData();
-          myForm.append('batch_type', 'other_task_reply');
+          myForm.append('batch_type', 'other_task_msg_rep');
           myForm.append('batch_id', batch_id);
           myForm.append("file", data);
 
@@ -743,9 +744,9 @@ var app = new Vue({
               if (res.data.code == 0) {
           
                 myArr[index].progress = 1;
-                _this.$set(_this.arrMsg[msg_id], index, myArr[index]);
-                console.log(_this.arrMsg[msg_id], index);
-                Vue.set(_this.arrMsg, 0, '');
+                _this.$set(_this.arrMsg[item_id], index, myArr[index]);
+                console.log(_this.arrMsg[item_id], index);
+                Vue.set(_this.arrMsg, '', '');
               } else {
                 alert(JSON.stringify(res.data));
               }
@@ -755,7 +756,7 @@ var app = new Vue({
             });
         });
 
-        this.msgCanSub[msg_id] = true;
+        this.msgCanSub[item_id] = true;
       
     },
 
