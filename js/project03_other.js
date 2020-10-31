@@ -6,15 +6,16 @@ var app = new Vue({
     record: {},
 
     project03_other_task: {},
+    project03_other_task_r: {},
 
-    users : {},
+    users: {},
 
-    submit : false,
+    submit: false,
 
-    contactor : '',
-    username : '',
-    client_type : '',
-    category : '',
+    contactor: '',
+    username: '',
+    client_type: '',
+    category: '',
     // paging
     page: 1,
     //perPage: 10,
@@ -29,7 +30,7 @@ var app = new Vue({
     ],
     perPage: 20,
 
-    baseURL:'https://storage.cloud.google.com/feliiximg/',
+    baseURL: 'https://storage.cloud.google.com/feliiximg/',
 
 
     // TASKS
@@ -38,26 +39,51 @@ var app = new Vue({
     assignee: [],
     collaborator: [],
     due_date: '',
-    detail:'',
+    detail: '',
 
 
     fileArray: [],
 
     arrTask: [],
     taskCanSub: [],
-    taskFinish:[],
-    current_task_id:0,
+    taskFinish: [],
+    current_task_id: 0,
 
 
     arrMsg: [],
     msgCanSub: [],
-    msgFinish:[],
-    current_msg_item_id:'',
-
-
+    msgFinish: [],
+    current_msg_item_id: '',
 
     canSub: true,
     finish: false,
+
+    // MESSAGE
+    title_r: '',
+    priority_r: 0,
+    assignee_r: [],
+    collaborator_r: [],
+    due_date_r: '',
+    detail_r: '',
+
+
+    fileArray_r: [],
+
+    arrTask_r: [],
+    taskCanSub_r: [],
+    taskFinish_r: [],
+    current_task_id_r: 0,
+
+
+    arrMsg_r: [],
+    msgCanSub_r: [],
+    msgFinish_r: [],
+    current_msg_item_id_r: '',
+
+
+
+    canSub_r: true,
+    finish_r: false,
 
 
   },
@@ -73,7 +99,8 @@ var app = new Vue({
         tmp = v.split('=');
         if (tmp.length == 2)
           _this.stage_id = tmp[1];
-          _this.getProjectOtherTask(_this.stage_id);
+        _this.getProjectOtherTask(_this.stage_id);
+        _this.getProjectOtherTask_r(_this.stage_id);
 
       });
     }
@@ -108,11 +135,11 @@ var app = new Vue({
       handler(newValue, oldValue) {
         var _this = this;
         console.log(newValue);
-        var finish = newValue[_this.current_task_id].find(function(currentValue, index) {
+        var finish = newValue[_this.current_task_id].find(function (currentValue, index) {
           return currentValue.progress != 1;
         });
         if (finish === undefined && this.arrTask[_this.current_task_id].length) {
-          
+
           Swal.fire({
             text: "upload finished",
             type: "success",
@@ -136,11 +163,11 @@ var app = new Vue({
       handler(newValue, oldValue) {
         var _this = this;
         console.log(newValue);
-        var finish = newValue[_this.current_msg_item_id].find(function(currentValue, index) {
+        var finish = newValue[_this.current_msg_item_id].find(function (currentValue, index) {
           return currentValue.progress != 1;
         });
         if (finish === undefined && this.arrMsg[_this.current_msg_item_id].length) {
-          
+
           Swal.fire({
             text: "upload finished",
             type: "success",
@@ -164,11 +191,11 @@ var app = new Vue({
       handler(newValue, oldValue) {
         var _this = this;
         console.log(newValue);
-        var finish = newValue.find(function(currentValue, index) {
+        var finish = newValue.find(function (currentValue, index) {
           return currentValue.progress != 1;
         });
         if (finish === undefined && this.fileArray.length) {
-          
+
           Swal.fire({
             text: "upload finished",
             type: "success",
@@ -182,6 +209,34 @@ var app = new Vue({
 
           });
           this.task_clear();
+
+        }
+      },
+      deep: true
+    },
+
+    fileArray_r: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function (currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.fileArray_r.length) {
+
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish_r = true;
+            _this.getProjectOtherTask_r(_this.stage_id);
+
+          });
+          this.task_clear_r();
 
         }
       },
@@ -203,22 +258,50 @@ var app = new Vue({
     changeFile() {
       var fileTarget = this.$refs.file;
 
-        for (i = 0; i < fileTarget.files.length; i++) {
-            // remove duplicate
-            if (
-              this.fileArray.indexOf(fileTarget.files[i]) == -1 ||
-              this.fileArray.length == 0
-            ) {
-              var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
-              this.fileArray.push(fileItem);
-            }else{
-              fileTarget.value = "";
-            }
-          }
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.fileArray.indexOf(fileTarget.files[i]) == -1 ||
+          this.fileArray.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.fileArray.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    deleteFile_r(index) {
+      this.fileArray_r.splice(index, 1);
+      var fileTarget = this.$refs.file_r;
+      fileTarget.value = "";
+    },
+
+    changeFile_r() {
+      var fileTarget = this.$refs.file_r;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.fileArray_r.indexOf(fileTarget.files[i]) == -1 ||
+          this.fileArray_r.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.fileArray_r.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
     },
 
     taskItems(task_id) {
       var arr = this.arrTask[task_id];
+      return arr;
+    },
+
+    taskItems_r(task_id) {
+      var arr = this.arrTask_r[task_id];
       return arr;
     },
 
@@ -260,48 +343,48 @@ var app = new Vue({
       this.current_msg_item_id = item_id;
 
       var arr = this.arrMsg[item_id];
-      if(typeof arr === 'undefined' || arr.length == 0)
+      if (typeof arr === 'undefined' || arr.length == 0)
         this.arrMsg[item_id] = [];
 
       var fileTarget = this.$refs['file_msg_' + item_id][0];
 
-        for (i = 0; i < fileTarget.files.length; i++) {
-            // remove duplicate
-            if (
-              this.arrMsg[item_id].indexOf(fileTarget.files[i]) == -1 ||
-              this.arrMsg[item_id].length == 0
-            ) {
-              var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
-              this.arrMsg[item_id].push(fileItem);
-              Vue.set(this.arrMsg, 0, '');
-            }else{
-              fileTarget.value = "";
-            }
-          }
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.arrMsg[item_id].indexOf(fileTarget.files[i]) == -1 ||
+          this.arrMsg[item_id].length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.arrMsg[item_id].push(fileItem);
+          Vue.set(this.arrMsg, 0, '');
+        } else {
+          fileTarget.value = "";
+        }
+      }
     },
 
     changeTaskFile(task_id) {
       this.current_task_id = task_id;
 
       var arr = this.arrTask[task_id];
-      if(typeof arr === 'undefined' || arr.length == 0)
+      if (typeof arr === 'undefined' || arr.length == 0)
         this.arrTask[task_id] = [];
 
       var fileTarget = this.$refs['file_task_' + task_id][0];
 
-        for (i = 0; i < fileTarget.files.length; i++) {
-            // remove duplicate
-            if (
-              this.arrTask[task_id].indexOf(fileTarget.files[i]) == -1 ||
-              this.arrTask[task_id].length == 0
-            ) {
-              var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
-              this.arrTask[task_id].push(fileItem);
-              Vue.set(this.arrTask, 0, '');
-            }else{
-              fileTarget.value = "";
-            }
-          }
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.arrTask[task_id].indexOf(fileTarget.files[i]) == -1 ||
+          this.arrTask[task_id].length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.arrTask[task_id].push(fileItem);
+          Vue.set(this.arrTask, 0, '');
+        } else {
+          fileTarget.value = "";
+        }
+      }
     },
 
     setPages() {
@@ -333,52 +416,83 @@ var app = new Vue({
     getProjectOtherTask(stage_id) {
       let _this = this;
 
-      if(stage_id == 0)
+      if (stage_id == 0)
         return;
 
       const params = {
-              stage_id : stage_id,
-           
-            };
+        stage_id: stage_id,
 
-          let token = localStorage.getItem('accessToken');
-    
-          axios
-              .get('api/project03_other_task', { params, headers: {"Authorization" : `Bearer ${token}`} })
-              .then(
-              (res) => {
-                  _this.project03_other_task = res.data;
-              },
-              (err) => {
-                  alert(err.response);
-              },
-              )
-              .finally(() => {
-                  
-              });
-      },
+      };
 
-    getUsers () {
+      let token = localStorage.getItem('accessToken');
 
-        let _this = this;
-  
-        let token = localStorage.getItem('accessToken');
-  
-        axios
-            .get('api/project02_user', { headers: {"Authorization" : `Bearer ${token}`} })
-            .then(
-            (res) => {
-                _this.users = res.data;
-            },
-            (err) => {
-                alert(err.response);
-            },
-            )
-            .finally(() => {
-                
-            });
+      axios
+        .get('api/project03_other_task', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.project03_other_task = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
     },
 
+    getProjectOtherTask_r(stage_id) {
+      let _this = this;
+
+      if (stage_id == 0)
+        return;
+
+      const params = {
+        stage_id: stage_id,
+
+      };
+
+      let token = localStorage.getItem('accessToken');
+
+      axios
+        .get('api/project03_other_task_r', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.project03_other_task_r = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
+    },
+
+    getUsers() {
+
+      let _this = this;
+
+      let token = localStorage.getItem('accessToken');
+
+      axios
+        .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.users = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
+    },
+
+    OpenAssignee_r() {
+      document.getElementById("assignee_r").multiple = true;
+    },
 
     OpenAssignee() {
       document.getElementById("assignee").multiple = true;
@@ -396,8 +510,16 @@ var app = new Vue({
       document.getElementById('add_a1').classList.remove("show");
     },
 
+    task_clear_r() {
+
+      this.detail_r = "";
+
+      document.getElementById('dialog_a1_r').classList.remove("focus");
+      document.getElementById('add_a1_r').classList.remove("show");
+    },
+
     msg_clear(item_id) {
-      
+
       this.$refs['task_reply_msg_' + item_id][0].value = "";
 
       document.getElementById('task_reply_btn_' + item_id).classList.remove("focus");
@@ -449,18 +571,15 @@ var app = new Vue({
         data: form_Data
       })
         .then(function (response) {
-          if(response.data['batch_id'] != 0)
-          {
-              _this.task_upload(response.data['batch_id']);
+          if (response.data['batch_id'] != 0) {
+            _this.task_upload(response.data['batch_id']);
           }
-          else
-          {
+          else {
             _this.task_clear();
-        
+
           }
 
-          if(_this.fileArray.length == 0)
-          {
+          if (_this.fileArray.length == 0) {
             _this.getProjectOtherTask(_this.stage_id);
             _this.task_clear();
           }
@@ -468,60 +587,171 @@ var app = new Vue({
         .catch(function (response) {
           //handle error
           console.log(response)
-        }).finally(function () {_this.task_clear()});
+        }).finally(function () { _this.task_clear() });
     },
 
     task_upload(batch_id) {
-    
-        this.canSub = false;
-        var myArr = this.fileArray;
-        var vm = this;
-       
-        //循环文件数组挨个上传
-        myArr.forEach((element, index) => {
-          var config = {
-            headers: { "Content-Type": "multipart/form-data" },
-            onUploadProgress: function(e) {
-   
-              if (e.lengthComputable) {
-                var rate = e.loaded / e.total; 
-                console.log(index, e.loaded, e.total, rate);
-                if (rate < 1) {
-                  
-                  myArr[index].progress = rate;
-                  vm.$set(vm.fileArray, index, myArr[index]);
-                } else {
-                  myArr[index].progress = 0.99;
-                  vm.$set(vm.fileArray, index, myArr[index]);
-                }
+
+      this.canSub = false;
+      var myArr = this.fileArray;
+      var vm = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                vm.$set(vm.fileArray, index, myArr[index]);
+              } else {
+                myArr[index].progress = 0.99;
+                vm.$set(vm.fileArray, index, myArr[index]);
               }
             }
-          };
-          var data = myArr[index];
-          var myForm = new FormData();
-          myForm.append('batch_type', 'other_task');
-          myForm.append('batch_id', batch_id);
-          myForm.append("file", data);
- 
-          axios
-            .post("api/uploadFile_gcp", myForm, config)
-            .then(function(res) {
-              if (res.data.code == 0) {
-           
-                myArr[index].progress = 1;
-                vm.$set(vm.fileArray, index, myArr[index]);
-                console.log(vm.fileArray, index);
-              } else {
-                alert(JSON.stringify(res.data));
-              }
-            })
-            .catch(function(err) {
-              console.log(err);
-            });
-        });
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
 
-        this.canSub = true;
-      
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              vm.$set(vm.fileArray, index, myArr[index]);
+              console.log(vm.fileArray, index);
+            } else {
+              alert(JSON.stringify(res.data));
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.canSub = true;
+
+    },
+
+
+    task_create_r() {
+      let _this = this;
+
+      if (this.title_r.trim() == '') {
+        Swal.fire({
+          text: 'Please enter message!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      form_Data.append('stage_id', this.stage_id);
+      form_Data.append('title', this.title_r.trim());
+      form_Data.append('priority', '');
+      form_Data.append('assignee', this.assignee_r);
+      form_Data.append('collaborator', '');
+      form_Data.append('due_date', '');
+      form_Data.append('detail', this.detail_r.trim());
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project03_other_task_r',
+        data: form_Data
+      })
+        .then(function (response) {
+          if (response.data['batch_id'] != 0) {
+            _this.task_upload_r(response.data['batch_id']);
+          }
+          else {
+            _this.task_clear_r();
+
+          }
+
+          if (_this.fileArray.length == 0) {
+            _this.getProjectOtherTask_r(_this.stage_id);
+            _this.task_clear_r();
+          }
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () { _this.task_clear_r() });
+    },
+
+    task_upload_r(batch_id) {
+
+      this.canSub_r = false;
+      var myArr = this.fileArray_r;
+      var vm = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                vm.$set(vm.fileArray_r, index, myArr[index]);
+              } else {
+                myArr[index].progress = 0.99;
+                vm.$set(vm.fileArray_r, index, myArr[index]);
+              }
+            }
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task_r');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
+
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              vm.$set(vm.fileArray_r, index, myArr[index]);
+              console.log(vm.fileArray_r, index);
+            } else {
+              alert(JSON.stringify(res.data));
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.canSub_r = true;
+
     },
 
 
@@ -563,18 +793,15 @@ var app = new Vue({
         data: form_Data
       })
         .then(function (response) {
-          if(response.data['batch_id'] != 0)
-          {
-              _this.comment_upload(task_id, response.data['batch_id']);
+          if (response.data['batch_id'] != 0) {
+            _this.comment_upload(task_id, response.data['batch_id']);
           }
-          else
-          {
+          else {
             _this.comment_clear(task_id);
-        
+
           }
 
-          if(_this.arrTask[task_id].length == 0)
-          {
+          if (_this.arrTask[task_id].length == 0) {
             _this.getProjectOtherTask(_this.stage_id);
             _this.comment_clear(task_id);
           }
@@ -582,67 +809,67 @@ var app = new Vue({
         .catch(function (response) {
           //handle error
           console.log(response)
-        }).finally(function () {_this.comment_clear(task_id)});
+        }).finally(function () { _this.comment_clear(task_id) });
     },
 
     comment_upload(task_id, batch_id) {
 
       this.current_task_id = task_id;
-    
-        this.canSub = false;
-        var myArr = this.arrTask[task_id];
-        var _this = this;
-       
-        //循环文件数组挨个上传
-        myArr.forEach((element, index) => {
-          var config = {
-            headers: { "Content-Type": "multipart/form-data" },
-            onUploadProgress: function(e) {
-   
-              if (e.lengthComputable) {
-                var rate = e.loaded / e.total; 
-                console.log(index, e.loaded, e.total, rate);
-                if (rate < 1) {
-                  
-                  myArr[index].progress = rate;
-                  _this.$set(_this.arrTask[task_id], index, myArr[index]);
-                  Vue.set(_this.arrTask, 0, '');
-                } else {
-                  myArr[index].progress = 0.99;
-                  _this.$set(_this.arrTask[task_id], index, myArr[index]);
-                  Vue.set(_this.arrTask, 0, '');
-                }
-              }
-            }
-          };
-          var data = myArr[index];
-          var myForm = new FormData();
-          myForm.append('batch_type', 'other_task_msg');
-          myForm.append('batch_id', batch_id);
-          myForm.append("file", data);
- 
-          axios
-            .post("api/uploadFile_gcp", myForm, config)
-            .then(function(res) {
-              if (res.data.code == 0) {
-           
-                myArr[index].progress = 1;
+
+      this.canSub = false;
+      var myArr = this.arrTask[task_id];
+      var _this = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
                 _this.$set(_this.arrTask[task_id], index, myArr[index]);
-                console.log(_this.arrTask[task_id], index);
                 Vue.set(_this.arrTask, 0, '');
               } else {
-                alert(JSON.stringify(res.data));
+                myArr[index].progress = 0.99;
+                _this.$set(_this.arrTask[task_id], index, myArr[index]);
+                Vue.set(_this.arrTask, 0, '');
               }
-            })
-            .catch(function(err) {
-              console.log(err);
-            });
-        });
+            }
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task_msg');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
 
-        this.taskCanSub[task_id] = true;
-      
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              _this.$set(_this.arrTask[task_id], index, myArr[index]);
+              console.log(_this.arrTask[task_id], index);
+              Vue.set(_this.arrTask, 0, '');
+            } else {
+              alert(JSON.stringify(res.data));
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.taskCanSub[task_id] = true;
+
     },
-  
+
     msg_create(item_id, msg_id) {
       this.current_msg_item_id = item_id;
 
@@ -680,18 +907,15 @@ var app = new Vue({
         data: form_Data
       })
         .then(function (response) {
-          if(response.data['batch_id'] != 0)
-          {
-              _this.msg_upload(item_id, msg_id, response.data['batch_id']);
+          if (response.data['batch_id'] != 0) {
+            _this.msg_upload(item_id, msg_id, response.data['batch_id']);
           }
-          else
-          {
+          else {
             _this.msg_clear(item_id);
-        
+
           }
 
-          if(_this.arrMsg[item_id].length == 0)
-          {
+          if (_this.arrMsg[item_id].length == 0) {
             _this.getProjectOtherTask(_this.stage_id);
             _this.msg_clear(item_id);
           }
@@ -699,65 +923,65 @@ var app = new Vue({
         .catch(function (response) {
           //handle error
           console.log(response)
-        }).finally(function () {_this.msg_clear(item_id)});
+        }).finally(function () { _this.msg_clear(item_id) });
     },
 
     msg_upload(item_id, msg_id, batch_id) {
 
       this.current_msg_item_id = item_id;
-    
-        this.canSub = false;
-        var myArr = this.arrMsg[item_id];
-        var _this = this;
-      
-        //循环文件数组挨个上传
-        myArr.forEach((element, index) => {
-          var config = {
-            headers: { "Content-Type": "multipart/form-data" },
-            onUploadProgress: function(e) {
-  
-              if (e.lengthComputable) {
-                var rate = e.loaded / e.total; 
-                console.log(index, e.loaded, e.total, rate);
-                if (rate < 1) {
-                  
-                  myArr[index].progress = rate;
-                  _this.$set(_this.arrMsg[item_id], index, myArr[index]);
-                  Vue.set(_this.arrMsg, 0, '');
-                } else {
-                  myArr[index].progress = 0.99;
-                  _this.$set(_this.arrMsg[item_id], index, myArr[index]);
-                  Vue.set(_this.arrMsg, 0, '');
-                }
+
+      this.canSub = false;
+      var myArr = this.arrMsg[item_id];
+      var _this = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                _this.$set(_this.arrMsg[item_id], index, myArr[index]);
+                Vue.set(_this.arrMsg, 0, '');
+              } else {
+                myArr[index].progress = 0.99;
+                _this.$set(_this.arrMsg[item_id], index, myArr[index]);
+                Vue.set(_this.arrMsg, 0, '');
               }
             }
-          }; 
-          var data = myArr[index];
-          var myForm = new FormData();
-          myForm.append('batch_type', 'other_task_msg_rep');
-          myForm.append('batch_id', batch_id);
-          myForm.append("file", data);
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task_msg_rep');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
 
-          axios
-            .post("api/uploadFile_gcp", myForm, config)
-            .then(function(res) {
-              if (res.data.code == 0) {
-          
-                myArr[index].progress = 1;
-                _this.$set(_this.arrMsg[item_id], index, myArr[index]);
-                console.log(_this.arrMsg[item_id], index);
-                Vue.set(_this.arrMsg, '', '');
-              } else {
-                alert(JSON.stringify(res.data));
-              }
-            })
-            .catch(function(err) {
-              console.log(err);
-            });
-        });
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
 
-        this.msgCanSub[item_id] = true;
-      
+              myArr[index].progress = 1;
+              _this.$set(_this.arrMsg[item_id], index, myArr[index]);
+              console.log(_this.arrMsg[item_id], index);
+              Vue.set(_this.arrMsg, '', '');
+            } else {
+              alert(JSON.stringify(res.data));
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.msgCanSub[item_id] = true;
+
     },
 
   },

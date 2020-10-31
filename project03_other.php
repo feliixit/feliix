@@ -333,40 +333,73 @@
                     </div>
                     <!-- add -->
                     <div class="popupblock">
-                        <a class="add blue"></a>
+                        <a id="dialog_a1_r" class="add blue"></a>
                         <!-- dialog -->
-                        <div class="dialog d-add">
+                        <div id="add_a1_r" class="dialog d-add">
                             <h6>Add Message:</h6>
                             <div class="formbox">
                                 <dl>
                                     <dt>Title:</dt>
-                                    <dd><input type="text" placeholder=""></dd>
+                                    <dd><input type="text" placeholder="" v-model="title_r"></dd>
                                 </dl>
                                 <dl>
                                     <dt>Assignee:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="text"><button>Browse</button></div>
+                                        <div class="browser_group">
+                                            <select v-model="assignee_r" id="assignee_r">
+                                                <option v-for="(item, index) in users" :value="item.id" :key="item.username">
+                                                    {{ item.username }}
+                                                </option>
+                                            </select>
+                                            <button @click="OpenAssignee_r">Browse</button>
+                                        </div>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Description:</dt>
-                                    <dd><textarea placeholder=""></textarea></dd>
+                                    <dd><textarea placeholder="" v-model="detail_r"></textarea></dd>
                                 </dl>
                                 <dl>
-                                    <dt>Pictures:</dt>
-                                    <dd>
-                                        <div class="browser_group"><input type="text"><button>Choose Picture</button></div>
+                                    <dd style="display: flex; justify-content: flex_start;">
+                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                        <div class="pub-con" ref="bg">
+                                            <div class="input-zone">
+                                                <span class="upload-des">choose file</span>
+                                                <input class="input" type="file" name="file_r" value placeholder="choose file" ref="file_r" v-show="canSub_r" @change="changeFile_r()" multiple />
+                                            </div>
+                                        </div>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Files:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="text"><button>Choose File</button></div>
+                                        <div class="browser_group">
+
+                                            <div class="pad">
+                                                <div class="file-list">
+                                                    <div class="file-item" v-for="(item,index) in fileArray_r" :key="index">
+                                                        <p>
+                                                            {{item.name}}
+                                                            <span @click="deleteFile_r(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
+                                                            </span>
+                                                        </p>
+                                                        <div class="progress-container" v-show="item.progress!=0">
+                                                            <div class="progress-wrapper">
+                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                                            </div>
+                                                            <div class="progress-rate">
+                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                <span v-else><i class="fas fa-check-circle"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                     </dd>
                                 </dl>
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Create</a>
+                                    <a class="btn small" @click="task_clear_r">Cancel</a>
+                                    <a class="btn small green" @click="task_create_r">Create</a>
                                 </div>
                             </div>
                         </div>
@@ -376,7 +409,7 @@
                     <div class="popupblock">
                         <a class="edit blue"></a>
                         <!-- dialog -->
-                        <div class="dialog d-edit">
+                        <div class="dialog d-edit edit">
                             <h6>Edit/Delete Message:</h6>
                             <div class="tablebox s1">
                                 <ul>
@@ -500,8 +533,6 @@
                 </div>
 
                 <div v-for='(receive_record, index) in project03_other_task'>
-
-
 
                     <div class="teskbox dialogclear">
                         <a class="btn small red">{{ receive_record.priority }}</a>
@@ -677,39 +708,40 @@
                         <a class="next">Next</a>
                     </div>
                 </div>
-                <div class="teskbox">
-                    <h5>[MESSAGE] Information from Customer</h5>
+                <div class="teskbox" v-for='(receive_record, index) in project03_other_task_r' :class="{ red : receive_record.task_status == -1, dialogclear : receive_record.task_status == -1 }">
+                    <h5>[MESSAGE] {{ receive_record.title }}</h5>
                     <div class="tablebox2">
                         <ul>
                             <li class="teskblock dialogclear">
                                 <div class="tablebox m01">
                                     <ul>
                                         <li><b>Creator</b></li>
-                                        <li><a class="man" style="background-image: url(images/man/man10.jpg);"></a></li>
+                                        <li><a class="man" :style="'background-image: url(images/man/' +  receive_record.creator_pic  + ');'"></a></li>
                                     </ul>
                                     <ul>
                                         <li><b>Date</b></li>
-                                        <li>November 4, 2020 / 10:07 AM</li>
+                                        <li>{{ receive_record.task_date }}</li>
                                     </ul>
                                     <ul>
                                         <li><b>Assignee</b></li>
                                         <li>
-                                            <a class="man" style="background-image: url(images/man/man11.jpg);"></a>
-                                            <a class="man" style="background-image: url(images/man/man12.jpg);"></a>
+                                            <i v-for="item in receive_record.assignee">
+                                                <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
+                                            </i>
                                         </li>
                                     </ul>
                                     <ul>
                                         <li><b>Description</b></li>
-                                        <li>Below are the information that the client provided: <br>
-                                            • The site is an existing office, they just needed to renovate it quickly because there was an accident that happened. <br>
-                                            • They need workstations, low partitions and suspended panel light. <br>
-                                            • They already have existing layout or plan for the office.
+                                        <li>
+                                            {{ receive_record.detail }}
                                         </li>
                                     </ul>
                                     <ul>
                                         <li><b>Attachments</b></li>
                                         <li>
-                                            <a class="attch">requirement.doc</a>
+                                            <i v-for="item in receive_record.items">
+                                                <a class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                            </i>
                                         </li>
                                     </ul>
                                 </div>
@@ -718,42 +750,48 @@
                                 <div class="tableframe">
                                     <div class="tablebox m02">
                                         <!-- 1 message -->
-                                        <ul>
+                                        <ul v-for="item in receive_record.message" :class="{ deleted : item.message_status == -1, dialogclear : item.message_status == -1 }">
                                             <li class="dialogclear">
-                                                <a class="man" style="background-image: url(images/man/man7.jpg);"></a>
+                                                <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'"></a>
                                                 <i class="info">
-                                                    <b>Nestor Rosales</b><br>
-                                                    2:00 PM<br>
-                                                    May 3, 2020
+                                                    <b>{{item.messager}}</b><br>
+                                                    {{ item.message_time }}<br>
+                                                    {{ item.message_date }}
                                                 </i>
                                             </li>
-                                            <li>
+                                            <li v-if="item.message_status == 0">
                                                 <div class="msg">
                                                     <div class="msgbox dialogclear">
-                                                        <p>Hi Nestor. Here are the deliverables. Please check. Thank you.</p>
-                                                        <a class="attch">building1.jpg</a>
-                                                        <a class="attch">building.jpg</a>
-                                                        <a class="attch">quotation.pdf</a>
-                                                        <a class="attch">rendering.pdf</a>
+                                                        <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
+                                                        <p>{{ item.message }}</p>
+                                                        <i v-for="file in item.items">
+                                                            <a class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
+                                                        </i>
                                                     </div>
                                                     <div class="btnbox">
-                                                        <a class="btn small green reply r3">Reply</a>
+                                                        <a class="btn small green reply r3" :id="'task_reply_btn_r_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg_r(item.message_id + '_' + item.ref_id)">Reply</a>
                                                         <!-- dialog -->
-                                                        <div class="dialog reply r3">
+                                                        <div class="dialog reply r3" :id="'task_reply_dlg_r_' + item.message_id + '_' + item.ref_id">
                                                             <div class="formbox">
                                                                 <dl>
-                                                                    <dd><textarea name="" id=""></textarea></dd>
+                                                                    <dd><textarea name="" :ref="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id"></textarea></dd>
                                                                     <dd>
-                                                                        <div class="browser_group"><span>Photo:</span><input type="text"><button>Choose</button></div>
+                                                                        <div class="filebox">
+                                                                            <a class="attch" v-for="(it,index) in msgItems_r(item.message_id + '_' + item.ref_id)" :key="index" @click="deleteMsgFile_r(item.message_id + '_' + item.ref_id, index)">{{it.name}}</a>
+                                                                        </div>
                                                                     </dd>
-
                                                                     <dd>
-                                                                        <div class="browser_group"><span>File:</span><input type="text"><button>Choose</button></div>
+                                                                        <div class="pub-con" ref="bg">
+                                                                            <div class="input-zone">
+                                                                                <span class="upload-des">choose file</span>
+                                                                                <input class="input" type="file" :ref="'file_msg_r_' + item.message_id + '_' + item.ref_id" placeholder="choose file" @change="changeMsgFile_r(item.message_id + '_' + item.ref_id)" multiple />
+                                                                            </div>
+                                                                        </div>
                                                                     </dd>
                                                                     <dd>
                                                                         <div class="btnbox">
-                                                                            <a class="btn small orange">Cancel</a>
-                                                                            <a class="btn small green">Save</a>
+                                                                            <a class="btn small orange" @click="msg_clear_r(item.message_id + '_' + item.ref_id)">Cancel</a>
+                                                                            <a class="btn small green" @click="msg_create_r(item.message_id + '_' + item.ref_id, item.message_id)">Save</a>
                                                                         </div>
                                                                     </dd>
                                                                 </dl>
@@ -762,169 +800,55 @@
                                                         <!-- dialog end -->
                                                         <a class="btn small yellow">Delete</a>
                                                     </div>
+
+                                                    <div class="msgbox dialogclear" v-for="reply in item.reply">
+                                                        <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
+                                                        <i v-for="file in reply.items">
+                                                            <a class="attch" :href="baseURL + reply.gcp_name" target="_blank">{{reply.filename}}</a>
+                                                        </i>
+
+                                                    </div>
+                                                    
                                                 </div>
                                             </li>
-                                        </ul>
-                                        <!-- 1 message end -->
-                                        <ul class="deleted dialogclear">
-                                            <li>
-                                                <a class="man" style="background-image: url(images/man/man8.jpg);"></a>
-                                                <i class="info">
-                                                    <b>Dennis Lin</b><br>
-                                                    1:00 PM<br>
-                                                    May 30, 2020
-                                                </i>
-                                            </li>
-                                            <li>
+
+                                            <li v-if="item.message_status == -1">
                                                 <div class="msg">
                                                     <div class="msgbox">
-                                                        <p>Deleted by <a href="" class="tag_name">@Nestor Rosales</a> at 2020/04/03 15:47</p>
+                                                        <p>Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
                                                     </div>
                                                 </div>
                                             </li>
                                         </ul>
+                                        
 
-                                        <ul>
-                                            <li class="dialogclear">
-                                                <a class="man" style="background-image: url(images/man/man9.jpg);"></a>
-                                                <i class="info">
-                                                    <b>Kuan Lu</b><br>
-                                                    1:30 PM<br>
-                                                    May 30, 2020
-                                                </i>
-                                            </li>
-                                            <li>
-                                                <div class="msg">
-                                                    <div class="msgbox dialogclear">
-                                                        <p><a href="" class="tag_name">@Dennis Lin</a> I think this task needs to be more careful.</p>
-                                                    </div>
-                                                    <div class="btnbox">
-                                                        <a class="btn small green reply r4">Reply</a>
-                                                        <!-- dialog -->
-                                                        <div class="dialog reply r4">
-                                                            <div class="formbox">
-                                                                <dl>
-                                                                    <dd><textarea name="" id=""></textarea></dd>
-                                                                    <dd>
-                                                                        <div class="browser_group"><span>Photo:</span><input type="text"><button>Choose</button></div>
-                                                                    </dd>
-
-                                                                    <dd>
-                                                                        <div class="browser_group"><span>File:</span><input type="text"><button>Choose</button></div>
-                                                                    </dd>
-                                                                    <dd>
-                                                                        <div class="btnbox">
-                                                                            <a class="btn small orange">Cancel</a>
-                                                                            <a class="btn small green">Save</a>
-                                                                        </div>
-                                                                    </dd>
-                                                                </dl>
-                                                            </div>
-                                                        </div>
-                                                        <!-- dialog end -->
-                                                        <a class="btn small yellow">Delete</a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
                                     </div>
                                 </div>
                                 <div class="tablebox lv3c m03 dialogclear">
                                     <ul>
-                                        <li><textarea name="" id="" placeholder="Write your comment here"></textarea></li>
-                                        <li><a class="btn small green">Comment</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="teskbox red dialogclear">
-                    <h5>[MESSAGE] Information from Customer</h5>
-                    <div class="tablebox2">
-                        <ul>
-                            <li class="teskblock">
-                                <div class="tablebox m01">
-                                    <ul>
-                                        <li><b>Creator</b></li>
-                                        <li><a class="man" style="background-image: url(images/man/man1.jpg);"></a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><b>Date</b></li>
-                                        <li>November 4, 2020 / 10:07 AM</li>
-                                    </ul>
-                                    <ul>
-                                        <li><b>Assignee</b></li>
                                         <li>
-                                            <a class="man" style="background-image: url(images/man/man2.jpg);"></a>
-                                            <a class="man" style="background-image: url(images/man/man3.jpg);"></a>
+                                            <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_r_' + receive_record.task_id"></textarea>
+                                            <div class="filebox">
+                                                <a class="attch" v-for="(item,index) in taskItems_r(receive_record.task_id)" :key="index" @click="deleteTaskFile_r(receive_record.task_id, index)">{{item.name}}</a>
+
+                                            </div>
                                         </li>
+                                        <li>
+                                            <div class="pub-con" ref="bg">
+                                                <div class="input-zone">
+                                                    <span class="upload-des">choose file</span>
+                                                    <input class="input" type="file" :ref="'file_task_r_' + receive_record.task_id" placeholder="choose file" @change="changeTaskFile_r(receive_record.task_id)" multiple />
+                                                </div>
+                                                <a class="btn small green" @click="comment_create_r(receive_record.task_id)">Comment</a>
+                                        </li>
+
                                     </ul>
-                                </div>
-                            </li>
-                            <li class="teskblock">
-                                <div class="tableframe">
-                                    <div class="tablebox m02">
-                                        <!-- 1 message -->
-                                        <ul>
-                                            <li>
-                                                <a class="man" style="background-image: url(images/man/man8.jpg);"></a>
-                                                <i class="info">
-                                                    <b>Dennis Lin</b><br>
-                                                    1:00 PM<br>
-                                                    May 30, 2020
-                                                </i>
-                                            </li>
-                                            <li>
-                                                <div class="msg">
-                                                    <div class="msgbox">
-                                                        <p>Edited 2020/04/03 15:47</p>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <!-- 1 message end -->
-                                        <ul class="deleted">
-                                            <li>
-                                                <a class="man" style="background-image: url(images/man/man9.jpg);"></a>
-                                                <i class="info">
-                                                    <b>Dennis Lin</b><br>
-                                                    1:00 PM<br>
-                                                    May 30, 2020
-                                                </i>
-                                            </li>
-                                            <li>
-                                                <div class="msg">
-                                                    <div class="msgbox">
-                                                        <p>Deleted at 2020/04/03 15:47</p>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <ul>
-                                            <li>
-                                                <a class="man" style="background-image: url(images/man/man10.jpg);"></a>
-                                                <i class="info">
-                                                    <b>Dennis Lin</b><br>
-                                                    1:00 PM<br>
-                                                    May 30, 2020
-                                                </i>
-                                            </li>
-                                            <li>
-                                                <div class="msg">
-                                                    <div class="msgbox">
-                                                        <p>Edited 2020/04/03 15:47</p>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
-
                 </div>
+                
             </div>
         </div>
     </div>
