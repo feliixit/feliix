@@ -640,7 +640,7 @@
                                                     </div>
                                                 </div>
                                                 <!-- dialog end -->
-                                                <a class="btn small yellow">Delete</a>
+                                                <a class="btn small yellow" @click="msg_delete(item.message_id, item.ref_id)">Delete</a>
                                             </div>
 
                                             <div class="msgbox dialogclear" v-for="reply in item.reply">
@@ -798,7 +798,7 @@
                                                             </div>
                                                         </div>
                                                         <!-- dialog end -->
-                                                        <a class="btn small yellow">Delete</a>
+                                                        <a class="btn small yellow" @click="msg_delete_r(item.message_id, item.ref_id)">Delete</a>
                                                     </div>
 
                                                     <div class="msgbox dialogclear" v-for="reply in item.reply">
@@ -820,7 +820,7 @@
                                                 </div>
                                             </li>
                                         </ul>
-                                        
+                                     
 
                                     </div>
                                 </div>

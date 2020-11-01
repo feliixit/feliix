@@ -60,7 +60,7 @@ switch ($method) {
         pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name
         from project_other_task_r pm 
         LEFT JOIN user u ON u.id = pm.create_id 
-        LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task'
+        LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task_r'
         where pm.stage_id = " . $stage_id . " ";
 
         if (!empty($_GET['page'])) {
@@ -290,7 +290,7 @@ function GetMessage($task_id, $db)
             from project_other_task_message_r pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
             LEFT JOIN user p ON p.id = pmsgrp.updated_id 
-            LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg' 
+            LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_r' 
             where pmsgrp.task_id = " . $task_id . " order by pmsgrp.created_at ";
 
     $merged_results = array();
@@ -398,7 +398,7 @@ function GetReply($msg_id, $db, $id, $name, $msg)
             from project_other_task_message_reply_r pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
             LEFT JOIN user p ON p.id = pmsgrp.updated_id 
-            LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_rep' 
+            LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_rep_r' 
             where pmsgrp.message_id = " . $msg_id . " order by pmsgrp.created_at ";
 
     $merged_results = array();
