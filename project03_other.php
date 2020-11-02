@@ -228,7 +228,7 @@
                     <div class="popupblock">
                         <a class="edit red"></a>
                         <!-- dialog -->
-                        <div class="dialog r-edit">
+                        <div class="dialog r-edit edit">
                             <h6>Edit/Delete Task:</h6>
                             <div class="tablebox s1">
                                 <ul>
@@ -616,11 +616,7 @@
                                                     <div class="formbox">
                                                         <dl>
                                                             <dd><textarea name="" :ref="'task_reply_msg_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_' + item.message_id + '_' + item.ref_id"></textarea></dd>
-                                                            <dd>
-                                                                <div class="filebox">
-                                                                        <a class="attch" v-for="(it,index) in msgItems(item.message_id + '_' + item.ref_id)" :key="index" @click="deleteMsgFile(item.message_id + '_' + item.ref_id, index)">{{it.name}}</a>
-                                                                </div>
-                                                            </dd>
+                                                            
                                                             <dd>
                                                                 <div class="pub-con" ref="bg">
                                                                     <div class="input-zone">
@@ -629,7 +625,11 @@
                                                                     </div>
                                                                 </div>
                                                             </dd>
-
+                                                            <dd>
+                                                                <div class="filebox">
+                                                                        <a class="attch" v-for="(it,index) in msgItems(item.message_id + '_' + item.ref_id)" :key="index" @click="deleteMsgFile(item.message_id + '_' + item.ref_id, index)">{{it.name}}</a>
+                                                                </div>
+                                                            </dd>
                                                             <dd>
                                                                 <div class="btnbox">
                                                                     <a class="btn small orange" @click="msg_clear(item.message_id + '_' + item.ref_id)">Cancel</a>
@@ -773,17 +773,18 @@
                                                             <div class="formbox">
                                                                 <dl>
                                                                     <dd><textarea name="" :ref="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id"></textarea></dd>
-                                                                    <dd>
-                                                                        <div class="filebox">
-                                                                            <a class="attch" v-for="(it,index) in msgItems_r(item.message_id + '_' + item.ref_id)" :key="index" @click="deleteMsgFile_r(item.message_id + '_' + item.ref_id, index)">{{it.name}}</a>
-                                                                        </div>
-                                                                    </dd>
+                                                                    
                                                                     <dd>
                                                                         <div class="pub-con" ref="bg">
                                                                             <div class="input-zone">
                                                                                 <span class="upload-des">choose file</span>
                                                                                 <input class="input" type="file" :ref="'file_msg_r_' + item.message_id + '_' + item.ref_id" placeholder="choose file" @change="changeMsgFile_r(item.message_id + '_' + item.ref_id)" multiple />
                                                                             </div>
+                                                                        </div>
+                                                                    </dd>
+                                                                    <dd>
+                                                                        <div class="filebox">
+                                                                            <a class="attch" v-for="(it,index) in msgItems_r(item.message_id + '_' + item.ref_id)" :key="index" @click="deleteMsgFile_r(item.message_id + '_' + item.ref_id, index)">{{it.name}}</a>
                                                                         </div>
                                                                     </dd>
                                                                     <dd>

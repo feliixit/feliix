@@ -298,9 +298,9 @@ body.fourth .mainContent > .block .tablebox.lv2a{ margin: 0;}
 
 /* dialog Style */
 .dialog { border: 5px solid var(--fth04); background-color: #FFF; position: absolute; top: 61px; left: 0px; min-width: 500px; padding: 15px; opacity: 0; transition: .3s; pointer-events: none;}
-.tablebox .dialog{top: 14px; left: 54px; transform: translate(0, -50%); padding-bottom: 0;}
+.tablebox .dialog{top: 14px; left: 54px; padding-bottom: 0;}
 .tablebox .dialog.cmt{top: 34px; left: auto; right: 150px;}
-.tableframe .tablebox .dialog{top: 20px; left: auto; right: 100px; width: 320px; min-width: auto;}
+.tableframe .tablebox .dialog{top: -15px; left: auto; right: 100px; width: 320px; min-width: auto;}
 
 .dialog::before {
     border-color: transparent transparent transparent var(--fth04);
@@ -330,19 +330,19 @@ body.fourth .mainContent > .block .tablebox.lv2a{ margin: 0;}
     border-color: transparent transparent transparent var(--fth04) ;
     border-style: solid solid solid solid; 
     border-width: 14px 28px;
-    position: absolute; top: calc(50% - 14px); right: -56px; left: auto; content: ""; width: 0px; height: 0px; 
+    position: absolute; top: 14px; right: -57px; left: auto; content: ""; width: 0px; height: 0px; 
 }
 .tableframe .tablebox .dialog::after {
     border-color: transparent transparent transparent #fff ; 
     border-style: solid solid solid solid; 
     border-width: 14px 28px; 
-    position: absolute; top: calc(50% - 14px); right: -46px; left: auto; content: ""; width: 0px; height: 0px; 
+    position: absolute; top:  14px; right: -47px; left: auto; content: ""; width: 0px; height: 0px; 
 }
 .tableframe .tablebox .dialog::before {
     border-color: transparent transparent transparent var(--fth04) ;
     border-style: solid solid solid solid; 
     border-width: 14px 28px;
-    position: absolute; top: calc(50% - 14px); right: -56px; left: auto; content: ""; width: 0px; height: 0px; 
+    position: absolute; top: 14px; right: -57px; left: auto; content: ""; width: 0px; height: 0px; 
 }
 .tablebox .dialog.cmt::after {
     border-color: transparent transparent transparent #fff ; 
@@ -558,7 +558,7 @@ body.fourth .mainContent > .block .teskbox .tablebox2 > ul > li{ background-colo
 .tablebox.m01 a.man:hover{ border-color: var(--fth01);}
 .tablebox.m01 a.add{ font-size: 20px; font-weight: 900; color: #AAA; transition: .3s;}
 .tablebox.m01 a.add:hover{ color: #333;}
-.other .tablebox a.attch{ color: var(--fth05); transition: .3s; margin: 3px 3px 3px 0; padding: 5px 10px 5px 0;}
+.other .tablebox a.attch{ color: var(--fth05); transition: .3s; margin: 3px 3px 3px 0; padding: 5px 10px 5px 0; font-size:13px;}
 .other .tablebox a.attch::before{ content: ''; width: 20px; height: 20px; display: inline-block; margin-right: 5px; background-color: var(--fth05); border-radius: 50px; vertical-align: middle; transition: .3s;}
 .other .tablebox a.attch:hover{ color: var(--fth01);}
 .other .tablebox a.attch:hover::before{ background-color: var(--fth01);}
