@@ -6,7 +6,7 @@ var app = new Vue({
     record: {},
 
     project03_other_task: {},
-    project03_other_task_r: {},
+    project03_other_task_r: [],
 
     users: {},
 
@@ -29,7 +29,7 @@ var app = new Vue({
       { name: '100', id: 100 },
       { name: 'All', id: 10000 }
     ],
-    perPage: 20,
+    perPage: 5,
 
     baseURL: 'https://storage.cloud.google.com/feliiximg/',
 
@@ -113,7 +113,7 @@ var app = new Vue({
   computed: {
     displayedStagePosts() {
       this.setPages();
-      return this.paginate(this.receive_records);
+      return this.paginate(this.project03_other_task_r);
     },
 
 
@@ -127,7 +127,7 @@ var app = new Vue({
 
   watch: {
 
-    receive_records() {
+    project03_other_task_r() {
       console.log('Vue watch receive_stage_records');
       this.setPages();
     },
@@ -531,7 +531,7 @@ var app = new Vue({
     setPages() {
       console.log('setPages');
       this.pages = [];
-      let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+      let numberOfPages = Math.ceil(this.project03_other_task_r.length / this.perPage);
 
       if (numberOfPages == 1)
         this.page = 1;
@@ -551,7 +551,7 @@ var app = new Vue({
       let perPage = this.perPage;
       let from = (page * perPage) - perPage;
       let to = (page * perPage);
-      return this.receive_records.slice(from, to);
+      return this.project03_other_task_r.slice(from, to);
     },
 
     getProjectOtherTask(stage_id) {
@@ -653,7 +653,11 @@ var app = new Vue({
 
     task_clear_r() {
 
+      this.title_r = "";
+      this.assignee_r = [];
       this.detail_r = "";
+
+      this.fileArray_r = [];
 
       document.getElementById('dialog_a1_r').classList.remove("focus");
       document.getElementById('add_a1_r').classList.remove("show");

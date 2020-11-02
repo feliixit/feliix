@@ -699,16 +699,14 @@
                 <div class="list_function dialogclear">
                     <!-- 分頁 -->
                     <div class="pagenation">
-                        <a class="prev">Previous</a>
-                        <a class="page">1</a>
-                        <a class="page">2</a>
-                        <a class="page">3</a>
-                        <b>...</b>
-                        <a class="page">12</a>
-                        <a class="next">Next</a>
+                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                      
+                        <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                      
+                        <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                     </div>
                 </div>
-                <div class="teskbox" v-for='(receive_record, index) in project03_other_task_r' :class="{ red : receive_record.task_status == -1, dialogclear : receive_record.task_status == -1 }">
+                <div class="teskbox" v-for='(receive_record, index) in displayedStagePosts' :class="{ red : receive_record.task_status == -1, dialogclear : receive_record.task_status == -1 }">
                     <h5>[MESSAGE] {{ receive_record.title }}</h5>
                     <div class="tablebox2">
                         <ul>
