@@ -227,9 +227,9 @@
                     </div>
                     <!-- edit red -->
                     <div class="popupblock">
-                        <a class="edit red"></a>
+                        <a id="edit_red" class="edit red"></a>
                         <!-- dialog -->
-                        <div class="dialog r-edit edit">
+                        <div id="dialog_red_edit" class="dialog r-edit edit">
                             <h6>Edit/Delete Task:</h6>
                             <div class="tablebox s1">
                                 <ul>
@@ -247,7 +247,7 @@
                                     <li class="head">Target Task:</li>
                                     <li class="mix">
                                         <select  v-model="task_id_to_del">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" >
+                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" v-if="it.task_status != '-1'">
                                                 {{ it.title }}
                                             </option>
                                         </select>
@@ -260,7 +260,7 @@
                                     <li class="head">Target Sequence:</li>
                                     <li class="mix">
                                         <select  v-model="task_id_to_load">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" >
+                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" v-if="it.task_status != '-1'">
                                                 {{ it.title }}
                                             </option>
                                         </select>
@@ -288,10 +288,10 @@
                                 <dl>
                                     <dt>Status:</dt>
                                     <dd>
-                                    <select name="" id="" v-model="record.status">
-                                            <option value="1">Ongoing</option>
-                                            <option value="2">Pending</option>
-                                            <option value="3">Close</option>
+                                    <select name="" id="" v-model="record.task_status">
+                                            <option value="0">Ongoing</option>
+                                            <option value="1">Pending</option>
+                                            <option value="2">Close</option>
                                         </select>
                                     </dd>
                                 </dl>
@@ -329,22 +329,25 @@
                                     <dt>Description:</dt>
                                     <dd><textarea placeholder="" v-model="record.detail"></textarea></dd>
                                 </dl>
-                                <dl>
-                                    <dt>Pictures:</dt>
-                                    <dd>
-                                        <div class="browser_group"><input type="text"><button>Choose Picture</button></div>
-                                    </dd>
-                                </dl>
+
                                 <dl>
                                     <dt>Files:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="text"><button>Choose File</button></div>
+                                        <div class="filebox">
+                                            <a class="attch" v-for="(it,index) in editfileArray" :key="index" @click="deleteEditFile(index)">{{it.name}}</a>
+                                        </div>
+                                        <div class="pub-con" ref="bg">
+                                            <div class="input-zone">
+                                                <span class="upload-des">choose file</span>
+                                                <input class="input" type="file" :ref="'editfile'" placeholder="choose file" @change="changeEditFile()" multiple />
+                                            </div>
+                                        </div>
                                     </dd>
                                 </dl>
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
+                                    <a class="btn small" @click="task_edit_clear">Cancel</a>
                                     <a class="btn small green">Calendar</a>
-                                    <a class="btn small green">Save</a>
+                                    <a class="btn small green" @click="task_edit_create">Save</a>
                                 </div>
                             </div>
                         </div>
@@ -551,12 +554,13 @@
                     </div>
                 </div>
 
-                <div v-for='(receive_record, index) in project03_other_task'>
+                <div v-for='(receive_record, index) in project03_other_task' v-if="receive_record.task_status != '-1'">
 
                     <div class="teskbox dialogclear">
                         <a class="btn small red">{{ receive_record.priority }}</a>
-                        <a class="btn small yellow" v-if="receive_record.task_status == '0'">Progressing</a>
-                        <a class="btn small green" v-if="receive_record.task_status == '1'">Done</a>
+                        <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
+                        <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
+                        <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
                         <b>[Task] {{ receive_record.title }}</b>
                         <a class="btn small blue right">Arrange Meeting</a>
                     </div>

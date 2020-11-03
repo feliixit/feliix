@@ -296,13 +296,13 @@ function GetStatus($loc)
 {
     $location = "";
     switch ($loc) {
-        case "1":
+        case "0":
             $location = "Ongoing";
             break;
-        case "2":
+        case "1":
             $location = "Pending";
             break;
-        case "3":
+        case "2":
             $location = "Close";
             break;
                 

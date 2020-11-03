@@ -91,7 +91,7 @@ var app = new Vue({
     task_id_to_del:0,
     task_id_to_load:0,
 
-
+    editfileArray: [],
   },
 
   created() {
@@ -277,6 +277,34 @@ var app = new Vue({
       deep: true
     },
 
+    editfileArray: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function (currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.editfileArray.length) {
+
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish = true;
+            _this.getProjectOtherTask(_this.stage_id);
+
+          });
+          this.task_edit_clear();
+
+        }
+      },
+      deep: true
+    },
+
     fileArray_r: {
       handler(newValue, oldValue) {
         var _this = this;
@@ -317,6 +345,12 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    deleteEditFile(index) {
+      this.editfileArray.splice(index, 1);
+      var fileTarget = this.$refs.editfile;
+      fileTarget.value = "";
+    },
+
     changeFile() {
       var fileTarget = this.$refs.file;
 
@@ -328,6 +362,23 @@ var app = new Vue({
         ) {
           var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
           this.fileArray.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    changeEditFile() {
+      var fileTarget = this.$refs.editfile;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.editfileArray.indexOf(fileTarget.files[i]) == -1 ||
+          this.editfileArray.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.editfileArray.push(fileItem);
         } else {
           fileTarget.value = "";
         }
@@ -811,6 +862,12 @@ var app = new Vue({
       document.getElementById('add_a1').classList.remove("show");
     },
 
+    task_edit_clear() {
+
+      document.getElementById('dialog_red_edit').classList.remove("show");
+      document.getElementById('edit_red').classList.remove("focus");
+    },
+
     task_clear_r() {
 
       this.title_r = "";
@@ -1084,6 +1141,118 @@ var app = new Vue({
               myArr[index].progress = 1;
               vm.$set(vm.fileArray, index, myArr[index]);
               console.log(vm.fileArray, index);
+            } else {
+              alert(JSON.stringify(res.data));
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.canSub = true;
+
+    },
+
+
+    task_edit_create() {
+      let _this = this;
+
+      if (this.task_id_to_load == 0) {
+        Swal.fire({
+          text: 'Please select a task to edit',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      form_Data.append('task_id', this.record.task_id);
+      form_Data.append('title', this.record.title.trim());
+      form_Data.append('priority', this.record.priority_id);
+      form_Data.append('status', this.record.task_status);
+      form_Data.append('assignee', this.record.assignee_id);
+      form_Data.append('collaborator', this.record.collaborator_id);
+      form_Data.append('due_date', this.record.due_date.trim());
+      form_Data.append('detail', this.record.detail.trim());
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project03_other_task_edit',
+        data: form_Data
+      })
+        .then(function (response) {
+          if (response.data['batch_id'] != 0) {
+            _this.task_edit_upload(response.data['batch_id']);
+          }
+          else {
+            _this.task_edit_clear();
+
+          }
+
+          if (_this.editfileArray.length == 0) {
+            _this.getProjectOtherTask(_this.stage_id);
+            _this.task_edit_clear();
+          }
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () { _this.task_edit_clear() });
+    },
+
+    task_edit_upload(batch_id) {
+
+      this.canSub = false;
+      var myArr = this.editfileArray;
+      var vm = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                vm.$set(vm.editfileArray, index, myArr[index]);
+              } else {
+                myArr[index].progress = 0.99;
+                vm.$set(vm.editfileArray, index, myArr[index]);
+              }
+            }
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
+
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              vm.$set(vm.editfileArray, index, myArr[index]);
+              console.log(vm.editfileArray, index);
             } else {
               alert(JSON.stringify(res.data));
             }
