@@ -106,7 +106,7 @@
                                     <li class="head">Operation Type:</li>
                                     <li>
                                         <select name="" id="opType3">
-                                            <option value="add">Add New Tesk</option>
+                                            <option value="add">Add New Task</option>
                                             <option value="dup">Duplicate Existing Task</option>
                                         </select>
                                     </li>
@@ -211,13 +211,14 @@
                             </div>
                             <div class="tablebox s2 dup">
                                 <ul>
-                                    <li class="head">Target Tesk:</li>
+                                <li class="head">Target Task:</li>
                                     <li class="mix">
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                        <select  v-model="task_id_to_dup">
+                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" >
+                                                {{ it.title }}
+                                            </option>
                                         </select>
-                                        <a class="btn small green">Duplicate</a>
+                                        <a class="btn small green" @click="task_dup">Duplicate</a>
                                     </li>
                                 </ul>
                             </div>
@@ -243,13 +244,14 @@
                             </div>
                             <div class="tablebox s2 del">
                                 <ul>
-                                    <li class="head">Target Tesk:</li>
+                                    <li class="head">Target Task:</li>
                                     <li class="mix">
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                        <select  v-model="task_id_to_del">
+                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" >
+                                                {{ it.title }}
+                                            </option>
                                         </select>
-                                        <a class="btn small">Delete</a>
+                                        <a class="btn small" @click="task_del">Delete</a>
                                     </li>
                                 </ul>
                             </div>
@@ -257,58 +259,75 @@
                                 <ul>
                                     <li class="head">Target Sequence:</li>
                                     <li class="mix">
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                        <select  v-model="task_id_to_load">
+                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" >
+                                                {{ it.title }}
+                                            </option>
                                         </select>
-                                        <a class="btn small green">Load</a>
+                                        <a class="btn small green" @click="task_load">Load</a>
                                     </li>
                                 </ul>
                             </div>
                             <div class="formbox s2 edit">
                                 <dl>
                                     <dt>Title:</dt>
-                                    <dd><input type="text"></dd>
+                                    <dd><input type="text" v-model="record.title"></dd>
                                 </dl>
                                 <dl>
                                     <dt>Priority:</dt>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                        <select name="" id="" v-model="record.priority_id">
+                                            <option value="1">No Priority</option>
+                                            <option value="2">Low</option>
+                                            <option value="3">Normal</option>
+                                            <option value="4">High</option>
+                                            <option value="5">Urgent</option>
                                         </select>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Status:</dt>
                                     <dd>
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                    <select name="" id="" v-model="record.status">
+                                            <option value="1">Ongoing</option>
+                                            <option value="2">Pending</option>
+                                            <option value="3">Close</option>
                                         </select>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Assignee:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="text"><button>Browse</button></div>
+                                        <div class="browser_group">
+                                            <select v-model="record.assignee_id" multiple v-if="record.assignee_id">
+                                                <option v-for="(it, index) in users" :value="it.id" :key="it.username">
+                                                    {{ it.username }}
+                                                </option>
+                                            </select>
+                                        </div>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Collaborator:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="text"><button>Browse</button></div>
+                                        <div class="browser_group">
+                                            <select v-model="record.collaborator_id" multiple v-if="record.collaborator_id">
+                                                <option v-for="(it, index) in users" :value="it.id" :key="it.username">
+                                                    {{ it.username }}
+                                                </option>
+                                            </select>
+                                        </div>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Due Date:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="text"><button>Choose Date</button></div>
+                                        <div class="browser_group"><input type="date" v-model="record.due_date"></div>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Description:</dt>
-                                    <dd><textarea placeholder=""></textarea></dd>
+                                    <dd><textarea placeholder="" v-model="record.detail"></textarea></dd>
                                 </dl>
                                 <dl>
                                     <dt>Pictures:</dt>

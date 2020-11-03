@@ -112,12 +112,15 @@ switch ($method) {
                     "task_id" => $task_id,
                     "title" => $title,
                     "priority" => $priority,
+                    "priority_id" => $priority_id,
                     "due_date" => $due_date,
                     "task_status" => $task_status,
                     "creator" => $creator,
                     "creator_pic" => $creator_pic,
                     "assignee" => $assignee,
+                    "assignee_id" => $assignee_id,
                     "collaborator" => $collaborator,
+                    "collaborator_id" => $collaborator_id,
                     "detail" => $detail,
                     "task_date" => $task_date,
                     "message" => $message,
@@ -134,14 +137,17 @@ switch ($method) {
             $task_id = $row['task_id'];
             $title = $row['title'];
             $priority = GetPriority($row['priority']);
+            $priority_id = $row['priority'];
             $due_date = $row['due_date'];
             $task_status = $row['task_status'];
             $creator = $row['creator'];
             $creator_pic = $row['creator_pic'];
             if(empty($assignee ))
                 $assignee = GetUserInfo($row['assignee'], $db);
+            $assignee_id = explode(",", $row['assignee']);
             if(empty($collaborator ))
                 $collaborator = GetUserInfo($row['collaborator'], $db);
+            $collaborator_id = explode(",", $row['collaborator']);
             $message = GetMessage($row['task_id'], $db);
             $gcp_name = $row['gcp_name'];
             $filename = $row['filename'];
@@ -162,12 +168,15 @@ switch ($method) {
                 "task_id" => $task_id,
                 "title" => $title,
                 "priority" => $priority,
+                "priority_id" => $priority_id,
                 "due_date" => $due_date,
                 "task_status" => $task_status,
                 "creator" => $creator,
                 "creator_pic" => $creator_pic,
                 "assignee" => $assignee,
+                "assignee_id" => $assignee_id,
                 "collaborator" => $collaborator,
+                "collaborator_id" => $collaborator_id,
                 "detail" => $detail,
                 "task_date" => $task_date,
                 "message" => $message,
@@ -282,6 +291,26 @@ function GetPriority($loc)
 
     return $location;
 }
+
+function GetStatus($loc)
+{
+    $location = "";
+    switch ($loc) {
+        case "1":
+            $location = "Ongoing";
+            break;
+        case "2":
+            $location = "Pending";
+            break;
+        case "3":
+            $location = "Close";
+            break;
+                
+    }
+
+    return $location;
+}
+
 
 function GetMessage($task_id, $db)
 {

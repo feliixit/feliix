@@ -86,6 +86,11 @@ var app = new Vue({
     canSub_r: true,
     finish_r: false,
 
+    // dup task
+    task_id_to_dup:0,
+    task_id_to_del:0,
+    task_id_to_load:0,
+
 
   },
 
@@ -430,6 +435,22 @@ var app = new Vue({
       document.getElementById('task_reply_dlg_r_' + item_id).classList.remove("show");
     },
 
+    task_load () {
+      if(this.task_id_to_load != 0)
+      {
+        this.record = {};
+        this.record = this.shallowCopy(this.project03_other_task.find(element => element.task_id == this.task_id_to_load));
+      }
+    },
+
+    shallowCopy(obj) {
+      console.log("shallowCopy");
+        var result = {};
+        for (var i in obj) {
+            result[i] = obj[i];
+        }
+        return result;
+    },
 
     changeMsgFile(item_id) {
       this.current_msg_item_id = item_id;
@@ -641,6 +662,145 @@ var app = new Vue({
 
     OpenCollaborator() {
       document.getElementById("collaborator").multiple = true;
+    },
+
+    task_dup() {
+      if(this.task_id_to_dup != 0)
+      {
+        let _this = this;
+        Swal.fire({
+            title: "Duplicate",
+            text: "Are you sure to duplicate?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              
+                _this.do_task_duplicate(_this.task_id_to_dup); // <--- submit form programmatically
+              
+            } else {
+              // swal("Cancelled", "Your imaginary file is safe :)", "error");
+            }
+          });
+      }
+    },
+
+    do_task_duplicate(task_id_to_dup) {
+      var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+
+        form_Data.append('jwt', token);
+        form_Data.append('task_id_to_dup', task_id_to_dup);
+
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/project03_other_task_dup',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            if(response.data['ret'] != 0)
+            {
+              _this.org_uid = _this.uid;
+              
+                Swal.fire({
+                  text: "Duplicated",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                })
+
+                _this.getProjectOtherTask(_this.stage_id);
+            }
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+
+            _this.getProjectOtherTask(_this.stage_id);
+        });
+
+        _this.task_clear();
+    },
+
+
+    task_del() {
+      if(this.task_id_to_del != 0)
+      {
+        let _this = this;
+        Swal.fire({
+            title: "Delete",
+            text: "Are you sure to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              
+                _this.do_task_delete(_this.task_id_to_del); // <--- submit form programmatically
+              
+            } else {
+              // swal("Cancelled", "Your imaginary file is safe :)", "error");
+            }
+          });
+      }
+    },
+
+    do_task_delete(task_id_to_del) {
+      var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+
+        form_Data.append('jwt', token);
+        form_Data.append('task_id_to_del', task_id_to_del);
+
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/project03_other_task_del',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            if(response.data['ret'] != 0)
+            {
+              _this.org_uid = _this.uid;
+              
+                Swal.fire({
+                  text: "Deleted",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                })
+
+                _this.getProjectOtherTask(_this.stage_id);
+            }
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+
+            _this.getProjectOtherTask(_this.stage_id);
+        });
+
+        _this.task_clear();
     },
 
     task_clear() {
