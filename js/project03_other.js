@@ -1428,11 +1428,11 @@ var app = new Vue({
 
       form_Data.append('task_id', this.record_r.task_id);
       form_Data.append('title', this.record_r.title.trim());
-      form_Data.append('priority', this.record_r.priority_id);
-      form_Data.append('status', this.record_r.task_status);
+      form_Data.append('priority', 0);
+      form_Data.append('status', 0);
       form_Data.append('assignee', this.record_r.assignee_id);
-      form_Data.append('collaborator', this.record_r.collaborator_id);
-      form_Data.append('due_date', this.record_r.due_date.trim());
+      form_Data.append('collaborator', '');
+      form_Data.append('due_date', '');
       form_Data.append('detail', this.record_r.detail.trim());
 
       const token = sessionStorage.getItem('token');
