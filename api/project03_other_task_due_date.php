@@ -60,12 +60,6 @@ switch ($method) {
     
         where pm.stage_id = " . $stage_id . " ";
 
- 
-
-        $sql = $sql . " ORDER BY pm.id ";
-
-
-
         $merged_results = array();
 
         $stmt = $db->prepare($sql);
