@@ -592,7 +592,7 @@
                             </ul>
                             <ul>
                                 <li><b>Due Date</b></li>
-                                <li>{{ receive_record.task_date }}</li>
+                                <li>{{ receive_record.due_date }}</li>
                             </ul>
                             <ul>
                                 <li><b>Description</b></li>
