@@ -53,33 +53,18 @@ $db = $database->getConnection();
 switch ($method) {
     case 'GET':
         $stage_id = (isset($_GET['stage_id']) ?  $_GET['stage_id'] : 0);
-        $page = (isset($_GET['page']) ?  $_GET['page'] : "");
-        $size = (isset($_GET['size']) ?  $_GET['size'] : "");
+
 
         $sql = "SELECT distinct due_date
         from project_other_task pm 
     
         where pm.stage_id = " . $stage_id . " ";
 
-        if (!empty($_GET['page'])) {
-            $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
-            if (false === $page) {
-                $page = 1;
-            }
-        }
+ 
 
         $sql = $sql . " ORDER BY pm.id ";
 
-        if (!empty($_GET['size'])) {
-            $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
-            if (false === $size) {
-                $size = 10;
-            }
 
-            $offset = ($page - 1) * $size;
-
-            $sql = $sql . " LIMIT " . $offset . "," . $size;
-        }
 
         $merged_results = array();
 
