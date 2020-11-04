@@ -4,6 +4,7 @@ var app = new Vue({
     stage_id: 0,
     receive_records: [],
     record: {},
+    record_r: {},
 
     project03_other_task: {},
     project03_other_task_r: [],
@@ -92,6 +93,13 @@ var app = new Vue({
     task_id_to_load:0,
 
     editfileArray: [],
+
+
+    task_id_to_dup_r:0,
+    task_id_to_del_r:0,
+    task_id_to_load_r:0,
+
+    editfileArray_r: [],
   },
 
   created() {
@@ -305,6 +313,34 @@ var app = new Vue({
       deep: true
     },
 
+    editfileArray_r: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function (currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.editfileArray_r.length) {
+
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish = true;
+            _this.getProjectOtherTask_r(_this.stage_id);
+
+          });
+          this.task_edit_clear_r();
+
+        }
+      },
+      deep: true
+    },
+
     fileArray_r: {
       handler(newValue, oldValue) {
         var _this = this;
@@ -351,6 +387,12 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    deleteEditFile_r(index) {
+      this.editfileArray_r.splice(index, 1);
+      var fileTarget = this.$refs.editfile_r;
+      fileTarget.value = "";
+    },
+
     changeFile() {
       var fileTarget = this.$refs.file;
 
@@ -379,6 +421,23 @@ var app = new Vue({
         ) {
           var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
           this.editfileArray.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    changeEditFile_r() {
+      var fileTarget = this.$refs.editfile_r;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.editfileArray_r.indexOf(fileTarget.files[i]) == -1 ||
+          this.editfileArray_r.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.editfileArray_r.push(fileItem);
         } else {
           fileTarget.value = "";
         }
@@ -491,6 +550,14 @@ var app = new Vue({
       {
         this.record = {};
         this.record = this.shallowCopy(this.project03_other_task.find(element => element.task_id == this.task_id_to_load));
+      }
+    },
+
+    task_load_r () {
+      if(this.task_id_to_load_r != 0)
+      {
+        this.record_r = {};
+        this.record_r = this.shallowCopy(this.project03_other_task_r.find(element => element.task_id == this.task_id_to_load_r));
       }
     },
 
@@ -854,6 +921,76 @@ var app = new Vue({
         _this.task_clear();
     },
 
+
+    task_del_r() {
+      if(this.task_id_to_del_r != 0)
+      {
+        let _this = this;
+        Swal.fire({
+            title: "Delete",
+            text: "Are you sure to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              
+                _this.do_task_delete_r(_this.task_id_to_del_r); // <--- submit form programmatically
+              
+            } else {
+              // swal("Cancelled", "Your imaginary file is safe :)", "error");
+            }
+          });
+      }
+    },
+
+    do_task_delete_r(task_id_to_del_r) {
+      var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+
+        form_Data.append('jwt', token);
+        form_Data.append('task_id_to_del', task_id_to_del_r);
+
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/project03_other_task_del_r',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            if(response.data['ret'] != 0)
+            {
+              _this.org_uid = _this.uid;
+              
+                Swal.fire({
+                  text: "Deleted",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                })
+
+                _this.getProjectOtherTask_r(_this.stage_id);
+            }
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+
+            _this.getProjectOtherTask_r(_this.stage_id);
+        });
+
+        _this.task_clear_r();
+    },
+
     task_clear() {
 
       this.detail = "";
@@ -866,6 +1003,12 @@ var app = new Vue({
 
       document.getElementById('dialog_red_edit').classList.remove("show");
       document.getElementById('edit_red').classList.remove("focus");
+    },
+
+    task_edit_clear_r() {
+
+      document.getElementById('dialog_blue_edit').classList.remove("show");
+      document.getElementById('edit_blue').classList.remove("focus");
     },
 
     task_clear_r() {
@@ -1213,6 +1356,64 @@ var app = new Vue({
         }).finally(function () { _this.task_edit_clear() });
     },
 
+    task_edit_create_r() {
+      let _this = this;
+
+      if (this.task_id_to_load_r == 0) {
+        Swal.fire({
+          text: 'Please select a task to edit',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      form_Data.append('task_id', this.record_r.task_id);
+      form_Data.append('title', this.record_r.title.trim());
+      form_Data.append('priority', this.record_r.priority_id);
+      form_Data.append('status', this.record_r.task_status);
+      form_Data.append('assignee', this.record_r.assignee_id);
+      form_Data.append('collaborator', this.record_r.collaborator_id);
+      form_Data.append('due_date', this.record_r.due_date.trim());
+      form_Data.append('detail', this.record_r.detail.trim());
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project03_other_task_edit_r',
+        data: form_Data
+      })
+        .then(function (response) {
+          if (response.data['batch_id'] != 0) {
+            _this.task_edit_upload_r(response.data['batch_id']);
+          }
+          else {
+            _this.task_edit_clear_r();
+
+          }
+
+          if (_this.editfileArray_r.length == 0) {
+            _this.getProjectOtherTask_r(_this.stage_id);
+            _this.task_edit_clear_r();
+          }
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () { _this.task_edit_clear_r() });
+    },
+
     task_edit_upload(batch_id) {
 
       this.canSub = false;
@@ -1266,6 +1467,59 @@ var app = new Vue({
 
     },
 
+    task_edit_upload_r(batch_id) {
+
+      this.canSub = false;
+      var myArr = this.editfileArray_r;
+      var vm = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                vm.$set(vm.editfileArray_r, index, myArr[index]);
+              } else {
+                myArr[index].progress = 0.99;
+                vm.$set(vm.editfileArray_r, index, myArr[index]);
+              }
+            }
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
+
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              vm.$set(vm.editfileArray_r, index, myArr[index]);
+              console.log(vm.editfileArray_r, index);
+            } else {
+              alert(JSON.stringify(res.data));
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.canSub = true;
+
+    },
+
 
     task_create_r() {
       let _this = this;
@@ -1287,7 +1541,7 @@ var app = new Vue({
 
       form_Data.append('stage_id', this.stage_id);
       form_Data.append('title', this.title_r.trim());
-      form_Data.append('priority', '');
+      form_Data.append('priority', 0);
       form_Data.append('assignee', this.assignee_r);
       form_Data.append('collaborator', '');
       form_Data.append('due_date', '');

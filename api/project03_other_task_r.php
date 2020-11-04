@@ -117,6 +117,7 @@ switch ($method) {
                     "creator" => $creator,
                     "creator_pic" => $creator_pic,
                     "assignee" => $assignee,
+                    "assignee_id" => $assignee_id,
                     "collaborator" => $collaborator,
                     "detail" => $detail,
                     "task_date" => $task_date,
@@ -140,6 +141,7 @@ switch ($method) {
             $creator_pic = $row['creator_pic'];
             if(empty($assignee ))
                 $assignee = GetUserInfo($row['assignee'], $db);
+            $assignee_id = explode(",", $row['assignee']);
             if(empty($collaborator ))
                 $collaborator = GetUserInfo($row['collaborator'], $db);
             $message = GetMessage($row['task_id'], $db);
@@ -167,6 +169,7 @@ switch ($method) {
                 "creator" => $creator,
                 "creator_pic" => $creator_pic,
                 "assignee" => $assignee,
+                "assignee_id" => $assignee_id,
                 "collaborator" => $collaborator,
                 "detail" => $detail,
                 "task_date" => $task_date,

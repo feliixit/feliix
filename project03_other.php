@@ -429,9 +429,9 @@
                     </div>
                     <!-- edit -->
                     <div class="popupblock">
-                        <a class="edit blue"></a>
+                        <a id="edit_blue" class="edit blue"></a>
                         <!-- dialog -->
-                        <div class="dialog d-edit edit">
+                        <div id="dialog_blue_edit" class="dialog d-edit edit">
                             <h6>Edit/Delete Message:</h6>
                             <div class="tablebox s1">
                                 <ul>
@@ -448,11 +448,12 @@
                                 <ul>
                                     <li class="head">Target Message:</li>
                                     <li class="mix">
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                        <select  v-model="task_id_to_del_r">
+                                            <option v-for="(it, index) in project03_other_task_r" :value="it.task_id" v-if="it.task_status != '-1'">
+                                                {{ it.title }}
+                                            </option>
                                         </select>
-                                        <a class="btn small">Delete</a>
+                                        <a class="btn small" @click="task_del_r">Delete</a>
                                     </li>
                                 </ul>
                             </div>
@@ -460,44 +461,54 @@
                                 <ul>
                                     <li class="head">Target Message:</li>
                                     <li class="mix">
-                                        <select name="" id="">
-                                            <option value="">1</option>
-                                            <option value="">2</option>
+                                        <select  v-model="task_id_to_load_r">
+                                            <option v-for="(it, index) in project03_other_task_r" :value="it.task_id" v-if="it.task_status != '-1'">
+                                                {{ it.title }}
+                                            </option>
                                         </select>
-                                        <a class="btn small green">Load</a>
+                                        <a class="btn small green" @click="task_load_r">Load</a>
                                     </li>
                                 </ul>
                             </div>
                             <div class="formbox s2 edit">
                                 <dl>
                                     <dt>Title:</dt>
-                                    <dd><input type="text" placeholder=""></dd>
+                                    <dd><input type="text" placeholder="" v-model="record_r.title"></dd>
                                 </dl>
                                 <dl>
                                     <dt>Assignee:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="text"><button>Browse</button></div>
+                                        <div class="browser_group">
+                                            <select v-model="record_r.assignee_id" multiple v-if="record_r.assignee_id">
+                                                <option v-for="(it, index) in users" :value="it.id" :key="it.username">
+                                                    {{ it.username }}
+                                                </option>
+                                            </select>
+                                        </div>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Description:</dt>
-                                    <dd><textarea placeholder=""></textarea></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Pictures:</dt>
-                                    <dd>
-                                        <div class="browser_group"><input type="text"><button>Choose Picture</button></div>
-                                    </dd>
+                                    <dd><textarea placeholder="" v-model="record_r.detail"></textarea></dd>
                                 </dl>
                                 <dl>
                                     <dt>Files:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="text"><button>Choose File</button></div>
+                                        <div class="filebox">
+                                            <a class="attch" v-for="(it,index) in editfileArray_r" :key="index" @click="deleteEditFile_r(index)">{{it.name}}</a>
+                                        </div>
+                                        <div class="pub-con" ref="bg">
+                                            <div class="input-zone">
+                                                <span class="upload-des">choose file</span>
+                                                <input class="input" type="file" :ref="'editfile_r'" placeholder="choose file" @change="changeEditFile_r()" multiple />
+                                            </div>
+                                        </div>
                                     </dd>
                                 </dl>
+                                
                                 <div class="btnbox">
-                                    <a class="btn small">Cancel</a>
-                                    <a class="btn small green">Save</a>
+                                    <a class="btn small" @click="task_edit_clear_r">Cancel</a>
+                                    <a class="btn small green" @click="task_edit_create_r">Save</a>
                                 </div>
                             </div>
                         </div>
