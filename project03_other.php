@@ -533,34 +533,25 @@
                             <option value=""></option>
                             <option value=""></option>
                         </select>
-                        <select name="" id="">
+                        <select name="" id="" v-model="fil_priority">
                             <option value="">Priority</option>
-                            <option value="">No Priority</option>
-                            <option value="">Low</option>
-                            <option value="">Normal</option>
-                            <option value="">High</option>
-                            <option value="">Urgent</option>
+                            <option value="1">No Priority</option>
+                            <option value="2">Low</option>
+                            <option value="3">Normal</option>
+                            <option value="4">High</option>
+                            <option value="5">Urgent</option>
                         </select>
-                        <select name="" id="">
+                        <select name="" id="" v-model="fil_status">
                             <option value="">Status</option>
-                            <option value="">Planning</option>
-                            <option value="">Pending Review</option>
-                            <option value="">Pending Approval</option>
-                            <option value="">For Revision</option>
-                            <option value="">On Hold</option>
-                            <option value="">Disapproved</option>
-                            <option value="">Approved</option>
-                            <option value="">On Progress</option>
-                            <option value="">Completed</option>
-                            <option value="">Special</option>
+                            <option value="0">Ongoing</option>
+                            <option value="1">Pending</option>
+                            <option value="2">Close</option>
+                         
                         </select>
-                        <select name="" id="">
-                            <option value="">Due Date</option>
-                            <option value=""></option>
-                            <option value=""></option>
-                            <option value=""></option>
-                            <option value=""></option>
-                            <option value=""></option>
+                        <select v-model="fil_due_date">
+                            <option v-for="(it, index) in opt_due_date" :value="it.due_date" :key="it.due_date">
+                                {{ it.due_date }}
+                            </option>
                         </select>
                     </div>
                 </div>

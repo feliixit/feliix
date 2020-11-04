@@ -53,6 +53,11 @@ $db = $database->getConnection();
 switch ($method) {
     case 'GET':
         $stage_id = (isset($_GET['stage_id']) ?  $_GET['stage_id'] : 0);
+
+        $status = (isset($_GET['status']) ?  $_GET['status'] : '');
+        $priority = (isset($_GET['priority']) ?  $_GET['priority'] : '');
+        $duedate = (isset($_GET['duedate']) ?  $_GET['duedate'] : '');
+
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
@@ -62,6 +67,18 @@ switch ($method) {
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task'
         where pm.stage_id = " . $stage_id . " ";
+
+        if ($status != 0) {
+            $sql = $sql . " and pm.`status` = " . $status . " ";
+        }
+
+        if ($priority != 0) {
+            $sql = $sql . " and pm.priority = " . $priority . " ";
+        }
+
+        if ($duedate != '') {
+            $sql = $sql . " and DATE_FORMAT(pm.due_date, '%Y-%m-%d') = '" . $duedate . "' ";
+        }
 
         if (!empty($_GET['page'])) {
             $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);

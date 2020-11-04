@@ -100,6 +100,12 @@ var app = new Vue({
     task_id_to_load_r:0,
 
     editfileArray_r: [],
+
+    // filter
+    fil_priority:0,
+    fil_status:0,
+    fil_due_date:'',
+    opt_due_date:[],
   },
 
   created() {
@@ -115,11 +121,12 @@ var app = new Vue({
           _this.stage_id = tmp[1];
         _this.getProjectOtherTask(_this.stage_id);
         _this.getProjectOtherTask_r(_this.stage_id);
-
+        _this.getDueDate(_this.stage_id);
       });
     }
 
     _this.getUsers();
+    
 
   },
 
@@ -139,6 +146,20 @@ var app = new Vue({
   },
 
   watch: {
+    fil_status: function (value){ 
+      this.fil_status = value;
+      this.getProjectOtherTask(this.stage_id); 
+    },
+
+    fil_priority: function (value){ 
+      this.fil_priority = value;
+      this.getProjectOtherTask(this.stage_id); 
+    },
+
+    fil_due_date: function (value){ 
+
+      this.getProjectOtherTask(this.stage_id); 
+    },
 
     project03_other_task_r() {
       console.log('Vue watch receive_stage_records');
@@ -701,7 +722,9 @@ var app = new Vue({
 
       const params = {
         stage_id: stage_id,
-
+        status: this.fil_status,
+        priority: this.fil_priority,
+        duedate: this.fil_due_date,
       };
 
       let token = localStorage.getItem('accessToken');
@@ -760,6 +783,35 @@ var app = new Vue({
         .then(
           (res) => {
             _this.users = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
+    },
+
+    getDueDate(stage_id) {
+
+      let _this = this;
+
+      if (stage_id == 0)
+        return;
+
+      const params = {
+        stage_id: stage_id,
+
+      };
+
+      let token = localStorage.getItem('accessToken');
+
+      axios
+        .get('api/project03_other_task_due_date', {params, headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.opt_due_date = res.data;
           },
           (err) => {
             alert(err.response);
@@ -1495,7 +1547,7 @@ var app = new Vue({
         };
         var data = myArr[index];
         var myForm = new FormData();
-        myForm.append('batch_type', 'other_task');
+        myForm.append('batch_type', 'other_task_r');
         myForm.append('batch_id', batch_id);
         myForm.append("file", data);
 
