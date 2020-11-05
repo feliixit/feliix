@@ -528,11 +528,7 @@
                     <!-- Filter -->
                     <div class="filter">
                         <b>Filter:</b>
-                        <select name="" id="">
-                            <option value="">Info. Type</option>
-                            <option value=""></option>
-                            <option value=""></option>
-                        </select>
+                     
                         <select name="" id="" v-model="fil_priority">
                             <option value="">Priority</option>
                             <option value="1">No Priority</option>
