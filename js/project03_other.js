@@ -1,3 +1,5 @@
+Vue.component('v-select', VueSelect.VueSelect)
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -9,7 +11,7 @@ var app = new Vue({
     project03_other_task: {},
     project03_other_task_r: [],
 
-    users: {},
+    users: [],
 
     submit: false,
     submit_r:false,

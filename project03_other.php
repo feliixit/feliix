@@ -33,6 +33,8 @@
     <link rel="stylesheet" type="text/css" href="css/ui.css" />
     <link rel="stylesheet" type="text/css" href="css/case.css" />
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css" />
+    <link rel="stylesheet" href="css/vue-select.css" type="text/css">
+
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
@@ -104,7 +106,7 @@
                             <div class="tablebox s1">
                                 <ul>
                                     <li class="head">Operation Type:</li>
-                                    <li>
+                                    <li style="padding-right: 0;">
                                         <select name="" id="opType3">
                                             <option value="add">Add New Task</option>
                                             <option value="dup">Duplicate Existing Task</option>
@@ -132,13 +134,14 @@
                                 <dl>
                                     <dt>Assignee:</dt>
                                     <dd>
-                                        <div class="browser_group">
-                                            <select v-model="assignee" id="assignee">
-                                                <option v-for="(item, index) in users" :value="item.id" :key="item.username">
-                                                    {{ item.username }}
-                                                </option>
-                                            </select>
-                                            <button @click="OpenAssignee">Browse</button><button class="selectbox">Browse</button>
+                                        <div style="text-align: left;">
+                                            <v-select v-model="assignee" :id="assignee"
+                                              :options="users"
+                                              attach
+                                              chips
+                                              label="username"
+                                              multiple></v-select>
+                                         
                                         </div>
                                     </dd>
                                 </dl>
@@ -158,7 +161,7 @@
                                 <dl>
                                     <dt>Due Date:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="date" v-model="due_date"></div>
+                                        <div class="browser_group"><input type="date" style="width: 100%!important;" v-model="due_date"></div>
                                     </dd>
                                 </dl>
                                 <dl>
@@ -177,10 +180,9 @@
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>Files:</dt>
+
                                     <dd>
                                         <div class="browser_group">
-
                                             <div class="pad">
                                                 <div class="file-list">
                                                     <div class="file-item" v-for="(item,index) in fileArray" :key="index">
@@ -234,7 +236,7 @@
                             <div class="tablebox s1">
                                 <ul>
                                     <li class="head">Operation Type:</li>
-                                    <li>
+                                    <li style="padding-right: 0;">
                                         <select name="" id="opType">
                                             <option value="edit">Edit Existing Task</option>
                                             <option value="del">Delete Existing Task</option>
@@ -322,7 +324,7 @@
                                 <dl>
                                     <dt>Due Date:</dt>
                                     <dd>
-                                        <div class="browser_group"><input type="date" v-model="record.due_date"></div>
+                                        <div class="browser_group"><input type="date" style="width: 100%!important;" v-model="record.due_date"></div>
                                     </dd>
                                 </dl>
                                 <dl>
@@ -344,6 +346,7 @@
                                         </div>
                                     </dd>
                                 </dl>
+
                                 <div class="btnbox">
                                     <a class="btn small" @click="task_edit_clear">Cancel</a>
                                     <a class="btn small green">Calendar</a>
@@ -393,7 +396,6 @@
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>Files:</dt>
                                     <dd>
                                         <div class="browser_group">
 
@@ -436,7 +438,7 @@
                             <div class="tablebox s1">
                                 <ul>
                                     <li class="head">Operation Type:</li>
-                                    <li>
+                                    <li style="padding-right: 0;">
                                         <select name="" id="opType2">
                                             <option value="edit">Edit Existing Message</option>
                                             <option value="del">Delete Existing Message</option>
@@ -566,13 +568,13 @@
                         <div class="tablebox m01">
                             <ul>
                                 <li><b>Creator</b></li>
-                                <li><a class="man" :style="'background-image: url(images/man/' +  receive_record.creator_pic  + ');'"></a></li>
+                                <li><a class="man" :style="'background-image: url(images/man/' +  receive_record.creator_pic  + ');'" :title="receive_record.creator"></a></li>
                             </ul>
                             <ul>
                                 <li><b>Assignee</b></li>
                                 <li>
                                     <i v-for="item in receive_record.assignee">
-                                        <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
+                                        <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'" :title="item.username"></a>
                                     </i>
 
                                 </li>
@@ -581,7 +583,7 @@
                                 <li><b>Collaborator</b></li>
                                 <li>
                                     <i v-for="item in receive_record.collaborator">
-                                        <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
+                                        <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'" :title="item.username"></a>
                                     </i>
 
                                 </li>
@@ -605,14 +607,14 @@
                             </ul>
                         </div>
                     </div>
-
+ 
                     <div class="teskbox scroll">
                         <div class="tableframe">
                             <div class="tablebox m02">
                                 <!-- 1 message -->
                                 <ul v-for="item in receive_record.message" :class="{ deleted : item.message_status == -1, dialogclear : item.message_status == -1 }" >
                                     <li class="dialogclear">
-                                        <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'"></a>
+                                        <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'" :title="item.messager"></a>
                                         <i class="info">
                                             <b>{{item.messager}}</b><br>
                                             {{ item.message_time }}<br>
@@ -735,7 +737,7 @@
                                 <div class="tablebox m01">
                                     <ul>
                                         <li><b>Creator</b></li>
-                                        <li><a class="man" :style="'background-image: url(images/man/' +  receive_record.creator_pic  + ');'"></a></li>
+                                        <li><a class="man" :style="'background-image: url(images/man/' +  receive_record.creator_pic  + ');'" :title="receive_record.creator"></a></li>
                                     </ul>
                                     <ul>
                                         <li><b>Date</b></li>
@@ -745,7 +747,7 @@
                                         <li><b>Assignee</b></li>
                                         <li>
                                             <i v-for="item in receive_record.assignee">
-                                                <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'"></a>
+                                                <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'" :title="item.username"></a>
                                             </i>
                                         </li>
                                     </ul>
@@ -771,7 +773,7 @@
                                         <!-- 1 message -->
                                         <ul v-for="item in receive_record.message" :class="{ deleted : item.message_status == -1, dialogclear : item.message_status == -1 }">
                                             <li class="dialogclear">
-                                                <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'"></a>
+                                                <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'" :title="item.messager"></a>
                                                 <i class="info">
                                                     <b>{{item.messager}}</b><br>
                                                     {{ item.message_time }}<br>
@@ -876,6 +878,7 @@
 
 
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -905,7 +908,7 @@
     }
 
     .input-zone {
-        width: 5rem;
+        margin: 0 5px 5px 0;
         background-size: 2.13rem;
         border-radius: 0.38rem;
         border: 0.06rem solid rgba(112, 112, 112, 1);
@@ -926,7 +929,7 @@
     }
 
     .pad {
-        padding: 0.5rem 1.7rem 0 0rem;
+        margin-top: -10px;
         font-size: 0.88rem;
     }
 
