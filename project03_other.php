@@ -35,8 +35,9 @@
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css" />
     <link rel="stylesheet" href="css/vue-select.css" type="text/css">
 
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/fullcalendar@5.1.0/main.min.css" >
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/fullcalendar@5.1.0/main.min.css">
     <script type="text/javascript" src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
@@ -1073,13 +1074,13 @@
        */
 
        /* 會議加入array的格式如下： */
-        var event = {
-          id: 12,
-          title: 'title',
-          start: '2020/11/09',
-          end: '2020/11/20',
-          description: '資料庫中的 meeting_data'
-        };
+        var event = 
+            {
+      title: '昨天的活動',
+      start: moment().subtract(1, 'days').format('YYYY-MM-DD'),
+      end: moment().add(14, 'days').format('YYYY-MM-DD'),
+      color: 'lightBlue'
+    };
         event_array.push(event);
       
 
