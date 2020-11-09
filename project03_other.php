@@ -134,7 +134,7 @@
                                 <dl>
                                     <dt>Assignee:</dt>
                                     <dd>
-                                        <div style="text-align: left;">
+                                        <div style="text-align: left;font-size: 12px;">
                                             <v-select v-model="assignee" :id="assignee"
                                               :options="users"
                                               attach
@@ -148,14 +148,16 @@
                                 <dl>
                                     <dt>Collaborator:</dt>
                                     <dd>
-                                        <div class="browser_group">
-                                            <select id="collaborator" v-model="collaborator">
-                                                <option v-for="(item, index) in users" :value="item.id" :key="item.username">
-                                                    {{ item.username }}
-                                                </option>
-                                            </select>
-                                            <button @click="OpenCollaborator">Browse</button>
+                                        <div style="text-align: left;font-size: 12px;">
+                                            <v-select v-model="collaborator" :id="collaborator"
+                                              :options="users"
+                                              attach
+                                              chips
+                                              label="username"
+                                              multiple></v-select>
+                                         
                                         </div>
+                                        
                                     </dd>
                                 </dl>
                                 <dl>
@@ -300,24 +302,32 @@
                                 <dl>
                                     <dt>Assignee:</dt>
                                     <dd>
-                                        <div class="browser_group">
-                                            <select v-model="record.assignee_id" multiple v-if="record.assignee_id">
-                                                <option v-for="(it, index) in users" :value="it.id" :key="it.username">
-                                                    {{ it.username }}
-                                                </option>
-                                            </select>
+                                        <div style="text-align: left;font-size: 12px;">
+                                            <v-select v-model="record.assignee_id" :id="record.assignee"
+                                              :options="users"
+                                              attach
+                                              chips
+                                              label="username"
+                                              v-if="record.assignee_id"
+                                              multiple></v-select>
+                                         
                                         </div>
+                                        
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>Collaborator:</dt>
                                     <dd>
-                                        <div class="browser_group">
-                                            <select v-model="record.collaborator_id" multiple v-if="record.collaborator_id">
-                                                <option v-for="(it, index) in users" :value="it.id" :key="it.username">
-                                                    {{ it.username }}
-                                                </option>
-                                            </select>
+                                        
+                                        <div style="text-align: left;font-size: 12px;">
+                                            <v-select v-model="record.collaborator_id" :id="record.collaborator_id"
+                                              :options="users"
+                                              attach
+                                              chips
+                                              label="username"
+                                              v-if="record.collaborator_id"
+                                              multiple></v-select>
+                                         
                                         </div>
                                     </dd>
                                 </dl>
@@ -370,14 +380,17 @@
                                 <dl>
                                     <dt>Assignee:</dt>
                                     <dd>
-                                        <div class="browser_group">
-                                            <select v-model="assignee_r" id="assignee_r">
-                                                <option v-for="(item, index) in users" :value="item.id" :key="item.username">
-                                                    {{ item.username }}
-                                                </option>
-                                            </select>
-                                            <button @click="OpenAssignee_r">Browse</button>
+                                        <div style="text-align: left;font-size: 12px;">
+                                            <v-select v-model="assignee_r" :id="assignee_r"
+                                              :options="users"
+                                              attach
+                                              chips
+                                              label="username"
+                                         
+                                              multiple></v-select>
+                                         
                                         </div>
+                                        
                                     </dd>
                                 </dl>
                                 <dl>
@@ -480,13 +493,17 @@
                                 <dl>
                                     <dt>Assignee:</dt>
                                     <dd>
-                                        <div class="browser_group">
-                                            <select v-model="record_r.assignee_id" multiple v-if="record_r.assignee_id">
-                                                <option v-for="(it, index) in users" :value="it.id" :key="it.username">
-                                                    {{ it.username }}
-                                                </option>
-                                            </select>
+                                        <div style="text-align: left;font-size: 12px;">
+                                            <v-select v-model="record_r.assignee_r" :id="record_r.assignee_r"
+                                              :options="users"
+                                              attach
+                                              chips
+                                              label="username"
+                                              v-if="record_r.assignee_id"
+                                              multiple></v-select>
+                                         
                                         </div>
+                                        
                                     </dd>
                                 </dl>
                                 <dl>
@@ -1031,6 +1048,70 @@
 
     .file-list img.upload-success {
         margin-left: 0;
+    }
+
+    #vs1__combobox {
+        border: 1px solid #707070;
+        border-radius: 0;
+    }
+
+    #vs1__listbox {
+        border: none;
+        border-radius: 0;
+        margin-top: 0;
+    }
+
+    #vs1__listbox li{
+        border-right: 2px solid #707070;
+        font-size: 12px;
+    }
+
+    #vs2__combobox {
+        border: 1px solid #707070;
+        border-radius: 0;
+    }
+
+    #vs2__listbox {
+        border: none;
+        border-radius: 0;
+        margin-top: 0;
+    }
+
+    #vs2__listbox li{
+        border-right: 2px solid #707070;
+        font-size: 12px;
+    }
+
+    #vs3__combobox {
+        border: 1px solid #707070;
+        border-radius: 0;
+    }
+
+    #vs3__listbox {
+        border: none;
+        border-radius: 0;
+        margin-top: 0;
+    }
+
+    #vs3__listbox li{
+        border-right: 2px solid #707070;
+        font-size: 12px;
+    }
+
+    #vs4__combobox {
+        border: 1px solid #707070;
+        border-radius: 0;
+    }
+
+    #vs4__listbox {
+        border: none;
+        border-radius: 0;
+        margin-top: 0;
+    }
+
+    #vs4__listbox li{
+        border-right: 2px solid #707070;
+        font-size: 12px;
     }
 
 </style>
