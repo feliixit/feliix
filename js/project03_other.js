@@ -1962,7 +1962,7 @@ var app = new Vue({
 
           }
 
-          if (_this.arrMsg[item_id].length == 0) {
+          if (_this.arrMsg[item_id] === undefined) {
             _this.getProjectOtherTask(_this.stage_id);
             _this.msg_clear(item_id);
           }
@@ -1981,6 +1981,12 @@ var app = new Vue({
       var myArr = this.arrMsg[item_id];
       var _this = this;
 
+      if(myArr === undefined)
+      { 
+        _this.getProjectOtherTask(_this.stage_id);
+        _this.msg_clear(item_id);
+        return;
+      }
       //循环文件数组挨个上传
       myArr.forEach((element, index) => {
         var config = {
@@ -2076,7 +2082,7 @@ var app = new Vue({
 
           }
 
-          if (_this.arrMsg_r[item_id].length == 0) {
+          if (_this.arrMsg_r[item_id] === undefined) {
             _this.getProjectOtherTask_r(_this.stage_id);
             _this.msg_clear_r(item_id);
           }
@@ -2094,6 +2100,13 @@ var app = new Vue({
       this.canSub_r = false;
       var myArr = this.arrMsg_r[item_id];
       var _this = this;
+
+      if(myArr === undefined)
+      { 
+        _this.getProjectOtherTask_r(_this.stage_id);
+        _this.msg_clear_r(item_id);
+        return;
+      }
 
       //循环文件数组挨个上传
       myArr.forEach((element, index) => {
