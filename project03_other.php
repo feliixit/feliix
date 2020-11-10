@@ -42,7 +42,7 @@
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
-    <script type="text/javascript" src="js/main.js" defer></script>
+    <script type="text/javascript" src="js/main.js"></script>
     <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js"></script>
 
     <script>
@@ -948,7 +948,7 @@
     #meeting{
         border: 5px solid #00811e;
         padding: 10px 20px 20px;
-        width: 1200px;
+        width: 1000px;
         margin: auto;
         position: fixed;
         top:30px;
@@ -1340,6 +1340,7 @@
         background-size: 100%;
         text-align: center;
         position: relative;
+        display: inline-block;
     }
 
     .input-zone {
