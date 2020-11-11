@@ -1,3 +1,36 @@
+<?php
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ( !isset( $jwt ) ) {
+  header( 'location:index' );
+}
+
+include_once 'api/config/core.php';
+include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
+include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once 'api/libs/php-jwt-master/src/JWT.php';
+use \Firebase\JWT\JWT;
+
+try {
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+        $GLOBALS['username'] = $decoded->data->username;
+        $GLOBALS['position'] = $decoded->data->position;
+        $GLOBALS['department'] = $decoded->data->department;
+
+        //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
+        //    header( 'location:index.php' );
+    }
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+    
+        header( 'location:index' );
+    }
+
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -3029,7 +3062,7 @@
             end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
             content: $("#oldContent").val(),
             //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
-            creator: "Creator's Name" + " " + "2020/xx/xx xx:xx"
+            creator: "<?php echo $GLOBALS['username'] ?>" + moment().format('YYYY/MM/DD HH:mm')
         };
         $("#oldCreator").val(obj_meeting.creator);
 
@@ -3078,13 +3111,19 @@
         // if 所有欄位都不果為空  且 結束時間須晚於開始時間，則做以下動作
         var obj_meeting = {
             title: $("#newSubject").val().trim(),
-            attendee: "select多選的參與人系統名字",
+            attendee: app1.attendee,
             start: $("#newDate").val() + "T" + $("#newStartTime").val(),
             end: $("#newDate").val() + "T" + $("#newEndTime").val(),
             content: $("#newContent").val(),
             //creator: "創建人的系統名字" + " " + "按下Add按鈕的日期時間(小時:分即可)"
-            creator: "Creator's name" + " " + "2020/xx/xx xx:xx"
+            creator: "<?php echo $GLOBALS['username'] ?>" + moment().format('YYYY/MM/DD HH:mm')
         };
+
+        app1.addMeetings($("#newSubject").val().trim(), 
+                        $("#newContent").val(), 
+                        app1.attendee, 
+                        $("#newDate").val() + "T" + $("#newStartTime").val(), 
+                        $("#newDate").val() + "T" + $("#newEndTime").val());
 
         //##obj_meeting 內容寫入資料庫
         //資料庫欄位 (ID, meeting_data)  其中ID為自動計數

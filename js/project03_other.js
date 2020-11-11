@@ -2170,7 +2170,7 @@ var app1 = new Vue({
   el: '#meeting',
   data: {
  
-
+    meetings: {},
     users: [],
 
     // paging
@@ -2192,13 +2192,14 @@ var app1 = new Vue({
 
     // calendar
     attendee:[],
+    add_id: 0,
   },
 
   created() {
  
 
     this.getUsers();
-    
+    this.getMeetings();
 
   },
 
@@ -2230,7 +2231,7 @@ var app1 = new Vue({
         .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
         .then(
           (res) => {
-            _this.users = res.data;
+            _this.meetings = res.data;
           },
           (err) => {
             alert(err.response);
@@ -2240,6 +2241,81 @@ var app1 = new Vue({
 
         });
     },
+
+    getMeetings: function(){ 
+        this.action = 1;//select all
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+                form_Data.append('jwt', token);
+                form_Data.append('action', this.action);
+                axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    url: 'api/work_calender_meetings',
+                    data: form_Data
+                })
+                    .then(function (response) {
+                        //this.addDetails(response.data[0]);
+                        //handle success
+                        _this.meetings = response.data
+                        //console.log(_this.items)
+                        
+                    })
+                    .catch(function (response) {
+                        //handle error
+                        Swal.fire({
+                            text: JSON.stringify(response),
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        })
+                    });
+                    //this.upload();
+                  // this.reload();
+        },
+
+    addMeetings:function(subject, message, attendee, start_time, end_time){
+      this.action = 2;//add
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+              form_Data.append('jwt', token);
+              form_Data.append('subject', subject);
+              form_Data.append('message', message);
+              form_Data.append('attendee', attendee);
+              form_Data.append('start_time', start_time);
+              form_Data.append('end_time', end_time);
+              form_Data.append('is_enabled', true);
+              form_Data.append('action', this.action);
+              form_Data.append('created_by', this.name);
+              axios({
+                  method: 'post',
+                  headers: {
+                      'Content-Type': 'multipart/form-data',
+                  },
+                  url: 'api/work_calender_meetings',
+                  data: form_Data
+              })
+                  .then(function (response) {
+                      //this.addDetails(response.data[0]);
+                      //handle success
+                      //_this.items = response.data
+                      //console.log(_this.items)
+                      
+                  })
+                  .catch(function (response) {
+                      //handle error
+                      Swal.fire({
+                          text: JSON.stringify(response),
+                          icon: 'error',
+                          confirmButtonText: 'OK'
+                      })
+                  });
+                  //this.upload();
+                 // this.reload();
+      },
 
   },
 });
