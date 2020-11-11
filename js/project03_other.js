@@ -108,6 +108,9 @@ var app = new Vue({
     fil_status:0,
     fil_due_date:'',
     opt_due_date:[],
+
+    // calendar
+    attendee:[],
   },
 
   created() {
@@ -2156,6 +2159,86 @@ var app = new Vue({
 
       this.msgCanSub_r[item_id] = true;
 
+    },
+
+  },
+});
+
+
+
+var app1 = new Vue({
+  el: '#meeting',
+  data: {
+ 
+
+    users: [],
+
+    // paging
+    page: 1,
+    //perPage: 10,
+    pages: [],
+
+    inventory: [
+      { name: '10', id: 10 },
+      { name: '25', id: 25 },
+      { name: '50', id: 50 },
+      { name: '100', id: 100 },
+      { name: 'All', id: 10000 }
+    ],
+    perPage: 5,
+
+    baseURL: 'https://storage.cloud.google.com/feliiximg/',
+
+
+    // calendar
+    attendee:[],
+  },
+
+  created() {
+ 
+
+    this.getUsers();
+    
+
+  },
+
+  computed: {
+ 
+    },
+
+
+  mounted() {
+
+
+  },
+
+  watch: {
+   
+
+  },
+
+
+
+  methods: {
+    getUsers() {
+
+      let _this = this;
+
+      let token = localStorage.getItem('accessToken');
+
+      axios
+        .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.users = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
     },
 
   },
