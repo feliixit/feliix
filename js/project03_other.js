@@ -2280,6 +2280,14 @@ var app1 = new Vue({
           // this.reload();
         },
 
+    warning(txt) {
+      Swal.fire({
+        text: JSON.stringify(txt),
+        icon: 'error',
+        confirmButtonText: 'OK'
+    })
+    },
+
     addMeetings:function(subject, message, attendee, start_time, end_time, username){
       this.action = 2;//add
       var token = localStorage.getItem('token');
