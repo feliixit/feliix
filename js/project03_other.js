@@ -2170,7 +2170,7 @@ var app1 = new Vue({
   el: '#meeting',
   data: {
  
-    meetings: {},
+    meetings: [],
     users: [],
 
     // paging
@@ -2193,6 +2193,7 @@ var app1 = new Vue({
     // calendar
     attendee:[],
     add_id: 0,
+  
   },
 
   created() {
@@ -2231,7 +2232,7 @@ var app1 = new Vue({
         .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
         .then(
           (res) => {
-            _this.meetings = res.data;
+            _this.users = res.data;
           },
           (err) => {
             alert(err.response);
@@ -2247,39 +2248,43 @@ var app1 = new Vue({
         var token = localStorage.getItem('token');
         var form_Data = new FormData();
         let _this = this;
-                form_Data.append('jwt', token);
-                form_Data.append('action', this.action);
-                axios({
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                    url: 'api/work_calender_meetings',
-                    data: form_Data
+        form_Data.append('jwt', token);
+        form_Data.append('action', this.action);
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/work_calender_meetings',
+            data: form_Data
+        })
+            .then(function (response) {
+                //this.addDetails(response.data[0]);
+                //handle success
+                _this.meetings = response.data
+                //console.log(_this.items)
+                return response.data;
+                
+            })
+            .catch(function (response) {
+                //handle error
+                Swal.fire({
+                    text: JSON.stringify(response),
+                    icon: 'error',
+                    confirmButtonText: 'OK'
                 })
-                    .then(function (response) {
-                        //this.addDetails(response.data[0]);
-                        //handle success
-                        _this.meetings = response.data
-                        //console.log(_this.items)
-                        
-                    })
-                    .catch(function (response) {
-                        //handle error
-                        Swal.fire({
-                            text: JSON.stringify(response),
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        })
-                    });
-                    //this.upload();
-                  // this.reload();
+
+                return [];
+            });
+            //this.upload();
+          // this.reload();
         },
 
-    addMeetings:function(subject, message, attendee, start_time, end_time){
+    addMeetings:function(subject, message, attendee, start_time, end_time, username){
       this.action = 2;//add
       var token = localStorage.getItem('token');
       var form_Data = new FormData();
+      var ret = 0;
       let _this = this;
               form_Data.append('jwt', token);
               form_Data.append('subject', subject);
@@ -2289,7 +2294,7 @@ var app1 = new Vue({
               form_Data.append('end_time', end_time);
               form_Data.append('is_enabled', true);
               form_Data.append('action', this.action);
-              form_Data.append('created_by', this.name);
+              form_Data.append('created_by', username);
               axios({
                   method: 'post',
                   headers: {
@@ -2303,6 +2308,9 @@ var app1 = new Vue({
                       //handle success
                       //_this.items = response.data
                       //console.log(_this.items)
+                      ret = response.data[0];
+
+                      return ret;
                       
                   })
                   .catch(function (response) {
@@ -2312,6 +2320,8 @@ var app1 = new Vue({
                           icon: 'error',
                           confirmButtonText: 'OK'
                       })
+
+                      return 0;
                   });
                   //this.upload();
                  // this.reload();

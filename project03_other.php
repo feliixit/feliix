@@ -2897,7 +2897,11 @@ try {
 <script>
 
     var eventObj;
-    $(document).on("click", "#btn_arrange", function () { $('#meeting').show(); });
+    $(document).on("click", "#btn_arrange", function () {
+        
+
+         $('#meeting').show(); 
+    });
 
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -2906,7 +2910,7 @@ try {
 
         //##從資料庫中撈出已存在的會議，以便後續初始化到日曆中
         //SELECT ID, meeting_data FROM table_name;
-        var event_array = [];
+        
         /* 會議加入array的格式如下：
         var event = {
           id: 資料庫中的會議 id,
@@ -2917,18 +2921,37 @@ try {
         };
         event_array.push(event);
        */
-
-       /* 會議加入array的格式如下： */
+        
+        /*
         var event = 
             {
       title: '昨天的活動',
       start: moment().subtract(1, 'days').format('YYYY-MM-DD'),
       end: moment().add(14, 'days').format('YYYY-MM-DD'),
       color: 'lightBlue'
-    };
-        event_array.push(event);
+    }; */
+        
       
+        var event_array = [];
+       /* 會議加入array的格式如下： */
+        if(app1.meetings !== undefined)
+        {
+            var arrayLength = app1.meetings.length;
+            for (var i = 0; i < arrayLength; i++) {
+                console.log(app1.meetings[i]);
+                var obj_meeting = {
+                    title: app1.meetings[i].title.trim(),
+                    attendee: app1.meetings[i].attendee.trim(),
+                    start: moment(app1.meetings[i].start_time, 'YYYY-MM-DD HH:mm'),
+                    end: moment(app1.meetings[i].end_time, 'YYYY-MM-DD HH:mm'),
+                    content: app1.meetings[i].message.trim(),
+                    //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
+                    creator: "<?php echo $GLOBALS['username'] ?>" + moment().format('YYYY/MM/DD HH:mm')
+                };
 
+                event_array.push(obj_meeting);
+            }
+        }
 
         //初始化 fullcalendar 物件
         calendar = new FullCalendar.Calendar(calendarEl, {
@@ -2976,7 +2999,7 @@ try {
                     return;
 
                 $("#oldSubject").val(obj_meeting.title);
-                $("#oldCreator").val(obj_meeting.creator);
+                $("#oldCreator").val(obj_meeting.creator.split(/[\s ]+/)[0]);
                 $("#oldAttendee").val(obj_meeting.attendee);
                 $("#oldDate").val(obj_meeting.start.split("T")[0]);
                 $("#oldStartTime").val(obj_meeting.start.split("T")[1]);
@@ -3107,23 +3130,36 @@ try {
 
         //##任一欄位如果為空則提示欄位不得為空
         //結束時間須晚於開始時間
+        let start = moment($("#newDate").val() + " " + $("#newStartTime").val(), "YYYY/MM/DD HH:mm");
+        let end = moment($("#newDate").val() + " " + $("#newEndTime").val(), "YYYY/MM/DD HH:mm");
+
+        var isafter = moment(end).isAfter(start);
+
+        if(isafter === true)
+            return;
+
+        var names = app1.attendee.map(function(item) {
+            return item['username'];
+        });
 
         // if 所有欄位都不果為空  且 結束時間須晚於開始時間，則做以下動作
         var obj_meeting = {
             title: $("#newSubject").val().trim(),
-            attendee: app1.attendee,
+            attendee: names.toString(),
             start: $("#newDate").val() + "T" + $("#newStartTime").val(),
             end: $("#newDate").val() + "T" + $("#newEndTime").val(),
             content: $("#newContent").val(),
             //creator: "創建人的系統名字" + " " + "按下Add按鈕的日期時間(小時:分即可)"
-            creator: "<?php echo $GLOBALS['username'] ?>" + moment().format('YYYY/MM/DD HH:mm')
+            creator: "<?php echo $GLOBALS['username'] ?>" + " " + moment().format('YYYY/MM/DD HH:mm')
         };
 
-        app1.addMeetings($("#newSubject").val().trim(), 
+        var id = app1.addMeetings($("#newSubject").val().trim(), 
                         $("#newContent").val(), 
-                        app1.attendee, 
+                        names.toString(), 
                         $("#newDate").val() + "T" + $("#newStartTime").val(), 
-                        $("#newDate").val() + "T" + $("#newEndTime").val());
+                        $("#newDate").val() + "T" + $("#newEndTime").val(),
+                        "<?php echo $GLOBALS['username'] ?>"
+                        );
 
         //##obj_meeting 內容寫入資料庫
         //資料庫欄位 (ID, meeting_data)  其中ID為自動計數
@@ -3131,7 +3167,6 @@ try {
 
 
         //##將該obj_meeting在資料庫給的id返回回來，並設定到前端的id變數
-        var id = "資料庫返回的id編號";
 
 
 

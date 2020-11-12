@@ -13,6 +13,8 @@ $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $subject = (isset($_POST['subject']) ?  $_POST['subject'] : '');
 $message = (isset($_POST['message']) ?  $_POST['message'] : '');
 $attendee = (isset($_POST['attendee']) ?  $_POST['attendee'] : '');
+$start_time = (isset($_POST['start_time']) ?  $_POST['start_time'] : '');
+$end_time = (isset($_POST['end_time']) ?  $_POST['end_time'] : '');
 $is_enabled = (isset($_POST['is_enabled']) && $_POST['is_enabled'] === "true"? 1 : 0);
 $created_by = (isset($_POST['created_by']) ?  $_POST['created_by'] : '');
 $updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
