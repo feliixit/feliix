@@ -2192,6 +2192,7 @@ var app1 = new Vue({
 
     // calendar
     attendee:[],
+    old_attendee:[],
     add_id: 0,
   
   },
@@ -2200,7 +2201,7 @@ var app1 = new Vue({
  
 
     this.getUsers();
-    this.getMeetings();
+    //this.getMeetings();
 
   },
 

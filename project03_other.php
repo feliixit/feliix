@@ -2889,7 +2889,7 @@ catch (Exception $e) {
 
                 <div class="meetingform-item">
                     <label>Attendee:</label>
-                    <v-select id="oldAttendee" :options="users" attach chips label="username" v-model=attendee multiple></v-select>
+                    <v-select id="oldAttendee" :options="users" attach chips label="username" v-model=old_attendee multiple></v-select>
                 </div>
 
                 <div class="meetingform-item">
@@ -2967,6 +2967,8 @@ catch (Exception $e) {
         form_Data.append('jwt', token);
         form_Data.append('action', 1);
 
+        let _app1 = app1;
+
         $.ajax({
             url: "api/work_calender_meetings",
             type: "POST",
@@ -2974,6 +2976,7 @@ catch (Exception $e) {
             processData: false,
             contentType: false,
             data: form_Data,
+
             success: function(result) {
                 console.log(result);
                 var obj = JSON.parse(result);
@@ -2981,14 +2984,23 @@ catch (Exception $e) {
                     var arrayLength = obj.length;
                     for (var i = 0; i < arrayLength; i++) {
                         console.log(obj[i]);
-                        var obj_meeting = {
+
+                        var obj_description = {
                             title: obj[i].subject.trim(),
                             attendee: obj[i].attendee.trim(),
-                            start: moment(obj[i].start_time, 'YYYY-MM-DD HH:mm'),
-                            end: moment(obj[i].end_time, 'YYYY-MM-DD HH:mm'),
-                            content: obj[i].message.trim(),
-                            //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
-                            creator: "<?php echo $GLOBALS['username'] ?>" + moment().format('YYYY/MM/DD HH:mm')
+                            items:obj[i].items,
+                            start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                            end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                            content: obj[i].message.trim(),	
+                            creator: obj[i].created_by.trim() + " " +  moment(obj[i].created_at).format('YYYY-MM-DD HH:mm'),
+                        };
+
+                        var obj_meeting = {
+                            id: obj[i].id,
+                            title: obj[i].subject.trim(),
+                            start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                            end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                            description: obj_description,
                         };
 
                         event_array.push(obj_meeting);
@@ -3041,8 +3053,9 @@ catch (Exception $e) {
                             return;
 
                         $("#oldSubject").val(obj_meeting.title);
-                        $("#oldCreator").val(obj_meeting.creator.split(/[\s ]+/)[0]);
-                        $("#oldAttendee").val(obj_meeting.attendee);
+                        $("#oldCreator").val(info.event.extendedProps.description.creator.split(/[\s ]+/)[0]);
+                        $("#oldAttendee").val(info.event.extendedProps.description.items);
+                        _app1.old_attendee = info.event.extendedProps.description.items;
                         $("#oldDate").val(obj_meeting.start.split("T")[0]);
                         $("#oldStartTime").val(obj_meeting.start.split("T")[1]);
                         $("#oldEndTime").val(obj_meeting.end.split("T")[1]);

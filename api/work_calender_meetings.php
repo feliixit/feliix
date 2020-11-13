@@ -53,9 +53,85 @@ else
             $stmt = $db->prepare( $query );
             $stmt->execute();
 
-            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $merged_results[] = $row;
+            $items = [];
+
+            $id = 0;
+            $subject = "";
+            $message = "";
+            $attendee = "";
+            $start_time = "";
+            $end_time = "";
+            $is_enabled = 0;
+            $created_at = '';
+            $updated_at = '';
+            $deleted_at = "";
+            $created_by = "";
+            $updated_by = "";
+            $deleted_by = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if ($id != $row['id'] && $id != 0) {
+                    $merged_results[] = array(
+                        "id" => $id,
+                        "subject" => $subject,
+                        "message" => $message,
+                        "attendee" => $attendee,
+                        "start_time" => $start_time,
+                        "end_time" => $end_time,
+                        "is_enabled" => $is_enabled,
+                        "created_at" => $created_at,
+                        "updated_at" => $updated_at,
+                        "deleted_at" => $deleted_at,
+                        "created_by" => $created_by,
+                        "updated_by" => $updated_by,
+                        "deleted_by" => $deleted_by,
+                        "items" => $items,
+                        
+                    );
+    
+                    $items = [];
+                }
+    
+                $id = $row['id'];
+                $subject = $row['subject'];
+                $message = $row['message'];
+                $attendee = $row['attendee'];
+                $start_time = $row['start_time'];
+                $end_time = $row['end_time'];
+                $is_enabled = $row['is_enabled'];
+
+                $created_at = $row['created_at'];
+                $updated_at = $row['updated_at'];
+                $deleted_at = $row['deleted_at'];
+
+                $created_by = $row['created_by'];
+                $updated_by = $row['updated_by'];
+                $deleted_by = $row['deleted_by'];
+
+                if(!empty($attendee ))
+                    $items = GetUserInfo($row['attendee'], $db);
             }
+
+            if ($id != 0) {
+                $merged_results[] = array(
+                    "id" => $id,
+                    "subject" => $subject,
+                    "message" => $message,
+                    "attendee" => $attendee,
+                    "start_time" => $start_time,
+                    "end_time" => $end_time,
+                    "is_enabled" => $is_enabled,
+                    "created_at" => $created_at,
+                    "updated_at" => $updated_at,
+                    "deleted_at" => $deleted_at,
+                    "created_by" => $created_by,
+                    "updated_by" => $updated_by,
+                    "deleted_by" => $deleted_by,
+                    "items" => $items,
+    
+                );
+            }
+
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
         }
         catch(Exception $e){
@@ -208,4 +284,31 @@ else
             echo json_encode(array("message" => "Access denied."));
         }
     }
+}
+
+
+
+function GetUserInfo($users, $db)
+{
+    $psq = "";
+    $a_users = explode(",", $users);
+
+    foreach ($a_users as $value) {
+        $psq .= "'" . $value . "',";
+    }
+
+    $psq = rtrim($psq, ",");
+
+    $sql = "SELECT id, username FROM user WHERE username in (" . $psq . ")";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }
