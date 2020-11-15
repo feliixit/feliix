@@ -106,7 +106,7 @@ try {
         <ul class="menu">
             <li class="pri01a">
                 <a class="uni">Employee<br>Attendance</a>
-                <a class="list" href="../on_duty01">Punch In/Out</a>
+                <a class="list" href="../on_duty">Punch In/Out</a>
                 <a class="list" href="../apply_for_leave">Leave</a>
                 <a class="list">Query/Ammend</a>
             </li>

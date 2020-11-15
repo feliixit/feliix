@@ -148,7 +148,7 @@ $(function(){
 </head>
 
 <style>
-    body: {
+    body {
         background-color: #F0F0F0;
     }
     #app {
@@ -261,6 +261,6 @@ $(function(){
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/on_duty01.js"></script>
+<script defer src="js/on_duty.js"></script>
 
 </html>

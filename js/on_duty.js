@@ -190,7 +190,7 @@ var app = new Vue({
                   //$(window).scrollTop(0);
                   return false;
               } 
-/*
+
               if (this.latitude == 0 || this.lngitude == 0) 
               {
                 Swal.fire({
@@ -202,7 +202,7 @@ var app = new Vue({
                   //$(window).scrollTop(0);
                   return false;
               } 
-*/
+
 
 /*
               if ((this.piclatitude == 0 || this.piclongitude == 0) && !this.$refs.file == undefined) 
@@ -355,7 +355,7 @@ var app = new Vue({
                   headers: {
                       'Content-Type': 'multipart/form-data'
                   },
-                  url: 'api/on_duty01',
+                  url: 'api/on_duty',
                   data: form_Data
               })
               .then(function(response) {
