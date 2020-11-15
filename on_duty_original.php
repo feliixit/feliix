@@ -144,5 +144,5 @@ $(function(){
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/on_duty.js"></script>
+<script defer src="js/on_duty_original.js"></script>
 </html>

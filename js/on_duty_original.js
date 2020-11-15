@@ -299,7 +299,7 @@ var app = new Vue({
                   headers: {
                       'Content-Type': 'multipart/form-data'
                   },
-                  url: 'api/on_duty',
+                  url: 'api/on_duty_original',
                   data: form_Data
               })
               .then(function(response) {
