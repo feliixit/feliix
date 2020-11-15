@@ -194,7 +194,7 @@ var app = new Vue({
               if (this.latitude == 0 || this.lngitude == 0) 
               {
                 Swal.fire({
-                  text: 'Please turn on the function of GPS information acquiring in your camera or choose the existing photo with GPS information.',
+                  text: 'Submit Failed. No GPS Information Obtained. Please Turn On GPS Function.',
                   icon: 'error',
                   confirmButtonText: 'OK'
                 })
