@@ -2282,11 +2282,11 @@ var app1 = new Vue({
         },
 
     warning(txt) {
-      Swal.fire({
-        text: JSON.stringify(txt),
-        icon: 'error',
-        confirmButtonText: 'OK'
-    })
+        Swal.fire({
+          text: JSON.stringify(txt),
+          icon: 'error',
+          confirmButtonText: 'OK'
+      })
     },
 
     addMeetings:function(subject, message, attendee, start_time, end_time, username){
@@ -2318,7 +2318,7 @@ var app1 = new Vue({
                       //_this.items = response.data
                       //console.log(_this.items)
                       ret = response.data[0];
-
+                      notify_mail(ret);
                       return ret;
                       
                   })
@@ -2336,7 +2336,7 @@ var app1 = new Vue({
                  // this.reload();
       },
 
-  },
+  
 
   editMeetings:function(id, subject, message, attendee, start_time, end_time, username){
     this.action = 3;//update
@@ -2386,6 +2386,31 @@ var app1 = new Vue({
                // this.reload();
     },
 
+    notify_mail(batch_id){
+      var form_Data = new FormData();
+
+      form_Data.append('bid', batch_id);
+      
+      const token = sessionStorage.getItem('token');
+
+      axios({
+              method: 'post',
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${token}`
+              },
+              url: 'api/project_meeting_mail',
+              data: form_Data
+          })
+          .then(function(response) {
+              //handle success
+
+          })
+          .catch(function(response) {
+              //handle error
+              console.log(response)
+          });
+      },
 
   delMeetings:function(id){
     this.action = 7;//add
@@ -2429,5 +2454,7 @@ var app1 = new Vue({
                 //this.upload();
                // this.reload();
     },
+
+  },
 
 });

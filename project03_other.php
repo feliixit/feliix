@@ -2052,6 +2052,17 @@ catch (Exception $e) {
         body.swal2-toast-column .swal2-toast .swal2-validation-message {
             font-size: 1em
         }
+
+        .select_disabled {
+            pointer-events:none;
+            color: #bfcbd9;
+            cursor: not-allowed;
+            background-image: none;
+            background-color: #eef1f6;
+            border-color: #d1dbe5;   
+            
+        }
+ 
     </style>
 
 </head>
@@ -2889,7 +2900,7 @@ catch (Exception $e) {
 
                 <div class="meetingform-item">
                     <label>Attendee:</label>
-                    <v-select id="oldAttendee" :options="users" attach chips label="username" v-model=old_attendee multiple></v-select>
+                    <v-select id="oldAttendee" :options="users" attach chips label="username" v-model=old_attendee multiple ></v-select>
                 </div>
 
                 <div class="meetingform-item">
@@ -3031,7 +3042,9 @@ catch (Exception $e) {
                                 $('#addmeeting-form').trigger("reset");
                                 $('#editmeeting-form').hide();
                                 $('#addmeeting-form').show();
-
+                                
+                                _app1.old_attendee = [];
+                        
 
                             }
                         }
@@ -3043,6 +3056,8 @@ catch (Exception $e) {
                         $('#editmeeting-form').trigger("reset");
                         $('#addmeeting-form').hide();
                         $('#editmeeting-form > fieldset').prop('disabled', true);
+                        $("#oldAttendee").addClass("select_disabled");
+                        
 
                         //取得點擊的meeting資訊並載入表單
                         eventObj = info.event;
@@ -3095,9 +3110,19 @@ catch (Exception $e) {
 
     $(document).on("click", "#btn_edit", function() {
 
+        if($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>")
+        {
+            app1.warning('Only meeting creator can execute this action!');
+            return;
+        }
+
         //表單變成可以修改
         $('#editmeeting-form > fieldset').prop('disabled', false);
         $("#oldCreator").prop('disabled', true);
+
+        $("#oldAttendee").removeClass("select_disabled");
+  
+        //$("oldAttendee").prop('disabled', false);
 
 
         //按鈕也會改變
@@ -3114,7 +3139,8 @@ catch (Exception $e) {
 
         //表單變成不可修改
         $('#editmeeting-form > fieldset').prop('disabled', true);
-
+        // $("oldAttendee").prop('disabled', true);
+        $("#oldAttendee").addClass("select_disabled");
 
         //修改到一半的內容也會放棄並載入原先未修改的內容
         var obj_meeting = eventObj.extendedProps.description;
@@ -3185,8 +3211,8 @@ catch (Exception $e) {
         // if 所有欄位都不果為空  且 結束時間須晚於開始時間，則做以下動作
         //表單變成不可修改
         $('#editmeeting-form > fieldset').prop('disabled', true);
-
-
+        //$("oldAttendee").prop('disabled', true);
+        $("#oldAttendee").addClass("select_disabled");
 
         //##修改後的內容 update到資料庫
         var id = eventObj.id;
@@ -3218,7 +3244,7 @@ catch (Exception $e) {
         form_Data.append('end_time', $("#oldDate").val() + "T" + $("#oldEndTime").val());
         form_Data.append('is_enabled', true);
    
-        let _func = app1;
+        var _func = app1;
 
         //DELETE table_name WHERE ID=id;
         $.ajax({
@@ -3232,7 +3258,7 @@ catch (Exception $e) {
             success: function(result) {
                 console.log(result);
            
-                _func.warning('Please !!! content!');
+                _func.notify_mail(id);
             },
 
             // show error message to user
@@ -3261,42 +3287,66 @@ catch (Exception $e) {
 
     $(document).on("click", "#btn_delete", function() {
 
-        $("#editmeeting-form").hide();
+        if($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>")
+        {
+            app1.warning('Only meeting creator can execute this action!');
+            return;
+        }
 
-        //##從資料庫中刪除該會議
-        var id = eventObj.id;
+        Swal.fire({
+            title: "Delete",
+            text: "Are you sure to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              
+                $("#editmeeting-form").hide();
 
-        token = localStorage.getItem('token');
-        var form_Data = new FormData();
-        form_Data.append('jwt', token);
-        form_Data.append('action', 7);
+                //##從資料庫中刪除該會議
+                var id = eventObj.id;
 
-        form_Data.append('id', id);
+                token = localStorage.getItem('token');
+                var form_Data = new FormData();
+                form_Data.append('jwt', token);
+                form_Data.append('action', 7);
 
-        //DELETE table_name WHERE ID=id;
-        $.ajax({
-            url: "api/work_calender_meetings",
-            type: "POST",
-            contentType: 'multipart/form-data',
-            processData: false,
-            contentType: false,
-            data: form_Data,
+                form_Data.append('id', id);
 
-            success: function(result) {
-                console.log(result);
-           
+                //DELETE table_name WHERE ID=id;
+                $.ajax({
+                    url: "api/work_calender_meetings",
+                    type: "POST",
+                    contentType: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    data: form_Data,
 
-            },
+                    success: function(result) {
+                        console.log(result);
+                
 
-            // show error message to user
-            error: function(xhr, resp, text) {
+                    },
 
+                    // show error message to user
+                    error: function(xhr, resp, text) {
+
+                    }
+                });
+
+
+                //從日曆中刪除該會議
+                eventObj.remove();
+              
+            } else {
+          
             }
-        });
+          });
 
-
-        //從日曆中刪除該會議
-        eventObj.remove();
+        
 
     });
 
@@ -3357,6 +3407,7 @@ catch (Exception $e) {
             start: $("#newDate").val() + "T" + $("#newStartTime").val(),
             end: $("#newDate").val() + "T" + $("#newEndTime").val(),
             content: $("#newContent").val(),
+            items:app1.attendee,
             //creator: "創建人的系統名字" + " " + "按下Add按鈕的日期時間(小時:分即可)"
             creator: "<?php echo $GLOBALS['username'] ?>" + " " + moment().format('YYYY/MM/DD HH:mm')
         };
