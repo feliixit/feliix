@@ -2514,7 +2514,7 @@ catch (Exception $e) {
                         <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
                         <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
                         <b>[Task] {{ receive_record.title }}</b>
-                        <a class="btn small blue right" id="btn_arrange">Arrange Meeting</a>
+                        <!-- <a class="btn small blue right" id="btn_arrange">Arrange Meeting</a> -->
                     </div>
                     <div class="teskbox dialogclear" style="margin-top:-2px !important">
                         <div class="tablebox m01">
@@ -2923,6 +2923,7 @@ catch (Exception $e) {
 
 <script>
     var eventObj;
+
     $(document).on("click", "#btn_arrange", function() {
 
 
@@ -2957,7 +2958,7 @@ catch (Exception $e) {
       color: 'lightBlue'
     }; */
 
-
+        let _app1 = app1;
         let event_array = [];
         /* 會議加入array的格式如下： */
         var token = localStorage.getItem('token');
@@ -2966,8 +2967,6 @@ catch (Exception $e) {
         var form_Data = new FormData();
         form_Data.append('jwt', token);
         form_Data.append('action', 1);
-
-        let _app1 = app1;
 
         $.ajax({
             url: "api/work_calender_meetings",
@@ -3139,16 +3138,61 @@ catch (Exception $e) {
 
         //##任一欄位如果為空則提示欄位不得為空
         //結束時間須晚於開始時間
+        let start = moment($("#oldDate").val() + " " + $("#oldStartTime").val(), "YYYY/MM/DD HH:mm");
+        let end = moment($("#oldDate").val() + " " + $("#oldEndTime").val(), "YYYY/MM/DD HH:mm");
+
+        var isafter = moment(end).isAfter(start);
+
+        if (isafter !== true) {
+            app1.warning('Start time must less than End time!');
+            return;
+        }
+
+        if ($("#oldDate").val() === '') {
+            app1.warning('Please select Date!');
+            return;
+        }
+
+        if ($("#oldEndTime").val() === '') {
+            app1.warning('Please select End time!');
+            return;
+        }
+
+        if ($("#oldStartTime").val() === '') {
+            app1.warning('Please select Start time!');
+            return;
+        }
+
+        if ($("#oldSubject").val() === '') {
+            app1.warning('Please enter subject!');
+            return;
+        }
+
+        var names = app1.old_attendee.map(function(item) {
+            return item['username'];
+        });
+
+        if (names.toString().trim() === '') {
+            app1.warning('Please select attendee!');
+            return;
+        }
+
+        if ($("#oldContent").val().trim() === '') {
+            app1.warning('Please enter content!');
+            return;
+        }
 
         // if 所有欄位都不果為空  且 結束時間須晚於開始時間，則做以下動作
         //表單變成不可修改
         $('#editmeeting-form > fieldset').prop('disabled', true);
 
+
+
         //##修改後的內容 update到資料庫
         var id = eventObj.id;
         var obj_meeting = {
             title: $("#oldSubject").val().trim(),
-            attendee: "select多選的參與人系統名字",
+            attendee: names.toString(),
             start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
             end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
             content: $("#oldContent").val(),
@@ -3160,6 +3204,42 @@ catch (Exception $e) {
         //##利用 id變數到資料庫中update裡面舊的obj_meeting
         // UPDATE table_name  SET meeting_data = obj_meeting WHERE ID = id;
 
+        token = localStorage.getItem('token');
+        var form_Data = new FormData();
+      
+        form_Data.append('action', 3);
+
+        form_Data.append('id', id);
+        form_Data.append('jwt', token);
+        form_Data.append('subject', $("#oldSubject").val().trim());
+        form_Data.append('message', $("#oldContent").val());
+        form_Data.append('attendee', names.toString());
+        form_Data.append('start_time', $("#oldDate").val() + "T" + $("#oldStartTime").val());
+        form_Data.append('end_time', $("#oldDate").val() + "T" + $("#oldEndTime").val());
+        form_Data.append('is_enabled', true);
+   
+        let _func = app1;
+
+        //DELETE table_name WHERE ID=id;
+        $.ajax({
+            url: "api/work_calender_meetings",
+            type: "POST",
+            contentType: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            data: form_Data,
+
+            success: function(result) {
+                console.log(result);
+           
+                _func.warning('Please !!! content!');
+            },
+
+            // show error message to user
+            error: function(xhr, resp, text) {
+
+            }
+        });
 
         //##寄送通知信件給會議參與者,告知修改後訊息
 
@@ -3185,7 +3265,34 @@ catch (Exception $e) {
 
         //##從資料庫中刪除該會議
         var id = eventObj.id;
+
+        token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        form_Data.append('jwt', token);
+        form_Data.append('action', 7);
+
+        form_Data.append('id', id);
+
         //DELETE table_name WHERE ID=id;
+        $.ajax({
+            url: "api/work_calender_meetings",
+            type: "POST",
+            contentType: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            data: form_Data,
+
+            success: function(result) {
+                console.log(result);
+           
+
+            },
+
+            // show error message to user
+            error: function(xhr, resp, text) {
+
+            }
+        });
 
 
         //從日曆中刪除該會議
