@@ -2318,7 +2318,7 @@ var app1 = new Vue({
                       //_this.items = response.data
                       //console.log(_this.items)
                       ret = response.data[0];
-                      notify_mail(ret);
+                      notify_mail(ret, 1);
                       return ret;
                       
                   })
@@ -2386,10 +2386,11 @@ var app1 = new Vue({
                // this.reload();
     },
 
-    notify_mail(batch_id){
+    notify_mail(batch_id, type){
       var form_Data = new FormData();
 
       form_Data.append('bid', batch_id);
+      form_Data.append('type', type);
       
       const token = sessionStorage.getItem('token');
 
@@ -2418,6 +2419,7 @@ var app1 = new Vue({
     var form_Data = new FormData();
     var ret = 0;
     let _this = this;
+    let _id = id;
             form_Data.append('jwt', token);
             form_Data.append('id', id);
          
@@ -2437,6 +2439,8 @@ var app1 = new Vue({
                     //_this.items = response.data
                     //console.log(_this.items)
                     ret = response.data[0];
+
+                    notify_mail(_id, 3);
 
                     return ret;
                     

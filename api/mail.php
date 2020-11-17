@@ -302,13 +302,132 @@ function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee,
     $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
     $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
-    $mail->Subject = "Subject: " . $subject . " for Meeting submitted by " . $creator;
+    $mail->Subject = "Notification: New Meeting from " . $creator;
     $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>" . $creator . " created a meeting. Following are the details:</p>";
+    $content = $content . "<p>Subject:" . $subject . "</p>";
     $content = $content . "<p>Creator:" . $creator . "</p>";
     $content = $content . "<p>Attendee:" . $attendee . "</p>";
-    $content = $content . "<p>Start Time:" . $start_time . "</p>";
-    $content = $content . "<p>End Time:" . $end_time . "</p>";
-    $content = $content . "<p>Detail:" . $detail . "</p>";
+    $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Content:" . $detail . "</p>";
+    /*
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Checked:" . $status . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+    */
+
+    $content = $content . "<p> </p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function send_meeting_modified_mail($name, $email1, $subject, $creator, $attendee, $start_time, $end_time, $detail)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress($email1, $name);
+
+    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
+    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Notification: Meeting Info Changed by " . $creator;
+    $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>" . $creator . " changed the original info of the meeting. Following are the details after change:</p>";
+    $content = $content . "<p>Subject:" . $subject . "</p>";
+    $content = $content . "<p>Creator:" . $creator . "</p>";
+    $content = $content . "<p>Attendee:" . $attendee . "</p>";
+    $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Content:" . $detail . "</p>";
+    /*
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Checked:" . $status . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+    */
+
+    $content = $content . "<p> </p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee, $start_time, $end_time, $detail)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress($email1, $name);
+
+    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
+    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Notification: Meeting Deleted by " . $creator;
+    $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>" . $creator . " deleted the meeting. Following are the details before deletion:</p>";
+    $content = $content . "<p>Subject:" . $subject . "</p>";
+    $content = $content . "<p>Creator:" . $creator . "</p>";
+    $content = $content . "<p>Attendee:" . $attendee . "</p>";
+    $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Content:" . $detail . "</p>";
     /*
     $content = $content . "<p>Project Name:" . $projectname . "</p>";
     $content = $content . "<p>Submission Time:" . $subtime . "</p>";

@@ -3044,7 +3044,7 @@ catch (Exception $e) {
                                 $('#addmeeting-form').show();
                                 
                                 _app1.old_attendee = [];
-                        
+                                _app1.attendee = [];
 
                             }
                         }
@@ -3258,7 +3258,7 @@ catch (Exception $e) {
             success: function(result) {
                 console.log(result);
            
-                _func.notify_mail(id);
+                _func.notify_mail(id, 2);
             },
 
             // show error message to user

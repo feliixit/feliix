@@ -55,6 +55,7 @@ else
       switch ($method) {
           case 'POST':
             $bid = (isset($_POST['bid']) ?  $_POST['bid'] : 0);
+            $type = (isset($_POST['type']) ?  $_POST['type'] : "1");
 
             $query = "SELECT * from work_calendar_meetings where id = ".$bid;
 
@@ -84,22 +85,34 @@ else
                 $created_by = $row['created_by'];
              
                 if(!empty($attendee ))
-                    $items = GetUserInfo($row['attendee'], $db);
+                    $items = GetUserInfo($row['attendee'], $created_by, $db);
             }
 
             foreach ($items as $item)
             {
-                send_meeting_notify_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message);
+                switch ($type){
+                case "1":
+                    send_meeting_notify_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message);
+                break;
+                case "2":
+                    send_meeting_modified_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message);
+                break;
+                case "3":
+                    send_meeting_delete_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message);
+                break;
+                }
             }
 
             break;
           }
         
 
-function GetUserInfo($users, $db)
+function GetUserInfo($users, $created_by, $db)
 {
     $psq = "";
     $a_users = explode(",", $users);
+
+    array_push($a_users, $created_by);
 
     foreach ($a_users as $value) {
         $psq .= "'" . $value . "',";
