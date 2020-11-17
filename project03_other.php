@@ -3067,7 +3067,7 @@ catch (Exception $e) {
                             return;
 
                         $("#oldSubject").val(obj_meeting.title);
-                        $("#oldCreator").val(info.event.extendedProps.description.creator.split(/[\s ]+/)[0]);
+                        $("#oldCreator").val(info.event.extendedProps.description.creator.substring(0, info.event.extendedProps.description.creator.length - 17));
                         $("#oldAttendee").val(info.event.extendedProps.description.items);
                         _app1.old_attendee = info.event.extendedProps.description.items;
                         $("#oldDate").val(obj_meeting.start.split("T")[0]);
@@ -3327,8 +3327,8 @@ catch (Exception $e) {
 
                     success: function(result) {
                         console.log(result);
-                
-
+                        
+                        app1.notify_mail(id, 3);
                     },
 
                     // show error message to user

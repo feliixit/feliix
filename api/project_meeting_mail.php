@@ -81,7 +81,9 @@ else
                 $message = $row['message'];
                 $attendee = $row['attendee'];
                 $start_time = $row['start_time'];
+                $start_time = substr($start_time, 0, -3);
                 $end_time = $row['end_time'];
+                $end_time = substr($end_time, 11, -3);
                 $created_by = $row['created_by'];
              
                 if(!empty($attendee ))

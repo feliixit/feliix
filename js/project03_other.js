@@ -2318,7 +2318,7 @@ var app1 = new Vue({
                       //_this.items = response.data
                       //console.log(_this.items)
                       ret = response.data[0];
-                      notify_mail(ret, 1);
+                      _this.notify_mail(ret, 1);
                       return ret;
                       
                   })
@@ -2440,7 +2440,7 @@ var app1 = new Vue({
                     //console.log(_this.items)
                     ret = response.data[0];
 
-                    notify_mail(_id, 3);
+                    _this.notify_mail(_id, 3);
 
                     return ret;
                     
