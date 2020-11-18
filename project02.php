@@ -54,6 +54,7 @@ $(function(){
 
     dialogshow($('.list_function a.add'),$('.list_function .dialog.d-add'));
     dialogshow($('.list_function a.edit'),$('.list_function .dialog.d-edit'));
+    dialogshow($('.list_function a.file'),$('.list_function .dialog.d-file'));
     dialogshow($('.list_function a.fn1'),$('.list_function .dialog.fn1'));
     dialogshow($('.list_function a.fn2'),$('.list_function .dialog.fn2'));
     dialogshow($('.list_function a.fn3'),$('.list_function .dialog.fn3'));
@@ -197,6 +198,61 @@ $(function(){
                         </div>
                     </div>
                 </div>
+
+
+                <div class="popupblock"><a id="f_stage_fn1" class="file"></a>
+                    <div id="file_stage_dialog" class="dialog d-file"><h6>File Folder:</h6>
+                        <div class="formbox">
+                            <dl>
+                                <dt> </dt>
+                                <dd><input type="text" placeholder="Search for..."></dd>
+
+                                <div class="file_div">
+                                    <table id="showFile" class="file_table">
+                                        <thead>
+                                        <tr>
+                                            <th>File Name</th>
+                                            <th>Uploaded by</th>
+                                            <th>Time</th>
+                                            <th>Webpage</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody id="contact">
+                                        <tr>
+                                            <td><a href="#">2018-04-24_133451.jpg</a></td>
+                                            <td>Aries Anthony San Martin</td>
+                                            <td>2020-09-08 10:20:47</td>
+                                            <td><a href="#">Main Page</a>
+                                        </tr>
+
+                                        <tr>
+                                            <td><a href="#">2018-04-24_133451.jpg</a></td>
+                                            <td>Aries Anthony San Martin</td>
+                                            <td>2020-09-08 10:20:47</td>
+                                            <td><a href="#">Client</a>
+                                        </tr>
+
+                                        <tr>
+                                            <td><a href="#">2018-04-24_133451.jpg</a></td>
+                                            <td>Aries Anthony San Martin</td>
+                                            <td>2020-09-08 10:20:47</td>
+                                            <td><a href="#">Client Feedback / After Service</a>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            <div class="btnbox"><a class="btn small">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                
                 <!-- tag -->
                 <b class="tag focus">PROJECT</b>
                 <b class="tag">UNDP / Ranee</b>
@@ -783,5 +839,43 @@ $(function(){
 .file-list img.upload-success {
   margin-left: 0;
 }
+
+.list_function.main a.file {
+        width: 30px; 
+        height: 30px; 
+        background-image: url(images/ui/btn_file_blue.svg);
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .list_function.main a.file:hover,
+    .list_function.main a.file.focus {
+        background-image: url(images/ui/btn_file_green.svg);
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .dialog.d-file{
+        min-width: 600px;
+    }
+
+    .file_div {
+        overflow-y: auto;
+        max-height: 450px;
+    }
+
+    .file_table {
+        border: 1px solid black;
+    }
+
+    .file_table th, .file_table td {
+        border: 1px solid black;
+        text-align: center;
+        color: black;
+        font-size: 13px;
+        padding: 5px;
+        width: 25%;
+    }
+
 </style>
 </html>
