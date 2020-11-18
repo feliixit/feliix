@@ -126,7 +126,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 
     $content = $content . "<p>Project Name:" . $projectname . "</p>";
     $content = $content . "<p>Submission Time:" . $subtime . "</p>";
-    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Submitter:" . $name . "</p>";
     $content = $content . "<p>Remark:" . $remark . "</p>";
 
 

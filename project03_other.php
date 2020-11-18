@@ -3002,7 +3002,7 @@ catch (Exception $e) {
                             start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
                             end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
                             content: obj[i].message.trim(),	
-                            creator: obj[i].created_by.trim() + " " +  moment(obj[i].created_at).format('YYYY-MM-DD HH:mm'),
+                            creator: obj[i].created_by.trim(),
                         };
 
                         var obj_meeting = {
@@ -3067,7 +3067,7 @@ catch (Exception $e) {
                             return;
 
                         $("#oldSubject").val(obj_meeting.title);
-                        $("#oldCreator").val(info.event.extendedProps.description.creator.substring(0, info.event.extendedProps.description.creator.length - 17));
+                        $("#oldCreator").val(info.event.extendedProps.description.creator);
                         $("#oldAttendee").val(info.event.extendedProps.description.items);
                         _app1.old_attendee = info.event.extendedProps.description.items;
                         $("#oldDate").val(obj_meeting.start.split("T")[0]);
@@ -3218,12 +3218,13 @@ catch (Exception $e) {
         var id = eventObj.id;
         var obj_meeting = {
             title: $("#oldSubject").val().trim(),
-            attendee: names.toString(),
+            attendee: names.toString().trim(),
+            items: app1.old_attendee,
             start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
             end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
             content: $("#oldContent").val(),
             //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
-            creator: "<?php echo $GLOBALS['username'] ?>" + moment().format('YYYY/MM/DD HH:mm')
+            creator: "<?php echo $GLOBALS['username'] ?>"
         };
         $("#oldCreator").val(obj_meeting.creator);
 
@@ -3403,13 +3404,14 @@ catch (Exception $e) {
         // if 所有欄位都不果為空  且 結束時間須晚於開始時間，則做以下動作
         var obj_meeting = {
             title: $("#newSubject").val().trim(),
-            attendee: names.toString(),
+            attendee: names.toString().trim(),
+            items: app1.attendee,
             start: $("#newDate").val() + "T" + $("#newStartTime").val(),
             end: $("#newDate").val() + "T" + $("#newEndTime").val(),
             content: $("#newContent").val(),
             items:app1.attendee,
             //creator: "創建人的系統名字" + " " + "按下Add按鈕的日期時間(小時:分即可)"
-            creator: "<?php echo $GLOBALS['username'] ?>" + " " + moment().format('YYYY/MM/DD HH:mm')
+            creator: "<?php echo $GLOBALS['username'] ?>"
         };
 
         var id = app1.addMeetings($("#newSubject").val().trim(),
