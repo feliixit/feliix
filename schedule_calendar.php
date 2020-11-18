@@ -14,7 +14,7 @@
 
 
     <link href='https://unpkg.com/fullcalendar@5.1.0/main.min.css' rel='stylesheet'/>
-    <script src='https://unpkg.com/fullcalendar@5.1.0/main.min.js'></script>
+    
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
@@ -116,23 +116,28 @@
 
 <div id='calendar'></div>
 
-
-
+<div id='msg'>
 <div class="messageboard" id="messageboard">
     <h3>Message Board</h3>
-
+	<div v-for="(msg, i) in messages" class="message__item">
+	<div>
+	<input v-if="msg.id == edit" class="add__input" v-model="msg.message" maxlength="100">
+	<div v-else class="message__item__input">{{ msg.message }} by {{ msg.created_by }}</div>
+	</div>
+	<div v-if="msg.created_by == user" style="align-items:end; display: flex;">
+	<i class="fas fa-pencil-alt" @click="edit_msg(msg.id, msg.message)"style="padding-right: 10%;"></i>
+	<i class="fas fa-trash-alt" @click="deleteMessages(msg.id)"></i>
+	</div>
+	</div>
 </div>
 
 
 <div class="add">
-    <input class="add__input" type="text" placeholder="Type Message Here" maxlength="100">
-    <div><i class="fas fa-plus-circle" id="add_message"></i></div>
+    <input class="add__input" type="text" placeholder="Type Message Here" maxlength="100" v-model="txt">
+    <div><i class="fas fa-plus-circle" @click="addMessages(txt)" id="add_message"></i></div>
 </div>
 
-
-
-
-
+</div>
 
 
 
@@ -572,8 +577,9 @@
 
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
-<script defer src="js/axios.min.js"></script> 
-<script defer src="js/work_calender.js?v=202011"></script>
-</body>
-
+<script defer src="js/axios.min.js"></script>
+<script defer src="js/work_calender.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script src='https://unpkg.com/fullcalendar@5.1.0/main.min.js'></script>
+<script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>
 </html>

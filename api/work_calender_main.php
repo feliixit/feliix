@@ -11,6 +11,7 @@ $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : '');
 $action = (isset($_POST['action']) ?  $_POST['action'] : 4);
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $title = (isset($_POST['title']) ?  $_POST['title']: '');
+$all_day = (isset($_POST['all_day']) && ($_POST['all_day'] === 'true')? 1 : 0);
 $start_time = (isset($_POST['start_time']) ?  $_POST['start_time'] : '');
 $end_time = (isset($_POST['end_time']) ?  $_POST['end_time'] : '');
 $color = (isset($_POST['color']) ?  $_POST['color'] : '');
@@ -21,7 +22,7 @@ $project_in_charge = (isset($_POST['project_in_charge']) ?  $_POST['project_in_c
 $installer_needed = (isset($_POST['installer_needed']) ?  $_POST['installer_needed'] : '');
 $installer_needed_location = (isset($_POST['installer_needed_location']) ?  $_POST['installer_needed_location'] : '');
 $things_to_bring = (isset($_POST['things_to_bring']) ?  $_POST['things_to_bring'] : '');
-$things_to_bring_location = (isset($_POST['things_to_bring_location']) ?  (int)$_POST['things_to_bring_location'] : '');
+$things_to_bring_location = (isset($_POST['things_to_bring_location']) ?  $_POST['things_to_bring_location'] : '');
 $products_to_bring = (isset($_POST['products_to_bring']) ?  $_POST['products_to_bring'] : '');
 $products_to_bring_files = (isset($_POST['products_to_bring_files']) ?  $_POST['products_to_bring_files'] : '');
 $service = (isset($_POST['service']) ?  $_POST['service'] : '');
@@ -93,6 +94,7 @@ else
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
 
             $workCalenderMain->title = $title;
+			$workCalenderMain->all_day = $all_day;
             $workCalenderMain->start_time = $start_time;
             $workCalenderMain->end_time = $end_time;
             $workCalenderMain->color = $color;
@@ -136,6 +138,7 @@ else
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
             $workCalenderMain->id = $id;
             $workCalenderMain->title = $title;
+			$workCalenderMain->all_day = $all_day;
             $workCalenderMain->start_time = $start_time;
             $workCalenderMain->end_time = $end_time;
             $workCalenderMain->color = $color;
@@ -170,39 +173,41 @@ else
 
             echo json_encode(array("message" => "Access denied."));
         }
-    }else if($action == 4) {//未處理
-        //select by date
-        try{
-            $query = "SELECT * from work_calendar_main where is_enabled = true ";
-            if($start_date!='') {
-                $query = $query . " and paid_date >= '$start_date' ";
-            }
-
-            if($end_date!='') {
-                $query = $query . " and paid_date <= '$end_date' ";
-            }
-            
-            if($category!='') {
-                $query = $query . " and category <= '$category' ";
-            }
-            
-            if($sub_category!='') {
-                $query = $query . " and sub_category <= '$sub_category' ";
-            }
-            $query = $query . " order by created_at desc ";
-            $stmt = $db->prepare( $query );
-            $stmt->execute();
-            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $merged_results[] = $row;
-            }
-            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
-        }
-        catch(Exception $e){
-            http_response_code(401);
-
-            echo json_encode(array("message" => ".$e."));
-        }
-    }else if($action == 5) {
+    }
+	//else if($action == 4) {//未處理
+    //    //select by date
+    //    try{
+    //        $query = "SELECT * from work_calendar_main where is_enabled = true ";
+    //        if($start_date!='') {
+    //            $query = $query . " and paid_date >= '$start_date' ";
+    //        }
+	//
+    //        if($end_date!='') {
+    //            $query = $query . " and paid_date <= '$end_date' ";
+    //        }
+    //        
+    //        if($category!='') {
+    //            $query = $query . " and category <= '$category' ";
+    //        }
+    //        
+    //        if($sub_category!='') {
+    //            $query = $query . " and sub_category <= '$sub_category' ";
+    //        }
+    //        $query = $query . " order by created_at desc ";
+    //        $stmt = $db->prepare( $query );
+    //        $stmt->execute();
+    //        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    //            $merged_results[] = $row;
+    //        }
+    //        echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+    //    }
+    //    catch(Exception $e){
+    //        http_response_code(401);
+	//
+    //        echo json_encode(array("message" => ".$e."));
+    //    }
+    //}
+	else if($action == 5) {
         //get members
         try{
             $query = "SELECT * from user";

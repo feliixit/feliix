@@ -8,6 +8,7 @@ class WorkCalenderMain
     // object properties
     public $id;
     public $title;
+	public $all_day;
     public $start_time;
     public $end_time;
     public $color;
@@ -42,7 +43,7 @@ class WorkCalenderMain
     function update()
     {
         $query = "UPDATE " . $this->table_name . "
-                set title = :title, start_time = :start_time, 
+                set title = :title, all_day = :all_day, start_time = :start_time, 
                 end_time = :end_time, color = :color, 
                 text_color = :text_color, project = :project , sales_executive = :sales_executive, 
                 project_in_charge = :project_in_charge, installer_needed = :installer_needed, installer_needed_location = :installer_needed_location, 
@@ -58,6 +59,7 @@ class WorkCalenderMain
         // bind the values
         $this->id = (int)$this->id;
         $this->title = htmlspecialchars(strip_tags($this->title));
+		$allday = filter_var($this->all_day,FILTER_VALIDATE_INT);
         $this->start_time = htmlspecialchars(strip_tags($this->start_time));
         $this->end_time = htmlspecialchars(strip_tags($this->end_time));
         $this->color = htmlspecialchars(strip_tags($this->color));
@@ -85,6 +87,7 @@ class WorkCalenderMain
         // bind the values
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':title', $this->title);
+		$stmt->bindParam(':all_day', $allday);
         $stmt->bindParam(':start_time', $this->start_time);
         $stmt->bindParam(':end_time', $this->end_time);
         $stmt->bindParam(':color', $this->color);
@@ -135,8 +138,8 @@ class WorkCalenderMain
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`title`,`start_time`, `end_time`, `color`, `text_color`, `project`, `sales_executive`, `project_in_charge`, `installer_needed`, `installer_needed_location`, `things_to_bring`,`things_to_bring_location`,`products_to_bring`,`products_to_bring_files`,`service`,`driver`,`back_up_driver`,`photoshoot_request`,`notes`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:title,:start_time, :end_time, :color, :text_color, :project, :sales_executive, :project_in_charge, :installer_needed, :installer_needed_location, :things_to_bring, :things_to_bring_location, :products_to_bring, :products_to_bring_files, :service, :driver, :back_up_driver, :photoshoot_request, :notes, 1, now(),:created_by)";
+                (`title`, `all_day`,`start_time`, `end_time`, `color`, `text_color`, `project`, `sales_executive`, `project_in_charge`, `installer_needed`, `installer_needed_location`, `things_to_bring`,`things_to_bring_location`,`products_to_bring`,`products_to_bring_files`,`service`,`driver`,`back_up_driver`,`photoshoot_request`,`notes`,`is_enabled`,`created_at`,`created_by`) 
+                VALUES (:title, :all_day,:start_time, :end_time, :color, :text_color, :project, :sales_executive, :project_in_charge, :installer_needed, :installer_needed_location, :things_to_bring, :things_to_bring_location, :products_to_bring, :products_to_bring_files, :service, :driver, :back_up_driver, :photoshoot_request, :notes, 1, now(),:created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -144,6 +147,7 @@ class WorkCalenderMain
             // sanitize
 
             $this->title = htmlspecialchars(strip_tags($this->title));
+			$allday = filter_var($this->all_day,FILTER_VALIDATE_INT);
             $this->start_time = htmlspecialchars(strip_tags($this->start_time));
             $this->end_time = htmlspecialchars(strip_tags($this->end_time));
             $this->color = htmlspecialchars(strip_tags($this->color));
@@ -170,6 +174,7 @@ class WorkCalenderMain
            
             // bind the values
             $stmt->bindParam(':title', $this->title);
+			$stmt->bindParam(':all_day', $allday);
             $stmt->bindParam(':start_time', $this->start_time);
             $stmt->bindParam(':end_time', $this->end_time);
             $stmt->bindParam(':color', $this->color);
@@ -263,7 +268,7 @@ class WorkCalenderDetails
 
     // object properties
     public $id;
-    public $work_calendar_main_id;
+    public $main_id;
     public $location;
     public $agenda;
     public $appoint_time;
@@ -336,15 +341,15 @@ class WorkCalenderDetails
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`work_calendar_main_id`,`location`, `agenda`, `appoint_time`, `end_time`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:work_calendar_main_id,:location, :agenda, :appoint_time, :end_time, 1, now(),:created_by)";
+                (`main_id`,`location`, `agenda`, `appoint_time`, `end_time`,`is_enabled`,`created_at`,`created_by`) 
+                VALUES (:main_id,:location, :agenda, :appoint_time, :end_time, 1, now(),:created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
             // sanitize
 
-            $this->work_calendar_main_id = htmlspecialchars(strip_tags($this->work_calendar_main_id));
+            $this->main_id = htmlspecialchars(strip_tags($this->main_id));
             $this->location = htmlspecialchars(strip_tags($this->location));
             $this->agenda = htmlspecialchars(strip_tags($this->agenda));
             $this->appoint_time = htmlspecialchars(strip_tags($this->appoint_time));
@@ -354,7 +359,7 @@ class WorkCalenderDetails
 
            
             // bind the values
-            $stmt->bindParam(':work_calendar_main_id', $this->work_calendar_main_id);
+            $stmt->bindParam(':main_id', $this->main_id);
             $stmt->bindParam(':location', $this->location);
             $stmt->bindParam(':agenda', $this->agenda);
             $stmt->bindParam(':appoint_time', $this->appoint_time);
@@ -386,19 +391,19 @@ class WorkCalenderDetails
     function delete()
     {
         $query = "UPDATE " . $this->table_name . "
-                set is_enabled = 0, deleted_at = now(), deleted_by = :deleted_by where id = :id";
+                set is_enabled = 0, deleted_at = now(), deleted_by = :deleted_by where main_id = :main_id";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
         // bind the values
-        $this->id = (int)$this->id;
+        $this->main_id = (int)$this->main_id;
         $this->deleted_by = htmlspecialchars(strip_tags($this->deleted_by));
 
 
 
         // bind the values
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':main_id', $this->main_id);
 
         $stmt->bindParam(':deleted_by', $this->deleted_by);
 

@@ -10,7 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : '');
 $action = (isset($_POST['action']) ?  $_POST['action'] : 4);
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
-$work_calendar_main_id = (isset($_POST['work_calendar_main_id']) ?  $_POST['work_calendar_main_id'] : 0);
+$main_id = (isset($_POST['main_id']) ?  $_POST['main_id'] : 0);
 $location = (isset($_POST['location']) ?  $_POST['location'] : '');
 $agenda = (isset($_POST['agenda']) ?  $_POST['agenda'] : '');
 $appoint_time = (isset($_POST['appoint_time']) ?  $_POST['appoint_time'] : '');
@@ -72,7 +72,7 @@ else
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
 
-            $workCalenderDetails->work_calendar_main_id = $work_calendar_main_id;
+            $workCalenderDetails->main_id = $main_id;
             $workCalenderDetails->location = $location;
             $workCalenderDetails->agenda = $agenda;
             $workCalenderDetails->appoint_time = $appoint_time;
@@ -100,7 +100,7 @@ else
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
             $workCalenderDetails->id = $id;
-            $workCalenderDetails->work_calendar_main_id = $work_calendar_main_id;
+            $workCalenderDetails->main_id = $main_id;
             $workCalenderDetails->location = $location;
             $workCalenderDetails->agenda = $agenda;
             $workCalenderDetails->appoint_time = $appoint_time;
@@ -124,22 +124,10 @@ else
         //select by date
         try{
             $query = "SELECT * from work_calendar_details where is_enabled = true ";
-            if($start_date!='') {
-                $query = $query . " and paid_date >= '$start_date' ";
+            if($id!=0) {
+                $query = $query . " and main_id =" .$id;
             }
-
-            if($end_date!='') {
-                $query = $query . " and paid_date <= '$end_date' ";
-            }
-            
-            if($category!='') {
-                $query = $query . " and category <= '$category' ";
-            }
-            
-            if($sub_category!='') {
-                $query = $query . " and sub_category <= '$sub_category' ";
-            }
-            $query = $query . " order by created_at desc ";
+            $query = $query . " order by appoint_time asc ";
             $stmt = $db->prepare( $query );
             $stmt->execute();
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -191,7 +179,7 @@ else
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
-            $workCalenderDetails->id = $id;
+            $workCalenderDetails->main_id = $main_id;
             $workCalenderDetails->deleted_by = $deleted_by;
             $arr = $workCalenderDetails->delete();
 

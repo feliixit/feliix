@@ -933,3 +933,7 @@ CREATE TABLE IF NOT EXISTS `work_calendar_meetings` (
   
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+ALTER TABLE `work_calendar_main` ADD `all_day` BOOLEAN DEFAULT FALSE AFTER `title`
+ALTER TABLE `work_calendar_details` ADD `main_id` bigint(20) DEFAULT 0 AFTER `id`
