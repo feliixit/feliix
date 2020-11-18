@@ -15,7 +15,6 @@ var app = new Vue({
     piclatitude: 0,
     piclongitude: 0,
 
-
     file: '',
 
     isCameraOpen: false,
@@ -46,7 +45,6 @@ var app = new Vue({
   mounted(){
     this.getTimeNow();
     this.getToday();
-   
   },
 
   methods:{
@@ -117,7 +115,6 @@ var app = new Vue({
         return dd;
     },
 
-/*
     onChangeFileUpload() {
           const _this = this;
             this.file = this.$refs.file.files[0];
@@ -163,8 +160,6 @@ var app = new Vue({
                       _this.msg  = result;
                   });
         },
-*/
-
 
         validateForm() {
               if (this.type == "") 
@@ -203,8 +198,6 @@ var app = new Vue({
                   return false;
               } 
 */
-
-/*
               if ((this.piclatitude == 0 || this.piclongitude == 0) && !this.$refs.file == undefined) 
               {
                 Swal.fire({
@@ -216,8 +209,6 @@ var app = new Vue({
                   //$(window).scrollTop(0);
                   return false;
               } 
-*/
-
 
               if (this.showExtra && this.explanation == "")
               {
@@ -231,23 +222,6 @@ var app = new Vue({
                   return false;
               }
 
-              var file = "";
-
-              if(document.getElementById("base64image") !== null)
-                file =  document.getElementById("base64image").src;
-
-              if(this.showPhoto && file === "")
-              {
-                Swal.fire({
-                  text: 'Photo required',
-                  icon: 'error',
-                  confirmButtonText: 'OK'
-                })
-                  //this.err_msg = 'Location Photo required';
-                  //$(window).scrollTop(0);
-                  return false;
-              }
-/*
               if (this.showPhoto && !this.$refs.file.files[0])
               {
                 Swal.fire({
@@ -259,7 +233,7 @@ var app = new Vue({
                   //$(window).scrollTop(0);
                   return false;
               }
-*/
+
             return true;
           
         },
@@ -301,36 +275,6 @@ var app = new Vue({
 
           this.submit = true;
 
-          var file;
-          var ptime;
-
-          if(document.getElementById("base64image") !== null)
-            file =  document.getElementById("base64image").src;
-          else
-            file = "";
-
-          if(!this.showPhoto)
-            file = "";
-
-          if(document.getElementById('photo_time') !== null)
-          {
-            ptime = document.getElementById('photo_time').value;
-            ptime = ptime.split('/').join('');
-            ptime = ptime.split(':').join('');
-          }
-          else
-            ptime = this.today.split('/').join('') + ' ' + this.time.split(':').join('');
-
-          if(file !== "" && ptime == "")
-          {
-            Swal.fire({
-              text: "Can't get photo time, please take photo again.",
-              icon: 'warning',
-              confirmButtonText: 'OK'
-            });
-            return;
-          }
-
           var token = localStorage.getItem('token');
           var form_Data = new FormData();
           let _this = this;
@@ -342,20 +286,20 @@ var app = new Vue({
           form_Data.append('explan', this.explanation);
           form_Data.append('remark', this.remark);
           form_Data.append('time', this.time);
-          form_Data.append('base64image', file);
+          form_Data.append('file', this.file);
           form_Data.append('latitude', this.latitude);
           form_Data.append('longitude', this.longitude);
-          form_Data.append('piclatitude', this.latitude);
-          form_Data.append('piclongitude', this.longitude);
-          form_Data.append('photo_time', ptime);
-          form_Data.append('photo_gps', this.latitude+','+this.longitude);
+          form_Data.append('piclatitude', this.piclatitude);
+          form_Data.append('piclongitude', this.piclongitude);
+          form_Data.append('photo_time', this.photo_time.split(':').join(''));
+          form_Data.append('photo_gps', this.photo_gps);
 
           axios({
                   method: 'post',
                   headers: {
                       'Content-Type': 'multipart/form-data'
                   },
-                  url: 'api/on_duty01',
+                  url: 'api/on_duty_original',
                   data: form_Data
               })
               .then(function(response) {
@@ -394,7 +338,6 @@ var app = new Vue({
 
             this.getLocation();
             this.getToday();
-            this.getTimeNow();
             
         },
  

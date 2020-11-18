@@ -16,6 +16,7 @@ use \Firebase\JWT\JWT;
 $access1 = false;
 $access2 = false;
 $access3 = false;
+$pic_url = "man6.jpg";
 
 try {
         // decode jwt
@@ -50,7 +51,8 @@ try {
 
         $pic_url = $decoded->data->pic_url;
 
-
+        if($pic_url == "")
+            $pic_url = "man6.jpg";
         //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
         //    header( 'location:index.php' );
     }

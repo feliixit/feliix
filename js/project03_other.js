@@ -2282,11 +2282,11 @@ var app1 = new Vue({
         },
 
     warning(txt) {
-      Swal.fire({
-        text: JSON.stringify(txt),
-        icon: 'error',
-        confirmButtonText: 'OK'
-    })
+        Swal.fire({
+          text: JSON.stringify(txt),
+          icon: 'error',
+          confirmButtonText: 'OK'
+      })
     },
 
     addMeetings:function(subject, message, attendee, start_time, end_time, username){
@@ -2318,7 +2318,7 @@ var app1 = new Vue({
                       //_this.items = response.data
                       //console.log(_this.items)
                       ret = response.data[0];
-
+                      _this.notify_mail(ret, 1);
                       return ret;
                       
                   })
@@ -2336,5 +2336,129 @@ var app1 = new Vue({
                  // this.reload();
       },
 
+  
+
+  editMeetings:function(id, subject, message, attendee, start_time, end_time, username){
+    this.action = 3;//update
+    var token = localStorage.getItem('token');
+    var form_Data = new FormData();
+    var ret = 0;
+    let _this = this;
+            form_Data.append('jwt', token);
+            form_Data.append('id', id);
+            form_Data.append('subject', subject);
+            form_Data.append('message', message);
+            form_Data.append('attendee', attendee);
+            form_Data.append('start_time', start_time);
+            form_Data.append('end_time', end_time);
+            form_Data.append('is_enabled', true);
+            form_Data.append('action', this.action);
+            form_Data.append('updated_by', username);
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                url: 'api/work_calender_meetings',
+                data: form_Data
+            })
+                .then(function (response) {
+                    //this.addDetails(response.data[0]);
+                    //handle success
+                    //_this.items = response.data
+                    //console.log(_this.items)
+                    ret = response.data[0];
+
+                    return ret;
+                    
+                })
+                .catch(function (response) {
+                    //handle error
+                    Swal.fire({
+                        text: JSON.stringify(response),
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    })
+
+                    return 0;
+                });
+                //this.upload();
+               // this.reload();
+    },
+
+    notify_mail(batch_id, type){
+      var form_Data = new FormData();
+
+      form_Data.append('bid', batch_id);
+      form_Data.append('type', type);
+      
+      const token = sessionStorage.getItem('token');
+
+      axios({
+              method: 'post',
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${token}`
+              },
+              url: 'api/project_meeting_mail',
+              data: form_Data
+          })
+          .then(function(response) {
+              //handle success
+
+          })
+          .catch(function(response) {
+              //handle error
+              console.log(response)
+          });
+      },
+
+  delMeetings:function(id){
+    this.action = 7;//add
+    var token = localStorage.getItem('token');
+    var form_Data = new FormData();
+    var ret = 0;
+    let _this = this;
+    let _id = id;
+            form_Data.append('jwt', token);
+            form_Data.append('id', id);
+         
+            form_Data.append('action', this.action);
+            form_Data.append('deleted_by', username);
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                url: 'api/work_calender_meetings',
+                data: form_Data
+            })
+                .then(function (response) {
+                    //this.addDetails(response.data[0]);
+                    //handle success
+                    //_this.items = response.data
+                    //console.log(_this.items)
+                    ret = response.data[0];
+
+                    _this.notify_mail(_id, 3);
+
+                    return ret;
+                    
+                })
+                .catch(function (response) {
+                    //handle error
+                    Swal.fire({
+                        text: JSON.stringify(response),
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    })
+
+                    return 0;
+                });
+                //this.upload();
+               // this.reload();
+    },
+
   },
+
 });

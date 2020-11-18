@@ -21,14 +21,6 @@ $piclongitude = (isset($_POST['piclongitude']) ?  $_POST['piclongitude'] : 0.0);
 $photo_time = (isset($_POST['photo_time']) ?  $_POST['photo_time'] : '');
 $photo_gps = (isset($_POST['photo_gps']) ?  $_POST['photo_gps'] : '');
 
-$img = !empty($_POST['base64image']) ? $_POST['base64image'] : "";
-$img = str_replace('data:image/png;base64,', '', $img);
-$img = str_replace('data:image/jpeg;base64,', '', $img);
-$img = str_replace(' ', '+', $img);
-if($img != "")
-    $fileData = base64_decode($img);
-
-
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -67,20 +59,20 @@ else
 
 
         try {
-            if (isset($fileData)) {
+            if (isset($_FILES['file']['name'])) {
                 $conf = new Conf();
                 $key = "myKey";
                 $time = time();
                 $hash = hash_hmac('sha256', $time . rand(1, 65536), $key);
-                $ext = "jpg";
+                $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
                 $filename = $time . $hash . "." . $ext;
+                if (move_uploaded_file($_FILES["file"]["tmp_name"], $conf::$upload_path . $filename)) {
+                        $result = triphoto_getGPS($conf::$upload_path . $filename);
 
-                file_put_contents($conf::$upload_path . $filename, $fileData);
-
-                    $s_lat =  0.0;
-                    $s_lng =  0.0;
-                    $s_time = "";
-                
+                    $s_lat = (is_float($result['latitude']) ? $result['latitude'] : 0.0);
+                    $s_lng = (is_float($result['longitude']) ? $result['longitude'] : 0.0);
+                    $s_time = $result['time'];
+                }
 
                 compress_image($conf::$upload_path . $filename, $conf::$upload_path . $filename, 60);
             }
