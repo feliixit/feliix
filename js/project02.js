@@ -6,6 +6,8 @@ var app = new Vue({
     receive_stage_records: [],
     record: {},
 
+    
+
     project_comments: {},
     project_probs: {},
     project_action_detials: {},
@@ -107,6 +109,8 @@ var app = new Vue({
     ],
     perPage: 20,
 
+    file_management: [],
+
   },
 
   created () {
@@ -128,6 +132,7 @@ var app = new Vue({
         _this.getProjectProof(_this.project_id);
         _this.getProjectActionDetails(_this.project_id);
         _this.getUsers();
+        _this.getFileManagement(_this.project_id);
       });
     }
 
@@ -1678,7 +1683,32 @@ var app = new Vue({
                 });
         },
 
-
+        getFileManagement: function(keyword) {
+          let _this = this;
+    
+          if(keyword == 0)
+            return;
+    
+          const params = {
+                  pid : keyword,
+                };
+    
+              let token = localStorage.getItem('accessToken');
+        
+              axios
+                  .get('api/project_file_management', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                  .then(
+                  (res) => {
+                      _this.file_management = res.data;
+                  },
+                  (err) => {
+                      alert(err.response);
+                  },
+                  )
+                  .finally(() => {
+                      
+                  });
+          },
 
 
   }

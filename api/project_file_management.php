@@ -132,6 +132,7 @@ else
             $other_task_msg_reply_id = 0;
             $other_task_msg_reply_id_r = 0;
 
+            $merged_results = [];
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $project_id = $row['project_id'];
@@ -150,9 +151,45 @@ else
 
                 if($pac_id != null)
                 {
-                    if (!in_array(GetComment($pac_id, $db), $comment))
+                    if (!in_array($pac_id, $comment))
                     {
-                        $array[] = $value; 
+                        array_push($comment, $pac_id);
+                        $arr = GetComment($pac_id, $db, $pid);
+                        if(count($arr) > 0)
+                            array_merge($merged_results, $arr);
+                    }
+                }
+
+                if($pad_id != null)
+                {
+                    if (!in_array($pad_id, $action_detail))
+                    {
+                        array_push($action_detail, $pad_id);
+                        $arr = GetActionDetail($pad_id, $db, $pid);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
+                    }
+                }
+
+                if($prf_id != null)
+                {
+                    if (!in_array($prf_id, $proof))
+                    {
+                        array_push($proof, $prf_id);
+                        $arr = GetProof($prf_id, $db, $pid);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
+                    }
+                }
+
+                if($stage_client_id != null)
+                {
+                    if (!in_array($stage_client_id, $additional))
+                    {
+                        array_push($additional, $stage_client_id);
+                        $arr = GetAdditional($stage_client_id, $db, $stage_id);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
                     }
                 }
 
@@ -166,14 +203,14 @@ else
       }
 
 
-      function GetComment($pac_id, $db)
+      function GetComment($pac_id, $db, $pid)
       {
         $sql = "select pmsgrp.id replay_id, pmsgrp.comment reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from project_action_comment pmsgrp 
-            LEFT JOIN user r ON r.id = pmsgrp.create_id 
-            LEFT JOIN user p ON p.id = pmsgrp.updated_id 
-            LEFT JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'comment' 
+            JOIN user r ON r.id = pmsgrp.create_id 
+            JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'comment' 
             where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
 
             $merged_results = array();
@@ -189,7 +226,6 @@ else
             $reply_date = "";
             $gcp_name = "";
             $filename = "";
-            $items = [];
             $updator = "";
             $update_date = "";
 
@@ -225,6 +261,206 @@ else
                 
                     "gcp_name" => $gcp_name,
                     "filename" => $filename,
+
+                    "url" => 'project02?p=' + $pid,
+                );
+            }
+
+            return $merged_results;
+      }
+
+      function GetActionDetail($pac_id, $db, $pid)
+      {
+        $sql = "select pmsgrp.id replay_id, pmsgrp.detail_desc reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from project_action_detail pmsgrp 
+            JOIN user r ON r.id = pmsgrp.create_id 
+            JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'action_detail'
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+
+                    "url" => 'project02?p=' + $pid,
+                );
+            }
+
+            return $merged_results;
+      }
+
+      function GetProof($pac_id, $db, $pid)
+      {
+        $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from project_proof pmsgrp 
+            JOIN user r ON r.id = pmsgrp.create_id 
+            JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'action_detail' 
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+
+                    "url" => "project02?p=" . $pid,
+                );
+            }
+
+            return $merged_results;
+      }
+
+      function GetAdditional($pac_id, $db, $pid)
+      {
+        $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from project_stage_client pmsgrp 
+            JOIN user r ON r.id = pmsgrp.create_id 
+            JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'additional' and h.id <> null
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+
+                    "url" => 'project03_client?sid=' + $pid,
                 );
             }
 
