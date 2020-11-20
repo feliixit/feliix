@@ -221,9 +221,9 @@ $(function(){
                                         <tbody id="contact">
                                         <tr v-for="(item, index) in file_management">
                                             <td><a href="#">{{ item.filename }}</a></td>
-                                            <td>Aries Anthony San Martin</td>
-                                            <td>2020-09-08 10:20:47</td>
-                                            <td><a href="#">Main Page</a>
+                                            <td>{{ item.updator }}</td>
+                                            <td>{{ item.update_date }}</td>
+                                            <td><a href="{{ item.url }}">Main Page</a>
                                         </tr>
 
 

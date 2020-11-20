@@ -193,6 +193,72 @@ else
                     }
                 }
 
+                if($other_task_id != null)
+                {
+                    if (!in_array($other_task_id, $other_task))
+                    {
+                        array_push($other_task, $other_task_id);
+                        $arr = GetOtherTask($other_task_id, $db, $stage_id);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
+                    }
+                }
+
+                if($other_task_id_r != null)
+                {
+                    if (!in_array($other_task_id_r, $other_task_r))
+                    {
+                        array_push($other_task_r, $other_task_id_r);
+                        $arr = GetOtherTaskR($other_task_id_r, $db, $stage_id);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
+                    }
+                }
+
+                if($other_task_msg_id != null)
+                {
+                    if (!in_array($other_task_msg_id, $other_task_msg))
+                    {
+                        array_push($other_task_msg, $other_task_msg_id);
+                        $arr = GetOtherTaskMsg($other_task_msg_id, $db, $stage_id);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
+                    }
+                }
+
+                if($other_task_msg_id_r != null)
+                {
+                    if (!in_array($other_task_msg_id_r, $other_task_msg_r))
+                    {
+                        array_push($other_task_msg_r, $other_task_msg_id_r);
+                        $arr = GetOtherTaskMsgR($other_task_msg_id_r, $db, $stage_id);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
+                    }
+                }
+
+                if($other_task_msg_reply_id != null)
+                {
+                    if (!in_array($other_task_msg_reply_id, $other_task_msg_rep))
+                    {
+                        array_push($other_task_msg_rep, $other_task_msg_reply_id);
+                        $arr = GetOtherTaskMsgRep($other_task_msg_reply_id, $db, $stage_id);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
+                    }
+                }
+
+                if($other_task_msg_reply_id_r != null)
+                {
+                    if (!in_array($other_task_msg_reply_id_r, $other_task_msg_rep_r))
+                    {
+                        array_push($other_task_msg_rep_r, $other_task_msg_reply_id_r);
+                        $arr = GetOtherTaskMsgRepR($other_task_msg_reply_id_r, $db, $stage_id);
+                        if(count($arr) > 0)
+                            $merged_results = array_merge($merged_results, $arr);
+                    }
+                }
+
             }
 
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
@@ -206,10 +272,10 @@ else
       function GetComment($pac_id, $db, $pid)
       {
         $sql = "select pmsgrp.id replay_id, pmsgrp.comment reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
-            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
             from project_action_comment pmsgrp 
             JOIN user r ON r.id = pmsgrp.create_id 
-            JOIN user p ON p.id = pmsgrp.updated_id 
+            left JOIN user p ON p.id = pmsgrp.updated_id 
             JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'comment' 
             where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
 
@@ -262,7 +328,7 @@ else
                     "gcp_name" => $gcp_name,
                     "filename" => $filename,
 
-                    "url" => 'project02?p=' + $pid,
+                    "url" => 'project02?p=' . $pid,
                 );
             }
 
@@ -272,10 +338,10 @@ else
       function GetActionDetail($pac_id, $db, $pid)
       {
         $sql = "select pmsgrp.id replay_id, pmsgrp.detail_desc reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
-            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
             from project_action_detail pmsgrp 
             JOIN user r ON r.id = pmsgrp.create_id 
-            JOIN user p ON p.id = pmsgrp.updated_id 
+            left JOIN user p ON p.id = pmsgrp.updated_id 
             JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'action_detail'
             where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
 
@@ -328,7 +394,7 @@ else
                     "gcp_name" => $gcp_name,
                     "filename" => $filename,
 
-                    "url" => 'project02?p=' + $pid,
+                    "url" => 'project02?p=' . $pid,
                 );
             }
 
@@ -338,11 +404,11 @@ else
       function GetProof($pac_id, $db, $pid)
       {
         $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
-            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
             from project_proof pmsgrp 
             JOIN user r ON r.id = pmsgrp.create_id 
-            JOIN user p ON p.id = pmsgrp.updated_id 
-            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'action_detail' 
+            left JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'proof' 
             where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
 
             $merged_results = array();
@@ -404,11 +470,11 @@ else
       function GetAdditional($pac_id, $db, $pid)
       {
         $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
-            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
             from project_stage_client pmsgrp 
             JOIN user r ON r.id = pmsgrp.create_id 
-            JOIN user p ON p.id = pmsgrp.updated_id 
-            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'additional' and h.id <> null
+            left JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'additional'
             where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
 
             $merged_results = array();
@@ -424,6 +490,7 @@ else
             $reply_date = "";
             $gcp_name = "";
             $filename = "";
+            $bucket = "";
             $updator = "";
             $update_date = "";
 
@@ -459,12 +526,438 @@ else
                 
                     "gcp_name" => $gcp_name,
                     "filename" => $filename,
+                    "bucket" => $bucket,
 
-                    "url" => 'project03_client?sid=' + $pid,
+                    "page_name" => "Main Page",
+
+                    "url" => 'project03_client?sid=' . $pid,
+                );
+            }
+
+            return $merged_results;
+        }
+
+
+    function GetOtherTask($pac_id, $db, $pid)
+      {
+        $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
+            from project_other_task pmsgrp 
+            JOIN user r ON r.id = pmsgrp.create_id 
+            left JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task'
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $bucket = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "bucket" => $bucket,
+
+                    "page_name" => "Main Page",
+
+                    "url" => 'project03_other?sid=' . $pid,
                 );
             }
 
             return $merged_results;
       }
+
+
+      function GetOtherTaskR($pac_id, $db, $pid)
+      {
+        $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
+            from project_other_task_r pmsgrp 
+            JOIN user r ON r.id = pmsgrp.create_id 
+            left JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_r'
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $bucket = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "bucket" => $bucket,
+
+                    "page_name" => "Main Page",
+
+                    "url" => 'project03_other?sid=' . $pid,
+                );
+            }
+
+            return $merged_results;
+      }
+
+      function GetOtherTaskMsg($pac_id, $db, $pid)
+      {
+        $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
+            from project_other_task_message pmsgrp 
+            JOIN user r ON r.id = pmsgrp.create_id 
+            left JOIN user p ON p.id = pmsgrp.updated_id 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg'
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $bucket = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "bucket" => $bucket,
+
+                    "page_name" => "Main Page",
+
+                    "url" => 'project03_other?sid=' . $pid,
+                );
+            }
+
+            return $merged_results;
+      }
+
+      function GetOtherTaskMsgR($pac_id, $db, $pid)
+      {
+        $sql = "select h.id replay_id, pmsgrp.message reply, h.`status` reply_status, r.username replyer, r.pic_url replyer_pic, h.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(p.updated_at, '') update_date,
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
+            from project_other_task_message_r pmsgrp 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_r'
+            JOIN user r ON r.id = pmsgrp.create_id 
+            left JOIN user p ON p.id = pmsgrp.updated_id 
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $bucket = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "bucket" => $bucket,
+
+                    "page_name" => "Main Page",
+
+                    "url" => 'project03_other?sid=' . $pid,
+                );
+            }
+
+            return $merged_results;
+      }
+
+      function GetOtherTaskMsgRep($pac_id, $db, $pid)
+      {
+        $sql = "select h.id replay_id, pmsgrp.message reply, h.`status` reply_status, r.username replyer, r.pic_url replyer_pic, h.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(p.updated_at, '') update_date,
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
+            from project_other_task_message_reply pmsgrp 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_rep'
+            JOIN user r ON r.id = pmsgrp.create_id 
+            left JOIN user p ON p.id = pmsgrp.updated_id 
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $bucket = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "bucket" => $bucket,
+
+                    "page_name" => "Main Page",
+
+                    "url" => 'project03_other?sid=' . $pid,
+                );
+            }
+
+            return $merged_results;
+      }
+
+      function GetOtherTaskMsgRepR($pac_id, $db, $pid)
+      {
+        $sql = "select h.id replay_id, pmsgrp.message reply, h.`status` reply_status, r.username replyer, r.pic_url replyer_pic, h.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(p.updated_at, '') update_date,
+        COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
+            from project_other_task_message_reply_r pmsgrp 
+            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_rep_r'
+            JOIN user r ON r.id = h.create_id 
+            left JOIN user p ON p.id = h.updated_id 
+            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+
+            $merged_results = array();
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            $replay_id = 0;
+            $reply = "";
+            $reply_status = "";
+            $replyer = "";
+            $replyer_pic = "";
+            $reply_date = "";
+            $gcp_name = "";
+            $filename = "";
+            $bucket = "";
+            $updator = "";
+            $update_date = "";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+
+                $replay_id = $row['replay_id'];
+                $reply = $row['reply'];
+                $reply_status = $row['reply_status'];
+                $replyer = $row['replyer'];
+                $replyer_pic = $row['replyer_pic'];
+                $reply_date = $row['reply_date'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+            
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+            
+                $merged_results[] = array(
+                    "message_id" => $replay_id,
+
+                    "message" => $reply,
+                    "message_status" => $reply_status,
+                    "messager" => $replyer,
+                    "messager_pic" => $replyer_pic,
+                    
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+
+                    "updator" => $updator,
+                    "update_date" => $update_date,
+                
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "bucket" => $bucket,
+
+                    "page_name" => "Main Page",
+
+                    "url" => 'project03_other?sid=' . $pid,
+                );
+            }
+
+            return $merged_results;
+      }
+    
 
 ?>
