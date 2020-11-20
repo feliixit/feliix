@@ -219,26 +219,13 @@ $(function(){
                                         </thead>
 
                                         <tbody id="contact">
-                                        <tr>
-                                            <td><a href="#">2018-04-24_133451.jpg</a></td>
-                                            <td>Aries Anthony San Martin</td>
-                                            <td>2020-09-08 10:20:47</td>
-                                            <td><a href="#">Main Page</a>
+                                        <tr v-for="(item, index) in file_management">
+                                            <td><a href="#">{{ item.filename }}</a></td>
+                                            <td>{{ item.updator }}</td>
+                                            <td>{{ item.update_date }}</td>
+                                            <td><a href="{{ item.url }}">Main Page</a>
                                         </tr>
 
-                                        <tr>
-                                            <td><a href="#">2018-04-24_133451.jpg</a></td>
-                                            <td>Aries Anthony San Martin</td>
-                                            <td>2020-09-08 10:20:47</td>
-                                            <td><a href="#">Client</a>
-                                        </tr>
-
-                                        <tr>
-                                            <td><a href="#">2018-04-24_133451.jpg</a></td>
-                                            <td>Aries Anthony San Martin</td>
-                                            <td>2020-09-08 10:20:47</td>
-                                            <td><a href="#">Client Feedback / After Service</a>
-                                        </tr>
 
                                         </tbody>
                                     </table>
