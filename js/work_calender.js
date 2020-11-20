@@ -1,5 +1,4 @@
     var app = new Vue({
-
     data:{
         name:'',
         today:'',
@@ -7,6 +6,9 @@
 		agenda:[],
 		messages:[],
 		id:0,
+		file_day:'',
+		fileArray:[],
+		filename:[],
     },
     created () {
       this.getMonthDay();
@@ -34,7 +36,7 @@
                   form_Data.append('things_to_bring', main.Things_to_Bring);
                   form_Data.append('things_to_bring_location', main.Location_Things_to_Bring);
                   form_Data.append('products_to_bring', main.Products_to_Bring);
-                  form_Data.append('products_to_bring_files', main.products_to_bring_files);
+                  form_Data.append('products_to_bring_files', _this.filename);
                   form_Data.append('service', main.Service);
                   form_Data.append('driver', main.Driver);
                   form_Data.append('back_up_driver', main.Back_up_Driver);
@@ -114,6 +116,7 @@
                       //this.upload();
                      // this.reload();
           }
+		  _this.upload();
 		  reload();
         },
 		  
@@ -166,7 +169,21 @@
 				}
 				
 				}
-                    _this.items.push({
+				//整理檔案
+				response.data[i].products_to_bring_files = response.data[i].products_to_bring_files.replaceAll(',','","');
+				if(response.data[i].products_to_bring_files.indexOf("\"")==0){
+                              response.data[i].products_to_bring_files = "[" + response.data[i].products_to_bring_files + "]";
+                              response.data[i].products_to_bring_files = JSON.parse(response.data[i].products_to_bring_files);
+                          }else{
+                              response.data[i].products_to_bring_files = "[\"" + response.data[i].products_to_bring_files + "\"]";
+                              response.data[i].products_to_bring_files = JSON.parse(response.data[i].products_to_bring_files);
+                          }
+				var files = "";
+				response.data[i].products_to_bring_files.forEach((element)=>{
+					var file_str = "<a href='https://storage.googleapis.com/calendarfile/"+ element +"'>"+ element +"</a>&emsp;"
+					files += file_str;
+				});
+					_this.items.push({
 						id: response.data[i].id,
 						title: response.data[i].title,
 						Date: moment(response.data[i].start_time).format('YYYY-MM-DD'),
@@ -189,6 +206,7 @@
 							Things_to_Bring:response.data[i].things_to_bring,
 							Location_Products_to_Bring:response.data[i].installer_needed_location,
 							Products_to_Bring:response.data[i].products_to_bring,
+							Products_to_bring_files:files,
 							Service:response.data[i].service,
 							Driver:response.data[i].driver,
 							Back_up_Driver:response.data[i].back_up_driver,
@@ -225,7 +243,6 @@
 			.then(function(response) {
 				//handle success
 				_this.agenda = response.data
-	
 			})
 			.catch(function(response) {
 				//handle error
@@ -255,7 +272,7 @@
             form_Data.append('things_to_bring', main.Things_to_Bring);
             form_Data.append('things_to_bring_location', main.Location_Things_to_Bring);
             form_Data.append('products_to_bring', main.Products_to_Bring);
-            form_Data.append('products_to_bring_files', main.products_to_bring_files);
+            form_Data.append('products_to_bring_files', _this.filename);
             form_Data.append('service', main.Service);
             form_Data.append('driver', main.Driver);
             form_Data.append('back_up_driver', main.Back_up_Driver);
@@ -276,7 +293,7 @@
                     console.log(details);
                     console.log(response);
                     console.log(response.data[0]);
-				  _this.deleteDetail(_this.id);
+				    _this.deleteDetail(_this.id);
                     _this.addDetails(_this.id,details);
                     //handle success
                     
@@ -285,7 +302,6 @@
                     //handle error
 				  console.log(response);
             });
-		  
 		},
 		updateDetail: function(){},
 		deleteMain: function(id){
@@ -380,15 +396,45 @@
 			var dd = ("0" + (today.getDate())).slice(-2);
 			var mm = ("0" + (today.getMonth() + 1)).slice(-2);
 			var yyyy = today.getFullYear();
-			var HH = new Date().getHours();
-			var mm = new Date().getMinutes();
-			var ss = new Date().getSeconds();
 			today = yyyy + '-' + mm + '-' + dd;
 			first = yyyy + '-' + mm + '-01';
 			_this.file_day = yyyy + mm + dd;
 			_this.start_date = first;
 			_this.end_date = today;
 		},
+		upload:function(){
+			var myArr = this.fileArray;
+			var vm = this;
+			console.log(myArr);
+			myArr.forEach((element, index) => {
+			var config = {
+				headers: { "Content-Type": "multipart/form-data" }
+			}
+			var data = myArr[index];
+			var myForm = new FormData();
+			myForm.append("file", data);
+			myForm.append('batch_type', 'proof');
+			myForm.append('batch_id', 0);
+			myForm.append('today', vm.file_day);
+	
+	
+			axios
+				.post("api/work_calender_gcp", myForm, config)
+				.then(function(res) {
+				if (res.data.code == 0) {
+	
+					myArr[index].progress = 1;
+					vm.$set(vm.fileArray, index, myArr[index]);
+					console.log(vm.fileArray, index);
+				} else {
+					alert(JSON.stringify(res.data));
+				}
+				})
+				.catch(function(err) {
+				console.log(err);
+				});
+			});
+        },
 	},
     
 });
@@ -430,6 +476,9 @@
                         document.getElementById("btn_delete").style.display = "none";
                         document.getElementById("btn_cancel").style.display = "none";
                         document.getElementById("btn_save").style.display = "none";
+						
+						document.getElementById("sc_product_files").innerHTML = "";
+						document.getElementById("upload_input").style = "display: flex; align-items: center; margin-top:1%;";
 
                         resetSchedule();
                         Change_Schedule_State(false, true);
@@ -508,6 +557,8 @@
                 document.getElementById("sc_things").value = sc_content.Things_to_Bring;
                 document.getElementById("sc_location2").value = sc_content.Location_Products_to_Bring;
                 document.getElementById("sc_products").value = sc_content.Products_to_Bring;
+				document.getElementById("upload_input").style = "display:none;";
+				document.getElementById("sc_product_files").innerHTML = sc_content.Products_to_bring_files;
                 document.getElementById("sc_service").value = sc_content.Service;
                 document.getElementById("sc_driver1").value = sc_content.Driver;
                 document.getElementById("sc_driver2").value = sc_content.Back_up_Driver;
@@ -547,12 +598,22 @@
 			//
             //},
 
-            editable: true,
+            editable: false,
 
         });
         calendar.render();
     };
-
+	function onChangeFileUpload(e) {
+		
+		app.filename = [];
+		app.fileArray = [];
+		for(i=0;i<e.target.files.length;i++){
+			const image = e.target.files[i];
+			app.filename.push(app.file_day +"_"+ e.target.files[i].name);
+			app.fileArray.push(image);
+		}
+		
+	};
 
     $("button[id='btn_add']").click(function () {
 
@@ -774,6 +835,7 @@
 
         document.getElementById("last_editor").style.display = "none";
 
+		document.getElementById("upload_input").style = "display: flex; align-items: center; margin-top:1%;";
         //切換元件成為可修改狀態
         Change_Schedule_State(false, eventObj.extendedProps.description.Allday);
         icon_function_enable = true;
@@ -1264,10 +1326,7 @@
 		app.items = [];
 		app.getDetail();
 		app.getMain();
-		setTimeout(function(){
-                            initial();
-                        },500
-                      )
+		setTimeout(function(){initial();},500);
 	}
 	
 	$(document).ready(function() {
@@ -1297,147 +1356,155 @@
 				}
             },
 			getMessages: function(){
-			  var token = localStorage.getItem('token');
+				var token = localStorage.getItem('token');
 				var form_Data = new FormData();
 				let _this = this;
+				_this.clear();
 				this.action = 1;//select all
 				form_Data.append('jwt', token);
 				form_Data.append('action', this.action);
 
-			axios({
-				method: 'post',
-				headers: {
-				'Content-Type': 'multipart/form-data',
-				},
-				url: 'api/work_calender_message',
-				data: form_Data
-			})
-              .then(function(response) {
-                //handle success
-				_this.messages = response.data
-              })
-              .catch(function(response) {
-                //handle error
-                //alert(JSON.stringify(response));
-				console.log(response)
-              });
-		  },
-		  addMessages:function(message){
-          this.action = 2;//add
-          var token = localStorage.getItem('token');
-          var form_Data = new FormData();
-          let _this = this;
-                  form_Data.append('jwt', token);
-                  form_Data.append('message', message);
-                  form_Data.append('is_enabled', true);
-                  form_Data.append('action', this.action);
-                  form_Data.append('created_by', _this.user);
-                  axios({
-                      method: 'post',
-                      headers: {
-                          'Content-Type': 'multipart/form-data',
-                      },
-                      url: 'api/work_calender_message',
-                      data: form_Data
-                  })
-                      .then(function (response) {
-						  _this.messages.push({id: response.data[0], message: message, is_enabled: "1", created_by: _this.user});
-                          _this.txt='';
+				axios({
+					method: 'post',
+					headers: {
+					'Content-Type': 'multipart/form-data',
+					},
+					url: 'api/work_calender_message',
+					data: form_Data
+				})
+				.then(function(response) {
+					//handle success
+					_this.messages = response.data
+				})
+				.catch(function(response) {
+					//handle error
+					//alert(JSON.stringify(response));
+					console.log(response)
+				});
+			},
+			addMessages:function(message){
+				this.action = 2;//add
+				var token = localStorage.getItem('token');
+				var form_Data = new FormData();
+				let _this = this;
+				_this.clear();
+					form_Data.append('jwt', token);
+					form_Data.append('message', message);
+					form_Data.append('is_enabled', true);
+					form_Data.append('action', this.action);
+					form_Data.append('created_by', _this.user);
+					axios({
+						method: 'post',
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+						url: 'api/work_calender_message',
+						data: form_Data
+					})
+						.then(function (response) {
+						  //_this.messages.push({id: response.data[0], message: message, is_enabled: "1", created_by: _this.user, created_at: "now" });
+							_this.txt='';
 						  //this.addDetails(response.data[0]);
                           //handle success
                           //_this.items = response.data
                           //console.log(_this.items)
                           
-                      })
-                      .catch(function (response) {
+						})
+						.catch(function (response) {
                           //handle error
-                          Swal.fire({
-                              text: JSON.stringify(response),
-                              icon: 'error',
-                              confirmButtonText: 'OK'
-                          })
-                      });
-                      //this.upload();
-                     // this.reload();
-          },
-		  deleteMessages: function(id){
-			  this.action = 7;//delete
-			  var token = localStorage.getItem('token');
-		      var form_Data = new FormData();
-			  let _this = this;
-
-			  form_Data.append('jwt', token);
-			  form_Data.append('id', id);
-			  form_Data.append('action', _this.action);
-			  form_Data.append('deleted_by',_this.user);
-			  axios({
-			 	 method: 'post',
-			 	 headers: {
-			 		 'Content-Type': 'multipart/form-data',
-			 	 },
-			 	 url: 'api/work_calender_message',
-			 	 data: form_Data
-			  })
-			 	 .then(function (response) {
-			 		 //handle success
-			 		 //_this.items = response.data
-			 	 })
-			 	 .catch(function (response) {
-			 		 //handle error
-			 	 });
-		  },
-		  updateMessage: function(id,message){
-			  this.action = 3;//update
-			var token = localStorage.getItem('token');
-			var form_Data = new FormData();
-			let _this = this;
-                  form_Data.append('jwt', token);
-				  form_Data.append('id', id);
-                  form_Data.append('is_enabled', true);
-				  form_Data.append('message', message);
-                  form_Data.append('action', this.action);
-                  form_Data.append('updated_by', _this.user);
-                  axios({
-                      method: 'post',
-                      headers: {
-                          'Content-Type': 'multipart/form-data',
-                      },
-                      url: 'api/work_calender_message',
-                      data: form_Data
-                  })
-                      .then(function (response) {
-                          console.log(response);
-                          //handle success
-                          
-                      })
-                      .catch(function (response) {
-                          //handle error
-						  console.log(response);
-                      });
-			  
-		  },
-		  getUser: function() {
-			var token = localStorage.getItem('token');
-			var form_Data = new FormData();
-			let _this = this;
-
-			form_Data.append('jwt', token);
-
-			axios({
-			method: 'post',
-			headers: {
-				'Content-Type': 'multipart/form-data',
+						});
+						_this.reloadMessages();
 			},
-			url: 'api/on_duty_get_myname',
-			data: form_Data
-			})
-			.then(function(response) {
-					//handle success
+			deleteMessages: function(id){
+				this.action = 7;//delete
+				var token = localStorage.getItem('token');
+				var form_Data = new FormData();
+				let _this = this;
+				_this.clear();
+		
+				form_Data.append('jwt', token);
+				form_Data.append('id', id);
+				form_Data.append('action', _this.action);
+				form_Data.append('deleted_by',_this.user);
+				axios({
+					method: 'post',
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+					url: 'api/work_calender_message',
+					data: form_Data
+				})
+				.then(function (response) {
+						//handle success
+						//_this.items = response.data
+				})
+				.catch(function (response) {
+						//handle error
+				});
+				_this.reloadMessages();
+			},
+			updateMessage: function(id,message){
+				this.action = 3;//update
+				var token = localStorage.getItem('token');
+				var form_Data = new FormData();
+				let _this = this;
+				_this.clear();
+                form_Data.append('jwt', token);
+				form_Data.append('id', id);
+                form_Data.append('is_enabled', true);
+				form_Data.append('message', message);
+                form_Data.append('action', this.action);
+                form_Data.append('updated_by', _this.user);
+                axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    url: 'api/work_calender_message',
+                    data: form_Data
+                })
+                .then(function (response) {
+                    console.log(response);
+                          //handle success
+                })
+                .catch(function (response) {
+                          //handle error
+					console.log(response);
+                });
+				_this.reloadMessages();
+			  
+			},
+			getUser: function() {
+				var token = localStorage.getItem('token');
+				var form_Data = new FormData();
+				let _this = this;
+		
+				form_Data.append('jwt', token);
+		
+				axios({
+				method: 'post',
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+				url: 'api/on_duty_get_myname',
+				data: form_Data
+				})
+				.then(function(response) {
+						//handle success
 					_this.user = response.data.username;					
 				})
-			.catch(function(response) {
-					//handle error
+				.catch(function(response) {
+						//handle error
 				});
-  },
+			},
+			reloadMessages : function(){
+				let _this = this;
+				_this.myVar = setTimeout(function(){
+					_this.getMessages();},500);
+			},
+			clear : function(){
+				let _this = this;
+				clearTimeout(_this.myVar)
+			},
         }
     })

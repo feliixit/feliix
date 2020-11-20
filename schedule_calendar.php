@@ -121,8 +121,9 @@
     <h3>Message Board</h3>
 	<div v-for="(msg, i) in messages" class="message__item">
 	<div>
-	<input v-if="msg.id == edit" class="add__input" v-model="msg.message" maxlength="100">
-	<div v-else class="message__item__input">{{ msg.message }} by {{ msg.created_by }}</div>
+	<input v-if="msg.id == edit" class="add__input" style="width:100%" v-model="msg.message" maxlength="100">
+	<div v-else-if="msg.id != edit && msg.updated_at == null" class="message__item__input">{{ msg.message }} create by {{ msg.created_by }} at {{ msg.created_at }}</div>
+	<div v-else class="message__item__input">{{ msg.message }} edit by {{ msg.updated_by }} at {{ msg.updated_at }}</div>
 	</div>
 	<div v-if="msg.created_by == user" style="align-items:end; display: flex;">
 	<i class="fas fa-pencil-alt" @click="edit_msg(msg.id, msg.message)"style="padding-right: 10%;"></i>
@@ -414,8 +415,10 @@
                                       onkeyup="autogrow(this);" id="sc_products"></textarea>
                         </div>
 
-                        <div style="display: flex; align-items: center; margin-top:1%;">
-                            Upload PO/Quote <input type="file" class="form-control" style="width:70%; margin-left:1%;" multiple>
+                        <div id="upload_input" style="display: flex; align-items: center; margin-top:1%;">
+                            Upload PO/Quote <input type="file" onChange="onChangeFileUpload(event)" class="form-control" style="width:70%; margin-left:1%;" multiple>
+                        </div>
+						<div  id="sc_product_files" style="display: flex; align-items: center; margin-top:1%;">
                         </div>
 
                     </div>

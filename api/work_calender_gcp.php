@@ -71,9 +71,9 @@ if(isset($_FILES['file']['name']))
             'keyFilePath' => $conf::$gcp_key
         ]);
 
-        $bucket = $storage->bucket('feliiximg');
+        $bucket = $storage->bucket('calendarfile');
 
-        $upload_name = pathinfo($today.$image_name, PATHINFO_FILENAME) . '.' . $extension;
+        $upload_name = pathinfo($today.'_'.$image_name, PATHINFO_FILENAME) . '.' . $extension;
 
         if($bucket->upload(
           fopen($_FILES['file']['tmp_name'], 'r'),
