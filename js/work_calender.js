@@ -180,7 +180,7 @@
                           }
 				var files = "";
 				response.data[i].products_to_bring_files.forEach((element)=>{
-					var file_str = "<a href='https://storage.googleapis.com/calendarfile/"+ element +"'>"+ element +"</a>&emsp;"
+					var file_str = "<a href='https://storage.cloud.google.com/calendarfile/"+ element +"'>"+ element +"</a>&emsp;"
 					files += file_str;
 				});
 					_this.items.push({
