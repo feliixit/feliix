@@ -58,7 +58,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.id project_id, pac.id pac_id, pad.id pad_id, prf.id prf_id, ps.id stage_id, 
+            $sql = "SELECT pm.id project_id, pst.stage, pac.id pac_id, pad.id pad_id, prf.id prf_id, ps.id stage_id, 
                     psc.id stage_client_id, 
                     pot.id stage_other_id, 
                     pot.id other_task_id, potr.id other_task_id_r, 
@@ -68,7 +68,8 @@ else
                     LEFT JOIN project_action_comment pac ON pm.id = pac.project_id
                     LEFT JOIN project_action_detail pad ON pm.id = pad.project_id
                     LEFT JOIN project_proof prf ON pm.id = prf.project_id
-                    left join project_stages ps ON pm.id = ps.project_id
+                    left JOIN project_stages ps ON pm.id = ps.project_id
+                    LEFT JOIN project_stage pst ON ps.stage_id = pst.id
                     LEFT JOIN project_stage_client psc ON ps.id = psc.stage_id
                     LEFT JOIN project_other_task pot ON ps.id = pot.stage_id
                     LEFT JOIN project_other_task_r potr ON ps.id = potr.stage_id
@@ -76,6 +77,7 @@ else
                     LEFT JOIN project_other_task_message_r potmr ON pot.id = potmr.task_id
                     LEFT JOIN project_other_task_message_reply potmp ON potm.id = potmp.message_id
                     LEFT JOIN project_other_task_message_reply_r potmpr ON potmr.id = potmpr.message_id where pm.id = " . $pid . " and pm.status <> -1 ";
+
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -131,6 +133,7 @@ else
             $other_task_msg_id_r = 0;
             $other_task_msg_reply_id = 0;
             $other_task_msg_reply_id_r = 0;
+            $stage = '';
 
             $merged_results = [];
 
@@ -140,6 +143,7 @@ else
                 $pad_id = $row['pad_id'];
                 $prf_id = $row['prf_id'];
                 $stage_id = $row['stage_id'];
+                $stage = $row['stage'];
                 $stage_client_id = $row['stage_client_id'];
                 $stage_other_id = $row['stage_other_id'];
                 $other_task_id = $row['other_task_id'];
@@ -154,7 +158,7 @@ else
                     if (!in_array($pac_id, $comment))
                     {
                         array_push($comment, $pac_id);
-                        $arr = GetComment($pac_id, $db, $pid);
+                        $arr = GetComment($pac_id, $db, $pid, "Main Page");
                         if(count($arr) > 0)
                             array_merge($merged_results, $arr);
                     }
@@ -165,20 +169,23 @@ else
                     if (!in_array($pad_id, $action_detail))
                     {
                         array_push($action_detail, $pad_id);
-                        $arr = GetActionDetail($pad_id, $db, $pid);
+                        $arr = GetActionDetail($pad_id, $db, $pid, "Main Page");
                         if(count($arr) > 0)
                             $merged_results = array_merge($merged_results, $arr);
                     }
                 }
-
-                if($prf_id != null)
+                // Dennis Lin 2、Thalassa Wren Benzon 4、 Kristel Tan 6、 Glendon Wendell Co 41、 Kuan 3
+                if($user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 6 || $user_id == 41)
                 {
-                    if (!in_array($prf_id, $proof))
+                    if($prf_id != null)
                     {
-                        array_push($proof, $prf_id);
-                        $arr = GetProof($prf_id, $db, $pid);
-                        if(count($arr) > 0)
-                            $merged_results = array_merge($merged_results, $arr);
+                        if (!in_array($prf_id, $proof))
+                        {
+                            array_push($proof, $prf_id);
+                            $arr = GetProof($prf_id, $db, $pid, "Downpayment");
+                            if(count($arr) > 0)
+                                $merged_results = array_merge($merged_results, $arr);
+                        }
                     }
                 }
 
@@ -187,7 +194,7 @@ else
                     if (!in_array($stage_client_id, $additional))
                     {
                         array_push($additional, $stage_client_id);
-                        $arr = GetAdditional($stage_client_id, $db, $stage_id);
+                        $arr = GetAdditional($stage_client_id, $db, $stage_id, $stage);
                         if(count($arr) > 0)
                             $merged_results = array_merge($merged_results, $arr);
                     }
@@ -198,7 +205,7 @@ else
                     if (!in_array($other_task_id, $other_task))
                     {
                         array_push($other_task, $other_task_id);
-                        $arr = GetOtherTask($other_task_id, $db, $stage_id);
+                        $arr = GetOtherTask($other_task_id, $db, $stage_id, $stage);
                         if(count($arr) > 0)
                             $merged_results = array_merge($merged_results, $arr);
                     }
@@ -209,7 +216,7 @@ else
                     if (!in_array($other_task_id_r, $other_task_r))
                     {
                         array_push($other_task_r, $other_task_id_r);
-                        $arr = GetOtherTaskR($other_task_id_r, $db, $stage_id);
+                        $arr = GetOtherTaskR($other_task_id_r, $db, $stage_id, $stage);
                         if(count($arr) > 0)
                             $merged_results = array_merge($merged_results, $arr);
                     }
@@ -220,7 +227,7 @@ else
                     if (!in_array($other_task_msg_id, $other_task_msg))
                     {
                         array_push($other_task_msg, $other_task_msg_id);
-                        $arr = GetOtherTaskMsg($other_task_msg_id, $db, $stage_id);
+                        $arr = GetOtherTaskMsg($other_task_msg_id, $db, $stage_id, $stage);
                         if(count($arr) > 0)
                             $merged_results = array_merge($merged_results, $arr);
                     }
@@ -231,7 +238,7 @@ else
                     if (!in_array($other_task_msg_id_r, $other_task_msg_r))
                     {
                         array_push($other_task_msg_r, $other_task_msg_id_r);
-                        $arr = GetOtherTaskMsgR($other_task_msg_id_r, $db, $stage_id);
+                        $arr = GetOtherTaskMsgR($other_task_msg_id_r, $db, $stage_id, $stage);
                         if(count($arr) > 0)
                             $merged_results = array_merge($merged_results, $arr);
                     }
@@ -242,7 +249,7 @@ else
                     if (!in_array($other_task_msg_reply_id, $other_task_msg_rep))
                     {
                         array_push($other_task_msg_rep, $other_task_msg_reply_id);
-                        $arr = GetOtherTaskMsgRep($other_task_msg_reply_id, $db, $stage_id);
+                        $arr = GetOtherTaskMsgRep($other_task_msg_reply_id, $db, $stage_id, $stage);
                         if(count($arr) > 0)
                             $merged_results = array_merge($merged_results, $arr);
                     }
@@ -253,7 +260,7 @@ else
                     if (!in_array($other_task_msg_reply_id_r, $other_task_msg_rep_r))
                     {
                         array_push($other_task_msg_rep_r, $other_task_msg_reply_id_r);
-                        $arr = GetOtherTaskMsgRepR($other_task_msg_reply_id_r, $db, $stage_id);
+                        $arr = GetOtherTaskMsgRepR($other_task_msg_reply_id_r, $db, $stage_id, $stage);
                         if(count($arr) > 0)
                             $merged_results = array_merge($merged_results, $arr);
                     }
@@ -261,18 +268,33 @@ else
 
             }
 
-            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+            $return_result = [];
 
+            if($keyword == '')
+            {
+                echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+            }
+            else
+            {
+                foreach ($merged_results as &$value) {
+                    if(preg_match("/{$keyword}/i", $value['filename']) || preg_match("/{$keyword}/i", $value['messager']) || preg_match("/{$keyword}/i", $value['stage']) || preg_match("/{$keyword}/i", $value['message_date']) || preg_match("/{$keyword}/i", $value['message_time']))
+                    {
+                        $return_result[] = $value;
+                    }
+                }
+
+                echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
+            }
             break;
 
 
       }
 
 
-      function GetComment($pac_id, $db, $pid)
+      function GetComment($pac_id, $db, $pid, $stage)
       {
         $sql = "select pmsgrp.id replay_id, pmsgrp.comment reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
-            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname 
             from project_action_comment pmsgrp 
             JOIN user r ON r.id = pmsgrp.create_id 
             left JOIN user p ON p.id = pmsgrp.updated_id 
@@ -294,6 +316,7 @@ else
             $filename = "";
             $updator = "";
             $update_date = "";
+            $bucket = "";
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             
@@ -310,6 +333,7 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -329,13 +353,16 @@ else
                     "filename" => $filename,
 
                     "url" => 'project02?p=' . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
             return $merged_results;
       }
 
-      function GetActionDetail($pac_id, $db, $pid)
+      function GetActionDetail($pac_id, $db, $pid, $stage)
       {
         $sql = "select pmsgrp.id replay_id, pmsgrp.detail_desc reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -376,6 +403,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -395,13 +424,16 @@ else
                     "filename" => $filename,
 
                     "url" => 'project02?p=' . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
             return $merged_results;
       }
 
-      function GetProof($pac_id, $db, $pid)
+      function GetProof($pac_id, $db, $pid, $stage)
       {
         $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -442,6 +474,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -461,13 +495,16 @@ else
                     "filename" => $filename,
 
                     "url" => "project02?p=" . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
             return $merged_results;
       }
 
-      function GetAdditional($pac_id, $db, $pid)
+      function GetAdditional($pac_id, $db, $pid, $stage)
       {
         $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -509,6 +546,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -531,6 +570,9 @@ else
                     "page_name" => "Main Page",
 
                     "url" => 'project03_client?sid=' . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
@@ -538,7 +580,7 @@ else
         }
 
 
-    function GetOtherTask($pac_id, $db, $pid)
+    function GetOtherTask($pac_id, $db, $pid, $stage)
       {
         $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -580,6 +622,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -602,6 +646,9 @@ else
                     "page_name" => "Main Page",
 
                     "url" => 'project03_other?sid=' . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
@@ -609,7 +656,7 @@ else
       }
 
 
-      function GetOtherTaskR($pac_id, $db, $pid)
+      function GetOtherTaskR($pac_id, $db, $pid, $stage)
       {
         $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -651,6 +698,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -673,13 +722,16 @@ else
                     "page_name" => "Main Page",
 
                     "url" => 'project03_other?sid=' . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
             return $merged_results;
       }
 
-      function GetOtherTaskMsg($pac_id, $db, $pid)
+      function GetOtherTaskMsg($pac_id, $db, $pid, $stage)
       {
         $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -721,6 +773,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -743,13 +797,16 @@ else
                     "page_name" => "Main Page",
 
                     "url" => 'project03_other?sid=' . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
             return $merged_results;
       }
 
-      function GetOtherTaskMsgR($pac_id, $db, $pid)
+      function GetOtherTaskMsgR($pac_id, $db, $pid, $stage)
       {
         $sql = "select h.id replay_id, pmsgrp.message reply, h.`status` reply_status, r.username replyer, r.pic_url replyer_pic, h.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(p.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -791,6 +848,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -813,13 +872,16 @@ else
                     "page_name" => "Main Page",
 
                     "url" => 'project03_other?sid=' . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
             return $merged_results;
       }
 
-      function GetOtherTaskMsgRep($pac_id, $db, $pid)
+      function GetOtherTaskMsgRep($pac_id, $db, $pid, $stage)
       {
         $sql = "select h.id replay_id, pmsgrp.message reply, h.`status` reply_status, r.username replyer, r.pic_url replyer_pic, h.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(p.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -861,6 +923,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -883,13 +947,16 @@ else
                     "page_name" => "Main Page",
 
                     "url" => 'project03_other?sid=' . $pid,
+
+                    "stage" => $stage,
+                    "bucket" => $bucket,
                 );
             }
 
             return $merged_results;
       }
 
-      function GetOtherTaskMsgRepR($pac_id, $db, $pid)
+      function GetOtherTaskMsgRepR($pac_id, $db, $pid, $stage)
       {
         $sql = "select h.id replay_id, pmsgrp.message reply, h.`status` reply_status, r.username replyer, r.pic_url replyer_pic, h.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(p.updated_at, '') update_date,
         COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
@@ -897,7 +964,7 @@ else
             JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'other_task_msg_rep_r'
             JOIN user r ON r.id = h.create_id 
             left JOIN user p ON p.id = h.updated_id 
-            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+            where pmsgrp.id = " . $pac_id;
 
             $merged_results = array();
 
@@ -931,6 +998,8 @@ else
             
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
+
+                $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
                     "message_id" => $replay_id,
@@ -953,6 +1022,9 @@ else
                     "page_name" => "Main Page",
 
                     "url" => 'project03_other?sid=' . $pid,
+
+                    "stage" => $stage,
+        
                 );
             }
 

@@ -270,7 +270,7 @@ switch ($method) {
 
 function GetUserInfo($users, $db)
 {
-    $sql = "SELECT username, pic_url FROM user WHERE id IN (" . $users . ")";
+    $sql = "SELECT id, username, pic_url FROM user WHERE id IN (" . $users . ")";
 
     $merged_results = array();
 
