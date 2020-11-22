@@ -2273,7 +2273,7 @@ catch (Exception $e) {
                                     <dt>Assignee:</dt>
                                     <dd>
                                         <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record.assignee_id" :id="record.assignee" :options="users" attach chips label="username" v-if="record.assignee_id" multiple></v-select>
+                                            <v-select v-model="record.assignee" :id="record.assignee_id" :options="users" attach chips label="username"  multiple></v-select>
 
                                         </div>
 
@@ -2284,7 +2284,7 @@ catch (Exception $e) {
                                     <dd>
 
                                         <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record.collaborator_id" :id="record.collaborator_id" :options="users" attach chips label="username" v-if="record.collaborator_id" multiple></v-select>
+                                            <v-select v-model="record.collaborator" :id="record.collaborator_id" :options="users" attach chips label="username"  multiple></v-select>
 
                                         </div>
                                     </dd>
@@ -2446,7 +2446,7 @@ catch (Exception $e) {
                                     <dt>Assignee:</dt>
                                     <dd>
                                         <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record_r.assignee_r" :id="record_r.assignee_r" :options="users" attach chips label="username" v-if="record_r.assignee_id" multiple></v-select>
+                                            <v-select v-model="record_r.assignee" :id="record_r.assignee_id" :options="users" attach chips label="username"  multiple></v-select>
 
                                         </div>
 

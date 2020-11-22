@@ -6,7 +6,7 @@ var app = new Vue({
     receive_stage_records: [],
     record: {},
 
-    
+    keyword: '',
 
     project_comments: {},
     project_probs: {},
@@ -24,8 +24,9 @@ var app = new Vue({
 
     stage_id_to_edit:0,
 
-    baseURL:'https://storage.cloud.google.com/feliiximg/',
+    baseURL:'https://storage.cloud.google.com/',
 
+    pageURL:'https://feliix.myvnc.com/',
 
     category: '',
     category_id:0,
@@ -165,6 +166,11 @@ var app = new Vue({
     receive_stage_records () {
         console.log('Vue watch receive_stage_records');
         this.setPages();
+      },
+
+    keyword () {
+        console.log('Vue watch keyword');
+        this.getFileManagement(this.project_id);
       },
 
   fileArray: {
@@ -896,6 +902,13 @@ var app = new Vue({
             document.getElementById('comment_dialog').classList.remove("show");
             document.getElementById('project_fn3').classList.remove("focus");
         },
+
+        file_dialog_clear() {
+
+          this.keyword = '';
+          document.getElementById('file_stage_dialog').classList.remove("show");
+          document.getElementById('f_stage_fn1').classList.remove("focus");
+      },
 
 
         detail_clear() {
@@ -1683,14 +1696,15 @@ var app = new Vue({
                 });
         },
 
-        getFileManagement: function(keyword) {
+        getFileManagement: function(id) {
           let _this = this;
     
-          if(keyword == 0)
+          if(id == 0)
             return;
     
           const params = {
-                  pid : keyword,
+                  pid : id,
+                  keyword : this.keyword,
                 };
     
               let token = localStorage.getItem('accessToken');

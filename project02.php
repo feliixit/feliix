@@ -205,7 +205,7 @@ $(function(){
                         <div class="formbox">
                             <dl>
                                 <dt> </dt>
-                                <dd><input type="text" placeholder="Search for..."></dd>
+                                <dd><input type="text" v-model="keyword" placeholder="Search for..."></dd>
 
                                 <div class="file_div">
                                     <table id="showFile" class="file_table">
@@ -220,10 +220,10 @@ $(function(){
 
                                         <tbody id="contact">
                                         <tr v-for="(item, index) in file_management">
-                                            <td><a href="#">{{ item.filename }}</a></td>
-                                            <td>{{ item.updator }}</td>
-                                            <td>{{ item.update_date }}</td>
-                                            <td><a href="{{ item.url }}">Main Page</a>
+                                            <td><a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank">{{ item.filename }}</a></td>
+                                            <td>{{ item.messager }}</td>
+                                            <td>{{ item.message_date }} {{ item.message_time }}</td>
+                                            <td><a :href="pageURL + item.url"></a>{{ item.stage}}</td>
                                         </tr>
 
 
@@ -232,7 +232,7 @@ $(function(){
 
                                 </div>
 
-                            <div class="btnbox"><a class="btn small">Close</a>
+                            <div class="btnbox"><a class="btn small" @click="file_dialog_clear()">Close</a>
                             </div>
                         </div>
                     </div>
