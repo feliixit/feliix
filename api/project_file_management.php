@@ -316,11 +316,20 @@ else
                 "stage" => $stage,
                 "bucket" => $bucket,
             );
+        }
+
+        $sql = "select pm.id from project_other_task pm where pm.stage_id = " . $pac_id;
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
 
             $arr = GetOtherTaskMsg($id, $db, $pid, $stage);
             if(count($arr) > 0)
                 $merged_results = array_merge($merged_results, $arr);
         }
+
 
         return $merged_results;
 
@@ -360,6 +369,14 @@ else
                 "stage" => $stage,
                 "bucket" => $bucket,
             );
+        }
+
+        $sql = "select pm.id from project_other_task_r pm where pm.stage_id = " . $pac_id;
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
 
             $arr = GetOtherTaskMsgR($id, $db, $pid, $stage);
             if(count($arr) > 0)
@@ -402,7 +419,15 @@ else
                     "stage" => $stage,
                     "bucket" => $bucket,
                 );
-    
+            }
+            
+            $sql = "select pm.id from project_other_task_message pm where pm.task_id = " . $pac_id;
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+
                 $arr = GetOtherTaskMsgRep($id, $db, $pid, $stage);
                 if(count($arr) > 0)
                     $merged_results = array_merge($merged_results, $arr);
@@ -444,11 +469,18 @@ else
                     "stage" => $stage,
                     "bucket" => $bucket,
                 );
-    
+            }
+
+            $sql = "select pm.id from project_other_task_message_r pm where pm.task_id = " . $pac_id;
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+
                 $arr = GetOtherTaskMsgRepR($id, $db, $pid, $stage);
                 if(count($arr) > 0)
                     $merged_results = array_merge($merged_results, $arr);
-      
             }
     
             return $merged_results;
