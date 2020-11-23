@@ -58,6 +58,158 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
+            // comment
+            $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
+                                FROM project_main pm
+                    JOIN project_action_comment pac ON pm.id = pac.project_id
+                                join gcp_storage_file on batch_id = pac.id and batch_type = 'comment'
+                    join user on user.id = gcp_storage_file.create_id
+                    where pm.id =" . $pid . " and pm.status <> -1";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $reply = $row['username'];
+                $reply_date = $row['created_at'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+                $bucket = $row['bucketname'];
+
+                $merged_results[] = array(
+                    "messager" => $reply,
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "url" => 'project02?p=' . $pid,
+                    "stage" => 'Main Page',
+                    "bucket" => $bucket,
+                );
+            }
+
+            // additional detail
+            $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
+                                FROM project_main pm
+                    JOIN project_action_detail pac ON pm.id = pac.project_id
+                                join gcp_storage_file on batch_id = pac.id and batch_type = 'action_detail'
+                    join user on user.id = gcp_storage_file.create_id
+                    where pm.id =" . $pid . " and pm.status <> -1";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $reply = $row['username'];
+                $reply_date = $row['created_at'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+                $bucket = $row['bucketname'];
+
+                $merged_results[] = array(
+                    "messager" => $reply,
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "url" => 'project02?p=' . $pid,
+                    "stage" => 'Main Page',
+                    "bucket" => $bucket,
+                );
+            }
+
+            // downpayment
+            $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
+                                FROM project_main pm
+                    JOIN project_proof pac ON pm.id = pac.project_id
+                                join gcp_storage_file on batch_id = pac.id and batch_type = 'proof'
+                    join user on user.id = gcp_storage_file.create_id
+                    where pm.id =" . $pid . " and pm.status <> -1";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $reply = $row['username'];
+                $reply_date = $row['created_at'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+                $bucket = $row['bucketname'];
+
+                $merged_results[] = array(
+                    "messager" => $reply,
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "url" => 'project02?p=' . $pid,
+                    "stage" => 'Downpayment',
+                    "bucket" => $bucket,
+                );
+            }
+
+
+            // stages
+            $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
+                                FROM project_main pm
+                    JOIN project_proof pac ON pm.id = pac.project_id
+                                join gcp_storage_file on batch_id = pac.id and batch_type = 'proof'
+                    join user on user.id = gcp_storage_file.create_id
+                    where pm.id =" . $pid . " and pm.status <> -1";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $reply = $row['username'];
+                $reply_date = $row['created_at'];
+
+                $updator = $row['updator'];
+                $update_date = $row['update_date'];
+
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+                $bucket = $row['bucketname'];
+
+                $merged_results[] = array(
+                    "messager" => $replyer,
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "url" => 'project02?p=' . $pid,
+                    "stage" => 'Downpayment',
+                    "bucket" => $bucket,
+                );
+            }
+
+            // loop for stages_status_id
+            $sql = "SELECT ps.id, pst.stage
+                            FROM project_main pm
+                            JOIN project_stages ps ON pm.id = ps.project_id
+                            JOIN project_stage pst ON ps.stage_id = pst.id
+                    where pm.id = " . $pid . " and pm.status <> -1 ";
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $pac_id = $row['id'];
+                $stage = $row['stage'];
+
+                $merged_results[] = GetAdditional($pac_id, $db, $pid, $stage);
+            }
+
+
             $sql = "SELECT pm.id project_id, pst.stage, pac.id pac_id, pad.id pad_id, prf.id prf_id, ps.id stage_id, 
                     psc.id stage_client_id, 
                     pot.id stage_other_id, 
@@ -506,71 +658,35 @@ else
 
       function GetAdditional($pac_id, $db, $pid, $stage)
       {
-        $sql = "select pmsgrp.id replay_id, '' reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
-            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, bucketname
-            from project_stage_client pmsgrp 
-            JOIN user r ON r.id = pmsgrp.create_id 
-            left JOIN user p ON p.id = pmsgrp.updated_id 
-            JOIN gcp_storage_file h ON h.batch_id = pmsgrp.id AND h.batch_type = 'additional'
-            where pmsgrp.id = " . $pac_id . " order by pmsgrp.created_at ";
+        $sql = "select  bucketname, filename, gcp_name, username, gcp_storage_file.created_at
+            from project_stage_client pm 
+            join gcp_storage_file on batch_id = pac.id and batch_type = 'additional'
+            join user on user.id = gcp_storage_file.create_id
+            where pm.id = " . $pac_id;
 
             $merged_results = array();
 
             $stmt = $db->prepare($sql);
             $stmt->execute();
 
-            $replay_id = 0;
-            $reply = "";
-            $reply_status = "";
-            $replyer = "";
-            $replyer_pic = "";
-            $reply_date = "";
-            $gcp_name = "";
-            $filename = "";
-            $bucket = "";
-            $updator = "";
-            $update_date = "";
-
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            
-
-                $replay_id = $row['replay_id'];
-                $reply = $row['reply'];
-                $reply_status = $row['reply_status'];
-                $replyer = $row['replyer'];
-                $replyer_pic = $row['replyer_pic'];
-                $reply_date = $row['reply_date'];
+                $reply = $row['username'];
+                $reply_date = $row['created_at'];
 
                 $updator = $row['updator'];
                 $update_date = $row['update_date'];
-            
+
                 $gcp_name = $row['gcp_name'];
                 $filename = $row['filename'];
-
                 $bucket = $row['bucketname'];
             
                 $merged_results[] = array(
-                    "message_id" => $replay_id,
-
-                    "message" => $reply,
-                    "message_status" => $reply_status,
-                    "messager" => $replyer,
-                    "messager_pic" => $replyer_pic,
-                    
+                    "messager" => $reply,
                     "message_date" => explode(" ", $reply_date)[0],
                     "message_time" => explode(" ", $reply_date)[1],
-
-                    "updator" => $updator,
-                    "update_date" => $update_date,
-                
                     "gcp_name" => $gcp_name,
                     "filename" => $filename,
-                    "bucket" => $bucket,
-
-                    "page_name" => "Main Page",
-
-                    "url" => 'project03_client?sid=' . $pid,
-
+                    "url" => 'project02?p=' . $pid,
                     "stage" => $stage,
                     "bucket" => $bucket,
                 );
