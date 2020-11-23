@@ -326,8 +326,8 @@ else
       function GetOtherTaskR($pac_id, $db, $pid, $stage)
       {
         $sql = "select pm.id, bucketname, filename, gcp_name, username, gcp_storage_file.created_at
-        from project_other_task pm 
-        join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task'
+        from project_other_task_r pm 
+        join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task_r'
         join user on user.id = gcp_storage_file.create_id
         where pm.id = " . $pac_id;
 
