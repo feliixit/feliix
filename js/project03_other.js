@@ -1265,8 +1265,8 @@ var app = new Vue({
       form_Data.append('stage_id', this.stage_id);
       form_Data.append('title', this.title.trim());
       form_Data.append('priority', this.priority);
-      form_Data.append('assignee', this.assignee);
-      form_Data.append('collaborator', this.collaborator);
+      form_Data.append('assignee', Array.prototype.map.call(this.assignee, function(item) { return item.id; }).join(","));
+      form_Data.append('collaborator', Array.prototype.map.call(this.collaborator, function(item) { return item.id; }).join(",") );
       form_Data.append('due_date', this.due_date.trim());
       form_Data.append('detail', this.detail.trim());
 
@@ -1377,8 +1377,8 @@ var app = new Vue({
       form_Data.append('title', this.record.title.trim());
       form_Data.append('priority', this.record.priority_id);
       form_Data.append('status', this.record.task_status);
-      form_Data.append('assignee', this.record.assignee_id);
-      form_Data.append('collaborator', this.record.collaborator_id);
+      form_Data.append('assignee', Array.prototype.map.call(this.record.assignee, function(item) { return item.id; }).join(","));
+      form_Data.append('collaborator', Array.prototype.map.call(this.record.collaborator, function(item) { return item.id; }).join(","));
       form_Data.append('due_date', this.record.due_date.trim());
       form_Data.append('detail', this.record.detail.trim());
 
@@ -1435,7 +1435,7 @@ var app = new Vue({
       form_Data.append('title', this.record_r.title.trim());
       form_Data.append('priority', 0);
       form_Data.append('status', 0);
-      form_Data.append('assignee', this.record_r.assignee_id);
+      form_Data.append('assignee', Array.prototype.map.call(this.record_r.assignee_id, function(item) { return item.id; }).join(","));
       form_Data.append('collaborator', '');
       form_Data.append('due_date', '');
       form_Data.append('detail', this.record_r.detail.trim());
@@ -1599,7 +1599,7 @@ var app = new Vue({
       form_Data.append('stage_id', this.stage_id);
       form_Data.append('title', this.title_r.trim());
       form_Data.append('priority', 0);
-      form_Data.append('assignee', this.assignee_r);
+      form_Data.append('assignee',  Array.prototype.map.call(this.assignee_r, function(item) { return item.id; }).join(","));
       form_Data.append('collaborator', '');
       form_Data.append('due_date', '');
       form_Data.append('detail', this.detail_r.trim());

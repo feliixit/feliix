@@ -223,7 +223,7 @@ $(function(){
                                             <td><a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank">{{ item.filename }}</a></td>
                                             <td>{{ item.messager }}</td>
                                             <td>{{ item.message_date }} {{ item.message_time }}</td>
-                                            <td><a :href="pageURL + item.url"></a>{{ item.stage}}</td>
+                                            <td><a :href="pageURL + item.url">{{ item.stage}}</a></td>
                                         </tr>
 
 
