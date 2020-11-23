@@ -285,7 +285,7 @@ else
         from project_other_task pm 
         join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task'
         join user on user.id = gcp_storage_file.create_id
-        where pm.id = " . $pac_id;
+        where pm.stage_id = " . $pac_id;
 
         $merged_results = array();
 
@@ -329,7 +329,7 @@ else
         from project_other_task_r pm 
         join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task_r'
         join user on user.id = gcp_storage_file.create_id
-        where pm.id = " . $pac_id;
+        where pm.stage_id = " . $pac_id;
 
         $merged_results = array();
 
@@ -368,10 +368,10 @@ else
       function GetOtherTaskMsg($pac_id, $db, $pid, $stage)
       {
         $sql = "select pm.id, bucketname, filename, gcp_name, username, gcp_storage_file.created_at
-        from project_other_task_message_r pm 
-        join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task_msg_r'
+        from project_other_task_message pm 
+        join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task_msg'
         join user on user.id = gcp_storage_file.create_id
-        where pm.id = " . $pac_id;
+        where pm.task_id = " . $pac_id;
 
             $merged_results = array();
 
@@ -413,7 +413,7 @@ else
         from project_other_task_message_r pm 
         join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task_msg_r'
         join user on user.id = gcp_storage_file.create_id
-        where pm.id = " . $pac_id;
+        where pm.task_id = " . $pac_id;
 
             $merged_results = array();
 
@@ -456,7 +456,7 @@ else
         from project_other_task_message_reply pm 
         join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task_msg_rep'
         join user on user.id = gcp_storage_file.create_id
-        where pm.id = " . $pac_id;
+        where pm.message_id = " . $pac_id;
 
             $merged_results = array();
 
@@ -495,7 +495,7 @@ else
         from project_other_task_message_reply_r pm 
         join gcp_storage_file on batch_id = pm.id and batch_type = 'other_task_msg_rep_r'
         join user on user.id = gcp_storage_file.create_id
-        where pm.id = " . $pac_id;
+        where pm.message_id = " . $pac_id;
 
             $merged_results = array();
 
