@@ -225,7 +225,20 @@ else
                     return $item2['message_datetime'] <=> $item1['message_datetime'];
                 });
 
-                echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+                // remove duplicate
+                $arry_keys = [];
+                $final_results = [];
+                foreach ($merged_results as $arr)
+                {
+                    $str = $arr['message_datetime'] .  $arr['gcp_name'] . $arr['gcp_name'] . $arr['messager'];
+                    if(!in_array($str, $arry_keys))
+                        array_push($final_results, $arr);
+
+                    array_push($arry_keys, $str);
+                }
+                
+
+                echo json_encode($final_results, JSON_UNESCAPED_SLASHES);
             }
             else
             {
@@ -240,7 +253,19 @@ else
                     return $item2['message_datetime'] <=> $item1['message_datetime'];
                 });
 
-                echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
+                // remove duplicate
+                $arry_keys = [];
+                $final_results = [];
+                foreach ($return_result as $arr)
+                {
+                    $str = $arr['message_datetime'] .  $arr['gcp_name'] . $arr['gcp_name'] . $arr['messager'];
+                    if(!in_array($str, $arry_keys))
+                        array_push($final_results, $arr);
+
+                    array_push($arry_keys, $str);
+                }
+
+                echo json_encode($final_results, JSON_UNESCAPED_SLASHES);
             }
             break;
       }
@@ -563,6 +588,6 @@ else
     
             return $merged_results;
       }
-    
+
 
 ?>
