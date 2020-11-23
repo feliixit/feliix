@@ -203,15 +203,15 @@ else
                 $pac_id = $row['id'];
                 $stage = $row['stage'];
 
-                $arr = GetAdditional($pac_id, $db, $pid, $stage);
+                $arr = GetAdditional($pac_id, $db, $pac_id, $stage);
                 if(count($arr) > 0)
                     $merged_results = array_merge($merged_results, $arr);
              
-                $arr = GetOtherTask($pac_id, $db, $pid, $stage);
+                $arr = GetOtherTask($pac_id, $db, $pac_id, $stage);
                 if(count($arr) > 0)
                     $merged_results = array_merge($merged_results, $arr);
 
-                $arr = GetOtherTaskR($pac_id, $db, $pid, $stage);
+                $arr = GetOtherTaskR($pac_id, $db, $pac_id, $stage);
                 if(count($arr) > 0)
                     $merged_results = array_merge($merged_results, $arr);
                 
@@ -235,6 +235,10 @@ else
                         $return_result[] = $value;
                     }
                 }
+
+                usort($return_result, function ($item1, $item2) {
+                    return $item2['message_datetime'] <=> $item1['message_datetime'];
+                });
 
                 echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
             }
