@@ -446,7 +446,7 @@ else
                 );
             }
             
-            $sql = "select pm.id from project_other_task_message pm where pm.task_id = " . $pac_id;
+            $sql = "select distinct pm.id from project_other_task_message pm where pm.task_id = " . $pac_id;
             $stmt = $db->prepare($sql);
             $stmt->execute();
 
@@ -496,7 +496,7 @@ else
                 );
             }
 
-            $sql = "select pm.id from project_other_task_message_r pm where pm.task_id = " . $pac_id;
+            $sql = "select distinct pm.id from project_other_task_message_r pm where pm.task_id = " . $pac_id;
             $stmt = $db->prepare($sql);
             $stmt->execute();
 
