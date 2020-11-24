@@ -78,9 +78,9 @@
         addDetails:function(mainId,addDetails){
           this.action = 2;//add
           var token = localStorage.getItem('token');
-          var form_Data = new FormData();
           let _this = this;
           for (var i = 0; i < addDetails.length; i++) {
+				  var form_Data = new FormData();
                   form_Data.append('jwt', token);
                   form_Data.append('main_id', mainId);
                   form_Data.append('location', addDetails[i].location);
@@ -164,7 +164,7 @@
 					agendas.push({
 						agenda:_this.agenda[j].agenda,
 						appointtime:moment(_this.agenda[j].appoint_time).format('HH:mm'),
-						endtime:moment(_this.agenda[j].endt_ime).format('HH:mm'),
+						endtime:moment(_this.agenda[j].end_time).format('HH:mm'),
 						location:_this.agenda[j].location
 					});
 				}
@@ -603,6 +603,7 @@
 
         });
         calendar.render();
+		clearTimeOut();
     };
 	function onChangeFileUpload(e) {
 		
@@ -1328,10 +1329,16 @@
         }
     }
 	
+	var timeOut1;
+	var timeOut2;
 	function reload(){
 		app.getDetail();
-		setTimeout(function(){app.getMain();},500);
-		setTimeout(function(){initial();},1000);
+		timeOut1 = setTimeout(function(){app.getMain();},500);
+		timeOut2 = setTimeout(function(){initial();},1000);
+	}
+	function clearTimeOut(){
+		clearTimeout(timeOut1);
+		clearTimeout(timeOut2);
 	}
 	
 	$(document).ready(function() {
