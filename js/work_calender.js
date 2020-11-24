@@ -124,6 +124,7 @@
 		  var token = localStorage.getItem('token');
         var form_Data = new FormData();
         let _this = this;
+		_this.items = [];
         this.action = 1;//select
         form_Data.append('jwt', token);
         form_Data.append('action', this.action);
@@ -867,6 +868,8 @@
                 backgroundColor: sc_content.Color,
 
             });
+			sc_content.Starttime = sc_content.Date +' 00:00:00';
+            sc_content.Endtime = sc_content.Date +' 23:59:59';
         } else {
 
             if ((sc_content.Starttime != "") && (sc_content.Endtime != "") && (sc_content.Endtime >= sc_content.Starttime)) {
@@ -882,8 +885,11 @@
                     backgroundColor: sc_content.Color,
 
                 });
+				sc_content.Starttime = sc_content.Date +' '+ sc_content.Starttime;
+            sc_content.Endtime = sc_content.Date +' '+ sc_content.Endtime;
             }
         }
+		app.addMain(sc_content.Agenda,sc_content);
 
         $('#exampleModalScrollable').modal('toggle');
 
@@ -1323,10 +1329,9 @@
     }
 	
 	function reload(){
-		app.items = [];
 		app.getDetail();
-		app.getMain();
-		setTimeout(function(){initial();},500);
+		setTimeout(function(){app.getMain();},500);
+		setTimeout(function(){initial();},1000);
 	}
 	
 	$(document).ready(function() {
