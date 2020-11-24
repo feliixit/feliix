@@ -57,7 +57,7 @@
                           console.log(details);
                           console.log(response);
                           console.log(response.data[0]);
-                          _this.addDetails(response.data[0],details);
+                          _this.addDetails(response.data[0],details,main.Date);
                           //handle success
                           //_this.items = response.data
                           //console.log(_this.items)
@@ -75,7 +75,7 @@
                       //this.reload();
           },
         
-        addDetails:function(mainId,addDetails){
+        addDetails:function(mainId,addDetails,date){
           this.action = 2;//add
           var token = localStorage.getItem('token');
           let _this = this;
@@ -85,8 +85,36 @@
                   form_Data.append('main_id', mainId);
                   form_Data.append('location', addDetails[i].location);
                   form_Data.append('agenda', addDetails[i].agenda);
-                  form_Data.append('appoint_time', addDetails[i].appointtime);
-                  form_Data.append('end_time', addDetails[i].endtime);
+				  if(addDetails[i].appointtime !=''){
+					var valid = moment(addDetails[i].appointtime, "YYYY-MM-DD HH:mm", true).isValid(); 
+					var valids = moment(addDetails[i].appointtime, "YYYY-MM-DD HH:mm:ss", true).isValid();
+					if(!valid && !valids){
+						form_Data.append('appoint_time', date +''+ addDetails[i].appointtime);
+					}
+					else
+					{
+						form_Data.append('appoint_time', addDetails[i].appointtime);
+					}
+				  }
+				  else
+				  {
+					  form_Data.append('appoint_time', '');
+				  }
+				  if(addDetails[i].endtime !=''){
+					var valide = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm", true).isValid();
+					var valides = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm:ss", true).isValid(); 
+					if(!valide && !valides){
+						form_Data.append('end_time', date +''+ addDetails[i].endtime);
+					}
+					else
+					{
+						form_Data.append('end_time', addDetails[i].endtime);
+					}
+				  }
+				  else
+				  {
+					  form_Data.append('end_time', '');
+				  }
                   form_Data.append('is_enabled', addDetails[i].is_enabled);
                   form_Data.append('action', this.action);
                   form_Data.append('created_by', this.name);
@@ -295,7 +323,7 @@
                     console.log(response);
                     console.log(response.data[0]);
 				    _this.deleteDetail(_this.id);
-                    _this.addDetails(_this.id,details);
+                    _this.addDetails(_this.id,details,main.Date);
                     //handle success
                     
             })
@@ -627,14 +655,21 @@
 
         var agenda_object = document.getElementById("agenda_table").getElementsByTagName("tr");
         var agenda_content = [];
-
+		var appointtime = '';
+		var endtime = '';
         for(i=2; i<agenda_object.length;i++){
+			if(agenda_object[i].getElementsByTagName("input")[2].value != ''){
+				appointtime = document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[2].value;
+			}
+			if(agenda_object[i].getElementsByTagName("input")[3].value != ''){
+				endtime = document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[3].value;
+			}
             agenda_content.push(
                 {
                     location: agenda_object[i].getElementsByTagName("input")[0].value,
                     agenda: agenda_object[i].getElementsByTagName("input")[1].value,
-                    appointtime: document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[2].value,
-                    endtime: document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[3].value
+                    appointtime: appointtime,
+                    endtime: endtime
                 }
             );
         }
@@ -857,7 +892,7 @@
     $(document).on('click', '#btn_duplicate', function () {
 
         var sc_content = eventObj.extendedProps.description;
-
+		console.log(sc_content);
         if(sc_content.Allday) {
 
             calendar.addEvent({
@@ -887,7 +922,7 @@
 
                 });
 				sc_content.Starttime = sc_content.Date +' '+ sc_content.Starttime;
-            sc_content.Endtime = sc_content.Date +' '+ sc_content.Endtime;
+				sc_content.Endtime = sc_content.Date +' '+ sc_content.Endtime;
             }
         }
 		app.addMain(sc_content.Agenda,sc_content);
@@ -907,7 +942,7 @@
         document.getElementById("sc_color").value = sc_content.Color;
 
         //設定最後編輯者資訊
-        document.getElementById("sc_editor").value = "Dennis Lin at 2020/07/23 10:30";
+        document.getElementById("sc_editor").value = sc_content.Lasteditor;
         document.getElementById("last_editor").style.display = "inline";
 
         document.getElementById("sc_date").value = sc_content.Date;
@@ -1003,13 +1038,21 @@
         var agenda_object = document.getElementById("agenda_table").getElementsByTagName("tr");
         var agenda_content = [];
 
-        for (i = 2; i < agenda_object.length; i++) {
+        var appointtime = '';
+		var endtime = '';
+        for(i=2; i<agenda_object.length;i++){
+			if(agenda_object[i].getElementsByTagName("input")[2].value != ''){
+				appointtime = document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[2].value;
+			}
+			if(agenda_object[i].getElementsByTagName("input")[3].value != ''){
+				endtime = document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[3].value;
+			}
             agenda_content.push(
                 {
                     location: agenda_object[i].getElementsByTagName("input")[0].value,
                     agenda: agenda_object[i].getElementsByTagName("input")[1].value,
-                    appointtime: document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[2].value,
-                    endtime: document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[3].value
+                    appointtime: appointtime,
+                    endtime: endtime
                 }
             );
         }

@@ -49,7 +49,7 @@ else
     if($action == 1){
         //select all
         try{
-            $query = "SELECT * from work_calendar_details where is_enabled = true";
+            $query = "SELECT * from work_calendar_details where is_enabled = true order by appoint_time";
 
             $stmt = $db->prepare( $query );
             $stmt->execute();
