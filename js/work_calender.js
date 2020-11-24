@@ -658,6 +658,8 @@
 		var appointtime = '';
 		var endtime = '';
         for(i=2; i<agenda_object.length;i++){
+			appointtime = '';
+			endtime = '';
 			if(agenda_object[i].getElementsByTagName("input")[2].value != ''){
 				appointtime = document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[2].value;
 			}
@@ -1037,10 +1039,11 @@
 
         var agenda_object = document.getElementById("agenda_table").getElementsByTagName("tr");
         var agenda_content = [];
-
-        var appointtime = '';
+		var appointtime = '';
 		var endtime = '';
         for(i=2; i<agenda_object.length;i++){
+			appointtime = '';
+			endtime = '';
 			if(agenda_object[i].getElementsByTagName("input")[2].value != ''){
 				appointtime = document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[2].value;
 			}
