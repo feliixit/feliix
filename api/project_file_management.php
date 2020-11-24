@@ -221,11 +221,30 @@ else
 
             if($keyword == '')
             {
-                usort($merged_results, function ($item1, $item2) {
-                    return $item2['message_datetime'] <=> $item1['message_datetime'];
-                });
+                if(count($merged_results) > 0)
+                {
+                    usort($merged_results, function ($item1, $item2) {
+                        return $item2['message_datetime'] <=> $item1['message_datetime'];
+                    });
+                
 
-                echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+                    // remove duplicate
+                    $arry_keys = [];
+                    $final_results = [];
+                    foreach ($merged_results as $arr)
+                    {
+                        $str = $arr['message_datetime'] .  $arr['gcp_name'] . $arr['gcp_name'] . $arr['messager'];
+                        if(!in_array($str, $arry_keys))
+                            array_push($final_results, $arr);
+
+                        array_push($arry_keys, $str);
+                    }
+                }
+                else
+                    $final_results = $merged_results;
+                
+
+                echo json_encode($final_results, JSON_UNESCAPED_SLASHES);
             }
             else
             {
@@ -240,7 +259,19 @@ else
                     return $item2['message_datetime'] <=> $item1['message_datetime'];
                 });
 
-                echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
+                // remove duplicate
+                $arry_keys = [];
+                $final_results = [];
+                foreach ($return_result as $arr)
+                {
+                    $str = $arr['message_datetime'] .  $arr['gcp_name'] . $arr['gcp_name'] . $arr['messager'];
+                    if(!in_array($str, $arry_keys))
+                        array_push($final_results, $arr);
+
+                    array_push($arry_keys, $str);
+                }
+
+                echo json_encode($final_results, JSON_UNESCAPED_SLASHES);
             }
             break;
       }
@@ -248,10 +279,10 @@ else
       function GetAdditional($pac_id, $db, $pid, $stage)
       {
         $sql = "select bucketname, filename, gcp_name, username, gcp_storage_file.created_at
-            from project_stage_client pm 
-            join gcp_storage_file on batch_id = pac.id and batch_type = 'additional'
-            join user on user.id = gcp_storage_file.create_id
-            where pm.id = " . $pac_id;
+        from project_stage_client pm 
+        join gcp_storage_file on batch_id = pm.id and batch_type = 'additional'
+        join user on user.id = gcp_storage_file.create_id
+        where pm.stage = " . $pac_id;
 
             $merged_results = array();
 
@@ -316,11 +347,20 @@ else
                 "stage" => $stage,
                 "bucket" => $bucket,
             );
+        }
+
+        $sql = "select pm.id from project_other_task pm where pm.stage_id = " . $pac_id;
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
 
             $arr = GetOtherTaskMsg($id, $db, $pid, $stage);
             if(count($arr) > 0)
                 $merged_results = array_merge($merged_results, $arr);
         }
+
 
         return $merged_results;
 
@@ -360,6 +400,14 @@ else
                 "stage" => $stage,
                 "bucket" => $bucket,
             );
+        }
+
+        $sql = "select pm.id from project_other_task_r pm where pm.stage_id = " . $pac_id;
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $id = $row['id'];
 
             $arr = GetOtherTaskMsgR($id, $db, $pid, $stage);
             if(count($arr) > 0)
@@ -402,7 +450,15 @@ else
                     "stage" => $stage,
                     "bucket" => $bucket,
                 );
-    
+            }
+            
+            $sql = "select distinct pm.id from project_other_task_message pm where pm.task_id = " . $pac_id;
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+
                 $arr = GetOtherTaskMsgRep($id, $db, $pid, $stage);
                 if(count($arr) > 0)
                     $merged_results = array_merge($merged_results, $arr);
@@ -444,11 +500,18 @@ else
                     "stage" => $stage,
                     "bucket" => $bucket,
                 );
-    
+            }
+
+            $sql = "select distinct pm.id from project_other_task_message_r pm where pm.task_id = " . $pac_id;
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+
                 $arr = GetOtherTaskMsgRepR($id, $db, $pid, $stage);
                 if(count($arr) > 0)
                     $merged_results = array_merge($merged_results, $arr);
-      
             }
     
             return $merged_results;
@@ -531,6 +594,6 @@ else
     
             return $merged_results;
       }
-    
+
 
 ?>
