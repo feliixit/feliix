@@ -58,6 +58,8 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
+            $merged_results = [];
+
             // comment
             $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
                                 FROM project_main pm
@@ -282,7 +284,7 @@ else
         from project_stage_client pm 
         join gcp_storage_file on batch_id = pm.id and batch_type = 'additional'
         join user on user.id = gcp_storage_file.create_id
-        where pm.stage = " . $pac_id;
+        where pm.stage_id = " . $pac_id;
 
             $merged_results = array();
 
