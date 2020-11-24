@@ -98,7 +98,7 @@
 				  }
 				  else
 				  {
-					  form_Data.append('appoint_time', null);
+					  form_Data.append('appoint_time', '0000-00-00 00:00:00');
 				  }
 				  if(addDetails[i].endtime !=''){
 					var valide = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm", true).isValid();
@@ -113,7 +113,7 @@
 				  }
 				  else
 				  {
-					  form_Data.append('end_time', null);
+					  form_Data.append('end_time', '0000-00-00 00:00:00');
 				  }
                   form_Data.append('is_enabled', addDetails[i].is_enabled);
                   form_Data.append('action', this.action);
