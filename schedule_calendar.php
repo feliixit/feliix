@@ -122,8 +122,8 @@
 	<div v-for="(msg, i) in messages" class="message__item">
 	<div>
 	<input v-if="msg.id == edit" class="add__input" style="width:100%" v-model="msg.message" maxlength="100">
-	<div v-else-if="msg.id != edit && msg.updated_at == null" class="message__item__input">{{ msg.message }} create by {{ msg.created_by }} at {{ msg.created_at }}</div>
-	<div v-else class="message__item__input">{{ msg.message }} edit by {{ msg.updated_by }} at {{ msg.updated_at }}</div>
+	<div v-else-if="msg.id != edit && msg.updated_at == null" class="message__item__input">{{ msg.message }} (created by {{ msg.created_by }} at {{ msg.created_at }})</div>
+	<div v-else class="message__item__input">{{ msg.message }} (edited by {{ msg.updated_by }} at {{ msg.updated_at }})</div>
 	</div>
 	<div v-if="msg.created_by == user" style="align-items:end; display: flex;">
 	<i class="fas fa-pencil-alt" @click="edit_msg(msg.id, msg.message)"style="padding-right: 10%;"></i>
