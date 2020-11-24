@@ -221,21 +221,27 @@ else
 
             if($keyword == '')
             {
-                usort($merged_results, function ($item1, $item2) {
-                    return $item2['message_datetime'] <=> $item1['message_datetime'];
-                });
-
-                // remove duplicate
-                $arry_keys = [];
-                $final_results = [];
-                foreach ($merged_results as $arr)
+                if(count($merged_results) > 0)
                 {
-                    $str = $arr['message_datetime'] .  $arr['gcp_name'] . $arr['gcp_name'] . $arr['messager'];
-                    if(!in_array($str, $arry_keys))
-                        array_push($final_results, $arr);
+                    usort($merged_results, function ($item1, $item2) {
+                        return $item2['message_datetime'] <=> $item1['message_datetime'];
+                    });
+                
 
-                    array_push($arry_keys, $str);
+                    // remove duplicate
+                    $arry_keys = [];
+                    $final_results = [];
+                    foreach ($merged_results as $arr)
+                    {
+                        $str = $arr['message_datetime'] .  $arr['gcp_name'] . $arr['gcp_name'] . $arr['messager'];
+                        if(!in_array($str, $arry_keys))
+                            array_push($final_results, $arr);
+
+                        array_push($arry_keys, $str);
+                    }
                 }
+                else
+                    $final_results = $merged_results;
                 
 
                 echo json_encode($final_results, JSON_UNESCAPED_SLASHES);
@@ -273,10 +279,10 @@ else
       function GetAdditional($pac_id, $db, $pid, $stage)
       {
         $sql = "select bucketname, filename, gcp_name, username, gcp_storage_file.created_at
-            from project_stage_client pm 
-            join gcp_storage_file on batch_id = pac.id and batch_type = 'additional'
-            join user on user.id = gcp_storage_file.create_id
-            where pm.id = " . $pac_id;
+        from project_stage_client pm 
+        join gcp_storage_file on batch_id = pm.id and batch_type = 'additional'
+        join user on user.id = gcp_storage_file.create_id
+        where pm.stage = " . $pac_id;
 
             $merged_results = array();
 
