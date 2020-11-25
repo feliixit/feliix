@@ -340,10 +340,19 @@ class WorkCalenderDetails
 
         $last_id = 0;
         // insert query
-        $query = "INSERT INTO " . $this->table_name . "
-                (`main_id`,`location`, `agenda`, `appoint_time`, `end_time`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:main_id,:location, :agenda, :appoint_time, :end_time, 1, now(),:created_by)";
-
+		
+        if($this->end_time !='')
+		{
+			$query = "INSERT INTO " . $this->table_name . "
+					(`main_id`,`location`, `agenda`, `appoint_time`, `end_time`,`is_enabled`,`created_at`,`created_by`) 
+					VALUES (:main_id,:location, :agenda, :appoint_time, :end_time, 1, now(),:created_by)";
+		}
+		else
+		{
+			$query = "INSERT INTO " . $this->table_name . "
+                (`main_id`,`location`, `agenda`, `appoint_time`,`is_enabled`,`created_at`,`created_by`) 
+                VALUES (:main_id, :location, :agenda, :appoint_time, 1, now(),:created_by)";
+		}
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
@@ -353,8 +362,10 @@ class WorkCalenderDetails
             $this->location = htmlspecialchars(strip_tags($this->location));
             $this->agenda = htmlspecialchars(strip_tags($this->agenda));
             $this->appoint_time = htmlspecialchars(strip_tags($this->appoint_time));
-            $this->end_time = htmlspecialchars(strip_tags($this->end_time));
-            
+			if($this->end_time !='')
+			{
+				$this->end_time = htmlspecialchars(strip_tags($this->end_time));
+			}
             $this->created_by = htmlspecialchars(strip_tags($this->created_by));
 
            
@@ -363,7 +374,10 @@ class WorkCalenderDetails
             $stmt->bindParam(':location', $this->location);
             $stmt->bindParam(':agenda', $this->agenda);
             $stmt->bindParam(':appoint_time', $this->appoint_time);
-            $stmt->bindParam(':end_time', $this->end_time);
+			if($this->end_time !='')
+			{
+				$stmt->bindParam(':end_time', $this->end_time);
+			}
             $stmt->bindParam(':created_by', $this->created_by);
             
 

@@ -16,7 +16,7 @@
   },
      methods:{
          
-        addMain:function(details,main){
+        addMain:function(details,main,du){
           this.action = 2;//add
           var token = localStorage.getItem('token');
           var form_Data = new FormData();
@@ -36,7 +36,13 @@
                   form_Data.append('things_to_bring', main.Things_to_Bring);
                   form_Data.append('things_to_bring_location', main.Location_Things_to_Bring);
                   form_Data.append('products_to_bring', main.Products_to_Bring);
-                  form_Data.append('products_to_bring_files', _this.filename);
+				  if(du != 2){
+					form_Data.append('products_to_bring_files', _this.filename);
+				  }
+				  else
+				  {
+					form_Data.append('products_to_bring_files', main.File_name);
+				  }
                   form_Data.append('service', main.Service);
                   form_Data.append('driver', main.Driver);
                   form_Data.append('back_up_driver', main.Back_up_Driver);
@@ -96,10 +102,7 @@
 						form_Data.append('appoint_time', addDetails[i].appointtime);
 					}
 				  }
-				  else
-				  {
-					  form_Data.append('appoint_time', '');
-				  }
+
 				  if(addDetails[i].endtime !=''){
 					var valide = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm", true).isValid();
 					var valides = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm:ss", true).isValid(); 
@@ -110,10 +113,6 @@
 					{
 						form_Data.append('end_time', addDetails[i].endtime);
 					}
-				  }
-				  else
-				  {
-					  form_Data.append('end_time', '');
 				  }
                   form_Data.append('is_enabled', addDetails[i].is_enabled);
                   form_Data.append('action', this.action);
@@ -236,6 +235,7 @@
 							Location_Products_to_Bring:response.data[i].installer_needed_location,
 							Products_to_Bring:response.data[i].products_to_bring,
 							Products_to_bring_files:files,
+							File_name:response.data[i].products_to_bring_files,
 							Service:response.data[i].service,
 							Driver:response.data[i].driver,
 							Back_up_Driver:response.data[i].back_up_driver,
@@ -588,7 +588,8 @@
                 document.getElementById("sc_products").value = sc_content.Products_to_Bring;
 				document.getElementById("upload_input").style = "display:none;";
 				document.getElementById("sc_product_files").innerHTML = sc_content.Products_to_bring_files;
-                document.getElementById("sc_service").value = sc_content.Service;
+                document.getElementById("sc_product_files_hide").value = sc_content.File_name;
+				document.getElementById("sc_service").value = sc_content.Service;
                 document.getElementById("sc_driver1").value = sc_content.Driver;
                 document.getElementById("sc_driver2").value = sc_content.Back_up_Driver;
 
@@ -735,7 +736,7 @@
                 });
             }
         }
-        app.addMain(agenda_content,sc_content);
+        app.addMain(agenda_content,sc_content,1);
 
         $('#exampleModalScrollable').modal('toggle');
 		
@@ -927,7 +928,7 @@
 				sc_content.Endtime = sc_content.Date +' '+ sc_content.Endtime;
             }
         }
-		app.addMain(sc_content.Agenda,sc_content);
+		app.addMain(sc_content.Agenda,sc_content,2);
 
         $('#exampleModalScrollable').modal('toggle');
 

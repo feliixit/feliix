@@ -420,7 +420,7 @@
                         </div>
 						<div  id="sc_product_files" style="display: flex; align-items: center; margin-top:1%;">
                         </div>
-
+						<input  id="sc_product_files_hide" style="display: none;" value="">
                     </div>
 
                 </div>
