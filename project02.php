@@ -77,6 +77,26 @@ $(function(){
 
 </script>
 
+<style>
+    .mainContent {    
+        min-height: 110vh;
+    }
+
+    .tablebox.s2.edit>div{
+        position: relative;
+        height: 35px;
+    }
+
+    .tablebox.s2.edit>div div.btnbox{
+        position: absolute;
+        min-width: 470px;
+        top: -5px;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+</style>
+
 </head>
 
 <body class="fourth">
@@ -141,7 +161,7 @@ $(function(){
                         <div class="tablebox s2 del">
                             <ul>
                                 <li class="head">Target Sequence:</li>
-                                <li>
+                                <li class="mix">
                                     <select  v-model="stage_id_to_edit">
                                         <option v-for="(item, index) in receive_stage_records" :value="item.id" >
                                           {{ item.sequence }}
@@ -154,7 +174,7 @@ $(function(){
                         <div class="tablebox s2 edit">
                             <ul>
                                 <li class="head">Target Sequence:</li>
-                                <li>
+                                <li class="mix">
                                     <select  v-model="stage_id_to_edit">
                                         <option v-for="(item, index) in receive_stage_records" :value="item.id" >
                                           {{ item.sequence }}
@@ -191,9 +211,11 @@ $(function(){
                                 <li class="head">Reason for Editing:</li>
                                 <li><textarea placeholder="" v-model="stage_edit_reason"></textarea></li>
                             </ul>
-                            <div class="btnbox">
-                                <a class="btn small" @click="edit_stage_clear">Cancel</a>
-                                <a class="btn small green" @click="save_edit_stage">Save</a>
+                            <div>
+                                <div class="btnbox">
+                                    <a class="btn small" @click="edit_stage_clear">Cancel</a>
+                                    <a class="btn small green" @click="save_edit_stage">Save</a>
+                                </div>
                             </div>
                         </div>
                     </div>

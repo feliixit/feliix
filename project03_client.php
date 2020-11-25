@@ -2283,8 +2283,7 @@ $(function(){
                         <div v-for='(receive_record, index) in stage_client_infomation'>{{ receive_record.message }} ({{ receive_record.username }} at {{ receive_record.created_at }})
                             <br v-if="receive_record.items.length > 0">
                                 <span v-for="item in receive_record.items">
-                                • <a :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>&nbsp&nbsp
-                                </span>
+                                <a :href="baseURL + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a></span>
                          
                         </div>
                     </li>

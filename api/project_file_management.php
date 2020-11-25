@@ -221,7 +221,7 @@ else
 
             $return_result = [];
 
-            if($keyword == '')
+            if(trim($keyword) == '')
             {
                 if(count($merged_results) > 0)
                 {

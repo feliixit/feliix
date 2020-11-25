@@ -92,6 +92,10 @@ try {
                 if($access1 == true || $access2 == true || $access3 == true)
                 {
             ?>
+            <li class="sec03">
+                <a class="uni" href="../project01">Project<br>Management</a>
+                <a class="uni" href="../schedule_calendar">Schedule<br>Calendar</a>
+            </li>
             <li class="gray05" style="border: 3px solid var(--black01);">
                 <a class="uni">Admin<br>Section</a>
                 <?=($access1 == true) ? '<a class="list" href="../ammend">Verify and Review</a>' : '' ?>
@@ -112,7 +116,7 @@ try {
                 <a class="list" href="../apply_for_leave">Leave</a>
                 <a class="list">Query/Ammend</a>
             </li>
-            <li class="sec03">
+            <li class="sec02">
                 <a class="uni">Payment<br>Request/Claim</a>
             </li>
             <li class="gray02">

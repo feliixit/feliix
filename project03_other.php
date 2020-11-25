@@ -122,6 +122,55 @@ catch (Exception $e) {
         })
     </script>
 
+    <style>
+        .tablebox .dialog {
+            top: -20px;    
+        }
+
+
+        .tablebox .dialog::before, .tablebox .dialog::after {
+            top: 15px;
+        }
+
+
+
+        body.fourth .mainContent > .block .tablebox.lv3c {   
+            margin: 15px auto;
+        }
+
+
+        div.tablebox.lv3a a.attch{
+            color: var(--fth05);
+            transition: .3s;
+            margin: 0 15px 0 0;    
+            font-size: 13px;
+        }
+
+        div.tablebox.lv3a a.attch:hover{
+            color: var(--fth01);
+        }
+
+        div.tablebox.lv3a a.attch::before{
+            content: '';
+            width: 8px;
+            height: 8px;
+            display: inline-block;
+            margin-right: 3px;
+            background-color: var(--fth05);
+            border-radius: 8px;
+            vertical-align: baseline;
+            transition: .3s;
+        }
+
+        div.tablebox.lv3a a.attch:hover::before{
+            background-color: var(--fth01);
+        }
+
+        .mainContent {    
+            min-height: 150vh;
+        }
+
+    </style>
 
     <style>
         .meetingform-buttons {
@@ -410,6 +459,11 @@ catch (Exception $e) {
         #vs4__listbox li {
             border-right: 2px solid #707070;
             font-size: 12px;
+        }
+
+        #vs5combobox, #vs6combobox {
+            border: 1px solid #707070;
+            border-radius: 0;
         }
 
         .swal2-popup.swal2-toast {
