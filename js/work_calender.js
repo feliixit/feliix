@@ -91,7 +91,7 @@
                   form_Data.append('main_id', mainId);
                   form_Data.append('location', addDetails[i].location);
                   form_Data.append('agenda', addDetails[i].agenda);
-				  if(addDetails[i].appointtime !=''){
+				  if(addDetails[i].appointtime !='' && addDetails[i].appointtime != null){
 					var valid = moment(addDetails[i].appointtime, "YYYY-MM-DD HH:mm", true).isValid(); 
 					var valids = moment(addDetails[i].appointtime, "YYYY-MM-DD HH:mm:ss", true).isValid();
 					if(!valid && !valids){
@@ -103,7 +103,7 @@
 					}
 				  }
 
-				  if(addDetails[i].endtime !=''){
+				  if(addDetails[i].endtime !='' && addDetails[i].endtime != null){
 					var valide = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm", true).isValid();
 					var valides = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm:ss", true).isValid(); 
 					if(!valide && !valides){
@@ -1045,10 +1045,10 @@
         for(i=2; i<agenda_object.length;i++){
 			appointtime = '';
 			endtime = '';
-			if(agenda_object[i].getElementsByTagName("input")[2].value != ''){
+			if(agenda_object[i].getElementsByTagName("input")[2].value != ''&& agenda_object[i].getElementsByTagName("input")[2].value != null){
 				appointtime = document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[2].value;
 			}
-			if(agenda_object[i].getElementsByTagName("input")[3].value != ''){
+			if(agenda_object[i].getElementsByTagName("input")[3].value != '' && agenda_object[i].getElementsByTagName("input")[3].value != null){
 				endtime = document.getElementById("sc_date").value +' ' +agenda_object[i].getElementsByTagName("input")[3].value;
 			}
             agenda_content.push(
