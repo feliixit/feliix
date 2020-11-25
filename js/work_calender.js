@@ -91,7 +91,7 @@
                   form_Data.append('main_id', mainId);
                   form_Data.append('location', addDetails[i].location);
                   form_Data.append('agenda', addDetails[i].agenda);
-				  if(addDetails[i].appointtime !='' && addDetails[i].appointtime != null){
+				  if(addDetails[i].appointtime !='' && addDetails[i].appointtime != 'Invalid date'){
 					var valid = moment(addDetails[i].appointtime, "YYYY-MM-DD HH:mm", true).isValid(); 
 					var valids = moment(addDetails[i].appointtime, "YYYY-MM-DD HH:mm:ss", true).isValid();
 					if(!valid && !valids){
@@ -103,7 +103,7 @@
 					}
 				  }
 
-				  if(addDetails[i].endtime !='' && addDetails[i].endtime != null){
+				  if(addDetails[i].endtime !='' && addDetails[i].endtime != 'Invalid date'){
 					var valide = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm", true).isValid();
 					var valides = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm:ss", true).isValid(); 
 					if(!valide && !valides){
