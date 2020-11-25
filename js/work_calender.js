@@ -95,7 +95,7 @@
 					var valid = moment(addDetails[i].appointtime, "YYYY-MM-DD HH:mm", true).isValid(); 
 					var valids = moment(addDetails[i].appointtime, "YYYY-MM-DD HH:mm:ss", true).isValid();
 					if(!valid && !valids){
-						form_Data.append('appoint_time', date +''+ addDetails[i].appointtime);
+						form_Data.append('appoint_time', date +' '+ addDetails[i].appointtime);
 					}
 					else
 					{
@@ -107,7 +107,7 @@
 					var valide = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm", true).isValid();
 					var valides = moment(addDetails[i].endtime, "YYYY-MM-DD HH:mm:ss", true).isValid(); 
 					if(!valide && !valides){
-						form_Data.append('end_time', date +''+ addDetails[i].endtime);
+						form_Data.append('end_time', date +' '+ addDetails[i].endtime);
 					}
 					else
 					{
