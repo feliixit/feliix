@@ -273,6 +273,7 @@ class WorkCalenderDetails
     public $agenda;
     public $appoint_time;
     public $end_time;
+	public $sort;
     public $is_enabled;
     public $created_at;
     public $updated_at;
@@ -344,14 +345,14 @@ class WorkCalenderDetails
         if($this->end_time !='')
 		{
 			$query = "INSERT INTO " . $this->table_name . "
-					(`main_id`,`location`, `agenda`, `appoint_time`, `end_time`,`is_enabled`,`created_at`,`created_by`) 
-					VALUES (:main_id,:location, :agenda, :appoint_time, :end_time, 1, now(),:created_by)";
+					(`main_id`,`location`, `agenda`, `appoint_time`, `end_time`,`sort`,`is_enabled`,`created_at`,`created_by`) 
+					VALUES (:main_id,:location, :agenda, :appoint_time, :end_time, :sort, 1, now(),:created_by)";
 		}
 		else
 		{
 			$query = "INSERT INTO " . $this->table_name . "
-                (`main_id`,`location`, `agenda`, `appoint_time`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:main_id, :location, :agenda, :appoint_time, 1, now(),:created_by)";
+                (`main_id`,`location`, `agenda`, `appoint_time`,`sort`,`is_enabled`,`created_at`,`created_by`) 
+                VALUES (:main_id, :location, :agenda, :appoint_time, :sort, 1, now(),:created_by)";
 		}
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -366,6 +367,7 @@ class WorkCalenderDetails
 			{
 				$this->end_time = htmlspecialchars(strip_tags($this->end_time));
 			}
+			$this->sort = htmlspecialchars(strip_tags($this->sort));
             $this->created_by = htmlspecialchars(strip_tags($this->created_by));
 
            
@@ -378,6 +380,7 @@ class WorkCalenderDetails
 			{
 				$stmt->bindParam(':end_time', $this->end_time);
 			}
+			$stmt->bindParam(':sort', $this->sort);
             $stmt->bindParam(':created_by', $this->created_by);
             
 

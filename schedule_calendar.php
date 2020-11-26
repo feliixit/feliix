@@ -581,7 +581,7 @@
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script>
-<script defer src="js/work_calender.js?v=2020112603"></script>
+<script defer src="js/work_calender.js?v=2020112701"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
 <script src='https://unpkg.com/fullcalendar@5.1.0/main.min.js'></script>
 <script src='https://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>

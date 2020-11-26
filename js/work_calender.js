@@ -114,6 +114,7 @@
 						form_Data.append('end_time', addDetails[i].endtime);
 					}
 				  }
+				  form_Data.append('sort', addDetails[i].sort);
                   form_Data.append('is_enabled', addDetails[i].is_enabled);
                   form_Data.append('action', this.action);
                   form_Data.append('created_by', this.name);
@@ -672,7 +673,8 @@
                     location: agenda_object[i].getElementsByTagName("input")[0].value,
                     agenda: agenda_object[i].getElementsByTagName("input")[1].value,
                     appointtime: appointtime,
-                    endtime: endtime
+                    endtime: endtime,
+					sort:i
                 }
             );
         }
@@ -1056,7 +1058,8 @@
                     location: agenda_object[i].getElementsByTagName("input")[0].value,
                     agenda: agenda_object[i].getElementsByTagName("input")[1].value,
                     appointtime: appointtime,
-                    endtime: endtime
+                    endtime: endtime,
+					sort:i
                 }
             );
         }
@@ -1378,14 +1381,16 @@
 	
 	var timeOut1;
 	var timeOut2;
+	var timeOut3;
 	function reload(){
-		app.getDetail();
-		timeOut1 = setTimeout(function(){app.getMain();},500);
-		timeOut2 = setTimeout(function(){initial();},1000);
+		timeOut3 = setTimeout(function(){app.getDetail();},500);
+		timeOut1 = setTimeout(function(){app.getMain();},1000);
+		timeOut2 = setTimeout(function(){initial();},1500);
 	}
 	function clearTimeOut(){
 		clearTimeout(timeOut1);
 		clearTimeout(timeOut2);
+		clearTimeout(timeOut3);
 	}
 	
 	$(document).ready(function() {

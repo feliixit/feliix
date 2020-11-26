@@ -16,6 +16,7 @@ $agenda = (isset($_POST['agenda']) ?  $_POST['agenda'] : '');
 $appoint_time = (isset($_POST['appoint_time']) ?  $_POST['appoint_time'] : '');
 $end_time = (isset($_POST['end_time']) ?  $_POST['end_time'] : '');
 $is_enabled = (isset($_POST['is_enabled']) && $_POST['is_enabled'] === "true"? 1 : 0);
+$sort = (isset($_POST['sort']) ?  $_POST['sort'] : 0);
 $created_by = (isset($_POST['created_by']) ?  $_POST['created_by'] : '');
 $updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
 $deleted_by = (isset($_POST['deleted_by']) ?  $_POST['deleted_by'] : '');
@@ -34,7 +35,6 @@ $database = new Database();
 $db = $database->getConnection();
 
 $workCalenderDetails = new WorkCalenderDetails($db);
-$workCalenderMessages = new WorkCalenderMessages($db);
 //$le = new Leave($db);
 
 use \Firebase\JWT\JWT;
@@ -49,7 +49,7 @@ else
     if($action == 1){
         //select all
         try{
-            $query = "SELECT * from work_calendar_details where is_enabled = true order by appoint_time";
+            $query = "SELECT * from work_calendar_details where is_enabled = true order by sort";
 
             $stmt = $db->prepare( $query );
             $stmt->execute();
@@ -77,6 +77,7 @@ else
             $workCalenderDetails->agenda = $agenda;
             $workCalenderDetails->appoint_time = $appoint_time;
             $workCalenderDetails->end_time = $end_time;
+			$workCalenderDetails->sort = $sort;
             $workCalenderDetails->is_enabled = $is_enabled;
             $workCalenderDetails->created_by = $created_by;
             $arr = $workCalenderDetails->create();
@@ -105,6 +106,7 @@ else
             $workCalenderDetails->agenda = $agenda;
             $workCalenderDetails->appoint_time = $appoint_time;
             $workCalenderDetails->end_time = $end_time;
+			$workCalenderDetails->sort = $sort;
             $workCalenderDetails->is_enabled = $is_enabled;
             $workCalenderDetails->updated_by = $updated_by;
             $arr = $workCalenderDetails->update();
