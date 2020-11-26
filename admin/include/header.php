@@ -93,8 +93,9 @@ try {
                 {
             ?>
             <li class="sec03">
-                <a class="uni" href="../project01">Project<br>Management</a>
-                <a class="uni" href="../schedule_calendar">Schedule<br>Calendar</a>
+                <a class="uni">Project<br>Management</a>
+                <a class="list" href="../project01">Project Management</a>
+                <a class="list" href="../schedule_calendar">Schedule Calendar</a>
             </li>
             <li class="gray05" style="border: 3px solid var(--black01);">
                 <a class="uni">Admin<br>Section</a>
