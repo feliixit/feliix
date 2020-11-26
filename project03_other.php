@@ -2355,17 +2355,42 @@ catch (Exception $e) {
                                 </dl>
 
                                 <dl>
-                                    <dt>Files:</dt>
-                                    <dd>
-                                        <div class="filebox">
-                                            <a class="attch" v-for="(it,index) in editfileArray" :key="index" @click="deleteEditFile(index)">{{it.name}}</a>
-                                        </div>
+                                    <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                      
                                         <div class="pub-con" ref="bg">
                                             <div class="input-zone">
                                                 <span class="upload-des">choose file</span>
                                                 <input class="input" type="file" :ref="'editfile'" placeholder="choose file" @change="changeEditFile()" multiple />
                                             </div>
                                         </div>
+                                    </dd>
+                                </dl>
+
+                                <dl>
+
+                                    <dd>
+                                        <div class="browser_group">
+                                            <div class="pad">
+                                                <div class="file-list">
+                                                    <div class="file-item" v-for="(item,index) in editfileArray" :key="index">
+                                                        <p>
+                                                            {{item.name}}
+                                                            <span @click="deleteEditFile(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
+                                                            </span>
+                                                        </p>
+                                                        <div class="progress-container" v-show="item.progress!=0">
+                                                            <div class="progress-wrapper">
+                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                                            </div>
+                                                            <div class="progress-rate">
+                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                <span v-else><i class="fas fa-check-circle"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                     </dd>
                                 </dl>
 
@@ -2511,17 +2536,41 @@ catch (Exception $e) {
                                     <dd><textarea placeholder="" v-model="record_r.detail"></textarea></dd>
                                 </dl>
                                 <dl>
-                                    <dt>Files:</dt>
-                                    <dd>
-                                        <div class="filebox">
-                                            <a class="attch" v-for="(it,index) in editfileArray_r" :key="index" @click="deleteEditFile_r(index)">{{it.name}}</a>
-                                        </div>
+                                    <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
                                         <div class="pub-con" ref="bg">
                                             <div class="input-zone">
                                                 <span class="upload-des">choose file</span>
                                                 <input class="input" type="file" :ref="'editfile_r'" placeholder="choose file" @change="changeEditFile_r()" multiple />
                                             </div>
                                         </div>
+                                    </dd>
+                                </dl>
+
+                                <dl>
+
+                                    <dd>
+                                        <div class="browser_group">
+                                            <div class="pad">
+                                                <div class="file-list">
+                                                    <div class="file-item" v-for="(item,index) in editfileArray_r" :key="index">
+                                                        <p>
+                                                            {{item.name}}
+                                                            <span @click="deleteEditFile_r(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
+                                                            </span>
+                                                        </p>
+                                                        <div class="progress-container" v-show="item.progress!=0">
+                                                            <div class="progress-wrapper">
+                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                                            </div>
+                                                            <div class="progress-rate">
+                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                <span v-else><i class="fas fa-check-circle"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                     </dd>
                                 </dl>
 
@@ -2539,7 +2588,7 @@ catch (Exception $e) {
                     </div>
                     <!-- tag -->
                     <b class="tag focus">PROJECT</b>
-                    <b class="tag">UNDP / Ranee</b>
+                    <b><a style="font-size:20px; padding-left:20px;" :href="'project02?p=' + project_id">{{ project_name }}</a></b>
                 </div>
             </div>
             <div class="block left">
@@ -2549,7 +2598,7 @@ catch (Exception $e) {
                         <b>Filter:</b>
 
                         <select name="" id="" v-model="fil_priority">
-                            <option value="">Priority</option>
+                            <option value="0" select>Priority</option>
                             <option value="1">No Priority</option>
                             <option value="2">Low</option>
                             <option value="3">Normal</option>
@@ -2557,13 +2606,14 @@ catch (Exception $e) {
                             <option value="5">Urgent</option>
                         </select>
                         <select name="" id="" v-model="fil_status">
-                            <option value="">Status</option>
+                            <option value="0">Status</option>
                             <option value="0">Ongoing</option>
                             <option value="1">Pending</option>
                             <option value="2">Close</option>
 
                         </select>
                         <select v-model="fil_due_date">
+                            <option value="">Due Date</option>
                             <option v-for="(it, index) in opt_due_date" :value="it.due_date" :key="it.due_date">
                                 {{ it.due_date }}
                             </option>
@@ -3228,6 +3278,7 @@ catch (Exception $e) {
             return;
         }
 
+        // if 所有欄位都不果為空  且 結束時間須晚於開始時間，則做以下動作
         if ($("#oldDate").val() === '') {
             app1.warning('Please select Date!');
             return;
@@ -3262,28 +3313,16 @@ catch (Exception $e) {
             return;
         }
 
-        // if 所有欄位都不果為空  且 結束時間須晚於開始時間，則做以下動作
+        
         //表單變成不可修改
         $('#editmeeting-form > fieldset').prop('disabled', true);
         //$("oldAttendee").prop('disabled', true);
         $("#oldAttendee").addClass("select_disabled");
 
-        //##修改後的內容 update到資料庫
-        var id = eventObj.id;
-        var obj_meeting = {
-            title: $("#oldSubject").val().trim(),
-            attendee: names.toString().trim(),
-            items: app1.old_attendee,
-            start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
-            end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
-            content: $("#oldContent").val(),
-            //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
-            creator: "<?php echo $GLOBALS['username'] ?>"
-        };
-        $("#oldCreator").val(obj_meeting.creator);
 
         //##利用 id變數到資料庫中update裡面舊的obj_meeting
         // UPDATE table_name  SET meeting_data = obj_meeting WHERE ID = id;
+        var id = eventObj.id;
 
         token = localStorage.getItem('token');
         var form_Data = new FormData();
@@ -3313,7 +3352,28 @@ catch (Exception $e) {
             success: function(result) {
                 console.log(result);
            
+                //##寄送通知信件給會議參與者,告知修改後訊息
                 _func.notify_mail(id, 2);
+
+                //##修改後的內容 update到資料庫
+                var obj_meeting = {
+                    title: $("#oldSubject").val().trim(),
+                    attendee: names.toString().trim(),
+                    items: app1.old_attendee,
+                    start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
+                    end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
+                    content: $("#oldContent").val(),
+                    //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
+                    creator: "<?php echo $GLOBALS['username'] ?>"
+                };
+                $("#oldCreator").val(obj_meeting.creator);
+
+                //把修改後的會議資訊 update 到日曆上
+                eventObj.setStart(obj_meeting.start);
+                eventObj.setEnd(obj_meeting.end);
+                eventObj.setProp("title", obj_meeting.title);
+                eventObj.setExtendedProp("description", obj_meeting);
+
             },
 
             // show error message to user
@@ -3321,15 +3381,6 @@ catch (Exception $e) {
 
             }
         });
-
-        //##寄送通知信件給會議參與者,告知修改後訊息
-
-
-        //把修改後的會議資訊 update 到日曆上
-        eventObj.setStart(obj_meeting.start);
-        eventObj.setEnd(obj_meeting.end);
-        eventObj.setProp("title", obj_meeting.title);
-        eventObj.setExtendedProp("description", obj_meeting);
 
         //按鈕也會改變
         $("#btn_cancel").hide();
@@ -3382,6 +3433,10 @@ catch (Exception $e) {
 
                     success: function(result) {
                         console.log(result);
+
+                        
+                        //從日曆中刪除該會議
+                        eventObj.remove();
                         
                         app1.notify_mail(id, 3);
                     },
@@ -3393,8 +3448,6 @@ catch (Exception $e) {
                 });
 
 
-                //從日曆中刪除該會議
-                eventObj.remove();
               
             } else {
           
@@ -3407,8 +3460,6 @@ catch (Exception $e) {
 
 
     $(document).on("click", "#btn_add", function() {
-
-        //##任一欄位如果為空則提示欄位不得為空
         //結束時間須晚於開始時間
         let start = moment($("#newDate").val() + " " + $("#newStartTime").val(), "YYYY/MM/DD HH:mm");
         let end = moment($("#newDate").val() + " " + $("#newEndTime").val(), "YYYY/MM/DD HH:mm");
@@ -3420,6 +3471,7 @@ catch (Exception $e) {
             return;
         }
 
+        //##任一欄位如果為空則提示欄位不得為空
         if ($("#newDate").val() === '') {
             app1.warning('Please select Date!');
             return;
@@ -3468,6 +3520,11 @@ catch (Exception $e) {
             creator: "<?php echo $GLOBALS['username'] ?>"
         };
 
+        //##obj_meeting 內容寫入資料庫
+        //資料庫欄位 (ID, meeting_data)  其中ID為自動計數
+        //INSERT table_name (meeting_data) VALUES (obj_meeting)
+        //##將該obj_meeting在資料庫給的id返回回來，並設定到前端的id變數
+        //##寄送通知信件給會議參與者
         var id = app1.addMeetings($("#newSubject").val().trim(),
             $("#newContent").val(),
             names.toString(),
@@ -3476,27 +3533,17 @@ catch (Exception $e) {
             "<?php echo $GLOBALS['username'] ?>"
         );
 
-        //##obj_meeting 內容寫入資料庫
-        //資料庫欄位 (ID, meeting_data)  其中ID為自動計數
-        //INSERT table_name (meeting_data) VALUES (obj_meeting)
-
-
-        //##將該obj_meeting在資料庫給的id返回回來，並設定到前端的id變數
-
-
-
-        //##寄送通知信件給會議參與者
-        //???
-
-
         //把新增會議 呈現於日曆上
-        calendar.addEvent({
-            id: id,
-            title: obj_meeting.title,
-            start: obj_meeting.start,
-            end: obj_meeting.end,
-            description: obj_meeting
-        });
+        if(id != 0)
+        {
+            calendar.addEvent({
+                id: id,
+                title: obj_meeting.title,
+                start: obj_meeting.start,
+                end: obj_meeting.end,
+                description: obj_meeting
+            });
+        }
 
         $("#addmeeting-form").hide();
 

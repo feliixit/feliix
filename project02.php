@@ -264,7 +264,7 @@ $(function(){
                 
                 <!-- tag -->
                 <b class="tag focus">PROJECT</b>
-                <b class="tag">UNDP / Ranee</b>
+                <b class="tag">{{ projectname }}</b>
                 <b class="tag" v-if="verified_downpayment">(Verified Downpayment)</b>
             </div>
             <div class="block fn">
