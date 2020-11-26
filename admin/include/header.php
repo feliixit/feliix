@@ -90,9 +90,11 @@ try {
                 <a class="list" href="../project01">Project Management</a>
                 <a class="list" href="../schedule_calendar">Schedule Calendar</a>
             </li>
+            <!--
             <li class="sec02">
                 <a class="uni">Process<br>Management</a>
             </li>
+-->
             <?php 
                 if($access1 == true || $access2 == true || $access3 == true)
                 {
