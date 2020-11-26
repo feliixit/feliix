@@ -112,6 +112,8 @@ var app = new Vue({
 
     file_management: [],
 
+    projectname:'',
+
   },
 
   created () {
@@ -134,6 +136,7 @@ var app = new Vue({
         _this.getProjectActionDetails(_this.project_id);
         _this.getUsers();
         _this.getFileManagement(_this.project_id);
+        _this.getProjectInfo(_this.project_id);
       });
     }
 
@@ -531,6 +534,35 @@ var app = new Vue({
               .finally(() => {
                   
               });
+      },
+
+      getProjectInfo(pid) {
+
+        let _this = this;
+  
+        if (pid == 0)
+          return;
+  
+        const params = {
+          pid: pid,
+  
+        };
+  
+        let token = localStorage.getItem('accessToken');
+  
+        axios
+          .get('api/project02_get_project_name_by_project_id', {params, headers: { "Authorization": `Bearer ${token}` } })
+          .then(
+            (res) => {
+              _this.projectname = res.data;
+            },
+            (err) => {
+              alert(err.response);
+            },
+          )
+          .finally(() => {
+  
+          });
       },
 
       getProjectActionDetails: function(keyword) {

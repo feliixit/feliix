@@ -85,17 +85,20 @@ try {
             <li class="sec01">
                 <a class="uni" href="../attendance">Office<br>Attendance</a>
             </li>
+            <li class="sec03">
+                <a class="uni">Project<br>Management</a>
+                <a class="list" href="../project01">Project Management</a>
+                <a class="list" href="../schedule_calendar">Schedule Calendar</a>
+            </li>
+            <!--
             <li class="sec02">
                 <a class="uni">Process<br>Management</a>
             </li>
+-->
             <?php 
                 if($access1 == true || $access2 == true || $access3 == true)
                 {
             ?>
-            <li class="sec03">
-                <a class="uni" href="../project01">Project<br>Management</a>
-                <a class="uni" href="../schedule_calendar">Schedule<br>Calendar</a>
-            </li>
             <li class="gray05" style="border: 3px solid var(--black01);">
                 <a class="uni">Admin<br>Section</a>
                 <?=($access1 == true) ? '<a class="list" href="../ammend">Verify and Review</a>' : '' ?>

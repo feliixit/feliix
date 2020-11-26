@@ -2010,6 +2010,53 @@ catch (Exception $e) {
             border-color: #d1dbe5;   
             
         }
+
+        .tablebox .dialog {
+            top: -20px;    
+        }
+
+
+        .tablebox .dialog::before, .tablebox .dialog::after {
+            top: 15px;
+        }
+
+
+
+        body.fourth .mainContent > .block .tablebox.lv3c {   
+            margin: 15px auto;
+        }
+
+
+        div.tablebox.lv3a a.attch{
+            color: var(--fth05);
+            transition: .3s;
+            margin: 0 15px 0 0;    
+            font-size: 13px;
+        }
+
+        div.tablebox.lv3a a.attch:hover{
+            color: var(--fth01);
+        }
+
+        div.tablebox.lv3a a.attch::before{
+            content: '';
+            width: 8px;
+            height: 8px;
+            display: inline-block;
+            margin-right: 3px;
+            background-color: var(--fth05);
+            border-radius: 8px;
+            vertical-align: baseline;
+            transition: .3s;
+        }
+
+        div.tablebox.lv3a a.attch:hover::before{
+            background-color: var(--fth01);
+        }
+
+        .mainContent {    
+            min-height: 150vh;
+        }
  
     </style>
 
@@ -2646,6 +2693,7 @@ $(function(){
             return;
         }
 
+        // if 所有欄位都不果為空  且 結束時間須晚於開始時間，則做以下動作
         if ($("#oldDate").val() === '') {
             app1.warning('Please select Date!');
             return;
@@ -2688,17 +2736,7 @@ $(function(){
 
         //##修改後的內容 update到資料庫
         var id = eventObj.id;
-        var obj_meeting = {
-            title: $("#oldSubject").val().trim(),
-            attendee: names.toString().trim(),
-            items: app1.old_attendee,
-            start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
-            end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
-            content: $("#oldContent").val(),
-            //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
-            creator: "<?php echo $GLOBALS['username'] ?>"
-        };
-        $("#oldCreator").val(obj_meeting.creator);
+    
 
         //##利用 id變數到資料庫中update裡面舊的obj_meeting
         // UPDATE table_name  SET meeting_data = obj_meeting WHERE ID = id;
@@ -2732,6 +2770,25 @@ $(function(){
                 console.log(result);
            
                 _func.notify_mail(id, 2);
+
+                var obj_meeting = {
+                    title: $("#oldSubject").val().trim(),
+                    attendee: names.toString().trim(),
+                    items: app1.old_attendee,
+                    start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
+                    end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
+                    content: $("#oldContent").val(),
+                    //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
+                    creator: "<?php echo $GLOBALS['username'] ?>"
+                };
+                $("#oldCreator").val(obj_meeting.creator);
+
+                //把修改後的會議資訊 update 到日曆上
+                eventObj.setStart(obj_meeting.start);
+                eventObj.setEnd(obj_meeting.end);
+                eventObj.setProp("title", obj_meeting.title);
+                eventObj.setExtendedProp("description", obj_meeting);
+
             },
 
             // show error message to user
@@ -2740,15 +2797,7 @@ $(function(){
             }
         });
 
-        //##寄送通知信件給會議參與者,告知修改後訊息
-
-
-        //把修改後的會議資訊 update 到日曆上
-        eventObj.setStart(obj_meeting.start);
-        eventObj.setEnd(obj_meeting.end);
-        eventObj.setProp("title", obj_meeting.title);
-        eventObj.setExtendedProp("description", obj_meeting);
-
+     
         //按鈕也會改變
         $("#btn_cancel").hide();
         $("#btn_save").hide();
@@ -2800,6 +2849,9 @@ $(function(){
 
                     success: function(result) {
                         console.log(result);
+
+                        //從日曆中刪除該會議
+                        eventObj.remove();
                         
                         app1.notify_mail(id, 3);
                     },
@@ -2809,10 +2861,6 @@ $(function(){
 
                     }
                 });
-
-
-                //從日曆中刪除該會議
-                eventObj.remove();
               
             } else {
           
@@ -2825,8 +2873,6 @@ $(function(){
 
 
     $(document).on("click", "#btn_add", function() {
-
-        //##任一欄位如果為空則提示欄位不得為空
         //結束時間須晚於開始時間
         let start = moment($("#newDate").val() + " " + $("#newStartTime").val(), "YYYY/MM/DD HH:mm");
         let end = moment($("#newDate").val() + " " + $("#newEndTime").val(), "YYYY/MM/DD HH:mm");
@@ -2838,6 +2884,7 @@ $(function(){
             return;
         }
 
+        //##任一欄位如果為空則提示欄位不得為空
         if ($("#newDate").val() === '') {
             app1.warning('Please select Date!');
             return;
@@ -2886,6 +2933,11 @@ $(function(){
             creator: "<?php echo $GLOBALS['username'] ?>"
         };
 
+        //##obj_meeting 內容寫入資料庫
+        //資料庫欄位 (ID, meeting_data)  其中ID為自動計數
+        //INSERT table_name (meeting_data) VALUES (obj_meeting)
+        //##將該obj_meeting在資料庫給的id返回回來，並設定到前端的id變數
+        //##寄送通知信件給會議參與者
         var id = app1.addMeetings($("#newSubject").val().trim(),
             $("#newContent").val(),
             names.toString(),
@@ -2894,27 +2946,17 @@ $(function(){
             "<?php echo $GLOBALS['username'] ?>"
         );
 
-        //##obj_meeting 內容寫入資料庫
-        //資料庫欄位 (ID, meeting_data)  其中ID為自動計數
-        //INSERT table_name (meeting_data) VALUES (obj_meeting)
-
-
-        //##將該obj_meeting在資料庫給的id返回回來，並設定到前端的id變數
-
-
-
-        //##寄送通知信件給會議參與者
-        //???
-
-
         //把新增會議 呈現於日曆上
-        calendar.addEvent({
-            id: id,
-            title: obj_meeting.title,
-            start: obj_meeting.start,
-            end: obj_meeting.end,
-            description: obj_meeting
-        });
+        if(id != 0)
+        {
+            calendar.addEvent({
+                id: id,
+                title: obj_meeting.title,
+                start: obj_meeting.start,
+                end: obj_meeting.end,
+                description: obj_meeting
+            });
+        }
 
         $("#addmeeting-form").hide();
 
