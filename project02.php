@@ -1,10 +1,59 @@
-<?php 
-
+<?php
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
-$p = (isset($_GET['p']) ?  $_GET['p'] : 0);
-if (  $p < 1 || !is_numeric($p)) {
-  header( 'location:project01' );
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ( !isset( $jwt ) ) {
+  header( 'location:index' );
 }
+
+include_once 'api/config/core.php';
+include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
+include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once 'api/libs/php-jwt-master/src/JWT.php';
+include_once 'api/config/database.php';
+include_once 'api/project02_is_creator.php';
+
+
+use \Firebase\JWT\JWT;
+
+
+try {
+        // decode jwt
+        try {
+            // decode jwt
+            $decoded = JWT::decode($jwt, $key, array('HS256'));
+            $user_id = $decoded->data->id;
+
+            $GLOBALS['position'] = $decoded->data->position;
+            $GLOBALS['department'] = $decoded->data->department;
+            
+            // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
+            $test_manager = $decoded->data->test_manager;
+
+        }
+        catch (Exception $e){
+
+            header( 'location:index' );
+        }
+
+        $p = (isset($_GET['p']) ?  $_GET['p'] : 0);
+        if (  $p < 1 || !is_numeric($p)) {
+          header( 'location:project01' );
+        }
+        
+        $is_creator = IsCreator($p, $user_id);
+        
+        if($test_manager[1] == "0" && $is_creator == "1")
+            $test_manager[1] = "1";
+
+        //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
+        //    header( 'location:index.php' );
+    }
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+    
+        header( 'location:index' );
+    }
 
 ?>
 
@@ -43,7 +92,7 @@ if (  $p < 1 || !is_numeric($p)) {
 <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
 
 <!-- jQuery和js載入 -->
-<script type="text/javascript" src="js/rm/jquery-3.4.1.min.js" ></script>
+<script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
 <script type="text/javascript" src="js/main.js" defer></script>
 
@@ -51,12 +100,25 @@ if (  $p < 1 || !is_numeric($p)) {
 $(function(){
     $('header').load('include/header.php');
     //
-
+<?php 
+  if ($test_manager[1]  == "1")
+  {
+?>
     dialogshow($('.list_function a.add'),$('.list_function .dialog.d-add'));
     dialogshow($('.list_function a.edit'),$('.list_function .dialog.d-edit'));
+<?php
+  }
+?>
     dialogshow($('.list_function a.file'),$('.list_function .dialog.d-file'));
+<?php 
+  if ($test_manager[1]  == "1")
+  {
+?>
     dialogshow($('.list_function a.fn1'),$('.list_function .dialog.fn1'));
     dialogshow($('.list_function a.fn2'),$('.list_function .dialog.fn2'));
+<?php
+  }
+?>
     dialogshow($('.list_function a.fn3'),$('.list_function .dialog.fn3'));
     dialogshow($('.list_function a.fn4'),$('.list_function .dialog.fn4'));
     dialogshow($('.list_function a.fn5'),$('.list_function .dialog.fn5'));
@@ -111,8 +173,8 @@ $(function(){
             <div class="block">
                 <!-- add -->
                 <div class="popupblock">
-                    <a id="stage_fn1" class="add"></a>
-                    <div id="stage_dialog" class="dialog d-add">
+                    <a id="stage_fn1" class="add" :ref="'a_add'" ></a>
+                    <div id="stage_dialog" class="dialog d-add" :ref="'dlg_add'">
                         <h6>Add New Stage:</h6>
                         <div class="formbox">
                             <dl>
@@ -144,8 +206,8 @@ $(function(){
                 </div>
                 <!-- edit -->
                 <div class="popupblock">
-                    <a id="edit_stage_fn1" class="edit"></a>
-                    <div id="edit_stage_dialog" class="dialog d-edit edit">
+                    <a id="edit_stage_fn1" class="edit" :ref="'a_edit'"></a>
+                    <div id="edit_stage_dialog" class="dialog d-edit edit" :ref="'dlg_edit'">
                         <h6>Edit/Delete Stage:</h6>
                         <div class="tablebox s1">
                             <ul>
@@ -222,8 +284,8 @@ $(function(){
                 </div>
 
 
-                <div class="popupblock"><a id="f_stage_fn1" class="file"></a>
-                    <div id="file_stage_dialog" class="dialog d-file"><h6>File Folder:</h6>
+                <div class="popupblock"><a id="f_stage_fn1" class="file" :ref="'a_file'"></a>
+                    <div id="file_stage_dialog" class="dialog d-file" :ref="'dlg_file'"><h6>File Folder:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt> </dt>
@@ -269,8 +331,8 @@ $(function(){
             </div>
             <div class="block fn">
                 <div class="popupblock">
-                    <a id="status_fn1" class="fn1">Change Project Status</a>
-                    <div id="status_dialog" class="dialog fn1">
+                    <a id="status_fn1" class="fn1" :ref="'a_fn1'">Change Project Status</a>
+                    <div id="status_dialog" class="dialog fn1" :ref="'dlg_fn1'">
                         <h6>Change Project Status:</h6>
                         <div class="formbox">
                             <dl>
@@ -296,8 +358,8 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a id="project_fn2" class="fn2">Edit Project Info</a>
-                    <div id="project_dialog" class="dialog fn2">
+                    <a id="project_fn2" class="fn2" :ref="'a_fn2'">Edit Project Info</a>
+                    <div id="project_dialog" class="dialog fn2" :ref="'dlg_fn2'">
                         <h6>Edit Project Info:</h6>
                         <div class="formbox">
                             <dl>
@@ -361,8 +423,8 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a id="project_fn3" class="fn3">Action to Comments</a>
-                    <div id="comment_dialog" class="dialog fn3">
+                    <a id="project_fn3" class="fn3" :ref="'a_fn3'">Action to Comments</a>
+                    <div id="comment_dialog" class="dialog fn3" :ref="'dlg_fn3'">
                         <h6>Action to Comments:</h6>
                         <div class="formbox">
                             <dl>
@@ -421,8 +483,8 @@ $(function(){
                 </div>
 
                 <div class="popupblock">
-                    <a id="status_fn4" class="fn4">Action to Est. Closing Prob.</a>
-                    <div id="prob_dialog" class="dialog fn4">
+                    <a id="status_fn4" class="fn4" :ref="'a_fn4'">Action to Est. Closing Prob.</a>
+                    <div id="prob_dialog" class="dialog fn4" :ref="'dlg_fn4'">
                         <h6>Action to Est. Closing Prob.:</h6>
                         <div class="formbox">
                             <dl>
@@ -454,8 +516,8 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a id="status_fn5" class="fn5">Action to Project Details</a>
-                    <div id="detail_dialog" class="dialog fn5">
+                    <a id="status_fn5" class="fn5" :ref="'a_fn5'">Action to Project Details</a>
+                    <div id="detail_dialog" class="dialog fn5" :ref="'dlg_fn5'">
                         <h6>Action to Project Details:</h6>
                         <div class="formbox">
                             <dl>
@@ -537,8 +599,8 @@ $(function(){
                 </div>
                 
                 <div class="popupblock">
-                    <a id="status_fn6" class="fn6">Submit Downpayment Proof</a>
-                    <div id="prof_dialog" class="dialog fn6">
+                    <a id="status_fn6" class="fn6" :ref="'a_fn6'">Submit Downpayment Proof</a>
+                    <div id="prof_dialog" class="dialog fn6" :ref="'dlg_fn6'">
                         <h6>Submit Downpayment Proof:</h6>
                         <div class="formbox">
                             <dl>
@@ -643,15 +705,15 @@ $(function(){
                     <li style="text-align: center !important;">Estimated Closing Probability</li>
                 </ul>
                 <ul>
-                    <li>
+                    <li class="morespace">
                         <div v-for='(receive_record, index) in project_comments'>• {{ receive_record.comment }} <br v-if="receive_record.items.length > 0">
                         <span v-for="item in receive_record.items">
-                            <a :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>&nbsp&nbsp
+                            <a :href="baseURL + item.gcp_name" target="_blank" class="attach">{{item.filename}}</a>
                         </span>
                          <br>({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
-                    <li>
+                    <li class="morespace">
                         <div v-for='(receive_record, index) in project_probs'>• {{ receive_record.prob }} - {{ receive_record.comment }} <br>
 
                          ({{ receive_record.username }} at {{ receive_record.created_at }})
@@ -664,10 +726,10 @@ $(function(){
                     <li style="text-align: center !important;">Project Details</li>
                 </ul>
                 <ul>
-                    <li>
+                    <li class="morespace">
                         <div v-for='(receive_record, index) in project_action_detials'>• {{ receive_record.detail_type }} : {{ receive_record.detail_desc }}  <br v-if="receive_record.items.length > 0">
                         <span v-for="item in receive_record.items">
-                            <a :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>&nbsp&nbsp
+                            <a :href="baseURL + item.gcp_name" target="_blank" class="attach">{{item.filename}}</a>
                         </span>
                         <br>
                          ({{ receive_record.username }} at {{ receive_record.created_at }})
@@ -884,6 +946,21 @@ $(function(){
         font-size: 13px;
         padding: 5px;
         width: 25%;
+    }
+
+    div.block.left a.attch{
+        color: var(--fth05);
+        transition: .3s;
+        margin: 0 15px 0 0;    
+        font-size: 13px;
+    }
+
+    div.block.left a.attch:hover{
+        color: var(--fth01);
+    }
+
+    li.morespace>div + div{
+    margin-top: 10px;
     }
 
 </style>

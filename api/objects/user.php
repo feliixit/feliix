@@ -24,7 +24,7 @@ class User{
     public $sick_leave;
     public $manager_leave;
     public $is_manager;
-    public $test_manger;
+    public $test_manager;
     public $is_viewer;
  
     // constructor
@@ -197,7 +197,7 @@ class User{
             $this->title_id = $row['title_id'];
             $this->apartment_id = $row['apartment_id'];
             $this->is_manager = $row['is_manager'];
-            $this->test_manager = $row['test_manager'];
+            $this->test_manager = $this->RoleManagement($row['test_manager'], $row['title_id'], $row['apartment_id'], $row['id']);
             $this->is_viewer = $row['is_viewer'];
             $this->pic_url = $row['pic_url'];
             // return true because email exists in the database
@@ -206,6 +206,56 @@ class User{
     
         // return false if email does not exist in the database
         return false;
+    }
+
+    function RoleManagement($is_tester, $title_id, $apartment_id, $user_id){
+        if($is_tester == 1)
+            return "111";
+
+        $ruleset = "";
+        // project01
+        if($title_id == 1 || $title_id == 2 || $title_id == 3 || $title_id == 4 || $title_id == 5 
+            || $title_id == 9 || $title_id == 10
+            || $title_id == 14 || $title_id == 15
+            || $title_id == 19 || $title_id == 20
+            || $title_id == 24 || $title_id == 25
+            || $title_id == 30
+            || $title_id == 38 || $title_id == 35 || $title_id == 36)
+            $ruleset = "1";
+        else
+            $ruleset = "0";
+
+        // project02
+        if($title_id == 9 || $title_id == 10
+            || $title_id == 14 || $title_id == 15
+            || $title_id == 19 || $title_id == 20
+            || $title_id == 24 || $title_id == 25
+            || $title_id == 30
+            || $title_id == 38 || $title_id == 35 || $title_id == 36)
+            $ruleset .= "1";
+        elseif($title_id == 1 || $title_id == 2 || $title_id == 3 || $title_id == 4 || $title_id == 5)
+        {
+            $ruleset .= "2";
+        }
+        else
+            $ruleset .= "0";
+
+        // project03
+        if($title_id == 8 || $title_id == 9 || $title_id == 10
+            || $title_id == 13 || $title_id == 14 || $title_id == 15
+            || $title_id == 18 || $title_id == 19 || $title_id == 20
+            || $title_id == 23 || $title_id == 24 || $title_id == 25
+            || $title_id == 30
+            || $title_id == 38 || $title_id == 35 || $title_id == 36)
+            $ruleset .= "1";
+        elseif($title_id == 1 || $title_id == 2 || $title_id == 3 || $title_id == 4 || $title_id == 5)
+        {
+            $ruleset .= "2";
+        }
+        else
+            $ruleset .= "0";
+
+        return $ruleset;
     }
     
     // check if given email exist in the database

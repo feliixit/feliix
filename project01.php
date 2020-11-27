@@ -23,6 +23,9 @@ try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
+
+            $GLOBALS['position'] = $decoded->data->position;
+            $GLOBALS['department'] = $decoded->data->department;
             
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $test_manager = $decoded->data->test_manager;
@@ -111,7 +114,7 @@ $(function(){
                     <a class="add"></a>
                     
 <?php 
-  if ($test_manager  == "1")
+  if ($test_manager[0]  == "1")
   {
 ?>
                     <div id="insert_dialog" class="dialog">

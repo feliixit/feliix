@@ -10,6 +10,7 @@ include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
 include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'api/libs/php-jwt-master/src/JWT.php';
+include_once 'api/project03_is_creator.php';
 
 use \Firebase\JWT\JWT;
 
@@ -21,8 +22,21 @@ try {
     $GLOBALS['position'] = $decoded->data->position;
     $GLOBALS['department'] = $decoded->data->department;
 
+    $test_manager = $decoded->data->test_manager;
+    $user_id = $decoded->data->id;
+
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
+
+    $sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
+        if (  $sid < 1 || !is_numeric($sid)) {
+          header( 'location:project01' );
+        }
+
+    $is_creator = IsCreator($sid, $user_id);
+    
+    if($test_manager[2] == "0" && $is_creator == "1")
+        $test_manager[2] = "1";
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -83,8 +97,15 @@ catch (Exception $e) {
         $(function() {
             $('header').load('include/header.php');
             //
+<?php 
+  if ($test_manager[2]  == "1")
+  {
+?>
             dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
             dialogshow($('.list_function a.edit.red'), $('.list_function .dialog.r-edit'));
+<?php 
+  }
+?>
             dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
             dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
             // left block Reply
@@ -461,9 +482,25 @@ catch (Exception $e) {
             font-size: 12px;
         }
 
-        #vs5combobox, #vs6combobox {
+        #vs5__combobox, #vs6__combobox {
             border: 1px solid #707070;
             border-radius: 0;
+        }
+
+        #vs5__listbox, #vs6__listbox {
+            border: none;
+            border-radius: 0;
+            margin-top: 0;
+        }
+
+        #vs5__listbox li {
+            border-right: 2px solid #707070;
+            font-size: 12px;
+        }
+
+        #vs6__listbox li {
+            border-right: 2px solid #707070;
+            font-size: 12px;
         }
 
         .swal2-popup.swal2-toast {
@@ -2730,7 +2767,7 @@ catch (Exception $e) {
                                                     </div>
                                                 </div>
                                                 <!-- dialog end -->
-                                                <a class="btn small yellow" @click="msg_delete(item.message_id, item.ref_id)">Delete</a>
+                                                <a class="btn small yellow" @click="msg_delete(item.message_id, item.ref_id, item.messager_id, '<?php echo $user_id; ?>')">Delete</a>
                                             </div>
 
                                             <div class="msgbox dialogclear" v-for="reply in item.reply">
@@ -2887,7 +2924,7 @@ catch (Exception $e) {
                                                             </div>
                                                         </div>
                                                         <!-- dialog end -->
-                                                        <a class="btn small yellow" @click="msg_delete_r(item.message_id, item.ref_id)">Delete</a>
+                                                        <a class="btn small yellow" @click="msg_delete_r(item.message_id, item.ref_id, item.messager_id, '<?php echo $user_id; ?>')">Delete</a>
                                                     </div>
 
                                                     <div class="msgbox dialogclear" v-for="reply in item.reply">
