@@ -941,3 +941,5 @@ ALTER TABLE `work_calendar_details` ADD `main_id` bigint(20) DEFAULT 0 AFTER `id
 
 ALTER TABLE `gcp_storage_file` ADD `deleted_id` int(11) DEFAULT 0 AFTER `updated_at`;
 ALTER TABLE `gcp_storage_file` ADD `deleted_at` timestamp NULL AFTER `deleted_id`;
+
+ALTER TABLE `work_calendar_details` ADD `sort` int(11) DEFAULT 0 AFTER `agenda`;

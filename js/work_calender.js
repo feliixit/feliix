@@ -190,10 +190,11 @@
 				for(var j = 0;j<_this.agenda.length;j++) {
 				if(_this.agenda[j].main_id == response.data[i].id){
 					agendas.push({
-						agenda:_this.agenda[j].agenda,
+						agenda:UnescapeHTML(_this.agenda[j].agenda),
 						appointtime:moment(_this.agenda[j].appoint_time).format('HH:mm'),
 						endtime:moment(_this.agenda[j].end_time).format('HH:mm'),
-						location:_this.agenda[j].location
+						sort:_this.agenda[j].sort,
+						location:UnescapeHTML(_this.agenda[j].location)
 					});
 				}
 				
@@ -221,27 +222,27 @@
 						color: response.data[i].color,
 						allDay:isAll,
 						description:{
-							Title: response.data[i].title,
+							Title: UnescapeHTML(response.data[i].title),
 							Color: response.data[i].color,
 							Date: moment(response.data[i].start_time).format('YYYY-MM-DD'),
 							Allday:isAll,
 							Starttime:moment(response.data[i].start_time).format('HH:mm'),
 							Endtime:moment(response.data[i].end_time).format('HH:mm'),
-							Project: response.data[i].project,
-							Sales_Executive:response.data[i].sales_executive,
-							Project_in_charge:response.data[i].project_in_charge,
-							Installer_needed:response.data[i].installer_needed,
-							Location_Things_to_Bring:response.data[i].things_to_bring_location,
-							Things_to_Bring:response.data[i].things_to_bring,
-							Location_Products_to_Bring:response.data[i].installer_needed_location,
-							Products_to_Bring:response.data[i].products_to_bring,
+							Project: UnescapeHTML(response.data[i].project),
+							Sales_Executive:UnescapeHTML(response.data[i].sales_executive),
+							Project_in_charge:UnescapeHTML(response.data[i].project_in_charge),
+							Installer_needed:UnescapeHTML(response.data[i].installer_needed),
+							Location_Things_to_Bring:UnescapeHTML(response.data[i].things_to_bring_location),
+							Things_to_Bring:UnescapeHTML(response.data[i].things_to_bring),
+							Location_Products_to_Bring:UnescapeHTML(response.data[i].installer_needed_location),
+							Products_to_Bring:UnescapeHTML(response.data[i].products_to_bring),
 							Products_to_bring_files:files,
 							File_name:response.data[i].products_to_bring_files,
 							Service:response.data[i].service,
 							Driver:response.data[i].driver,
 							Back_up_Driver:response.data[i].back_up_driver,
 							Photoshoot_Request:photoshoot,
-							Notes:response.data[i].notes,
+							Notes:UnescapeHTML(response.data[i].notes),
 							Agenda:agendas,
 							Lasteditor:Lasteditor,
 						}
@@ -1392,6 +1393,11 @@
 		clearTimeout(timeOut2);
 		clearTimeout(timeOut3);
 	}
+	
+	function UnescapeHTML(a) {
+        a = "" + a;
+        return a.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+    }
 	
 	$(document).ready(function() {
 		reload();
