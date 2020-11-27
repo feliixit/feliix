@@ -1048,7 +1048,6 @@
 		});
 		
 		document.getElementById("sc_product_files").innerHTML = files;
-        document.getElementById("sc_product_files_hide").value = sc_content.File_name;
 
         var agenda_object = document.getElementById("agenda_table").getElementsByTagName("tr");
         var agenda_content = [];
