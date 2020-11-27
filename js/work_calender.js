@@ -1004,8 +1004,6 @@
         document.getElementById("sc_things").value = sc_content.Things_to_Bring;
         document.getElementById("sc_location2").value = sc_content.Location_Products_to_Bring;
         document.getElementById("sc_products").value = sc_content.Products_to_Bring;
-		document.getElementById("sc_product_files").innerHTML = sc_content.Products_to_bring_files;
-        document.getElementById("sc_product_files_hide").value = sc_content.File_name;
         document.getElementById("sc_service").value = sc_content.Service;
         document.getElementById("sc_driver1").value = sc_content.Driver;
         document.getElementById("sc_driver2").value = sc_content.Back_up_Driver;
@@ -1042,6 +1040,15 @@
         $("[name=sc_Installer_needed]:checkbox:checked").each(function () {
             selected.push($(this).val());
         });
+		
+		var files = "";
+		app.filename.forEach((element)=>{
+			var file_str = "<a href='https://storage.cloud.google.com/calendarfile/"+ element +"' target='_blank'>"+ element +"</a>&emsp;"
+			files += file_str;
+		});
+		
+		document.getElementById("sc_product_files").innerHTML = files;
+        document.getElementById("sc_product_files_hide").value = sc_content.File_name;
 
         var agenda_object = document.getElementById("agenda_table").getElementsByTagName("tr");
         var agenda_content = [];
