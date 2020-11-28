@@ -303,7 +303,14 @@
             form_Data.append('things_to_bring', main.Things_to_Bring);
             form_Data.append('things_to_bring_location', main.Location_Things_to_Bring);
             form_Data.append('products_to_bring', main.Products_to_Bring);
-            form_Data.append('products_to_bring_files', _this.filename);
+			if(_this.filename != '')
+			{
+				form_Data.append('products_to_bring_files', _this.filename);
+			}
+			else
+			{
+				form_Data.append('products_to_bring_files', main.File_name);
+			}
             form_Data.append('service', main.Service);
             form_Data.append('driver', main.Driver);
             form_Data.append('back_up_driver', main.Back_up_Driver);
@@ -1021,7 +1028,8 @@
         Change_Schedule_State(true, sc_content.Allday);
         icon_function_enable = false;
 
-        document.getElementById("btn_reset").style.display = "none";
+        document.getElementById("upload_input").style.display = "none";
+		document.getElementById("btn_reset").style.display = "none";
         document.getElementById("btn_add").style.display = "none";
         document.getElementById("btn_duplicate").style.display = "inline";
         document.getElementById("btn_edit").style.display = "inline";
@@ -1169,7 +1177,8 @@
         Change_Schedule_State(true, eventObj.extendedProps.description.Allday);
         icon_function_enable = false;
 
-        document.getElementById("btn_reset").style.display = "none";
+        document.getElementById("upload_input").style.display = "none";
+		document.getElementById("btn_reset").style.display = "none";
         document.getElementById("btn_add").style.display = "none";
         document.getElementById("btn_duplicate").style.display = "inline";
         document.getElementById("btn_edit").style.display = "inline";
