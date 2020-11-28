@@ -1059,7 +1059,8 @@
 		}
 		else if(document.getElementById("sc_product_files_hide").value != '')
 		{
-			document.getElementById("sc_product_files_hide").value.forEach((element)=>{
+			var splits_array = document.getElementById("sc_product_files_hide").value.split(",");
+			splits_array.forEach((element)=>{
 				var file_str = "<a href='https://storage.cloud.google.com/calendarfile/"+ element +"' target='_blank'>"+ element +"</a>&emsp;"
 				files += file_str;
 			});
