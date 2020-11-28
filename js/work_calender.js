@@ -1050,10 +1050,20 @@
         });
 		
 		var files = "";
-		app.filename.forEach((element)=>{
-			var file_str = "<a href='https://storage.cloud.google.com/calendarfile/"+ element +"' target='_blank'>"+ element +"</a>&emsp;"
-			files += file_str;
-		});
+		if(app.filename != '')
+		{
+			app.filename.forEach((element)=>{
+				var file_str = "<a href='https://storage.cloud.google.com/calendarfile/"+ element +"' target='_blank'>"+ element +"</a>&emsp;"
+				files += file_str;
+			});
+		}
+		else if(document.getElementById("sc_product_files_hide").value != '')
+		{
+			document.getElementById("sc_product_files_hide").value.forEach((element)=>{
+				var file_str = "<a href='https://storage.cloud.google.com/calendarfile/"+ element +"' target='_blank'>"+ element +"</a>&emsp;"
+				files += file_str;
+			});
+		}
 		 
 		var time = 	new Date();
 		time = time.getFullYear() +'-'+ time.getMonth() + '-' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds(); 
