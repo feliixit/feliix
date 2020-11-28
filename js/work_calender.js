@@ -1103,6 +1103,7 @@
             Things_to_Bring: document.getElementById("sc_things").value,
             Location_Products_to_Bring: document.getElementById("sc_location2").value,
             Products_to_Bring: document.getElementById("sc_products").value,
+			File_name: document.getElementById("sc_product_files_hide").value,
             Service: document.getElementById("sc_service").value,
             Driver: document.getElementById("sc_driver1").value,
             Back_up_Driver: document.getElementById("sc_driver2").value,
