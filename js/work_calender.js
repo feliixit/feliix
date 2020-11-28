@@ -1046,8 +1046,13 @@
 			var file_str = "<a href='https://storage.cloud.google.com/calendarfile/"+ element +"' target='_blank'>"+ element +"</a>&emsp;"
 			files += file_str;
 		});
+		 
+		var time = 	new Date();
+		time = time.getFullYear() +'-'+ time.getMonth() + '-' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds(); 
 		
 		document.getElementById("sc_product_files").innerHTML = files;
+		document.getElementById("sc_editor").value = app.name + ' at ' + time;
+		document.getElementById("last_editor").style.display = "block";
 
         var agenda_object = document.getElementById("agenda_table").getElementsByTagName("tr");
         var agenda_content = [];
