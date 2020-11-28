@@ -382,32 +382,32 @@ var app = new Vue({
         return  this.receive_stage_records.slice(from, to);
       },
 
-    getRecordsStage: function(keyword) {
-      let _this = this;
-
-      if(keyword == 0)
-        return;
-
-      const params = {
-              pid : keyword,
-            };
-
-          let token = localStorage.getItem('accessToken');
-    
-          axios
-              .get('api/project02_stages', { params, headers: {"Authorization" : `Bearer ${token}`} })
-              .then(
-              (res) => {
-                  _this.receive_stage_records = res.data;
-              },
-              (err) => {
-                  alert(err.response);
-              },
-              )
-              .finally(() => {
-                  
-              });
-      },
+      getRecordsStage: function(keyword) {
+        let _this = this;
+  
+        if(keyword == 0)
+          return;
+  
+        const params = {
+                pid : keyword,
+              };
+  
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+                .get('api/project02_stages', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.receive_stage_records = res.data;
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
 
       getProjectComments: function(keyword) {
       let _this = this;

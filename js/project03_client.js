@@ -79,6 +79,10 @@ var app = new Vue({
     old_attendee:[],
     add_id: 0,
 
+    // project_name
+    project_id : 0,
+    project_name : '',
+
   },
 
   created() {
@@ -103,6 +107,7 @@ var app = new Vue({
           _this.get_stage_client_task(_this.stage_id);
 
           _this.get_stage_client(_this.stage_id);
+          _this.getProjectInfo(_this.stage_id);
       });
     }
 
@@ -219,6 +224,36 @@ var app = new Vue({
               .finally(() => {
                   
               });
+      },
+
+      getProjectInfo(stage_id) {
+
+        let _this = this;
+  
+        if (stage_id == 0)
+          return;
+  
+        const params = {
+          stage_id: stage_id,
+  
+        };
+  
+        let token = localStorage.getItem('accessToken');
+  
+        axios
+          .get('api/project03_get_project_name_by_stage_id', {params, headers: { "Authorization": `Bearer ${token}` } })
+          .then(
+            (res) => {
+              _this.project_name = res.data[0].project_name;
+              _this.project_id = res.data[0].project_id;
+            },
+            (err) => {
+              alert(err.response);
+            },
+          )
+          .finally(() => {
+  
+          });
       },
 
       get_stage_client_task: function(stage_id) {

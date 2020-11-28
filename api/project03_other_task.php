@@ -61,7 +61,7 @@ switch ($method) {
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
-        $sql = "SELECT pm.id task_id, title, priority, due_date, pm.`status` task_status, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
+        $sql = "SELECT pm.id task_id, title, priority, due_date, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
         pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name
         from project_other_task pm 
         LEFT JOIN user u ON u.id = pm.create_id 
@@ -111,6 +111,7 @@ switch ($method) {
         $due_date = "";
         $task_status = "";
         $creator = "";
+        $creator_id = 0;
         $creator_pic = "";
         $assignee = [];
         $collaborator = [];
@@ -133,6 +134,7 @@ switch ($method) {
                     "due_date" => $due_date,
                     "task_status" => $task_status,
                     "creator" => $creator,
+                    "creator_id" => $creator_id,
                     "creator_pic" => $creator_pic,
                     "assignee" => $assignee,
                     "assignee_id" => $assignee_id,
@@ -158,6 +160,7 @@ switch ($method) {
             $due_date = $row['due_date'];
             $task_status = $row['task_status'];
             $creator = $row['creator'];
+            $creator_id = $row['uid'];
             $creator_pic = $row['creator_pic'];
             if(empty($assignee ))
                 $assignee = GetUserInfo($row['assignee'], $db);
@@ -189,6 +192,7 @@ switch ($method) {
                 "due_date" => $due_date,
                 "task_status" => $task_status,
                 "creator" => $creator,
+                "creator_id" => $creator_id,
                 "creator_pic" => $creator_pic,
                 "assignee" => $assignee,
                 "assignee_id" => $assignee_id,
@@ -331,7 +335,7 @@ function GetStatus($loc)
 
 function GetMessage($task_id, $db)
 {
-    $sql = "select pmsgrp.id message_id, pmsgrp.message message, pmsgrp.`status` message_status, r.username messager, r.pic_url messager_pic, pmsgrp.created_at message_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
+    $sql = "select pmsgrp.id message_id, pmsgrp.message message, pmsgrp.`status` message_status, r.id uid, r.username messager, r.pic_url messager_pic, pmsgrp.created_at message_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from project_other_task_message pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
@@ -348,6 +352,7 @@ function GetMessage($task_id, $db)
     $message = "";
     $message_status = "";
     $messager = "";
+    $messager_id = 0;
     $messager_pic = "";
     $message_date = "";
     $gcp_name = "";
@@ -368,6 +373,7 @@ function GetMessage($task_id, $db)
                 "message" => $message,
                 "message_status" => $message_status,
                 "messager" => $messager,
+                "messager_id" => $messager_id,
                 "messager_pic" => $messager_pic,
 
                 "message_date" => explode(" ", $message_date)[0],
@@ -390,6 +396,7 @@ function GetMessage($task_id, $db)
         $message = $row['message'];
         $message_status = $row['message_status'];
         $messager = $row['messager'];
+        $messager_id = $row['uid'];
         $messager_pic = $row['messager_pic'];
         $message_date = $row['message_date'];
 
@@ -419,6 +426,7 @@ function GetMessage($task_id, $db)
             "message" => $message,
             "message_status" => $message_status,
             "messager" => $messager,
+            "messager_id" => $messager_id,
             "messager_pic" => $messager_pic,
 
             "message_date" => explode(" ", $message_date)[0],
@@ -439,7 +447,7 @@ function GetMessage($task_id, $db)
 
 function GetReply($msg_id, $db, $id, $name, $msg)
 {
-    $sql = "select pmsgrp.id replay_id, pmsgrp.message reply, pmsgrp.`status` reply_status, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
+    $sql = "select pmsgrp.id replay_id, pmsgrp.message reply, pmsgrp.`status` reply_status, r.id uid, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from project_other_task_message_reply pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
@@ -456,6 +464,7 @@ function GetReply($msg_id, $db, $id, $name, $msg)
     $reply = "";
     $reply_status = "";
     $replyer = "";
+    $replyer_id = 0;
     $replyer_pic = "";
     $reply_date = "";
     $gcp_name = "";
@@ -472,8 +481,10 @@ function GetReply($msg_id, $db, $id, $name, $msg)
                 "ref_name" => $name,
                 "ref_msg" => $msg,
                 "message" => $reply,
+                
                 "message_status" => $reply_status,
                 "messager" => $replyer,
+                "messager_id" => $replyer_id,
                 "messager_pic" => $replyer_pic,
 
                 "message_date" => explode(" ", $reply_date)[0],
@@ -492,6 +503,7 @@ function GetReply($msg_id, $db, $id, $name, $msg)
         $reply = $row['reply'];
         $reply_status = $row['reply_status'];
         $replyer = $row['replyer'];
+        $replyer_id = $row['uid'];
         $replyer_pic = $row['replyer_pic'];
         $reply_date = $row['reply_date'];
 
@@ -518,6 +530,7 @@ function GetReply($msg_id, $db, $id, $name, $msg)
             "message" => $reply,
             "message_status" => $reply_status,
             "messager" => $replyer,
+            "messager_id" => $replyer_id,
             "messager_pic" => $replyer_pic,
             
             "message_date" => explode(" ", $reply_date)[0],

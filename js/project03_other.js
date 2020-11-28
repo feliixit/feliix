@@ -1131,7 +1131,9 @@ var app = new Vue({
       document.getElementById('task_reply_dlg_r_' + item_id).classList.remove("show");
     },
 
-    msg_delete(message_id, item_id) {
+    msg_delete(message_id, item_id, mid, uid) {
+      if(mid !== uid)
+        return;
 
       let _this = this;
       Swal.fire({
@@ -1197,8 +1199,9 @@ var app = new Vue({
       });
     },
 
-    msg_delete_r(message_id, item_id) {
-
+    msg_delete_r(message_id, item_id, mid, uid) {
+      if(mid !== uid)
+        return;
       let _this = this;
     
         Swal.fire({

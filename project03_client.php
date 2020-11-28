@@ -10,6 +10,7 @@ include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
 include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'api/libs/php-jwt-master/src/JWT.php';
+include_once 'api/project03_is_creator.php';
 
 use \Firebase\JWT\JWT;
 
@@ -21,8 +22,21 @@ try {
     $GLOBALS['position'] = $decoded->data->position;
     $GLOBALS['department'] = $decoded->data->department;
 
+    $test_manager = $decoded->data->test_manager;
+    $user_id = $decoded->data->id;
+
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
+
+    $sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
+        if (  $sid < 1 || !is_numeric($sid)) {
+          header( 'location:project01' );
+        }
+
+    $is_creator = IsCreator($sid, $user_id);
+    
+    if($test_manager[2] == "0" && $is_creator == "1")
+        $test_manager[2] = "1";
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -2128,7 +2142,13 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a1" class="add a1" @click="dialogshow1"></a>
+                        <a id="add_a1" class="add a1" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="dialogshow1" 
+<?php 
+  }
+?>></a>
                         <div id="dialog_a1" class="dialog a1">
                             <div class="formbox">
                                 <dl>
@@ -2153,7 +2173,13 @@ $(function(){
                     <li><div v-for='(receive_record, index) in stage_client_sales'>{{ receive_record.salesname }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div></li>
                     <li>
-                        <a id="add_a2" class="add a2" @click="dialogshow2"></a>
+                        <a id="add_a2" class="add a2" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="dialogshow2" 
+<?php 
+  }
+?>></a>
                         <div id="dialog_a2" class="dialog a2">
                             <div class="formbox">
                                 <dl>
@@ -2184,7 +2210,13 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a3" class="add a3" @click="dialogshow3"></a>
+                        <a id="add_a3" class="add a3" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="dialogshow3" 
+<?php 
+  }
+?>></a>
                         <div id="dialog_a3" class="dialog a3">
                             <div class="formbox">
                                 <dl>
@@ -2209,7 +2241,13 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a4" class="add a4" @click="dialogshow4"></a>
+                        <a id="add_a4" class="add a4" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="dialogshow4" 
+<?php 
+  }
+?>></a>
                         <div id="dialog_a4" class="dialog a4">
                             <div class="formbox">
                                 <h6>Select Status</h6>
@@ -2248,7 +2286,13 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a5" class="add a5" @click="dialogshow5"></a>
+                        <a id="add_a5" class="add a5" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="dialogshow5" 
+<?php 
+  }
+?>></a>
                         <div id="dialog_a5" class="dialog a5">
                             <div class="formbox">
                                 <h6>Select Priority</h6>
@@ -2281,7 +2325,13 @@ $(function(){
                     <li><div v-for='(receive_record, index) in stage_client_amount'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div></li>
                     <li>
-                        <a id="add_a6" class="add a6" @click="dialogshow6"></a>
+                        <a id="add_a6" class="add a6" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="dialogshow6" 
+<?php 
+  }
+?>></a>
                         <div id="dialog_a6" class="dialog a6">
                             <div class="formbox">
                                 <dl>
@@ -2305,7 +2355,13 @@ $(function(){
                     <li><div v-for='(receive_record, index) in stage_client_competitor'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div></li>
                     <li>
-                        <a id="add_a7" class="add a7" @click="dialogshow7"></a>
+                        <a id="add_a7" class="add a7" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="dialogshow7" 
+<?php 
+  }
+?>></a>
                         <div id="dialog_a7" class="dialog a7">
                             <div class="formbox">
                                 <dl>
@@ -2335,7 +2391,13 @@ $(function(){
                         </div>
                     </li>
                     <li>
-                        <a id="add_a8" class="add a8" @click="dialogshow8"></a>
+                        <a id="add_a8" class="add a8" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="dialogshow8" 
+<?php 
+  }
+?>></a>
                         <div id="dialog_a8" class="dialog a8">
                             <div class="formbox">
                                 <dl>
@@ -2398,6 +2460,7 @@ $(function(){
         <div class="block right">
             <div class="list_function">
                 <a class="btn small green" id="btn_arrange">Arrange Meeting</a>
+                <a class="btn small orange" style="float: right;" :href="'project02?p=' + project_id">Back to Main Page</a>
             </div>
             <div class="teskbox">
                 <h5>Project Task Tracker</h5>
@@ -2440,7 +2503,13 @@ $(function(){
                 <div class="tablebox lv3c">
                     <ul>
                         <li><textarea name="" id="" placeholder="Create a task here" v-model="stage_task"></textarea></li>
-                        <li><a class="btn small green" @click="task_create">Create</a></li>
+                        <li><a class="btn small green" <?php 
+  if ($test_manager[2]  == "1")
+  {
+?> @click="task_create"
+<?php 
+  }
+?>>Create</a></li>
                     </ul>
                 </div>
             </div>
@@ -3213,6 +3282,10 @@ input:focus:-moz-placeholder{
             background-color: #F37058;
             cursor: pointer;
         }
+
+        div.tablebox.lv3a>ul:nth-of-type(even)>li:first-of-type>div + div{
+            margin-top: 10px;
+            }
         
   </style>
 </html>
