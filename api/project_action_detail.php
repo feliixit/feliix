@@ -58,7 +58,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.id, pm.detail_type, pm.detail_desc, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at FROM project_action_detail pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'action_detail' where project_id = " . $pid . " and pm.status <> -1 ";
+            $sql = "SELECT pm.id, pm.detail_type, pm.detail_desc, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at FROM project_action_detail pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'action_detail' where project_id = " . $pid . " and pm.status <> -1 ";
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -91,6 +91,7 @@ else
             $detail_desc = "";
             $filename = "";
             $gcp_name = "";
+            $bucket = "";
             $username = "";
             $created_at = "";
             $items = [];
@@ -114,13 +115,15 @@ else
                 $created_at = $row['created_at'];
                 $username = $row['username'];
                 $gcp_name = $row['gcp_name'];
+                $bucket = $row['bucket'];
                 $filename = $row['filename'];
                 $detail_desc = $row['detail_desc'];
                 $detail_type = GetDetailType($row['detail_type']);
 
                 if($filename != "")
                 $items[] = array('filename' => $filename,
-                                 'gcp_name' => $gcp_name );
+                                 'gcp_name' => $gcp_name,
+                                 'bucket' => $bucket );
             }
 
             if($id != 0)

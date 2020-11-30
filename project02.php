@@ -708,7 +708,7 @@ $(function(){
                     <li class="morespace">
                         <div v-for='(receive_record, index) in project_comments'>• {{ receive_record.comment }} <br v-if="receive_record.items.length > 0">
                         <span v-for="item in receive_record.items">
-                            <a :href="baseURL + item.gcp_name" target="_blank" class="attach">{{item.filename}}</a>
+                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
                         </span>
                          <br>({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>
@@ -729,7 +729,7 @@ $(function(){
                     <li class="morespace">
                         <div v-for='(receive_record, index) in project_action_detials'>• {{ receive_record.detail_type }} : {{ receive_record.detail_desc }}  <br v-if="receive_record.items.length > 0">
                         <span v-for="item in receive_record.items">
-                            <a :href="baseURL + item.gcp_name" target="_blank" class="attach">{{item.filename}}</a>
+                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
                         </span>
                         <br>
                          ({{ receive_record.username }} at {{ receive_record.created_at }})
