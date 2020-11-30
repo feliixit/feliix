@@ -14,6 +14,8 @@ include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 use \Firebase\JWT\JWT;
+use Illuminate\Support\Facades\Date;
+
 if ( !isset( $jwt ) ) {
     http_response_code(401);
 
@@ -70,16 +72,6 @@ if($timeStart > $timeEnd)
     die();
 }
 
-$startYear = substr($timeStart, 0, 4);
-$endYear = substr($timeEnd, 0, 4);
-
-if($startYear != $endYear)
-{
-    http_response_code(401);
-    echo json_encode(array("message" => "Leave accross years should be divided into 2 leave applications, leave this year and leave next year."));
-    die();
-}
-
 // leave credit!
 $al_credit = 0;
 $sl_credit = 0;
@@ -95,6 +87,17 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $al_credit = $row['annual_leave'];
     $sl_credit = $row['sick_leave'];
     $manager_leave = $row['manager_leave'];
+}
+
+$startYear = substr($timeStart, 0, 4);
+$endYear = substr($timeEnd, 0, 4);
+
+// 20201130 is manager can leave across year
+if(($startYear != $endYear) && $is_manager != "1")
+{
+    http_response_code(401);
+    echo json_encode(array("message" => "Leave accross years should be divided into 2 leave applications, leave this year and leave next year."));
+    die();
 }
 
 // 1. Check if history have the same day
@@ -125,7 +128,22 @@ else
     array_push($leaves, $end->format("Ymd") . " P");
 }
 
-$query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id where a.uid = " . $user_id . " and a.status in (0, 1) and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
+if($is_manager == "1")
+{
+    $headPeriodStart = date("Y-m-d",strtotime("last year Dec 1st"));
+    $headPeriodEnd = date("Y-m-d",strtotime("this year Nov 30"));
+
+    $tailPeriodStart = date("Y-m-d",strtotime("this year Dec 1st"));
+    $tailPeriodEnd = date("Y-m-d",strtotime("next year Nov 30"));
+
+    if($timeStart > $headPeriodEnd)
+        $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id where a.uid = " . $user_id . " and a.status in (0, 1) and apply_date >= '" . str_replace('-', '', $tailPeriodStart) . "' and apply_date <= '" . str_replace('-', '', $tailPeriodEnd) . "' ";
+    else
+        $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id where a.uid = " . $user_id . " and a.status in (0, 1) and apply_date >= '" . str_replace('-', '', $headPeriodStart) . "' and apply_date <= '" . str_replace('-', '', $headPeriodEnd) . "' ";
+}
+else
+    $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id where a.uid = " . $user_id . " and a.status in (0, 1) and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
+
 $stmt = $db->prepare( $query );
 $stmt->execute();
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
