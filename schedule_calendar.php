@@ -105,10 +105,10 @@
 <body>
 
 <div style="background: rgb(2,106,167); padding: 0.5vh; height:7.5vh;">
-    <a href="" style="margin-left:1vw; position: relative; top:-10%;" ><span style="color: white;">&#9776;</span></a>
 
-    <span style="margin-left:1vw; font-weight:700; font-size:xx-large; color: white;">FELIIX</span>
+    <a href="default" style="margin-left:1vw; position: relative; top:-10%;" ><span style="color: white;">&#9776;</span></a>
 
+    <a href="default"><span style="margin-left:1vw; font-weight:700; font-size:xx-large; color: white;">FELIIX</span></a>
 
 </div>
 
