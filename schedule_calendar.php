@@ -362,6 +362,8 @@
                         <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="RS"> RS
                         <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="CJ"> CJ
                         <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="JO"> JO
+                        <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="EO"> EO
+                        <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="JM"> JM
 
 
                     </div>
@@ -467,6 +469,7 @@
                             <option value="2">AY</option>
                             <option value="3">EV</option>
                             <option value="4">JB</option>
+                            <option value="5">MA</option>
                         </Select>
 
                     </div>
@@ -490,6 +493,7 @@
                             <option value="2">AY</option>
                             <option value="3">EV</option>
                             <option value="4">JB</option>
+                            <option value="5">MA</option>
                         </Select>
 
                     </div>

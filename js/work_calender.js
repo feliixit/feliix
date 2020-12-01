@@ -577,6 +577,12 @@
                     if(installer[i] == "JO")
                         document.getElementsByName("sc_Installer_needed")[4].checked = true;
 
+                    if(installer[i] == "EO")
+                        document.getElementsByName("sc_Installer_needed")[5].checked = true;
+
+                    if(installer[i] == "JM")
+                        document.getElementsByName("sc_Installer_needed")[6].checked = true;
+
                 }
 
                 //加入Agenda內容(先刪除未儲存的)
@@ -992,6 +998,12 @@
 
             if (installer[i] == "JO")
                 document.getElementsByName("sc_Installer_needed")[4].checked = true;
+
+            if (installer[i] == "EO")
+                document.getElementsByName("sc_Installer_needed")[5].checked = true;
+
+            if (installer[i] == "JM")
+                document.getElementsByName("sc_Installer_needed")[6].checked = true;
 
         }
 
