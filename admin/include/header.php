@@ -40,9 +40,12 @@ try {
             $access1 = true;
         }
 
+        if($user_id == 3)
+            $access1 = true;
+
         // 2. 針對 Query and Export的內容，只有 Glendon Wendell Co 和 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到
         $access2 = false;
-        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
+        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
             $access2 = true;
 
         $access3 = false;

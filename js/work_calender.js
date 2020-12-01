@@ -861,6 +861,8 @@
         document.getElementsByName("sc_Installer_needed")[2].disabled = status;
         document.getElementsByName("sc_Installer_needed")[3].disabled = status;
         document.getElementsByName("sc_Installer_needed")[4].disabled = status;
+        document.getElementsByName("sc_Installer_needed")[5].disabled = status;
+        document.getElementsByName("sc_Installer_needed")[6].disabled = status;
 
         document.getElementById("sc_location1").disabled = status;
         document.getElementById("sc_things").disabled = status;

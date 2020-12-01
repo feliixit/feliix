@@ -144,8 +144,6 @@ var app = new Vue({
     this.getClientTypes();
     this.getPrioritys();
     this.getStatuses();
-    this.getStages();
-
   },
 
   computed: {
@@ -499,6 +497,8 @@ var app = new Vue({
               (res) => {
                   if(res.data.length > 0)
                     _this.verified_downpayment = res.data[0].status;
+
+                    _this.getStages(_this.verified_downpayment);
               },
               (err) => {
                   alert(err.response);
@@ -837,14 +837,23 @@ var app = new Vue({
               });
       },
 
-      getStages () {
+      getStages (keyword) {
 
           let _this = this;
+          val = 0;
+
+          if(keyword == false)
+            val = 1;
+
+          const params = {
+            keyword : val,
+           
+          };
     
           let token = localStorage.getItem('accessToken');
     
           axios
-              .get('api/admin/project_stage', { headers: {"Authorization" : `Bearer ${token}`} })
+              .get('api/admin/project_stage', { params, headers: {"Authorization" : `Bearer ${token}`} })
               .then(
               (res) => {
                   _this.stages = res.data;

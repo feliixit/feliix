@@ -59,6 +59,9 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
+            if($keyword == 1)
+                $sql = "SELECT 0 as is_checked, id, stage FROM project_stage  where status <> -1 and status <> 2 ".($id ? " and id=$id" : '');
+            else
             $sql = "SELECT 0 as is_checked, id, stage FROM project_stage  where status <> -1 ".($id ? " and id=$id" : '');
 
             if(!empty($_GET['page'])) {
