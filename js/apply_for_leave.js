@@ -49,15 +49,7 @@ var app = new Vue({
   },
 
   mounted(){
-    var d1 = new Date();
-
-    var today = new Date();
-      var d2 =  new Date(today.getFullYear(), today.getMonth()+1, 0);
-
-    $('#start').val(d1.toISOString().slice(0,4) + "-01");
-    $('#end').val(d2.toISOString().slice(0,7));
-
-    this.getLeaveCredit();
+    
   },
 
   watch: {
@@ -455,6 +447,38 @@ var app = new Vue({
   },
 
 
+  setUpLeavePeriod(){
+    var d1 = new Date();
+
+    var today = new Date();
+    var d2 =  new Date(today.getFullYear(), today.getMonth()+1, 0);
+
+    var d_manager =  new Date(today.getFullYear(), "11", 0);
+
+    if(this.is_manager == 1)
+    {
+      if(d1 > d_manager)
+      {
+        $('#start').val(d1.toISOString().slice(0,4) + "-12");
+        $('#end').val(d2.toISOString().slice(0,7));
+      }
+      else
+      {
+        var manager_start_date = new Date(today.getFullYear() -1, "12", 0);
+        $('#start').val(manager_start_date.toISOString().slice(0,7));
+        $('#end').val(d1.toISOString().slice(0,4) + "-11");
+      }
+    }
+    else
+    {
+      $('#start').val(d1.toISOString().slice(0,4) + "-01");
+      $('#end').val(d2.toISOString().slice(0,7));
+    }
+
+    this.getLeaveCredit();
+  },
+
+
   getUserName: function() {
     var token = localStorage.getItem('token');
     var form_Data = new FormData();
@@ -478,6 +502,8 @@ var app = new Vue({
             _this.al_credit = response.data.annual_leave;
             _this.sl_credit = response.data.sick_leave;
 
+            // for is manager period
+            _this.setUpLeavePeriod();
           })
     .catch(function(response) {
             //handle error
