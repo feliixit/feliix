@@ -536,12 +536,12 @@
                             id="btn_duplicate">Duplicate Schedule
                     </button>
 
-                    <button class="btn btn-primary" style="width:8vw; font-weight:700; margin-left:2vw;"
-                            id="btn_edit">Edit
-                    </button>
-
                     <button class="btn btn-danger" style="width:8vw; font-weight:700; margin-left:2vw;"
                             id="btn_delete">Delete
+                    </button>
+
+                    <button class="btn btn-primary" style="width:8vw; font-weight:700; margin-left:2vw;"
+                            id="btn_edit">Edit
                     </button>
 
                     <button class="btn btn-secondary" style="width:8vw; font-weight:700; margin-left:2vw;"
