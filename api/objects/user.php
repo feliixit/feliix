@@ -231,9 +231,10 @@ class User{
             || $title_id == 19 || $title_id == 20
             || $title_id == 24 || $title_id == 25
             || $title_id == 30
-            || $title_id == 38 || $title_id == 35 || $title_id == 36)
+            || $title_id == 38 || $title_id == 35 || $title_id == 36
+            || $title_id == 4 || $title_id == 5)
             $ruleset .= "1";
-        elseif($title_id == 1 || $title_id == 2 || $title_id == 3 || $title_id == 4 || $title_id == 5)
+        elseif($title_id == 1 || $title_id == 2 || $title_id == 3)
         {
             $ruleset .= "2";
         }
@@ -246,9 +247,10 @@ class User{
             || $title_id == 18 || $title_id == 19 || $title_id == 20
             || $title_id == 23 || $title_id == 24 || $title_id == 25
             || $title_id == 30
-            || $title_id == 38 || $title_id == 35 || $title_id == 36)
+            || $title_id == 38 || $title_id == 35 || $title_id == 36
+            || $title_id == 4 || $title_id == 5)
             $ruleset .= "1";
-        elseif($title_id == 1 || $title_id == 2 || $title_id == 3 || $title_id == 4 || $title_id == 5)
+        elseif($title_id == 1 || $title_id == 2 || $title_id == 3)
         {
             $ruleset .= "2";
         }
