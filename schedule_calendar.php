@@ -169,13 +169,13 @@
                 <div class="row">
                     <div class="col-2 align-self-center" style="text-align: center;">
 
-                        <label>Title</label>
+                        <label>Project</label>
                     </div>
 
                     <div class="col-10">
 
-
-                        <input type="text" class="form-control" style="width:90%;" id="sc_title">
+                        <input type="text" class="form-control" style="width:90%;" id="sc_project">
+                        <input type="text" class="form-control" style="display: none;" id="sc_title">
 
                     </div>
 
@@ -239,24 +239,6 @@
                 </div>
 
                 <br>
-
-                <div class="row">
-                    <div class="col-2 align-self-center" style="text-align: center;">
-
-                        <label>Project</label>
-                    </div>
-
-                    <div class="col-10">
-
-
-                        <input type="text" class="form-control" style="width:90%;" id="sc_project">
-
-                    </div>
-
-                </div>
-
-                <br>
-
 
                 <div class="form-inline row">
                     <div class="col-2 align-self-center" style="text-align: center;">

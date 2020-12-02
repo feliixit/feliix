@@ -696,7 +696,7 @@
 
         var sc_content = {
             Date: document.getElementById("sc_date").value,
-            Title: document.getElementById("sc_title").value,
+            Title: document.getElementById("sc_project").value,
             Color: document.getElementById("sc_color").value,
             Allday: document.getElementById("sc_time").checked,
             
@@ -1114,7 +1114,7 @@
 
         var sc_content = {
             Date: document.getElementById("sc_date").value,
-            Title: document.getElementById("sc_title").value,
+            Title: document.getElementById("sc_project").value,
             Color: document.getElementById("sc_color").value,
             Allday: document.getElementById("sc_time").checked,
             Starttime: document.getElementById("sc_date").value +' '+ document.getElementById("sc_stime").value,
