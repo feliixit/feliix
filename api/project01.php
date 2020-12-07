@@ -112,7 +112,86 @@ $stmt->execute();
 
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $merged_results[] = $row;
+    $id = $row['id'];
+    $category = $row['category'];
+    $client_type = $row['client_type'];
+    $pct_class = $row['pct_class'];
+    $priority = $row['priority'];
+
+    $pp_class = $row['pp_class'];
+    $project_name = $row['project_name'];
+    $project_status = $row['project_status'];
+    $estimate_close_prob = $row['estimate_close_prob'];
+    $username = $row['username'];
+
+    $created_at = $row['created_at'];
+    $stage = $row['stage'];
+    $recent = GetRecentPost($row['id'], $db);
+
+    $merged_results[] = array(
+        "id" => $id,
+        "category" => $category,
+        "client_type" => $client_type,
+        "pct_class" => $pct_class,
+        "priority" => $priority,
+        "pp_class" => $pp_class,
+        "project_name" => $project_name,
+        "project_status" => $project_status,
+        "estimate_close_prob" => $estimate_close_prob,
+        "username" => $username,
+        "created_at" => $created_at,
+        "stage" => $stage,
+        "recent" => $recent,
+    );
 }
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
+
+function GetRecentPost($project_id, $db){
+    $query = "SELECT u.username, pm.created_at FROM project_stage_client pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id WHERE p.project_id = " . $project_id . " and pm.status <> -1  
+    UNION all
+    SELECT  u.username, pc.created_at FROM project_stage_client_task pc left join user u on u.id = pc.create_id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
+    UNION ALL
+    SELECT  u.username, pt.created_at FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
+    UNION ALL
+    SELECT  u.username, pm.created_at FROM project_other_task pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    UNION ALL
+    SELECT  u.username, pm.created_at FROM project_other_task_message pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    UNION all
+    SELECT  u.username, pm.created_at FROM project_other_task_message_reply pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message ps ON pm.message_id = ps.id  LEFT JOIN project_other_task pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    UNION ALL
+    SELECT  u.username, pm.created_at FROM project_other_task_r pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    UNION ALL
+    SELECT  u.username, pm.created_at FROM project_other_task_message_r pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task_r pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    UNION all
+    SELECT  u.username, pm.created_at FROM project_other_task_message_reply_r pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message_r ps ON pm.message_id = ps.id  LEFT JOIN project_other_task_r pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    $str = "";
+
+    if(count($merged_results) > 0)
+    {
+        usort($merged_results, function ($item1, $item2) {
+            return $item2['created_at'] <=> $item1['created_at'];
+        });
+    
+        foreach ($merged_results as $arr)
+        {
+            $str = $arr['created_at'] . " " . $arr['username'];
+            break;
+        }
+    }
+
+    return $str;
+}

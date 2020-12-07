@@ -262,7 +262,8 @@ $(function(){
                      <li>{{ receive_record.username }}</li>
                      <li>{{ receive_record.created_at }} ~ {{ receive_record.updated_at }}</li>
                      <li>{{ receive_record.stage }}</li>
-                     <li></li>
+                     <li v-if="receive_record.recent != ''">{{ receive_record.recent }}</li>
+                   <li v-else>{{ receive_record.created_at }} {{ receive_record.username }}</li>
                  </ul>
                 
              </div>
