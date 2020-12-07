@@ -260,7 +260,7 @@ $(function(){
                      <li>{{ receive_record.project_status }}</li>
                      <li>{{ receive_record.estimate_close_prob }}</li>
                      <li>{{ receive_record.username }}</li>
-                     <li>{{ receive_record.created_at }} ~ </li>
+                     <li>{{ receive_record.created_at }} ~ {{ receive_record.updated_at }}</li>
                      <li>{{ receive_record.stage }}</li>
                      <li></li>
                  </ul>

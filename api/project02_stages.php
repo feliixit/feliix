@@ -50,7 +50,7 @@ $merged_results = array();
 
 
 
-$query = "SELECT pm.id, `sequence`, pst.id project_stage_id, pst.`stage`, (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, `stages_status_id`, DATE_FORMAT(pm.created_at, '%Y-%m-%d') start, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d %r') created_at, 0 replies, 0 post, '' recent FROM project_stages pm LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where pm.status <> -1 ";
+$query = "SELECT pm.id, `sequence`, pst.id project_stage_id, pst.`stage`, (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, `stages_status_id`, DATE_FORMAT(pm.created_at, '%Y-%m-%d') start, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d %T') created_at, 0 replies, 0 post, '' recent FROM project_stages pm LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where pm.status <> -1 ";
 
 if($pid != 0)
 {
@@ -89,7 +89,84 @@ $stmt->execute();
 
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $merged_results[] = $row;
+    $id = $row['id'];
+    $sequence = $row['sequence'];
+    $project_stage_id = $row['project_stage_id'];
+    $stage = $row['stage'];
+    $stages_status = $row['stages_status'];
+
+    $stages_status_id = $row['stages_status_id'];
+    $start = $row['start'];
+    $username = $row['username'];
+    $created_at = $row['created_at'];
+    $replies = $row['replies'];
+
+    $post = $row['post'];
+    $recent = GetRecentPost($row['id'], $db);
+
+    $merged_results[] = array(
+        "id" => $id,
+        "sequence" => $sequence,
+        "project_stage_id" => $project_stage_id,
+        "stage" => $stage,
+        "stages_status" => $stages_status,
+        "stages_status_id" => $stages_status_id,
+        "start" => $start,
+        "username" => $username,
+        "created_at" => $created_at,
+        "replies" => $replies,
+        "post" => $post,
+        "recent" => $recent,
+    );
 }
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
+
+function GetRecentPost($stage_id, $db){
+    $query = "SELECT u.username, pm.created_at FROM project_stage_client pm left join user u on u.id = pm.create_id  where stage_id = " . $stage_id . " and pm.status <> -1  
+    UNION all
+    SELECT  u.username, pc.created_at FROM project_stage_client_task pc left join user u on u.id = pc.create_id  where pc.stage_id = " . $stage_id . "  and pc.status <> -1 
+    UNION ALL
+    SELECT  u.username, pt.created_at FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id where pc.stage_id = " . $stage_id . "  and pc.status <> -1 
+    UNION ALL
+    SELECT  u.username, pm.created_at FROM project_other_task pm left join user u on u.id = pm.create_id  where stage_id = " . $stage_id . "  and pm.status <> -1 
+    UNION ALL
+    SELECT  u.username, pm.created_at FROM project_other_task_message pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task pc ON pm.task_id = pc.id where stage_id = " . $stage_id . "  and pm.status <> -1 
+    UNION all
+    SELECT  u.username, pm.created_at FROM project_other_task_message_reply pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message ps ON pm.message_id = ps.id  LEFT JOIN project_other_task pc ON ps.task_id = pc.id where stage_id = " . $stage_id . "  and pm.status <> -1 
+    UNION ALL
+    SELECT  u.username, pm.created_at FROM project_other_task_r pm left join user u on u.id = pm.create_id  where stage_id = " . $stage_id . "  and pm.status <> -1 
+    UNION ALL
+    SELECT  u.username, pm.created_at FROM project_other_task_message_r pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task_r pc ON pm.task_id = pc.id where stage_id = " . $stage_id . "  and pm.status <> -1 
+    UNION all
+    SELECT  u.username, pm.created_at FROM project_other_task_message_reply_r pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message_r ps ON pm.message_id = ps.id  LEFT JOIN project_other_task_r pc ON ps.task_id = pc.id where stage_id = " . $stage_id . "  and pm.status <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    $str = "";
+
+    if(count($merged_results) > 0)
+    {
+        usort($merged_results, function ($item1, $item2) {
+            return $item2['created_at'] <=> $item1['created_at'];
+        });
+    
+        foreach ($merged_results as $arr)
+        {
+            $str = $arr['created_at'] . " " . $arr['username'];
+            break;
+        }
+    }
+
+    return $str;
+}

@@ -758,7 +758,7 @@ $(function(){
                    <li>Status</li>
                    <li>Execution Period</li>
                    <li>Created by</li>
-                   <li>Post/Reply</li>
+                   <!-- <li>Post/Reply</li> -->
                    <li>Recent Message</li>
                </ul>
                <ul v-for='(receive_record, index) in displayedStagePosts'>
@@ -768,8 +768,9 @@ $(function(){
                    <li>{{ receive_record.stages_status }}</li>
                    <li>{{ receive_record.start }} ~  </li>
                    <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
-                   <li>{{ receive_record.replies }}/{{ receive_record.post }}</li>
-                   <li>{{ receive_record.recent }}</li>
+                   <!-- <li>{{ receive_record.replies }}/{{ receive_record.post }}</li> -->
+                   <li v-if="receive_record.recent != ''">{{ receive_record.recent }}</li>
+                   <li v-else>{{ receive_record.created_at }} {{ receive_record.username }}</li>
                </ul>
            </div>
            <!-- list end -->

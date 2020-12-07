@@ -632,6 +632,9 @@ var app = new Vue({
                   _this.edit_location = res.data[0].location;
                   _this.edit_contact_number = res.data[0].contact_number;
 
+                  _this.created_at = res.data[0].created_at;
+                  _this.end_at = res.data[0].updated_at;
+
               },
               (err) => {
                   alert(err.response);
