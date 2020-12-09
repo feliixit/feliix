@@ -97,8 +97,6 @@
         }
 
 
-
-
     </style>
 
 </head>
@@ -192,7 +190,7 @@
                     <div class="col-10">
 
 
-                        <input type="color" class="form-control" style="width:15%;" id="sc_color">
+                        <input type="color" class="form-control" style="width: 90%;"  id="sc_color">
 
                     </div>
 
@@ -210,7 +208,7 @@
                         <div class="col-10">
 
 
-                            <input type="text" class="form-control" style="width:40%;" disabled id="sc_editor">
+                            <input type="text" class="form-control" style="width:90%;" disabled id="sc_editor">
 
                         </div>
 
@@ -285,7 +283,7 @@
                     <div class="col-10">
 
                         <input type="checkbox" class="form-control" id="sc_time" checked> all-day
-                        <input type="time" class="form-control" style="width:20%; margin-left:5%; margin-right:1%;" id="sc_stime" disabled> to <input type="time" class="form-control" style="width:20%; margin-left:1%;" id="sc_etime" disabled>
+                        <input type="time" class="form-control" style="width:30%; margin-left:5%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime" disabled> to <input type="time" class="form-control" style="width:30%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime" disabled>
 
                     </div>
 
@@ -369,7 +367,7 @@
 
                         <div>
 
-                            <textarea class="form-control" style="width:90%; margin-top:1%; resize:none; overflow:auto;"
+                            <textarea class="form-control" style="width:90%; margin-top:1%; resize:none; overflow:auto;" rows="5"
                                       onkeyup="autogrow(this);" id="sc_things"></textarea>
                         </div>
 
@@ -395,7 +393,7 @@
 
                         <div style="margin-top: 1%;">
 
-                            <textarea class="form-control" style="width:90%; resize:none; overflow:auto;"
+                            <textarea class="form-control" style="width:90%; resize:none; overflow:auto;" rows="5"
                                       onkeyup="autogrow(this);" id="sc_products"></textarea>
                         </div>
 
@@ -511,7 +509,7 @@
 
                     <div class="col-10">
 
-                        <textarea class="form-control" style="width:90%; resize:none; overflow:auto;"
+                        <textarea class="form-control" style="width:90%; resize:none; overflow:auto;" rows="5"
                                       onkeyup="autogrow(this);" id="sc_notes"></textarea>
 
                     </div>
