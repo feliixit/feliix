@@ -52,6 +52,7 @@ $edit_contactor = (isset($_POST['edit_contactor']) ?  $_POST['edit_contactor'] :
 $edit_location = (isset($_POST['edit_location']) ?  $_POST['edit_location'] : '');
 $creator = (isset($_POST['creator']) ?  $_POST['creator'] : 0);
 $edit_contact_number = (isset($_POST['edit_contact_number']) ?  $_POST['edit_contact_number'] : '');
+$edit_client = (isset($_POST['edit_client']) ?  $_POST['edit_client'] : '');
 $edit_project_reason = (isset($_POST['edit_project_reason']) ?  $_POST['edit_project_reason'] : '');
 
 
@@ -87,6 +88,7 @@ $query = "INSERT INTO project_edit_info
                     location = :edit_location,
                     create_id = :create_id,
                     contact_number = :edit_contact_number,
+                    client = :edit_client,
                     edit_reason = :edit_project_reason
                 
                 where id = :project_id ";
@@ -102,6 +104,7 @@ $query = "INSERT INTO project_edit_info
                 $stmt1->bindParam(':create_id', $creator);
                 $stmt1->bindParam(':edit_location', $edit_location);
                 $stmt1->bindParam(':edit_contact_number', $edit_contact_number);
+                $stmt1->bindParam(':edit_client', $edit_client);
                 $stmt1->bindParam(':edit_project_reason', $edit_project_reason);
 
                 $stmt1->execute();

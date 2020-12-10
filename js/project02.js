@@ -10,6 +10,7 @@ var app = new Vue({
 
     project_comments: {},
     project_probs: {},
+    project_quotes: {},
     project_action_detials: {},
 
     categorys : {},
@@ -41,6 +42,7 @@ var app = new Vue({
     location:'',
     contactor:'',
     contact_number:'',
+    client:'',
     edit_reason:'',
 
     // + sign
@@ -60,6 +62,7 @@ var app = new Vue({
     edit_priority: '',
     edit_contactor:'',
     edit_contact_number:'',
+    edit_client:'',
     edit_location:'',
     edit_project_reason:'',
 
@@ -94,6 +97,14 @@ var app = new Vue({
     prof_fileArray: [],
     prof_canSub: true,
     prof_finish: false,
+
+    // Downpayment Quotation
+    quote_remark:'',
+    quote_fileArray: [],
+    quote_canSub: true,
+    quote_finish: false,
+
+    verified_quotation: false,
 
     submit : false,
     // paging
@@ -133,6 +144,7 @@ var app = new Vue({
         _this.getProjectComments(_this.project_id);
         _this.getProjectProbs(_this.project_id);
         _this.getProjectProof(_this.project_id);
+        _this.getProjectQuotation(_this.project_id);
         _this.getProjectActionDetails(_this.project_id);
         _this.getUsers();
         _this.getFileManagement(_this.project_id);
@@ -197,6 +209,33 @@ var app = new Vue({
           });
           this.detail_clear();
 
+        }
+      },
+      deep: true
+    },
+
+    quote_fileArray: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.quote_fileArray.length) {
+          this.quote_finish = true;
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.quote_finish = true;
+            _this.getProjectActionDetails(_this.project_id);
+
+          });;
+          this.quote_clear();
         }
       },
       deep: true
@@ -275,6 +314,12 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    quote_deleteFile(index) {
+      this.quote_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.quote_file;
+      fileTarget.value = "";
+    },
+
     prof_changeFile() {
       var fileTarget = this.$refs.prof_file;
 
@@ -286,6 +331,23 @@ var app = new Vue({
           ) {
             var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
             this.prof_fileArray.push(fileItem);
+          }else{
+            fileTarget.value = "";
+          }
+        }
+    },
+
+    quote_changeFile() {
+      var fileTarget = this.$refs.quote_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+          // remove duplicate
+          if (
+            this.quote_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+            this.quote_fileArray.length == 0
+          ) {
+            var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+            this.quote_fileArray.push(fileItem);
           }else{
             fileTarget.value = "";
           }
@@ -508,7 +570,37 @@ var app = new Vue({
                   
               });
       },
-
+/*
+      getProjectQuotation: function(keyword) {
+        let _this = this;
+  
+        if(keyword == 0)
+          return;
+  
+        const params = {
+                pid : keyword,
+              };
+  
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+                .get('api/project_quotation_approval', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    if(res.data.length > 0)
+                      _this.verified_quotation = res.data[0].status;
+  
+                     // _this.getStages(_this.verified_downpayment);
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
+*/
       getProjectProbs: function(keyword) {
       let _this = this;
 
@@ -535,6 +627,33 @@ var app = new Vue({
                   
               });
       },
+
+      getProjectQuotation: function(keyword) {
+        let _this = this;
+  
+        if(keyword == 0)
+          return;
+  
+        const params = {
+                pid : keyword,
+              };
+  
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+                .get('api/project_quotation', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.project_quotes = res.data;
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
 
       getProjectInfo(pid) {
 
@@ -624,6 +743,8 @@ var app = new Vue({
                   _this.contactor = res.data[0].contactor;
                   _this.location = res.data[0].location;
                   _this.contact_number = res.data[0].contact_number;
+                  _this.client = res.data[0].client;
+
 
                   _this.edit_category = res.data[0].category_id;
                   _this.edit_client_type = res.data[0].client_type_id;
@@ -631,6 +752,7 @@ var app = new Vue({
                   _this.edit_contactor = res.data[0].contactor;
                   _this.edit_location = res.data[0].location;
                   _this.edit_contact_number = res.data[0].contact_number;
+                  _this.edit_client = res.data[0].client;
 
                   _this.created_at = res.data[0].created_at;
                   _this.end_at = res.data[0].updated_at;
@@ -987,6 +1109,21 @@ var app = new Vue({
             document.getElementById('status_fn6').classList.remove("focus");
         },
 
+        quote_clear() {
+
+          this.quote_remark = '';
+          this.quote_fileArray = [];
+          this.$refs.quote_file.value = '';
+
+          //this.getProjectDetail(this.project_id);
+          this.quote_canSub = true;
+
+          this.getProjectQuotation(this.project_id);
+          
+          document.getElementById('dlg_fn7').classList.remove("show");
+          document.getElementById('a_fn7').classList.remove("focus");
+      },
+
 
         prob_clear() {
 
@@ -1008,6 +1145,7 @@ var app = new Vue({
             this.edit_contactor = this.contactor;
             this.edit_location = this.location;
             this.edit_contact_number = this.contact_number;
+            this.edit_client = this.client;
             
             document.getElementById('project_dialog').classList.remove("show");
             document.getElementById('project_fn2').classList.remove("focus");
@@ -1152,6 +1290,63 @@ var app = new Vue({
                 });
         },
 
+
+        quote_create() {
+          let _this = this;
+          if (this.quote_remark.trim() == '') {
+            Swal.fire({
+              text: 'Please enter description!',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+              
+              //$(window).scrollTop(0);
+              return;
+          }
+
+
+          _this.submit = true;
+          var form_Data = new FormData();
+
+          form_Data.append('pid', this.project_id);
+          form_Data.append('remark', this.quote_remark.trim());
+
+          const token = sessionStorage.getItem('token');
+
+          axios({
+                  method: 'post',
+                  headers: {
+                      'Content-Type': 'multipart/form-data',
+                      Authorization: `Bearer ${token}`
+                  },
+                  url: 'api/project_quote',
+                  data: form_Data
+              })
+              .then(function(response) {
+                  //handle success
+                  if(response.data['batch_id'] != 0)
+                  {
+                      _this.quote_upload(response.data['batch_id']);
+                  }
+                  else
+                  {
+                    _this.quote_clear();
+                
+                  }
+
+                  if(_this.quote_fileArray.length == 0)
+                    _this.quote_clear();
+
+                   // _this.sendNotifyEmail(response.data['batch_id']);
+
+                  
+              })
+              .catch(function(response) {
+                  //handle error
+                  console.log(response)
+              });
+      },
+
         sendNotifyEmail(batch_id) {
             var form_Data = new FormData();
 
@@ -1244,6 +1439,59 @@ var app = new Vue({
                     console.log(response)
                 });
         },
+
+        quote_upload(batch_id) {
+            
+          this.quote_canSub = false;
+          var myArr = this.quote_fileArray;
+          var vm = this;
+         
+          //循环文件数组挨个上传
+          myArr.forEach((element, index) => {
+            var config = {
+              headers: { "Content-Type": "multipart/form-data" },
+              onUploadProgress: function(e) {
+     
+                if (e.lengthComputable) {
+                  var rate = e.loaded / e.total; 
+                  console.log(index, e.loaded, e.total, rate);
+                  if (rate < 1) {
+                    
+                    myArr[index].progress = rate;
+                    vm.$set(vm.quote_fileArray, index, myArr[index]);
+                  } else {
+                    myArr[index].progress = 0.99;
+                    vm.$set(vm.quote_fileArray, index, myArr[index]);
+                  }
+                }
+              }
+            };
+            var data = myArr[index];
+            var myForm = new FormData();
+            myForm.append('batch_type', 'quote');
+            myForm.append('batch_id', batch_id);
+            myForm.append("file", data);
+   
+            axios
+              .post("api/uploadFile_gcp", myForm, config)
+              .then(function(res) {
+                if (res.data.code == 0) {
+             
+                  myArr[index].progress = 1;
+                  vm.$set(vm.quote_fileArray, index, myArr[index]);
+                  console.log(vm.quote_fileArray, index);
+                } else {
+                  alert(JSON.stringify(res.data));
+                }
+              })
+              .catch(function(err) {
+                console.log(err);
+              });
+          });
+
+          this.quote_canSub = true;
+        
+      },
 
         prof_upload(batch_id) {
             
@@ -1592,6 +1840,7 @@ var app = new Vue({
             form_Data.append('creator', this.uid);
             form_Data.append('edit_location', this.edit_location);
             form_Data.append('edit_contact_number', this.edit_contact_number);
+            form_Data.append('edit_client', this.edit_client);
             form_Data.append('edit_project_reason', this.edit_project_reason);
 
             const token = sessionStorage.getItem('token');

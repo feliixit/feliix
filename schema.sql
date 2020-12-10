@@ -943,3 +943,25 @@ ALTER TABLE `gcp_storage_file` ADD `deleted_id` int(11) DEFAULT 0 AFTER `updated
 ALTER TABLE `gcp_storage_file` ADD `deleted_at` timestamp NULL AFTER `deleted_id`;
 
 ALTER TABLE `work_calendar_details` ADD `sort` int(11) DEFAULT 0 AFTER `agenda`;
+
+
+-- 20201210 project02_1 modified
+ALTER TABLE project_main
+ADD COLUMN `client` varchar(256) DEFAULT '' AFTER contact_number;
+
+CREATE TABLE IF NOT EXISTS `project_quotation` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `remark` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `doc_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+ALTER TABLE project_quotation
+ADD COLUMN `batch_id` int(11) DEFAULT 0 AFTER project_id;
