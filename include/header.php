@@ -87,6 +87,10 @@ try {
             <li class="photo" style="background-image: url(images/man/<?=$pic_url ?>)"></li>
             <li class="name"><?= isset($username) ? $username : "" ?> <br /> <b style="font-size: 26px;"><?= isset($position) ? $position : "" ?></b></li>
         </ul>
+        <?php
+            if($user_id != 94)
+            {
+        ?>
         <ul class="menu">
             <li class="sec01">
                 <a class="uni" href="attendance">Office<br>Attendance</a>
@@ -131,8 +135,21 @@ try {
             <li class="gray02">
                 <a class="uni">Profile<br>Section</a>
             </li>
-            
         </ul>
+        <?php
+            }
+            else
+            {
+        ?>
+        <ul class="menu">
+            <li class="sec03 focus">
+                <a class="uni">Project<br>Management</a>
+                <a class="list" href="schedule_calendar">Schedule Calendar</a>
+            </li>
+        </ul>
+        <?php
+            }
+        ?>
     </div>
     <!--  menu list  -->
     <div class="footer"><a class="logout" href="index" onclick="logout();">Log out</a></div>

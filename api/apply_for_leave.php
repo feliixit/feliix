@@ -193,6 +193,7 @@ else
             array_push($holiday, $from_date . " P");
         }
 
+
         // 3. exclude holiday
         $result = array_diff($leaves, $holiday);
 
@@ -221,6 +222,35 @@ else
 
         $leave = count($result) * 0.5;
 
+
+        // 4. sliding window checking
+        $second_flag = false;
+        if(count($result) * 0.5 == 1)
+        {
+            $count = 0;
+            $begin = new DateTime($timeStart);
+            $head = CounterSlideWindow($holiday, $applied, $begin, 2, $count);
+
+            $end = new DateTime($timeEnd);
+            $tail = SlideWindow($holiday, $applied, $end, 2, $count);
+
+            if($head > 1 || $tail > 1)
+                $second_flag = true;
+        }
+
+        if(count($result) * 0.5 == 2)
+        {
+            $count = 0;
+            $begin = new DateTime($timeStart);
+            $head = CounterSlideWindow($holiday, $applied, $begin, 1, $count);
+
+            $end = new DateTime($timeEnd);
+            $tail = SlideWindow($holiday, $applied, $end, 1, $count);
+
+            if($head > 0 || $tail > 0)
+                $second_flag = true;
+        }
+      
         // now you can apply
         $filename = "";
 
@@ -474,4 +504,62 @@ function getLeaveType($type){
 
 function formateDate($_date){
     return substr($_date, 0, 4)."/".substr($_date, 4, 2)."/".substr($_date, 6, 2);
+}
+
+function CounterSlideWindow($holiday, $applied, $date, $n, $count)
+{
+    if($n == 0)
+        return 0;
+
+    $leaves = array();
+    $check_date = $date->modify('-1 day');
+
+    array_push($leaves, $check_date->format("Ymd") . " A");
+    array_push($leaves, $check_date->format("Ymd") . " P");
+
+    $inter = array();
+    $inter = array_intersect($leaves, $applied);
+    if(count($inter) > 0)
+    {
+        $count++;
+    }
+
+    $holi = array();
+    $holi = array_intersect($leaves, $holiday);
+    if(count($holi) > 0)
+        $count = CounterSlideWindow($holiday, $applied, $check_date, $n, $count);
+    else
+        $count = CounterSlideWindow($holiday, $applied, $check_date, $n - 1, $count);
+
+    return $count;
+}
+
+function SlideWindow($holiday, $applied, $date, $n, $count)
+{
+    if($n == 0)
+        return 0;
+
+    $leaves = array();
+    
+
+    $check_date = $date->modify('1 day');
+
+    array_push($leaves, $check_date->format("Ymd") . " A");
+    array_push($leaves, $check_date->format("Ymd") . " P");
+
+    $inter = array();
+    $inter = array_intersect($leaves, $applied);
+    if(count($inter) > 0)
+    {
+        $count++;
+    }
+
+    $holi = array();
+    $holi = array_intersect($leaves, $holiday);
+    if(count($holi) > 0)
+        $count = SlideWindow($holiday, $applied, $check_date, $n, $count);
+    else
+        $count = SlideWindow($holiday, $applied, $check_date, $n - 1, $count);
+
+    return $count;
 }
