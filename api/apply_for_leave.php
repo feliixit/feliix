@@ -514,7 +514,7 @@ function formateDate($_date){
 function CounterSlideWindow($holiday, $applied, $date, $n, $count)
 {
     if($n == 0)
-        return 0;
+        return $count;
 
     $leaves = array();
     $check_date = $date->modify('-1 day');
@@ -542,7 +542,7 @@ function CounterSlideWindow($holiday, $applied, $date, $n, $count)
 function SlideWindow($holiday, $applied, $date, $n, $count)
 {
     if($n == 0)
-        return 0;
+        return $count;
 
     $leaves = array();
     
