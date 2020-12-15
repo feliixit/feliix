@@ -647,7 +647,18 @@
 
         });
         calendar.render();
-		clearTimeOut();
+        clearTimeOut();
+        
+        if(app.name === "guest")
+        {
+            document.getElementsByClassName("fc-addEventButton-button")[0].style.visibility="hidden";
+
+            document.getElementById("add_message").style.visibility="hidden";
+
+            document.getElementById("btn_duplicate").style.visibility="hidden";
+            document.getElementById("btn_delete").style.visibility="hidden";
+            document.getElementById("btn_edit").style.visibility="hidden";
+        }
     };
 	function onChangeFileUpload(e) {
 		

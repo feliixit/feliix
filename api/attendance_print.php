@@ -125,7 +125,13 @@ if($jwt){
                 else
                     $sheet->setCellValue('G' . $i, '');
 
-                $sheet->setCellValue('H' . $i, $row['pos_lat'] . " - " . $row['pos_lng']);
+                 
+                $link = "http://www.google.com/maps/place/" . $row['pos_lat'] . ',' . $row['pos_lng'];
+                $sheet->setCellValue('H' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
+                $sheet->getCellByColumnAndRow(8,$i)->getHyperlink()->setUrl($link);
+                    
+
+                //$sheet->setCellValue('H' . $i, $row['pos_lat'] . " - " . $row['pos_lng']);
                 
                 $sheet->setCellValue('I' . $i, $row['remark']);
 
@@ -200,7 +206,10 @@ if($jwt){
                 else
                     $sheet->setCellValue('G' . $i, '');
 
-                $sheet->setCellValue('H' . $i, $row['pos_lat'] . " - " . $row['pos_lng']);
+                    $link = "http://www.google.com/maps/place/" . $row['pos_lat'] . ',' . $row['pos_lng'];
+                    $sheet->setCellValue('H' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
+                    $sheet->getCellByColumnAndRow(8,$i)->getHyperlink()->setUrl($link);
+                    
                 $sheet->setCellValue('I' . $i, $row['remark']);
 
 
@@ -272,7 +281,10 @@ if($jwt){
                 else
                     $sheet->setCellValue('G' . $i, '');
                 
-                    $sheet->setCellValue('H' . $i, $row['pos_lat'] . " - " . $row['pos_lng']);
+                    $link = "http://www.google.com/maps/place/" . $row['pos_lat'] . ',' . $row['pos_lng'];
+                    $sheet->setCellValue('H' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
+                    $sheet->getCellByColumnAndRow(8,$i)->getHyperlink()->setUrl($link);
+
                 $sheet->setCellValue('I' . $i, $row['remark']);
 
 

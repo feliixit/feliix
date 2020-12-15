@@ -965,3 +965,8 @@ CREATE TABLE IF NOT EXISTS `project_quotation` (
 
 ALTER TABLE project_quotation
 ADD COLUMN `batch_id` int(11) DEFAULT 0 AFTER project_id;
+
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `too_many` varchar(1) DEFAULT '' AFTER `leave`;
+
