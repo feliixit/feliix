@@ -14,6 +14,7 @@ class ApplyForLeave
     public $end_time;
     public $leave_type;
     public $leave;
+    public $too_many;
     public $pic_url;
     public $reason;
     public $approval_id;
@@ -103,8 +104,8 @@ class ApplyForLeave
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`uid`, `start_date`, `start_time`, `end_date`, `end_time`, `leave_type`, `leave`, `pic_url`, `reason`, `created_at`) 
-                VALUES (:uid, :start_date, :start_time, :end_date, :end_time, :leave_type, :leave, :pic_url, :reason, now())";
+                (`uid`, `start_date`, `start_time`, `end_date`, `end_time`, `leave_type`, `leave`, `too_many`, `pic_url`, `reason`, `created_at`) 
+                VALUES (:uid, :start_date, :start_time, :end_date, :end_time, :leave_type, :leave, :too_many, :pic_url, :reason, now())";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -117,6 +118,8 @@ class ApplyForLeave
             $this->end_date = htmlspecialchars(strip_tags($this->end_date));
             $this->end_time = htmlspecialchars(strip_tags($this->end_time));
             $this->leave_type = htmlspecialchars(strip_tags($this->leave_type));
+
+            $this->too_many = htmlspecialchars(strip_tags($this->too_many));
 
             $this->leave = (float) $this->leave;
            
@@ -133,6 +136,7 @@ class ApplyForLeave
             $stmt->bindParam(':leave_type', $this->leave_type);
 
             $stmt->bindParam(':leave', $this->leave);
+            $stmt->bindParam(':too_many', $this->too_many);
 
             $stmt->bindParam(':pic_url', $this->pic_url);
             $stmt->bindParam(':reason', $this->reason);

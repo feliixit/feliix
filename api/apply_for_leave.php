@@ -284,6 +284,11 @@ else
         $afl->end_time = $end_time;
         $afl->pic_url = $filename;
         $afl->leave = $leave;
+        if($second_flag == true)
+            $afl->too_many = "Y";
+        else
+            $afl->too_many = "";
+            
         $afl->reason = $reason;
 
         $leav_msg = "[" . $user_department . "] " . $user_name . " apply leave from " . $start_date . " " . $start_time . " to " . $end_date . " " . $end_time;

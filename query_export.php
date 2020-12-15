@@ -24,7 +24,7 @@ try {
             
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $access = false;
-            if($user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
+            if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
                 $access = true;
 
         }
