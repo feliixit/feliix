@@ -55,7 +55,7 @@ try {
         $pic_url = $decoded->data->pic_url;
 
         if($pic_url == "")
-            $pic_url = "man6.jpg";
+            $pic_url = "avatar.svg";
         //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
         //    header( 'location:index.php' );
     }
