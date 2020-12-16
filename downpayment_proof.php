@@ -34,6 +34,10 @@ try {
                 $access = true;
             }
 
+            // Glendon Wendell Co and Kuan
+            if($user_id == 3 || $user_id == 41)
+                $access = true;
+
         }
         catch (Exception $e){
 
