@@ -1139,9 +1139,9 @@
         }
     });
 
-    $(document).on('click', '#btn_lock', function () {
+    $(document).on('click', '#btn_lock', async function () {
         document.getElementById("lock").value = "Y";
-        app.updateLock("Y");
+        await app.updateLock("Y");
 
         var sc_content = eventObj.extendedProps.description;
         sc_content.Lock = "Y";
@@ -1153,9 +1153,9 @@
         document.getElementById("btn_delete").style.display = "none";
     });
 
-    $(document).on('click', '#btn_unlock', function () {
+    $(document).on('click', '#btn_unlock', async function () {
         document.getElementById("lock").value = "";
-        app.updateLock("");
+        await app.updateLock("");
 
         var sc_content = eventObj.extendedProps.description;
         sc_content.Lock = "";
