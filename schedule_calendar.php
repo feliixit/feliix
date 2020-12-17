@@ -518,9 +518,10 @@
 
                 <hr>
 
-                <br>
+                <br><input type="hidden" id="lock" value=""/>
 
                 <div style="margin-left:6vw;">
+
 
                     <button class="btn btn-secondary" style="font-weight:700; margin-left:2vw;"
                             id="btn_reset">Reset Schedule
@@ -548,6 +549,14 @@
 
                     <button class="btn btn-primary" style="width:8vw; font-weight:700; margin-left:2vw;" id="btn_save">
                         Save
+                    </button>
+                    
+                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw;"
+                            id="btn_lock">Lock
+                    </button>
+
+                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw;"
+                            id="btn_unlock">Unlock
                     </button>
 
                 </div>

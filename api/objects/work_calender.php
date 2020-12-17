@@ -43,8 +43,7 @@ class WorkCalenderMain
 
     function updateLockStatus()
     {
-        $query = "UPDATE " . $this->table_name . "
-                set lock = :lock where id = :id";
+        $query = "UPDATE " . $this->table_name . " set `lock` = :lock where id = :id";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);

@@ -243,7 +243,7 @@
 							Back_up_Driver:response.data[i].back_up_driver,
 							Photoshoot_Request:photoshoot,
                             Notes:UnescapeHTML(response.data[i].notes),
-                            lock:response.data[i].lock,
+                            Lock:response.data[i].lock,
 							Agenda:agendas,
 							Lasteditor:Lasteditor,
 						}
@@ -291,7 +291,8 @@
             form_Data.append('jwt', token);
 			form_Data.append('id', _this.id);
             form_Data.append('lock', vlock);
-			
+            form_Data.append('action', _this.action);
+            
             axios({
                 method: 'post',
                 headers: {
@@ -546,6 +547,9 @@
                         document.getElementById("btn_delete").style.display = "none";
                         document.getElementById("btn_cancel").style.display = "none";
                         document.getElementById("btn_save").style.display = "none";
+
+                        document.getElementById("btn_lock").style.display = "none";
+                        document.getElementById("btn_unlock").style.display = "none";
 						
 						document.getElementById("sc_product_files").innerHTML = "";
 						document.getElementById("upload_input").style = "display: flex; align-items: center; margin-top:1%;";
@@ -649,6 +653,7 @@
                 }
 
                 document.getElementById("sc_notes").value = sc_content.Notes;
+          
 
                 Change_Schedule_State(true, sc_content.Allday);
                 icon_function_enable = false;
@@ -662,16 +667,19 @@
                 document.getElementById("btn_save").style.display = "none";
 
                 // add schedual lock
-                document.getElementById("lock").value = sc_content.lock;
-                if(sc_content.lock == '')
+                document.getElementById("lock").value = sc_content.Lock;
+                if(sc_content.Lock != "")
                 {
-                    document.getElementById("btn_lock").style.visibility="hidden";
-                    document.getElementById("btn_unlock").style.visibility="inline";
+                    document.getElementById("btn_lock").style.display="none";
+                    document.getElementById("btn_unlock").style.display="inline";
+
+                    document.getElementById("btn_edit").style.display = "none";
+                    document.getElementById("btn_delete").style.display = "none";
                 }
                 else
                 {
-                    document.getElementById("btn_lock").style.visibility="inline";
-                    document.getElementById("btn_unlock").style.visibility="hidden";
+                    document.getElementById("btn_lock").style.display="inline";
+                    document.getElementById("btn_unlock").style.display="none";
                 }
 
                 $('#exampleModalScrollable').modal('toggle');
@@ -705,7 +713,7 @@
             document.getElementById("btn_edit").style.visibility="hidden";
         }
 
-        if(app.name != "ttt")
+        if(app.name != "Dennis Lin" && app.name != "Thalassa Wren Benzon" && app.name != "dereck")
         {
             document.getElementById("btn_lock").style.visibility="hidden";
             document.getElementById("btn_unlock").style.visibility="hidden";
@@ -954,6 +962,9 @@
         document.getElementById("btn_cancel").style.display = "inline";
         document.getElementById("btn_save").style.display = "inline";
 
+        document.getElementById("btn_lock").style.display = "none";
+        document.getElementById("btn_unlock").style.display = "none";
+
         document.getElementById("last_editor").style.display = "none";
 
 		document.getElementById("upload_input").style = "display: flex; align-items: center; margin-top:1%;";
@@ -976,6 +987,8 @@
     $(document).on('click', '#btn_duplicate', function () {
 
         var sc_content = eventObj.extendedProps.description;
+        sc_content.Lock = "";
+
 		console.log(sc_content);
         if(sc_content.Allday) {
 
@@ -1114,23 +1127,44 @@
         document.getElementById("btn_cancel").style.display = "none";
         document.getElementById("btn_save").style.display = "none";
 
-
+        if(document.getElementById("lock").value == "Y")
+        {
+            document.getElementById("btn_lock").style.display = "none";
+            document.getElementById("btn_unlock").style.display = "inline";
+        }
+        else
+        {
+            document.getElementById("btn_lock").style.display = "inline";
+            document.getElementById("btn_unlock").style.display = "none";
+        }
     });
 
     $(document).on('click', '#btn_lock', function () {
         document.getElementById("lock").value = "Y";
-        app.updateMain("Y");
+        app.updateLock("Y");
+
+        var sc_content = eventObj.extendedProps.description;
+        sc_content.Lock = "Y";
 
         document.getElementById("btn_lock").style.display = "none";
         document.getElementById("btn_unlock").style.display = "inline";
+
+        document.getElementById("btn_edit").style.display = "none";
+        document.getElementById("btn_delete").style.display = "none";
     });
 
     $(document).on('click', '#btn_unlock', function () {
         document.getElementById("lock").value = "";
-        app.updateMain("");
+        app.updateLock("");
+
+        var sc_content = eventObj.extendedProps.description;
+        sc_content.Lock = "";
 
         document.getElementById("btn_lock").style.display = "inline";
         document.getElementById("btn_unlock").style.display = "none";
+
+        document.getElementById("btn_edit").style.display = "inline";
+        document.getElementById("btn_delete").style.display = "inline";
     });
 
     $(document).on('click', '#btn_save', function () {
@@ -1212,7 +1246,7 @@
             Back_up_Driver: document.getElementById("sc_driver2").value,
             Photoshoot_Request: $('input[name=sc_Photoshoot_request]:checked').val(),
             Notes: document.getElementById("sc_notes").value,
-            lock: document.getElementById("lock").value,
+            Lock: document.getElementById("lock").value,
         };
 
 
@@ -1290,6 +1324,17 @@
         document.getElementById("btn_delete").style.display = "inline";
         document.getElementById("btn_cancel").style.display = "none";
         document.getElementById("btn_save").style.display = "none";
+
+        if(document.getElementById("lock").value == "Y")
+        {
+            document.getElementById("btn_lock").style.display = "none";
+            document.getElementById("btn_unlock").style.display = "inline";
+        }
+        else
+        {
+            document.getElementById("btn_lock").style.display = "inline";
+            document.getElementById("btn_unlock").style.display = "none";
+        }
 
 		app.updateMain(agenda_content,sc_content);
     });
