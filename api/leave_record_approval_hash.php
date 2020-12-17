@@ -85,7 +85,7 @@ if($action == 'approve') {
         update apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
         set re_approval_id = " . $user_id . ", re_approval_at = NOW()
         WHERE a.STATUS <> -1 AND approval_id  = " . $user_id . " AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
-        and `leave` <= 2 and too_many = ''
+        and `leave` <= 2 
         and uid IN 
         ( SELECT id FROM user WHERE apartment_id IN (SELECT apartment_id FROM leave_flow WHERE uid = " . $user_id . " and flow = 1))
         AND a.id in (" . $id . ")
