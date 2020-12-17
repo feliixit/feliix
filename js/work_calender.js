@@ -242,7 +242,8 @@
 							Driver:response.data[i].driver,
 							Back_up_Driver:response.data[i].back_up_driver,
 							Photoshoot_Request:photoshoot,
-							Notes:UnescapeHTML(response.data[i].notes),
+                            Notes:UnescapeHTML(response.data[i].notes),
+                            lock:response.data[i].lock,
 							Agenda:agendas,
 							Lasteditor:Lasteditor,
 						}
@@ -280,6 +281,37 @@
 				//alert(JSON.stringify(response));
 				console.log(response)
 			});
+        },
+        
+        updateLock: function(vlock){
+			this.action = 8;//update lock status
+			var token = localStorage.getItem('token');
+			var form_Data = new FormData();
+			let _this = this;
+            form_Data.append('jwt', token);
+			form_Data.append('id', _this.id);
+            form_Data.append('lock', vlock);
+			
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                url: 'api/work_calender_main',
+                data: form_Data
+            })
+            .then(function (response) {
+                    console.log(details);
+                    console.log(response);
+                    console.log(response.data[0]);
+				  
+                    //handle success
+                    
+            })
+            .catch(function (response) {
+                    //handle error
+				  console.log(response);
+            });
 		},
 		
 		updateMain: function(details,main){
@@ -629,6 +661,19 @@
                 document.getElementById("btn_cancel").style.display = "none";
                 document.getElementById("btn_save").style.display = "none";
 
+                // add schedual lock
+                document.getElementById("lock").value = sc_content.lock;
+                if(sc_content.lock == '')
+                {
+                    document.getElementById("btn_lock").style.visibility="hidden";
+                    document.getElementById("btn_unlock").style.visibility="inline";
+                }
+                else
+                {
+                    document.getElementById("btn_lock").style.visibility="inline";
+                    document.getElementById("btn_unlock").style.visibility="hidden";
+                }
+
                 $('#exampleModalScrollable').modal('toggle');
 
 
@@ -658,6 +703,12 @@
             document.getElementById("btn_duplicate").style.visibility="hidden";
             document.getElementById("btn_delete").style.visibility="hidden";
             document.getElementById("btn_edit").style.visibility="hidden";
+        }
+
+        if(app.name != "ttt")
+        {
+            document.getElementById("btn_lock").style.visibility="hidden";
+            document.getElementById("btn_unlock").style.visibility="hidden";
         }
     };
 	function onChangeFileUpload(e) {
@@ -727,6 +778,7 @@
             Back_up_Driver: document.getElementById("sc_driver2").value,
             Photoshoot_Request: $('input[name=sc_Photoshoot_request]:checked').val(),
             Notes:  document.getElementById("sc_notes").value,
+            Lock: '',
             is_enable :true
         };
 
@@ -1065,6 +1117,21 @@
 
     });
 
+    $(document).on('click', '#btn_lock', function () {
+        document.getElementById("lock").value = "Y";
+        app.updateMain("Y");
+
+        document.getElementById("btn_lock").style.display = "none";
+        document.getElementById("btn_unlock").style.display = "inline";
+    });
+
+    $(document).on('click', '#btn_unlock', function () {
+        document.getElementById("lock").value = "";
+        app.updateMain("");
+
+        document.getElementById("btn_lock").style.display = "inline";
+        document.getElementById("btn_unlock").style.display = "none";
+    });
 
     $(document).on('click', '#btn_save', function () {
 
@@ -1144,7 +1211,8 @@
             Driver: document.getElementById("sc_driver1").value,
             Back_up_Driver: document.getElementById("sc_driver2").value,
             Photoshoot_Request: $('input[name=sc_Photoshoot_request]:checked').val(),
-            Notes: document.getElementById("sc_notes").value
+            Notes: document.getElementById("sc_notes").value,
+            lock: document.getElementById("lock").value,
         };
 
 

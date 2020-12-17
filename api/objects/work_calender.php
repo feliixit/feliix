@@ -27,6 +27,7 @@ class WorkCalenderMain
     public $back_up_driver;
     public $photoshoot_request;
     public $notes;
+    public $lock;
     public $is_enabled;
     public $created_at;
     public $updated_at;
@@ -38,6 +39,41 @@ class WorkCalenderMain
     public function __construct($db)
     {
         $this->conn = $db;
+    }
+
+    function updateLockStatus()
+    {
+        $query = "UPDATE " . $this->table_name . "
+                set lock = :lock where id = :id";
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // bind the values
+        $this->id = (int)$this->id;
+        $this->lock = htmlspecialchars(strip_tags($this->lock));
+
+        // bind the values
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':lock', $this->lock);
+
+    try {
+        // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+                return true;
+            }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                return false;
+            }
+        }
+        catch (Exception $e)
+        {
+            error_log($e->getMessage());
+            return false;
+        }
     }
 
     function update()

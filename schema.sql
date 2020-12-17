@@ -474,7 +474,7 @@ ADD COLUMN `special_note` varchar(128) DEFAULT '' AFTER project_status_id;
 ALTER TABLE user
 ADD COLUMN `test_manager` varchar(1)  DEFAULT '' AFTER is_admin;
 
---2020/08/18
+-- 2020/08/18
 ALTER TABLE project_main
 ADD COLUMN `location` varchar(1024) DEFAULT '' AFTER estimate_close_prob;
 
@@ -970,3 +970,6 @@ ADD COLUMN `batch_id` int(11) DEFAULT 0 AFTER project_id;
 ALTER TABLE apply_for_leave
 ADD COLUMN `too_many` varchar(1) DEFAULT '' AFTER `leave`;
 
+-- 20201217 calendar with lock modified
+ALTER TABLE work_calendar_main
+ADD COLUMN `lock` varchar(1) COLLATE utf8mb4_unicode_ci  default '' AFTER `notes`;
