@@ -54,7 +54,7 @@ function sendGridMail($name, $email1,  $leaver, $projectname, $remark)
 {
     $conf = new Conf();
     $email = new \SendGrid\Mail\Mail();
-    $email->setFrom("feliix.it@gmail.com", "feliix.it");
+    $email->setFrom("feliix.it@gmail.com", "Feliix.System");
     $email->setSubject("Downpayment Proof Submitted by " . $leaver . "(" . $projectname . ")" );
     $email->addTo($email1, $name);
 
@@ -117,8 +117,8 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
-    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
-    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
     $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
     $content =  "<p>Dear " . $name . ",</p>";
@@ -191,8 +191,8 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
-    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
-    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
     $mail->Subject = "Downpayment Proof Submitted by " . $leaver . "(" . $projectname . ")";
     $content =  "<p>Dear Glen,</p>";
@@ -243,8 +243,8 @@ function sendMail($name, $email1, $appove_hash, $reject_hash, $leave_info, $leav
     $mail->IsHTML(true);
     $mail->AddAddress($email1, $name);
     //$mail->Subject = "=?utf-8?B?" . base64_encode("信件標題") . "?=";
-    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
-    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
     $mail->Subject = "Leave Application from " . $leaver;
     $content =  "<p>Dear " . $name . ",</p>";
@@ -299,8 +299,8 @@ function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee,
     $mail->IsHTML(true);
     $mail->AddAddress($email1, $name);
 
-    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
-    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
     $mail->Subject = "Notification: New Meeting from " . $creator;
     $content =  "<p>Dear " . $name . ",</p>";
@@ -358,8 +358,8 @@ function send_meeting_modified_mail($name, $email1, $subject, $creator, $attende
     $mail->IsHTML(true);
     $mail->AddAddress($email1, $name);
 
-    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
-    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
     $mail->Subject = "Notification: Meeting Info Changed by " . $creator;
     $content =  "<p>Dear " . $name . ",</p>";
@@ -417,8 +417,8 @@ function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee,
     $mail->IsHTML(true);
     $mail->AddAddress($email1, $name);
 
-    $mail->SetFrom("feliix.it@gmail.com", "feliix.it");
-    $mail->AddReplyTo("feliix.it@gmail.com", "feliix.it");
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
     $mail->Subject = "Notification: Meeting Deleted by " . $creator;
     $content =  "<p>Dear " . $name . ",</p>";

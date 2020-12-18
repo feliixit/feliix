@@ -551,11 +551,11 @@
                         Save
                     </button>
                     
-                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw;"
+                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw; with:8vw;"
                             id="btn_lock">Lock
                     </button>
 
-                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw;"
+                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw; with:8vw;"
                             id="btn_unlock">Unlock
                     </button>
 
