@@ -95,7 +95,7 @@ $phpWord = new PhpOffice\PhpWord\PhpWord();
 // Adding an empty Section to the document...
 $section = $phpWord->addSection();
 // Adding Text element to the Section having font styled by default...
-$section->addText($weekday . ", " . $start_time);
+$section->addText($weekday . ", " . $start_time . " Schedule");
 
 $section->addText("");
 
