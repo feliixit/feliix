@@ -162,7 +162,8 @@ $table1 = $section->addTable('table1', [
     'borderColor' => 'F73605', 
     'afterSpacing' => 0, 
     'Spacing'=> 0, 
-    'cellMargin'=> 0
+    'cellMargin'=> 0,
+    'align' => 'center'
 ]);
 
 $table1->addRow();
