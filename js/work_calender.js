@@ -313,7 +313,38 @@
                     //handle error
 				  console.log(response);
             });
-		},
+        },
+        
+        export: function() {
+   
+            var form_Data = new FormData();
+          
+            const filename = "attendance";
+
+            const token = sessionStorage.getItem('token');
+
+            axios({
+                    method: 'get',
+                    url: 'schedule_data_word?id=' + this.id,
+                    data: form_Data,
+                    responseType: 'blob', // important
+                })
+                .then(function(response) {
+                      const url = window.URL.createObjectURL(new Blob([response.data]));
+                      const link = document.createElement('a');
+                      link.href = url;
+                     
+                        link.setAttribute('download', 'schedule.docx');
+                     
+                      document.body.appendChild(link);
+                      link.click();
+
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
 		
 		updateMain: function(details,main){
 			this.action = 3;//update
@@ -543,6 +574,7 @@
                         document.getElementById("btn_reset").style.display = "inline";
                         document.getElementById("btn_add").style.display = "inline";
                         document.getElementById("btn_duplicate").style.display = "none";
+                        document.getElementById("btn_export").style.display = "none";
                         document.getElementById("btn_edit").style.display = "none";
                         document.getElementById("btn_delete").style.display = "none";
                         document.getElementById("btn_cancel").style.display = "none";
@@ -661,6 +693,7 @@
                 document.getElementById("btn_reset").style.display = "none";
                 document.getElementById("btn_add").style.display = "none";
                 document.getElementById("btn_duplicate").style.display = "inline";
+                document.getElementById("btn_export").style.display = "inline";
                 document.getElementById("btn_edit").style.display = "inline";
                 document.getElementById("btn_delete").style.display = "inline";
                 document.getElementById("btn_cancel").style.display = "none";
@@ -709,6 +742,7 @@
             document.getElementById("add_message").style.visibility="hidden";
 
             document.getElementById("btn_duplicate").style.visibility="hidden";
+            document.getElementById("btn_export").style.visibility="hidden";
             document.getElementById("btn_delete").style.visibility="hidden";
             document.getElementById("btn_edit").style.visibility="hidden";
         }
@@ -957,6 +991,7 @@
         document.getElementById("btn_reset").style.display = "none";
         document.getElementById("btn_add").style.display = "none";
         document.getElementById("btn_duplicate").style.display = "inline";
+        document.getElementById("btn_export").style.display = "inline";
         document.getElementById("btn_edit").style.display = "none";
         document.getElementById("btn_delete").style.display = "none";
         document.getElementById("btn_cancel").style.display = "inline";
@@ -1030,6 +1065,13 @@
 
     });
 
+    $(document).on('click', '#btn_export', function () {
+
+        
+		app.export();
+
+
+    });
 
     $(document).on('click', '#btn_cancel', function () {
 
@@ -1122,6 +1164,7 @@
 		document.getElementById("btn_reset").style.display = "none";
         document.getElementById("btn_add").style.display = "none";
         document.getElementById("btn_duplicate").style.display = "inline";
+        document.getElementById("btn_export").style.display = "inline";
         document.getElementById("btn_edit").style.display = "inline";
         document.getElementById("btn_delete").style.display = "inline";
         document.getElementById("btn_cancel").style.display = "none";
@@ -1320,6 +1363,7 @@
 		document.getElementById("btn_reset").style.display = "none";
         document.getElementById("btn_add").style.display = "none";
         document.getElementById("btn_duplicate").style.display = "inline";
+        document.getElementById("btn_export").style.display = "inline";
         document.getElementById("btn_edit").style.display = "inline";
         document.getElementById("btn_delete").style.display = "inline";
         document.getElementById("btn_cancel").style.display = "none";
