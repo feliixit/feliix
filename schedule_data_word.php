@@ -57,6 +57,11 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $photoshoot_request = '';
     $notes = '';
 
+    $location = '';
+    $agenda = '';
+    $appoint_time = '';
+    $end_time = '';
+
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
 {
     $weekday = $row['weekday'];
@@ -72,6 +77,12 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $back_up_driver = $row['back_up_driver'];
     $photoshoot_request = $row['photoshoot_request'];
     $notes = $row['notes'];
+
+
+    $location = $row['location'];
+    $agenda = $row['agenda'];
+    $appoint_time = $row['appoint_time'];
+    $end_time = $row['end_time'];
 
     break;
 }
@@ -161,10 +172,11 @@ $table1->addCell(2600, ['borderSize' => 6])->addText("Appoint Time", array('bold
 $table1->addCell(2600, ['borderSize' => 6])->addText("End Time", array('bold' => true, 'align' => 'center'));
 
 
-$location = '';
-$agenda = '';
-$appoint_time = '';
-$end_time = '';
+    $table1->addRow();
+    $table1->addCell(2600, ['borderSize' => 6])->addText($location, array('align' => 'center'));
+    $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, array('align' => 'center'));
+    $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, array( 'align' => 'center'));
+    $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, array( 'align' => 'center'));
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
 {
