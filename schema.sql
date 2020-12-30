@@ -973,3 +973,67 @@ ADD COLUMN `too_many` varchar(1) DEFAULT '' AFTER `leave`;
 -- 20201217 calendar with lock modified
 ALTER TABLE work_calendar_main
 ADD COLUMN `lock` varchar(1) COLLATE utf8mb4_unicode_ci  default '' AFTER `notes`;
+
+-- 20201230 project02 extend
+ALTER TABLE project_main
+ADD COLUMN `client_name` varchar(512) DEFAULT '' AFTER client;
+
+ALTER TABLE project_main
+ADD COLUMN `designer` varchar(512) DEFAULT '' AFTER client;
+
+ALTER TABLE project_main
+ADD COLUMN `type` varchar(512) DEFAULT '' AFTER client;
+
+ALTER TABLE project_main
+ADD COLUMN `scope` varchar(512) DEFAULT '' AFTER client;
+
+ALTER TABLE project_main
+ADD COLUMN `office_location` varchar(512) DEFAULT '' AFTER client;
+
+ALTER TABLE project_main
+ADD COLUMN `background_client` varchar(512) DEFAULT '' AFTER client;
+
+ALTER TABLE project_main
+ADD COLUMN `background_project` varchar(512) DEFAULT '' AFTER client;
+
+CREATE TABLE IF NOT EXISTS `project_quotation` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `remark` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `doc_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `project_party_contactor` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `type` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `name` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `number` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `project_key_person` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `type` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `name` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `number` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';

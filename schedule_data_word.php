@@ -34,11 +34,12 @@ $db = $database->getConnection();
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 
 $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
-		project_in_charge, installer_needed, things_to_bring, products_to_bring, service, driver, 
-		back_up_driver, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%s %p') appoint_time, 
-		DATE_FORMAT(detail.end_time, '%I:%s %p') end_time
+        project_in_charge, installer_needed, things_to_bring, installer_needed_location, things_to_bring_location, 
+        products_to_bring, service, driver, 
+		back_up_driver, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
+		DATE_FORMAT(detail.end_time, '%I:%i %p') end_time
 		from work_calendar_main main 
-		left join work_calendar_details detail on detail.main_id = main.id where main.id = $id ";
+		left join work_calendar_details detail on detail.main_id = main.id where detail.is_enabled = 1 and main.id = $id ";
 
     $stmt = $db->prepare( $sql );
     $stmt->execute();
@@ -50,6 +51,8 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $project_in_charge = '';
     $installer_needed = '';
     $things_to_bring = '';
+    $installer_needed_location = '';
+    $things_to_bring_location = '';
     $products_to_bring = '';
     $service = '';
     $driver = '';
@@ -71,6 +74,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $project_in_charge = $row['project_in_charge'];
     $installer_needed = $row['installer_needed'];
     $things_to_bring = $row['things_to_bring'];
+    $installer_needed_location = $row['installer_needed_location'];
+    $things_to_bring_location = $row['things_to_bring_location'];
     $products_to_bring = $row['products_to_bring'];
     $service = $row['service'];
     $driver = $row['driver'];
@@ -129,11 +134,29 @@ $table->addCell(8500, ['borderSize' => 6])->addText($installer_needed);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Things to Bring:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($things_to_bring);
+if($things_to_bring_location != "")
+{
+    $cell = $table->addCell(8500, ['borderSize' => 6]);
+    addMultiLineText($cell, "From " . $things_to_bring_location . "\n" . $things_to_bring);
+}
+else
+{
+    $cell = $table->addCell(8500, ['borderSize' => 6]);
+    addMultiLineText($cell, $things_to_bring);
+}
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Products to Bring:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($products_to_bring);
+if($installer_needed_location != "")
+{
+    $cell = $table->addCell(8500, ['borderSize' => 6]);
+    addMultiLineText($cell, "From " . $installer_needed_location . "\n" . $products_to_bring);
+}
+else
+{
+    $cell = $table->addCell(8500, ['borderSize' => 6]);
+    addMultiLineText($cell, $products_to_bring);
+}
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Service:", array('bold' => true));
@@ -153,7 +176,8 @@ $table->addCell(8500, ['borderSize' => 6])->addText(getRequest($photoshoot_reque
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Note/s:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($notes);
+$cell = $table->addCell(8500, ['borderSize' => 6]);
+addMultiLineText($cell, $notes);
 
 $section->addText("");
 
@@ -163,21 +187,21 @@ $table1 = $section->addTable('table1', [
     'afterSpacing' => 0, 
     'Spacing'=> 0, 
     'cellMargin'=> 0,
-    'align' => 'center'
+    'textAlign' => 'center'
 ]);
 
 $table1->addRow();
-$table1->addCell(2600, ['borderSize' => 6])->addText("Location", array('bold' => true, 'align' => 'center'));
-$table1->addCell(2600, ['borderSize' => 6])->addText("Agenda", array('bold' => true, 'align' => 'center'));
-$table1->addCell(2600, ['borderSize' => 6])->addText("Appoint Time", array('bold' => true, 'align' => 'center'));
-$table1->addCell(2600, ['borderSize' => 6])->addText("End Time", array('bold' => true, 'align' => 'center'));
+$table1->addCell(2600, ['borderSize' => 6])->addText("Location", [], ['bold' => true, 'align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table1->addCell(2600, ['borderSize' => 6])->addText("Agenda",  [], ['bold' => true, 'align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table1->addCell(2600, ['borderSize' => 6])->addText("Appoint Time",  [], ['bold' => true, 'align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table1->addCell(2600, ['borderSize' => 6])->addText("End Time",  [], ['bold' => true, 'align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 
     $table1->addRow();
-    $table1->addCell(2600, ['borderSize' => 6])->addText($location, array('align' => 'center'));
-    $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, array('align' => 'center'));
-    $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, array( 'align' => 'center'));
-    $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, array( 'align' => 'center'));
+    $table1->addCell(2600, ['borderSize' => 6])->addText($location,  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
 {
@@ -187,10 +211,10 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $end_time = $row['end_time'];
 
     $table1->addRow();
-    $table1->addCell(2600, ['borderSize' => 6])->addText($location, array('align' => 'center'));
-    $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, array('align' => 'center'));
-    $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, array( 'align' => 'center'));
-    $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, array( 'align' => 'center'));
+    $table1->addCell(2600, ['borderSize' => 6])->addText($location, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 }
 
@@ -266,5 +290,17 @@ header("Content-Disposition: attachment; filename=schedule.docx");
         
         return $leave_type;
     }
-    
+
+    function addMultiLineText($cell, $text)
+    {
+        // break from line breaks
+        $strArr = explode("\n", $text);
+
+        // add text line together
+        foreach ($strArr as $v) {
+            $cell->addText($v);
+        }
+       
+    }
+
 ?>

@@ -121,7 +121,7 @@ $(function(){
                         <h6>Create New Project:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt>Project Name / Client Name</dt>
+                                <dt>Project Name</dt>
                                 <dd><input type="text" placeholder="" v-model="project_name"></dd>
                                 <dt>Project Category</dt>
                                 <dd>

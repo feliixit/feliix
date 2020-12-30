@@ -531,7 +531,7 @@
                             id="btn_add">Add
                     </button>
 
-                    <button class="btn btn-secondary" style="font-weight:700; margin-left:2vw;"
+                    <button class="btn btn-secondary" style="width:8vw; font-weight:700; margin-left:2vw;"
                             id="btn_export">Export
                     </button>
 
