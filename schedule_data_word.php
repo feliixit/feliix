@@ -191,10 +191,10 @@ $table1 = $section->addTable('table1', [
 ]);
 
 $table1->addRow();
-$table1->addCell(2600, ['borderSize' => 6])->addText("Location", [], ['bold' => true, 'align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table1->addCell(2600, ['borderSize' => 6])->addText("Agenda",  [], ['bold' => true, 'align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table1->addCell(2600, ['borderSize' => 6])->addText("Appoint Time",  [], ['bold' => true, 'align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table1->addCell(2600, ['borderSize' => 6])->addText("End Time",  [], ['bold' => true, 'align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table1->addCell(2600, ['borderSize' => 6])->addText("Location", ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table1->addCell(2600, ['borderSize' => 6])->addText("Agenda",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table1->addCell(2600, ['borderSize' => 6])->addText("Appoint Time",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table1->addCell(2600, ['borderSize' => 6])->addText("End Time",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 
     $table1->addRow();

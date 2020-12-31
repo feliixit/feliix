@@ -4,6 +4,7 @@
         "phpoffice/phpspreadsheet": "^1.14",
 	"google/apiclient": "^2.7",
         "google/cloud-storage": "^1.22",
-        "sendgrid/sendgrid": "^7.8"
+        "sendgrid/sendgrid": "^7.8",
+        "phpoffice/phpword": "^0.17.0"
     }
 }
