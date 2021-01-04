@@ -996,20 +996,6 @@ ADD COLUMN `background_client` varchar(512) DEFAULT '' AFTER client;
 ALTER TABLE project_main
 ADD COLUMN `background_project` varchar(512) DEFAULT '' AFTER client;
 
-CREATE TABLE IF NOT EXISTS `project_quotation` (
-  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
-  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
-  `remark` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
-  `doc_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
-  `status` int(11) DEFAULT 0,
-  `create_id` int(11) DEFAULT 0,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `updated_id` int(11) DEFAULT 0,
-  `updated_at` timestamp NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
-
 CREATE TABLE IF NOT EXISTS `project_party_contactor` (
   `id` bigint(20)  NOT NULL AUTO_INCREMENT,
   `project_id` bigint(20)  DEFAULT 0 NOT NULL,
@@ -1037,3 +1023,9 @@ CREATE TABLE IF NOT EXISTS `project_key_person` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20210101 project02 extend
+ALTER TABLE project_main  DROP COLUMN client_name;
+
+ALTER TABLE project_main
+ADD COLUMN `contractor` varchar(512) DEFAULT '' AFTER client;

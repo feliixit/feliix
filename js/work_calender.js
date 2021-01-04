@@ -742,7 +742,7 @@
             document.getElementById("add_message").style.visibility="hidden";
 
             document.getElementById("btn_duplicate").style.visibility="hidden";
-            document.getElementById("btn_export").style.visibility="hidden";
+            // document.getElementById("btn_export").style.visibility="hidden";
             document.getElementById("btn_delete").style.visibility="hidden";
             document.getElementById("btn_edit").style.visibility="hidden";
         }
