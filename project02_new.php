@@ -397,7 +397,7 @@ $(function(){
                 
                 <!-- tag -->
                 <b class="tag focus">PROJECT</b>
-                <b class="tag">{{ projectname }}</b>
+                <b class="tag">{{ project_name }}</b>
                 <b class="tag" v-if="verified_downpayment">(Verified Downpayment)</b>
             </div>
             <div class="block fn">
@@ -437,7 +437,7 @@ $(function(){
                                 <div class="Info_A">
                                     <dt class="head">Project Name:</dt>
                                     <dd>
-                                        <input type="text">
+                                        <input type="text" v-model="edit_project_name">
                                     </dd>
                                     <dt class="head">Project Category:</dt>
                                     <dd>
@@ -472,11 +472,11 @@ $(function(){
                                     </div>
                                     <dt class="head">Client Name (Firm/Company Name):</dt>
                                     <dd>
-                                        <input type="text">
+                                        <input type="text" v-model="edit_client">
                                     </dd>
                                     <dt class="head">Architect/Designer:</dt>
                                     <dd>
-                                        <input type="text">
+                                        <input type="text" v-model="edit_designer">
                                     </dd>
                                     <dt>Project Creator:</dt>
                                     <dd>
@@ -493,9 +493,9 @@ $(function(){
                                     <div class="half">
                                         <dt>Type:</dt>
                                         <dd>
-                                            <select v-model="edit_priority">
-                                                <option>Major</option>
-                                                <option>Minor</option>
+                                            <select v-model="edit_type">
+                                                <option value="Major">Major</option>
+                                                <option value="Minor">Minor</option>
                                             </select>
                                         </dd>
                                     </div>
@@ -503,122 +503,106 @@ $(function(){
                                     <div class="half">
                                         <dt>Scope of Works:</dt>
                                         <dd>
-                                            <select v-model="edit_priority">
-                                                <option>Installation</option>
-                                                <option>Delivery</option>
+                                            <select v-model="edit_scope">
+                                                <option value="Installation">Installation</option>
+                                                <option value="Delivery">Delivery</option>
                                             </select>
                                         </dd>
                                     </div>
 
                                     <dt>Reason for Editing Project Info:</dt>
                                     <dd><textarea name="" id="" cols="30" rows="10"
-                                                  v-model="edit_project_reason"></textarea></dd>
+                                                  v-model="edit_edit_reason"></textarea></dd>
 
                                 </div>
 
                                 <div class="Info_B" style="display: none;">
 
                                     <dt>Contractor:</dt>
-                                    <dd><input type="text"></dd>
+                                    <dd><input type="text" v-model="edit_contractor"></dd>
 
                                     <div class="half">
                                         <dt>3rd Party Contractor:</dt>
                                         <dd>
-                                            <select>
-                                                <option value="1">Electrical</option>
-                                                <option value="2">Data</option>
-                                                <option value="3">Furniture</option>
-                                                <option value="4">Other</option>
+                                            <select :ref="'party_type'" @change="onChange_party_type()">
+                                                <option value="Electrical">Electrical</option>
+                                                <option value="Data">Data</option>
+                                                <option value="Furniture">Furniture</option>
+                                                <option value="Other">Other</option>
                                             </select>
                                         </dd>
-                                        <dd><input type="text" placeholder="Name"></dd>
+                                        <dd><input type="text" :ref="'party_name'" placeholder="Name"></dd>
                                     </div>
 
                                     <div class="half">
                                         <dt></dt>
-                                        <dd><input type="text" style="display: none;"></dd>
+                                        <dd><input type="text" :ref="'party_type_other'" style="display: none;"></dd>
                                         <!-- 如果選擇Other，則可以在此Input中輸入Contractor特定的類型名稱 -->
-                                        <dd><input type="text" placeholder="Contact Number"></dd>
+                                        <dd><input type="text" :ref="'party_number'" placeholder="Contact Number"></dd>
                                     </div>
 
                                     <dt class="project_info_side_button">
-                                        <a>Add</a>
+                                        <a @click="add_party_contactor">Add</a>
                                     </dt>
                                     <dd class="project_info_items">
-                                        <ul>
+                                    <ul v-for="(item, index) in edit_party_contactor" :key="index">
                                             <li>
-                                                <a>x</a>
+                                                <a @click="remove_party_contactor(index)">x</a>
                                             </li>
-                                            <li>Light: XXXXXXX - 09123456789
-                                            </li>
-                                        </ul>
-
-                                        <ul>
-                                            <li>
-                                                <a>x</a>
-                                            </li>
-                                            <li>Electrical: XXXXXXX - 092355577777
+                                            <li>{{ item.type}}: {{ item.name }} - {{ item.number }}
                                             </li>
                                         </ul>
                                     </dd>
 
                                     <div class="half">
                                         <dt>Project Location:</dt>
-                                        <dd><input type="text"></dd>
+                                        <dd><input type="text" v-model="edit_location"></dd>
                                     </div>
 
                                     <div class="half">
                                         <dt>Office Location:</dt>
-                                        <dd><input type="text"></dd>
+                                        <dd><input type="text" v-model="edit_office_location"></dd>
                                     </div>
 
                                     <div class="half">
                                         <dt>Key Person:</dt>
                                         <dd>
-                                            <select>
-                                                <option value="1">Purchasing contact</option>
-                                                <option value="2">Accounting contact</option>
-                                                <option value="3">Admin contact</option>
-                                                <option value="4">Person in charge of site</option>
-                                                <option value="5">Other</option>
+                                            <select :ref="'key_type'" @change="onChange_key_type()">
+                                                <option value="Purchasing contact">Purchasing contact</option>
+                                                <option value="Accounting contact">Accounting contact</option>
+                                                <option value="Admin contact">Admin contact</option>
+                                                <option value="Person in charge of site">Person in charge of site</option>
+                                                <option value="Other">Other</option>
                                             </select>
                                         </dd>
-                                        <dd><input type="text" placeholder="Name"></dd>
+                                        <dd><input type="text" :ref="'key_name'" placeholder="Name"></dd>
                                     </div>
                                     <div class="half">
                                         <dt></dt>
-                                        <dd><input type="text" style="display:none"></dd>
+                                        <dd><input type="text" :ref="'key_type_other'" style="display:none"></dd>
                                         <!-- 如果選擇Other，則可以在此Input中輸入Key Person特定的角色名稱 -->
-                                        <dd><input type="text" placeholder="Contact Number"></dd>
+                                        <dd><input type="text" :ref="'key_number'" placeholder="Contact Number"></dd>
                                     </div>
 
                                     <dt class="project_info_side_button">
-                                        <a>Add</a>
+                                        <a @click="add_key_person">Add</a>
                                     </dt>
                                     <dd class="project_info_items">
-                                        <ul>
+                                        <ul v-for="(item, index) in edit_key_person" :key="index">
                                             <li>
-                                                <a>x</a>
+                                                <a @click="remove_key_person(index)">x</a>
                                             </li>
-                                            <li>Accounting contact: XXXXXXX - 09123456789
+                                            <li>{{ item.type}}: {{ item.name }} - {{ item.number }}
                                             </li>
                                         </ul>
 
-                                        <ul>
-                                            <li>
-                                                <a>x</a>
-                                            </li>
-                                            <li>Person in charge of site: Thalassa Wren Benzon -
-                                                092355577777
-                                            </li>
-                                        </ul>
                                     </dd>
 
                                     <dt>Background of Client:</dt>
-                                    <dd><textarea name="" id="" cols="30" rows="10"></textarea></dd>
+                                    <dd><textarea name="" id="" cols="30" rows="10" v-model="edit_background_client"></textarea></dd>
 
                                     <dt>Brief Background Story Regarding Project:</dt>
-                                    <dd><textarea name="" id="" cols="30" rows="10"></textarea></dd>
+                                    <dd><textarea name="" id="" cols="30" rows="10" v-model="edit_background_project"></textarea></dd>
                                 </div>
 
                                 <div class="btnbox">
@@ -955,8 +939,8 @@ $(function(){
                     <ul>
                         <li>{{ category }}</li>
                         <li>{{ client_type }}</li>
-                        <li>???</li>
-                        <li>???</li>
+                        <li>{{ client }}</li>
+                        <li>{{ designer }}</li>
                     </ul>
                 </div>
 
@@ -969,8 +953,8 @@ $(function(){
                     </ul>
                     <ul>
                         <li>{{ priority }}</li>
-                        <li>???</li>
-                        <li>???</li>
+                        <li>{{ type }}</li>
+                        <li>{{ scope }}</li>
                         <li>{{ username }}</li>
                     </ul>
                 </div>
@@ -1013,7 +997,7 @@ $(function(){
                     </ul>
                 </div>
 
-                <div class="tablebox lv2a">
+                <div class="tablebox lv2a" v-if="title != 'technician'">
                     <ul class="head">
                         <li style="text-align: center !important;">Quotation Files</li>
                     </ul>
@@ -1060,7 +1044,7 @@ $(function(){
                     </ul>
                     <ul>
                         <li>
-                            ???
+                            {{ contractor }}
                         </li>
                     </ul>
                 </div>
@@ -1071,8 +1055,7 @@ $(function(){
                     </ul>
                     <ul>
                         <li class="morespace">
-                            <div>• Electrial: Ms jeannette - 09660001111<br>• Data: Mr. Jonathan - 09110002222<br>•
-                                Furniture: Mr. Casero - 09113337777
+                        <div v-for="(item, index) in party_contactor" :key="index">• {{ item.type }}: {{ item.name }} - {{ item.number }}<br>
                             </div>
                         </li>
                     </ul>
@@ -1084,8 +1067,8 @@ $(function(){
                         <li style="text-align: center !important;">Office Location</li>
                     </ul>
                     <ul>
-                        <li>???</li>
-                        <li>???</li>
+                        <li>{{ location }}</li>
+                        <li>{{ office_location }}</li>
                     </ul>
                 </div>
 
@@ -1095,8 +1078,7 @@ $(function(){
                     </ul>
                     <ul>
                         <li class="morespace">
-                            <div>• Purchasing contact: Ms jeannette - 09660001111<br>• Accounting contact: Mr. Jonathan
-                                - 09110002222
+                            <div v-for="(item, index) in key_person" :key="index">• {{ item.type }}: {{ item.name }} - {{ item.number }}<br>
                             </div>
                         </li>
                     </ul>
@@ -1105,14 +1087,14 @@ $(function(){
                         <li style="text-align: center !important;">Background of Client</li>
                     </ul>
                     <ul>
-                        <li class="morespace"></li>
+                        <li class="morespace"><pre>{{ background_client }}</pre></li>
                     </ul>
 
                     <ul class="head">
                         <li style="text-align: center !important;">Brief Background Story Regarding Project</li>
                     </ul>
                     <ul>
-                        <li class="morespace"></li>
+                        <li class="morespace"><pre>{{ background_project }}</pre></li>
                     </ul>
                 </div>
 

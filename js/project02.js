@@ -23,12 +23,15 @@ var app = new Vue({
     uid:0,
     org_uid:0,
 
+    title:'',
+
     stage_id_to_edit:0,
 
     baseURL:'https://storage.cloud.google.com/',
 
     pageURL:'https://feliix.myvnc.com/',
 
+    project_name: '',
     category: '',
     category_id:0,
     client_type : '',
@@ -44,6 +47,18 @@ var app = new Vue({
     contact_number:'',
     client:'',
     edit_reason:'',
+
+    // extend
+    designer:'',
+    type:'',
+    scope:'',
+    office_location:'',
+    background_client:'',
+    background_project:'',
+    contractor:'',
+
+    party_contactor : [],
+    key_person : [],
 
     // + sign
     stage_sequence:'',
@@ -65,6 +80,20 @@ var app = new Vue({
     edit_client:'',
     edit_location:'',
     edit_project_reason:'',
+    edit_edit_reason:'',
+
+    // extend
+    edit_project_name:'',
+    edit_designer:'',
+    edit_type:'',
+    edit_scope:'',
+    edit_office_location:'',
+    edit_background_client:'',
+    edit_background_project:'',
+    edit_contractor:'',
+
+    edit_party_contactor : [],
+    edit_key_person : [],
 
     //  Action to Comments
     comment : '',
@@ -149,6 +178,8 @@ var app = new Vue({
         _this.getUsers();
         _this.getFileManagement(_this.project_id);
         _this.getProjectInfo(_this.project_id);
+        _this.getKeyPerson(_this.project_id);
+        _this.getPartyContactor(_this.project_id);
       });
     }
 
@@ -156,6 +187,8 @@ var app = new Vue({
     this.getClientTypes();
     this.getPrioritys();
     this.getStatuses();
+
+    this.getUserName();
   },
 
   computed: {
@@ -267,6 +300,7 @@ var app = new Vue({
       },
       deep: true
     },
+
 
     comm_fileArray: {
       handler(newValue, oldValue) {
@@ -684,6 +718,62 @@ var app = new Vue({
           });
       },
 
+      getKeyPerson: function(keyword) {
+        let _this = this;
+  
+        if(keyword == 0)
+          return;
+  
+        const params = {
+                pid : keyword,
+              };
+  
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+                .get('api/project_key_person', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.key_person = res.data;
+                    _this.edit_key_person = res.data;
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
+
+        getPartyContactor: function(keyword) {
+          let _this = this;
+    
+          if(keyword == 0)
+            return;
+    
+          const params = {
+                  pid : keyword,
+                };
+    
+              let token = localStorage.getItem('accessToken');
+        
+              axios
+                  .get('api/project_party_contactor', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                  .then(
+                  (res) => {
+                      _this.party_contactor = res.data;
+                      _this.edit_party_contactor = res.data;
+                  },
+                  (err) => {
+                      alert(err.response);
+                  },
+                  )
+                  .finally(() => {
+                      
+                  });
+          },
+
       getProjectActionDetails: function(keyword) {
       let _this = this;
 
@@ -728,6 +818,7 @@ var app = new Vue({
               .get('api/project02', { params, headers: {"Authorization" : `Bearer ${token}`} })
               .then(
               (res) => {
+                  _this.project_name = res.data[0].project_name;
                   _this.category = res.data[0].category;
                   _this.client_type = res.data[0].client_type;
                   _this.priority = res.data[0].priority;
@@ -744,8 +835,9 @@ var app = new Vue({
                   _this.location = res.data[0].location;
                   _this.contact_number = res.data[0].contact_number;
                   _this.client = res.data[0].client;
+                  _this.edit_reason = res.data[0].edit_reason;
 
-
+                  _this.edit_project_name = res.data[0].project_name;
                   _this.edit_category = res.data[0].category_id;
                   _this.edit_client_type = res.data[0].client_type_id;
                   _this.edit_priority = res.data[0].priority_id;
@@ -753,6 +845,24 @@ var app = new Vue({
                   _this.edit_location = res.data[0].location;
                   _this.edit_contact_number = res.data[0].contact_number;
                   _this.edit_client = res.data[0].client;
+                  _this.edit_edit_reason = res.data[0].edit_reason;
+
+                  // extend
+                  _this.designer = res.data[0].designer;
+                  _this.type = res.data[0].type;
+                  _this.scope = res.data[0].scope;
+                  _this.office_location = res.data[0].office_location;
+                  _this.background_client = res.data[0].background_client;
+                  _this.background_project = res.data[0].background_project;
+                  _this.contractor = res.data[0].contractor;
+
+                  _this.edit_designer = res.data[0].designer;
+                  _this.edit_type = res.data[0].type;
+                  _this.edit_scope = res.data[0].scope;
+                  _this.edit_office_location = res.data[0].office_location;
+                  _this.edit_background_client = res.data[0].background_client;
+                  _this.edit_background_project = res.data[0].background_project;
+                  _this.edit_contractor = res.data[0].contractor;
 
                   _this.created_at = res.data[0].created_at;
                   _this.end_at = res.data[0].updated_at;
@@ -1013,6 +1123,7 @@ var app = new Vue({
             //handle success
             _this.name = response.data.username;
             _this.is_manager = response.data.is_manager;
+            _this.title = response.data.title.toLowerCase();
 
         })
         .catch(function(response) {
@@ -1146,6 +1257,18 @@ var app = new Vue({
             this.edit_location = this.location;
             this.edit_contact_number = this.contact_number;
             this.edit_client = this.client;
+
+            // extend
+            this.edit_designer = this.designer;
+            this.edit_type = this.type;
+            this.edit_scope = this.scope;
+            this.edit_office_location = this.office_location;
+            this.edit_background_client = this.background_client;
+            this.edit_background_project = this.background_project;
+            this.edit_contractor = this.contractor;
+
+            this.edit_key_person = this.key_person;
+            this.edit_party_contactor = this.party_contactor;
             
             document.getElementById('project_dialog').classList.remove("show");
             document.getElementById('project_fn2').classList.remove("focus");
@@ -1372,6 +1495,71 @@ var app = new Vue({
                     console.log(response)
                 });
         },
+
+        onChange_key_type() {
+          var type = this.$refs.key_type;
+          if(type.value === 'Other')
+          {
+            this.$refs.key_type_other.style.display = 'inline';
+          }
+          else
+          {
+            this.$refs.key_type_other.style.display = 'none';
+          }
+        },
+
+        onChange_party_type() {
+          var type = this.$refs.party_type;
+          if(type.value === 'Other')
+          {
+            this.$refs.party_type_other.style.display = 'inline';
+          }
+          else
+          {
+            this.$refs.party_type_other.style.display = 'none';
+          }
+        },
+
+        add_key_person() {
+            var type = this.$refs.key_type;
+            var name = this.$refs.key_name;
+            var number = this.$refs.key_number;
+
+            var s_type = '';
+
+            if(type.value === 'Other')
+              s_type = this.$refs.key_type_other.value;
+            else
+              s_type = type.value;
+
+            obj = { type: s_type, name : name.value, number : number.value};
+            this.edit_key_person.push(obj);
+        },
+
+        add_party_contactor() {
+          var type = this.$refs.party_type;
+          var name = this.$refs.party_name;
+          var number = this.$refs.party_number;
+
+          var s_type = '';
+
+          if(type.value === 'Other')
+            s_type = this.$refs.party_type_other.value;
+          else
+            s_type = type.value;
+
+          obj = { type: s_type, name : name.value, number : number.value};
+          this.edit_party_contactor.push(obj);
+      },
+
+        remove_key_person (index) {
+          this.edit_key_person.splice(index, 1);
+        },
+
+        remove_party_contactor (index) {
+          this.edit_party_contactor.splice(index, 1);
+        },
+
 
         detail_create() {
             let _this = this;
@@ -1841,7 +2029,21 @@ var app = new Vue({
             form_Data.append('edit_location', this.edit_location);
             form_Data.append('edit_contact_number', this.edit_contact_number);
             form_Data.append('edit_client', this.edit_client);
-            form_Data.append('edit_project_reason', this.edit_project_reason);
+            form_Data.append('edit_edit_reason', this.edit_edit_reason);
+
+            // extend
+            form_Data.append('edit_project_name', this.edit_project_name);
+            form_Data.append('edit_designer', this.edit_designer);
+            form_Data.append('edit_type', this.edit_type);
+            form_Data.append('edit_scope', this.edit_scope);
+            form_Data.append('edit_office_location', this.edit_office_location);
+            form_Data.append('edit_background_client', this.edit_background_client);
+            form_Data.append('edit_background_project', this.edit_background_project);
+            form_Data.append('edit_contractor', this.edit_contractor);
+
+            form_Data.append('edit_key_person', JSON.stringify(this.edit_key_person));
+            form_Data.append('edit_party_contactor', JSON.stringify(this.edit_party_contactor));
+
 
             const token = sessionStorage.getItem('token');
 
