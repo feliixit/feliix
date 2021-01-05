@@ -76,7 +76,7 @@ if($user_exists && password_verify($password, $user->password)  && $user->status
            "is_admin" => $user->is_admin,
            "department" => $user->department,
            "position" => $user->position,
-           "annual_leave" => $user->position,
+           "annual_leave" => $user->annual_leave,
            "sick_leave" => $user->sick_leave,
            "manager_leave" => $user->manager_leave,
            "head_of_department" => $user->head_of_department,
