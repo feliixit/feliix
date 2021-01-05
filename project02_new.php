@@ -397,7 +397,7 @@ $(function(){
                 
                 <!-- tag -->
                 <b class="tag focus">PROJECT</b>
-                <b class="tag">{{ project_name }}</b>
+                <a href="project01"><b class="tag">{{ project_name }}</b></a>
                 <b class="tag" v-if="verified_downpayment">(Verified Downpayment)</b>
             </div>
             <div class="block fn">
@@ -1043,7 +1043,7 @@ $(function(){
                         <li style="text-align: center !important;">Contractor</li>
                     </ul>
                     <ul>
-                        <li>
+                        <li style="text-align: center !important;">
                             {{ contractor }}
                         </li>
                     </ul>
@@ -1067,8 +1067,8 @@ $(function(){
                         <li style="text-align: center !important;">Office Location</li>
                     </ul>
                     <ul>
-                        <li>{{ location }}</li>
-                        <li>{{ office_location }}</li>
+                        <li style="text-align: center !important;">{{ location }}</li>
+                        <li style="text-align: center !important;">{{ office_location }}</li>
                     </ul>
                 </div>
 

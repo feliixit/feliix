@@ -25,6 +25,8 @@ else
           // decode jwt
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user_id = $decoded->data->id;
+
+          $title = strtolower($decoded->data->title);
           //if(!$decoded->data->is_admin)
           //{
           //  http_response_code(401);
@@ -159,37 +161,40 @@ else
             }
 
 
-            // quotation
-            $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
-                                FROM project_main pm
-                    JOIN project_quotation pac ON pm.id = pac.project_id
-                                join gcp_storage_file on gcp_storage_file.batch_id = pac.id and batch_type = 'quote'
-                    join user on user.id = gcp_storage_file.create_id
-                    where pm.id =" . $pid . " and pm.status <> -1";
+            if($title != "technician")
+            {
+                // quotation
+                $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
+                                    FROM project_main pm
+                        JOIN project_quotation pac ON pm.id = pac.project_id
+                                    join gcp_storage_file on gcp_storage_file.batch_id = pac.id and batch_type = 'quote'
+                        join user on user.id = gcp_storage_file.create_id
+                        where pm.id =" . $pid . " and pm.status <> -1";
 
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
+                $stmt = $db->prepare($sql);
+                $stmt->execute();
 
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $reply = $row['username'];
-                $reply_date = $row['created_at'];
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $reply = $row['username'];
+                    $reply_date = $row['created_at'];
 
 
-                $gcp_name = $row['gcp_name'];
-                $filename = $row['filename'];
-                $bucket = $row['bucketname'];
+                    $gcp_name = $row['gcp_name'];
+                    $filename = $row['filename'];
+                    $bucket = $row['bucketname'];
 
-                $merged_results[] = array(
-                    "messager" => $reply,
-                    "message_date" => explode(" ", $reply_date)[0],
-                    "message_time" => explode(" ", $reply_date)[1],
-                    "message_datetime" => $reply_date,
-                    "gcp_name" => $gcp_name,
-                    "filename" => $filename,
-                    "url" => 'project02?p=' . $pid,
-                    "stage" => 'Quotation',
-                    "bucket" => $bucket,
-                );
+                    $merged_results[] = array(
+                        "messager" => $reply,
+                        "message_date" => explode(" ", $reply_date)[0],
+                        "message_time" => explode(" ", $reply_date)[1],
+                        "message_datetime" => $reply_date,
+                        "gcp_name" => $gcp_name,
+                        "filename" => $filename,
+                        "url" => 'project02?p=' . $pid,
+                        "stage" => 'Quotation',
+                        "bucket" => $bucket,
+                    );
+                }
             }
 
 
