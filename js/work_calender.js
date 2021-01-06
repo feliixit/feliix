@@ -5,7 +5,8 @@
 		items:[],
 		agenda:[],
 		messages:[],
-		id:0,
+        id:0,
+        download_type:'docx',
 		file_day:'',
 		fileArray:[],
 		filename:[],
@@ -211,7 +212,8 @@
 				var files = "";
 				response.data[i].products_to_bring_files.forEach((element)=>{
 					var file_str = "<a href='https://storage.cloud.google.com/calendarfile/"+ element +"' target='_blank'>"+ element +"</a>&emsp;"
-					files += file_str;
+                    files += file_str;
+                    
 				});
 					_this.items.push({
 						id: response.data[i].id,
@@ -320,6 +322,7 @@
             var form_Data = new FormData();
           
             const filename = "attendance";
+            let _this = this;
 
             const token = sessionStorage.getItem('token');
 
@@ -334,7 +337,7 @@
                       const link = document.createElement('a');
                       link.href = url;
                      
-                        link.setAttribute('download', 'schedule.docx');
+                        link.setAttribute('download', 'schedule.' + _this.download_type);
                      
                       document.body.appendChild(link);
                       link.click();
@@ -670,7 +673,10 @@
                 document.getElementById("sc_location2").value = sc_content.Location_Products_to_Bring;
                 document.getElementById("sc_products").value = sc_content.Products_to_Bring;
 				document.getElementById("upload_input").style = "display:none;";
-				document.getElementById("sc_product_files").innerHTML = sc_content.Products_to_bring_files;
+                document.getElementById("sc_product_files").innerHTML = sc_content.Products_to_bring_files;
+                if(sc_content.Products_to_bring_files != "<a href='https://storage.cloud.google.com/calendarfile/' target='_blank'></a>&emsp;")
+                    app.download_type = 'zip';
+
                 document.getElementById("sc_product_files_hide").value = sc_content.File_name;
 				document.getElementById("sc_service").value = sc_content.Service;
                 document.getElementById("sc_driver1").value = sc_content.Driver;

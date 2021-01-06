@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 
 include_once 'api/config/database.php';
+include_once 'api/config/conf.php';
 
 require 'vendor/autoload.php';
 
@@ -37,7 +38,7 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
         project_in_charge, installer_needed, things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, 
 		back_up_driver, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
-		DATE_FORMAT(detail.end_time, '%I:%i %p') end_time
+		DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files
 		from work_calendar_main main 
 		left join work_calendar_details detail on detail.main_id = main.id where detail.is_enabled = 1 and main.id = $id ";
 
@@ -59,6 +60,8 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $back_up_driver = '';
     $photoshoot_request = '';
     $notes = '';
+
+    $products_to_bring_files = '';
 
     $location = '';
     $agenda = '';
@@ -82,6 +85,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $back_up_driver = $row['back_up_driver'];
     $photoshoot_request = $row['photoshoot_request'];
     $notes = $row['notes'];
+
+    $products_to_bring_files = $row['products_to_bring_files'];
 
 
     $location = $row['location'];
@@ -229,8 +234,68 @@ $fontStyle->setSize(13);
 // Saving the document as OOXML file...
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007', $download = true);
 
+if(trim($products_to_bring_files) != "")
+{
+    $attachment = explode(",", $products_to_bring_files);
 
-header("Content-Disposition: attachment; filename=schedule.docx");
+    $conf = new Conf();
+
+    $path = $conf::$upload_path . "tmp/";
+
+    if (!file_exists($path)) {
+        mkdir($path, 0777, true);
+    }
+    else
+    {
+        $files = glob($path . "*"); // get all file names
+        foreach($files as $file){ // iterate files
+            if(is_file($file)) {
+                unlink($file); // delete file
+            }
+        }
+    }
+
+    foreach ($attachment as &$value) {
+        grab_image($value, $path . $value);
+    }
+    // $arr is now array(2, 4, 6, 8)
+    unset($value); // break the reference with the last element
+
+    $objWriter->save($path . "schedule.docx");
+
+    $time = microtime(true);
+    $zipname = $path . $time . 'schedule.zip';
+    $zip = new ZipArchive();
+    
+    // touch($zipname); 
+    //$zip->open($zipname, ZipArchive::CREATE);
+    if ($zip->open($zipname, (ZipArchive::CREATE)) !== true)
+        die("Failed to create archive\n");
+
+    if ($handle = opendir($path)) {
+    while (false !== ($entry = readdir($handle))) {
+        if ($entry != "." && $entry != ".." && !strstr($entry,'.zip')) {
+            $r = $zip->addFile($path . $entry, basename($entry));
+        }
+    }
+    closedir($handle);
+    }
+
+    $zip->close();
+
+    header('Content-Type: application/zip');
+    header("Content-Disposition: attachment; filename='schedule.zip'");
+    header('Content-Length: ' . filesize($zipname));
+    header("Content-Transfer-Encoding: Binary");
+    while (ob_get_level()) {
+        ob_end_clean();
+      }
+    readfile($zipname);
+    exit;
+}
+else
+{
+    header("Content-Disposition: attachment; filename=schedule.docx");
 
     header('Cache-Control: max-age=0');
     // If you're serving to IE 9, then the following may be needed
@@ -242,7 +307,7 @@ header("Content-Disposition: attachment; filename=schedule.docx");
     header('Pragma: public'); // HTTP/1.0
 
     $objWriter->save('php://output');
-
+}
 
     function getService($type){
         $leave_type = '';
@@ -301,6 +366,30 @@ header("Content-Disposition: attachment; filename=schedule.docx");
             $cell->addText($v);
         }
        
+    }
+
+    function grab_image($image_url,$image_file){
+
+        /*
+        $storage = new StorageClient([
+            'projectId' => 'predictive-fx-284008',
+            'keyFilePath' => $key
+        ]);
+
+        $bucket = $storage->bucket('feliiximg');
+
+        $object = $bucket->object($image_url);
+        $object->downloadToFile($image_file);
+        */
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://storage.googleapis.com/calendarfile/' . $image_url);
+        //Create a new file where you want to save
+        $fp = fopen($image_file, 'w');
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_exec ($ch);
+        curl_close ($ch);
+        fclose($fp);
     }
 
 ?>
