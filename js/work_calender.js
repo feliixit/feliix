@@ -676,6 +676,8 @@
                 document.getElementById("sc_product_files").innerHTML = sc_content.Products_to_bring_files;
                 if(sc_content.Products_to_bring_files != "<a href='https://storage.cloud.google.com/calendarfile/' target='_blank'></a>&emsp;")
                     app.download_type = 'zip';
+                else
+                    app.download_type = 'docx';
 
                 document.getElementById("sc_product_files_hide").value = sc_content.File_name;
 				document.getElementById("sc_service").value = sc_content.Service;
