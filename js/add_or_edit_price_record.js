@@ -269,14 +269,19 @@ var app = new Vue({
                   })
                       .then(function (response) {
                           //handle success
-                          //_this.items = response.data
-                          //console.log(_this.items)
+                          _this.items = response.data
+                          console.log(_this.items)
+                          Swal.fire({
+                            text: "Add Success.",
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        })
                           
                       })
                       .catch(function (response) {
                           //handle error
                           Swal.fire({
-                              text: JSON.stringify(response),
+                              text: "Upload Error, Please contact engineer.",
                               icon: 'error',
                               confirmButtonText: 'OK'
                           })
@@ -334,6 +339,11 @@ var app = new Vue({
                                     //handle success
                                     //_this.items = response.data
                                     //console.log(_this.items)
+                                    //Swal.fire({
+                                    //    text: _this.items,
+                                    //    icon: 'success',
+                                    //    confirmButtonText: 'OK'
+                                    //});
                                 })
                                 .catch(function (response) {
                                     //handle error
@@ -342,6 +352,7 @@ var app = new Vue({
                                     //    icon: 'error',
                                     //    confirmButtonText: 'OK'
                                     //})
+                                    
                                 });
                         }
                         form_Data = new FormData();
@@ -399,16 +410,21 @@ var app = new Vue({
                     })
                         .then(function (response) {
                             //handle success
-                            //_this.items = response.data
+                            _this.items = response.data
                             //console.log(_this.items)
+                            Swal.fire({
+                                text: "Update Success.",
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
                         })
                         .catch(function (response) {
                             //handle error
-                            //Swal.fire({
-                                //text: JSON.stringify(response),
-                                //icon: 'error',
-                                //confirmButtonText: 'OK'
-                            //})
+                            Swal.fire({
+                                text: "Upload Error, Please contact engineer.",
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            })
                         });
                         this.upload();
                         this.reload();
@@ -541,36 +557,51 @@ var app = new Vue({
               });
       },
        deleteRecord:function(id){
-          this.action = 7;//delete
-          var token = localStorage.getItem('token');
-          var form_Data = new FormData();
-          let _this = this;
-
-          form_Data.append('jwt', token);
-          form_Data.append('id', id);
-          form_Data.append('action', _this.action);
-          form_Data.append('deleted_by',_this.name);
-          axios({
-              method: 'post',
-              headers: {
-                  'Content-Type': 'multipart/form-data',
-              },
-              url: 'api/add_or_edit_price_record',
-              data: form_Data
-          })
-              .then(function (response) {
-                  //handle success
-                  //_this.items = response.data
-              })
-              .catch(function (response) {
-                  //handle error
-                  Swal.fire({
-                      text: JSON.stringify(response),
-                      icon: 'error',
-                      confirmButtonText: 'OK'
-                  })
-              });
-              _this.reload();
+        Swal.fire({
+            title: "Delete",
+            text: "Are you sure to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.value) {
+                this.action = 7;//delete
+                var token = localStorage.getItem('token');
+                var form_Data = new FormData();
+                let _this = this;
+      
+                form_Data.append('jwt', token);
+                form_Data.append('id', id);
+                form_Data.append('action', _this.action);
+                form_Data.append('deleted_by',_this.name);
+                axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    url: 'api/add_or_edit_price_record',
+                    data: form_Data
+                })
+                    .then(function (response) {
+                        //handle success
+                        //_this.items = response.data
+                    })
+                    .catch(function (response) {
+                        //handle error
+                        Swal.fire({
+                            text: JSON.stringify(response),
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        })
+                    });
+                    _this.reload();
+              
+            } else {
+              return;
+            }
+          });
 
       },
       lockRecord:function(id){
