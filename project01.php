@@ -223,7 +223,8 @@ $(function(){
                     </select>
                     <select name="" id="" v-model="fil_stage">
                         <option value="">Current Stage</option>
-                        <option v-for="item in stages" :value="item.id" :key="item.stage">
+                        <option value="Empty">Empty</option>
+                        <option v-for="item in stages" :value="item.stage" :key="item.stage">
                             {{ item.stage }}
                         </option>
                     </select>
