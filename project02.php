@@ -26,7 +26,7 @@ try {
 
             $GLOBALS['position'] = $decoded->data->position;
             $GLOBALS['department'] = $decoded->data->department;
-            
+
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $test_manager = $decoded->data->test_manager;
 
@@ -40,9 +40,9 @@ try {
         if (  $p < 1 || !is_numeric($p)) {
           header( 'location:project01' );
         }
-        
+
         $is_creator = IsCreator($p, $user_id);
-        
+
         if($test_manager[1] == "0" && $is_creator == "1")
             $test_manager[1] = "1";
 
@@ -51,7 +51,7 @@ try {
     }
     // if decode fails, it means jwt is invalid
     catch (Exception $e){
-    
+
         header( 'location:index' );
     }
 
@@ -123,6 +123,7 @@ $(function(){
     dialogshow($('.list_function a.fn4'),$('.list_function .dialog.fn4'));
     dialogshow($('.list_function a.fn5'),$('.list_function .dialog.fn5'));
     dialogshow($('.list_function a.fn6'),$('.list_function .dialog.fn6'));
+    dialogshow($('.list_function a.fn7'),$('.list_function .dialog.fn7'));
     
     $('header').click(function(){dialogclear()});
     $('.block.left').click(function(){dialogclear()});
@@ -134,14 +135,14 @@ $(function(){
         var f = $("#opType").val();
         $('.dialog.d-edit').removeClass('edit').removeClass('del').addClass(f);
     })
-    
+
 })
 
 </script>
 
 <style>
     .mainContent {    
-        min-height: 110vh;
+        min-height: 150vh;
     }
 
     .tablebox.s2.edit>div{
@@ -157,6 +158,77 @@ $(function(){
         right: 0;
         margin: auto;
     }
+
+    .list_function .info_btnbox{
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        margin-bottom: 5px;
+        border-radius: 100px;
+        background-color: var(--fth01);
+    }
+
+    .list_function .info_btnbox .info_btn{
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: white;
+        border: 3px solid var(--fth01);
+    }
+
+    .info_checkbox:checked + .info_btnbox .info_btn {
+        margin-left: 20px;
+    }
+
+    .project_info_side_button {
+        margin-top: 0!important;
+        margin-bottom: 5px!important;
+        text-align: right!important;
+    }
+
+    .project_info_side_button a {
+        display: inline-block!important;
+        width: 60px!important;
+        background: green!important;
+        color: white!important;
+        text-align: center!important;
+        border-radius: 20px!important;
+        line-height: 20px!important;
+        height: 20px!important;
+        border: none!important;
+        font-weight: 700!important;
+    }
+
+    .project_info_items{
+        border: 1px solid #707070!important;
+        border-radius: 0!important;
+        width: 99%!important;
+    }
+
+    .project_info_items ul{
+        border: none!important;
+        margin-top: 0!important;
+    }
+
+    .project_info_items li{
+        font-size: 12px!important;
+        border: none!important;
+    }
+
+    .project_info_items li a{
+        display: inline-block!important;
+        width: 20px!important;
+        background: gray!important;
+        color: white!important;
+        text-align: center!important;
+        border-radius: 20px!important;
+        line-height: 20px!important;
+        height: 20px!important;
+        border: none!important;
+        font-weight: 700!important;
+    }
+
 </style>
 
 </head>
@@ -322,11 +394,10 @@ $(function(){
                     </div>
                 </div>
 
-
                 
                 <!-- tag -->
                 <b class="tag focus">PROJECT</b>
-                <a href="project01"><b class="tag">{{ projectname }}</b></a>
+                <a href="project01"><b class="tag">{{ project_name }}</b></a>
                 <b class="tag" v-if="verified_downpayment">(Verified Downpayment)</b>
             </div>
             <div class="block fn">
@@ -363,56 +434,177 @@ $(function(){
                         <h6>Edit Project Info:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt class="head">Project Category:</dt>
-                                <dd>
-                                    <select v-model="edit_category">
-                                      <option v-for="(item, index) in categorys" :value="item.id" :key="item.category">
-                                          {{ item.category }}
-                                      </option>
-                                    </select>
-                                </dd>
-                                <div class="half">
-                                    <dt>Client Type:</dt>
+                                <div class="Info_A">
+                                    <dt class="head">Project Name:</dt>
                                     <dd>
-                                        <select v-model="edit_client_type">
-                                          <option v-for="(item, index) in client_types" :value="item.id" :key="item.client_type">
-                                              {{ item.client_type }}
-                                          </option>
+                                        <input type="text" v-model="edit_project_name">
+                                    </dd>
+                                    <dt class="head">Project Category:</dt>
+                                    <dd>
+                                        <select v-model="edit_category">
+                                            <option v-for="(item, index) in categorys" :value="item.id"
+                                                    :key="item.category">
+                                                {{ item.category }}
+                                            </option>
                                         </select>
                                     </dd>
-                                </div>
-                                <div class="half">
-                                    <dt>Priority</dt>
+                                    <div class="half">
+                                        <dt>Client Type:</dt>
+                                        <dd>
+                                            <select v-model="edit_client_type">
+                                                <option v-for="(item, index) in client_types" :value="item.id"
+                                                        :key="item.client_type">
+                                                    {{ item.client_type }}
+                                                </option>
+                                            </select>
+                                        </dd>
+                                    </div>
+                                    <div class="half">
+                                        <dt>Priority</dt>
+                                        <dd>
+                                            <select v-model="edit_priority">
+                                                <option v-for="(item, index) in priorities" :value="item.id"
+                                                        :key="item.priority">
+                                                    {{ item.priority }}
+                                                </option>
+                                            </select>
+                                        </dd>
+                                    </div>
+                                    <dt class="head">Client Name (Firm/Company Name):</dt>
                                     <dd>
-                                        <select v-model="edit_priority">
-                                          <option v-for="(item, index) in priorities" :value="item.id" :key="item.priority">
-                                              {{ item.priority }}
-                                          </option>
-                                        </select>
+                                        <input type="text" v-model="edit_client">
                                     </dd>
+                                    <dt class="head">Architect/Designer:</dt>
+                                    <dd>
+                                        <input type="text" v-model="edit_designer">
+                                    </dd>
+                                    <dt>Project Creator:</dt>
+                                    <dd>
+                                        <div class="browser_group">
+                                            <select v-model="uid">
+                                                <option v-for="(item, index) in users" :value="item.id"
+                                                        :key="item.username">
+                                                    {{ item.username }}
+                                                </option>
+                                            </select>
+                                            <!-- <button @click="change_project_creator">Change</button> --></div>
+                                    </dd>
+
+                                    <div class="half">
+                                        <dt>Type:</dt>
+                                        <dd>
+                                            <select v-model="edit_type">
+                                                <option value="Major">Major</option>
+                                                <option value="Minor">Minor</option>
+                                            </select>
+                                        </dd>
+                                    </div>
+
+                                    <div class="half">
+                                        <dt>Scope of Works:</dt>
+                                        <dd>
+                                            <select v-model="edit_scope">
+                                                <option value="Installation">Installation</option>
+                                                <option value="Delivery">Delivery</option>
+                                            </select>
+                                        </dd>
+                                    </div>
+
+                                    <dt>Reason for Editing Project Info:</dt>
+                                    <dd><textarea name="" id="" cols="30" rows="10"
+                                                  v-model="edit_edit_reason"></textarea></dd>
+
                                 </div>
-                                <dt>Project Creator:</dt>
-                                <dd>
-                                    <div class="browser_group">
-                                        <select v-model="uid">
-                                          <option v-for="(item, index) in users" :value="item.id" :key="item.username">
-                                              {{ item.username }}
-                                          </option>
-                                        </select>
-                                       <!-- <button @click="change_project_creator">Change</button> --></div>
-                                </dd>
-                                <dt>Contact Person:</dt>
-                                <dd><input type="text" v-model="edit_contactor"></dd>
-                                <div class="half">
-                                    <dt>Project Location:</dt>
-                                    <dd><input type="text" v-model="edit_location"></dd>
+
+                                <div class="Info_B" style="display: none;">
+
+                                    <dt>Contractor:</dt>
+                                    <dd><input type="text" v-model="edit_contractor"></dd>
+
+                                    <div class="half">
+                                        <dt>3rd Party Contractor:</dt>
+                                        <dd>
+                                            <select :ref="'party_type'" @change="onChange_party_type()">
+                                                <option value="Electrical">Electrical</option>
+                                                <option value="Data">Data</option>
+                                                <option value="Furniture">Furniture</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </dd>
+                                        <dd><input type="text" :ref="'party_name'" placeholder="Name"></dd>
+                                    </div>
+
+                                    <div class="half">
+                                        <dt></dt>
+                                        <dd><input type="text" :ref="'party_type_other'" style="display: none;"></dd>
+                                        <!-- 如果選擇Other，則可以在此Input中輸入Contractor特定的類型名稱 -->
+                                        <dd><input type="text" :ref="'party_number'" placeholder="Contact Number"></dd>
+                                    </div>
+
+                                    <dt class="project_info_side_button">
+                                        <a @click="add_party_contactor">Add</a>
+                                    </dt>
+                                    <dd class="project_info_items">
+                                    <ul v-for="(item, index) in edit_party_contactor" :key="index">
+                                            <li>
+                                                <a @click="remove_party_contactor(index)">x</a>
+                                            </li>
+                                            <li>{{ item.type}}: {{ item.name }} - {{ item.number }}
+                                            </li>
+                                        </ul>
+                                    </dd>
+
+                                    <div class="half">
+                                        <dt>Project Location:</dt>
+                                        <dd><input type="text" v-model="edit_location"></dd>
+                                    </div>
+
+                                    <div class="half">
+                                        <dt>Office Location:</dt>
+                                        <dd><input type="text" v-model="edit_office_location"></dd>
+                                    </div>
+
+                                    <div class="half">
+                                        <dt>Key Person:</dt>
+                                        <dd>
+                                            <select :ref="'key_type'" @change="onChange_key_type()">
+                                                <option value="Purchasing contact">Purchasing contact</option>
+                                                <option value="Accounting contact">Accounting contact</option>
+                                                <option value="Admin contact">Admin contact</option>
+                                                <option value="Person in charge of site">Person in charge of site</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </dd>
+                                        <dd><input type="text" :ref="'key_name'" placeholder="Name"></dd>
+                                    </div>
+                                    <div class="half">
+                                        <dt></dt>
+                                        <dd><input type="text" :ref="'key_type_other'" style="display:none"></dd>
+                                        <!-- 如果選擇Other，則可以在此Input中輸入Key Person特定的角色名稱 -->
+                                        <dd><input type="text" :ref="'key_number'" placeholder="Contact Number"></dd>
+                                    </div>
+
+                                    <dt class="project_info_side_button">
+                                        <a @click="add_key_person">Add</a>
+                                    </dt>
+                                    <dd class="project_info_items">
+                                        <ul v-for="(item, index) in edit_key_person" :key="index">
+                                            <li>
+                                                <a @click="remove_key_person(index)">x</a>
+                                            </li>
+                                            <li>{{ item.type}}: {{ item.name }} - {{ item.number }}
+                                            </li>
+                                        </ul>
+
+                                    </dd>
+
+                                    <dt>Background of Client:</dt>
+                                    <dd><textarea name="" id="" cols="30" rows="10" v-model="edit_background_client"></textarea></dd>
+
+                                    <dt>Brief Background Story Regarding Project:</dt>
+                                    <dd><textarea name="" id="" cols="30" rows="10" v-model="edit_background_project"></textarea></dd>
                                 </div>
-                                <div class="half">
-                                    <dt>Contact Number:</dt>
-                                    <dd><input type="text" v-model="edit_contact_number"></dd>
-                                </div>
-                                <dt>Reason for Editing Project Info:</dt>
-                                <dd><textarea name="" id="" cols="30" rows="10" v-model="edit_project_reason"></textarea></dd>
+
                                 <div class="btnbox">
                                     <a class="btn small" @click="project_clear">Cancel</a>
                                     <a class="btn small green" @click="project_create">Save</a>
@@ -597,6 +789,68 @@ $(function(){
                         </div>
                     </div>
                 </div>
+
+
+                <div class="popupblock">
+                    <a id="a_fn7" class="fn7" :ref="'a_fn7'">Upload Quotation</a>
+                    <div id="dlg_fn7" class="dialog fn7" :ref="'dlg_fn7'">
+                        <h6>Upload Quotation:</h6>
+                        <div class="formbox">
+                            <dl>
+                                <dt class="head">Description:</dt>
+                                <dd><textarea name="" id="" v-model="quote_remark"></textarea></dd>
+                                <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            name="quote_file"
+                                            value
+                                            placeholder="choose file"
+                                            ref="quote_file"
+                                            v-show="quote_canSub"
+                                            @change="quote_changeFile()"
+                                            multiple
+                                          />
+                                    </div>
+                                  </div>
+                                </dd>
+
+                                <div class="file-list">
+                                  <div class="file-item" v-for="(item,index) in quote_fileArray" :key="index">
+                                    <p>
+                                      {{item.name}}
+                                      <span
+                                        @click="quote_deleteFile(index)"
+                                        v-show="item.progress==0"
+                                        class="upload-delete"
+                                      ><i class="fas fa-backspace"></i>
+                                        </span>
+                                    </p>
+                                    <div class="progress-container" v-show="item.progress!=0">
+                                      <div class="progress-wrapper">
+                                        <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                      </div>
+                                      <div class="progress-rate">
+                                        <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                        <span v-else><i class="fas fa-check-circle"></i></span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="btnbox">
+                                    <a class="btn small" @click="quote_clear">Cancel</a>
+                                    <a class="btn small green" @click="quote_create">Upload</a>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
                 
                 <div class="popupblock">
                     <a id="status_fn6" class="fn6" :ref="'a_fn6'">Submit Downpayment Proof</a>
@@ -663,117 +917,227 @@ $(function(){
             </div>
         </div>
         <div class="block left">
-            <div class="tablebox lv2a b-4">
-                <ul class="head">
-                    <li>Category</li>
-                    <li>Client Type</li>
-                    <li>Priority</li>
-                    <li>Project Creator</li>
-                </ul>
-                <ul>
-                    <li>{{ category }}</li>
-                    <li>{{ client_type }}</li>
-                    <li>{{ priority }}</li>
-                    <li>{{ username }}</li>
-                </ul>
-            </div>
-            <div class="tablebox lv2a b-3">
-                <ul class="head">
-                    <li>Project Status</li>
-                    <li>Current Stage</li>
-                    <li>Project Execution Period</li>
-                </ul>
-                <ul>
-                    <li>{{ project_status }}</li>
-                    <li>{{ stage }}</li>
-                    <li>{{ created_at }} ~  {{ end_at }}</li>
-                </ul>
-                <ul class="head">
-                    <li>Project Location</li>
-                    <li>Contact Person</li>
-                    <li>Contact Number</li>
-                </ul>
-                <ul>
-                    <li>{{ location }}</li>
-                    <li>{{ contactor }}</li>
-                    <li>{{ contact_number }}</li>
-                </ul>
-            </div>
-            <div class="tablebox lv2a b-2">
-                <ul class="head">
-                    <li style="text-align: center !important;">Comments</li>
-                    <li style="text-align: center !important;">Estimated Closing Probability</li>
-                </ul>
-                <ul>
-                    <li class="morespace">
-                        <div v-for='(receive_record, index) in project_comments'>• {{ receive_record.comment }} <br v-if="receive_record.items.length > 0">
-                        <span v-for="item in receive_record.items">
-                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
-                        </span>
-                         <br>({{ receive_record.username }} at {{ receive_record.created_at }})
-                        </div>
-                    </li>
-                    <li class="morespace">
-                        <div v-for='(receive_record, index) in project_probs'>• {{ receive_record.prob }} - {{ receive_record.comment }} <br>
 
-                         ({{ receive_record.username }} at {{ receive_record.created_at }})
-                        </div>
-                    </li>
-                </ul>
+            <div class="list_function">
+                <label style="font-size: 14px">
+                    <input type="checkbox" class="info_checkbox" name id onchange="change_Project_Info(this)">
+                    <span class="info_btnbox">
+                        <span class="info_btn"></span>
+                    </span>
+                </label>
             </div>
-            <div class="tablebox lv2a">
-                <ul class="head">
-                    <li style="text-align: center !important;">Project Details</li>
-                </ul>
-                <ul>
-                    <li class="morespace">
-                        <div v-for='(receive_record, index) in project_action_detials'>• {{ receive_record.detail_type }} : {{ receive_record.detail_desc }}  <br v-if="receive_record.items.length > 0">
-                        <span v-for="item in receive_record.items">
+
+            <div class="Info_A">
+
+                <div class="tablebox lv2a b-4">
+                    <ul class="head">
+                        <li>Category</li>
+                        <li>Client Type</li>
+                        <li>Client Name</li>
+                        <li>Architect / Designer</li>
+                    </ul>
+                    <ul>
+                        <li>{{ category }}</li>
+                        <li>{{ client_type }}</li>
+                        <li>{{ client }}</li>
+                        <li>{{ designer }}</li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a b-4">
+                    <ul class="head">
+                        <li>Priority</li>
+                        <li>Type</li>
+                        <li>Scope of Works</li>
+                        <li>Project Creator</li>
+                    </ul>
+                    <ul>
+                        <li>{{ priority }}</li>
+                        <li>{{ type }}</li>
+                        <li>{{ scope }}</li>
+                        <li>{{ username }}</li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a b-3">
+                    <ul class="head">
+                        <li>Project Status</li>
+                        <li>Execution Period</li>
+                        <li>Current Ongoing Stage</li>
+                    </ul>
+                    <ul>
+                        <li>{{ project_status }}</li>
+                        <li>{{ created_at }} ~ {{ end_at }}</li>
+                        <li>{{ stage }}</li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a b-2">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Comments</li>
+                        <li style="text-align: center !important;">Estimated Closing Probability</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                            <div v-for='(receive_record, index) in project_comments'>• {{ receive_record.comment }} <br
+                                    v-if="receive_record.items.length > 0">
+                                <span v-for="item in receive_record.items">
                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
                         </span>
-                        <br>
-                         ({{ receive_record.username }} at {{ receive_record.created_at }})
-                         <br>
-                        </div>
-                    </li>
-                </ul>
+                                <br>({{ receive_record.username }} at {{ receive_record.created_at }})
+                            </div>
+                        </li>
+                        <li class="morespace">
+                            <div v-for='(receive_record, index) in project_probs'>• {{ receive_record.prob }} - {{
+                                receive_record.comment }} <br>
+
+                                ({{ receive_record.username }} at {{ receive_record.created_at }})
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a" v-if="title != 'technician'">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Quotation Files</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                            <div v-for='(receive_record, index) in project_quotes'>• {{ receive_record.comment }} <br
+                                    v-if="receive_record.items.length > 0">
+                                <span v-for="item in receive_record.items">
+                                <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
+                            </span>
+                                <br>({{ receive_record.username }} at {{ receive_record.created_at }})
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Project Details</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                            <div v-for='(receive_record, index) in project_action_detials'>• {{
+                                receive_record.detail_type
+                                }} : {{ receive_record.detail_desc }} <br v-if="receive_record.items.length > 0">
+                                <span v-for="item in receive_record.items">
+                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
+                        </span>
+                                <br>
+                                ({{ receive_record.username }} at {{ receive_record.created_at }})
+                                <br>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
+
+            <div class="Info_B" style="display: none;">
+
+                <div class="tablebox lv2a">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Contractor</li>
+                    </ul>
+                    <ul>
+                        <li style="text-align: center !important;">
+                            {{ contractor }}
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a">
+                    <ul class="head">
+                        <li style="text-align: center !important;">3rd Party Contractor</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                        <div v-for="(item, index) in party_contactor" :key="index">• {{ item.type }}: {{ item.name }} - {{ item.number }}<br>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a b-2">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Project Location</li>
+                        <li style="text-align: center !important;">Office Location</li>
+                    </ul>
+                    <ul>
+                        <li style="text-align: center !important;">{{ location }}</li>
+                        <li style="text-align: center !important;">{{ office_location }}</li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Key Person</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                            <div v-for="(item, index) in key_person" :key="index">• {{ item.type }}: {{ item.name }} - {{ item.number }}<br>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <ul class="head">
+                        <li style="text-align: center !important;">Background of Client</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace"><pre>{{ background_client }}</pre></li>
+                    </ul>
+
+                    <ul class="head">
+                        <li style="text-align: center !important;">Brief Background Story Regarding Project</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace"><pre>{{ background_project }}</pre></li>
+                    </ul>
+                </div>
+
+            </div>
+
         </div>
         <div class="block right">
             <div class="list_function">
                 <!-- 分頁 -->
                 <div class="pagenation">
                     <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
-                  
+
                     <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
-                  
+
                     <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                 </div>
             </div>
             <!-- list -->
             <div class="tablebox lv2b">
-               <ul class="head">
-                   <li>Sequence</li>
-                   <li>Stage</li>
-                   <li>Status</li>
-                   <li>Execution Period</li>
-                   <li>Created by</li>
-                   <!-- <li>Post/Reply</li> -->
-                   <li>Recent Message</li>
-               </ul>
-               <ul v-for='(receive_record, index) in displayedStagePosts'>
-                   <li>{{ receive_record.sequence }}</li>
-                   <li v-if="receive_record.project_stage_id == 1"><a v-bind:href="'project03_client?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
-                   <li v-if="receive_record.project_stage_id != 1"><a v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
-                   <li>{{ receive_record.stages_status }}</li>
-                   <li>{{ receive_record.start }} ~  </li>
-                   <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
-                   <!-- <li>{{ receive_record.replies }}/{{ receive_record.post }}</li> -->
-                   <li v-if="receive_record.recent != ''">{{ receive_record.recent }}</li>
-                   <li v-else>{{ receive_record.created_at }} {{ receive_record.username }}</li>
-               </ul>
-           </div>
-           <!-- list end -->
+                <ul class="head">
+                    <li>Sequence</li>
+                    <li>Stage</li>
+                    <li>Status</li>
+                    <li>Execution Period</li>
+                    <li>Created by</li>
+                    <!-- <li>Post/Reply</li> -->
+                    <li>Recent Message</li>
+                </ul>
+                <ul v-for='(receive_record, index) in displayedStagePosts'>
+                    <li>{{ receive_record.sequence }}</li>
+                    <li v-if="receive_record.project_stage_id == 1"><a
+                            v-bind:href="'project03_client?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
+                    <li v-if="receive_record.project_stage_id != 1"><a
+                            v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
+                    <li>{{ receive_record.stages_status }}</li>
+                    <li>{{ receive_record.start }} ~</li>
+                    <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
+                    <!-- <li>{{ receive_record.replies }}/{{ receive_record.post }}</li> -->
+                    <li v-if="receive_record.recent != ''">{{ receive_record.recent }}</li>
+                    <li v-else>{{ receive_record.created_at }} {{ receive_record.username }}</li>
+                </ul>
+            </div>
+            <!-- list end -->
         </div>
     </div>
 </div>
@@ -782,7 +1146,26 @@ $(function(){
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script defer src="js/project02.js"></script>
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
+<script defer src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script>
+
+    function change_Project_Info(obj_checkbox){
+      if(obj_checkbox.checked){
+          document.getElementsByClassName("Info_A")[0].style.display = "none";
+          document.getElementsByClassName("Info_A")[1].style.display = "none";
+          document.getElementsByClassName("Info_B")[0].style.display = "";
+          document.getElementsByClassName("Info_B")[1].style.display = "";
+      }
+      else{
+          document.getElementsByClassName("Info_A")[0].style.display = "";
+          document.getElementsByClassName("Info_A")[1].style.display = "";
+          document.getElementsByClassName("Info_B")[0].style.display = "none";
+          document.getElementsByClassName("Info_B")[1].style.display = "none";
+      }
+    }
+
+</script>
+
 <style scoped>
 .extendex-top {
   background: none;
