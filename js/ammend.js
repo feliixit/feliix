@@ -7,11 +7,14 @@ var app = new Vue({
 
     picked:'A',
     view_detail:false,
+    view_void_detail:false,
 
     submit: false,
 
     receive_records: [],
+    approve_records: [],
     record: {},
+    void_record:{},
 
   },
 
@@ -26,6 +29,10 @@ var app = new Vue({
       return this.receive_records;
     },
 
+    approvedRecord () {
+      return this.approve_records;
+    },
+
   },
 
   mounted(){
@@ -35,6 +42,7 @@ var app = new Vue({
     $('#start').val(d1.toISOString().slice(0,7).replace(/-/g,"-"));
 
     this.getLeaveCredit();
+    this.getLeaveVoid();
     
   },
 
@@ -64,6 +72,21 @@ var app = new Vue({
               console.log(error);
           });
   },
+
+  getLeaveVoid: function() {
+    let _this = this;
+
+    axios.get('api/ammend_void')
+        .then(function(response) {
+            console.log(response.data);
+            _this.approve_records = response.data;
+
+
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+},
 
     getUserName: function() {
         var token = localStorage.getItem('token');
@@ -101,6 +124,11 @@ var app = new Vue({
             for (i = 0; i < this.receive_records.length; i++) 
             {
               this.receive_records[i].is_checked = false;
+            }
+
+            for (i = 0; i < this.approve_records.length; i++) 
+            {
+              this.approve_records[i].is_checked = false;
             }
           //$(".alone").prop("checked", false);
           //this.clicked = false;
@@ -183,6 +211,42 @@ var app = new Vue({
                 });
         },
 
+
+        voidRecord: function(id) {
+          let _this = this;
+          //targetId = this.record.id;
+          var form_Data = new FormData();
+
+          form_Data.append('crud', "void");
+          form_Data.append('id', id);
+
+          var params = {
+              'id': id
+          }
+
+          const token = sessionStorage.getItem('token');
+
+          axios({
+                  method: 'post',
+                  headers: {
+                      'Content-Type': 'multipart/form-data',
+                      Authorization: `Bearer ${token}`
+                  },
+                  url: 'api/leave_record_reject',
+                  data: form_Data
+              })
+              .then(function(response) {
+                  //handle success
+                  //this.$forceUpdate();
+                  _this.resetForm();
+              })
+              .catch(function(response) {
+                  //handle error
+                  console.log(response)
+              });
+      },
+
+
         detail: function() {
           let _this = this;
 
@@ -211,6 +275,36 @@ var app = new Vue({
             this.view_detail = true;
 
         },
+
+        void_detail: function() {
+          let _this = this;
+
+        let favorite = [];
+          
+          for (i = 0; i < this.approve_records.length; i++) 
+            {
+              if(this.approve_records[i].is_checked == 1)
+                favorite.push(this.approve_records[i].id);
+            }
+
+            if (favorite.length != 1) {
+              Swal.fire({
+                text: 'Please select row to see the detail!',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              })
+                
+                //$(window).scrollTop(0);
+                this.view_void_detail = false;
+                return;
+            }
+
+            this.void_record = this.shallowCopy(this.approve_records.find(element => element.id == favorite));
+
+            this.view_void_detail = true;
+
+        },
+
 
     approve: function() {
 
@@ -283,7 +377,7 @@ var app = new Vue({
 
       },
 
-      reject: function() {
+      void_click: function() {
 
       let _this = this;
 
@@ -291,33 +385,13 @@ var app = new Vue({
 
         var approve_record = false;
           
-          for (i = 0; i < this.receive_records.length; i++) 
+          for (i = 0; i < this.approve_records.length; i++) 
             {
-              if(this.receive_records[i].is_checked == 1)
+              if(this.approve_records[i].is_checked == 1)
               {
-                if(this.receive_records[i].approval === 'R')
-                {
-                  Swal.fire({
-                    text: 'Rejected data cannot be rejected again! Please contact Admin or IT staffs.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                  });
+                
 
-                  return;
-                }
-
-                if(this.receive_records[i].approval === 'A')
-                {
-                  Swal.fire({
-                    text: 'Approved data cannot be rejected! Please contact Admin or IT staffs.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                  });
-
-                  return;
-                }
-
-                favorite.push(this.receive_records[i].id);
+                favorite.push(this.approve_records[i].id);
               }
             }
 
@@ -335,8 +409,8 @@ var app = new Vue({
           
 
           Swal.fire({
-            title: 'Are you sure to reject?',
-            text: "Are you sure to reject apply?",
+            title: 'Are you sure to void?',
+            text: "Are you sure to void?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -345,7 +419,7 @@ var app = new Vue({
           }).then((result) => {
             if (result.value) {
               _this.submit = true;
-              _this.rejectReceiveRecord(favorite.join(", "));
+              _this.voidRecord(favorite.join(", "));
 
               _this.resetForm();
               _this.unCheckCheckbox();
@@ -354,15 +428,94 @@ var app = new Vue({
 
       },
 
+
+      reject: function() {
+
+        let _this = this;
+  
+          let favorite = [];
+  
+          var approve_record = false;
+            
+            for (i = 0; i < this.receive_records.length; i++) 
+              {
+                if(this.receive_records[i].is_checked == 1)
+                {
+                  if(this.receive_records[i].approval === 'R')
+                  {
+                    Swal.fire({
+                      text: 'Rejected data cannot be rejected again! Please contact Admin or IT staffs.',
+                      icon: 'warning',
+                      confirmButtonText: 'OK'
+                    });
+  
+                    return;
+                  }
+  
+                  if(this.receive_records[i].approval === 'A')
+                  {
+                    Swal.fire({
+                      text: 'Approved data cannot be rejected! Please contact Admin or IT staffs.',
+                      icon: 'warning',
+                      confirmButtonText: 'OK'
+                    });
+  
+                    return;
+                  }
+  
+                  favorite.push(this.receive_records[i].id);
+                }
+              }
+  
+              if (favorite.length < 1) {
+                Swal.fire({
+                  text: 'Please select rows to reject!',
+                  icon: 'warning',
+                  confirmButtonText: 'OK'
+                })
+                  
+                  //$(window).scrollTop(0);
+                  return;
+              }
+  
+            
+  
+            Swal.fire({
+              title: 'Are you sure to reject?',
+              text: "Are you sure to reject apply?",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes'
+            }).then((result) => {
+              if (result.value) {
+                _this.submit = true;
+                _this.rejectReceiveRecord(favorite.join(", "));
+  
+                _this.resetForm();
+                _this.unCheckCheckbox();
+              }
+            })
+  
+        },
+  
+
       resetForm: function() {
           
             this.submit = false;
             this.view_detail = false;
 
+            this.view_void_detail = false;
+
           this.receive_records = [];
           this.record = {};
 
+          this.approve_records = [];
+          this.void_record = {};
+
           this.getLeaveCredit();
+          this.getLeaveVoid();
 
         },
 
