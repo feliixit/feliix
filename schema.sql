@@ -1029,3 +1029,10 @@ ALTER TABLE project_main  DROP COLUMN client_name;
 
 ALTER TABLE project_main
 ADD COLUMN `contractor` varchar(512) DEFAULT '' AFTER client;
+
+-- 20210112 add void id for apply_for_leave
+ALTER TABLE apply_for_leave
+ADD COLUMN `void_id`  int(11) DEFAULT 0 after re_reject_at;
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `void_at`   timestamp NULL DEFAULT NULL after void_id;

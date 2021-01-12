@@ -232,7 +232,7 @@ var app = new Vue({
                       'Content-Type': 'multipart/form-data',
                       Authorization: `Bearer ${token}`
                   },
-                  url: 'api/leave_record_reject',
+                  url: 'api/leave_record_void',
                   data: form_Data
               })
               .then(function(response) {

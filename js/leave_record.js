@@ -219,6 +219,17 @@ var app = new Vue({
                   return;
                 }
 
+                if(this.receive_records[i].approval === 'V')
+                {
+                  Swal.fire({
+                    text: 'Voided data cannot be withdrawn by user! Please contact Admin or IT staffs.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                  });
+
+                  return;
+                }
+
                 if(this.receive_records[i].approval === 'A' && this.receive_records[i].leave_type === 'D')
                 {
                   Swal.fire({
