@@ -89,7 +89,7 @@ function sendGridMail($name, $email1,  $leaver, $projectname, $remark)
 }
 
 
-function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime, $reason, $status)
+function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category)
 {
     $conf = new Conf();
 
@@ -110,6 +110,12 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 
     $mail->IsHTML(true);
     $mail->AddAddress($email1, $name);
+
+    if($category == '1')
+        $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
+
+    if($category == '2')
+        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
 
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
@@ -163,7 +169,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 }
 
 
-function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $subtime)
+function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $subtime, $category)
 {
     $conf = new Conf();
 
@@ -184,6 +190,12 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
 
     $mail->IsHTML(true);
     $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
+    if($category == '1')
+        $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
+
+    if($category == '2')
+        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
 
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');

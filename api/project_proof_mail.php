@@ -56,7 +56,7 @@ else
           case 'POST':
             $bid = (isset($_POST['bid']) ?  $_POST['bid'] : "");
 
-            $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status <> -1 ";
+            $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, p.catagory_id FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status <> -1 ";
 
             $merged_results = array();
 
@@ -68,6 +68,7 @@ else
             $leaver = "";
             $subtime = "";
             $email1 = "";
+            $category = "";
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $project_name = $row['project_name'];
@@ -75,9 +76,10 @@ else
                 $leaver = $row['username'];
                 $subtime = $row['created_at'];
                 $email1 = $row['email'];
+                $category = $row['catagory_id'];
             }
 
-            send_pay_notify_mail($leaver, $email1, $leaver, $project_name, $remark, $subtime);
+            send_pay_notify_mail($leaver, $email1, $leaver, $project_name, $remark, $subtime, $category);
 
             break;
 
