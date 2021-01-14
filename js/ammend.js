@@ -421,7 +421,7 @@ var app = new Vue({
               _this.submit = true;
               _this.voidRecord(favorite.join(", "));
 
-              _this.resetForm();
+              //_this.resetForm();
               _this.unCheckCheckbox();
             }
           })
@@ -493,7 +493,7 @@ var app = new Vue({
                 _this.submit = true;
                 _this.rejectReceiveRecord(favorite.join(", "));
   
-                _this.resetForm();
+                // _this.resetForm();
                 _this.unCheckCheckbox();
               }
             })
