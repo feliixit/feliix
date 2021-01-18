@@ -40,7 +40,7 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
 		back_up_driver, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
 		DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files
 		from work_calendar_main main 
-		left join work_calendar_details detail on detail.main_id = main.id where detail.is_enabled = 1 and main.id = $id ";
+		left join work_calendar_details detail on detail.main_id = main.id where detail.is_enabled = 1 and main.id = " . $id . " order by sort " ;
 
     $stmt = $db->prepare( $sql );
     $stmt->execute();
