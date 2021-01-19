@@ -58,70 +58,92 @@ $(function(){
         <div class="tags">
             <a class="tag A" href="user">User</a>
             <a class="tag B" href="department">Department</a>
-            <a class="tag C focus">Postion</a>
+            <a class="tag C" href="position">Postion</a>
             <a class="tag D" href="leave_flow">Leave Flow</a>
-            <a class="tag E" href="expense_flow">Expense Flow</a>
+            <a class="tag E focus">Expense Flow</a>
         </div>
         <!-- Blocks -->
-        <div class="block C focus">
-            <h6>Position Management
-                <div class="function" style="padding-top:10px;">
-                    Choose Apartment: <select v-model="department_id">
-                        <option v-for="item in departments" :value="item.id" :key="item.department">
-                            {{ item.department }}
-                        </option>
-                    </select>
-                </div>
+        <div class="block E focus">
+            <h6>Expense Flow Management
+                
             </h6>
             
             <div class="box-content">
-                <div class="box-content"  v-if="!isEditing">
+                <div class="box-content">
                     <ul>
-                        <li><b>Position Name</b></li>
-                        <li><input type="text" v-model="title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%"></li>
+                        <li>
+                            <div class="function" style="float:left; margin-right:10px;">
+                                Choose Department: <select v-model="department_id">
+                                    <option v-for="item in departments" :value="item.id" :key="item.department">
+                                        {{ item.department }}
+                                    </option>
+                                </select>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="function" style="float:left; margin-right:10px;">
+                                Choose User: <select v-model="user_id">
+                                    <option v-for="item in user_list" :value="item.id" :key="item.username">
+                                        {{ item.username }}
+                                    </option>
+                                </select>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="function" style="float:left; margin-right:10px;">
+                                Choose Role: <select v-model="flow_type">
+                                    <option value="1">
+                                        Checker
+                                    </option>
+                                    <option value="2">
+                                        Approver (OP)
+                                    </option>
+                                    <option value="3">
+                                        Approver (MD)
+                                    </option>
+                                    <option value="4">
+                                        Verifier
+                                    </option>
+
+                                </select>
+                            </div>
+                        </li>
+
                     </ul>
-                    
-                    <div style="padding-top:10px;">
-                        <div>
-                            <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
-                            <button type="button" @click="createReceiveRecord()"><p>ADD</p></button>
-                        </div>
-                    </div>
+             
+                    <ul>
+                        <li>
+                            <div style="padding-top:80px;">
+                                <div>
+                                    <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
+                                    <button type="button" @click="createReceiveRecord()"><p>ADD</p></button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="box-content" v-else>
-                    <ul>
-                        <li><b>Position Name</b></li>
-                        <li><div class="function"><input type="text" v-model="record.title" required onfocus="this.placeholder = ''"  maxlength="255" onblur="this.placeholder = ''" style="width:100%"></li>
-                    </ul>
-                    
-                    <div style="padding-top:10px;">
-                        <div>
-                            <button type="button" @click="cancelReceiveRecord($event)"><p>CANCEL</p></button>
-                            <button type="button" @click="editReceiveRecord($event)"><p>SAVE</p></button>
-                        </div>
-                    </div>
-                </div>
-
-                    
 
                 <div class="tablebox">
                     <ul class="head">
-                    <li><i class="micons">view_list</i></li>
-                        <li>Position Name</li>
-                     
+                        <li><i class="micons">view_list</i></li>
+                        <li>Department</li>
+                        <li>Name</li>
+                     	<li>Role</li>
                         
                     </ul>
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
-                        <li>{{record.title}}</li>
-                        
+                        <li>{{record.department}}</li>
+                        <li>{{record.username}}</li>
+                        <li>{{ (record.flow == 1) ? "Checker" : (record.flow == 2) ? "Approver (OP)" : (record.flow == 3) ? "Approver (MD)" : (record.flow == 4) ? "Verifier" : "" }}</li>
                         
                     </ul>
                     
                 </div>
                 <div class="btnbox">
-                    <a class="btn" @click="editRecord()">Modify</a>
                     <a class="btn" @click="deleteRecord()">Delete</a>
                 </div>
             </div>
@@ -132,5 +154,5 @@ $(function(){
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="../js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="../js/admin/position.js"></script>
+<script defer src="../js/admin/expense_flow.js"></script>
 </html>
