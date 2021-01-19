@@ -9,10 +9,9 @@ var app = new Vue({
     date_requested:'',
     request_type:'',
     project_name:'',
-    payable_to:0,
+    payable_to:1,
+    payable_other:'',
     remark:'',
-   
-    receive_records: [],
 
     petty_list: [],
 
@@ -22,9 +21,8 @@ var app = new Vue({
     list_particulars:'',
     list_price:0,
     list_qty:0,
-  
 
-    file: '',
+  
   },
 
   created () {
@@ -61,20 +59,7 @@ var app = new Vue({
   },
 
   watch: {
-    apply_end () {
 
-      //this.setPeriod();
-      this.getUserPeriod();
-    },
-
-    apply_start () {
-      //this.setPeriod();
-      this.getUserPeriod();
-    },
-
-    leave_type (){
-      this.getUserPeriod();
-    },
 
   },
 
@@ -92,6 +77,7 @@ var app = new Vue({
       }
       return true;
     },
+
 
     check_input:function(){
       if(this.list_payee.trim() == '')
@@ -182,11 +168,11 @@ var app = new Vue({
 
 
     validateForm() {
-      if (this.period  <= 0) 
+      if (this.date_requested == '') 
       {
         Swal.fire({
-          text: 'Choose apply date',
-          icon: 'error',
+          text: 'Choose request date',
+          icon: 'warning',
           confirmButtonText: 'OK'
         })
             //this.err_msg = 'Choose Punch Type';
@@ -194,11 +180,11 @@ var app = new Vue({
             return false;
           } 
 
-          if (this.leave_type == "") 
+          if (this.request_type == "") 
           {
             Swal.fire({
-              text: 'Choose leave type',
-              icon: 'error',
+              text: 'Choose request type',
+              icon: 'warning',
               confirmButtonText: 'OK'
             })
             //this.err_msg = 'Choose Punch location';
@@ -206,11 +192,11 @@ var app = new Vue({
             return false;
           } 
 
-          if (this.reason == "") 
+          if (this.project_name == "") 
           {
             Swal.fire({
-              text: 'Please Input reason',
-              icon: 'error',
+              text: 'Please Input project name (reason)',
+              icon: 'warning',
               confirmButtonText: 'OK'
             })
             //this.err_msg = 'Choose Punch location';
@@ -218,12 +204,47 @@ var app = new Vue({
             return false;
           } 
 
-
-          if (this.showExtra && !this.$refs.file.files[0])
+          if (this.payable_to == 0) 
           {
             Swal.fire({
-              text: 'Sick leave Certificate of Diagnosis required',
-              icon: 'error',
+              text: 'Please select payable to',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+            //this.err_msg = 'Choose Punch location';
+            //$(window).scrollTop(0);
+            return false;
+          } 
+
+          if (this.payable_to == 2 && this.payable_other == "") 
+          {
+            Swal.fire({
+              text: 'Please specific other payable',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+            //this.err_msg = 'Choose Punch location';
+            //$(window).scrollTop(0);
+            return false;
+          } 
+
+          if (!this.$refs.file.files[0])
+          {
+            Swal.fire({
+              text: 'File Attachment required',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+            //this.err_msg = 'Location Photo required';
+            //$(window).scrollTop(0);
+            return false;
+          }
+
+          if (!this.sum_amonut > 0)
+          {
+            Swal.fire({
+              text: 'Petty list required',
+              icon: 'warning',
               confirmButtonText: 'OK'
             })
             //this.err_msg = 'Location Photo required';
@@ -242,66 +263,33 @@ var app = new Vue({
 
           this.submit = true;
 
-
-          var timeStart = '';
-          var amStart = 'A';
-          var timeEnd = '';
-          var amEnd = 'P';
-
-          this.apply_start = this.normalize(this.apply_start);
-          this.apply_end = this.normalize(this.apply_end);
-
-
-          if(this.is_manager)
-          {
-            var timeStart = this.apply_start.slice(0, 10);
-
-            var amStart = this.IsAm(this.apply_start, true);
-
-            var timeEnd = this.apply_end.slice(0, 10);
-
-            var amEnd = this.IsAm(this.apply_end, false);
-
-          }
-          else
-          {
-            var timeStart = this.apply_start.slice(0, 10);
-            var timeEnd = this.apply_end.slice(0, 10);
-          }
-
           var token = localStorage.getItem('token');
           var form_Data = new FormData();
           let _this = this;
 
-          var sdate = this.sliceDate(this.apply_start).replace(/-/g,"");
-          var stime = this.sliceTime(this.apply_start);
-
-          var edate = this.sliceDate(this.apply_end).replace(/-/g,"");
-          var etime = this.sliceTime(this.apply_end)
 
           form_Data.append('jwt', token);
-          form_Data.append('leave_type', this.leave_type);
-          form_Data.append('start_date', sdate);
-          form_Data.append('start_time', stime);
-          form_Data.append('end_date', edate);
-          form_Data.append('end_time', etime);
-          form_Data.append('file', this.file);
-          form_Data.append('leave', this.period);
-          form_Data.append('reason', this.reason);
+          form_Data.append('request_no', this.request_no);
+          form_Data.append('date_requested', this.date_requested);
+          form_Data.append('request_type', this.request_type);
+          form_Data.append('project_name', this.project_name);
+          form_Data.append('payable_to', this.payable_to);
+          form_Data.append('payable_other', this.payable_other);
+          form_Data.append('remark', this.remark);
 
-            form_Data.append('is_manager', this.is_manager);
-            form_Data.append('timeStart', timeStart);
-            form_Data.append('amStart', amStart);
-            form_Data.append('timeEnd', timeEnd);
-            form_Data.append('amEnd', amEnd);
-
-
+          for( var i = 0; i < this.$refs.file.files.length; i++ ){
+            let file = this.$refs.file.files[i];
+            form_Data.append('files[' + i + ']', file);
+          }
+          
+          form_Data.append('petty_list', JSON.stringify(this.petty_list));
+         
           axios({
             method: 'post',
             headers: {
               'Content-Type': 'multipart/form-data'
             },
-            url: 'api/apply_for_leave',
+            url: 'api/apply_for_petty',
             data: form_Data
           })
           .then(function(response) {
@@ -341,7 +329,10 @@ var app = new Vue({
     this.date_requested='';
     this.request_type='';
     this.project_name='';
-    this.payable_to=0;
+    this.payable_to=1;
+    this.$refs.payable_other.style.display = 'none';
+    this.payable_other='';
+
     this.remark='';
 
     this.submit = false;

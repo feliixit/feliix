@@ -214,20 +214,20 @@
                                                                 placeholder="Auto Calculation"></li>
 
                         <li><b>Attachments</b></li>
-                        <li><input type="file" multiple style="width:100%"></li>
+                        <li><input type="file" ref="file" name="file[]" multiple style="width:100%" ></li>
 
                         <li><b>Payable to</b></li>
                         <li>
-                            <select onchange="action_forOther(this);" style="width:100%">
-                                <option value="0">Requestor</option>
-                                <option value="1">Other</option>
+                            <select onchange="action_forOther(this);" style="width:100%" v-model="payable_to">
+                                <option value="1">Requestor</option>
+                                <option value="2">Other</option>
                             </select>
 
-                            <input type="text" id="specific_payableto" style="display: none; width:100%; margin-top: 5px;" placeholder="Please Specify ...">
+                            <input type="text" id="specific_payableto" ref="payable_other" v-model="payable_other" style="display: none; width:100%; margin-top: 5px;" placeholder="Please Specify ...">
                         </li>
 
                         <li><b>Remarks or Payment Instructions</b></li>
-                        <li><textarea style="width:100%"></textarea></li>
+                        <li><textarea style="width:100%" v-model="remark" ></textarea></li>
 
                     </ul>
 
@@ -315,7 +315,7 @@
 
     function action_forOther(selector){
 
-        if(selector.value == 0){
+        if(selector.value == 1){
             document.getElementById("specific_payableto").style.display = "none";
         }else{
             document.getElementById("specific_payableto").value = "";

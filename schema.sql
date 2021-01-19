@@ -1059,6 +1059,7 @@ CREATE TABLE IF NOT EXISTS `apply_for_petty` (
   `request_type` varchar(10) COLLATE utf8mb4_unicode_ci default '',
   `project_name` varchar(512) COLLATE utf8mb4_unicode_ci default '',
   `payable_to` bigint(20) unsigned NOT NULL,
+  `payable_other` varchar(512) COLLATE utf8mb4_unicode_ci default '',
   `remark` varchar(512) COLLATE utf8mb4_unicode_ci default '',
   `approval_id` bigint(20) unsigned default 0,
   `approval_at` timestamp NULL DEFAULT NULL,
@@ -1069,7 +1070,7 @@ CREATE TABLE IF NOT EXISTS `apply_for_petty` (
   `re_reject_reason` varchar(1024) COLLATE utf8mb4_unicode_ci default '',
   `re_reject_at` timestamp NULL DEFAULT NULL,
 
-  `created_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
@@ -1087,7 +1088,6 @@ CREATE TABLE IF NOT EXISTS `petty_list` (
 
   `status` int(11) DEFAULT 0,
 
-  `create_id` int(11) DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_id` int(11) DEFAULT 0,
   `updated_at` timestamp NULL,
