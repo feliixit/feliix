@@ -1029,3 +1029,67 @@ ALTER TABLE project_main  DROP COLUMN client_name;
 
 ALTER TABLE project_main
 ADD COLUMN `contractor` varchar(512) DEFAULT '' AFTER client;
+
+-- 20210112 add void id for apply_for_leave
+ALTER TABLE apply_for_leave
+ADD COLUMN `void_id`  int(11) DEFAULT 0 after re_reject_at;
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `void_at`   timestamp NULL DEFAULT NULL after void_id;
+
+-- 20210118 expense_flow
+CREATE TABLE IF NOT EXISTS `expense_flow` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) unsigned NOT NULL,
+  `apartment_id` bigint(20) unsigned NOT NULL,
+  `flow` bigint(20) default 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `status` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+
+CREATE TABLE IF NOT EXISTS `apply_for_petty` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) unsigned NOT NULL,
+  `request_no` varchar(10) COLLATE utf8mb4_unicode_ci default '',
+  `date_requested` varchar(20) COLLATE utf8mb4_unicode_ci default '',
+  `request_type` varchar(10) COLLATE utf8mb4_unicode_ci default '',
+  `project_name` varchar(512) COLLATE utf8mb4_unicode_ci default '',
+  `payable_to` bigint(20) unsigned NOT NULL,
+  `remark` varchar(512) COLLATE utf8mb4_unicode_ci default '',
+  `approval_id` bigint(20) unsigned default 0,
+  `approval_at` timestamp NULL DEFAULT NULL,
+  `reject_reason` varchar(1024) COLLATE utf8mb4_unicode_ci default '',
+  `reject_at` timestamp NULL DEFAULT NULL,
+  `re_approval_id` bigint(20) unsigned default 0,
+  `re_approval_at` timestamp NULL DEFAULT NULL,
+  `re_reject_reason` varchar(1024) COLLATE utf8mb4_unicode_ci default '',
+  `re_reject_at` timestamp NULL DEFAULT NULL,
+
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `status` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+CREATE TABLE IF NOT EXISTS `petty_list` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `petty_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `sn` int(11) DEFAULT 0,
+  `payee` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `particulars` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `price` decimal(10, 2) default 0.0,
+  `qty` int(11) DEFAULT 0,
+
+  `status` int(11) DEFAULT 0,
+
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
