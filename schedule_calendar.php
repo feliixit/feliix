@@ -282,7 +282,11 @@
 
                     <div class="col-10">
 
-                        <input type="checkbox" class="form-control" id="sc_time" checked> all-day
+                        <div class="custom-control custom-checkbox" style="display:inline-block;">
+                            <input type="checkbox" class="custom-control-input" id="sc_time" checked>
+                            <label class="custom-control-label" for="sc_time"> all-day</label>
+                        </div>
+
                         <input type="time" class="form-control" style="width:30%; margin-left:5%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime" disabled> to <input type="time" class="form-control" style="width:30%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime" disabled>
 
                     </div>
@@ -336,15 +340,40 @@
 
                     <div class="col-10">
 
+                        <div class="custom-control custom-checkbox" style="display:inline-block;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="AS" id="AS">
+                            <label class="custom-control-label" for="AS">AS</label>
+                        </div>
 
-                        <input type="checkbox" name="sc_Installer_needed" value="AS"> AS
-                        <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="RM"> RM
-                        <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="RS"> RS
-                        <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="CJ"> CJ
-                        <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="JO"> JO
-                        <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="EO"> EO
-                        <input type="checkbox" name="sc_Installer_needed" style="margin-left:1%;" value="JM"> JM
+                        <div class="custom-control custom-checkbox" style="display:inline-block; margin-left:1%;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="RM" id="RM">
+                            <label class="custom-control-label" for="RM">RM</label>
+                        </div>
 
+                        <div class="custom-control custom-checkbox" style="display:inline-block; margin-left:1%;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="RS" id="RS">
+                            <label class="custom-control-label" for="RS">RS</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block; margin-left:1%;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="CJ" id="CJ">
+                            <label class="custom-control-label" for="CJ">CJ</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block; margin-left:1%;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="JO" id="JO">
+                            <label class="custom-control-label" for="JO">JO</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block; margin-left:1%;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="EO" id="EO">
+                            <label class="custom-control-label" for="EO">EO</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block; margin-left:1%;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="JM" id="JM">
+                            <label class="custom-control-label" for="JM">JM</label>
+                        </div>
 
                     </div>
 
@@ -491,9 +520,16 @@
 
                     <div class="col-10">
 
+                        <div class="custom-control custom-radio" style="display: inline-block;">
+                            <input type="radio" id="photoshoot_yes" name="sc_Photoshoot_request" value="Yes" class="custom-control-input">
+                            <label class="custom-control-label" for="photoshoot_yes">Yes</label>
+                        </div>
 
-                        <input type="radio" name="sc_Photoshoot_request" value="Yes"> Yes
-                        <input type="radio" name="sc_Photoshoot_request" style="margin-left:1%;" value="No"> No
+                        <div class="custom-control custom-radio" style="display: inline-block; margin-left:1%;">
+                            <input type="radio" id="photoshoot_no" name="sc_Photoshoot_request" value="No" class="custom-control-input">
+                            <label class="custom-control-label" for="photoshoot_no">No</label>
+                        </div>
+
                     </div>
 
                 </div>
