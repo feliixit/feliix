@@ -398,8 +398,10 @@
                     console.log(details);
                     console.log(response);
                     console.log(response.data[0]);
-				    _this.deleteDetail(_this.id);
-                    _this.addDetails(_this.id,details,main.Date);
+
+                    _this.updateDetail(_this.id,details,main.Date);
+				    //_this.deleteDetail(_this.id);
+                    //_this.addDetails(_this.id,details,main.Date);
                     //handle success
                     
             })
@@ -407,8 +409,36 @@
                     //handle error
 				  console.log(response);
             });
-		},
-		updateDetail: function(){},
+        },
+        
+        updateDetail: function(mainId,addDetails,date){
+			this.action = 7;//delete
+			var token = localStorage.getItem('token');
+			var form_Data = new FormData();
+			let _this = this;
+	
+			form_Data.append('jwt', token);
+			form_Data.append('main_id', mainId);
+			form_Data.append('action', _this.action);
+			form_Data.append('deleted_by',_this.name);
+			axios({
+				method: 'post',
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+				url: 'api/work_calender_detail',
+				data: form_Data
+			})
+				.then(function (response) {
+                    //handle success
+                    _this.addDetails(mainId,addDetails,date);
+				})
+				.catch(function (response) {
+                //handle error
+                });
+        },
+
+		// updateDetail: function(){},
 		deleteMain: function(id){
 		  this.action = 7;//delete
 		  var token = localStorage.getItem('token');
