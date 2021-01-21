@@ -68,8 +68,12 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $appoint_time = '';
     $end_time = '';
 
+    $onrecord = 0;
+
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
 {
+    $onrecord = $onrecord + 1;
+
     $weekday = $row['weekday'];
     $start_time = $row['start_time'];
     $title = $row['title'];
@@ -95,6 +99,50 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $end_time = $row['end_time'];
 
     break;
+}
+
+if($onrecord == 0)
+{
+    $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
+        project_in_charge, installer_needed, things_to_bring, installer_needed_location, things_to_bring_location, 
+        products_to_bring, service, driver, 
+		back_up_driver, photoshoot_request, notes, '' location, '' agenda, '' appoint_time, 
+		'' end_time, products_to_bring_files
+		from work_calendar_main main 
+		where main.id = " . $id . " " ;
+
+        $stmt = $db->prepare( $sql );
+        $stmt->execute();
+
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+    {
+        $weekday = $row['weekday'];
+        $start_time = $row['start_time'];
+        $title = $row['title'];
+        $sales_executive = $row['sales_executive'];
+        $project_in_charge = $row['project_in_charge'];
+        $installer_needed = $row['installer_needed'];
+        $things_to_bring = $row['things_to_bring'];
+        $installer_needed_location = $row['installer_needed_location'];
+        $things_to_bring_location = $row['things_to_bring_location'];
+        $products_to_bring = $row['products_to_bring'];
+        $service = $row['service'];
+        $driver = $row['driver'];
+        $back_up_driver = $row['back_up_driver'];
+        $photoshoot_request = $row['photoshoot_request'];
+        $notes = $row['notes'];
+
+        $products_to_bring_files = $row['products_to_bring_files'];
+
+
+        $location = $row['location'];
+        $agenda = $row['agenda'];
+        $appoint_time = $row['appoint_time'];
+        $end_time = $row['end_time'];
+
+        break;
+    }
 }
 
 // Creating the new document...
