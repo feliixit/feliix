@@ -219,6 +219,28 @@ var app = new Vue({
                   return;
                 }
 
+                if(this.receive_records[i].approval === 'V')
+                {
+                  Swal.fire({
+                    text: 'Void data cannot be withdrawn!',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                  });
+
+                  return;
+                }
+
+                if(this.receive_records[i].approval === 'W')
+                {
+                  Swal.fire({
+                    text: 'Withdraw data cannot be withdrawn again!',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                  });
+
+                  return;
+                }
+
                 if(this.receive_records[i].approval === 'A' && this.receive_records[i].leave_type === 'D')
                 {
                   Swal.fire({

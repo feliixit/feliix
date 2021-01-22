@@ -116,7 +116,8 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A">Attendance</a>
-            <a class="tag B focus">Leaves</a>
+            <a class="tag B focus">Leave Review</a>
+            <a class="tag D">Leave Void</a>
             <a class="tag C" href="downpayment_proof">Project</a>
         </div>
         <!-- Blocks -->
@@ -187,6 +188,71 @@ $(function(){
                     <ul v-if="record.pic_url != ''">
                         <li class="head">Certificate of Diagnosis</li>
                         <li><i class="fas fa-image"  @click="showPic(record.pic_url)"></i></li>
+                    </ul>
+                </div>
+                
+            </div>
+            
+        </div>
+
+        <div class="block D">
+            <h6>Leave Applications</h6>
+            <div class="box-content">
+             
+                <div class="tablebox">
+                    <ul class="head">
+                        <li><i class="micons">view_list</i></li>
+                        <li>Application Time</li>
+                        <li>Applicant</li>
+                        <li>Type</li>
+                        <li>Leave Time</li>
+                    </ul>
+                    <ul v-for='(record, index) in approvedRecord' :key="index">
+                        <li>
+                            <input type="checkbox" name="record_id" class="alone blue" :value="record.index" :true-value="1" v-model:checked="record.is_checked">
+                        </li>
+                       
+                        <li>{{ record.created_at }}</li>
+                        <li>{{ record.username }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
+                    </ul>
+                </div>
+
+                <div class="btnbox">
+                    <a class="btn" @click="void_detail">Detail</a>
+                    
+                    <a class="btn" @click="void_click" :disabled="submit">Void</a>
+                </div>
+
+                <div class="tablebox" v-if="view_void_detail">
+                    <ul class="head">
+                        <li class="head">Leave Type</li>
+                        <li>{{ (void_record.leave_type == 'A') ? "Vacation Leave" : ((void_record.leave_type == 'B') ? "Emerency/Sick Leave" : ((void_record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
+                    </ul>
+                    <ul>
+                        <li class="head">Application Time</li>
+                        <li>{{ void_record.created_at.replace(/-/g,"/").substring(0, 16) }}</li>
+                    </ul>
+                    <ul>
+                        <li class="head">Start Time</li>
+                        <li>{{ void_record.start_date.substring(0, 4) }}/{{ void_record.start_date.substring(4, 6) }}/{{ void_record.start_date.substring(6, 8) }} {{ void_record.start_time }} </li>
+                    </ul>
+                    <ul>
+                        <li class="head">End Time</li>
+                        <li>{{ void_record.end_date.substring(0, 4) }}/{{ void_record.end_date.substring(4, 6) }}/{{ void_record.end_date.substring(6, 8) }} {{ void_record.end_time }}</li>
+                    </ul>
+                    <ul>
+                        <li class="head">Leave Length</li>
+                        <li>{{ void_record.le }} Days</li>
+                    </ul>
+                    <ul>
+                        <li class="head">Reason</li>
+                        <li>{{ void_record.reason }}</li>
+                    </ul>
+                    <ul v-if="record.pic_url != ''">
+                        <li class="head">Certificate of Diagnosis</li>
+                        <li><i class="fas fa-image"  @click="showPic(void_record.pic_url)"></i></li>
                     </ul>
                 </div>
                 

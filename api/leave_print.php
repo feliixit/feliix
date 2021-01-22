@@ -56,7 +56,9 @@ if($jwt){
             $merged_results = array();
 
             $sql = "SELECT ap.uid, u.username, leave_type,  
-                    CASE when ap.STATUS = -1 then 'W'
+                    CASE
+                        when ap.STATUS = -3 then 'V' 
+                        when ap.STATUS = -1 then 'W'
                         when leave_type = 'D' then 'D' 
                         WHEN reject_id + re_reject_id > 0 THEN 'R' 
                         WHEN approval_id * re_approval_id > 0 THEN 'A'  
@@ -254,6 +256,8 @@ function getLeaveStatus($type){
         $leave_type = "Archived";
     if($type =="W")
         $leave_type = "Withdrawn";
+    if($type =="V")
+        $leave_type = "Void";
     
     return $leave_type;
 }

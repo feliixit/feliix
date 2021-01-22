@@ -127,7 +127,8 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A">Attendance</a>
-            <a class="tag B" href="ammend">Leaves</a>
+            <a class="tag B" href="ammend">Leave Review</a>
+            <a class="tag D" href="ammend">Leave Void</a>
             <a class="tag C focus">Project</a>
         </div>
         <!-- Blocks -->
