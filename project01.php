@@ -228,6 +228,12 @@ $(function(){
                             {{ item.stage }}
                         </option>
                     </select>
+                    <select name="" id="" v-model="fil_creator">
+                        <option value="">Project Creator</option>
+                        <option v-for="item in creators" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
                 </div>
                 <!-- 分頁 -->
                 <div class="pagenation">

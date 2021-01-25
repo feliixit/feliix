@@ -47,6 +47,7 @@ $fct = (isset($_GET['fct']) ?  $_GET['fct'] : '');
 $fp = (isset($_GET['fp']) ?  $_GET['fp'] : '');
 $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
 $fcs = (isset($_GET['fcs']) ?  $_GET['fcs'] : '');
+$fpt = (isset($_GET['fpt']) ?  $_GET['fpt'] : '');
 
 $page = (isset($_GET['page']) ?  $_GET['page'] : "");
 $size = (isset($_GET['size']) ?  $_GET['size'] : "");
@@ -80,6 +81,11 @@ if($fs != "")
     $query = $query . " and pm.project_status_id = '" . $fs . "' ";
 }
 
+if($fpt != "")
+{
+    $query = $query . " and user.username = '" . $fpt . "' ";
+}
+
 $query = $query . " order by pm.created_at desc ";
 
 if($fcs != "")
@@ -104,6 +110,11 @@ if($fcs != "")
     if($fs != "")
     {
         $query = $query . " and pm.project_status_id = '" . $fs . "' ";
+    }
+
+    if($fpt != "")
+    {
+        $query = $query . " and user.username = '" . $fpt . "' ";
     }
 
     if($fcs == 'Empty')
