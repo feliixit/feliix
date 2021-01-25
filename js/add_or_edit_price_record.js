@@ -26,7 +26,7 @@ var app = new Vue({
 
     is_locked: false,
     is_enabled: true,
-    is_marked:false,
+    is_marked:0,
     action:0,
     items:[],
     payees:[],
@@ -81,7 +81,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: 0,
       },
     split2: {
         account:0,
@@ -100,7 +100,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: 0,
       },
     split3: {
         account:0,
@@ -119,7 +119,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: 0,
       },
     split4: {
         account:0,
@@ -138,7 +138,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: 0,
       },
     split5: {
         account:0,
@@ -157,7 +157,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: 0,
       },
       inventory: [
           {name: '10', id: 10},
@@ -540,11 +540,13 @@ var app = new Vue({
                   _this.remarks = response.data[0].remarks;
                   _this.is_locked = response.data[0].is_locked;
                   _this.is_enabled = response.data[0].is_enabled;
-                  if(response.data[0].is_marked == 0){
-                    _this.is_marked = false;
-                  }else{
-                      _this.is_marked = true;
-                  }
+
+                  _this.is_marked = response.data[0].is_marked;
+                  //if(response.data[0].is_marked == 0){
+                  //  _this.is_marked = false;
+                  //}else{
+                  //    _this.is_marked = true;
+                  //}
                   console.log(response.data[0]);
               })
               .catch(function(response) {
@@ -939,7 +941,7 @@ var app = new Vue({
       
       this.split1.is_locked= false;
       this.split1.is_enabled= true;
-      this.split1.is_marked= false;
+      this.split1.is_marked= 0;
       
       this.split2.account=0;
       this.split2.category= '';
@@ -957,7 +959,7 @@ var app = new Vue({
                 
       this.split2.is_locked= false;
       this.split2.is_enabled= true;
-      this.split2.is_marked= false;
+      this.split2.is_marked= 0;
       
       this.split3.account=0;
       this.split3.category= '';
@@ -975,7 +977,7 @@ var app = new Vue({
                 
       this.split3.is_locked= false;
       this.split3.is_enabled= true;
-      this.split3.is_marked= false;
+      this.split3.is_marked= 0;
       
       this.split4.account=0;
       this.split4.category= '';
@@ -993,7 +995,7 @@ var app = new Vue({
                 
       this.split4.is_locked= false;
       this.split4.is_enabled= true;
-      this.split4.is_marked= false;
+      this.split4.is_marked= 0;
       
       this.split5.account=0;
       this.split5.category= '';
@@ -1011,7 +1013,7 @@ var app = new Vue({
                 
       this.split5.is_locked= false;
       this.split5.is_enabled= true;
-      this.split5.is_marked= false;
+      this.split5.is_marked= 0;
       this.$refs.file0.value='';
       this.$refs.file1.value='';
       this.$refs.file2.value='';

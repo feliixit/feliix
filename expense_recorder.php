@@ -82,10 +82,42 @@ try {
         .red{
             color: #ff0000;
         }
+
+        .orange{
+            color: #ffa500;
+        }
+
+        .green{
+            color: #008000;
+        }
+
+        .blue{
+            color: #0000ff;
+        }
         .hide{
             display:none;
         }
 
+    </style>
+
+    <style>
+        div.record_color {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        div.record_color > label {
+            width: 18px;
+            height: 18px;
+            margin-bottom: 0;
+            margin-left: 3px;
+        }
+
+        div.record_color > input:not(:first-child) {
+            margin-left: 15px;
+        }
+        
     </style>
 
 
@@ -332,10 +364,27 @@ try {
                         
                         <tr>
                             <td>
-
+                                <label>Record Color</label>
                             </td>
 
-                            <td style="text-align: left;"><input type="checkbox" style="margin-right:0.5vw; " v-model="is_marked">Mark this record with special font color
+                            <td style="text-align: left;">
+                                <div class="record_color">
+                                    <input type="radio" name="record_color" id="record_color_black" value="0" v-model="is_marked" checked>
+                                    <label for="record_color_black" style="background-color: black;"></label>
+
+                                    <input type="radio" name="record_color" id="record_color_red" value="1" v-model="is_marked">
+                                    <label for="record_color_red" style="background-color: red;"></label>
+
+                                    <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="is_marked">
+                                    <label for="record_color_orange" style="background-color: orange;"></label>
+
+                                    <input type="radio" name="record_color" id="record_color_green" value="3" v-model="is_marked">
+                                    <label for="record_color_green" style="background-color: green;"></label>
+
+                                    <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="is_marked">
+                                    <label for="record_color_blue" style="background-color: blue;"></label>
+
+                                </div>
                             </td>
 
                         </tr>
@@ -480,7 +529,7 @@ try {
             </thead>
 
             <tbody >
-             <tr v-for='item in items' v-if="item.account == 1" :class="[item.is_marked == '1' ? 'red' : '']">
+             <tr v-for='item in items' v-if="item.account == 1" :class="[(item.is_marked == '1' ? 'red' : ''), (item.is_marked == '2' ? 'orange' : ''), (item.is_marked == '3' ? 'green' : ''), (item.is_marked == '4' ? 'blue' : '')]">
                 <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
                 <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
@@ -592,7 +641,7 @@ try {
             </thead>
 
             <tbody >
-            <tr v-for='item in items' v-if="item.account == 3" :class="[item.is_marked == '1' ? 'red' : '']">
+            <tr v-for='item in items' v-if="item.account == 3" :class="[(item.is_marked == '1' ? 'red' : ''), (item.is_marked == '2' ? 'orange' : ''), (item.is_marked == '3' ? 'green' : ''), (item.is_marked == '4' ? 'blue' : '')]">
                 <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
                 <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
@@ -704,7 +753,7 @@ try {
             </thead>
 
             <tbody >
-            <tr v-for='item in items' v-if="item.account == 2" :class="[item.is_marked == '1' ? 'red' : '']">
+            <tr v-for='item in items' v-if="item.account == 2" :class="[(item.is_marked == '1' ? 'red' : ''), (item.is_marked == '2' ? 'orange' : ''), (item.is_marked == '3' ? 'green' : ''), (item.is_marked == '4' ? 'blue' : '')]">
                 <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
                 <td>{{item.category}}</td>
@@ -1087,11 +1136,27 @@ try {
 
                     <tr>
                         <td>
-
+                            <label>Record Color</label>
                         </td>
 
-                        <td style="text-align: left;"><input type="checkbox" style="margin-right:0.5vw; " v-model="split1.is_marked">Mark with
-                            Special Font Color
+                        <td style="text-align: left;">
+                            <div class="record_color">
+                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split1.is_marked" checked>
+                                <label for="record_color_black" style="background-color: black;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split1.is_marked">
+                                <label for="record_color_red" style="background-color: red;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split1.is_marked">
+                                <label for="record_color_orange" style="background-color: orange;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split1.is_marked">
+                                <label for="record_color_green" style="background-color: green;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split1.is_marked">
+                                <label for="record_color_blue" style="background-color: blue;"></label>
+
+                            </div>
                         </td>
 
                     </tr>
@@ -1221,13 +1286,29 @@ try {
                         </tr>
 
                         <tr>
-                            <td>
+                        <td>
+                            <label>Record Color</label>
+                        </td>
 
-                            </td>
+                        <td style="text-align: left;">
+                            <div class="record_color">
+                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split2.is_marked" checked>
+                                <label for="record_color_black" style="background-color: black;"></label>
 
-                            <td style="text-align: left;"><input type="checkbox" style="margin-right:0.5vw; " v-model="split2.is_marked">Mark with
-                                Special Font Color
-                            </td>
+                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split2.is_marked">
+                                <label for="record_color_red" style="background-color: red;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split2.is_marked">
+                                <label for="record_color_orange" style="background-color: orange;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split2.is_marked">
+                                <label for="record_color_green" style="background-color: green;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split2.is_marked">
+                                <label for="record_color_blue" style="background-color: blue;"></label>
+
+                            </div>
+                        </td>
 
                         </tr>
 
@@ -1356,13 +1437,29 @@ try {
                         </tr>
 
                         <tr>
-                            <td>
+                        <td>
+                            <label>Record Color</label>
+                        </td>
 
-                            </td>
+                        <td style="text-align: left;">
+                            <div class="record_color">
+                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split3.is_marked" checked>
+                                <label for="record_color_black" style="background-color: black;"></label>
 
-                            <td style="text-align: left;"><input type="checkbox" style="margin-right:0.5vw; " v-model="split3.is_marked">Mark with
-                                Special Font Color
-                            </td>
+                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split3.is_marked">
+                                <label for="record_color_red" style="background-color: red;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split3.is_marked">
+                                <label for="record_color_orange" style="background-color: orange;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split3.is_marked">
+                                <label for="record_color_green" style="background-color: green;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split3.is_marked">
+                                <label for="record_color_blue" style="background-color: blue;"></label>
+
+                            </div>
+                        </td>
 
                         </tr>
 
@@ -1491,13 +1588,29 @@ try {
                         </tr>
 
                         <tr>
-                            <td>
+                        <td>
+                            <label>Record Color</label>
+                        </td>
 
-                            </td>
+                        <td style="text-align: left;">
+                            <div class="record_color">
+                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split4.is_marked" checked>
+                                <label for="record_color_black" style="background-color: black;"></label>
 
-                            <td style="text-align: left;"><input type="checkbox" style="margin-right:0.5vw; " v-model="split4.is_marked">Mark with
-                                Special Font Color
-                            </td>
+                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split4.is_marked">
+                                <label for="record_color_red" style="background-color: red;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split4.is_marked">
+                                <label for="record_color_orange" style="background-color: orange;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split4.is_marked">
+                                <label for="record_color_green" style="background-color: green;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split4.is_marked">
+                                <label for="record_color_blue" style="background-color: blue;"></label>
+
+                            </div>
+                        </td>
 
                         </tr>
 
@@ -1626,13 +1739,29 @@ try {
                         </tr>
 
                         <tr>
-                            <td>
+                        <td>
+                            <label>Record Color</label>
+                        </td>
 
-                            </td>
+                        <td style="text-align: left;">
+                            <div class="record_color">
+                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split5.is_marked" checked>
+                                <label for="record_color_black" style="background-color: black;"></label>
 
-                            <td style="text-align: left;"><input type="checkbox" style="margin-right:0.5vw; " v-model="split5.is_marked">Mark with
-                                Special Font Color
-                            </td>
+                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split5.is_marked">
+                                <label for="record_color_red" style="background-color: red;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split5.is_marked">
+                                <label for="record_color_orange" style="background-color: orange;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split5.is_marked">
+                                <label for="record_color_green" style="background-color: green;"></label>
+
+                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split5.is_marked">
+                                <label for="record_color_blue" style="background-color: blue;"></label>
+
+                            </div>
+                        </td>
 
                         </tr>
 
