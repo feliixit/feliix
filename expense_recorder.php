@@ -88,7 +88,7 @@ try {
         }
 
         .green{
-            color: #008000;
+            color: #00B000;
         }
 
         .blue{
@@ -369,7 +369,7 @@ try {
 
                             <td style="text-align: left;">
                                 <div class="record_color">
-                                    <input type="radio" name="record_color" id="record_color_black" value="0" v-model="is_marked" checked>
+                                    <input type="radio" name="record_color" id="record_color_black" value="x" v-model="is_marked" checked="checked">
                                     <label for="record_color_black" style="background-color: black;"></label>
 
                                     <input type="radio" name="record_color" id="record_color_red" value="1" v-model="is_marked">
@@ -1141,20 +1141,20 @@ try {
 
                         <td style="text-align: left;">
                             <div class="record_color">
-                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split1.is_marked" checked>
-                                <label for="record_color_black" style="background-color: black;"></label>
+                                <input type="radio" name="record_color1" id="record_color_black1" value="x" v-model="split1.is_marked" checked="checked">
+                                <label for="record_color_black1" style="background-color: black;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split1.is_marked">
-                                <label for="record_color_red" style="background-color: red;"></label>
+                                <input type="radio" name="record_color1" id="record_color_red1" value="1" v-model="split1.is_marked">
+                                <label for="record_color_red1" style="background-color: red;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split1.is_marked">
-                                <label for="record_color_orange" style="background-color: orange;"></label>
+                                <input type="radio" name="record_color1" id="record_color_orange1" value="2" v-model="split1.is_marked">
+                                <label for="record_color_orange1" style="background-color: orange;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split1.is_marked">
-                                <label for="record_color_green" style="background-color: green;"></label>
+                                <input type="radio" name="record_color1" id="record_color_green1" value="3" v-model="split1.is_marked">
+                                <label for="record_color_green1" style="background-color: green;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split1.is_marked">
-                                <label for="record_color_blue" style="background-color: blue;"></label>
+                                <input type="radio" name="record_color1" id="record_color_blue1" value="4" v-model="split1.is_marked">
+                                <label for="record_color_blue1" style="background-color: blue;"></label>
 
                             </div>
                         </td>
@@ -1292,20 +1292,20 @@ try {
 
                         <td style="text-align: left;">
                             <div class="record_color">
-                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split2.is_marked" checked>
-                                <label for="record_color_black" style="background-color: black;"></label>
+                                <input type="radio" name="record_color2" id="record_color_black2" value="x" v-model="split2.is_marked" checked="checked">
+                                <label for="record_color_black2" style="background-color: black;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split2.is_marked">
-                                <label for="record_color_red" style="background-color: red;"></label>
+                                <input type="radio" name="record_color2" id="record_color_red2" value="1" v-model="split2.is_marked">
+                                <label for="record_color_red2" style="background-color: red;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split2.is_marked">
-                                <label for="record_color_orange" style="background-color: orange;"></label>
+                                <input type="radio" name="record_color2" id="record_color_orange2" value="2" v-model="split2.is_marked">
+                                <label for="record_color_orange2" style="background-color: orange;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split2.is_marked">
-                                <label for="record_color_green" style="background-color: green;"></label>
+                                <input type="radio" name="record_color2" id="record_color_green2" value="3" v-model="split2.is_marked">
+                                <label for="record_color_green2" style="background-color: green;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split2.is_marked">
-                                <label for="record_color_blue" style="background-color: blue;"></label>
+                                <input type="radio" name="record_color2" id="record_color_blue2" value="4" v-model="split2.is_marked">
+                                <label for="record_color_blue2" style="background-color: blue;"></label>
 
                             </div>
                         </td>
@@ -1443,20 +1443,20 @@ try {
 
                         <td style="text-align: left;">
                             <div class="record_color">
-                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split3.is_marked" checked>
-                                <label for="record_color_black" style="background-color: black;"></label>
+                                <input type="radio" name="record_color3" id="record_color_black3" value="x" v-model="split3.is_marked" checked="checked">
+                                <label for="record_color_black3" style="background-color: black;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split3.is_marked">
-                                <label for="record_color_red" style="background-color: red;"></label>
+                                <input type="radio" name="record_color3" id="record_color_red3" value="1" v-model="split3.is_marked">
+                                <label for="record_color_red3" style="background-color: red;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split3.is_marked">
-                                <label for="record_color_orange" style="background-color: orange;"></label>
+                                <input type="radio" name="record_color3" id="record_color_orange3" value="2" v-model="split3.is_marked">
+                                <label for="record_color_orange3" style="background-color: orange;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split3.is_marked">
-                                <label for="record_color_green" style="background-color: green;"></label>
+                                <input type="radio" name="record_color3" id="record_color_green3" value="3" v-model="split3.is_marked">
+                                <label for="record_color_green3" style="background-color: green;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split3.is_marked">
-                                <label for="record_color_blue" style="background-color: blue;"></label>
+                                <input type="radio" name="record_color3" id="record_color_blue3" value="4" v-model="split3.is_marked">
+                                <label for="record_color_blue3" style="background-color: blue;"></label>
 
                             </div>
                         </td>
@@ -1594,20 +1594,20 @@ try {
 
                         <td style="text-align: left;">
                             <div class="record_color">
-                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split4.is_marked" checked>
-                                <label for="record_color_black" style="background-color: black;"></label>
+                                <input type="radio" name="record_color4" id="record_color_black4" value="x" v-model="split4.is_marked" checked="checked">
+                                <label for="record_color_black4" style="background-color: black;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split4.is_marked">
-                                <label for="record_color_red" style="background-color: red;"></label>
+                                <input type="radio" name="record_color4" id="record_color_red4" value="1" v-model="split4.is_marked">
+                                <label for="record_color_red4" style="background-color: red;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split4.is_marked">
-                                <label for="record_color_orange" style="background-color: orange;"></label>
+                                <input type="radio" name="record_color4" id="record_color_orange4" value="2" v-model="split4.is_marked">
+                                <label for="record_color_orange4" style="background-color: orange;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split4.is_marked">
-                                <label for="record_color_green" style="background-color: green;"></label>
+                                <input type="radio" name="record_color4" id="record_color_green4" value="3" v-model="split4.is_marked">
+                                <label for="record_color_green4" style="background-color: green;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split4.is_marked">
-                                <label for="record_color_blue" style="background-color: blue;"></label>
+                                <input type="radio" name="record_color4" id="record_color_blue4" value="4" v-model="split4.is_marked">
+                                <label for="record_color_blue4" style="background-color: blue;"></label>
 
                             </div>
                         </td>
@@ -1745,20 +1745,20 @@ try {
 
                         <td style="text-align: left;">
                             <div class="record_color">
-                                <input type="radio" name="record_color" id="record_color_black" value="0" v-model="split5.is_marked" checked>
-                                <label for="record_color_black" style="background-color: black;"></label>
+                                <input type="radio" name="record_color5" id="record_color_black5" value="x" v-model="split5.is_marked" checked="checked">
+                                <label for="record_color_black5" style="background-color: black;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_red" value="1" v-model="split5.is_marked">
-                                <label for="record_color_red" style="background-color: red;"></label>
+                                <input type="radio" name="record_color5" id="record_color_red5" value="1" v-model="split5.is_marked">
+                                <label for="record_color_red5" style="background-color: red;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_orange" value="2" v-model="split5.is_marked">
-                                <label for="record_color_orange" style="background-color: orange;"></label>
+                                <input type="radio" name="record_color5" id="record_color_orange5" value="2" v-model="split5.is_marked">
+                                <label for="record_color_orange5" style="background-color: orange;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_green" value="3" v-model="split5.is_marked">
-                                <label for="record_color_green" style="background-color: green;"></label>
+                                <input type="radio" name="record_color5" id="record_color_green5" value="3" v-model="split5.is_marked">
+                                <label for="record_color_green5" style="background-color: green;"></label>
 
-                                <input type="radio" name="record_color" id="record_color_blue" value="4" v-model="split5.is_marked">
-                                <label for="record_color_blue" style="background-color: blue;"></label>
+                                <input type="radio" name="record_color5" id="record_color_blue5" value="4" v-model="split5.is_marked">
+                                <label for="record_color_blue5" style="background-color: blue;"></label>
 
                             </div>
                         </td>
