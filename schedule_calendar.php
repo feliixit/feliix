@@ -20,10 +20,13 @@ $test_manager = "0";
 try {
         // decode jwt
         try {
+            $user_id = "";
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
 
+            if(!is_numeric($user_id))
+                header( 'location:index' );
 
         }
         catch (Exception $e){

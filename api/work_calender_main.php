@@ -342,7 +342,7 @@ else
                     $workCalenderDetails->sort = $detail_array[$i]['sort'];
                     $workCalenderDetails->is_enabled = 1;
                     $workCalenderDetails->created_by = $created_by;
-                    $arr = $workCalenderDetails->create();
+                    $workCalenderDetails->create();
         
                     //echo json_encode(array("message" => " Add success at " . date("Y-m-d") . " " . date("h:i:sa")));
         
