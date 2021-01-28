@@ -130,7 +130,7 @@ $(function(){
             </div>
             
         </div>
-        <div class="block B focus">
+        <div class="block B">
             <h6>Leave Applications</h6>
             <div class="box-content">
              
@@ -195,7 +195,7 @@ $(function(){
             
         </div>
 
-        <div class="block D">
+        <div class="block D focus">
             <h6>Leave Applications</h6>
             <div class="box-content">
              
