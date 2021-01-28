@@ -40,6 +40,12 @@ $is_enabled = (isset($_POST['is_enabled']) && $_POST['is_enabled'] === "true"? 1
 $created_by = (isset($_POST['created_by']) ?  $_POST['created_by'] : '');
 $updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
 $deleted_by = (isset($_POST['deleted_by']) ?  $_POST['deleted_by'] : '');
+
+$detail_list = (isset($_POST['detail_list']) ?  $_POST['detail_list'] : '');
+$detail_array = json_decode(stripslashes($detail_list),true);
+
+$today = (isset($_POST['today']) ?  $_POST['today'] : '');
+
 $merged_results = array();
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -47,12 +53,16 @@ include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 
+require_once '../vendor/autoload.php';
 include_once 'config/database.php';
 include_once 'objects/work_calender.php';
 include_once 'config/conf.php';
 
+use Google\Cloud\Storage\StorageClient;
+
 $database = new Database();
 $db = $database->getConnection();
+$conf = new Conf();
 
 $workCalenderMain = new WorkCalenderMain($db);
 $workCalenderDetails = new WorkCalenderDetails($db);
@@ -283,6 +293,131 @@ else
             http_response_code(401);
 
             echo json_encode(array("message" => "Access denied."));
+        }
+    }else if($action == 22) {
+        //add
+        try {
+            // decode jwt
+            //$key = 'myKey';
+            //$decoded = JWT::decode($jwt, $key, array('HS256'));
+
+            $workCalenderMain->title = $title;
+			$workCalenderMain->all_day = $all_day;
+            $workCalenderMain->start_time = $start_time;
+            $workCalenderMain->end_time = $end_time;
+            $workCalenderMain->color = $color;
+            $workCalenderMain->text_color = $text_color;
+            $workCalenderMain->project = $project;
+            $workCalenderMain->sales_executive = $sales_executive;
+            $workCalenderMain->project_in_charge = $project_in_charge;
+            $workCalenderMain->installer_needed = $installer_needed;
+            $workCalenderMain->installer_needed_location = $installer_needed_location;
+            $workCalenderMain->things_to_bring = $things_to_bring;
+            $workCalenderMain->things_to_bring_location = $things_to_bring_location;
+            
+            $workCalenderMain->products_to_bring = $products_to_bring;
+            $workCalenderMain->products_to_bring_files = $products_to_bring_files;
+            $workCalenderMain->service = $service;
+            $workCalenderMain->driver = $driver;
+            $workCalenderMain->back_up_driver = $back_up_driver;
+            $workCalenderMain->photoshoot_request = $photoshoot_request;
+            $workCalenderMain->notes = $notes;
+            $workCalenderMain->is_enabled = $is_enabled;
+            $workCalenderMain->created_by = $created_by;
+            $arr = $workCalenderMain->create();
+
+            // detail
+            for($i=0 ; $i < count($detail_array) ; $i++)
+            {
+                try {
+                    // decode jwt
+                    //$key = 'myKey';
+                    //$decoded = JWT::decode($jwt, $key, array('HS256'));
+        
+                    $workCalenderDetails->main_id = $arr;
+                    $workCalenderDetails->location = $detail_array[$i]['location'];
+                    $workCalenderDetails->agenda = $detail_array[$i]['agenda'];
+                    $workCalenderDetails->appoint_time = $detail_array[$i]['appointtime'];
+                    $workCalenderDetails->end_time = $detail_array[$i]['endtime'];
+                    $workCalenderDetails->sort = $detail_array[$i]['sort'];
+                    $workCalenderDetails->is_enabled = 1;
+                    $workCalenderDetails->created_by = $created_by;
+                    $arr = $workCalenderDetails->create();
+        
+                    //echo json_encode(array("message" => " Add success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        
+                } // if decode fails, it means jwt is invalid
+                catch (Exception $e) {
+                    $workCalenderMain->id = $arr;
+                    $workCalenderMain->deleted_by = 'system';
+                    $workCalenderMain->delete();
+
+                    http_response_code(401);
+        
+                    echo json_encode(array("message" => "Detail insertion error"));
+        
+                }
+            }
+
+            $total = 0;
+            if(isset($_FILES['files']))
+                $total = count($_FILES['files']['name']);
+            // Loop through each file
+            for( $i=0 ; $i < $total ; $i++ ) {
+
+                if(isset($_FILES['files']['name'][$i]))
+                {
+                    $image_name = $_FILES['files']['name'][$i];
+                    $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
+                    $extension = pathinfo($image_name, PATHINFO_EXTENSION);
+                    if(in_array(strtolower($extension), $valid_extensions))
+                    {
+                        //$upload_path = 'img/' . time() . '.' . $extension;
+
+                        $storage = new StorageClient([
+                            'projectId' => 'predictive-fx-284008',
+                            'keyFilePath' => $conf::$gcp_key
+                        ]);
+
+                        $bucket = $storage->bucket('calendarfile');
+
+                        $upload_name = pathinfo($today.'_'.$image_name, PATHINFO_FILENAME) . '.' . $extension;
+
+                        if($bucket->upload(
+                        fopen($_FILES['files']['tmp_name'][$i], 'r'),
+                        ['name' => $upload_name]
+                        ))
+                        {
+                            $message = 'Uploaded';
+                            $code = 0;
+                            $image = $image_name;
+                        }
+                        else
+                        {
+                            http_response_code(401);
+
+                            echo json_encode(array("message" => "Access denied."));
+                        }
+                    }
+                    else
+                    {
+                        $message = 'Only Images or Office files allowed to upload';
+                    }
+                }
+
+            }
+
+            http_response_code(200);
+            echo json_encode(array($arr));
+            //echo json_encode(array("message" => " Add success at " . date("Y-m-d") . " " . date("h:i:sa")));
+
+        } // if decode fails, it means jwt is invalid
+        catch (Exception $e) {
+
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Access denied."));
+
         }
     }
 }

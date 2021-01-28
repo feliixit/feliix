@@ -16,6 +16,130 @@
       this.getUserName();
   },
      methods:{
+
+        addMain2:function(details,main,du, calendar){
+
+            if(!main.Allday) {
+                if ((main.Starttime != "") && (main.Endtime != "") && (main.Endtime >= main.Starttime)) {
+                    //good to go
+                    console.log('go');
+                }
+                else
+                {
+                    Swal.fire({
+                        text: JSON.stringify("End-time has to behide start-time!"),
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    })
+                    return;
+                }
+            }
+
+
+            this.action = 22;//add
+            var token = localStorage.getItem('token');
+            var form_Data = new FormData();
+            let _this = this;
+            form_Data.append('jwt', token);
+            form_Data.append('title', main.Title);
+            form_Data.append('all_day', main.Allday);
+            form_Data.append('start_time', main.Starttime);
+            form_Data.append('end_time', main.Endtime);
+            form_Data.append('color', main.Color);
+            form_Data.append('text_color', 'white');
+            form_Data.append('project', main.Project);
+            form_Data.append('sales_executive', main.Sales_Executive);
+            form_Data.append('project_in_charge', main.Project_in_charge);
+            form_Data.append('installer_needed', main.Installer_needed);
+            form_Data.append('installer_needed_location', main.Location_Products_to_Bring);
+            form_Data.append('things_to_bring', main.Things_to_Bring);
+            form_Data.append('things_to_bring_location', main.Location_Things_to_Bring);
+            form_Data.append('products_to_bring', main.Products_to_Bring);
+            if(du != 2){
+                form_Data.append('products_to_bring_files', _this.filename);
+            }
+            else
+            {
+                form_Data.append('products_to_bring_files', main.File_name);
+            }
+            form_Data.append('service', main.Service);
+            form_Data.append('driver', main.Driver);
+            form_Data.append('back_up_driver', main.Back_up_Driver);
+            form_Data.append('photoshoot_request', main.Photoshoot_Request);
+            form_Data.append('notes', main.Notes);
+            form_Data.append('is_enabled', main.is_enabled);
+            form_Data.append('action', this.action);
+            form_Data.append('created_by', this.name);
+            form_Data.append('today', this.file_day);
+
+            // make it in one process
+            form_Data.append('detail_list', JSON.stringify(details));
+
+            for( var i = 0; i < this.fileArray.length; i++ ){
+                let file = this.fileArray[i];
+                form_Data.append('files[' + i + ']', file);
+                }
+
+            axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                url: 'api/work_calender_main',
+                data: form_Data
+            })
+                .then(function(response) {
+
+                if(isNaN(response.data))
+                {
+                    Swal.fire({
+                        text: JSON.stringify("Calendar schedule insert fail"),
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    })
+                    return;
+                }
+
+                //handle success
+                if(main.Allday)
+                {
+                    calendar.addEvent({
+                        title: main.Title,
+                        start: main.Date,
+                        allDay: main.Allday,
+                        description: main,
+                        borderColor: main.Color,
+                        backgroundColor: main.Color,
+        
+                    });
+                }else{
+                    if ((main.Starttime != "") && (main.Endtime != "") && (main.Endtime >= main.Starttime)) {
+
+                        calendar.addEvent({
+                            title: main.Title,
+                            start: main.Date + "T" + main.Starttime,
+                            end: main.Date + "T" + main.Endtime,
+                            allDay: main.Allday,
+                            description: main,
+                            borderColor: main.Color,
+                            backgroundColor: main.Color,
+        
+                        });
+                    }
+                }
+
+                reload();
+
+            })
+            .catch(function(error) {
+                //handle error
+                Swal.fire({
+                    text: JSON.stringify(error),
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+            });
+        },
          
         addMain:function(details,main,du){
           this.action = 2;//add
@@ -328,7 +452,7 @@
 
             axios({
                     method: 'get',
-                    url: 'schedule_data_word?id=' + this.id,
+                    url: 'schedule_data_word?id=' + app.id,
                     data: form_Data,
                     responseType: 'blob', // important
                 })
@@ -791,6 +915,7 @@
             document.getElementById("btn_unlock").style.visibility="hidden";
         }
     };
+
 	function onChangeFileUpload(e) {
 		
 		app.filename = [];
@@ -866,36 +991,13 @@
 
         if(sc_content.Allday) {
 
-            calendar.addEvent({
-                title: sc_content.Title,
-                start: sc_content.Date,
-                allDay: sc_content.Allday,
-                description: sc_content,
-                borderColor: sc_content.Color,
-                backgroundColor: sc_content.Color,
-
-            });
+            
             sc_content.Starttime = document.getElementById("sc_date").value +' 00:00:00';
             sc_content.Endtime = document.getElementById("sc_date").value +' 23:59:59';
             
-        } else {
+        } 
 
-            if ((sc_content.Starttime != "") && (sc_content.Endtime != "") && (sc_content.Endtime >= sc_content.Starttime)) {
-
-                calendar.addEvent({
-
-                    title: sc_content.Title,
-                    start: sc_content.Date + "T" + sc_content.Starttime,
-                    end: sc_content.Date + "T" + sc_content.Endtime,
-                    allDay: sc_content.Allday,
-                    description: sc_content,
-                    borderColor: sc_content.Color,
-                    backgroundColor: sc_content.Color,
-
-                });
-            }
-        }
-        app.addMain(agenda_content,sc_content,1);
+        app.addMain2(agenda_content,sc_content,1, calendar);
 
         $('#exampleModalScrollable').modal('toggle');
 		
@@ -1065,37 +1167,19 @@
 		console.log(sc_content);
         if(sc_content.Allday) {
 
-            calendar.addEvent({
-                title: sc_content.Title,
-                start: sc_content.Date,
-                allDay: sc_content.Allday,
-                description: sc_content,
-                borderColor: sc_content.Color,
-                backgroundColor: sc_content.Color,
-
-            });
+            
 			sc_content.Starttime = sc_content.Date +' 00:00:00';
             sc_content.Endtime = sc_content.Date +' 23:59:59';
         } else {
 
             if ((sc_content.Starttime != "") && (sc_content.Endtime != "") && (sc_content.Endtime >= sc_content.Starttime)) {
 
-                calendar.addEvent({
-
-                    title: sc_content.Title,
-                    start: sc_content.Date + "T" + sc_content.Starttime,
-                    end: sc_content.Date + "T" + sc_content.Endtime,
-                    allDay: sc_content.Allday,
-                    description: sc_content,
-                    borderColor: sc_content.Color,
-                    backgroundColor: sc_content.Color,
-
-                });
+            
 				sc_content.Starttime = sc_content.Date +' '+ sc_content.Starttime;
 				sc_content.Endtime = sc_content.Date +' '+ sc_content.Endtime;
             }
         }
-		app.addMain(sc_content.Agenda,sc_content,2);
+		app.addMain2(sc_content.Agenda,sc_content,2, calendar);
 
         $('#exampleModalScrollable').modal('toggle');
 
