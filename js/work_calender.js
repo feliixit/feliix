@@ -94,6 +94,8 @@ var app = new Vue({
                     if (!valid && !valids) {
                         details[i].appointtime = main.Date + " " + details[i].appointtime;
                     }
+                }else{
+                    details[i].appointtime = "";
                 }
 
                 if (details[i].endtime != "" && details[i].endtime != "Invalid date") {
@@ -110,6 +112,8 @@ var app = new Vue({
                     if (!valide && !valides) {
                         details[i].endtime = main.Date + " " + details[i].endtime;
                     }
+                }else{
+                    details[i].endtime = "";
                 }
             }
 
