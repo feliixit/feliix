@@ -300,6 +300,12 @@ else
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
+            $database = new Database();
+            $db = $database->getConnection();
+            $db->beginTransaction();
+
+            $workCalenderMain = new WorkCalenderMain($db);
+            $workCalenderDetails = new WorkCalenderDetails($db);
 
             $workCalenderMain->title = $title;
 			$workCalenderMain->all_day = $all_day;
@@ -348,13 +354,11 @@ else
         
                 } // if decode fails, it means jwt is invalid
                 catch (Exception $e) {
-                    $workCalenderMain->id = $arr;
-                    $workCalenderMain->deleted_by = 'system';
-                    $workCalenderMain->delete();
+                    $db->rollback();
 
-                    http_response_code(401);
+                    http_response_code(501);
         
-                    echo json_encode(array("message" => "Detail insertion error"));
+                    echo json_encode(array("Detail insertion error"));
         
                 }
             }
@@ -394,9 +398,10 @@ else
                         }
                         else
                         {
-                            http_response_code(401);
+                            $db->rollback();
+                            http_response_code(501);
 
-                            echo json_encode(array("message" => "Access denied."));
+                            echo json_encode(array("error upload"));
                         }
                     }
                     else
@@ -407,6 +412,7 @@ else
 
             }
 
+            $db->commit();
             http_response_code(200);
             echo json_encode(array($arr));
             //echo json_encode(array("message" => " Add success at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -414,9 +420,10 @@ else
         } // if decode fails, it means jwt is invalid
         catch (Exception $e) {
 
-            http_response_code(401);
+            $db->rollback();
+            http_response_code(501);
 
-            echo json_encode(array("message" => "Access denied."));
+            echo json_encode(array("error"));
 
         }
     }
