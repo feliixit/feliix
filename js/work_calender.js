@@ -133,9 +133,21 @@ var app = new Vue({
                     data: form_Data,
                 })
                 .then(function (response) {
+                    if (response.data === "") 
+                    {
+                        Swal.fire({
+                            // text: JSON.stringify("Files size over 200MB, Please don't upload file too many at one time."),
+                            text: JSON.stringify(response.data),
+                            icon: "warning",
+                            confirmButtonText: "OK",
+                        });
+                        return;
+                    }
+
                     if (isNaN(response.data)) {
                         Swal.fire({
-                            text: JSON.stringify("Calendar schedule insert fail"),
+                            // text: JSON.stringify("Calendar schedule insert fail"),
+                            text: JSON.stringify(response.data),
                             icon: "warning",
                             confirmButtonText: "OK",
                         });

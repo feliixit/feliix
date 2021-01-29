@@ -359,57 +359,76 @@ else
                     http_response_code(501);
         
                     echo json_encode(array("Detail insertion error"));
+
+                    die();
         
                 }
             }
 
-            $total = 0;
-            if(isset($_FILES['files']))
-                $total = count($_FILES['files']['name']);
-            // Loop through each file
-            for( $i=0 ; $i < $total ; $i++ ) {
+            try{
+                $total = 0;
+                if(isset($_FILES['files']))
+                    $total = count($_FILES['files']['name']);
+                // Loop through each file
+                for( $i=0 ; $i < $total ; $i++ ) {
 
-                if(isset($_FILES['files']['name'][$i]))
-                {
-                    $image_name = $_FILES['files']['name'][$i];
-                    $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
-                    $extension = pathinfo($image_name, PATHINFO_EXTENSION);
-                    if(in_array(strtolower($extension), $valid_extensions))
+                    if(isset($_FILES['files']['name'][$i]))
                     {
-                        //$upload_path = 'img/' . time() . '.' . $extension;
-
-                        $storage = new StorageClient([
-                            'projectId' => 'predictive-fx-284008',
-                            'keyFilePath' => $conf::$gcp_key
-                        ]);
-
-                        $bucket = $storage->bucket('calendarfile');
-
-                        $upload_name = pathinfo($today.'_'.$image_name, PATHINFO_FILENAME) . '.' . $extension;
-
-                        if($bucket->upload(
-                        fopen($_FILES['files']['tmp_name'][$i], 'r'),
-                        ['name' => $upload_name]
-                        ))
+                        $image_name = $_FILES['files']['name'][$i];
+                        $valid_extensions = array("jpg","jpeg","png","gif","pdf","docx","doc","xls","xlsx","ppt","pptx","zip","rar","7z","txt","dwg","skp","psd","evo");
+                        $extension = pathinfo($image_name, PATHINFO_EXTENSION);
+                        if(in_array(strtolower($extension), $valid_extensions))
                         {
-                            $message = 'Uploaded';
-                            $code = 0;
-                            $image = $image_name;
+                            //$upload_path = 'img/' . time() . '.' . $extension;
+
+                            $storage = new StorageClient([
+                                'projectId' => 'predictive-fx-284008',
+                                'keyFilePath' => $conf::$gcp_key
+                            ]);
+
+                            $bucket = $storage->bucket('calendarfile');
+
+                            $upload_name = pathinfo($today.'_'.$image_name, PATHINFO_FILENAME) . '.' . $extension;
+
+                            if($bucket->upload(
+                            fopen($_FILES['files']['tmp_name'][$i], 'r'),
+                            ['name' => $upload_name]
+                            ))
+                            {
+                                $message = 'Uploaded';
+                                $code = 0;
+                                $image = $image_name;
+                            }
+                            else
+                            {
+                                $db->rollback();
+                                http_response_code(501);
+
+                                die();
+
+                                echo json_encode(array("error upload"));
+                            }
                         }
                         else
                         {
+                            $message = 'Only Images or Office files allowed to upload';
                             $db->rollback();
-                            http_response_code(501);
+                                http_response_code(501);
 
-                            echo json_encode(array("error upload"));
+                                die();
+
+                                echo json_encode(array($message));
                         }
-                    }
-                    else
-                    {
-                        $message = 'Only Images or Office files allowed to upload';
                     }
                 }
 
+                }catch (Exception $e) {
+                    $db->rollback();
+                    http_response_code(501);
+
+                    die();
+
+                    echo json_encode(array("error upload"));
             }
 
             $db->commit();
@@ -424,6 +443,8 @@ else
             http_response_code(501);
 
             echo json_encode(array("error"));
+
+            die();
 
         }
     }
