@@ -378,7 +378,7 @@ if (!isset($jwt)) {
                             $upload_name = pathinfo($today . '_' . $image_name, PATHINFO_FILENAME) . '.' . $extension;
 
                             if ($bucket->upload(
-                                fopen($_FILES['files']['tmp_name'][$i], 'r'),
+                                fopen($_FILES['files']['name'][$i], 'r'),
                                 ['name' => $upload_name]
                             )) {
                                 $message = 'Uploaded';
