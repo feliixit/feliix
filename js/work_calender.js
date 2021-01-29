@@ -192,7 +192,7 @@ var app = new Vue({
                 .catch(function (error) {
                     //handle error
                     Swal.fire({
-                        text: JSON.stringify(error),
+                        text: error.data,
                         icon: "warning",
                         confirmButtonText: "OK",
                     });
