@@ -187,6 +187,10 @@ var app = new Vue({
 
                     document.getElementById("fileload").value = "";
 
+                    $("#exampleModalScrollable").modal("toggle");
+
+                    resetSchedule();
+
                     reload();
                 })
                 .catch(function (error) {
@@ -1116,9 +1120,6 @@ $("button[id='btn_add']").click(function () {
 
     app.addMain2(agenda_content, sc_content, 1, calendar);
 
-    $("#exampleModalScrollable").modal("toggle");
-
-    resetSchedule();
 });
 
 $("button[id='btn_close']").click(function () {
