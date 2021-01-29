@@ -392,11 +392,11 @@ else
 
                             $upload_name = pathinfo($today.'_'.$image_name, PATHINFO_FILENAME) . '.' . $extension;
 
-                            if(!isset($_FILES['files']['tmp_name'][$i]))
+                            if(!file_exists($_FILES['files']['tmp_name'][$i]))
                             {
                                 $db->rollback();
                                 http_response_code(501);
-                                echo json_encode(array("error upload"));
+                                echo json_encode(array("Error upload, please use laptop to upload again."));
                                 die();
                             }
 
