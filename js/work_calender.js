@@ -627,6 +627,10 @@ var app = new Vue({
                     //_this.deleteDetail(_this.id);
                     //_this.addDetails(_this.id,details,main.Date);
                     //handle success
+                    app.filename = [];
+                    app.fileArray = [];
+
+                    document.getElementById("fileload").value = "";
                 })
                 .catch(function (response) {
                     //handle error
