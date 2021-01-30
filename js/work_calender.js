@@ -586,6 +586,179 @@ var app = new Vue({
                 });
         },
 
+        updateMain2: function (details, sc_content, files, time) {
+            this.action = 33; //update
+            var token = localStorage.getItem("token");
+            var form_Data = new FormData();
+            let _this = this;
+            form_Data.append("jwt", token);
+            form_Data.append("id", _this.id);
+            form_Data.append("title", sc_content.Title);
+            form_Data.append("all_day", sc_content.Allday);
+            form_Data.append("start_time", sc_content.Starttime);
+            form_Data.append("end_time", sc_content.Endtime);
+            form_Data.append("color", sc_content.Color);
+            form_Data.append("text_color", "white");
+            form_Data.append("project", sc_content.Project);
+            form_Data.append("sales_executive", sc_content.Sales_Executive);
+            form_Data.append("project_in_charge", sc_content.Project_in_charge);
+            form_Data.append("installer_needed", sc_content.Installer_needed);
+            form_Data.append(
+                "installer_needed_location",
+                sc_content.Location_Products_to_Bring
+            );
+            form_Data.append("things_to_bring", sc_content.Things_to_Bring);
+            form_Data.append(
+                "things_to_bring_location",
+                sc_content.Location_Things_to_Bring
+            );
+            form_Data.append("products_to_bring", sc_content.Products_to_Bring);
+            if (_this.filename != "") {
+                form_Data.append("products_to_bring_files", _this.filename);
+            } else {
+                form_Data.append("products_to_bring_files", sc_content.File_name);
+            }
+            form_Data.append("service", sc_content.Service);
+            form_Data.append("driver", sc_content.Driver);
+            form_Data.append("back_up_driver", sc_content.Back_up_Driver);
+            form_Data.append("photoshoot_request", sc_content.Photoshoot_Request);
+            form_Data.append("notes", sc_content.Notes);
+            form_Data.append("is_enabled", sc_content.is_enabled);
+            form_Data.append("action", this.action);
+            form_Data.append("updated_by", _this.name);
+
+            form_Data.append("detail_list", JSON.stringify(details));
+
+            for (var i = 0; i < this.fileArray.length; i++) {
+                let file = this.fileArray[i];
+                form_Data.append("files[" + i + "]", file);
+            }
+
+            axios({
+                    method: "post",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    url: "api/work_calender_main",
+                    data: form_Data,
+                })
+                .then(function (response) {
+                    console.log(details);
+                    console.log(response);
+                    console.log(response.data[0]);
+
+                    //_this.updateDetail(_this.id, details, sc_content.Date);
+                    //_this.deleteDetail(_this.id);
+                    //_this.addDetails(_this.id,details,main.Date);
+                    //handle success
+
+                    // update ui
+                    document.getElementById("sc_product_files").innerHTML = files;
+                    document.getElementById("sc_editor").value = app.name + " at " + time;
+                    document.getElementById("last_editor").style.display = "block";
+                    
+                    if (sc_content.Allday) {
+                        eventObj.setStart(sc_content.Date + "T00:00");
+                        eventObj.setEnd(sc_content.Date + "T00:00");
+                        eventObj.setAllDay(sc_content.Allday);
+                        eventObj.setProp("title", sc_content.Title);
+                        eventObj.setProp("borderColor", sc_content.Color);
+                        eventObj.setProp("backgroundColor", sc_content.Color);
+                        eventObj.setExtendedProp("description", sc_content);
+                
+                    } else {
+                        if (
+                            sc_content.Starttime != "" &&
+                            sc_content.Endtime != "" &&
+                            sc_content.Endtime >= sc_content.Starttime
+                        ) {
+                            eventObj.setAllDay(sc_content.Allday);
+                            eventObj.setStart(sc_content.Date + "T" + sc_content.Starttime);
+                            eventObj.setEnd(sc_content.Date + "T" + sc_content.Endtime);
+                            eventObj.setProp("title", sc_content.Title);
+                            eventObj.setProp("borderColor", sc_content.Color);
+                            eventObj.setProp("backgroundColor", sc_content.Color);
+                            eventObj.setExtendedProp("description", sc_content);
+                        } else {
+                            sc_content.Allday = eventObj.extendedProps.description.Allday;
+                            sc_content.Starttime = eventObj.extendedProps.description.Starttime;
+                            sc_content.Endtime = eventObj.extendedProps.description.Endtime;
+                
+                            if (eventObj.extendedProps.description.Allday) {
+                                eventObj.setStart(sc_content.Date + "T00:00");
+                                eventObj.setEnd(sc_content.Date + "T00:00");
+                                eventObj.setAllDay(eventObj.extendedProps.description.Allday);
+                                eventObj.setProp("title", sc_content.Title);
+                                eventObj.setProp("borderColor", sc_content.Color);
+                                eventObj.setProp("backgroundColor", sc_content.Color);
+                                eventObj.setExtendedProp("description", sc_content);
+                            } else {
+                                eventObj.setAllDay(eventObj.extendedProps.description.Allday);
+                                eventObj.setStart(
+                                    sc_content.Date + "T" + eventObj.extendedProps.description.Starttime
+                                );
+                                eventObj.setEnd(
+                                    sc_content.Date + "T" + eventObj.extendedProps.description.Endtime
+                                );
+                                eventObj.setProp("title", sc_content.Title);
+                                eventObj.setProp("borderColor", sc_content.Color);
+                                eventObj.setProp("backgroundColor", sc_content.Color);
+                                eventObj.setExtendedProp("description", sc_content);
+                            }
+                
+                            document.getElementById("sc_time").checked =
+                                eventObj.extendedProps.description.Allday;
+                            document.getElementById("sc_stime").value =
+                                eventObj.extendedProps.description.Starttime;
+                            document.getElementById("sc_etime").value =
+                                eventObj.extendedProps.description.Endtime;
+                        }
+                    }
+
+                    // reset ui
+                    document.getElementById("sc_tb_location").value = "";
+                    document.getElementById("sc_tb_agenda").value = "";
+                    document.getElementById("sc_tb_appointtime").value = "";
+                    document.getElementById("sc_tb_endtime").value = "";
+
+                    Change_Schedule_State(true, eventObj.extendedProps.description.Allday);
+                    icon_function_enable = false;
+
+                    document.getElementById("upload_input").style.display = "none";
+                    document.getElementById("btn_reset").style.display = "none";
+                    document.getElementById("btn_add").style.display = "none";
+                    document.getElementById("btn_duplicate").style.display = "inline";
+                    document.getElementById("btn_export").style.display = "inline";
+                    document.getElementById("btn_edit").style.display = "inline";
+                    document.getElementById("btn_delete").style.display = "inline";
+                    document.getElementById("btn_cancel").style.display = "none";
+                    document.getElementById("btn_save").style.display = "none";
+
+                    if (document.getElementById("lock").value == "Y") {
+                        document.getElementById("btn_lock").style.display = "none";
+                        document.getElementById("btn_unlock").style.display = "inline";
+                    } else {
+                        document.getElementById("btn_lock").style.display = "inline";
+                        document.getElementById("btn_unlock").style.display = "none";
+                    }
+
+                    app.filename = [];
+                    app.fileArray = [];
+
+                    document.getElementById("fileload").value = "";
+
+                    reload();
+                })
+                .catch(function (error) {
+                    //handle error
+                    Swal.fire({
+                        text: error.data,
+                        icon: "warning",
+                        confirmButtonText: "OK",
+                    });
+                });
+        },
+
         updateMain: function (details, main) {
             this.action = 3; //update
             var token = localStorage.getItem("token");
@@ -1471,9 +1644,7 @@ $(document).on("click", "#btn_save", function () {
         ":" +
         time.getSeconds();
 
-    document.getElementById("sc_product_files").innerHTML = files;
-    document.getElementById("sc_editor").value = app.name + " at " + time;
-    document.getElementById("last_editor").style.display = "block";
+    
 
     var agenda_object = document
         .getElementById("agenda_table")
@@ -1541,15 +1712,7 @@ $(document).on("click", "#btn_save", function () {
     };
 
     if (sc_content.Allday) {
-        eventObj.setStart(sc_content.Date + "T00:00");
-        eventObj.setEnd(sc_content.Date + "T00:00");
-        eventObj.setAllDay(sc_content.Allday);
-        eventObj.setProp("title", sc_content.Title);
-        eventObj.setProp("borderColor", sc_content.Color);
-        eventObj.setProp("backgroundColor", sc_content.Color);
-        eventObj.setExtendedProp("description", sc_content);
-
-        sc_content.Starttime =
+         sc_content.Starttime =
             document.getElementById("sc_date").value + " 00:00:00";
         sc_content.Endtime = document.getElementById("sc_date").value + " 23:59:59";
     } else {
@@ -1558,76 +1721,20 @@ $(document).on("click", "#btn_save", function () {
             sc_content.Endtime != "" &&
             sc_content.Endtime >= sc_content.Starttime
         ) {
-            eventObj.setAllDay(sc_content.Allday);
-            eventObj.setStart(sc_content.Date + "T" + sc_content.Starttime);
-            eventObj.setEnd(sc_content.Date + "T" + sc_content.Endtime);
-            eventObj.setProp("title", sc_content.Title);
-            eventObj.setProp("borderColor", sc_content.Color);
-            eventObj.setProp("backgroundColor", sc_content.Color);
-            eventObj.setExtendedProp("description", sc_content);
+            console.log('valid1');
         } else {
             sc_content.Allday = eventObj.extendedProps.description.Allday;
             sc_content.Starttime = eventObj.extendedProps.description.Starttime;
             sc_content.Endtime = eventObj.extendedProps.description.Endtime;
 
             if (eventObj.extendedProps.description.Allday) {
-                eventObj.setStart(sc_content.Date + "T00:00");
-                eventObj.setEnd(sc_content.Date + "T00:00");
-                eventObj.setAllDay(eventObj.extendedProps.description.Allday);
-                eventObj.setProp("title", sc_content.Title);
-                eventObj.setProp("borderColor", sc_content.Color);
-                eventObj.setProp("backgroundColor", sc_content.Color);
-                eventObj.setExtendedProp("description", sc_content);
-            } else {
-                eventObj.setAllDay(eventObj.extendedProps.description.Allday);
-                eventObj.setStart(
-                    sc_content.Date + "T" + eventObj.extendedProps.description.Starttime
-                );
-                eventObj.setEnd(
-                    sc_content.Date + "T" + eventObj.extendedProps.description.Endtime
-                );
-                eventObj.setProp("title", sc_content.Title);
-                eventObj.setProp("borderColor", sc_content.Color);
-                eventObj.setProp("backgroundColor", sc_content.Color);
-                eventObj.setExtendedProp("description", sc_content);
+                } else {
+                    console.log('valid2');
             }
-
-            document.getElementById("sc_time").checked =
-                eventObj.extendedProps.description.Allday;
-            document.getElementById("sc_stime").value =
-                eventObj.extendedProps.description.Starttime;
-            document.getElementById("sc_etime").value =
-                eventObj.extendedProps.description.Endtime;
         }
     }
 
-    document.getElementById("sc_tb_location").value = "";
-    document.getElementById("sc_tb_agenda").value = "";
-    document.getElementById("sc_tb_appointtime").value = "";
-    document.getElementById("sc_tb_endtime").value = "";
-
-    Change_Schedule_State(true, eventObj.extendedProps.description.Allday);
-    icon_function_enable = false;
-
-    document.getElementById("upload_input").style.display = "none";
-    document.getElementById("btn_reset").style.display = "none";
-    document.getElementById("btn_add").style.display = "none";
-    document.getElementById("btn_duplicate").style.display = "inline";
-    document.getElementById("btn_export").style.display = "inline";
-    document.getElementById("btn_edit").style.display = "inline";
-    document.getElementById("btn_delete").style.display = "inline";
-    document.getElementById("btn_cancel").style.display = "none";
-    document.getElementById("btn_save").style.display = "none";
-
-    if (document.getElementById("lock").value == "Y") {
-        document.getElementById("btn_lock").style.display = "none";
-        document.getElementById("btn_unlock").style.display = "inline";
-    } else {
-        document.getElementById("btn_lock").style.display = "inline";
-        document.getElementById("btn_unlock").style.display = "none";
-    }
-
-    app.updateMain(agenda_content, sc_content);
+    app.updateMain2(agenda_content, sc_content, files, time);
 });
 
 $("input[id='sc_time']").change(function () {
