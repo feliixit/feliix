@@ -479,8 +479,6 @@ if (!isset($jwt)) {
                 $workCalenderDetails->deleted_by = $updated_by;
                 $arr = $workCalenderDetails->delete();
 
-                $i = 1/0;
-
             } // if decode fails, it means jwt is invalid
             catch (Exception $e) {
                 $db->rollback();
@@ -577,7 +575,7 @@ if (!isset($jwt)) {
 
             $db->commit();
             http_response_code(200);
-            echo json_encode(array("message" => " Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
+            echo json_encode(array("message" => "Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
             die();
             
         } // if decode fails, it means jwt is invalid

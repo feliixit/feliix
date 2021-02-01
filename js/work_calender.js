@@ -626,6 +626,7 @@ var app = new Vue({
             form_Data.append("is_enabled", sc_content.is_enabled);
             form_Data.append("action", this.action);
             form_Data.append("updated_by", _this.name);
+            form_Data.append("today", this.file_day);
 
             form_Data.append("detail_list", JSON.stringify(details));
 
@@ -854,6 +855,28 @@ var app = new Vue({
                 });
         },
 
+        deleteMe: function(id) {
+            let _this = this;
+
+            Swal.fire({
+                title: "Duplicate",
+                text: "Are you sure to delete?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+              }).then((result) => {
+                if (result.value) {
+                  
+                    _this.deleteMain(id); // <--- submit form programmatically
+                  
+                } else {
+                  // swal("Cancelled", "Your imaginary file is safe :)", "error");
+                }
+              });
+        },
+
         // updateDetail: function(){},
         deleteMain: function (id) {
             this.action = 7; //delete
@@ -876,6 +899,8 @@ var app = new Vue({
                 .then(function (response) {
                     //handle success
                     //_this.items = response.data
+                    eventObj.remove();
+                    $("#exampleModalScrollable").modal("toggle");
                 })
                 .catch(function (response) {
                     //handle error
@@ -1425,9 +1450,8 @@ $(document).on("click", "#btn_edit", function () {
 });
 
 $(document).on("click", "#btn_delete", function () {
-    app.deleteMain(eventObj.id);
-    eventObj.remove();
-    $("#exampleModalScrollable").modal("toggle");
+    app.deleteMe(eventObj.id);
+    
 });
 
 $(document).on("click", "#btn_duplicate", function () {
