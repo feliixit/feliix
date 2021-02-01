@@ -15,6 +15,7 @@ var app = new Vue({
     fil_priority: '',
     fil_status : '',
     fil_stage : '',
+    fil_creator : '',
 
     probability : 0,
 
@@ -26,6 +27,7 @@ var app = new Vue({
     priorities : {},
     statuses : {},
     stages : {},
+    creators : {},
 
     submit : false,
     // paging
@@ -51,6 +53,7 @@ var app = new Vue({
     this.getPrioritys();
     this.getStatuses();
     this.getStages();
+    this.getCreators();
   },
 
   computed: {
@@ -89,6 +92,9 @@ var app = new Vue({
         this.getRecords(value);
         },
     fil_stage (value) {
+        this.getRecords(value);
+        },
+    fil_creator (value) {
         this.getRecords(value);
         },
   },
@@ -132,6 +138,7 @@ var app = new Vue({
                 fp: _this.fil_priority,
                 fs: _this.fil_status,
                 fcs: _this.fil_stage,
+                fpt: _this.fil_creator,
             };
 
       
@@ -259,6 +266,27 @@ var app = new Vue({
                   
               });
       },
+
+      getCreators () {
+
+        let _this = this;
+  
+        let token = localStorage.getItem('accessToken');
+  
+        axios
+            .get('api/admin/project_creators', { headers: {"Authorization" : `Bearer ${token}`} })
+            .then(
+            (res) => {
+                _this.creators = res.data;
+            },
+            (err) => {
+                alert(err.response);
+            },
+            )
+            .finally(() => {
+                
+            });
+    },
 
     
     getLeaveCredit: function() {

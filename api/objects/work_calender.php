@@ -379,15 +379,33 @@ class WorkCalenderDetails
 		
         if($this->end_time !='')
 		{
-			$query = "INSERT INTO " . $this->table_name . "
-					(`main_id`,`location`, `agenda`, `appoint_time`, `end_time`,`sort`,`is_enabled`,`created_at`,`created_by`) 
-					VALUES (:main_id,:location, :agenda, :appoint_time, :end_time, :sort, 1, now(),:created_by)";
+            if($this->appoint_time == '')
+            {
+                $query = "INSERT INTO " . $this->table_name . "
+                        (`main_id`,`location`, `agenda`, `end_time`,`sort`,`is_enabled`,`created_at`,`created_by`) 
+                        VALUES (:main_id,:location, :agenda,  :end_time, :sort, 1, now(),:created_by)";
+            }
+            else
+            {
+                $query = "INSERT INTO " . $this->table_name . "
+                        (`main_id`,`location`, `agenda`, `appoint_time`, `end_time`,`sort`,`is_enabled`,`created_at`,`created_by`) 
+                        VALUES (:main_id,:location, :agenda, :appoint_time, :end_time, :sort, 1, now(),:created_by)";
+            }
 		}
 		else
 		{
-			$query = "INSERT INTO " . $this->table_name . "
-                (`main_id`,`location`, `agenda`, `appoint_time`,`sort`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:main_id, :location, :agenda, :appoint_time, :sort, 1, now(),:created_by)";
+            if($this->appoint_time == '')
+            {
+                $query = "INSERT INTO " . $this->table_name . "
+                    (`main_id`,`location`, `agenda`, `sort`,`is_enabled`,`created_at`,`created_by`) 
+                    VALUES (:main_id, :location, :agenda, :sort, 1, now(),:created_by)";
+            }
+            else
+            {
+                $query = "INSERT INTO " . $this->table_name . "
+                    (`main_id`,`location`, `agenda`, `appoint_time`,`sort`,`is_enabled`,`created_at`,`created_by`) 
+                    VALUES (:main_id, :location, :agenda, :appoint_time, :sort, 1, now(),:created_by)";
+            }
 		}
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -410,7 +428,12 @@ class WorkCalenderDetails
             $stmt->bindParam(':main_id', $this->main_id);
             $stmt->bindParam(':location', $this->location);
             $stmt->bindParam(':agenda', $this->agenda);
-            $stmt->bindParam(':appoint_time', $this->appoint_time);
+            
+            if($this->appoint_time !='')
+			{
+				$stmt->bindParam(':appoint_time', $this->appoint_time);
+			}
+            
 			if($this->end_time !='')
 			{
 				$stmt->bindParam(':end_time', $this->end_time);

@@ -26,7 +26,7 @@ var app = new Vue({
 
     is_locked: false,
     is_enabled: true,
-    is_marked:false,
+    is_marked:"x",
     action:0,
     items:[],
     payees:[],
@@ -81,7 +81,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: "x",
       },
     split2: {
         account:0,
@@ -100,7 +100,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: "x",
       },
     split3: {
         account:0,
@@ -119,7 +119,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: "x",
       },
     split4: {
         account:0,
@@ -138,7 +138,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: "x",
       },
     split5: {
         account:0,
@@ -157,7 +157,7 @@ var app = new Vue({
 
         is_locked: false,
         is_enabled: true,
-        is_marked: false,
+        is_marked: "x",
       },
       inventory: [
           {name: '10', id: 10},
@@ -256,7 +256,12 @@ var app = new Vue({
                   form_Data.append('remarks', this.remarks);
                   form_Data.append('is_locked', this.is_locked);
                   form_Data.append('is_enabled', this.is_enabled);
-                  form_Data.append('is_marked', this.is_marked);
+
+                  if(this.is_marked == "x")
+                    form_Data.append('is_marked', "0");
+                  else
+                    form_Data.append('is_marked', this.is_marked);
+
                   form_Data.append('action', this.action);
                   form_Data.append('created_by', this.name);
                   axios({
@@ -324,7 +329,10 @@ var app = new Vue({
                             form_Data.append('remarks', this.spa[i].remarks);
                             form_Data.append('is_locked', this.is_locked);
                             form_Data.append('is_enabled', this.is_enabled);
-                            form_Data.append('is_marked', this.spa[i].is_marked);
+                            if(this.spa[i].is_marked == "x")
+                                form_Data.append('is_marked', "0");
+                            else
+                                form_Data.append('is_marked', this.spa[i].is_marked);
                             form_Data.append('action', this.action);
                             form_Data.append('created_by', this.name);
                             axios({
@@ -397,7 +405,10 @@ var app = new Vue({
                     form_Data.append('cash_in', this.cash_in);
                     form_Data.append('cash_out', this.cash_out);
                     form_Data.append('remarks', this.remarks);
-                    form_Data.append('is_marked', this.is_marked);
+                    if(this.is_marked == "x")
+                        form_Data.append('is_marked', "0");
+                    else
+                        form_Data.append('is_marked', this.is_marked);
                     form_Data.append('action', this.action);
                     form_Data.append('updated_by', this.name);
                     axios({
@@ -540,10 +551,12 @@ var app = new Vue({
                   _this.remarks = response.data[0].remarks;
                   _this.is_locked = response.data[0].is_locked;
                   _this.is_enabled = response.data[0].is_enabled;
-                  if(response.data[0].is_marked == 0){
-                    _this.is_marked = false;
+
+                  //_this.is_marked = response.data[0].is_marked;
+                  if(response.data[0].is_marked == "0"){
+                    _this.is_marked = "x";
                   }else{
-                      _this.is_marked = true;
+                      _this.is_marked = response.data[0].is_marked;
                   }
                   console.log(response.data[0]);
               })
@@ -916,7 +929,7 @@ var app = new Vue({
 
       this.is_locked= 0;
       this.is_enabled= 1;
-      this.is_marked=0;
+      this.is_marked="x";
       this.action=0;
       this.edd = 0;
       
@@ -939,7 +952,7 @@ var app = new Vue({
       
       this.split1.is_locked= false;
       this.split1.is_enabled= true;
-      this.split1.is_marked= false;
+      this.split1.is_marked= "x";
       
       this.split2.account=0;
       this.split2.category= '';
@@ -957,7 +970,7 @@ var app = new Vue({
                 
       this.split2.is_locked= false;
       this.split2.is_enabled= true;
-      this.split2.is_marked= false;
+      this.split2.is_marked= "x";
       
       this.split3.account=0;
       this.split3.category= '';
@@ -975,7 +988,7 @@ var app = new Vue({
                 
       this.split3.is_locked= false;
       this.split3.is_enabled= true;
-      this.split3.is_marked= false;
+      this.split3.is_marked= "x";
       
       this.split4.account=0;
       this.split4.category= '';
@@ -993,7 +1006,7 @@ var app = new Vue({
                 
       this.split4.is_locked= false;
       this.split4.is_enabled= true;
-      this.split4.is_marked= false;
+      this.split4.is_marked="x";
       
       this.split5.account=0;
       this.split5.category= '';
@@ -1011,7 +1024,7 @@ var app = new Vue({
                 
       this.split5.is_locked= false;
       this.split5.is_enabled= true;
-      this.split5.is_marked= false;
+      this.split5.is_marked="x";
       this.$refs.file0.value='';
       this.$refs.file1.value='';
       this.$refs.file2.value='';

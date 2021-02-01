@@ -47,6 +47,7 @@ $fct = (isset($_GET['fct']) ?  $_GET['fct'] : '');
 $fp = (isset($_GET['fp']) ?  $_GET['fp'] : '');
 $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
 $fcs = (isset($_GET['fcs']) ?  $_GET['fcs'] : '');
+$fpt = (isset($_GET['fpt']) ?  $_GET['fpt'] : '');
 
 $page = (isset($_GET['page']) ?  $_GET['page'] : "");
 $size = (isset($_GET['size']) ?  $_GET['size'] : "");
@@ -58,7 +59,7 @@ $merged_results = array();
 
 
 
-$query = "SELECT pm.id, COALESCE(pc.category, '') category, pct.client_type, pct.class_name pct_class, pp.priority, pp.class_name pp_class, pm.project_name, COALESCE(ps.project_status, '') project_status, pm.estimate_close_prob, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage FROM project_main pm LEFT JOIN project_category pc ON pm.catagory_id = pc.id LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id LEFT JOIN project_priority pp ON pm.priority_id = pp.id LEFT JOIN project_status ps ON pm.project_status_id = ps.id LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
+$query = "SELECT pm.id, COALESCE(pc.category, '') category, pct.client_type, pct.class_name pct_class, pp.priority, pp.class_name pp_class, pm.project_name, COALESCE(ps.project_status, '') project_status, COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage FROM project_main pm LEFT JOIN project_category pc ON pm.catagory_id = pc.id LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id LEFT JOIN project_priority pp ON pm.priority_id = pp.id LEFT JOIN project_status ps ON pm.project_status_id = ps.id LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
 
 if($fpc != "")
 {
@@ -80,11 +81,16 @@ if($fs != "")
     $query = $query . " and pm.project_status_id = '" . $fs . "' ";
 }
 
+if($fpt != "")
+{
+    $query = $query . " and user.username = '" . $fpt . "' ";
+}
+
 $query = $query . " order by pm.created_at desc ";
 
 if($fcs != "")
 {
-    $query = "SELECT * FROM ( SELECT pm.id, COALESCE(pc.category, '') category, pct.client_type, pct.class_name pct_class, pp.priority, pp.class_name pp_class, pm.project_name, COALESCE(ps.project_status, '') project_status, pm.estimate_close_prob, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage FROM project_main pm LEFT JOIN project_category pc ON pm.catagory_id = pc.id LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id LEFT JOIN project_priority pp ON pm.priority_id = pp.id LEFT JOIN project_status ps ON pm.project_status_id = ps.id LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
+    $query = "SELECT * FROM ( SELECT pm.id, COALESCE(pc.category, '') category, pct.client_type, pct.class_name pct_class, pp.priority, pp.class_name pp_class, pm.project_name, COALESCE(ps.project_status, '') project_status, COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage FROM project_main pm LEFT JOIN project_category pc ON pm.catagory_id = pc.id LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id LEFT JOIN project_priority pp ON pm.priority_id = pp.id LEFT JOIN project_status ps ON pm.project_status_id = ps.id LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
 
     if($fpc != "")
     {
@@ -104,6 +110,11 @@ if($fcs != "")
     if($fs != "")
     {
         $query = $query . " and pm.project_status_id = '" . $fs . "' ";
+    }
+
+    if($fpt != "")
+    {
+        $query = $query . " and user.username = '" . $fpt . "' ";
     }
 
     if($fcs == 'Empty')

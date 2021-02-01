@@ -116,8 +116,8 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <!-- <a class="tag A">Attendance</a> -->
-            <a class="tag B focus">Leave Review</a>
-            <a class="tag D" href="leave_void">Leave Void</a>
+            <a class="tag B" href="ammend">Leave Review</a>
+            <a class="tag D focus">Leave Void</a>
             <a class="tag C" href="downpayment_proof">Project</a>
         </div>
         <!-- Blocks -->
@@ -130,7 +130,7 @@ $(function(){
             </div>
             
         </div>
-        <div class="block B focus">
+        <div class="block B">
             <h6>Leave Applications</h6>
             <div class="box-content">
              
@@ -195,7 +195,7 @@ $(function(){
             
         </div>
 
-        <div class="block D">
+        <div class="block D focus">
             <h6>Leave Applications</h6>
             <div class="box-content">
              

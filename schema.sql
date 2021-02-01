@@ -1035,6 +1035,7 @@ ALTER TABLE apply_for_leave
 ADD COLUMN `void_id`  int(11) DEFAULT 0 after re_reject_at;
 
 ALTER TABLE apply_for_leave
+<<<<<<< HEAD
 ADD COLUMN `void_at`   timestamp NULL DEFAULT NULL after void_id;
 
 -- 20210118 expense_flow
@@ -1093,3 +1094,6 @@ CREATE TABLE IF NOT EXISTS `petty_list` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+=======
+ADD COLUMN `void_at`   timestamp NULL DEFAULT NULL after void_id;
+>>>>>>> master

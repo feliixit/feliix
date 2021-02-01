@@ -25,7 +25,7 @@ else
     try {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
-
+        $user_id = $decoded->data->id;
     }
         // if decode fails, it means jwt is invalid
     catch (Exception $e){
@@ -41,20 +41,24 @@ include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$subquery = "";
+$merged_results = [];
 
-$merged_results = array();
+$id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 
-$mdate = date('Ymd', strtotime(date('Ymd'). ' + 0 days'));
-$edate = date('Ymd', strtotime(date('Ymd'). ' + 6 days'));
+$query = "
+    update apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
+    set void_id = " . $user_id . ", void_at = NOW(), a.STATUS = -3
+    WHERE a.STATUS <> -1 AND approval_id <> 0 AND reject_id = 0 AND re_approval_id <> 0 AND re_reject_id = 0 
+    AND a.id in (" . $id . ")
+";
 
-$subquery = "SELECT u.id, u.username, l.start_date, l.start_time, l.end_date, l.end_time, l.leave_type, CASE when l.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval FROM user u LEFT JOIN apply_for_leave l ON u.id = l.uid WHERE  (l.start_date between '" . $mdate . "' and '" . $edate . "' or  l.end_date between '" . $mdate . "' and '" . $edate . "' or '" . $mdate . "' between l.start_date and l.end_date) AND l.STATUS <> -1 AND l.STATUS <> -2 AND l.STATUS <> -3 ORDER BY u.username, l.start_date ";
+$stmt = $db->prepare( $query );
 
-$stmt1 = $db->prepare( $subquery );
-$stmt1->execute();
-
-while($row = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-    $merged_results[] = $row;
+if (!$stmt->execute())
+{
+    $arr = $stmt->errorInfo();
+    error_log($arr[2]);
 }
+
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
