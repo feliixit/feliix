@@ -1474,9 +1474,9 @@ $(document).on("click", "#btn_duplicate", function () {
     }
     app.addMain2(sc_content.Agenda, sc_content, 2, calendar);
 
-    $("#exampleModalScrollable").modal("toggle");
+    //$("#exampleModalScrollable").modal("toggle");
 
-    resetSchedule();
+    //resetSchedule();
 });
 
 $(document).on("click", "#btn_export", function () {
