@@ -322,7 +322,7 @@ if(trim($products_to_bring_files) != "")
 
     if ($handle = opendir($path)) {
     while (false !== ($entry = readdir($handle))) {
-        if ($entry != "." && $entry != ".." && !strstr($entry,'.zip')) {
+        if ($entry != "." && $entry != "..") {
             $r = $zip->addFile($path . $entry, basename($entry));
         }
     }

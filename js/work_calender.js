@@ -670,6 +670,179 @@ var app = new Vue({
                 });
         },
 
+        getInitMain: function () {
+            var token = localStorage.getItem("token");
+            var form_Data = new FormData();
+            let _this = this;
+            _this.items = [];
+            this.action = 1; //select
+            form_Data.append("jwt", token);
+            form_Data.append("action", this.action);
+
+            axios({
+                    method: "post",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    url: "api/work_calender_main",
+                    data: form_Data,
+                })
+                .then(function (response) {
+                    //handle success
+                    //var data = JSON.parse(response.data);
+                    for (var i = 0; i < response.data.length; i++) {
+                        var agendas = [];
+                        var isAll = false;
+                        var Lasteditor = "";
+                        var photoshoot = "No";
+                        if (response.data[i].all_day == "1") {
+                            isAll = true;
+                        }
+                        if (response.data[i].photoshoot_request == "1") {
+                            photoshoot = "Yes";
+                        }
+                        if (
+                            response.data[i].updated_by != "" &&
+                            response.data[i].updated_by != null
+                        ) {
+                            Lasteditor =
+                                response.data[i].updated_by +
+                                " at " +
+                                response.data[i].updated_at;
+                        } else {
+                            Lasteditor =
+                                response.data[i].created_by +
+                                " at " +
+                                response.data[i].created_at;
+                        }
+                        for (var j = 0; j < _this.agenda.length; j++) {
+                            if (_this.agenda[j].main_id == response.data[i].id) {
+                                agendas.push({
+                                    agenda: UnescapeHTML(_this.agenda[j].agenda),
+                                    appointtime: moment(_this.agenda[j].appoint_time).format(
+                                        "HH:mm"
+                                    ),
+                                    endtime: moment(_this.agenda[j].end_time).format("HH:mm"),
+                                    sort: _this.agenda[j].sort,
+                                    location: UnescapeHTML(_this.agenda[j].location),
+                                });
+                            }
+                        }
+                        //整理檔案
+                        response.data[i].products_to_bring_files = response.data[
+                            i
+                        ].products_to_bring_files.replaceAll(",", '","');
+                        if (response.data[i].products_to_bring_files.indexOf('"') == 0) {
+                            response.data[i].products_to_bring_files =
+                                "[" + response.data[i].products_to_bring_files + "]";
+                            response.data[i].products_to_bring_files = JSON.parse(
+                                response.data[i].products_to_bring_files
+                            );
+                        } else {
+                            response.data[i].products_to_bring_files =
+                                '["' + response.data[i].products_to_bring_files + '"]';
+                            response.data[i].products_to_bring_files = JSON.parse(
+                                response.data[i].products_to_bring_files
+                            );
+                        }
+                        var files = "";
+                        response.data[i].products_to_bring_files.forEach((element) => {
+                            var file_str =
+                                "<a href='https://storage.cloud.google.com/calendarfile/" +
+                                element +
+                                "' target='_blank'>" +
+                                element +
+                                "</a>&emsp;";
+                            files += file_str;
+                        });
+                        _this.items.push({
+                            id: response.data[i].id,
+                            title: response.data[i].title,
+                            Date: moment(response.data[i].start_time).format("YYYY-MM-DD"),
+                            start: moment(response.data[i].start_time).format(
+                                "YYYY-MM-DDTHH:mm"
+                            ), // will be parsed
+                            end: moment(response.data[i].end_time).format("YYYY-MM-DDTHH:mm"),
+                            color: response.data[i].color,
+                            allDay: isAll,
+                            description: {
+                                Title: UnescapeHTML(response.data[i].title),
+                                Color: response.data[i].color,
+                                Date: moment(response.data[i].start_time).format("YYYY-MM-DD"),
+                                Allday: isAll,
+                                Starttime: moment(response.data[i].start_time).format("HH:mm"),
+                                Endtime: moment(response.data[i].end_time).format("HH:mm"),
+                                Project: UnescapeHTML(response.data[i].project),
+                                Sales_Executive: UnescapeHTML(response.data[i].sales_executive),
+                                Project_in_charge: UnescapeHTML(
+                                    response.data[i].project_in_charge
+                                ),
+                                Installer_needed: UnescapeHTML(
+                                    response.data[i].installer_needed
+                                ),
+                                Location_Things_to_Bring: UnescapeHTML(
+                                    response.data[i].things_to_bring_location
+                                ),
+                                Things_to_Bring: UnescapeHTML(response.data[i].things_to_bring),
+                                Location_Products_to_Bring: UnescapeHTML(
+                                    response.data[i].installer_needed_location
+                                ),
+                                Products_to_Bring: UnescapeHTML(
+                                    response.data[i].products_to_bring
+                                ),
+                                Products_to_bring_files: files,
+                                File_name: response.data[i].products_to_bring_files,
+                                Service: response.data[i].service,
+                                Driver: response.data[i].driver,
+                                Back_up_Driver: response.data[i].back_up_driver,
+                                Photoshoot_Request: photoshoot,
+                                Notes: UnescapeHTML(response.data[i].notes),
+                                Lock: response.data[i].lock,
+                                Agenda: agendas,
+                                Lasteditor: Lasteditor,
+                            },
+                        });
+                    }
+
+                    initial();
+                })
+                .catch(function (response) {
+                    //handle error
+                    //alert(JSON.stringify(response));
+                });
+        },
+
+        getInitial: function() {
+
+            var token = localStorage.getItem("token");
+            var form_Data = new FormData();
+            let _this = this;
+            this.action = 1; //select all
+            form_Data.append("jwt", token);
+            form_Data.append("action", this.action);
+
+            axios({
+                    method: "post",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    url: "api/work_calender_detail",
+                    data: form_Data,
+                })
+                .then(function (response) {
+                    //handle success
+                    _this.agenda = response.data;
+
+                    _this.getInitMain();
+                })
+                .catch(function (response) {
+                    //handle error
+                    //alert(JSON.stringify(response));
+                    console.log(response);
+                });
+
+        },
+
         getDetail: function () {
             var token = localStorage.getItem("token");
             var form_Data = new FormData();
@@ -1188,7 +1361,7 @@ var app = new Vue({
 var eventObj;
 var icon_function_enable = true;
 
-function initial() {
+var initial = () =>  {
     var calendarEl = document.getElementById("calendar");
 
     calendar = new FullCalendar.Calendar(calendarEl, {
@@ -1381,7 +1554,7 @@ function initial() {
         editable: false,
     });
     calendar.render();
-    clearTimeOut();
+    //clearTimeOut();
 
     if (app.name === "guest") {
         document.getElementsByClassName(
@@ -1508,7 +1681,7 @@ function resetSchedule() {
     document.getElementById("sc_etime").value = "";
     document.getElementById("sc_etime").disabled = true;
     document.getElementById("sc_title").value = "";
-    document.getElementById("sc_color").value = "";
+    document.getElementById("sc_color").value = "#000000";
     document.getElementById("sc_project").value = "";
     document.getElementById("sc_sales").value = "";
     document.getElementById("sc_incharge").value = "";
@@ -1646,9 +1819,9 @@ $(document).on("click", "#btn_duplicate", function () {
     }
     app.addMain2(sc_content.Agenda, sc_content, 2, calendar);
 
-    $("#exampleModalScrollable").modal("toggle");
+    //$("#exampleModalScrollable").modal("toggle");
 
-    resetSchedule();
+    //resetSchedule();
 });
 
 $(document).on("click", "#btn_export", function () {
@@ -2137,21 +2310,23 @@ var timeOut2;
 var timeOut3;
 
 function reload() {
-    timeOut3 = setTimeout(function () {
-        app.getDetail();
-    }, 500);
-    timeOut1 = setTimeout(function () {
-        app.getMain();
-    }, 1000);
-    timeOut2 = setTimeout(function () {
-        initial();
-    }, 1500);
+    //timeOut3 = setTimeout(function () {
+    //    app.getDetail();
+    //}, 500);
+    //timeOut1 = setTimeout(function () {
+    //    app.getMain();
+    //}, 1000);
+    //timeOut2 = setTimeout(function () {
+    //    initial();
+    //}, 1500);
+
+    app.getInitial();
 }
 
 function clearTimeOut() {
-    clearTimeout(timeOut1);
-    clearTimeout(timeOut2);
-    clearTimeout(timeOut3);
+    //clearTimeout(timeOut1);
+    //clearTimeout(timeOut2);
+    //clearTimeout(timeOut3);
 }
 
 function UnescapeHTML(a) {
