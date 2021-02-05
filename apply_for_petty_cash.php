@@ -152,12 +152,12 @@
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A focus">Apply</a>
-            <a class="tag B">Records</a>
-            <a class="tag C">Check</a>
+            <a class="tag B" href="petty_cash_record">Records</a>
+            <a class="tag C" href="petty_cash_checking">Check</a>
             <a class="tag D">Review</a>
             <a class="tag E">Release</a>
             <a class="tag F">Liquidate</a>
-            <a class="tag G">Verify</a>
+            <a class="tag G" href="petty_cash_verify">Verify</a>
         </div>
         <!-- Blocks -->
         <div class="block A focus" style="position: relative;">

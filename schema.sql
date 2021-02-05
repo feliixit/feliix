@@ -1035,7 +1035,6 @@ ALTER TABLE apply_for_leave
 ADD COLUMN `void_id`  int(11) DEFAULT 0 after re_reject_at;
 
 ALTER TABLE apply_for_leave
-<<<<<<< HEAD
 ADD COLUMN `void_at`   timestamp NULL DEFAULT NULL after void_id;
 
 -- 20210118 expense_flow
@@ -1094,6 +1093,28 @@ CREATE TABLE IF NOT EXISTS `petty_list` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
-=======
-ADD COLUMN `void_at`   timestamp NULL DEFAULT NULL after void_id;
->>>>>>> master
+
+-- 2021/02/03 for petty history
+CREATE TABLE IF NOT EXISTS `petty_history` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `petty_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `actor` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `action` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `reason` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+
+  `status` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+ALTER TABLE apply_for_petty
+ADD COLUMN `info_account` varchar(512) DEFAULT '' AFTER remark;
+ALTER TABLE apply_for_petty
+ADD COLUMN `info_category` varchar(512) DEFAULT '' AFTER info_account;
+ALTER TABLE apply_for_petty
+ADD COLUMN `info_sub_category` varchar(512) DEFAULT '' AFTER info_category;
+ALTER TABLE apply_for_petty
+ADD COLUMN `info_remark` varchar(512) DEFAULT '' AFTER info_sub_category;
+

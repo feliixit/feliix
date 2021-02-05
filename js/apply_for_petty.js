@@ -306,7 +306,7 @@ var app = new Vue({
           .catch(function(error) {
                   //handle error
                   Swal.fire({
-                    text: JSON.stringify(response.data.message),
+                    text: JSON.stringify(error),
                     icon: 'warning',
                     confirmButtonText: 'OK'
                   })
