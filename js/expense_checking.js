@@ -100,24 +100,8 @@ var app = new Vue({
     getLeaveCredit: function() {
       let _this = this;
 
-      if ($("#start").val() === undefined) return;
-
-      var sdate1 = "";
-      var edate1 = "";
-      if ($("#start").val()) {
-        var d1 = new Date($("#start").val() + "-01");
-        sdate1 = d1
-          .toISOString()
-          .slice(0, 10)
-          .replace(/-/g, "");
-        var newDate1 = new Date(d1.setMonth(d1.getMonth() + 1));
-        edate1 = newDate1
-          .toISOString()
-          .slice(0, 10)
-          .replace(/-/g, "");
-      }
       axios
-        .get("api/petty_cash_record?sdate1=" + sdate1 + "&edate1=" + edate1)
+        .get("api/expense_checking")
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;

@@ -73,62 +73,62 @@ $(function(){
         }
 
         div.tablebox.listing ul.head li{
-            background-color: #CCDCEE!important;
+            background-color: #EFEFEF!important;
         }
 
         div.box-content form{
-            border: 3px solid var(--sec03);
+            border: 3px solid var(--black01);
             margin-top: 40px;
-            padding: 15px 15px 0;
+            padding: 15px 30px 0;
             box-sizing: border-box;
         }
 
-        div.details>span {
+        div.box-content form > span {
             font-size: x-large;
             font-weight: 700;
-            color: var(--sec03);
+            color: var(--black01);
             display: block;
-            margin-top: 20px;
+            margin-bottom: 5px;
         }
-        
-        div.btnbox a.btn.red{
+
+        div.btnbox a.btn.red {
             background-color: var(--pri01a);
         }
 
-        .block.G div.details form li:nth-of-type(even) {
+        .block.C div.details form li:nth-of-type(even) {
             padding-bottom: 10px;
         }
+
+        body input.alone.black[type=radio]::before{
+            font-size: 25px; color: var(--black01);}
     </style>
 
 
 
 </head>
 
-<body class="third">
+<body class="black">
 
 <div class="bodybox">
     <!-- header -->
-    <header>header</header>
+	<header>header</header>
     <!-- header end -->
     <div id="app" class="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A">Apply</a>
-            <a class="tag B">Records</a>
-            <a class="tag C">Check</a>
-            <a class="tag D">Review</a>
-            <a class="tag E">Release</a>
-            <a class="tag F">Liquidate</a>
-            <a class="tag G focus">Verify</a>
+            <a class="tag A focus">Check</a>
+            <a class="tag B">Review</a>
+            <a class="tag C">Release</a>
+            <a class="tag D">Verify</a>
         </div>
         <!-- Blocks -->
-        <div class="block G focus">
-            <h6>Liquidation Verification</h6>
+        <div class="block A focus">
+            <h6>Expense Application Checking</h6>
             <div class="box-content">
                 <div class="title">
 
                     <div class="function">
-                        <input type="month">
+
                     </div>
 
                 </div>
@@ -141,26 +141,15 @@ $(function(){
                         <li>Total Amount Requested</li>
                     </ul>
 
-                    <ul>
+                    <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
-                            <input type="radio" class="alone blue">
+                            <input type="radio" name="record_id" class="alone black" :value="record.id" v-model="proof_id">
                         </li>
-                        <li>00017</li>
-                        <li>Dennis Lin</li>
-                        <li>2020/11/20</li>
-                        <li>372,500</li>
+                        <li>{{ (record.status == 1) ? "For Approve" : ((record.status == 2) ? "Completed" : ((record.status == -1) ? "Checked: False" : '')) }}</li>
+                        <li>{{ record.request_no }}</li>
+                        <li>{{ record.date_requested }}</li>
+                        <li>{{ record.project_name }}</li>
                     </ul>
-
-                    <ul>
-                        <li>
-                            <input type="radio" class="alone blue">
-                        </li>
-                        <li>00014</li>
-                        <li>Dennis Lin</li>
-                        <li>2020/11/03</li>
-                        <li>10,750.5</li>
-                    </ul>
-
                 </div>
 
 
@@ -168,57 +157,61 @@ $(function(){
                     <div class="tablebox">
                         <ul class="head">
                             <li class="head">Request No.</li>
-                            <li>00017</li>
+                            <li>{{record.request_no}}</li>
+                        </ul>
+                         <ul>
+                            <li class="head">Application Time</li>
+                            <li>{{record.created_at}}</li>
                         </ul>
                         <ul>
-                            <li class="head">Date Requested</li>
-                            <li>2020/11/20</li>
+                            <li class="head">Requestor</li>
+                            <li>{{ record.requestor }}</li>
                         </ul>
                         <ul>
                             <li class="head">Status</li>
-                            <li>For Verify</li>
+                            <li>{{ (record.status == 1) ? "For Approve" : ((record.status == 2) ? "Completed" : ((record.status == -1) ? "Checked: False" : '')) }}</li>
                         </ul>
                         <ul>
                             <li class="head">Processing History
                             </li>
-                            <li>Submitted (Dennis Lin at 2020/11/20 15:30)<br>
-                                Checker Rejected: document is not complete. (Mary Jude Jeng Articulo at 2020/12/03 09:43)<br>
-                                Submitted (Dennis Lin at 2020/12/04 11:30)<br>
-                                Checker Checked (Mary Jude Jeng Articulo at 2020/12/04 13:55)<br>
-                                OP Approved (Thalassa Wren Benzon at 2020/12/04 16:23)<br>
-                                MD Approved (Kristel Tan at 2020/12/04 17:05)<br>
-                                Released (Mary Jude Jeng Articulo at 2020/12/07 10:03)<br>
-                                Liquidated (Dennis Lin at 2020/12/14 14:04)
+                            <li>
+                                <p v-for='(item, index) in record.history' :key="index">
+                                    {{ item.action }} <a v-if="item.reason != ''">: {{ item.reason }}</a> ({{ item.actor }} at {{ item.created_at }})
+                                </p>
                             </li>
                         </ul>
                         <ul>
+                            <li class="head">Date Requested</li>
+                            <li>{{ record.date_requested }}</li>
+                        </ul>
+                        <ul>
                             <li class="head">Type</li>
-                            <li>New</li>
+                            <li>{{record.request_type}}</li>
                         </ul>
                         <ul>
                             <li class="head">Project Name / Reason</li>
-                            <li>UDNP Ranee</li>
+                            <li>{{ record.project_name}}</li>
                         </ul>
                         <ul>
                             <li class="head">Total Amount Requested
                             </li>
-                            <li>372,500</li>
+                            <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Attachments</li>
-                            <li><a>Requirement.doc</a>
-                                <a>Requirement.xlsx</a>
+                            <li>
+                                <a v-for='(item, index) in record.items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                             </li>
                         </ul>
                         <ul>
                             <li class="head">Payable to
                             </li>
-                            <li>Other: xxxxxxx</li>
+                            <li>{{ (record.payable_other == "") ? record.payable_to : (( typeof record.payable_other == "undefined" ) ? "":  "Other:" + record.payable_other) }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions
                             </li>
-                            <li></li>
+                            <li>{{ record.remark }}</li>
                         </ul>
                     </div>
 
@@ -230,67 +223,12 @@ $(function(){
                             <li>Qty</li>
                             <li>Amount</li>
                         </ul>
-                        <ul>
-                            <li>John Raymund Casero</li>
-                            <li>Light Texture</li>
-                            <li>350</li>
-                            <li>100</li>
-                            <li>35,000</li>
-                        </ul>
-                        <ul>
-                            <li>Kristel Tan</li>
-                            <li>Light Bulb</li>
-                            <li>135</li>
-                            <li>2,500</li>
-                            <li>337,500</li>
-                        </ul>
-                    </div>
-
-                     <span>Additional Info</span>
-                    <div class="tablebox">
-                        <ul>
-                            <li class="head">Account</li>
-                            <li>Office Petty Cash</li>
-                        </ul>
-                        <ul>
-                            <li class="head">Category</li>
-                            <li>Office Needs>>Tools and Materials</li>
-                        </ul>
-                        <ul>
-                            <li class="head">Remarks or Payment Instructions</li>
-                            <li>Check</li>
-                        </ul>
-                    </div>
-
-
-                    <div class="tablebox" style="margin-top: 60px;">
-                        <ul class="head">
-                            <li class="head">Request No.</li>
-                            <li>00017</li>
-                        </ul>
-                        <ul>
-                            <li class="head">Total Amount Requested
-                            </li>
-                            <li>372,500</li>
-                        </ul>
-                        <ul>
-                            <li class="head">Date Released</li>
-                            <li>2020/12/07</li>
-                        </ul>
-                        <ul>
-                            <li class="head">Proof of Release</li>
-                            <li><a>Signature_01.pdf</a>
-                                <a>Signature_02.pdf</a>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li class="head">Date Liquidated</li>
-                            <li>2020/12/14</li>
-                        </ul>
-                        <ul>
-                            <li class="head">Liquidation Files</li>
-                            <li><a>Receipt.jpg</a>
-                            </li>
+                        <ul v-for='(item, index) in record.list' :key="index" >
+                            <li>{{ item.payee }}</li>
+                            <li>{{ item.particulars }}</li>
+                            <li>{{ Number(item.price).toLocaleString() }}</li>
+                            <li>{{ Number(item.qty).toLocaleString() }}</li>
+                            <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
                         </ul>
                     </div>
 
@@ -308,29 +246,79 @@ $(function(){
 
 
                     <form>
+                        <span>Additional Info</span>
                         <ul>
-                            <li><b>Actual Amount After Verification</b></li>
+                            <li><b>Account</b></li>
                             <li>
-                                <input type="text" style="width:100%">
+                                <select style="width:100%">
+                                    <option>Office Petty Cash</option>
+                                    <option>Online Transactions</option>
+                                    <option>Security Bank</option>
+                                </select>
                             </li>
 
-                            <li><b>Proof of Return or Release of Payment Balance</b></li>
+                            <li><b>Category</b></li>
                             <li>
-                                <input type="file" style="width:100%" multiple>
+                                <select style="width:100%">
+                                    <option>Accounting and govt payments</option>
+                                    <option>Bills</option>
+                                    <option>Client Refunds</option>
+                                    <option>Consignment</option>
+                                    <option>Credit Card</option>
+                                    <option>Marketing</option>
+                                    <option>Misc</option>
+                                    <option>Office Needs</option>
+                                    <option>Others</option>
+                                    <option>Projects</option>
+                                    <option>Rental</option>
+                                    <option>Salary</option>
+                                    <option>Sales Petty Cash</option>
+                                    <option>Store</option>
+                                    <option>Transportation Petty Cash</option>
+                                </select>
                             </li>
+
+                            <li><b>Sub Category</b></li>
+                            <li>
+                                <select style="width:100%">
+                                    <option>Allowance</option>
+                                    <option>Commission</option>
+                                    <option>Delivery</option>
+                                    <option>Maintenance</option>
+                                    <option>Meals</option>
+                                    <option>Misc</option>
+                                    <option>Others</option>
+                                    <option>Outsource</option>
+                                    <option>Petty cash</option>
+                                    <option>Products</option>
+                                    <option>Supplies</option>
+                                    <option>Tools and Materials</option>
+                                    <option>Transportation</option>
+                                </select>
+                            </li>
+
+                            <li><b>Remarks or Payment Instructions</b></li>
+                            <li>
+                                <select style="width:100%">
+                                    <option>Cash</option>
+                                    <option>Check</option>
+                                    <option>Other</option>
+                                </select>
+                            </li>
+                        </ul>
 
                         <div class="btnbox">
-                            <a class="btn">Finish Verifying</a>
+                            <a class="btn">Send to OP</a>
+                            <a class="btn">Send to MD</a>
                         </div>
 
                     </form>
 
-
                 </div>
 
             </div>
-        </div>
     </div>
+</div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
@@ -347,5 +335,5 @@ $(function(){
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/leave_record.js"></script>
+<script src="js/expense_checking.js"></script>
 </html>

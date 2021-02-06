@@ -95,6 +95,7 @@ try {
         <ul class="menu">
             <li class="sec01">
                 <a class="uni" href="attendance">Office<br>Attendance</a>
+                
             </li>
             <li class="sec03">
                 <a class="uni">Project<br>Management</a>
@@ -114,6 +115,7 @@ try {
                 <a class="uni">Admin<br>Section</a>
                 <?=($access1 == true) ? '<a class="list" href="ammend">Verify and Review</a>' : '' ?>
                 <?=($access2 == true) ? '<a class="list" href="query_export">Query and Export</a>' : '' ?>
+                <a class="list" href="expense_checking">Expense Review</a>
                 <?=($access3 == true) ? '<a class="list" href="expense_recorder">Expense Recorder</a>' : '' ?>
             </li>
             <?php 
@@ -132,6 +134,7 @@ try {
             </li>
             <li class="sec02">
                 <a class="uni">Payment<br>Request/Claim</a>
+                <a class="list" href="apply_for_petty_cash">Expense Apply/Liquidate</a>
             </li>
             <li class="gray02">
                 <a class="uni">Profile<br>Section</a>
