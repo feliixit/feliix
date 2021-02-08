@@ -132,6 +132,90 @@ var app = new Vue({
         });
     },
 
+    revise: function() {
+      let _this = this;
+      targetId = this.record.id;
+      var form_Data = new FormData();
+
+      var token = localStorage.getItem("token");
+      form_Data.append("jwt", token);
+
+      form_Data.append("crud", "Revise");
+      form_Data.append("id", targetId);
+      form_Data.append("remark", '');
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/petty_cash_action",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          //this.$forceUpdate();
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.resetForm();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+        });
+      
+    },
+
+    withdraw: function() {
+      let _this = this;
+      targetId = this.record.id;
+      var form_Data = new FormData();
+
+      var token = localStorage.getItem("token");
+      form_Data.append("jwt", token);
+
+      form_Data.append("crud", "Withdraw");
+      form_Data.append("id", targetId);
+      form_Data.append("remark", '');
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/petty_cash_action",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          //this.$forceUpdate();
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.resetForm();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+        });
+      
+    },
+
     getUserName: function() {
       var token = localStorage.getItem("token");
       var form_Data = new FormData();
@@ -404,15 +488,7 @@ var app = new Vue({
     
 
     resetForm: function() {
-      this.submit = false;
-      this.view_detail = false;
-
-      this.receive_records = [];
-      this.record = {};
-
-      this.proof_id = 0;
-      this.proof_remark = "";
-
+      this.record = [];
       this.getLeaveCredit();
     },
 

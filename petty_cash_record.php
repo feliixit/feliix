@@ -276,7 +276,7 @@ body.green input[type=date] {
                             <li>
                                 <input type="radio" name="record_id" class="alone black" :value="record.id" v-model="proof_id">
                             </li>
-                            <li>{{ (record.status == 1) ? "For Approve" : ((record.status == 2) ? "Completed" : ((record.status == -1) ? "Checked: False" : '')) }}</li>
+                            <li>{{ record.desc }}</li>
                             <li>{{ record.request_no }}</li>
                             <li>{{ record.date_requested }}</li>
                             <li>{{ record.project_name }}</li>
@@ -299,7 +299,7 @@ body.green input[type=date] {
                             </ul>
                             <ul>
                                 <li class="head">Status</li>
-                                <li>{{ (record.status == 1) ? "For Approve" : ((record.status == 2) ? "Completed" : ((record.status == -1) ? "Checked: False" : '')) }}</li>
+                                <li>{{ record.desc }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Processing History
@@ -361,12 +361,12 @@ body.green input[type=date] {
                         <div class="tablebox" style="margin-top: 60px;">
                             <ul class="head">
                                 <li class="head">Request No.</li>
-                                <li>00017</li>
+                                <li>{{record.request_no}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Total Amount Requested
                                 </li>
-                                <li>372,500</li>
+                                <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Date Released</li>
@@ -403,8 +403,8 @@ body.green input[type=date] {
                         </div>
 
                         <div class="btnbox">
-                            <a class="btn">&nbsp;&nbsp;Revise&nbsp;&nbsp;</a>
-                            <a class="btn">Withdraw</a>
+                            <a class="btn" v-if="record.status == 0 || record.status == -1" @click="revise">&nbsp;&nbsp;Revise&nbsp;&nbsp;</a>
+                            <a class="btn" v-if="record.status == 0 || record.status == 1 || record.status == 2 || record.status == 3 || record.status == 4" @click="withdraw">Withdraw</a>
                         </div>
 
                     </div>

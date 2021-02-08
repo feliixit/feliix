@@ -129,6 +129,7 @@ switch ($method) {
         $payable_other = "";
         $remark = "";
         $status = 0;
+        $desc = "";
        
         $history = [];
         $list = [];
@@ -145,6 +146,7 @@ switch ($method) {
             $payable_other = $row['payable_other'];
             $remark = $row['remark'];
             $status = $row['status'];
+            $desc = GetStatus($row['status']);
             $items = GetAttachment($row['id'], $db);
             $history = GetHistory($row['id'], $db);
             $list = GetList($row['id'], $db);
@@ -164,6 +166,7 @@ switch ($method) {
                 "payable_other" => $payable_other,
                 "remark" => $remark,
                 "status" => $status,
+                "desc" => $desc,
                 "items" => $items,
                 "history" => $history,
                 "list" => $list,
@@ -261,15 +264,43 @@ function GetStatus($loc)
 {
     $location = "";
     switch ($loc) {
-        case "0":
-            $location = "Ongoing";
+        case -2:
+            $location = "Void";
             break;
-        case "1":
-            $location = "Pending";
+        case -1:
+            $location = "Withdrawn";
             break;
-        case "2":
-            $location = "Close";
+        case 0:
+            $location = "Rejected";
             break;
+        case 1:
+            $location = "For Check";
+            break;
+        case 2:
+            $location = "Rejected to Checker";
+            break;
+        case 3:
+            $location = "For Approve";
+            break;
+        case 4:
+            $location = "For Approve";
+            break;
+        case 5:
+            $location = "For Release";
+            break;
+        case 6:
+            $location = "For Liquidate";
+            break;
+        case 7:
+            $location = "Rejected";
+            break;
+        case 8:
+            $location = "For Verify";
+            break;
+        case 9:
+            $location = "Completed";
+            break;
+        
                 
     }
 
@@ -297,7 +328,7 @@ function GetList($_id, $db)
 function GetHistory($_id, $db)
 {
     $sql = "select pm.id, `actor`, `action`, reason, `status`, DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at from petty_history pm 
-            where `status` <> -1 and petty_id = " . $_id . " order by created_at ";
+            where `status` <> -1 and petty_id = " . $_id . " order by created_at desc ";
 
     $merged_results = array();
 
