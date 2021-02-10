@@ -52,18 +52,19 @@ $db = $database->getConnection();
 
 switch ($method) {
     case 'GET':
-
+ 
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
         // check if can see petty expense list (Record only for himself)
-        /*
-        $sql = "select * from expense_flow where uid = " . $user_id . " where status <> -1";
+        $sql = "select * from expense_flow where uid = " . $user_id . " AND `status` <> -1 and flow = 1";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
         $arry_apartment_id = [];
         $array_flow = [];
+
+        $merged_results = array();
         
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             
@@ -73,7 +74,14 @@ switch ($method) {
             array_push($arry_apartment_id, $apartment_id);
             array_push($array_flow, $flow);
         }
-        */
+        
+        if(sizeof($arry_apartment_id) == 0)
+        {
+            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+            die();
+        }
+
+        $apartment_id_str = implode (", ", $arry_apartment_id);
 
         $sql = "SELECT  pm.id,
                         request_no, 
@@ -84,14 +92,20 @@ switch ($method) {
                         u.username payable_to,
                         payable_other,
                         remark,
-                        pm.`status`,
-                        DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at
+                        pm.`status` ,
+                        DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at,
+                        info_account,
+                        info_category,
+                        info_sub_category,
+                        info_remark
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
-                where pm.uid = " . $user_id . " ";
+                where pm.uid = " . $user_id . " 
+                AND p.apartment_id in (" . $apartment_id_str . ") 
+                AND pm.`status` in (1, 2)";
 
-
+ 
         if (!empty($_GET['page'])) {
             $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
             if (false === $page) {
@@ -112,7 +126,7 @@ switch ($method) {
             $sql = $sql . " LIMIT " . $offset . "," . $size;
         }
 
-        $merged_results = array();
+        
 
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -126,8 +140,15 @@ switch ($method) {
         $payable_other = "";
         $remark = "";
         $status = 0;
+        $desc = "";
+
         $requestor = "";
         $created_at = "";
+
+        $info_account = "";
+        $info_category = "";
+        $info_sub_category = "";
+        $info_remark = "";
        
         $history = [];
         $list = [];
@@ -139,17 +160,22 @@ switch ($method) {
             $request_no = $row['request_no'];
             $date_requested = $row['date_requested'];
             $request_type = GetPettyType($row['request_type']);
+            $requestor = $row['requestor'];
             $project_name = $row['project_name'];
             $payable_to = $row['payable_to'];
             $payable_other = $row['payable_other'];
             $remark = $row['remark'];
             $status = $row['status'];
+            $desc = GetStatus($row['status']);
             $items = GetAttachment($row['id'], $db);
             $history = GetHistory($row['id'], $db);
             $list = GetList($row['id'], $db);
-
-            $requestor = $row['requestor'];
             $created_at = $row['created_at'];
+
+            $info_account = $row['info_account'];
+            $info_category = $row['info_category'];
+            $info_sub_category = $row['info_sub_category'];
+            $info_remark = $row['info_remark'];
 
             $total = 0;
             foreach ($list as &$value) {
@@ -161,20 +187,29 @@ switch ($method) {
                 "request_no" => $request_no,
                 "date_requested" => $date_requested,
                 "request_type" => $request_type,
+                "requestor" => $requestor,
                 "project_name" => $project_name,
                 "payable_to" => $payable_to,
                 "payable_other" => $payable_other,
                 "remark" => $remark,
                 "status" => $status,
+                "desc" => $desc,
                 "items" => $items,
                 "history" => $history,
                 "list" => $list,
                 "total" => $total,
-                "requestor" => $requestor,
                 "created_at" => $created_at,
+
+                "info_account" => $info_account,
+                "info_category" => $info_category,
+                "sub_category" => $info_sub_category,
+                "info_remark" => $info_remark,
             );
+
         }
 
+        
+        
         echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
         break;
@@ -262,15 +297,43 @@ function GetStatus($loc)
 {
     $location = "";
     switch ($loc) {
-        case "0":
-            $location = "Ongoing";
+        case -2:
+            $location = "Void";
             break;
-        case "1":
-            $location = "Pending";
+        case -1:
+            $location = "Withdrawn";
             break;
-        case "2":
-            $location = "Close";
+        case 0:
+            $location = "Rejected";
             break;
+        case 1:
+            $location = "For Check";
+            break;
+        case 2:
+            $location = "Rejected to Checker";
+            break;
+        case 3:
+            $location = "For Approve";
+            break;
+        case 4:
+            $location = "For Approve";
+            break;
+        case 5:
+            $location = "For Release";
+            break;
+        case 6:
+            $location = "For Liquidate";
+            break;
+        case 7:
+            $location = "Rejected";
+            break;
+        case 8:
+            $location = "For Verify";
+            break;
+        case 9:
+            $location = "Completed";
+            break;
+        
                 
     }
 
@@ -298,7 +361,7 @@ function GetList($_id, $db)
 function GetHistory($_id, $db)
 {
     $sql = "select pm.id, `actor`, `action`, reason, `status`, DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at from petty_history pm 
-            where `status` <> -1 and petty_id = " . $_id . " order by created_at ";
+            where `status` <> -1 and petty_id = " . $_id . " order by created_at desc ";
 
     $merged_results = array();
 

@@ -117,9 +117,9 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A focus">Check</a>
-            <a class="tag B">Review</a>
-            <a class="tag C">Release</a>
-            <a class="tag D">Verify</a>
+            <a class="tag B" href="expense_reviewing">Review</a>
+            <a class="tag C" href="expense_releasing">Release</a>
+            <a class="tag D" href="expense_verifying">Verify</a>
         </div>
         <!-- Blocks -->
         <div class="block A focus">
@@ -145,10 +145,10 @@ $(function(){
                         <li>
                             <input type="radio" name="record_id" class="alone black" :value="record.id" v-model="proof_id">
                         </li>
-                        <li>{{ (record.status == 1) ? "For Approve" : ((record.status == 2) ? "Completed" : ((record.status == -1) ? "Checked: False" : '')) }}</li>
                         <li>{{ record.request_no }}</li>
+                        <li>{{ record.requestor }}</li>
                         <li>{{ record.date_requested }}</li>
-                        <li>{{ record.project_name }}</li>
+                        <li>{{ isNaN(record.total) ? 0 : Number(record.total).toLocaleString() }}</li>
                     </ul>
                 </div>
 
@@ -169,7 +169,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Status</li>
-                            <li>{{ (record.status == 1) ? "For Approve" : ((record.status == 2) ? "Completed" : ((record.status == -1) ? "Checked: False" : '')) }}</li>
+                            <li>{{ record.desc }}</li>
                         </ul>
                         <ul>
                             <li class="head">Processing History
@@ -236,11 +236,11 @@ $(function(){
                     <form>
                         <ul>
                             <li><b>Rejection Reason</b></li>
-                            <li><textarea style="width:100%"></textarea></li>
+                            <li><textarea style="width:100%" v-model="reject_reason"></textarea></li>
                         </ul>
 
                         <div class="btnbox">
-                            <a class="btn red">Reject</a>
+                            <a class="btn red" @click="reject">Reject</a>
                         </div>
                     </form>
 
@@ -250,66 +250,70 @@ $(function(){
                         <ul>
                             <li><b>Account</b></li>
                             <li>
-                                <select style="width:100%">
-                                    <option>Office Petty Cash</option>
-                                    <option>Online Transactions</option>
-                                    <option>Security Bank</option>
+                                <select style="width:100%" v-model="record.info_account">
+                                    <option value=""></option>
+                                    <option value="Office Petty Cash">Office Petty Cash</option>
+                                    <option value="Online Transactions">Online Transactions</option>
+                                    <option value="Security Bank">Security Bank</option>
                                 </select>
                             </li>
 
                             <li><b>Category</b></li>
                             <li>
-                                <select style="width:100%">
-                                    <option>Accounting and govt payments</option>
-                                    <option>Bills</option>
-                                    <option>Client Refunds</option>
-                                    <option>Consignment</option>
-                                    <option>Credit Card</option>
-                                    <option>Marketing</option>
-                                    <option>Misc</option>
-                                    <option>Office Needs</option>
-                                    <option>Others</option>
-                                    <option>Projects</option>
-                                    <option>Rental</option>
-                                    <option>Salary</option>
-                                    <option>Sales Petty Cash</option>
-                                    <option>Store</option>
-                                    <option>Transportation Petty Cash</option>
+                                <select style="width:100%" v-model="record.info_category">
+                                    <option value=""></option>
+                                    <option value="Accounting and govt payments">Accounting and govt payments</option>
+                                    <option value="Bills">Bills</option>
+                                    <option value="Client Refunds">Client Refunds</option>
+                                    <option value="Consignment">Consignment</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Misc">Misc</option>
+                                    <option value="Office Needs">Office Needs</option>
+                                    <option value="Others">Others</option>
+                                    <option value="Projects">Projects</option>
+                                    <option value="Rental">Rental</option>
+                                    <option value="Salary">Salary</option>
+                                    <option value="Sales Petty Cash">Sales Petty Cash</option>
+                                    <option value="Store">Store</option>
+                                    <option value="Transportation Petty Cash">Transportation Petty Cash</option>
                                 </select>
                             </li>
 
                             <li><b>Sub Category</b></li>
                             <li>
-                                <select style="width:100%">
-                                    <option>Allowance</option>
-                                    <option>Commission</option>
-                                    <option>Delivery</option>
-                                    <option>Maintenance</option>
-                                    <option>Meals</option>
-                                    <option>Misc</option>
-                                    <option>Others</option>
-                                    <option>Outsource</option>
-                                    <option>Petty cash</option>
-                                    <option>Products</option>
-                                    <option>Supplies</option>
-                                    <option>Tools and Materials</option>
-                                    <option>Transportation</option>
+                                <select style="width:100%" v-model="record.sub_category">
+                                    <option value=""></option>
+                                    <option value="Allowance">Allowance</option>
+                                    <option value="Commission">Commission</option>
+                                    <option value="Delivery">Delivery</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                    <option value="Meals">Meals</option>
+                                    <option value="Misc">Misc</option>
+                                    <option value="Others">Others</option>
+                                    <option value="Outsource">Outsource</option>
+                                    <option value="Petty cash">Petty cash</option>
+                                    <option value="Products">Products</option>
+                                    <option value="Supplies">Supplies</option>
+                                    <option value="Tools and Materials">Tools and Materials</option>
+                                    <option value="Transportation">Transportation</option>
                                 </select>
                             </li>
 
                             <li><b>Remarks or Payment Instructions</b></li>
                             <li>
-                                <select style="width:100%">
-                                    <option>Cash</option>
-                                    <option>Check</option>
-                                    <option>Other</option>
+                                <select style="width:100%" v-model="record.info_remark">
+                                    <option value=""></option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Check">Check</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </li>
                         </ul>
 
                         <div class="btnbox">
-                            <a class="btn">Send to OP</a>
-                            <a class="btn">Send to MD</a>
+                            <a class="btn" @click="approve_op">Send to OP</a>
+                            <a class="btn" @click="approve_md">Send to MD</a>
                         </div>
 
                     </form>

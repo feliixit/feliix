@@ -279,7 +279,7 @@ body.green input[type=date] {
                             <li>{{ record.desc }}</li>
                             <li>{{ record.request_no }}</li>
                             <li>{{ record.date_requested }}</li>
-                            <li>{{ record.project_name }}</li>
+                            <li>{{ isNaN(record.total) ? 0 : Number(record.total).toLocaleString() }}</li>
 
                         </ul>
 

@@ -52,21 +52,19 @@ $db = $database->getConnection();
 
 switch ($method) {
     case 'GET':
-  
-        $sdate1 = (isset($_GET['sdate1']) ?  $_GET['sdate1'] : '');
-        $edate1 = (isset($_GET['edate1']) ?  $_GET['edate1'] : '');
-
+ 
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
         // check if can see petty expense list (Record only for himself)
-        /*
-        $sql = "select * from expense_flow where uid = " . $user_id . " where status <> -1";
+        $sql = "select * from expense_flow where uid = " . $user_id . " AND `status` <> -1 and flow in (2, 3)";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
         $arry_apartment_id = [];
         $array_flow = [];
+
+        $merged_results = array();
         
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             
@@ -76,7 +74,14 @@ switch ($method) {
             array_push($arry_apartment_id, $apartment_id);
             array_push($array_flow, $flow);
         }
-        */
+        
+        if(sizeof($arry_apartment_id) == 0)
+        {
+            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+            die();
+        }
+
+        $apartment_id_str = implode (", ", $arry_apartment_id);
 
         $sql = "SELECT  pm.id,
                         request_no, 
@@ -88,16 +93,19 @@ switch ($method) {
                         payable_other,
                         remark,
                         pm.`status` ,
-                        DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at
+                        DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at,
+                        info_account,
+                        info_category,
+                        info_sub_category,
+                        info_remark
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
-                where pm.uid = " . $user_id . " ";
+                where pm.uid = " . $user_id . " 
+                AND p.apartment_id in (" . $apartment_id_str . ") 
+                AND pm.`status` in (3, 4)";
 
-        if($sdate1 != '' && $edate1 != '')
-            $sql = $sql . " and DATE_FORMAT(pm.created_at, '%Y%m%d') BETWEEN '" . $sdate1 . "' AND  '" . $edate1 . "' ";
-        
-
+ 
         if (!empty($_GET['page'])) {
             $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
             if (false === $page) {
@@ -118,7 +126,7 @@ switch ($method) {
             $sql = $sql . " LIMIT " . $offset . "," . $size;
         }
 
-        $merged_results = array();
+        
 
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -136,6 +144,11 @@ switch ($method) {
 
         $requestor = "";
         $created_at = "";
+
+        $info_account = "";
+        $info_category = "";
+        $info_sub_category = "";
+        $info_remark = "";
        
         $history = [];
         $list = [];
@@ -159,6 +172,11 @@ switch ($method) {
             $list = GetList($row['id'], $db);
             $created_at = $row['created_at'];
 
+            $info_account = $row['info_account'];
+            $info_category = $row['info_category'];
+            $info_sub_category = $row['info_sub_category'];
+            $info_remark = $row['info_remark'];
+
             $total = 0;
             foreach ($list as &$value) {
                 $total += $value['price'] * $value['qty'];
@@ -181,6 +199,11 @@ switch ($method) {
                 "list" => $list,
                 "total" => $total,
                 "created_at" => $created_at,
+
+                "info_account" => $info_account,
+                "info_category" => $info_category,
+                "sub_category" => $info_sub_category,
+                "info_remark" => $info_remark,
             );
 
         }

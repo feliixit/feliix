@@ -12,6 +12,11 @@ $id = (isset($_POST['id']) ?  $_POST['id'] : '');
 $crud = (isset($_POST['crud']) ?  $_POST['crud'] : '');
 $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
+$info_account = (isset($_POST['info_account']) ?  $_POST['info_account'] : '');
+$info_category = (isset($_POST['info_category']) ?  $_POST['info_category'] : '');
+$sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
+$info_remark = (isset($_POST['info_remark']) ?  $_POST['info_remark'] : '');
+
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -52,10 +57,34 @@ else
         $user_name = $decoded->data->username;
         $user_department = $decoded->data->department;
 
-        
-        // now you can apply
         $uid = $user_id;
+        // now you can apply
+    if($crud == "Send To OP" || $crud == "Send To MD")
+    {
     
+        $query = "update apply_for_petty
+                   SET
+                  `status` =  :status,
+                  `updated_at` = now(),
+                  `info_account` =  :info_account,
+                  `info_category` =  :info_category,
+                  `info_sub_category` =  :info_sub_category,
+                  `info_remark` =  :info_remark
+                   where id = :id ";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':status', GetAction($crud));
+        $stmt->bindParam(':info_account', $info_account);
+        $stmt->bindParam(':info_category', $info_category);
+        $stmt->bindParam(':info_sub_category', $sub_category);
+        $stmt->bindParam(':info_remark', $info_remark);
+    }
+    else
+    {
         $query = "update apply_for_petty
                    SET
                   `status` =  :status,
@@ -68,7 +97,7 @@ else
         // bind the values
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':status', GetAction($crud));
-
+    }
         try {
             // execute the query, also check if query was successful
             if (!$stmt->execute()) {
@@ -202,7 +231,7 @@ else
         // bind the values
         $stmt->bindParam(':petty_id', $id);
         $stmt->bindParam(':actor', $user_name);
-        $stmt->bindParam(':_action', $crud);
+        $stmt->bindParam(':_action', GetDesc($crud));
         $stmt->bindParam(':remark', $remark);
         
         try {
@@ -249,6 +278,45 @@ function GetAction($loc)
             break;
         case "Withdraw":
             $location = -1;
+            break;
+        case "Checking Reject":
+            $location = 0;
+            break;
+        case "Send To OP":
+            $location = 3;
+            break;
+        case "Send To MD":
+            $location = 4;
+            break;
+        case "Review Reject To User":
+            $location = 0;
+            break;
+        case "Review Reject To Checker":
+            $location = 2;
+            break;
+        case "Send To Releaser":
+            $location = 5;
+            break;
+    }
+
+    return $location;
+}
+
+function GetDesc($loc)
+{
+    $location = $loc;
+    switch ($loc) {
+        case "Checking Reject":
+            $location = "Reject";
+            break;
+        case "Review Reject To User":
+            $location = "Reject";
+            break;
+        case "Review Reject To Checker":
+            $location = "Reject";
+            break;
+        case "Send To Releaser":
+            $location = "Approve";
             break;
     }
 

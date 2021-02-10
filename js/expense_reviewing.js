@@ -102,7 +102,7 @@ var app = new Vue({
       let _this = this;
 
       axios
-        .get("api/expense_checking")
+        .get("api/expense_reviewing")
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;
@@ -172,7 +172,7 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Send To OP");
+      form_Data.append("crud", "Send To MD");
       form_Data.append("id", id);
       form_Data.append("remark", "");
       form_Data.append("info_account", this.record.info_account);
@@ -217,13 +217,9 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Send To MD");
+      form_Data.append("crud", "Send To Releaser");
       form_Data.append("id", id);
       form_Data.append("remark", "");
-      form_Data.append("info_account", this.record.info_account);
-      form_Data.append("info_category", this.record.info_category);
-      form_Data.append("sub_category", this.record.sub_category);
-      form_Data.append("info_remark", this.record.info_remark);
 
       axios({
         method: "post",
@@ -254,6 +250,47 @@ var app = new Vue({
         });
     },
 
+    rejectReceiveRecord_Checker: function(id) {
+        let _this = this;
+        targetId = this.record.id;
+        var form_Data = new FormData();
+  
+        var token = localStorage.getItem("token");
+        form_Data.append("jwt", token);
+  
+        form_Data.append("crud", "Review Reject To Checker");
+        form_Data.append("id", id);
+        form_Data.append("remark", this.reject_reason);
+  
+        axios({
+          method: "post",
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+          url: "api/petty_cash_action",
+          data: form_Data,
+        })
+          .then(function(response) {
+            //handle success
+            //this.$forceUpdate();
+            Swal.fire({
+              text: response.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+            _this.resetForm();
+          })
+          .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: response.data,
+              icon: "warning",
+              confirmButtonText: "OK",
+            });
+          });
+      },
+
     rejectReceiveRecord: function(id) {
       let _this = this;
       targetId = this.record.id;
@@ -262,7 +299,7 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Checking Reject");
+      form_Data.append("crud", "Review Reject To User");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
 
@@ -340,46 +377,6 @@ var app = new Vue({
         return;
       }
 
-      if (this.record.info_category.trim() === "") {
-        Swal.fire({
-          text: "Please select category!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.record.sub_category.trim() === "") {
-        Swal.fire({
-          text: "Please select sub category!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.record.info_account.trim() === "") {
-        Swal.fire({
-          text: "Please select account!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.record.info_remark.trim() === "") {
-        Swal.fire({
-          text: "Please select remark!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
       Swal.fire({
         title: "Are you sure to approve?",
         text: "Are you sure to approve apply?",
@@ -410,46 +407,6 @@ var app = new Vue({
         });
 
         //$(window).scrollTop(0);
-        return;
-      }
-
-      if (this.record.info_category.trim() === "") {
-        Swal.fire({
-          text: "Please select category!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.record.sub_category.trim() === "") {
-        Swal.fire({
-          text: "Please select sub category!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.record.info_account.trim() === "") {
-        Swal.fire({
-          text: "Please select account!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.record.info_remark.trim() === "") {
-        Swal.fire({
-          text: "Please select remark!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
         return;
       }
 
@@ -514,6 +471,49 @@ var app = new Vue({
         }
       });
     },
+
+    reject_checker: function() {
+        let _this = this;
+  
+        if (this.proof_id < 1) {
+          Swal.fire({
+            text: "Please select applicant to be rejected!",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          //$(window).scrollTop(0);
+          return;
+        }
+  
+        if (this.reject_reason.trim() === "") {
+          Swal.fire({
+            text: "Please enter reject reason!",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          //$(window).scrollTop(0);
+          return;
+        }
+  
+        Swal.fire({
+          title: "Are you sure to reject?",
+          text: "Are you sure to reject apply?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+        }).then((result) => {
+          if (result.value) {
+            _this.submit = true;
+            _this.rejectReceiveRecord_Checker(this.proof_id);
+  
+            _this.resetForm();
+          }
+        });
+      },
    
 
     resetForm: function() {

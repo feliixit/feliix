@@ -112,10 +112,10 @@ $(function(){
     <div id="app" class="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A">Check</a>
+            <a class="tag A" href="expense_checking">Check</a>
             <a class="tag B focus">Review</a>
-            <a class="tag C">Release</a>
-            <a class="tag D">Verify</a>
+            <a class="tag C" href="expense_releasing">Release</a>
+            <a class="tag D" href="expense_verifying">Verify</a>
         </div>
         <!-- Blocks -->
         <div class="block B focus">
@@ -137,24 +137,14 @@ $(function(){
                         <li>Total Amount Requested</li>
                     </ul>
 
-                    <ul>
+                    <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
-                            <input type="radio" class="alone black">
+                            <input type="radio" name="record_id" class="alone black" :value="record.id" v-model="proof_id">
                         </li>
-                        <li>00017</li>
-                        <li>Dennis Lin</li>
-                        <li>2020/12/07 </li>
-                        <li>372,500</li>
-                    </ul>
-
-                    <ul>
-                        <li>
-                            <input type="radio" class="alone black">
-                        </li>
-                        <li>00014</li>
-                        <li>Dennis Lin</li>
-                        <li>2021/01/25</li>
-                        <li>10,750.5</li>
+                        <li>{{ record.request_no }}</li>
+                        <li>{{ record.requestor }}</li>
+                        <li>{{ record.date_requested }}</li>
+                        <li>{{ isNaN(record.total) ? 0 : Number(record.total).toLocaleString() }}</li>
                     </ul>
                 </div>
 
@@ -163,61 +153,61 @@ $(function(){
                     <div class="tablebox">
                         <ul class="head">
                             <li class="head">Request No.</li>
-                            <li>00017</li>
+                            <li>{{record.request_no}}</li>
                         </ul>
                         <ul>
                             <li class="head">Application Time</li>
-                            <li>2020/11/20 10:15</li>
+                            <li>{{record.created_at}}</li>
                         </ul>
                         <ul>
                             <li class="head">Requestor</li>
-                            <li>Dennis Lin</li>
+                            <li>{{ record.requestor }}</li>
                         </ul>
                         <ul>
                             <li class="head">Status</li>
-                            <li>For Approve</li>
+                            <li>{{ record.desc }}</li>
                         </ul>
                         <ul>
                             <li class="head">Processing History
                             </li>
-                            <li>Submitted (Dennis Lin at 2020/11/20 15:30)<br>
-                                Checker Rejected: document is not complete. (Mary Jude Jeng Articulo at 2020/12/03 09:43)<br>
-                                Submitted (Dennis Lin at 2020/12/04 11:30)<br>
-                                Checker Checked (Mary Jude Jeng Articulo at 2020/12/04 13:55)
+                            <li>
+                                <p v-for='(item, index) in record.history' :key="index">
+                                    {{ item.action }} <a v-if="item.reason != ''">: {{ item.reason }}</a> ({{ item.actor }} at {{ item.created_at }})
+                                </p>
                             </li>
                         </ul>
                         <ul>
                             <li class="head">Date Requested</li>
-                            <li>2020/12/07</li>
+                            <li>{{ record.date_requested }}</li>
                         </ul>
                         <ul>
                             <li class="head">Type</li>
-                            <li>New</li>
+                            <li>{{record.request_type}}</li>
                         </ul>
                         <ul>
                             <li class="head">Project Name / Reason</li>
-                            <li>UDNP Ranee</li>
+                            <li>{{ record.project_name}}</li>
                         </ul>
                         <ul>
                             <li class="head">Total Amount Requested
                             </li>
-                            <li>372,500</li>
+                            <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Attachments</li>
-                            <li><a>Requirement.doc</a>
-                                <a>Requirement.xlsx</a>
+                            <li>
+                                <a v-for='(item, index) in record.items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                             </li>
                         </ul>
                         <ul>
                             <li class="head">Payable to
                             </li>
-                            <li>Other: xxxxxxx</li>
+                            <li>{{ (record.payable_other == "") ? record.payable_to : (( typeof record.payable_other == "undefined" ) ? "":  "Other:" + record.payable_other) }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions
                             </li>
-                            <li></li>
+                            <li>{{ record.remark }}</li>
                         </ul>
                     </div>
 
@@ -229,19 +219,12 @@ $(function(){
                             <li>Qty</li>
                             <li>Amount</li>
                         </ul>
-                        <ul>
-                            <li>John Raymund Casero</li>
-                            <li>Light Texture</li>
-                            <li>350</li>
-                            <li>100</li>
-                            <li>35,000</li>
-                        </ul>
-                        <ul>
-                            <li>Pika</li>
-                            <li>Light Bulb</li>
-                            <li>135</li>
-                            <li>2,500</li>
-                            <li>337,500</li>
+                        <ul v-for='(item, index) in record.list' :key="index" >
+                            <li>{{ item.payee }}</li>
+                            <li>{{ item.particulars }}</li>
+                            <li>{{ Number(item.price).toLocaleString() }}</li>
+                            <li>{{ Number(item.qty).toLocaleString() }}</li>
+                            <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
                         </ul>
                     </div>
 
@@ -249,15 +232,15 @@ $(function(){
                     <div class="tablebox">
                         <ul>
                             <li class="head">Account</li>
-                            <li>Office Petty Cash</li>
+                            <li>{{ record.info_account }}</li>
                         </ul>
                         <ul>
                             <li class="head">Category</li>
-                            <li>Office Needs>>Tools and Materials</li>
+                            <li>{{ record.info_category }}>>{{ record.sub_category }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions</li>
-                            <li>Check</li>
+                            <li>{{ record.info_remark }}</li>
                         </ul>
                     </div>
 
@@ -265,17 +248,18 @@ $(function(){
                     <form>
                         <ul>
                             <li><b>Rejection Reason</b></li>
-                            <li><textarea style="width:100%"></textarea></li>
+                            <li><textarea style="width:100%" v-model="reject_reason"></textarea></li>
                         </ul>
 
                         <div class="btnbox">
-                            <a class="btn red">Reject (Requestor)</a>
-                        <a class="btn red">Reject (Checker)</a>
+                            <a class="btn red" v-if="record.status == 3 || record.status == 4" @click="reject">Reject (Requestor)</a>
+                        <a class="btn red" v-if="record.status == 3 || record.status == 4" @click="reject_checker">Reject (Checker)</a>
                         </div>
                     </form>
 
                     <div class="btnbox">
-                        <a class="btn">Approve</a>
+                        <a class="btn" @click="approve_op" v-if="record.status == 3">Approve</a>
+                        <a class="btn" @click="approve_md" v-if="record.status == 4">Approve</a>
                     </div>
 
                 </div>
@@ -299,5 +283,5 @@ $(function(){
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/leave_record.js"></script>
+<script src="js/expense_reviewing.js"></script>
 </html>
