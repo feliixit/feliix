@@ -104,6 +104,15 @@ $(function(){
                                         Approver (MD)
                                     </option>
                                     <option value="4">
+                                        Releaser (Office Petty Cash)
+                                    </option>
+                                    <option value="5">
+                                        Releaser (Online Transactions)
+                                    </option>
+                                    <option value="6">
+                                        Releaser (Security Bank)
+                                    </option>
+                                    <option value="7">
                                         Verifier
                                     </option>
 

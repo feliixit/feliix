@@ -249,7 +249,7 @@ body.green input[type=date] {
             <!-- tags js在 main.js -->
             <div class="tags">
                 <a class="tag A" href="apply_for_petty_cash">Apply</a>
-                <a class="tag F">Liquidate</a>
+                <a class="tag F" href="expense_liquidating">Liquidate</a>
                 <a class="tag B focus">Records</a>
             </div>
             <!-- Blocks -->

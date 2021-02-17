@@ -297,6 +297,9 @@ function GetAction($loc)
         case "Send To Releaser":
             $location = 5;
             break;
+        case "Void":
+            $location = -2;
+            break;
     }
 
     return $location;
