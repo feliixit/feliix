@@ -102,7 +102,6 @@ switch ($method) {
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
                 where pm.uid = " . $user_id . " 
-                AND p.apartment_id in (" . $apartment_id_str . ") 
                 AND pm.`status` in (3, 4)";
 
  
