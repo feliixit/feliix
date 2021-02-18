@@ -262,7 +262,8 @@ $(function(){
                         </ul>
 
                         <div class="btnbox">
-                            <a class="btn" @click="approve_op">Finish Releasing</a>
+                            <a class="btn" @click="approve_op" v-if="record.request_type_id == 1">Finish Releasing</a>
+                            <a class="btn" @click="approve_md" v-if="record.request_type_id == 2">Finish Releasing</a>
                         </div>
                     </form>
 

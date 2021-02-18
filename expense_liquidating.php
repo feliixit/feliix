@@ -287,24 +287,15 @@ $(function(){
                         <li>Date Released</li>
                     </ul>
 
-                    <ul>
+                    <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
-                            <input type="radio" class="alone green">
+                            <input type="radio" name="record_id" class="alone green" :value="record.id" v-model="proof_id">
                         </li>
-                        <li>00017</li>
-                        <li>2020/11/20 10:15</li>
-                        <li>372,500</li>
-                        <li>2020/12/07</li>
-                    </ul>
-
-                    <ul>
-                        <li>
-                            <input type="radio" class="alone green">
-                        </li>
-                        <li>00014</li>
-                        <li>2020/11/03 14:47</li>
-                        <li>10,750.5</li>
-                        <li>2021/01/25</li>
+                        <li>{{ record.request_no }}</li>
+                        <li>{{ record.requestor }}</li>
+                        <li>{{ isNaN(record.total) ? 0 : Number(record.total).toLocaleString() }}</li>
+                        <li>{{ record.date_requested }}</li>
+                        
                     </ul>
 
                 </div>
@@ -314,62 +305,55 @@ $(function(){
                     <div class="tablebox">
                         <ul class="head">
                             <li class="head">Request No.</li>
-                            <li>00017</li>
+                            <li>{{record.request_no}}</li>
                         </ul>
                         <ul>
                             <li class="head">Application Time</li>
-                            <li>2020/11/20 10:15</li>
+                            <li>{{record.created_at}}</li>
                         </ul>
                         <ul>
                             <li class="head">Status</li>
-                            <li>For Liquidate</li>
+                            <li>{{ record.desc }}</li>
                         </ul>
                         <ul>
                             <li class="head">Processing History
                             </li>
-                            <li>Submitted (Dennis Lin at 2020/11/20 15:30)<br>
-                                Checker Rejected: document is not complete. (Mary Jude Jeng Articulo at 2020/12/03 09:43)<br>
-                                Submitted (Dennis Lin at 2020/12/04 11:30)<br>
-                                Checker Checked (Mary Jude Jeng Articulo at 2020/12/04 13:55)<br>
-                                OP Approved (Thalassa Wren Benzon at 2020/12/04 16:23)<br>
-                                MD Approved (Kristel Tan at 2020/12/04 17:05)<br>
-                                Releaser Released (Mary Jude Jeng Articulo at 2020/12/07 10:03)<br>
-                                Liquidated (Dennis Lin at 2020/12/09 14:04)<br>
-                                Verifier Rejected: Liquidation files are not clear. (Mary Jude Jeng Articulo at 2020/12/11 10:15)<br>
+                            <li><p v-for='(item, index) in record.history' :key="index">
+                                    {{ item.action }} <a v-if="item.reason != ''">: {{ item.reason }}</a> ({{ item.actor }} at {{ item.created_at }})
+                                </p>
                             </li>
                         </ul>
                         <ul>
                             <li class="head">Date Requested</li>
-                            <li>2020/12/07</li>
+                            <li>{{ record.date_requested }}</li>
                         </ul>
                         <ul>
                             <li class="head">Type</li>
-                            <li>New</li>
+                            <li>{{record.request_type}}</li>
                         </ul>
                         <ul>
                             <li class="head">Project Name / Reason</li>
-                            <li>UDNP Ranee</li>
+                            <li>{{ record.project_name}}</li>
                         </ul>
                         <ul>
                             <li class="head">Total Amount Requested
                             </li>
-                            <li>372,500</li>
+                            <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Attachments</li>
-                            <li><a>Requirement.doc</a>
-                                <a>Requirement.xlsx</a>
+                            <li><a v-for='(item, index) in record.items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                             </li>
                         </ul>
                         <ul>
                             <li class="head">Payable to
                             </li>
-                            <li>Other: xxxxxxx</li>
+                            <li>{{ (record.payable_other == "") ? record.payable_to : (( typeof record.payable_other == "undefined" ) ? "":  "Other:" + record.payable_other) }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions
                             </li>
-                            <li></li>
+                            <li>{{ record.remark }}</li>
                         </ul>
                     </div>
 
@@ -381,19 +365,12 @@ $(function(){
                             <li>Qty</li>
                             <li>Amount</li>
                         </ul>
-                        <ul>
-                            <li>John Raymund Casero</li>
-                            <li>Light Texture</li>
-                            <li>350</li>
-                            <li>100</li>
-                            <li>35,000</li>
-                        </ul>
-                        <ul>
-                            <li>Pika</li>
-                            <li>Light Bulb</li>
-                            <li>135</li>
-                            <li>2,500</li>
-                            <li>337,500</li>
+                        <ul v-for='(item, index) in record.list' :key="index" >
+                            <li>{{ item.payee }}</li>
+                            <li>{{ item.particulars }}</li>
+                            <li>{{ Number(item.price).toLocaleString() }}</li>
+                            <li>{{ Number(item.qty).toLocaleString() }}</li>
+                            <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
                         </ul>
                     </div>
 
@@ -401,38 +378,37 @@ $(function(){
                     <div class="tablebox" style="margin-top: 60px;">
                         <ul class="head">
                             <li class="head">Request No.</li>
-                            <li>00017</li>
+                            <li>{{record.request_no}}</li>
                         </ul>
                         <ul>
                             <li class="head">Total Amount Requested
                             </li>
-                            <li>372,500</li>
+                            <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Date Released</li>
-                            <li>2020/12/07</li>
+                            <li>{{record.release_date}}</li>
                         </ul>
                         <ul>
                             <li class="head">Proof of Release</li>
-                            <li><a>Signature_01.pdf</a>
-                                <a>Signature_02.pdf</a>
+                            <li><a v-for='(item, index) in record.release_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                             </li>
                         </ul>
                          <ul>
                             <li class="head">Date Liquidated</li>
-                            <li>2020/12/09</li>
+                            <li>{{record.liquidate_date}}</li>
                         </ul>
                         <ul>
                             <li class="head">Amount Liquidated</li>
-                            <li>372,500</li>
+                            <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Liquidation Files</li>
-                            <li><a>Receipt.xlsx</a></li>
+                            <li><a v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a></li>
                         </ul>
                          <ul>
                             <li class="head">Remarks</li>
-                            <li></li>
+                            <li>{{ record.remark }}</li>
                         </ul>
                     </div>
 
@@ -440,17 +416,17 @@ $(function(){
                     <form>
                         <ul>
                             <li><b>Amount Liquidated</b></li>
-                            <li><input type="number" style="width:100%"></li>
+                            <li><input type="number" style="width:100%" v-model="amount_liquidated"></li>
 
                             <li style="margin-top: 15px;"><b>Upload Liquidation Files</b></li>
-                            <li><input type="file" style="width:100%" multiple></li>
+                            <li><input type="file" style="width:100%" ref="file" name="file[]" multiple></li>
 
                             <li style="margin-top: 15px;"><b>Remarks</b></li>
-                            <li><textarea style="width:100%;" placeholder="Require to write the reason here if no liquidation file was attached in the above."></textarea></li>
+                            <li><textarea style="width:100%;" placeholder="Require to write the reason here if no liquidation file was attached in the above." v-model="reject_reason"></textarea></li>
                         </ul>
 
                         <div class="btnbox">
-                            <a class="btn">Submit</a>
+                            <a class="btn" @click="approve_op">Submit</a>
                         </div>
                     </form>
 

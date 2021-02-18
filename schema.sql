@@ -1118,3 +1118,7 @@ ADD COLUMN `info_sub_category` varchar(512) DEFAULT '' AFTER info_category;
 ALTER TABLE apply_for_petty
 ADD COLUMN `info_remark` varchar(512) DEFAULT '' AFTER info_sub_category;
 
+-- 
+ALTER TABLE apply_for_petty
+ADD COLUMN `amount_liquidated` decimal(10, 2) default 0.0 AFTER info_remark;
+

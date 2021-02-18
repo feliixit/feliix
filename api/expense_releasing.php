@@ -133,6 +133,7 @@ switch ($method) {
         $id = 0;
         $request_no = "";
         $date_requested = "";
+        $request_type_id = 0;
         $request_type = "";
         $project_name = "";
         $payable_to = "";
@@ -158,6 +159,7 @@ switch ($method) {
             $id = $row['id'];
             $request_no = $row['request_no'];
             $date_requested = $row['date_requested'];
+            $request_type_id = $row['request_type'];
             $request_type = GetPettyType($row['request_type']);
             $requestor = $row['requestor'];
             $project_name = $row['project_name'];
@@ -185,6 +187,7 @@ switch ($method) {
                 "id" => $id,
                 "request_no" => $request_no,
                 "date_requested" => $date_requested,
+                "request_type_id" => $request_type_id,
                 "request_type" => $request_type,
                 "requestor" => $requestor,
                 "project_name" => $project_name,

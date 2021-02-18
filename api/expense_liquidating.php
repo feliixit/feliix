@@ -57,7 +57,7 @@ switch ($method) {
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
         // check if can see petty expense list (Record only for himself)
-        $sql = "select * from expense_flow where uid = " . $user_id . " AND `status` <> -1 and flow in (4, 5, 6)";
+        $sql = "select * from expense_flow where uid = " . $user_id . " AND `status` <> -1 and flow in (7)";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
@@ -102,7 +102,7 @@ switch ($method) {
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
                 where pm.uid = " . $user_id . " 
-                AND pm.`status` in (5)";
+                AND pm.`status` in (7, 8)";
 
  
         if (!empty($_GET['page'])) {
@@ -152,7 +152,12 @@ switch ($method) {
         $history = [];
         $list = [];
         $items = [];
-    
+
+        $release_date = "";
+        $release_items = [];
+        $liquidate_date = "";
+        $liquidate_items = [];
+
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
@@ -167,6 +172,12 @@ switch ($method) {
             $status = $row['status'];
             $desc = GetStatus($row['status']);
             $items = GetAttachment($row['id'], $db);
+
+            $release_date = GetReleaseHistory($row['id'], $db);
+            $release_items = GetReleaseAttachment($row['id'], $db);
+            $liquidate_date = GetLiquidateHistory($row['id'], $db);
+            $liquidate_items = GetLiquidateAttachment($row['id'], $db);
+
             $history = GetHistory($row['id'], $db);
             $list = GetList($row['id'], $db);
             $created_at = $row['created_at'];
@@ -199,6 +210,11 @@ switch ($method) {
                 "total" => $total,
                 "created_at" => $created_at,
 
+                "liquidate_date" => $liquidate_date,
+                "liquidate_items" => $liquidate_items,
+                "release_date" => $release_date,
+                "release_items" => $release_items,
+
                 "info_account" => $info_account,
                 "info_category" => $info_category,
                 "sub_category" => $info_sub_category,
@@ -219,6 +235,42 @@ function GetAttachment($_id, $db)
 {
     $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'petty'
+            order by h.created_at ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetReleaseAttachment($_id, $db)
+{
+    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Releasing'
+            order by h.created_at ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetLiquidateAttachment($_id, $db)
+{
+    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Liquidating'
             order by h.created_at ";
 
     $merged_results = array();
@@ -369,6 +421,41 @@ function GetHistory($_id, $db)
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+
+function GetReleaseHistory($_id, $db)
+{
+    $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
+            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Releasing' order by created_at desc limit 1";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row['created_at'];
+    }
+
+    return $merged_results;
+}
+
+function GetLiquidateHistory($_id, $db)
+{
+    $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
+            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Liquidating' order by created_at desc limit 1";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row['created_at'];
     }
 
     return $merged_results;

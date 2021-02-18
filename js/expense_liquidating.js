@@ -16,6 +16,7 @@ var app = new Vue({
 
     proof_remark: "",
     reject_reason: "",
+    amount_liquidated: 0,
 
     proof_id: 0,
 
@@ -172,9 +173,10 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Releasing");
+      form_Data.append("crud", "Liquidating");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
+      form_Data.append("amount", this.amount_liquidated);
    
       for( var i = 0; i < this.$refs.file.files.length; i++ ){
         let file = this.$refs.file.files[i];
