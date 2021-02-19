@@ -57,7 +57,7 @@ switch ($method) {
 
         $pid  = (isset($_GET['pid']) ?  $_GET['pid'] : 0);
 
-        $sql = "SELECT 0 as is_checked, f.id, username, d.department, flow FROM `expense_flow` f LEFT JOIN `user` u ON f.uid = u.id left join user_department d on f.apartment_id = d.id WHERE f.apartment_id = $pid AND u.`status` <> -1 ";
+        $sql = "SELECT 0 as is_checked, f.id, username, d.department, flow FROM `expense_flow` f LEFT JOIN `user` u ON f.uid = u.id left join user_department d on f.apartment_id = d.id WHERE u.`status` <> -1 ";
 
         $sql = $sql . " ORDER BY id ";
 

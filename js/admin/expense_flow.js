@@ -51,7 +51,7 @@ var app = new Vue({
       this.perPage = this.inventory.find(i => i.id === this.perPage);
 
       this.getDepartments();
-      this.getUsers();
+      this.getUsers(this.department_id);
 
     },
 
@@ -72,14 +72,14 @@ var app = new Vue({
 
       department_id (value) {
         this.getReceiveRecords(value);
+        this.getUsers (value);
         },
 
     },
  
 	methods:{
 		getReceiveRecords: function(department_id) {
-            if(department_id == 0)
-                return;
+    
             let _this = this;
             let token = localStorage.getItem('accessToken');
             const params = {
@@ -136,14 +136,17 @@ var app = new Vue({
                 });
         },
 
-        getUsers () {
-
+        getUsers (department_id) {
+            if(department_id == 0)
+              return;
             let _this = this;
       
             let token = localStorage.getItem('accessToken');
-      
+            const params = {
+              apartment_id: this.department_id
+          };
             axios
-                .get('../api/admin/user', { headers: {"Authorization" : `Bearer ${token}`} })
+                .get('../api/admin/user', { params, headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
                     _this.user_list = res.data;

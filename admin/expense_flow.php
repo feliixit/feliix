@@ -147,7 +147,7 @@ $(function(){
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
                         <li>{{record.department}}</li>
                         <li>{{record.username}}</li>
-                        <li>{{ (record.flow == 1) ? "Checker" : (record.flow == 2) ? "Approver (OP)" : (record.flow == 3) ? "Approver (MD)" : (record.flow == 4) ? "Verifier" : "" }}</li>
+                        <li>{{ (record.flow == 1) ? "Checker" : (record.flow == 2) ? "Approver (OP)" : (record.flow == 3) ? "Approver (MD)" : (record.flow == 4) ? "Releaser (Office Petty Cash)" : (record.flow == 5) ? "Releaser (Online Transactions)" : (record.flow == 6) ? "Releaser (Security Bank)" : (record.flow == 7) ? "Verifier" : "" }}</li>
                         
                     </ul>
                     
