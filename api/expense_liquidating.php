@@ -75,7 +75,7 @@ switch ($method) {
             array_push($array_flow, $flow);
         }
         
-        if(sizeof($arry_apartment_id) == 0)
+        if(sizeof($array_flow) == 0)
         {
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
             die();

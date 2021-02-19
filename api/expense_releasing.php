@@ -75,13 +75,13 @@ switch ($method) {
             array_push($array_flow, $flow);
         }
         
-        if(sizeof($arry_apartment_id) == 0)
+        if(sizeof($array_flow) == 0)
         {
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
             die();
         }
 
-        $apartment_id_str = implode (", ", $arry_apartment_id);
+        //$apartment_id_str = implode (", ", $arry_apartment_id);
 
         $sql = "SELECT  pm.id,
                         request_no, 
