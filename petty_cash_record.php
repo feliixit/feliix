@@ -370,34 +370,33 @@ body.green input[type=date] {
                             </ul>
                             <ul>
                                 <li class="head">Date Released</li>
-                                <li>2020/12/07</li>
+                                <li>{{record.release_date}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Proof of Release</li>
-                                <li><a>Signature_01.pdf</a>
-                                    <a>Signature_02.pdf</a>
+                                <li><a v-for='(item, index) in record.release_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Date Liquidated</li>
-                                <li>2020/12/14</li>
+                                <li>{{record.liquidate_date}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Liquidation Files</li>
-                                <li><a>Receipt.jpg</a>
+                                <li><a v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Date Verified</li>
-                                <li>2020/12/14</li>
+                                <li>{{record.verified_date}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Actual Amount After Verification</li>
-                                <li>370,000</li>
+                                <li>{{ isNaN(record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Proof of Return or Release</li>
-                                <li><a>Signature_03.pdf</a>
+                                <li><a v-for='(item, index) in record.verified_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                 </li>
                             </ul>
                         </div>
