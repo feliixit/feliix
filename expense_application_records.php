@@ -235,6 +235,16 @@ body.green input[type=date] {
     margin: 0 15px 0 0;
     font-weight: 500;
 }
+
+.block .function input[type="month"] {
+    border: 2px solid #2F9A57;
+}
+
+body.green .mainContent > .block .tablebox ul.head,
+        body.green .mainContent > .block .formbox li.head {
+            background-color: #2F9A57;
+            font-weight: 800;
+}
 </style>
 
 </head>
@@ -286,7 +296,7 @@ body.green input[type=date] {
                     </div>
 
 
-                    <div class="details">
+                    <div class="details" v-if="proof_id != 0">
                         <div class="tablebox">
                             <ul class="head">
                                 <li class="head">Request No.</li>
@@ -382,9 +392,17 @@ body.green input[type=date] {
                                 <li>{{record.liquidate_date}}</li>
                             </ul>
                             <ul>
+                                <li class="head">Amount Liquidated</li>
+                                <li>{{ isNaN(record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
+                            </ul>
+                            <ul>
                                 <li class="head">Liquidation Files</li>
                                 <li><a v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                 </li>
+                            </ul>
+                            <ul>
+                                <li class="head">Remark</li>
+                                <li>{{record.remark}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Date Verified</li>
@@ -419,7 +437,7 @@ body.green input[type=date] {
 <script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
 <script src="//unpkg.com/element-ui"></script>
 <script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script defer src="js/a076d05399.js"></script>
 
 <script>
     ELEMENT.locale(ELEMENT.lang.en)

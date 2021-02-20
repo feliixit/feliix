@@ -101,8 +101,7 @@ switch ($method) {
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
-                where pm.uid = " . $user_id . " 
-                AND pm.`status` in (1, 2)";
+                where pm.`status` in (1, 2)";
 
  
         if (!empty($_GET['page'])) {

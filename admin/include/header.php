@@ -130,7 +130,7 @@ try {
             </li>
             <li class="sec02">
                 <a class="uni">Payment<br>Request/Claim</a>
-                <a class="list" href="../apply_for_petty_cash">Expense Apply/Liquidate</a>
+                <a class="list" href="../apply_for_expense">Expense Apply/Liquidate</a>
             </li>
             <li class="gray02">
                 <a class="uni">Profile<br>Section</a>

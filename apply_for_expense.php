@@ -280,12 +280,6 @@ body.green input[type=date] {
     padding-bottom: 10px;
 }
 
-#modal_EditListing .tablebox li input[type="checkbox"] {
-    -webkit-appearance: checkbox;
-    -moz-appearance: checkbox;
-    appearance: checkbox;
-    display: inline-block;
-}
 
 .block.A .box-content ul:first-of-type li:nth-of-type(even) {
     padding-bottom: 10px;
@@ -313,7 +307,7 @@ body.green input[type=date] {
         <div class="tags">
             <a class="tag A focus">Apply</a>
             <a class="tag F" href="expense_liquidating">Liquidate</a>
-            <a class="tag B" href="petty_cash_record">Records</a>
+            <a class="tag B" href="expense_application_records">Records</a>
         </div>
         <!-- Blocks -->
         <div class="block A focus" style="position: relative;">
@@ -498,6 +492,6 @@ body.green input[type=date] {
 <script src="js/apply_for_petty.js"></script>
 
 <!-- Awesome Font for current webpage -->
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script src="js/a076d05399.js"></script>
 
 </html>

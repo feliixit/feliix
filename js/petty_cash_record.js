@@ -123,8 +123,9 @@ var app = new Vue({
           _this.receive_records = response.data;
           if(_this.receive_records.length > 0)
           {
-              _this.proof_id = _this.receive_records[0].id;
-              _this.detail();
+            _this.proof_id = 0;
+              //_this.proof_id = _this.receive_records[0].id;
+              //_this.detail();
           }
         })
         .catch(function(error) {
@@ -337,11 +338,11 @@ var app = new Vue({
       //}
 
       if (this.proof_id == 0) {
-        Swal.fire({
-          text: "Please select row to see the detail!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
+        //Swal.fire({
+        //  text: "Please select row to see the detail!",
+        //  icon: "warning",
+        //  confirmButtonText: "OK",
+        //});
 
         //$(window).scrollTop(0);
         this.view_detail = false;

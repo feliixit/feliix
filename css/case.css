@@ -11,7 +11,7 @@ body.third   header > .headerbox{background-color: var(--sec03);}
 body.fourth  header > .headerbox{background-color: var(--fth01);}
 body.black   header > .headerbox{background-color: var(--black01);}
 body.cyan    header > .headerbox{background-color: var(--cyan01);}
-body.green   header > .headerbox{background-color: var(--cat03);}
+body.green   header > .headerbox{background-color: var(--sec02);}
 
 header .logo{ display: inline-block; /*width: 188px; height: 43px;*/  width: 125px; height: 30px; background-image: url(../images/ui/logo_light.svg);  background-size: contain; background-repeat: no-repeat; background-position: center; }
 header > .headerbox .logo{ margin-left: 20px; float: left;}

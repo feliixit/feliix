@@ -264,9 +264,9 @@ $(function(){
     <div id="app" class="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-             <a class="tag A" href="apply_for_petty_cash">Apply</a>
+             <a class="tag A" href="apply_for_expense">Apply</a>
              <a class="tag F focus">Liquidate</a>
-            <a class="tag B" href="petty_cash_record">Records</a>
+            <a class="tag B" href="expense_application_records">Records</a>
         </div>
         <!-- Blocks -->
         <div class="block F focus">
