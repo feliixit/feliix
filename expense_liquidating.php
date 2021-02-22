@@ -405,6 +405,7 @@ $(function(){
                         <ul>
                             <li class="head">Liquidation Files</li>
                             <li><a v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a></li>
+                            
                         </ul>
                          <ul>
                             <li class="head">Remarks</li>
@@ -419,14 +420,21 @@ $(function(){
                             <li><input type="number" style="width:100%"  v-model="amount_liquidated"></li>
 
                             <li style="margin-top: 15px;"><b>Upload Liquidation Files</b></li>
-                            <li><input type="file" style="width:100%" ref="file" name="file[]" multiple></li>
+                            <li>
+                                <input type="file" style="width:100%" ref="file" name="file[]" multiple>
+                                <div class="list_attch" v-for="(item,index) in record.liquidate_items" :key="index" >
+                                    <input type="checkbox" :id="'file' + item.id" v-model="item.is_checked">
+                                    <label :for="'file' + item.id"><a class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a></label>
+                                </div>
+                            </li>
 
                             <li style="margin-top: 15px;"><b>Remarks</b></li>
                             <li><textarea style="width:100%;" placeholder="Require to write the reason here if no liquidation file was attached in the above." v-model="reject_reason"></textarea></li>
                         </ul>
 
                         <div class="btnbox">
-                            <a class="btn" @click="approve_op">Submit</a>
+                            <a class="btn" v-if="record.status == 6" @click="approve_op">Submit</a>
+                            <a class="btn" v-if="record.status == 7" @click="approve_op">Re-Submit</a>
                         </div>
                     </form>
 

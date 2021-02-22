@@ -242,7 +242,7 @@ switch ($method) {
 
 function GetAttachment($_id, $db)
 {
-    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+    $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'petty'
             order by h.created_at ";
 
@@ -260,7 +260,7 @@ function GetAttachment($_id, $db)
 
 function GetReleaseAttachment($_id, $db)
 {
-    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+    $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Releasing'
             order by h.created_at ";
 
@@ -278,7 +278,7 @@ function GetReleaseAttachment($_id, $db)
 
 function GetLiquidateAttachment($_id, $db)
 {
-    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+    $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
             from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Liquidating'
             order by h.created_at ";
 

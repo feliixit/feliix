@@ -87,9 +87,11 @@ switch ($method) {
                         u.username payable_to,
                         payable_other,
                         remark,
+                        info_remark,
                         pm.`status` ,
                         DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at,
-                        pm.amount_liquidated
+                        pm.amount_liquidated,
+                        pm.amount_verified
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
@@ -132,6 +134,7 @@ switch ($method) {
         $payable_to = "";
         $payable_other = "";
         $remark = "";
+        $info_remark = "";
         $status = 0;
         $desc = "";
 
@@ -148,6 +151,7 @@ switch ($method) {
         $liquidate_items = [];
 
         $amount_liquidated = 0;
+        $amount_verified = 0;
 
         $verified_date = "";
         $verified_items = [];
@@ -163,6 +167,7 @@ switch ($method) {
             $payable_to = $row['payable_to'];
             $payable_other = $row['payable_other'];
             $remark = $row['remark'];
+            $info_remark = $row['info_remark'];
             $status = $row['status'];
             $desc = GetStatus($row['status']);
             $items = GetAttachment($row['id'], $db);
@@ -179,6 +184,7 @@ switch ($method) {
             $verified_items = GetVerifiedAttachment($row['id'], $db);
 
             $amount_liquidated = $row['amount_liquidated'];
+            $amount_verified = $row['amount_verified'];
 
             $total = 0;
             foreach ($list as &$value) {
@@ -195,6 +201,7 @@ switch ($method) {
                 "payable_to" => $payable_to,
                 "payable_other" => $payable_other,
                 "remark" => $remark,
+                "info_remark" => $info_remark,
                 "status" => $status,
                 "desc" => $desc,
                 "items" => $items,
@@ -212,6 +219,7 @@ switch ($method) {
                 "verified_items" => $verified_items,
 
                 "amount_liquidated" => $amount_liquidated,
+                "amount_verified" => $amount_verified,
 
             );
 
@@ -246,7 +254,7 @@ function GetAttachment($_id, $db)
 function GetReleaseAttachment($_id, $db)
 {
     $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
-            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Releasing'
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Releaser Released'
             order by h.created_at ";
 
     $merged_results = array();
@@ -282,7 +290,7 @@ function GetLiquidateAttachment($_id, $db)
 function GetVerifiedAttachment($_id, $db)
 {
     $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
-            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Verified'
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Verifier Verified'
             order by h.created_at ";
 
     $merged_results = array();
@@ -476,7 +484,7 @@ function GetLiquidateHistory($_id, $db)
 function GetVerifiedHistory($_id, $db)
 {
     $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
-            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Verified' order by created_at desc limit 1";
+            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Verifier Verified' order by created_at desc limit 1";
 
     $merged_results = "";
 

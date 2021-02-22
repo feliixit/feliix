@@ -175,9 +175,9 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Releasing");
+      form_Data.append("crud", "Verifier Verified");
       form_Data.append("id", id);
-      form_Data.append("remark", this.reject_reason);
+      form_Data.append("amount", this.actual_amount);
    
       for( var i = 0; i < this.$refs.file.files.length; i++ ){
         let file = this.$refs.file.files[i];
@@ -380,7 +380,7 @@ var app = new Vue({
         //$(window).scrollTop(0);
         return;
       }
-
+/*
       if (!this.$refs.file.files[0])
           {
             Swal.fire({
@@ -392,10 +392,10 @@ var app = new Vue({
             //$(window).scrollTop(0);
             return false;
           }
-
+*/
       Swal.fire({
-        title: "Are you sure to approve?",
-        text: "Are you sure to approve apply?",
+        title: "Are you sure to verify?",
+        text: "Are you sure to verify apply?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",

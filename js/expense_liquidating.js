@@ -16,7 +16,7 @@ var app = new Vue({
 
     proof_remark: "",
     reject_reason: "",
-    amount_liquidated: 0,
+    amount_liquidated: "",
 
     proof_id: 0,
 
@@ -177,7 +177,18 @@ var app = new Vue({
       form_Data.append("crud", "Liquidating");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
-      form_Data.append("amount", this.amount_liquidated);
+      form_Data.append("amount", this.amount_liquidated.replaceAll(',', ''));
+
+      if(this.record.status == 7)
+      {
+        var favorite = [];
+        for(var i = 0; i < this.record.liquidate_items.length; i++)
+        {
+          if(this.record.liquidate_items[i].is_checked === false)
+            favorite.push(this.record.liquidate_items[i].id);
+        }
+        form_Data.append("items_to_delete", JSON.stringify(favorite));
+      }
    
       for( var i = 0; i < this.$refs.file.files.length; i++ ){
         let file = this.$refs.file.files[i];
@@ -364,7 +375,7 @@ var app = new Vue({
       );
       
       this.reject_reason = "";
-      this.amount_liquidated = this.record.amount_liquidated;
+      this.amount_liquidated = Number(this.record.amount_liquidated).toLocaleString();
       this.view_detail = true;
     },
 
@@ -382,7 +393,7 @@ var app = new Vue({
         return;
       }
 
-      if (!this.$refs.file.files[0])
+      if (!this.$refs.file.files[0] && this.reject_reason.trim() == '')
           {
             Swal.fire({
               text: 'File Attachment required',

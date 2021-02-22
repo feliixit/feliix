@@ -18,6 +18,9 @@ $info_category = (isset($_POST['info_category']) ?  $_POST['info_category'] : ''
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 $info_remark = (isset($_POST['info_remark']) ?  $_POST['info_remark'] : '');
 
+$items_to_delete = (isset($_POST['items_to_delete']) ?  $_POST['items_to_delete'] : "[]");
+$items_array = json_decode(stripslashes($items_to_delete),true);
+
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -95,6 +98,21 @@ if (!isset($jwt)) {
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':status', GetAction($crud));
             $stmt->bindParam(':amount_liquidated', $amount);
+        } elseif ($crud == "Verifier Verified") {
+            $query = "update apply_for_petty
+                   SET
+                  `status` =  :status,
+                  `updated_at` = now(),
+                  `amount_verified` =  :amount_verified
+                   where id = :id ";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            // bind the values
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':status', GetAction($crud));
+            $stmt->bindParam(':amount_verified', $amount);
         } else {
             $query = "update apply_for_petty
                    SET
@@ -125,6 +143,38 @@ if (!isset($jwt)) {
             http_response_code(501);
             echo json_encode(array($e->getMessage()));
             die();
+        }
+
+
+        // items to delete
+        for ($i = 0; $i < count($items_array); $i++) {
+            $query = "DELETE FROM gcp_storage_file
+                WHERE
+                    `id` = :_id";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            // bind the values
+            $stmt->bindParam(':_id', $items_array[$i]);
+   
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array($arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array($e->getMessage()));
+                die();
+            }
         }
 
         $batch_id = $id;
@@ -314,6 +364,9 @@ function &GetAction($loc)
             break;
         case "Verifier Rejected":
             $location = 7;
+            break;
+        case "Verifier Verified":
+            $location = 9;
             break;
         case "Void":
             $location = -2;
