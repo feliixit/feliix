@@ -56,6 +56,7 @@ switch ($method) {
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
+        /*
         // check if can see petty expense list (Record only for himself)
         $sql = "select * from expense_flow where uid = " . $user_id . " AND `status` <> -1 and flow in (7)";
         $stmt = $db->prepare($sql);
@@ -80,6 +81,7 @@ switch ($method) {
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
             die();
         }
+        */
 
         $apartment_id_str = implode (", ", $arry_apartment_id);
 
@@ -102,7 +104,7 @@ switch ($method) {
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
                 where pm.uid = " . $user_id . " 
-                AND pm.`status` in (7, 8)";
+                AND pm.`status` in (6, 7)";
 
  
         if (!empty($_GET['page'])) {
@@ -412,7 +414,7 @@ function GetList($_id, $db)
 function GetHistory($_id, $db)
 {
     $sql = "select pm.id, `actor`, `action`, reason, `status`, DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at from petty_history pm 
-            where `status` <> -1 and petty_id = " . $_id . " order by created_at desc ";
+            where `status` <> -1 and petty_id = " . $_id . " order by created_at ";
 
     $merged_results = array();
 

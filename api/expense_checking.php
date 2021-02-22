@@ -359,7 +359,7 @@ function GetList($_id, $db)
 function GetHistory($_id, $db)
 {
     $sql = "select pm.id, `actor`, `action`, reason, `status`, DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at from petty_history pm 
-            where `status` <> -1 and petty_id = " . $_id . " order by created_at desc ";
+            where `status` <> -1 and petty_id = " . $_id . " order by created_at ";
 
     $merged_results = array();
 
