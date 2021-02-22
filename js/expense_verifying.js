@@ -16,7 +16,8 @@ var app = new Vue({
 
     proof_remark: "",
     reject_reason: "",
-    amount_liquidated: 0,
+
+    actual_amount: 0,
 
     proof_id: 0,
 
@@ -103,7 +104,7 @@ var app = new Vue({
       let _this = this;
 
       axios
-        .get("api/expense_liquidating")
+        .get("api/expense_verifying")
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;
@@ -174,10 +175,9 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Liquidating");
+      form_Data.append("crud", "Releasing");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
-      form_Data.append("amount", this.amount_liquidated);
    
       for( var i = 0; i < this.$refs.file.files.length; i++ ){
         let file = this.$refs.file.files[i];
@@ -303,7 +303,7 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Void");
+      form_Data.append("crud", "Verifier Rejected");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
 
@@ -364,7 +364,6 @@ var app = new Vue({
       );
       
       this.reject_reason = "";
-      this.amount_liquidated = this.record.amount_liquidated;
       this.view_detail = true;
     },
 
@@ -395,8 +394,8 @@ var app = new Vue({
           }
 
       Swal.fire({
-        title: "Are you sure to submit?",
-        text: "Are you sure to submit apply?",
+        title: "Are you sure to approve?",
+        text: "Are you sure to approve apply?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",

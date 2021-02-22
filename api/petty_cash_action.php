@@ -94,7 +94,7 @@ if (!isset($jwt)) {
             // bind the values
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':status', GetAction($crud));
-            $stmt->bindParam(':amount_liquidated', $amount_liquidated);
+            $stmt->bindParam(':amount_liquidated', $amount);
         } else {
             $query = "update apply_for_petty
                    SET
@@ -127,91 +127,92 @@ if (!isset($jwt)) {
             die();
         }
 
-
-
-        $batch_id = $last_id;
+        $batch_id = $id;
         $batch_type = $crud;
 
-        try {
-            $total = count($_FILES['files']['name']);
-            // Loop through each file
-            for ($i = 0; $i < $total; $i++) {
+        if(isset($_FILES['files']['name']))
+        {
+            try {
+                $total = count($_FILES['files']['name']);
+                // Loop through each file
+                for ($i = 0; $i < $total; $i++) {
 
-                if (isset($_FILES['files']['name'][$i])) {
-                    $image_name = $_FILES['files']['name'][$i];
-                    $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
-                    $extension = pathinfo($image_name, PATHINFO_EXTENSION);
-                    if (in_array(strtolower($extension), $valid_extensions)) {
-                        //$upload_path = 'img/' . time() . '.' . $extension;
+                    if (isset($_FILES['files']['name'][$i])) {
+                        $image_name = $_FILES['files']['name'][$i];
+                        $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
+                        $extension = pathinfo($image_name, PATHINFO_EXTENSION);
+                        if (in_array(strtolower($extension), $valid_extensions)) {
+                            //$upload_path = 'img/' . time() . '.' . $extension;
 
-                        $storage = new StorageClient([
-                            'projectId' => 'predictive-fx-284008',
-                            'keyFilePath' => $conf::$gcp_key
-                        ]);
+                            $storage = new StorageClient([
+                                'projectId' => 'predictive-fx-284008',
+                                'keyFilePath' => $conf::$gcp_key
+                            ]);
 
-                        $bucket = $storage->bucket('feliiximg');
+                            $bucket = $storage->bucket('feliiximg');
 
-                        $upload_name = time() . '_' . pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
+                            $upload_name = time() . '_' . pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
 
-                        if ($bucket->upload(
-                            fopen($_FILES['files']['tmp_name'][$i], 'r'),
-                            ['name' => $upload_name]
-                        )) {
-                            $query = "INSERT INTO gcp_storage_file
-                            SET
-                                batch_id = :batch_id,
-                                batch_type = :batch_type,
-                                filename = :filename,
-                                gcp_name = :gcp_name,
+                            if ($bucket->upload(
+                                fopen($_FILES['files']['tmp_name'][$i], 'r'),
+                                ['name' => $upload_name]
+                            )) {
+                                $query = "INSERT INTO gcp_storage_file
+                                SET
+                                    batch_id = :batch_id,
+                                    batch_type = :batch_type,
+                                    filename = :filename,
+                                    gcp_name = :gcp_name,
 
-                                create_id = :create_id,
-                                created_at = now()";
+                                    create_id = :create_id,
+                                    created_at = now()";
 
-                            // prepare the query
-                            $stmt = $db->prepare($query);
+                                // prepare the query
+                                $stmt = $db->prepare($query);
 
-                            // bind the values
-                            $stmt->bindParam(':batch_id', $batch_id);
-                            $stmt->bindParam(':batch_type', GetDesc($batch_type));
-                            $stmt->bindParam(':filename', $image_name);
-                            $stmt->bindParam(':gcp_name', $upload_name);
+                                // bind the values
+                                $stmt->bindParam(':batch_id', $batch_id);
+                                $stmt->bindParam(':batch_type', GetDesc($batch_type));
+                                $stmt->bindParam(':filename', $image_name);
+                                $stmt->bindParam(':gcp_name', $upload_name);
 
-                            $stmt->bindParam(':create_id', $user_id);
+                                $stmt->bindParam(':create_id', $user_id);
 
-                            try {
-                                // execute the query, also check if query was successful
-                                if ($stmt->execute()) {
-                                    $last_id = $db->lastInsertId();
-                                } else {
-                                    $arr = $stmt->errorInfo();
-                                    error_log($arr[2]);
+                                try {
+                                    // execute the query, also check if query was successful
+                                    if ($stmt->execute()) {
+                                        $last_id = $db->lastInsertId();
+                                    } else {
+                                        $arr = $stmt->errorInfo();
+                                        error_log($arr[2]);
+                                    }
+                                } catch (Exception $e) {
+                                    error_log($e->getMessage());
+                                    $db->rollback();
+                                    http_response_code(501);
+                                    echo json_encode(array($e->getMessage()));
+                                    die();
                                 }
-                            } catch (Exception $e) {
-                                error_log($e->getMessage());
-                                $db->rollback();
-                                http_response_code(501);
-                                echo json_encode(array($e->getMessage()));
-                                die();
+
+
+                                $message = 'Uploaded';
+                                $code = 0;
+                                $upload_id = $last_id;
+                                $image = $image_name;
+                            } else {
+                                $message = 'There is an error while uploading file';
                             }
-
-
-                            $message = 'Uploaded';
-                            $code = 0;
-                            $upload_id = $last_id;
-                            $image = $image_name;
                         } else {
-                            $message = 'There is an error while uploading file';
+                            $message = 'Only Images or Office files allowed to upload';
                         }
-                    } else {
-                        $message = 'Only Images or Office files allowed to upload';
                     }
                 }
+            } catch (Exception $e) {
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Error uploading, Please use laptop to upload again."));
+                die();
             }
-        } catch (Exception $e) {
-            $db->rollback();
-            http_response_code(501);
-            echo json_encode(array("Error uploading, Please use laptop to upload again."));
-            die();
         }
 
         // save history
@@ -265,7 +266,7 @@ if (!isset($jwt)) {
     }
 }
 
-function GetAction($loc)
+function &GetAction($loc)
 {
     $location = "";
     switch ($loc) {
@@ -311,6 +312,9 @@ function GetAction($loc)
         case "Finish Releasing":
             $location = 9;
             break;
+        case "Verifier Rejected":
+            $location = 7;
+            break;
         case "Void":
             $location = -2;
             break;
@@ -319,7 +323,7 @@ function GetAction($loc)
     return $location;
 }
 
-function GetDesc($loc)
+function &GetDesc($loc)
 {
     $location = $loc;
     switch ($loc) {

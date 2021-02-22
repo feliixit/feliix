@@ -416,7 +416,7 @@ $(function(){
                     <form>
                         <ul>
                             <li><b>Amount Liquidated</b></li>
-                            <li><input type="number" style="width:100%" v-model="amount_liquidated"></li>
+                            <li><input type="number" style="width:100%"  v-model="amount_liquidated"></li>
 
                             <li style="margin-top: 15px;"><b>Upload Liquidation Files</b></li>
                             <li><input type="file" style="width:100%" ref="file" name="file[]" multiple></li>

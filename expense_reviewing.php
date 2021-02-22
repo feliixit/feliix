@@ -236,7 +236,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Category</li>
-                            <li>{{ record.info_category }}>>{{ record.sub_category }}</li>
+                            <li>{{ record.info_category }} {{ record.sub_category }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions</li>

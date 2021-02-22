@@ -56,7 +56,7 @@ switch ($method) {
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
-        /*
+        
         // check if can see petty expense list (Record only for himself)
         $sql = "select * from expense_flow where uid = " . $user_id . " AND `status` <> -1 and flow in (7)";
         $stmt = $db->prepare($sql);
@@ -64,9 +64,9 @@ switch ($method) {
 
         $arry_apartment_id = [];
         $array_flow = [];
-        */
+    
         $merged_results = array();
-        /*
+        
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             
             $apartment_id = $row['apartment_id'];
@@ -83,8 +83,8 @@ switch ($method) {
         }
         
 
-        $apartment_id_str = implode (", ", $arry_apartment_id);
-        */
+        //$apartment_id_str = implode (", ", $arry_apartment_id);
+        
 
         $sql = "SELECT  pm.id,
                         request_no, 
@@ -100,13 +100,11 @@ switch ($method) {
                         info_account,
                         info_category,
                         info_sub_category,
-                        info_remark,
-                        amount_liquidated
+                        info_remark
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
-                where pm.uid = " . $user_id . " 
-                AND pm.`status` in (6, 7)";
+                where pm.`status` = 8 ";
 
  
         if (!empty($_GET['page'])) {
@@ -162,8 +160,6 @@ switch ($method) {
         $liquidate_date = "";
         $liquidate_items = [];
 
-        $amount_liquidated = 0;
-
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
@@ -183,8 +179,6 @@ switch ($method) {
             $release_items = GetReleaseAttachment($row['id'], $db);
             $liquidate_date = GetLiquidateHistory($row['id'], $db);
             $liquidate_items = GetLiquidateAttachment($row['id'], $db);
-
-            $amount_liquidated = $row['amount_liquidated'];
 
             $history = GetHistory($row['id'], $db);
             $list = GetList($row['id'], $db);
@@ -220,7 +214,6 @@ switch ($method) {
 
                 "liquidate_date" => $liquidate_date,
                 "liquidate_items" => $liquidate_items,
-                "amount_liquidated" => $amount_liquidated,
                 "release_date" => $release_date,
                 "release_items" => $release_items,
 

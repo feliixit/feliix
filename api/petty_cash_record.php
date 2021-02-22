@@ -442,7 +442,7 @@ function GetHistory($_id, $db)
 function GetReleaseHistory($_id, $db)
 {
     $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
-            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Releasing' order by created_at desc limit 1";
+            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Releaser Released' order by created_at desc limit 1";
 
     $merged_results = "";
 
