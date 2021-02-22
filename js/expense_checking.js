@@ -330,11 +330,11 @@ var app = new Vue({
       //}
 
       if (this.proof_id == 0) {
-        Swal.fire({
-          text: "Please select row to see the detail!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
+        //Swal.fire({
+        //  text: "Please select row to see the detail!",
+        //  icon: "warning",
+        //  confirmButtonText: "OK",
+        //});
 
         //$(window).scrollTop(0);
         this.view_detail = false;
@@ -542,6 +542,7 @@ var app = new Vue({
     resetForm: function() {
       this.record = [];
       this.reject_reason = "";
+      this.proof_id = 0;
       this.getLeaveCredit();
     },
 

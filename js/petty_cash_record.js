@@ -490,7 +490,9 @@ var app = new Vue({
 
     resetForm: function() {
       this.record = [];
+      this.proof_id = 0;
       this.getLeaveCredit();
+      
     },
 
     shallowCopy(obj) {
