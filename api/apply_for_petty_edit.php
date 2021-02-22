@@ -223,8 +223,7 @@ switch ($method) {
                     `payable_to` = :payable_to,
                     `payable_other` = :payable_other,
                     `remark` = :remark,
-                    `status` = 1,
-                    `created_at` = now()
+                    `status` = 1
                     where id = :id";
 
             // prepare the query

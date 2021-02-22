@@ -422,7 +422,7 @@ body.green .mainContent > .block .tablebox ul.head,
                         </div>
 
                         <div class="btnbox">
-                            <a class="btn" v-if="record.status == 0 || record.status == -1  || record.status == -2" @click="revise">&nbsp;&nbsp;Re-Submit&nbsp;&nbsp;</a>
+                            <a class="btn" v-if="record.status == 0 || record.status == -1  || record.status == -2" v-bind:href="'apply_for_expense?pid='+ record.id">&nbsp;&nbsp;Re-Submit&nbsp;&nbsp;</a>
                             <a class="btn" v-if="record.status == 0 || record.status == 1 || record.status == 2 || record.status == 3 || record.status == 4" @click="withdraw">Withdraw</a>
                         </div>
 
