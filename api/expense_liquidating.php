@@ -64,9 +64,9 @@ switch ($method) {
 
         $arry_apartment_id = [];
         $array_flow = [];
-
+        */
         $merged_results = array();
-        
+        /*
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             
             $apartment_id = $row['apartment_id'];
@@ -81,9 +81,10 @@ switch ($method) {
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
             die();
         }
-        */
+        
 
         $apartment_id_str = implode (", ", $arry_apartment_id);
+        */
 
         $sql = "SELECT  pm.id,
                         request_no, 

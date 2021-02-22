@@ -285,10 +285,16 @@ body.green input[type=date] {
     padding-bottom: 10px;
 }
 
-.box-content li a.attch {
-    color: #2F9A57;
+.list_attch {
+    display:flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.list_attch a.attch {
+    color: #25a2b8;
     transition: .3s;
-    margin: 0 15px 0 0;
+    margin: 0 0 0 5px;
     font-weight: 500;
 }
 </style>
@@ -364,7 +370,15 @@ body.green input[type=date] {
                                                                 placeholder="Auto Calculation"></li>
 
                         <li><b>Attachments</b></li>
-                        <li><input type="file" ref="file" name="file[]" multiple style="width:100%" ></li>
+                        <li>
+                            <input type="file" ref="file" name="file[]" multiple style="width:100%" >
+
+                            <div class="list_attch" v-for="(item,index) in item_list" :key="index" >
+                                <input type="checkbox" :id="'file' + item.id" v-model="item.is_checked">
+                                <label :for="'file' + item.id"><a class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a></label>
+                            </div>
+
+                        </li>
 
                         <li><b>Payable to</b></li>
                         <li>
@@ -383,7 +397,8 @@ body.green input[type=date] {
 
                     <div class="btnbox">
                         <a class="btn" @click="reset">Reset</a>
-                        <a class="btn" @click="apply">Submit</a>
+                        <a class="btn" v-if="pid == 0" @click="apply">Submit</a>
+                        <a class="btn" v-if="pid != 0" @click="apply_edit">Submit</a>
                     </div>
 
                 </form>

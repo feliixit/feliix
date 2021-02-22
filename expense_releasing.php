@@ -150,7 +150,7 @@ $(function(){
                 </div>
 
 
-                <div class="details">
+                <div class="details" v-if="proof_id != 0">
                     <div class="tablebox">
                         <ul class="head">
                             <li class="head">Request No.</li>

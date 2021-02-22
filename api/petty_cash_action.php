@@ -281,16 +281,25 @@ function GetAction($loc)
         case "Send To OP":
             $location = 3;
             break;
+        case "OP Send To MD":
+            $location = 4;
+            break;
         case "Send To MD":
             $location = 4;
             break;
-        case "Review Reject To User":
+        case "OP Review Reject To User":
             $location = 0;
             break;
-        case "Review Reject To Checker":
+        case "OP Review Reject To Checker":
             $location = 2;
             break;
-        case "Send To Releaser":
+        case "MD Review Reject To User":
+            $location = 0;
+            break;
+        case "MD Review Reject To Checker":
+            $location = 2;
+            break;
+        case "MD Send To Releaser":
             $location = 5;
             break;
         case "Releasing":
@@ -314,17 +323,41 @@ function GetDesc($loc)
 {
     $location = $loc;
     switch ($loc) {
+        case "Withdraw":
+            $location = "Withdrew";
+            break;
         case "Checking Reject":
-            $location = "Reject";
+            $location = "Checker Rejected";
             break;
-        case "Review Reject To User":
-            $location = "Reject";
+        case "Send To OP":
+            $location = "Checker Checked";
             break;
-        case "Review Reject To Checker":
-            $location = "Reject";
+        case "Send To MD":
+            $location = "Checker Checked";
             break;
-        case "Send To Releaser":
-            $location = "Approve";
+        case "OP Send To MD":
+            $location = "OP Approved";
+            break;
+        case "OP Review Reject To User":
+            $location = "OP Rejected ";
+            break;
+        case "OP Review Reject To Checker":
+            $location = "OP Rejected ";
+            break;
+        case "MD Review Reject To User":
+            $location = "MD Rejected ";
+            break;
+        case "MD Review Reject To Checker":
+            $location = "MD Rejected ";
+            break;
+        case "MD Send To Releaser":
+            $location = "MD Approved";
+            break;
+        case "Releasing":
+            $location = "Releaser Released";
+            break;
+        case "Void":
+            $location = "Releaser Voided";
             break;
         case "Finish Releasing":
             $location = "Releasing";

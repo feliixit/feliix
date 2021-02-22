@@ -26,6 +26,22 @@ var app = new Vue({
 
     perPage: 10000,
 
+    inventory: [
+      {name: 'Allowance', id: 'Allowance'},
+      {name: 'Commission', id: 'Commission'},
+      {name: 'Delivery', id: 'Delivery'},
+      {name: 'Maintenance', id: 'Maintenance'},
+      {name: 'Meals', id: 'Meals'},
+      {name: 'Misc', id: 'Misc'},
+      {name: 'Others', id: 'Others'},
+      {name: 'Outsource', id: 'Outsource'},
+      {name: 'Petty cash', id: 'Petty cash'},
+      {name: 'Products', id: 'Products'},
+      {name: 'Supplies', id: 'Supplies'},
+      {name: 'Tools and Materials', id: 'Tools and Materials'},
+      {name: 'Transportation', id: 'Transportation'},
+    ],
+
     is_approval: false,
   },
 
@@ -108,8 +124,9 @@ var app = new Vue({
           _this.receive_records = response.data;
           if(_this.receive_records.length > 0)
           {
-              _this.proof_id = _this.receive_records[0].id;
-              _this.detail();
+              //_this.proof_id = _this.receive_records[0].id;
+              //_this.detail();
+              _this.proof_id = 0;
           }
         })
         .catch(function(error) {
@@ -177,7 +194,10 @@ var app = new Vue({
       form_Data.append("remark", "");
       form_Data.append("info_account", this.record.info_account);
       form_Data.append("info_category", this.record.info_category);
-      form_Data.append("sub_category", this.record.sub_category);
+      if(this.record.info_category == 'Marketing' || this.record.info_category == 'Office Needs' || this.record.info_category == 'Others' || this.record.info_category == 'Projects' || this.record.info_category == 'Store')
+        form_Data.append("sub_category", this.record.sub_category);
+      else
+        form_Data.append("sub_category", "");
       form_Data.append("info_remark", this.record.info_remark);
 
       axios({
@@ -222,7 +242,10 @@ var app = new Vue({
       form_Data.append("remark", "");
       form_Data.append("info_account", this.record.info_account);
       form_Data.append("info_category", this.record.info_category);
-      form_Data.append("sub_category", this.record.sub_category);
+      if(this.record.info_category == 'Marketing' || this.record.info_category == 'Office Needs' || this.record.info_category == 'Others' || this.record.info_category == 'Projects' || this.record.info_category == 'Store')
+        form_Data.append("sub_category", this.record.sub_category);
+      else
+        form_Data.append("sub_category", "");
       form_Data.append("info_remark", this.record.info_remark);
 
       axios({

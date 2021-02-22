@@ -108,8 +108,9 @@ var app = new Vue({
           _this.receive_records = response.data;
           if(_this.receive_records.length > 0)
           {
-              _this.proof_id = _this.receive_records[0].id;
-              _this.detail();
+            _this.proof_id = 0;
+              //_this.proof_id = _this.receive_records[0].id;
+              //_this.detail();
           }
         })
         .catch(function(error) {
@@ -172,7 +173,7 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Send To MD");
+      form_Data.append("crud", "OP Send To MD");
       form_Data.append("id", id);
       form_Data.append("remark", "");
       form_Data.append("info_account", this.record.info_account);
@@ -217,7 +218,7 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Send To Releaser");
+      form_Data.append("crud", "MD Send To Releaser");
       form_Data.append("id", id);
       form_Data.append("remark", "");
 
@@ -250,15 +251,17 @@ var app = new Vue({
         });
     },
 
-    rejectReceiveRecord_Checker: function(id) {
+    rejectReceiveRecord_Checker: function(id, status) {
         let _this = this;
         targetId = this.record.id;
         var form_Data = new FormData();
   
         var token = localStorage.getItem("token");
         form_Data.append("jwt", token);
-  
-        form_Data.append("crud", "Review Reject To Checker");
+        if(status == 3)
+          form_Data.append("crud", "OP Review Reject To Checker");
+        if(status == 4)
+          form_Data.append("crud", "MD Review Reject To Checker");
         form_Data.append("id", id);
         form_Data.append("remark", this.reject_reason);
   
@@ -291,15 +294,17 @@ var app = new Vue({
           });
       },
 
-    rejectReceiveRecord: function(id) {
+    rejectReceiveRecord: function(id, status) {
       let _this = this;
       targetId = this.record.id;
       var form_Data = new FormData();
 
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
-
-      form_Data.append("crud", "Review Reject To User");
+      if(status == 3)
+        form_Data.append("crud", "OP Review Reject To User");
+      if(status == 4)
+        form_Data.append("crud", "MD Review Reject To User");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
 
@@ -465,7 +470,7 @@ var app = new Vue({
       }).then((result) => {
         if (result.value) {
           _this.submit = true;
-          _this.rejectReceiveRecord(this.proof_id);
+          _this.rejectReceiveRecord(this.proof_id, this.record.status);
 
           _this.resetForm();
         }
@@ -508,7 +513,7 @@ var app = new Vue({
         }).then((result) => {
           if (result.value) {
             _this.submit = true;
-            _this.rejectReceiveRecord_Checker(this.proof_id);
+            _this.rejectReceiveRecord_Checker(this.proof_id, this.record.status);
   
             _this.resetForm();
           }

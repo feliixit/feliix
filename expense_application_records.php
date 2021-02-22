@@ -258,7 +258,7 @@ body.green .mainContent > .block .tablebox ul.head,
         <div id="app" class="mainContent">
             <!-- tags js在 main.js -->
             <div class="tags">
-                <a class="tag A" href="apply_for_petty_cash">Apply</a>
+                <a class="tag A" href="apply_for_expense">Apply</a>
                 <a class="tag F" href="expense_liquidating">Liquidate</a>
                 <a class="tag B focus">Records</a>
             </div>
@@ -389,38 +389,40 @@ body.green .mainContent > .block .tablebox ul.head,
                             </ul>
                             <ul>
                                 <li class="head">Date Liquidated</li>
-                                <li>{{record.liquidate_date}}</li>
+                                <li>{{(record.request_type == "New") ? record.liquidate_date : "---"}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Amount Liquidated</li>
-                                <li>{{ isNaN(record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
+                                <li>{{ (record.request_type == "New") ?  (isNaN(record.amount_liquidated) || (record.amount_liquidated == 0) ? "" : Number(record.amount_liquidated).toLocaleString()) : "---" }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Liquidation Files</li>
-                                <li><a v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                <li><a v-if="record.request_type == 'New'" v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                    <div v-if="record.request_type == 'Reimbursement'">---</div>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Remark</li>
-                                <li>{{record.remark}}</li>
+                                <li>{{(record.request_type == "New") ? record.remark : "---"}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Date Verified</li>
-                                <li>{{record.verified_date}}</li>
+                                <li>{{(record.request_type == "New") ? record.verified_date : "---"}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Actual Amount After Verification</li>
-                                <li>{{ isNaN(record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
+                                <li>{{ (record.request_type == "New") ? (isNaN(record.amount_liquidated) || (record.amount_liquidated == 0) ? "" : Number(record.amount_liquidated).toLocaleString()) : "---" }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Proof of Return or Release</li>
-                                <li><a v-for='(item, index) in record.verified_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                <li><a v-if="record.request_type == 'New'" v-for='(item, index) in record.verified_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                    <div v-if="record.request_type == 'Reimbursement'">---</div>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="btnbox">
-                            <a class="btn" v-if="record.status == 0 || record.status == -1" @click="revise">&nbsp;&nbsp;Revise&nbsp;&nbsp;</a>
+                            <a class="btn" v-if="record.status == 0 || record.status == -1  || record.status == -2" @click="revise">&nbsp;&nbsp;Re-Submit&nbsp;&nbsp;</a>
                             <a class="btn" v-if="record.status == 0 || record.status == 1 || record.status == 2 || record.status == 3 || record.status == 4" @click="withdraw">Withdraw</a>
                         </div>
 

@@ -103,14 +103,15 @@ var app = new Vue({
       let _this = this;
 
       axios
-        .get("api/expense_releasing")
+        .get("api/expense_liquidating")
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;
           if(_this.receive_records.length > 0)
           {
-              _this.proof_id = _this.receive_records[0].id;
-              _this.detail();
+            _this.proof_id = 0;
+              //_this.proof_id = _this.receive_records[0].id;
+              //_this.detail();
           }
         })
         .catch(function(error) {
