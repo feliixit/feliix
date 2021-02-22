@@ -72,9 +72,9 @@
             margin-top: 15px;
         }
 
-        div.tablebox.listing ul.head li {
+        /* div.tablebox.listing ul.head li {
             background-color: #CCDCEE !important;
-        }
+        } */
     </style>
 
 <style type="text/css">
@@ -137,6 +137,7 @@ body.green input.alone[type=checkbox]::before,
 body.green input[type=checkbox] + Label::before,
 body.green input[type=radio] + Label::before {
     color: var(--green01);
+    font-size: 25px;
 }
 
 body.green input[type=range],
@@ -240,11 +241,11 @@ body.green input[type=date] {
     border: 2px solid #2F9A57;
 }
 
-body.green .mainContent > .block .tablebox ul.head,
+/* body.green .mainContent > .block .tablebox ul.head,
         body.green .mainContent > .block .formbox li.head {
             background-color: #2F9A57;
             font-weight: 800;
-}
+} */
 </style>
 
 </head>

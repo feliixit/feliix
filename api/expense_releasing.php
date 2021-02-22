@@ -69,7 +69,7 @@ switch ($method) {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             
             $apartment_id = $row['apartment_id'];
-            $flow = $row['flow'];
+            $flow = GetFlow($row['flow']);
             
             array_push($arry_apartment_id, $apartment_id);
             array_push($array_flow, $flow);
@@ -81,7 +81,7 @@ switch ($method) {
             die();
         }
 
-        //$apartment_id_str = implode (", ", $arry_apartment_id);
+        $apartment_id_str = implode (", ", $array_flow);
 
         $sql = "SELECT  pm.id,
                         request_no, 
@@ -101,7 +101,8 @@ switch ($method) {
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
-                where pm.`status` in (5)";
+                where pm.`status` in (5)
+                AND info_account in (" . $apartment_id_str . ") ";
 
  
         if (!empty($_GET['page'])) {
@@ -285,6 +286,27 @@ function GetPettyType($loc)
             break;
         case "2":
             $location = "Reimbursement";
+            break;
+        default:
+            $location = "";
+            break;
+    }
+
+    return $location;
+}
+
+function GetFlow($loc)
+{
+    $location = "";
+    switch ($loc) {
+        case "4":
+            $location = "'Office Petty Cash'";
+            break;
+        case "5":
+            $location = "'Online Transactions'";
+            break;
+        case "6":
+            $location = "'Security Bank'";
             break;
         default:
             $location = "";
