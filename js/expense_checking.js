@@ -195,7 +195,7 @@ var app = new Vue({
       form_Data.append("info_account", this.record.info_account);
       form_Data.append("info_category", this.record.info_category);
       if(this.record.info_category == 'Marketing' || this.record.info_category == 'Office Needs' || this.record.info_category == 'Others' || this.record.info_category == 'Projects' || this.record.info_category == 'Store')
-        form_Data.append("sub_category", this.record.sub_category);
+        form_Data.append("sub_category", this.record.sub_category["name"]);
       else
         form_Data.append("sub_category", "");
       form_Data.append("info_remark", this.record.info_remark);
@@ -243,7 +243,7 @@ var app = new Vue({
       form_Data.append("info_account", this.record.info_account);
       form_Data.append("info_category", this.record.info_category);
       if(this.record.info_category == 'Marketing' || this.record.info_category == 'Office Needs' || this.record.info_category == 'Others' || this.record.info_category == 'Projects' || this.record.info_category == 'Store')
-        form_Data.append("sub_category", this.record.sub_category);
+        form_Data.append("sub_category", this.record.sub_category["name"]);
       else
         form_Data.append("sub_category", "");
       form_Data.append("info_remark", this.record.info_remark);
@@ -383,7 +383,7 @@ var app = new Vue({
         return;
       }
 
-      if ((this.record.sub_category.trim() === "") && (this.record.info_category.trim() === "Marketing" || this.record.info_category.trim() === "Office Needs" || this.record.info_category.trim() === "Others" || this.record.info_category.trim() === "Projects" || this.record.info_category.trim() === "Store")) {
+      if ((this.record.sub_category["name"].trim() === "") && (this.record.info_category.trim() === "Marketing" || this.record.info_category.trim() === "Office Needs" || this.record.info_category.trim() === "Others" || this.record.info_category.trim() === "Projects" || this.record.info_category.trim() === "Store")) {
         Swal.fire({
           text: "Please select sub category!",
           icon: "warning",
@@ -448,7 +448,7 @@ var app = new Vue({
         return;
       }
 
-      if (this.record.sub_category.trim() === "") {
+      if (this.record.sub_category["name"].trim() === "") {
         Swal.fire({
           text: "Please select sub category!",
           icon: "warning",
