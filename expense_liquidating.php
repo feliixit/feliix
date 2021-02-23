@@ -400,7 +400,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Amount Liquidated</li>
-                            <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
+                            <li>{{ isNaN(record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Liquidation Files</li>
@@ -409,7 +409,7 @@ $(function(){
                         </ul>
                          <ul>
                             <li class="head">Remarks</li>
-                            <li>{{ record.remark }}</li>
+                            <li>{{ record.remark_liquidate }}</li>
                         </ul>
                     </div>
 

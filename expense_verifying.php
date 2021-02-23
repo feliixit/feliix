@@ -237,7 +237,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Category</li>
-                            <li>{{ record.info_category }} {{ record.sub_category }}</li>
+                            <li>{{ record.info_category }} {{ ' >> ' + (record.sub_category == "" ? "Bills" : record.sub_category) }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions</li>
@@ -271,7 +271,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Amount Liquidated</li>
-                            <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
+                            <li>{{ isNaN(record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Liquidation Files</li>

@@ -223,6 +223,11 @@ var app = new Vue({
       form_Data.append("id", id);
       form_Data.append("remark", "");
 
+      for( var i = 0; i < this.$refs.file.files.length; i++ ){
+        let file = this.$refs.file.files[i];
+        form_Data.append('files[' + i + ']', file);
+      }
+
       axios({
         method: "post",
         headers: {

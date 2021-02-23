@@ -26,6 +26,7 @@ if (!isset($jwt)) {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $user_id = $decoded->data->id;
+        $user_name = $decoded->data->username;
         //if(!$decoded->data->is_admin)
         //{
         //  http_response_code(401);

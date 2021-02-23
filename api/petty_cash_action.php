@@ -83,12 +83,13 @@ if (!isset($jwt)) {
             $stmt->bindParam(':info_category', $info_category);
             $stmt->bindParam(':info_sub_category', $sub_category);
             $stmt->bindParam(':info_remark', $info_remark);
-        } elseif ($crud == "Liquidating") {
+        } elseif ($crud == "Liquidated") {
             $query = "update apply_for_petty
                    SET
                   `status` =  :status,
                   `updated_at` = now(),
-                  `amount_liquidated` =  :amount_liquidated
+                  `amount_liquidated` =  :amount_liquidated,
+                  `remark_liquidated` =  :remark_liquidated
                    where id = :id ";
 
             // prepare the query
@@ -98,6 +99,7 @@ if (!isset($jwt)) {
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':status', GetAction($crud));
             $stmt->bindParam(':amount_liquidated', $amount);
+            $stmt->bindParam(':remark_liquidated', $remark);
         } elseif ($crud == "Verifier Verified") {
             $query = "update apply_for_petty
                    SET
@@ -356,7 +358,7 @@ function &GetAction($loc)
         case "Releasing":
             $location = 6;
             break;
-        case "Liquidating":
+        case "Liquidated":
             $location = 8;
             break;
         case "Finish Releasing":
@@ -417,7 +419,7 @@ function &GetDesc($loc)
             $location = "Releaser Voided";
             break;
         case "Finish Releasing":
-            $location = "Releasing";
+            $location = "Releaser Released";
             break;
     }
 

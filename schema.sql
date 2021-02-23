@@ -1125,3 +1125,7 @@ ADD COLUMN `amount_liquidated` decimal(10, 2) default 0.0 AFTER info_remark;
 --
 ALTER TABLE apply_for_petty
 ADD COLUMN `amount_verified` decimal(10, 2) default 0.0 AFTER amount_liquidated;
+
+--
+ALTER TABLE apply_for_petty
+ADD COLUMN `remark_liquidated` varchar(512) DEFAULT '' AFTER amount_liquidated;

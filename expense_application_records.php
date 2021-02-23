@@ -279,7 +279,7 @@ body.green input[type=date] {
                             <li><i class="micons">view_list</i></li>
                             <li>Status</li>
                             <li>Request No.</li>
-                            <li>Date Requested</li>
+                            <li>Application Time</li>
                             <li>Total Amount Requested</li>
                         </ul>
 
@@ -289,7 +289,7 @@ body.green input[type=date] {
                             </li>
                             <li>{{ record.desc }}</li>
                             <li>{{ record.request_no }}</li>
-                            <li>{{ record.date_requested }}</li>
+                            <li>{{ record.created_at }}</li>
                             <li>{{ isNaN(record.total) ? 0 : Number(record.total).toLocaleString() }}</li>
 
                         </ul>
@@ -304,8 +304,8 @@ body.green input[type=date] {
                                 <li>{{record.request_no}}</li>
                             </ul>
                             <ul>
-                                <li class="head">Date Requested</li>
-                                <li>{{record.date_requested}}</li>
+                                <li class="head">Application Time</li>
+                                <li>{{record.created_at}}</li>
                                 </li>
                             </ul>
                             <ul>
@@ -319,6 +319,11 @@ body.green input[type=date] {
                                     <p v-for='(item, index) in record.history' :key="index">
                                         {{ item.action }} <a v-if="item.reason != ''">: {{ item.reason }}</a> ({{ item.actor }} at {{ item.created_at }})
                                     </p>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li class="head">Date Requested</li>
+                                <li>{{record.date_requested}}</li>
                                 </li>
                             </ul>
                             <ul>
@@ -403,8 +408,8 @@ body.green input[type=date] {
                                 </li>
                             </ul>
                             <ul>
-                                <li class="head">Remark</li>
-                                <li>{{(record.request_type == "New") ? record.info_remark : "---"}}</li>
+                                <li class="head">Remarks</li>
+                                <li>{{ record.remark_liquidated }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Date Verified</li>
@@ -424,7 +429,7 @@ body.green input[type=date] {
 
                         <div class="btnbox">
                             <a class="btn" v-if="record.status == 0 || record.status == -1  || record.status == -2" v-bind:href="'apply_for_expense?pid='+ record.id">&nbsp;&nbsp;Re-Submit&nbsp;&nbsp;</a>
-                            <a class="btn" v-if="record.status == 0 || record.status == 1 || record.status == 2 || record.status == 3 || record.status == 4" @click="withdraw">Withdraw</a>
+                            <a class="btn" v-if="record.status == 1 || record.status == 2 || record.status == 3 || record.status == 4" @click="withdraw">Withdraw</a>
                         </div>
 
                     </div>

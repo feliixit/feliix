@@ -101,7 +101,8 @@ switch ($method) {
                         info_category,
                         info_sub_category,
                         info_remark,
-                        amount_liquidated
+                        amount_liquidated,
+                        remark_liquidated
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
@@ -163,6 +164,7 @@ switch ($method) {
         $liquidate_items = [];
 
         $amount_liquidated = 0;
+        $remark_liquidated = "";
 
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -185,6 +187,7 @@ switch ($method) {
             $liquidate_items = GetLiquidateAttachment($row['id'], $db);
 
             $amount_liquidated = $row['amount_liquidated'];
+            $remark_liquidated = $row['remark_liquidated'];
 
             $history = GetHistory($row['id'], $db);
             $list = GetList($row['id'], $db);
@@ -221,6 +224,7 @@ switch ($method) {
                 "liquidate_date" => $liquidate_date,
                 "liquidate_items" => $liquidate_items,
                 "amount_liquidated" => $amount_liquidated,
+                "remark_liquidated" => $remark_liquidated,
                 "release_date" => $release_date,
                 "release_items" => $release_items,
 
@@ -261,7 +265,7 @@ function GetAttachment($_id, $db)
 function GetReleaseAttachment($_id, $db)
 {
     $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
-            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Releasing'
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Releaser Released'
             order by h.created_at ";
 
     $merged_results = array();
@@ -279,7 +283,7 @@ function GetReleaseAttachment($_id, $db)
 function GetLiquidateAttachment($_id, $db)
 {
     $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
-            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Liquidating'
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Liquidated'
             order by h.created_at ";
 
     $merged_results = array();
@@ -456,7 +460,7 @@ function GetReleaseHistory($_id, $db)
 function GetLiquidateHistory($_id, $db)
 {
     $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
-            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Liquidating' order by created_at desc limit 1";
+            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Liquidated' order by created_at desc limit 1";
 
     $merged_results = "";
 

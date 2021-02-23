@@ -383,14 +383,16 @@ var app = new Vue({
         return;
       }
 
-      if ((this.record.sub_category["name"].trim() === "") && (this.record.info_category.trim() === "Marketing" || this.record.info_category.trim() === "Office Needs" || this.record.info_category.trim() === "Others" || this.record.info_category.trim() === "Projects" || this.record.info_category.trim() === "Store")) {
-        Swal.fire({
+      if ((this.record.info_category.trim() === "Marketing" || this.record.info_category.trim() === "Office Needs" || this.record.info_category.trim() === "Others" || this.record.info_category.trim() === "Projects" || this.record.info_category.trim() === "Store")) {
+        if(this.record.sub_category["name"].trim() === "") 
+        {Swal.fire({
           text: "Please select sub category!",
           icon: "warning",
           confirmButtonText: "OK",
         });
 
-        return;
+        return;}
+        
       }
 
       
@@ -448,14 +450,16 @@ var app = new Vue({
         return;
       }
 
-      if (this.record.sub_category["name"].trim() === "") {
-        Swal.fire({
+      if ((this.record.info_category.trim() === "Marketing" || this.record.info_category.trim() === "Office Needs" || this.record.info_category.trim() === "Others" || this.record.info_category.trim() === "Projects" || this.record.info_category.trim() === "Store")) {
+        if(this.record.sub_category["name"].trim() === "") 
+        {Swal.fire({
           text: "Please select sub category!",
           icon: "warning",
           confirmButtonText: "OK",
         });
 
-        return;
+        return;}
+        
       }
 
       if (this.record.info_account.trim() === "") {

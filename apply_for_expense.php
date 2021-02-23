@@ -137,6 +137,10 @@
         .block.A .box-content ul:first-of-type li:nth-of-type(even) {
             padding-bottom: 10px;
         }
+
+        body.green select {
+            background-image: url(./images/ui/icon_form_select_arrow_green.svg) !important;
+        }
     </style>
 
 <style type="text/css">

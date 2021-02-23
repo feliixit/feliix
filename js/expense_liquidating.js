@@ -174,7 +174,7 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
 
-      form_Data.append("crud", "Liquidating");
+      form_Data.append("crud", "Liquidated");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
       form_Data.append("amount", this.amount_liquidated.replaceAll(',', ''));
