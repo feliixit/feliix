@@ -131,7 +131,6 @@ $(function(){
         }
 
         #modal_Details {
-            display: none;
             position: absolute;
             top: 20px;
             left: 0;
@@ -183,7 +182,16 @@ $(function(){
         <!-- Blocks -->
         <div class="block A focus">
 
-            <div class="list_function" style="margin-top: 10px;"><div class="pagenation"><a class="prev" disabled="disabled">Previous</a> <a class="page">1</a> <a disabled="disabled" class="next">Next</a></div></div>
+            <div class="list_function" style="margin-top: 10px;">
+            <!-- 分頁 -->
+            <div class="pagenation">
+                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                  
+                    <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                  
+                    <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                </div>
+            </div>
 
             <div class="tableframe" style="margin-top: 5px;">
                 <div class="tablebox lv1">
@@ -205,55 +213,37 @@ $(function(){
                         <li>Details</li>
                     </ul>
 
-                    <ul>
-                        <li>00017</li>
-                        <li>Dennis Lin</li>
-                        <li>2020/11/20 10:15</li>
-                        <li>New</li>
-                        <li>Completed</li>
-                        <li>372,500</li>
-                        <li>370,000</li>
-                        <li>2020/12/07</li>
-                        <li>2020/12/04</li>
-                        <li>2020/12/04<br>2020/12/04</li>
-                        <li>2020/12/07</li>
-                        <li>2020/12/14</li>
-                        <li>2020/12/14</li>
+                    <ul v-for='(record, index) in displayedRecord' :key="index">
+                        <li>{{ record.request_no }}</li>
+                        <li>{{ record.requestor }}</li>
+                        <li>{{ record.created_at }}</li>
+                        <li>{{ record.request_type }}</li>
+                        <li>{{ record.desc }}</li>
+                        <li>{{ !(record.total) ? '' : Number(record.total).toLocaleString() }}</li>
+                        <li>{{ !(record.amount_verified) ? '' : Number(record.amount_verified).toLocaleString() }}</li>
+                        <li>{{ record.date_requested }}</li>
+                        <li>{{ record.checked_date }}</li>
+                        <li>{{ record.approve1_date }}<br>{{ record.approve2_date }}</li>
+                        <li>{{ record.release_date }}</li>
+                        <li>{{ record.liquidate_date }}</li>
+                        <li>{{ record.verified_date }}</li>
                         <li>
-                            <a href="javascript: void(0)" onclick="ShowDetails()"><i
+                            <a @click="show_detail(record.id)"><i
                                     class="fas fa-info-circle fa-lg" aria-hidden="true"></i></a></li>
                     </ul>
 
-                    <ul>
-                        <li>00014</li>
-                        <li>Dennis Lin</li>
-                        <li>2020/11/03 14:47</li>
-                        <li>Reimbursement</li>
-                        <li>For Approve</li>
-                        <li>10,750.5</li>
-                        <li></li>
-                        <li>2021/01/25</li>
-                        <li>2020/11/30</li>
-                        <li>2020/12/11</li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li>
-                            <a href="javascript: void(0)" onclick="ShowDetails()"><i
-                                    class="fas fa-info-circle fa-lg" aria-hidden="true"></i></a></li>
-                    </ul>
 
                 </div>
             </div>
 
 
-            <div id="modal_Details" class="modal">
+            <div id="modal_Details" class="modal" v-if="view_detail == true">
 
                 <!-- Modal content -->
                 <div class="modal-content">
                     <div class="modal-heading">
                         <h6>Details</h6>
-                        <a href="javascript: void(0)" onclick="ShowDetails()"><i class="fa fa-times fa-lg"
+                        <a @click="show_detail(0)"><i class="fa fa-times fa-lg"
                                                                                  aria-hidden="true"></i></a>
                     </div>
 
@@ -261,63 +251,55 @@ $(function(){
                         <div class="tablebox">
                             <ul class="head">
                                 <li class="head">Request No.</li>
-                                <li>00017</li>
+                                <li>{{record.request_no}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Application Time</li>
-                                <li>2020/11/20 10:15</li>
+                                <li>{{ record.created_at }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Status</li>
-                                <li>Completed</li>
+                                <li>{{ record.desc }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Processing History
                                 </li>
-                                <li>Submitted (Dennis Lin at 2020/11/20 15:30)<br>
-                                    Checker Rejected: document is not complete. (Mary Jude Jeng Articulo at 2020/12/03
-                                    09:43)<br>
-                                    Submitted (Dennis Lin at 2020/12/04 11:30)<br>
-                                    Checker Checked (Mary Jude Jeng Articulo at 2020/12/04 13:55)<br>
-                                    OP Approved (Thalassa Wren Benzon at 2020/12/04 16:23)<br>
-                                    MD Approved (Kristel Tan at 2020/12/04 17:05)<br>
-                                    Releaser Released (Mary Jude Jeng Articulo at 2020/12/07 10:03)<br>
-                                    Liquidated (Dennis Lin at 2020/12/14 14:04)<br>
-                                    Verifier Verified (Mary Jude Jeng Articulo at 2020/12/14 16:25)
+                                <li><p v-for='(item, index) in record.history' :key="index">
+                                        {{ item.action }} <a v-if="item.reason != ''">: {{ item.reason }}</a> ({{ item.actor }} at {{ item.created_at }})
+                                    </p>
                                 </li>
                             </ul>
                              <ul>
                                 <li class="head">Date Requested</li>
-                                <li>2020/12/07</li>
+                                <li>{{record.date_requested}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Type</li>
-                                <li>New</li>
+                                <li>{{record.request_type}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Project Name / Reason</li>
-                                <li>UDNP Ranee</li>
+                                <li>{{ record.project_name}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Requested Amount
                                 </li>
-                                <li>372,500</li>
+                                <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Attachments</li>
-                                <li><a>Requirement.doc</a>
-                                    <a>Requirement.xlsx</a>
+                                <li><a v-for='(item, index) in record.items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                 </li>
                             </ul>
                             <ul>
                                 <li class="head">Payable to
                                 </li>
-                                <li>Other: xxxxxxx</li>
+                                <li>{{ (record.payable_other == "") ? record.payable_to : (( typeof record.payable_other == "undefined" ) ? "":  "Other:" + record.payable_other) }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Remarks or Payment Instructions
                                 </li>
-                                <li></li>
+                                <li>{{ record.remark }}</li>
                             </ul>
                         </div>
 
@@ -329,20 +311,14 @@ $(function(){
                                 <li>Qty</li>
                                 <li>Amount</li>
                             </ul>
-                            <ul>
-                                <li>John Raymund Casero</li>
-                                <li>Light Texture</li>
-                                <li>350</li>
-                                <li>100</li>
-                                <li>35,000</li>
+                            <ul v-for='(item, index) in record.list' :key="index" >
+                                <li>{{ item.payee }}</li>
+                                <li>{{ item.particulars }}</li>
+                                <li>{{ Number(item.price).toLocaleString() }}</li>
+                                <li>{{ Number(item.qty).toLocaleString() }}</li>
+                                <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
                             </ul>
-                            <ul>
-                                <li>Pika</li>
-                                <li>Light Bulb</li>
-                                <li>135</li>
-                                <li>2,500</li>
-                                <li>337,500</li>
-                            </ul>
+                            
                         </div>
 
 
@@ -350,15 +326,15 @@ $(function(){
                     <div class="tablebox">
                         <ul>
                             <li class="head">Account</li>
-                            <li>Office Petty Cash</li>
+                            <li>{{ record.info_account }}</li>
                         </ul>
                         <ul>
                             <li class="head">Category</li>
-                            <li>Office Needs>>Tools and Materials</li>
+                            <li>{{ record.info_category }} {{ ' >> ' + (record.sub_category == "" ? "Bills" : record.sub_category) }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions</li>
-                            <li>Check</li>
+                            <li>{{ record.info_remark }}</li>
                         </ul>
                     </div>
 
@@ -366,48 +342,49 @@ $(function(){
                     <div class="tablebox" style="margin-top: 60px;">
                         <ul class="head">
                             <li class="head">Request No.</li>
-                            <li>00017</li>
+                            <li>{{record.request_no}}</li>
                         </ul>
                         <ul>
                             <li class="head">Total Amount Requested
                             </li>
-                            <li>372,500</li>
+                            <li>{{ isNaN(record.total) ? "" : Number(record.total).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Date Released</li>
-                            <li>2020/12/07</li>
+                            <li>{{record.release_date}}</li>
                         </ul>
                         <ul>
                             <li class="head">Proof of Release</li>
-                            <li><a>Signature_01.pdf</a>
-                                <a>Signature_02.pdf</a>
+                            <li><a v-for='(item, index) in record.release_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                             </li>
                         </ul>
                         <ul>
                             <li class="head">Date Liquidated</li>
-                            <li>2020/12/14</li>
+                            <li>{{(record.request_type == "New") ? record.liquidate_date : "---"}}</li>
                         </ul>
                         <ul>
                             <li class="head">Amount Liquidated</li>
-                            <li>372,500</li>
+                            <li>{{ (record.request_type == "New") ?  (!record.amount_liquidated ? "" : Number(record.amount_liquidated).toLocaleString()) : "---" }}</li>
                         </ul>
 
                         <ul>
                             <li class="head">Liquidation Files</li>
-                            <li><a>Receipt.jpg</a>
+                            <li><a v-if="record.request_type == 'New'" v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                    <div v-if="record.request_type == 'Reimbursement'">---</div>
                             </li>
                         </ul>
                         <ul>
                             <li class="head">Date Verified</li>
-                            <li>2020/12/14</li>
+                            <li>{{(record.request_type == "New") ? record.verified_date : "---"}}</li>
                         </ul>
                         <ul>
                             <li class="head">Actual Amount After Verification</li>
-                            <li>370,000</li>
+                            <li>{{ (record.request_type == "New") ? (!record.amount_verified  ? "" : Number(record.amount_verified).toLocaleString()) : "---" }}</li>
                         </ul>
                         <ul>
                             <li class="head">Proof of Return or Release</li>
-                            <li><a>Signature_03.pdf</a>
+                            <li><a v-if="record.request_type == 'New'" v-for='(item, index) in record.verified_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                    <div v-if="record.request_type == 'Reimbursement'">---</div>
                             </li>
                         </ul>
                     </div>
@@ -432,13 +409,7 @@ $(function(){
   ELEMENT.locale(ELEMENT.lang.en)
 </script>
 
-<script>
-        function ShowDetails() {
-            $("#modal_Details").toggle();
-        }
-    </script>
-
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/leave_record.js"></script>
+<script src="js/expense_application_report.js"></script>
 </html>

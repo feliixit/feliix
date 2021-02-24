@@ -398,16 +398,16 @@ function &GetDesc($loc)
             $location = "OP Approved";
             break;
         case "OP Review Reject To User":
-            $location = "OP Rejected ";
+            $location = "OP Rejected";
             break;
         case "OP Review Reject To Checker":
-            $location = "OP Rejected ";
+            $location = "OP Rejected";
             break;
         case "MD Review Reject To User":
-            $location = "MD Rejected ";
+            $location = "MD Rejected";
             break;
         case "MD Review Reject To Checker":
-            $location = "MD Rejected ";
+            $location = "MD Rejected";
             break;
         case "MD Send To Releaser":
             $location = "MD Approved";
