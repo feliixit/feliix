@@ -37,6 +37,9 @@
     --cyan02:#45C8D2;
     --cyan03:#D2F1F4;
 
+    --red01:#EA0029;
+    --red02:rgba(255,89,90,0.4);
+
 }
 
 input.alone[type=checkbox]::before,

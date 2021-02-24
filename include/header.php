@@ -121,8 +121,8 @@ try {
             <?php 
                 }
             ?>
-            <li class="cyan01" style="border: 3px solid var(--cyan01);">
-                <a class="uni" href="admin/user">System<br>Section</a>
+            <li class="red01" style="border: 3px solid var(--red01);">
+                <a class="uni" href="expense_application_report">Report<br>Section</a>
             </li>
         </ul>
         <ul class="menu">
@@ -138,6 +138,9 @@ try {
             </li>
             <li class="gray02">
                 <a class="uni">Profile<br>Section</a>
+            </li>
+            <li class="cyan01" style="border: 3px solid var(--cyan01);">
+                <a class="uni" href="admin/user">System<br>Section</a>
             </li>
         </ul>
         <?php
