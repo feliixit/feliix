@@ -400,7 +400,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Amount Liquidated</li>
-                            <li>{{ isNaN(record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
+                            <li>{{ (!record.amount_liquidated) ? "" : Number(record.amount_liquidated).toLocaleString() }}</li>
                         </ul>
                         <ul>
                             <li class="head">Liquidation Files</li>
@@ -417,7 +417,7 @@ $(function(){
                     <form>
                         <ul>
                             <li><b>Amount Liquidated</b></li>
-                            <li><input type="number" style="width:100%"  v-model="amount_liquidated"></li>
+                            <li><input type="text" style="width:100%"  v-model="amount_liquidated"></li>
 
                             <li style="margin-top: 15px;"><b>Upload Liquidation Files</b></li>
                             <li>

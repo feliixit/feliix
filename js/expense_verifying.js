@@ -17,7 +17,7 @@ var app = new Vue({
     proof_remark: "",
     reject_reason: "",
 
-    actual_amount: 0,
+    actual_amount: "",
 
     proof_id: 0,
 
@@ -177,7 +177,7 @@ var app = new Vue({
 
       form_Data.append("crud", "Verifier Verified");
       form_Data.append("id", id);
-      form_Data.append("amount", this.actual_amount);
+      form_Data.append("amount", this.actual_amount.replaceAll(',', ''));
    
       for( var i = 0; i < this.$refs.file.files.length; i++ ){
         let file = this.$refs.file.files[i];
@@ -379,6 +379,30 @@ var app = new Vue({
 
         //$(window).scrollTop(0);
         return;
+      }
+
+      if(!this.actual_amount)
+      {
+        Swal.fire({
+          text: 'Amount format invalid',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+        //this.err_msg = 'Location Photo required';
+        //$(window).scrollTop(0);
+        return false;
+      }
+
+      if(isNaN(this.actual_amount.replaceAll(',', '')))
+      {
+        Swal.fire({
+          text: 'Amount format invalid',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+        //this.err_msg = 'Location Photo required';
+        //$(window).scrollTop(0);
+        return false;
       }
 /*
       if (!this.$refs.file.files[0])

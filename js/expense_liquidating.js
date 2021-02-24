@@ -375,6 +375,9 @@ var app = new Vue({
       );
       
       this.reject_reason = "";
+      if(!this.record.amount_liquidated)
+        this.amount_liquidated = this.record.amount_liquidated;
+      else
       this.amount_liquidated = Number(this.record.amount_liquidated).toLocaleString();
       this.view_detail = true;
     },
@@ -393,7 +396,42 @@ var app = new Vue({
         return;
       }
 
-      if (!this.$refs.file.files[0] && this.reject_reason.trim() == '')
+      if(!this.amount_liquidated)
+      {
+        Swal.fire({
+          text: 'Amount format invalid',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+        //this.err_msg = 'Location Photo required';
+        //$(window).scrollTop(0);
+        return false;
+      }
+
+      if(isNaN(this.amount_liquidated.replaceAll(',', '')))
+      {
+        Swal.fire({
+          text: 'Amount format invalid',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+        //this.err_msg = 'Location Photo required';
+        //$(window).scrollTop(0);
+        return false;
+      }
+
+      var favorite = [];
+
+      if(this.record.status == 7)
+      {
+        for(var i = 0; i < this.record.liquidate_items.length; i++)
+        {
+          if(this.record.liquidate_items[i].is_checked === true)
+            favorite.push(this.record.liquidate_items[i].id);
+        }
+      }
+
+      if (!this.$refs.file.files[0] && this.reject_reason.trim() == '' && favorite.length == 0)
           {
             Swal.fire({
               text: 'File Attachment required',

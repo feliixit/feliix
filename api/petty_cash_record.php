@@ -109,7 +109,7 @@ switch ($method) {
             }
         }
 
-        $sql = $sql . " ORDER BY pm.id ";
+        $sql = $sql . " ORDER BY pm.created_at desc ";
 
         if (!empty($_GET['size'])) {
             $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
@@ -400,7 +400,7 @@ function GetStatus($loc)
             $location = "For Liquidate";
             break;
         case 7:
-            $location = "Rejected";
+            $location = "For Liquidate";
             break;
         case 8:
             $location = "For Verify";

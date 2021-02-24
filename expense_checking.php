@@ -284,10 +284,20 @@ $(function(){
                             <li v-if="record.info_category == 'Marketing' || record.info_category == 'Office Needs' || record.info_category == 'Others' || record.info_category == 'Projects' || record.info_category == 'Store'" >
                                 <select style="width:100%" v-model="record.sub_category">
                                     <option value=""></option>
-                                    <option v-for="item in inventory" :value="item" :key="item.id">
-                                        {{ item.name }}
-                                    </option>
                                     
+                                    <option value="Allowance">Allowance</option>
+                                    <option value="Commission">Commission</option>
+                                    <option value="Delivery">Delivery</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                    <option value="Meals">Meals</option>
+                                    <option value="Misc">Misc</option>
+                                    <option value="Others">Others</option>
+                                    <option value="Outsource">Outsource</option>
+                                    <option value="Petty cash">Petty cash</option>
+                                    <option value="Products">Products</option>
+                                    <option value="Supplies">Supplies</option>
+                                    <option value="Tools and Materials">Tools and Materials</option>
+                                    <option value="Transportation">Transportation</option>
                                 </select>
                             </li>
 

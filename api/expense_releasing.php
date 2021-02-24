@@ -348,7 +348,7 @@ function GetStatus($loc)
             $location = "For Liquidate";
             break;
         case 7:
-            $location = "Rejected";
+            $location = "For Liquidate";
             break;
         case 8:
             $location = "For Verify";

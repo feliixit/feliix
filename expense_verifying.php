@@ -278,6 +278,10 @@ $(function(){
                             <li><a v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                             </li>
                         </ul>
+                        <ul>
+                            <li class="head">Remarks</li>
+                            <li>{{ (record.request_type == 'New') ? record.remark_liquidated  : "---"}}</li>
+                        </ul>
                     </div>
 
 
@@ -296,7 +300,7 @@ $(function(){
                     <form>
                         <ul>
                             <li><b>Actual Amount After Verification</b></li>
-                            <li><input type="number" style="width:100%" v-model="actual_amount"></li>
+                            <li><input type="text" style="width:100%" v-model="actual_amount"></li>
 
                             <li style="margin-top: 15px;"><b>Proof of Return or Release of Payment Balance</b></li>
                             <li>

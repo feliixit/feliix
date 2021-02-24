@@ -399,7 +399,7 @@ body.green input[type=date] {
                             </ul>
                             <ul>
                                 <li class="head">Amount Liquidated</li>
-                                <li>{{ (record.request_type == "New") ?  (isNaN(record.amount_liquidated) || (record.amount_liquidated == 0) ? "" : Number(record.amount_liquidated).toLocaleString()) : "---" }}</li>
+                                <li>{{ (record.request_type == "New") ?  (!record.amount_liquidated ? "" : Number(record.amount_liquidated).toLocaleString()) : "---" }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Liquidation Files</li>
@@ -409,7 +409,7 @@ body.green input[type=date] {
                             </ul>
                             <ul>
                                 <li class="head">Remarks</li>
-                                <li>{{ record.remark_liquidated }}</li>
+                                <li>{{ (record.request_type == 'New') ? record.remark_liquidated  : "---"}}</li>
                             </ul>
                             <ul>
                                 <li class="head">Date Verified</li>
@@ -417,7 +417,7 @@ body.green input[type=date] {
                             </ul>
                             <ul>
                                 <li class="head">Actual Amount After Verification</li>
-                                <li>{{ (record.request_type == "New") ? (isNaN(record.amount_verified) || (record.amount_verified == 0) ? "" : Number(record.amount_verified).toLocaleString()) : "---" }}</li>
+                                <li>{{ (record.request_type == "New") ? (!record.amount_verified  ? "" : Number(record.amount_verified).toLocaleString()) : "---" }}</li>
                             </ul>
                             <ul>
                                 <li class="head">Proof of Return or Release</li>
