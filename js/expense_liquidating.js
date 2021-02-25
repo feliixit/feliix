@@ -218,7 +218,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -259,7 +259,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -300,7 +300,7 @@ var app = new Vue({
             //handle error
             Swal.fire({
               text: response.data,
-              icon: "warning",
+              icon: "info",
               confirmButtonText: "OK",
             });
           });
@@ -341,7 +341,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -374,11 +374,13 @@ var app = new Vue({
         this.receive_records.find((element) => element.id == this.proof_id)
       );
       
-      this.reject_reason = "";
+      if(this.record.status == 7)
+        this.reject_reason = this.record.remark_liquidated;
+
       if(!this.record.amount_liquidated)
         this.amount_liquidated = this.record.amount_liquidated;
       else
-      this.amount_liquidated = Number(this.record.amount_liquidated).toLocaleString();
+        this.amount_liquidated = Number(this.record.amount_liquidated).toLocaleString();
       this.view_detail = true;
     },
 
@@ -444,8 +446,8 @@ var app = new Vue({
           }
 
       Swal.fire({
-        title: "Are you sure to submit?",
-        text: "Are you sure to submit apply?",
+        title: "Are you sure to proceed this action?",
+        text: "Finish liquidation and send to verifier for verify",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",

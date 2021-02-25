@@ -121,12 +121,9 @@ var app = new Vue({
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;
-          if(_this.receive_records.length > 0)
-          {
-            _this.proof_id = 0;
-              //_this.proof_id = _this.receive_records[0].id;
-              //_this.detail();
-          }
+
+          _this.proof_id = 0
+         
         })
         .catch(function(error) {
           console.log(error);

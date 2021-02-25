@@ -81,6 +81,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':status', GetAction($crud));
             $stmt->bindParam(':info_account', $info_account);
             $stmt->bindParam(':info_category', $info_category);
+            if($info_category == 'Marketing' || $info_category == 'Office Needs' || $info_category == 'Others' || $info_category == 'Projects' || $info_category == 'Store' )
+                $sub_category = "";
             $stmt->bindParam(':info_sub_category', $sub_category);
             $stmt->bindParam(':info_remark', $info_remark);
         } elseif ($crud == "Liquidated") {
@@ -100,6 +102,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':status', GetAction($crud));
             $stmt->bindParam(':amount_liquidated', $amount);
             $stmt->bindParam(':remark_liquidated', $remark);
+
+            $remark = '';
         } elseif ($crud == "Verifier Verified") {
             $query = "update apply_for_petty
                    SET
@@ -136,14 +140,14 @@ if (!isset($jwt)) {
                 error_log($arr[2]);
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode(array($arr[2]));
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
                 die();
             }
         } catch (Exception $e) {
             error_log($e->getMessage());
             $db->rollback();
             http_response_code(501);
-            echo json_encode(array($e->getMessage()));
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
             die();
         }
 
@@ -167,14 +171,14 @@ if (!isset($jwt)) {
                     error_log($arr[2]);
                     $db->rollback();
                     http_response_code(501);
-                    echo json_encode(array($arr[2]));
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
                     die();
                 }
             } catch (Exception $e) {
                 error_log($e->getMessage());
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode(array($e->getMessage()));
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                 die();
             }
         }
@@ -242,7 +246,7 @@ if (!isset($jwt)) {
                                     error_log($e->getMessage());
                                     $db->rollback();
                                     http_response_code(501);
-                                    echo json_encode(array($e->getMessage()));
+                                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                                     die();
                                 }
 
@@ -262,7 +266,7 @@ if (!isset($jwt)) {
             } catch (Exception $e) {
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode(array("Error uploading, Please use laptop to upload again."));
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Error uploading, Please use laptop to upload again."));
                 die();
             }
         }
@@ -293,27 +297,27 @@ if (!isset($jwt)) {
                 error_log($arr[2]);
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode(array($arr[2]));
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
                 die();
             }
         } catch (Exception $e) {
             error_log($e->getMessage());
             $db->rollback();
             http_response_code(501);
-            echo json_encode(array($e->getMessage()));
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
             die();
         }
 
 
         $db->commit();
         http_response_code(200);
-        echo json_encode(array("message" => $crud . " Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
     } catch (Exception $e) {
 
         error_log($e->getMessage());
         $db->rollback();
         http_response_code(501);
-        echo json_encode(array($e->getMessage()));
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
         die();
     }
 }

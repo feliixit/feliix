@@ -65,7 +65,8 @@ $(function(){
             text-decoration: none;
             color: #25a2b8;
             cursor: pointer;
-            margin: 3px 6px 3px 0;
+            margin: 3px 0;
+            display: block;
         }
 
         div.tablebox.listing {
@@ -237,7 +238,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Category</li>
-                            <li>{{ record.info_category }} {{ ' >> ' + (record.sub_category == "" ? "Bills" : record.sub_category) }}</li>
+                            <li>{{ record.info_category }} {{ (record.sub_category != "" ? ' >> ' + record.sub_category : "")  }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions</li>

@@ -44,7 +44,7 @@ use Google\Cloud\Storage\StorageClient;
 if ( !isset( $jwt ) ) {
     http_response_code(401);
 
-    echo json_encode(array("message" => "Access denied."));
+    echo json_encode(array("message" => "Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " Access denied."));
     die();
 }
 else
@@ -101,14 +101,14 @@ else
                 error_log($arr[2]);
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode(array($arr[2]));
+                echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . array($arr[2]));
                 die();
             }
         } catch (Exception $e) {
             error_log($e->getMessage());
             $db->rollback();
             http_response_code(501);
-            echo json_encode(array($e->getMessage()));
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
             die();
         }
 
@@ -144,14 +144,14 @@ else
                     error_log($arr[2]);
                     $db->rollback();
                     http_response_code(501);
-                    echo json_encode(array($arr[2]));
+                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . array($arr[2]));
                     die();
                 }
             } catch (Exception $e) {
                 error_log($e->getMessage());
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode(array($e->getMessage()));
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                 die();
             }
   
@@ -225,7 +225,7 @@ else
                                 error_log($e->getMessage());
                                 $db->rollback();
                                 http_response_code(501);
-                                echo json_encode(array($e->getMessage()));
+                                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                                 die();
                             }
 
@@ -250,7 +250,7 @@ else
         } catch (Exception $e) {
             $db->rollback();
             http_response_code(501);
-            echo json_encode(array("Error uploading, Please use laptop to upload again."));
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " Error uploading, Please use laptop to upload again."));
             die();
         }
 
@@ -278,21 +278,21 @@ else
                 error_log($arr[2]);
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode(array($arr[2]));
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
                 die();
             }
         } catch (Exception $e) {
             error_log($e->getMessage());
             $db->rollback();
             http_response_code(501);
-            echo json_encode(array($e->getMessage()));
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
             die();
         }
        
 
         $db->commit();
         http_response_code(200);
-        echo json_encode(array("message" => "Apply Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
         
     }
     catch (Exception $e){
@@ -300,7 +300,7 @@ else
         error_log($e->getMessage());
         $db->rollback();
         http_response_code(501);
-        echo json_encode(array($e->getMessage()));
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . $e->getMessage()));
         die();
 
     }

@@ -207,7 +207,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -248,7 +248,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -289,7 +289,7 @@ var app = new Vue({
             //handle error
             Swal.fire({
               text: response.data,
-              icon: "warning",
+              icon: "info",
               confirmButtonText: "OK",
             });
           });
@@ -330,7 +330,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -418,8 +418,8 @@ var app = new Vue({
           }
 */
       Swal.fire({
-        title: "Are you sure to verify?",
-        text: "Are you sure to verify apply?",
+        title: "Are you sure to proceed this action?",
+        text: "Finish verifying and the status of this application will become completed",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -507,8 +507,8 @@ var app = new Vue({
       }
 
       Swal.fire({
-        title: "Are you sure to reject?",
-        text: "Are you sure to reject apply?",
+        title: "Are you sure to proceed this action?",
+        text: "Reject and send back to requestor for liquidate",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",

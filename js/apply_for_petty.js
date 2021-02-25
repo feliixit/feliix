@@ -390,7 +390,7 @@ var app = new Vue({
           //handle success
           Swal.fire({
             text: response.data.message,
-            icon: "success",
+            icon: "info",
             confirmButtonText: "OK",
           });
 
@@ -400,7 +400,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: JSON.stringify(error),
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -453,7 +453,7 @@ var app = new Vue({
           //handle success
           Swal.fire({
             text: response.data.message,
-            icon: "success",
+            icon: "info",
             confirmButtonText: "OK",
           });
 
@@ -463,7 +463,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: JSON.stringify(error),
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });

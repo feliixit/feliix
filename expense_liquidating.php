@@ -216,7 +216,8 @@ $(function(){
             text-decoration: none;
             color: #2F9A57;
             cursor: pointer;
-            margin: 3px 6px 3px 0;
+            margin: 3px 0;
+            display: block;
         }
 
         div.tablebox.listing {
@@ -292,7 +293,7 @@ $(function(){
                             <input type="radio" name="record_id" class="alone green" :value="record.id" v-model="proof_id">
                         </li>
                         <li>{{ record.request_no }}</li>
-                        <li>{{ record.requestor }}</li>
+                        <li>{{ record.created_at }}</li>
                         <li>{{ isNaN(record.total) ? 0 : Number(record.total).toLocaleString() }}</li>
                         <li>{{ record.date_requested }}</li>
                         

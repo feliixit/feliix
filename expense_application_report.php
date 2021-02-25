@@ -99,7 +99,8 @@ $(function(){
             text-decoration: none;
             color: #25a2b8;
             cursor: pointer;
-            margin: 3px 6px 3px 0;
+            margin: 3px 0;
+            display: block;
         }
 
         div.tablebox.listing {
@@ -163,6 +164,19 @@ $(function(){
             font-size: 20px;
         }
 
+        header .headerbox {  
+            background-color: #EA0029;
+        }
+
+        body.fifth .details .tablebox > ul > li {
+            font-size: 14px;
+        }
+
+        body.fifth .list_function .pagenation a:hover {
+            background-color: #EA0029;
+            color: #FFF;
+        }
+
     </style>
 
 
@@ -223,7 +237,7 @@ $(function(){
                         <li>{{ !(record.amount_verified) ? '' : Number(record.amount_verified).toLocaleString() }}</li>
                         <li>{{ record.date_requested }}</li>
                         <li>{{ record.checked_date }}</li>
-                        <li>{{ record.approve1_date }}<br>{{ record.approve2_date }}</li>
+                        <li>{{ record.approve1_date == "" ? "---" : record.approve1_date }}<br>{{ record.approve2_date }}</li>
                         <li>{{ record.release_date }}</li>
                         <li>{{ record.liquidate_date }}</li>
                         <li>{{ record.verified_date }}</li>
@@ -330,7 +344,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Category</li>
-                            <li>{{ record.info_category }} {{ ' >> ' + (record.sub_category == "" ? "Bills" : record.sub_category) }}</li>
+                            <li>{{ record.info_category }} {{ (record.sub_category != "" ? ' >> ' + record.sub_category : "") }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions</li>
@@ -372,6 +386,10 @@ $(function(){
                             <li><a v-if="record.request_type == 'New'" v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                     <div v-if="record.request_type == 'Reimbursement'">---</div>
                             </li>
+                        </ul>
+                        <ul>
+                            <li class="head">Remarks</li>
+                            <li>{{ (record.request_type == "New") ? record.remark_liquidated : "---" }}</li>
                         </ul>
                         <ul>
                             <li class="head">Date Verified</li>

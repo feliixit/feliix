@@ -204,7 +204,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -245,7 +245,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -288,7 +288,7 @@ var app = new Vue({
             //handle error
             Swal.fire({
               text: response.data,
-              icon: "warning",
+              icon: "info",
               confirmButtonText: "OK",
             });
           });
@@ -331,7 +331,7 @@ var app = new Vue({
           //handle error
           Swal.fire({
             text: response.data,
-            icon: "warning",
+            icon: "info",
             confirmButtonText: "OK",
           });
         });
@@ -383,8 +383,8 @@ var app = new Vue({
       }
 
       Swal.fire({
-        title: "Are you sure to approve?",
-        text: "Are you sure to approve apply?",
+        title: "Are you sure to proceed this action?",
+        text: "Approve and then send to MD for approve",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -416,8 +416,8 @@ var app = new Vue({
       }
 
       Swal.fire({
-        title: "Are you sure to approve?",
-        text: "Are you sure to approve apply?",
+        title: "Are you sure to proceed this action?",
+        text: "Approve and then go to the releasing step",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -460,8 +460,8 @@ var app = new Vue({
       }
 
       Swal.fire({
-        title: "Are you sure to reject?",
-        text: "Are you sure to reject apply?",
+        title: "Are you sure to proceed this action?",
+        text: "Reject and send back to requestor",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -503,8 +503,8 @@ var app = new Vue({
         }
   
         Swal.fire({
-          title: "Are you sure to reject?",
-          text: "Are you sure to reject apply?",
+          title: "Are you sure to proceed this action?",
+          text: "Reject and send back to checker",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
