@@ -410,7 +410,7 @@ $(function(){
                         </ul>
                          <ul>
                             <li class="head">Remarks</li>
-                            <li>{{ record.remark_liquidate }}</li>
+                            <li>{{ record.remark_liquidated }}</li>
                         </ul>
                     </div>
 
