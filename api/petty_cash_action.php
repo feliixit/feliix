@@ -82,6 +82,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':info_account', $info_account);
             $stmt->bindParam(':info_category', $info_category);
             if($info_category == 'Marketing' || $info_category == 'Office Needs' || $info_category == 'Others' || $info_category == 'Projects' || $info_category == 'Store' )
+                $sub_category = trim($sub_category);
+            else
                 $sub_category = "";
             $stmt->bindParam(':info_sub_category', $sub_category);
             $stmt->bindParam(':info_remark', $info_remark);
