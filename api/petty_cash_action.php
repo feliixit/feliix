@@ -97,11 +97,13 @@ if (!isset($jwt)) {
             // prepare the query
             $stmt = $db->prepare($query);
 
+            $remark_liquidated = $remark;
+
             // bind the values
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':status', GetAction($crud));
             $stmt->bindParam(':amount_liquidated', $amount);
-            $stmt->bindParam(':remark_liquidated', $remark);
+            $stmt->bindParam(':remark_liquidated', $remark_liquidated);
 
             $remark = '';
         } elseif ($crud == "Verifier Verified") {
