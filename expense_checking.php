@@ -207,7 +207,7 @@ $(function(){
                         <ul>
                             <li class="head">Payable to
                             </li>
-                            <li>{{ (record.payable_other == "") ? record.payable_to : (( typeof record.payable_other == "undefined" ) ? "":  "Other:" + record.payable_other) }}</li>
+                            <li>{{ (record.payable_other == "") ? "Requestor": (( typeof record.payable_other == "undefined" ) ? "":  "Other:" + record.payable_other) }}</li>
                         </ul>
                         <ul>
                             <li class="head">Remarks or Payment Instructions
