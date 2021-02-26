@@ -214,7 +214,7 @@ $(function(){
 
         .block .tablebox li > a {
             text-decoration: none;
-            color: #2F9A57;
+            color: #25a2b8;
             cursor: pointer;
             margin: 3px 0;
             display: block;

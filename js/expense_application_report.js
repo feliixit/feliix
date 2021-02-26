@@ -332,13 +332,15 @@ var app = new Vue({
 
         //$(window).scrollTop(0);
         this.view_detail = false;
+        this.$refs.mask.style.display = 'none';
         return;
       }
 
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
-
+      
+      this.$refs.mask.style.display = 'block';
       this.view_detail = true;
     },
 
