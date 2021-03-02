@@ -136,7 +136,7 @@ try {
                 {
             ?>
             <li class="red01" style="border: 3px solid var(--red01);">
-                <a class="uni" href="../expense_application_report">Reporting<br>Section</a>
+                <a class="uni" href="../expense_application_report">Report<br>Section</a>
             </li>
             <?php 
                 }
