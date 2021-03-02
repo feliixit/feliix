@@ -112,6 +112,44 @@ else
             die();
         }
 
+        if($last_id != 0)
+        {
+            // update new request no
+            $new_request_no = sprintf("%05d", $last_id);
+
+            $query = "update apply_for_petty
+                SET
+                    `request_no` = :request_no
+                    where id = :id";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            // bind the values
+            $stmt->bindParam(':request_no', $new_request_no);
+ 
+            $stmt->bindParam(':id', $last_id);
+
+            // execute the query, also check if query was successful
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+        }
+
         // petty_list
         for($i=0 ; $i < count($petty_array) ; $i++)
         {
@@ -292,7 +330,7 @@ else
 
         $db->commit();
         http_response_code(200);
-        echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") . " <br> Request No. is " . $new_request_no));
         
     }
     catch (Exception $e){

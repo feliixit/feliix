@@ -16,6 +16,9 @@ use \Firebase\JWT\JWT;
 $access1 = false;
 $access2 = false;
 $access3 = false;
+$access4 = false;
+$access5 = false;
+
 $pic_url = "man6.jpg";
 
 try {
@@ -40,6 +43,13 @@ try {
             $access1 = true;
         }
 
+        $query = "SELECT * FROM expense_flow WHERE uid = " . $user_id;
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $access4 = true;
+        }
+
         // Glendon Wendell Co and Kuan
         if($user_id == 3 || $user_id == 41)
             $access1 = true;
@@ -52,6 +62,10 @@ try {
         $access3 = false;
         if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9)
             $access3 = true;
+
+        // 5. 針對 Reporting Section的內容，只有 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到
+        if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
+            $access5 = true;
 
         $pic_url = $decoded->data->pic_url;
 
@@ -111,15 +125,22 @@ try {
                 <a class="uni">Admin<br>Section</a>
                 <?=($access1 == true) ? '<a class="list" href="../ammend">Verify and Review</a>' : '' ?>
                 <?=($access2 == true) ? '<a class="list" href="../query_export">Query and Export</a>' : '' ?>
-                <a class="list" href="../expense_checking">Expense Review</a>
+                <?=($access4 == true) ? '<a class="list" href="../expense_checking">Expense Review</a>' : '' ?>
                 <?=($access3 == true) ? '<a class="list" href="../expense_recorder">Expense Recorder</a>' : '' ?>
             </li>
             <?php 
                 }
             ?>
+            <?php 
+                if($access5 == true)
+                {
+            ?>
             <li class="red01" style="border: 3px solid var(--red01);">
                 <a class="uni" href="../expense_application_report">Reporting<br>Section</a>
             </li>
+            <?php 
+                }
+            ?>
         </ul>
         <ul class="menu">
             <li class="pri01a">

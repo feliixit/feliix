@@ -327,8 +327,8 @@ body.green input[type=date] {
                 <form>
 
                     <ul>
-                        <li><b>Request No.</b></li>
-                        <li><input type="text" required style="width:100%" readonly v-model="request_no"
+                        <li v-if="pid != 0"><b>Request No.</b></li>
+                        <li v-if="pid != 0"><input type="text" required style="width:100%" readonly v-model="request_no"
                                                                 placeholder="Auto Given"></li>
 
                         <li><b>Date Requested</b></li>

@@ -389,7 +389,7 @@ var app = new Vue({
         .then(function(response) {
           //handle success
           Swal.fire({
-            text: response.data.message,
+            html: response.data.message,
             icon: "info",
             confirmButtonText: "OK",
           });
