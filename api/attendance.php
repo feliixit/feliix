@@ -45,7 +45,7 @@ $subquery = "";
 
 $merged_results = array();
 
-$sql = "SELECT * FROM user where user.status = 1 and need_punch = 1 ";
+$sql = "SELECT * FROM user where user.status = 1 and need_punch = 1 order by username";
 
 $stmt = $db->prepare( $sql );
 $stmt->execute();
