@@ -254,184 +254,13 @@ var app = new Vue({
                     console.log(details);
                     console.log(response);
                     console.log(response.data[0]);
-<<<<<<< HEAD
-
-                    _this.updateDetail(_this.id,details,main.Date);
-				    //_this.deleteDetail(_this.id);
-                    //_this.addDetails(_this.id,details,main.Date);
-=======
                     _this.addDetails(response.data[0], details, main.Date);
->>>>>>> master
                     //handle success
                     //_this.items = response.data
                     //console.log(_this.items)
                 })
                 .catch(function (response) {
                     //handle error
-<<<<<<< HEAD
-				  console.log(response);
-            });
-        },
-        
-        updateDetail: function(mainId,addDetails,date){
-			this.action = 7;//delete
-			var token = localStorage.getItem('token');
-			var form_Data = new FormData();
-			let _this = this;
-	
-			form_Data.append('jwt', token);
-			form_Data.append('main_id', mainId);
-			form_Data.append('action', _this.action);
-			form_Data.append('deleted_by',_this.name);
-			axios({
-				method: 'post',
-				headers: {
-					'Content-Type': 'multipart/form-data',
-				},
-				url: 'api/work_calender_detail',
-				data: form_Data
-			})
-				.then(function (response) {
-                    //handle success
-                    _this.addDetails(mainId,addDetails,date);
-				})
-				.catch(function (response) {
-                //handle error
-                });
-        },
-
-		// updateDetail: function(){},
-		deleteMain: function(id){
-		  this.action = 7;//delete
-		  var token = localStorage.getItem('token');
-		    var form_Data = new FormData();
-		  let _this = this;
-
-		  form_Data.append('jwt', token);
-		  form_Data.append('id', id);
-		  form_Data.append('action', _this.action);
-		  form_Data.append('deleted_by',_this.name);
-		  axios({
-		 	 method: 'post',
-		 	 headers: {
-		 		 'Content-Type': 'multipart/form-data',
-		 	 },
-		 	 url: 'api/work_calender_main',
-		 	 data: form_Data
-		  })
-		 	 .then(function (response) {
-		 		 //handle success
-		 		 //_this.items = response.data
-		 	 })
-		 	 .catch(function (response) {
-		 		 //handle error
-		 	 });
-		},
-		deleteDetail: function(mainId){
-			this.action = 7;//delete
-			var token = localStorage.getItem('token');
-			var form_Data = new FormData();
-			let _this = this;
-	
-			form_Data.append('jwt', token);
-			form_Data.append('main_id', mainId);
-			form_Data.append('action', _this.action);
-			form_Data.append('deleted_by',_this.name);
-			axios({
-				method: 'post',
-				headers: {
-					'Content-Type': 'multipart/form-data',
-				},
-				url: 'api/work_calender_detail',
-				data: form_Data
-			})
-				.then(function (response) {
-					//handle success
-				})
-				.catch(function (response) {
-					//handle error
-					});
-			},
-		getUserName: function() {
-			var token = localStorage.getItem('token');
-			var form_Data = new FormData();
-			let _this = this;
-		
-			form_Data.append('jwt', token);
-		
-			axios({
-			method: 'post',
-			headers: {
-				'Content-Type': 'multipart/form-data',
-			},
-			url: 'api/on_duty_get_myname',
-			data: form_Data
-			})
-			.then(function(response) {
-					//handle success
-					_this.name = response.data.username;
-					_this.is_manager = response.data.is_manager;
-					_this.manager_leave = response.data.manager_leave;
-					_this.al_credit = response.data.annual_leave;
-					_this.sl_credit = response.data.sick_leave;
-					_this.is_viewer = response.data.is_viewer;
-		
-				})
-			.catch(function(response) {
-					//handle error
-					Swal.fire({
-					text: JSON.stringify(response),
-					icon: 'error',
-					confirmButtonText: 'OK'
-					})
-				});
-		},
-		getMonthDay:function(){
-			let _this = this;
-			var today = new Date();
-			var first = new Date();
-			var dd = ("0" + (today.getDate())).slice(-2);
-			var mm = ("0" + (today.getMonth() + 1)).slice(-2);
-			var yyyy = today.getFullYear();
-			today = yyyy + '-' + mm + '-' + dd;
-			first = yyyy + '-' + mm + '-01';
-			_this.file_day = yyyy + mm + dd;
-			_this.start_date = first;
-			_this.end_date = today;
-		},
-		upload:function(){
-			var myArr = this.fileArray;
-			var vm = this;
-			console.log(myArr);
-			myArr.forEach((element, index) => {
-			var config = {
-				headers: { "Content-Type": "multipart/form-data" }
-			}
-			var data = myArr[index];
-			var myForm = new FormData();
-			myForm.append("file", data);
-			myForm.append('batch_type', 'proof');
-			myForm.append('batch_id', 0);
-			myForm.append('today', vm.file_day);
-	
-	
-			axios
-				.post("api/work_calender_gcp", myForm, config)
-				.then(function(res) {
-				if (res.data.code == 0) {
-	
-					myArr[index].progress = 1;
-					vm.$set(vm.fileArray, index, myArr[index]);
-					console.log(vm.fileArray, index);
-				} else {
-					alert(JSON.stringify(res.data));
-				}
-				})
-				.catch(function(err) {
-				console.log(err);
-				});
-			});
-=======
                     Swal.fire({
                         text: JSON.stringify(response),
                         icon: "error",
@@ -440,7 +269,6 @@ var app = new Vue({
                 });
             //this.upload();
             //this.reload();
->>>>>>> master
         },
 
         addDetails: function (mainId, addDetails, date) {
