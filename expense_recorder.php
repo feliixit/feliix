@@ -120,7 +120,6 @@ try {
         
     </style>
 
-
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/hierarchy-select.min.js"></script>
@@ -534,7 +533,7 @@ try {
 
                 <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
 
-                <td style="text-align: left;">{{item.details}}</td>
+                <td style="text-align: left;"><span v-html="item.details.replace('&lt;br&gt;', '<br />')"></span></td>
 
                 <td v-if="item.pic_url != ''" >
                     <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
@@ -552,7 +551,7 @@ try {
 
                 <td>{{item.paid_date}}</td>
 
-                <td style="text-align: right;">{{item.cash_in.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
+                <td style="text-align: right;">{{ item.cash_in.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') }}</td>
 
                 <td style="text-align: right;">{{item.cash_out.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</td>
 
@@ -646,7 +645,7 @@ try {
 
                 <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
 
-                <td style="text-align: left;">{{item.details}}</td>
+                <td style="text-align: left;"><span v-html="item.details.replace('&lt;br&gt;', '<br />')"></span></td>
 
                 <td v-if="item.pic_url != ''" >
                     <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
@@ -758,7 +757,7 @@ try {
 
                 <td>{{item.category}}</td>
 
-                <td style="text-align: left;">{{item.details}}</td>
+                <td style="text-align: left;"><span v-html="item.details.replace('&lt;br&gt;', '<br />')"></span></td>
 
                 <td v-if="item.pic_url != ''" >
                     <a v-for="pic in item.pic_url" :href="`${mail_ip}${pic}`" target="_blank">
@@ -1002,7 +1001,7 @@ try {
                         </td>
 
                         <td style="text-align: left;">
-                            <a :href="`${mail_ip}${pic}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
+                            <a :href="`${mail_ip}`" target="_blank"><i class="fas fa-image fa-lg" ></i></a>
                         </td>
 
                     </tr>
@@ -1799,10 +1798,23 @@ try {
 
 
 
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.21.0/moment.js"></script>
+<script src="js/vue-select.js"></script>
+<script src="js/axios.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="js/a076d05399.js"></script> 
+<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
+<script src="//unpkg.com/element-ui"></script>
+<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+
 <script>
 
-
-
+$(document).ready(function(){
     var today = new Date();
     var dd = ("0" + (today.getDate())).slice(-2);
     var mm = ("0" + (today.getMonth() + 1)).slice(-2);
@@ -1810,27 +1822,10 @@ try {
     today = yyyy + '-' + mm + '-' + dd;
     $("#todays-date").attr("value", today);
     $("#todays_date").attr("value", today);
-
-
-
-
-
-
+});
+    
 </script>
 
-
-
-</body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-<script src="https://cdn.bootcss.com/moment.js/2.21.0/moment.js"></script>
-<script src="js/vue-select.js"></script>
-<script src="js/axios.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
 
 <script>
     ELEMENT.locale(ELEMENT.lang.en)
@@ -1838,6 +1833,6 @@ try {
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/add_or_edit_price_record.js"></script>
+<script defer src="js/add_or_edit_price_record.js"></script>
 
 </html>

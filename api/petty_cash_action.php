@@ -155,7 +155,6 @@ if (!isset($jwt)) {
             die();
         }
 
-
         // items to delete
         for ($i = 0; $i < count($items_array); $i++) {
             $query = "DELETE FROM gcp_storage_file
@@ -189,6 +188,9 @@ if (!isset($jwt)) {
 
         $batch_id = $id;
         $batch_type = $crud;
+
+        $_pic_url = "";
+        $_real_url = "";
 
         if(isset($_FILES['files']['name']))
         {
@@ -259,6 +261,11 @@ if (!isset($jwt)) {
                                 $code = 0;
                                 $upload_id = $last_id;
                                 $image = $image_name;
+
+                                // for expense record
+                                $_pic_url .= $upload_name . ",";
+                                $_real_url .= $image_name . ",";
+
                             } else {
                                 $message = 'There is an error while uploading file';
                             }
@@ -274,6 +281,264 @@ if (!isset($jwt)) {
                 die();
             }
         }
+
+
+        // for expense record
+        if ($crud == "Releasing" || $crud == "Finish Releasing") {
+
+            $_record = GetRecordDetail($id, $db);
+            $_record_list = GetList($id, $db);
+            $_record_attachments = GetAttachments($id, $db);
+            $_record_release_attachments = GetReleaseAttachments($id, $db);
+
+            $_account = 0;
+            $_related_account = "";
+            $_category = "";
+            $_sub_category = "";
+            $_details = "";
+
+            $_request_no = "";
+            $_project_name = "";
+
+            $_payee = "";
+
+            $_cash_in = 0;
+            $_cash_out = 0;
+            $_remarks = "";
+            $_is_marked = "";
+            $_is_locked = "";
+            $_created_by = "SYSTEM";
+
+            $_id = 0;
+
+            if(sizeof($_record) > 0)
+            {
+                switch ($_record[0]["info_account"]) {
+                    case "Office Petty Cash":
+                        $_account = 1;
+                        break;
+                    case "Security Bank":
+                        $_account = 2;
+                        break;
+                    case "Online Transactions":
+                        $_account = 3;
+                        break;
+                }
+
+                $_category = $_record[0]["info_category"];
+                $_subcategory = $_record[0]["info_sub_category"];
+                $_payee = $_record[0]["username"];
+                $_request_no = $_record[0]["request_no"];
+                $_project_name = $_record[0]["project_name"];
+                $_id = $_record[0]["id"];
+            }
+
+            $_details = 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
+
+            $_details = $_details . 'Project Name / Reason: ' . $_project_name . '<br>';
+            
+            foreach ($_record_list as &$list) {
+                $_details .= "● " . $list["payee"] . ", " . $list["particulars"] . ", Price = " . $list["price"]*1 . ", Qty = " . $list["qty"]*1 . ", Amount = " . $list["price"] * $list["qty"] . "<br>";
+
+                $_cash_out += $list["price"] * $list["qty"];
+            }
+            
+            foreach($_record_attachments as &$list){
+                $_pic_url .= $list["gcp_name"] . ",";
+                $_real_url .= $list["filename"] . ",";
+            }
+
+            $query = "INSERT INTO price_record
+                (`account`,`category`, `sub_category`, `related_account`, `details`, `gcp_url`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
+                VALUES (:account,:category, :sub_category, :related_account, :details, :gcp_url, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by) ";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            $remark_liquidated = $remark;
+
+            // bind the values
+            $stmt->bindParam(':account', $_account);
+            $stmt->bindParam(':category', $_category);
+            $stmt->bindParam(':sub_category', $_subcategory);
+            $stmt->bindParam(':related_account', $_related_account);
+
+            $stmt->bindParam(':details', rtrim($_details, "<br>"));
+            $stmt->bindParam(':gcp_url', rtrim($_gcp_url, ","));
+            $stmt->bindParam(':pic_url', rtrim($_pic_url, ","));
+            $stmt->bindParam(':payee', $_payee);
+
+
+            $stmt->bindParam(':paid_date', date("Y-m-d"));
+            $stmt->bindParam(':cash_in', $_cash_in);
+            $stmt->bindParam(':cash_out', $_cash_out);
+            $stmt->bindParam(':remarks', $_remarks);
+
+
+            $stmt->bindParam(':is_locked', $_is_locked);
+            $stmt->bindParam(':is_marked', $_is_marked);
+            $stmt->bindParam(':created_by', $_created_by);
+
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+        } 
+
+
+        if ($crud == "Verifier Verified") {
+
+            $_record = GetRecordDetail($id, $db);
+            $_record_list = GetList($id, $db);
+            $_record_attachments = GetAttachments($id, $db);
+            $_record_release_attachments = GetReleaseAttachments($id, $db);
+            $_record_liquidate_attachments = GetLiquidateAttachments($id, $db);
+
+            $_account = 0;
+            $_related_account = "";
+            $_category = "";
+            $_sub_category = "";
+            $_details = "";
+
+            $_request_no = "";
+            $_project_name = "";
+
+            $_payee = "";
+
+            $_cash_in = 0;
+            $_cash_out = 0;
+            $_amount_verified = 0;
+            $_remarks = "";
+            $_is_marked = "";
+            $_is_locked = "";
+            $_created_by = "SYSTEM";
+
+            $_id = 0;
+
+            if(sizeof($_record) > 0)
+            {
+                switch ($_record[0]["info_account"]) {
+                    case "Office Petty Cash":
+                        $_account = 1;
+                        break;
+                    case "Security Bank":
+                        $_account = 2;
+                        break;
+                    case "Online Transactions":
+                        $_account = 3;
+                        break;
+                }
+
+                $_category = $_record[0]["info_category"];
+                $_subcategory = $_record[0]["info_sub_category"];
+                $_payee = $_record[0]["username"];
+                $_request_no = $_record[0]["request_no"];
+                $_project_name = $_record[0]["project_name"];
+                $_id = $_record[0]["id"];
+                $_amount_verified = (int)$_record[0]["amount_verified"];
+            }
+
+            $_details_list = "";
+
+            foreach ($_record_list as &$list) {
+                $_details_list .= "● " . $list["payee"] . ", " . $list["particulars"] . ", Price = " . $list["price"]*1 . ", Qty = " . $list["qty"]*1 . ", Amount = " . $list["price"] * $list["qty"] . "<br>";
+
+                $_cash_out += $list["price"] * $list["qty"];
+            }
+
+            $_details = 'Liquidation was verified. <br>';
+            $_details = $_details . 'Total Amount Requested: ' . $_cash_out . '<br>';
+            $_details = $_details . 'Actual Amount After Verification: ' . $_amount_verified . '<br><br>';
+
+            $_details = $_details . 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
+
+            $_details = $_details . 'Project Name / Reason: ' . $_project_name . '<br>';
+
+            $_details = $_details . $_details_list;
+
+            foreach($_record_liquidate_attachments as &$list){
+                $_pic_url .= $list["gcp_name"] . ",";
+                $_real_url .= $list["filename"] . ",";
+            }
+
+            foreach($_record_release_attachments as &$list){
+                $_pic_url .= $list["gcp_name"] . ",";
+                $_real_url .= $list["filename"] . ",";
+            }
+
+            $query = "INSERT INTO price_record
+                (`account`,`category`, `sub_category`, `related_account`, `details`, `gcp_url`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
+                VALUES (:account,:category, :sub_category, :related_account, :details, :gcp_url, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by) ";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            $remark_liquidated = $remark;
+
+            if($_cash_out >= $_amount_verified)
+            {
+                $_cash_in = $_cash_out - $_amount_verified;
+                $_cash_out = 0;
+            }
+            else
+            {
+                $_cash_in = 0;
+                $_cash_out = $_amount_verified - $_cash_out;
+            }
+
+            // bind the values
+            $stmt->bindParam(':account', $_account);
+            $stmt->bindParam(':category', $_category);
+            $stmt->bindParam(':sub_category', $_subcategory);
+            $stmt->bindParam(':related_account', $_related_account);
+
+            $stmt->bindParam(':details', rtrim($_details, "<br>"));
+            $stmt->bindParam(':gcp_url', rtrim($_gcp_url, ","));
+            $stmt->bindParam(':pic_url', rtrim($_pic_url, ","));
+            $stmt->bindParam(':payee', $_payee);
+
+
+            $stmt->bindParam(':paid_date', date("Y-m-d"));
+            $stmt->bindParam(':cash_in', $_cash_in);
+            $stmt->bindParam(':cash_out', $_cash_out);
+            $stmt->bindParam(':remarks', $_remarks);
+
+
+            $stmt->bindParam(':is_locked', $_is_locked);
+            $stmt->bindParam(':is_marked', $_is_marked);
+            $stmt->bindParam(':created_by', $_created_by);
+
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+        } 
 
         // save history
         $query = "INSERT INTO petty_history
@@ -432,4 +697,97 @@ function &GetDesc($loc)
     }
 
     return $location;
+}
+
+function GetRecordDetail($_id, $db)
+{
+    $sql = "SELECT ap.id, request_no, project_name, info_account, info_category, info_sub_category, u.username, amount_verified
+            FROM apply_for_petty ap 
+            LEFT JOIN user u ON ap.uid = u.id 
+            where ap.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $_id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+
+function GetReleaseAttachments($_id, $db)
+{
+    $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Releaser Released'
+            order by h.created_at ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetLiquidateAttachments($_id, $db)
+{
+    $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Liquidated'
+            order by h.created_at ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetAttachments($_id, $db)
+{
+    $sql = "select id, 1 is_checked, COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'petty'
+            order by h.created_at ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetList($_id, $db)
+{
+    $sql = "select pm.id, sn, payee, particulars, price, qty, `status`
+    from petty_list pm 
+    where `status` <> -1 and petty_id = " . $_id . " order by sn ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }

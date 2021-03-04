@@ -37,9 +37,28 @@ var app = new Vue({
   },
 
   created() {
-   
-    this.getLeaveCredit();
+  
     this.getUserName();
+
+    let _this = this;
+    let uri = window.location.href.split('?');
+    if (uri.length == 2)
+    {
+      let vars = uri[1].split('&');
+      let getVars = {};
+      let tmp = '';
+      vars.forEach(function(v){
+        tmp = v.split('=');
+        if(tmp.length == 2)
+        {
+          _this.getLeaveCredit(tmp[1]);
+          //_this.proof_id = tmp[1];
+        }
+        
+      });
+    }
+    else
+      this.getLeaveCredit(0);
   },
 
   computed: {
@@ -52,7 +71,7 @@ var app = new Vue({
   },
 
   mounted() {
-     
+    
   },
 
   watch: {
@@ -95,7 +114,7 @@ var app = new Vue({
       return !isNaN(parseFloat(n)) && isFinite(n);
     },
 
-    getLeaveCredit: function() {
+    getLeaveCredit: function(id) {
       let _this = this;
 
       axios
@@ -103,12 +122,14 @@ var app = new Vue({
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;
-          if(_this.receive_records.length > 0)
+          if(_this.receive_records.length > 0 && id !== 0)
           {
-            _this.proof_id = 0;
+            _this.proof_id = id;
               //_this.proof_id = _this.receive_records[0].id;
               //_this.detail();
           }
+          else
+          {_this.proof_id = 0;}
         })
         .catch(function(error) {
           console.log(error);
@@ -479,7 +500,7 @@ var app = new Vue({
     resetForm: function() {
       this.record = [];
       this.proof_id = 0;
-      this.getLeaveCredit();
+      this.getLeaveCredit(0);
       
     },
 

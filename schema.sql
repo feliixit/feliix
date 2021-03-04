@@ -1134,3 +1134,7 @@ ADD COLUMN `remark_liquidated` varchar(512) DEFAULT '' AFTER amount_liquidated;
 ALTER TABLE apply_for_petty MODIFY COLUMN amount_liquidated decimal(10, 2) NULL DEFAULT NULL;
 
 ALTER TABLE apply_for_petty MODIFY COLUMN amount_verified decimal(10, 2) NULL DEFAULT NULL;
+
+-- apply for petty to price record
+ALTER TABLE price_record
+ADD COLUMN `gcp_url` varchar(1024)  default '' AFTER pic_url;
