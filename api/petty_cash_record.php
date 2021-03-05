@@ -389,7 +389,7 @@ function GetStatus($loc)
             $location = "For Check";
             break;
         case 2:
-            $location = "Rejected to Checker";
+            $location = "For Check";
             break;
         case 3:
             $location = "For Approve";
