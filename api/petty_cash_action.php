@@ -305,8 +305,8 @@ if (!isset($jwt)) {
             $_cash_in = 0;
             $_cash_out = 0;
             $_remarks = "";
-            $_is_marked = "";
-            $_is_locked = "";
+            $_is_marked = 0;
+            $_is_locked = 0;
             $_created_by = "SYSTEM";
 
             $_id = 0;
@@ -422,8 +422,8 @@ if (!isset($jwt)) {
             $_cash_out = 0;
             $_amount_verified = 0;
             $_remarks = "";
-            $_is_marked = "";
-            $_is_locked = "";
+            $_is_marked = 0;
+            $_is_locked = 0;
             $_created_by = "SYSTEM";
 
             $_id = 0;
@@ -473,12 +473,12 @@ if (!isset($jwt)) {
                 $_pic_url .= $list["gcp_name"] . ",";
                 $_real_url .= $list["filename"] . ",";
             }
-
+/*
             foreach($_record_release_attachments as &$list){
                 $_pic_url .= $list["gcp_name"] . ",";
                 $_real_url .= $list["filename"] . ",";
             }
-
+*/
             $query = "INSERT INTO price_record
                 (`account`,`category`, `sub_category`, `related_account`, `details`, `gcp_url`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
                 VALUES (:account,:category, :sub_category, :related_account, :details, :gcp_url, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by) ";
