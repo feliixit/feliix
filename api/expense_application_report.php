@@ -491,7 +491,7 @@ function GetReleaseHistory($_id, $db)
 
 function GetApprove1History($_id, $db)
 {
-    $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
+    $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') dt, `status` from petty_history pm 
             where  petty_id = " . $_id . " and `action` = 'OP Approved' order by created_at desc limit 1";
 
     $merged_results = "";
@@ -503,7 +503,7 @@ function GetApprove1History($_id, $db)
         if($row['status'] == -1)
             $merged_results = "";
         else
-            $merged_results = $row['created_at'];
+            $merged_results = $row['dt'];
     }
 
     return $merged_results;
