@@ -547,6 +547,47 @@ if (!isset($jwt)) {
             }
         } 
 
+        // for reject approval
+        if ($crud == "Send To MD") {
+            // save history
+            $query = "INSERT INTO petty_history
+            SET
+                `petty_id` = :petty_id,
+                `actor` = :actor,
+                `action` = :_action,
+                `reason` = :remark,
+                `status` = -1,
+                `created_at` = now()";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            // bind the values
+            $stmt->bindParam(':petty_id', $id);
+            $stmt->bindParam(':actor', $user_name);
+            $stmt->bindParam(':_action', GetDesc("OP Approved"));
+            $stmt->bindParam(':remark', $remark);
+
+
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+        }
+
         // save history
         $query = "INSERT INTO petty_history
         SET

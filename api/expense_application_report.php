@@ -492,7 +492,7 @@ function GetReleaseHistory($_id, $db)
 function GetApprove1History($_id, $db)
 {
     $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
-            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'OP Approved' order by created_at desc limit 1";
+            where  petty_id = " . $_id . " and `action` = 'OP Approved' order by created_at desc limit 1";
 
     $merged_results = "";
 
@@ -500,7 +500,10 @@ function GetApprove1History($_id, $db)
     $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results = $row['created_at'];
+        if($row['status'] == -1)
+            $merged_results = "";
+        else
+            $merged_results = $row['created_at'];
     }
 
     return $merged_results;
