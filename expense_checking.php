@@ -310,6 +310,8 @@ $(function(){
                                     <option value="Check">Check</option>
                                     <option value="Other">Other</option>
                                 </select>
+
+                                <input v-if="record.info_remark == 'Other'" type="text" id="specific_payableto" ref="specific_payableto" v-model="record.info_remark_other" style="width:100%; margin-top: 5px;" placeholder="Please Specify ...">
                             </li>
                         </ul>
 

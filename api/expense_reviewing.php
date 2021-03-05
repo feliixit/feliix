@@ -97,11 +97,20 @@ switch ($method) {
                         info_account,
                         info_category,
                         info_sub_category,
-                        info_remark
+                        info_remark,
+                        info_remark_other
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
-                LEFT JOIN user p ON p.id = pm.uid 
-                where pm.`status` in (3, 4)";
+                LEFT JOIN user p ON p.id = pm.uid ";
+        
+        $status_str = "";
+        foreach($array_flow as &$list)
+        {
+            $status_str .= $list + 1 . ",";
+        }
+        
+        $sql = $sql . "
+                where pm.`status` in (" . rtrim($status_str, ",") . ")";
 
  
         if (!empty($_GET['page'])) {
@@ -147,6 +156,7 @@ switch ($method) {
         $info_category = "";
         $info_sub_category = "";
         $info_remark = "";
+        $info_remark_other = "";
        
         $history = [];
         $list = [];
@@ -174,6 +184,7 @@ switch ($method) {
             $info_category = $row['info_category'];
             $info_sub_category = $row['info_sub_category'];
             $info_remark = $row['info_remark'];
+            $info_remark_other = $row['info_remark_other'];
 
             $total = 0;
             foreach ($list as &$value) {
@@ -202,6 +213,7 @@ switch ($method) {
                 "info_category" => $info_category,
                 "sub_category" => $info_sub_category,
                 "info_remark" => $info_remark,
+                "info_remark_other" => $info_remark_other,
             );
 
         }

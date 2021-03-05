@@ -101,6 +101,7 @@ switch ($method) {
                         info_category,
                         info_sub_category,
                         info_remark,
+                        info_remark_other,
                         amount_liquidated,
                         remark_liquidated
                 from apply_for_petty pm 
@@ -153,6 +154,7 @@ switch ($method) {
         $info_category = "";
         $info_sub_category = "";
         $info_remark = "";
+        $info_remark_other = "";
        
         $history = [];
         $list = [];
@@ -197,6 +199,7 @@ switch ($method) {
             $info_category = $row['info_category'];
             $info_sub_category = $row['info_sub_category'];
             $info_remark = $row['info_remark'];
+            $info_remark_other = $row['info_remark_other'];
 
             $total = 0;
             foreach ($list as &$value) {
@@ -232,6 +235,7 @@ switch ($method) {
                 "info_category" => $info_category,
                 "sub_category" => $info_sub_category,
                 "info_remark" => $info_remark,
+                "info_remark_other" => $info_remark_other,
             );
 
         }

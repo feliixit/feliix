@@ -1138,3 +1138,7 @@ ALTER TABLE apply_for_petty MODIFY COLUMN amount_verified decimal(10, 2) NULL DE
 -- apply for petty to price record
 ALTER TABLE price_record
 ADD COLUMN `gcp_url` varchar(1024)  default '' AFTER pic_url;
+
+-- 
+ALTER TABLE apply_for_petty
+ADD COLUMN `info_remark_other` varchar(512) DEFAULT '' AFTER info_remark;

@@ -183,6 +183,7 @@ var app = new Vue({
       else
         form_Data.append("sub_category", "");
       form_Data.append("info_remark", this.record.info_remark);
+      form_Data.append("info_remark_other", this.record.info_remark_other);
 
       axios({
         method: "post",
@@ -231,6 +232,7 @@ var app = new Vue({
       else
         form_Data.append("sub_category", "");
       form_Data.append("info_remark", this.record.info_remark);
+      form_Data.append("info_remark_other", this.record.info_remark_other);
 
       axios({
         method: "post",
@@ -328,9 +330,10 @@ var app = new Vue({
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
-      
+
       this.reject_reason = "";
       this.view_detail = true;
+
     },
 
     approve_op: function() {
@@ -379,11 +382,19 @@ var app = new Vue({
         
       }
 
-      
-
       if (this.record.info_remark.trim() === "") {
         Swal.fire({
           text: "Please select remark!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if (this.record.info_remark.trim() === "Other" && this.record.info_remark_other.trim() === "") {
+        Swal.fire({
+          text: "Please enter other remark!",
           icon: "warning",
           confirmButtonText: "OK",
         });
@@ -459,6 +470,16 @@ var app = new Vue({
       if (this.record.info_remark.trim() === "") {
         Swal.fire({
           text: "Please select remark!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if (this.record.info_remark.trim() === "Other" && this.record.info_remark_other.trim() === "") {
+        Swal.fire({
+          text: "Please enter other remark!",
           icon: "warning",
           confirmButtonText: "OK",
         });

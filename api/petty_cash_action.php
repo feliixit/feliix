@@ -17,6 +17,7 @@ $info_account = (isset($_POST['info_account']) ?  $_POST['info_account'] : '');
 $info_category = (isset($_POST['info_category']) ?  $_POST['info_category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 $info_remark = (isset($_POST['info_remark']) ?  $_POST['info_remark'] : '');
+$info_remark_other = (isset($_POST['info_remark_other']) ?  $_POST['info_remark_other'] : '');
 
 $items_to_delete = (isset($_POST['items_to_delete']) ?  $_POST['items_to_delete'] : "[]");
 $items_array = json_decode(stripslashes($items_to_delete),true);
@@ -70,7 +71,8 @@ if (!isset($jwt)) {
                   `info_account` =  :info_account,
                   `info_category` =  :info_category,
                   `info_sub_category` =  :info_sub_category,
-                  `info_remark` =  :info_remark
+                  `info_remark` =  :info_remark,
+                  `info_remark_other` =  :info_remark_other
                    where id = :id ";
 
             // prepare the query
@@ -87,6 +89,11 @@ if (!isset($jwt)) {
                 $sub_category = "";
             $stmt->bindParam(':info_sub_category', $sub_category);
             $stmt->bindParam(':info_remark', $info_remark);
+            if($info_remark == 'Cash' || $info_remark == 'Check')
+                $info_remark_other = "";
+            else
+                $info_remark_other = trim($info_remark_other);
+            $stmt->bindParam(':info_remark_other', $info_remark_other);
         } elseif ($crud == "Liquidated") {
             $query = "update apply_for_petty
                    SET

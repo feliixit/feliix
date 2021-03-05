@@ -88,6 +88,7 @@ switch ($method) {
                         payable_other,
                         remark,
                         info_remark,
+                        info_remark_other,
                         pm.`status` ,
                         DATE_FORMAT(pm.created_at, '%Y/%m/%d %T') created_at,
                         pm.amount_liquidated,
@@ -136,6 +137,7 @@ switch ($method) {
         $payable_other = "";
         $remark = "";
         $info_remark = "";
+        $info_remark_other = "";
         $status = 0;
         $desc = "";
 
@@ -170,6 +172,7 @@ switch ($method) {
             $payable_other = $row['payable_other'];
             $remark = $row['remark'];
             $info_remark = $row['info_remark'];
+            $info_remark_other = $row['info_remark_other'];
             $status = $row['status'];
             $desc = GetStatus($row['status']);
             $items = GetAttachment($row['id'], $db);
@@ -205,6 +208,7 @@ switch ($method) {
                 "payable_other" => $payable_other,
                 "remark" => $remark,
                 "info_remark" => $info_remark,
+                "info_remark_other" => $info_remark_other,
                 "status" => $status,
                 "desc" => $desc,
                 "items" => $items,

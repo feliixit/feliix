@@ -362,7 +362,7 @@
                                 </ul>
                                 <ul>
                                     <li class="head">Remarks or Payment Instructions</li>
-                                    <li>{{ record.info_remark }}</li>
+                                    <li>{{ record.info_remark }}{{ (record.info_remark_other != "" ? ' : ' + record.info_remark_other : "") }}</li>
                                 </ul>
                             </div>
 
