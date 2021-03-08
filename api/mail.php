@@ -695,7 +695,7 @@ function send_liquidate_mail($request_no,
     $content =  "<p>Dear " . $requestor . ",</p>";
     $content = $content . "<p>An expense application is waiting for you to " . $action . ". Following are the details:</p>";
     $content = $content . "<p>Request No.:" . $request_no . "</p>";
-    $content = $content . "<p>Applicant:" . $requestor . "</p>";
+    $content = $content . "<p>Applicant:" . $applicant . "</p>";
     $content = $content . "<p>Department:" . $department . "</p>";
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
@@ -784,7 +784,7 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
     $content =  "<p>Dear " . $requestor . ",</p>";
     $content = $content . "<p>An expense application is waiting for you to " . $action . ". Following are the details:</p>";
     $content = $content . "<p>Request No.:" . $request_no . "</p>";
-    $content = $content . "<p>Applicant:" . $requestor . "</p>";
+    $content = $content . "<p>Applicant:" . $applicant . "</p>";
     $content = $content . "<p>Department:" . $department . "</p>";
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";

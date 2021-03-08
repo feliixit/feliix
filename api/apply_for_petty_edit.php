@@ -691,7 +691,7 @@ function SendNotifyMail($id)
     $request_no = $_record[0]["request_no"];
     $applicant = $_record[0]["username"];
     $department = $_record[0]["department"];
-    $application_Time = str_replace($_record[0]["created_at"], "-", "/");
+    $application_Time = str_replace("-", "/", $_record[0]["created_at"]);
     $project_name = $_record[0]["project_name"];
     $date_request = $_record[0]["date_requested"];
     $total_amount = $_record[0]["total"];
