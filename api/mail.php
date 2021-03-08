@@ -465,4 +465,359 @@ function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee,
 
 }
 
+
+function void_expense_mail($request_no, $user_name, $user_email, $department, $ap_time, $project_name, $date_request, $total_amount, $reason, $request_type)
+{
+    $title = "";
+    $action = "";
+    $tab = "";
+
+    switch ($request_type) {
+        
+        case "Void":
+            $title = "Expense Application with Request No." . $request_no . " from " . $user_name . " was Voided";
+            $action = "Releaser";
+            $conten1 = "<p>Your expense application was voided by " . $action . ". Following are the details:</p>";
+            $tab = "<p>Please log on to Feliix >> Payment Request/Claim >> Expense Apply/Liquidate >> Tab Records to view the expense application or re-submit.</p>";
+            break;
+        default:
+            return;
+            break;
+
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $mail->AddAddress($user_name, $user_email);
+
+    $notifior = array();
+    $notifior = GetPettyVoidNotifiers();
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $user_name . ",</p>";
+    $content = $content . $conten1;
+    $content = $content . "<p>Request No.:" . $request_no . "</p>";
+    $content = $content . "<p>Applicant:" . $user_name . "</p>";
+    $content = $content . "<p>Department:" . $department . "</p>";
+    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
+    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
+    $content = $content . "<p>Voiding Reason:" . $reason . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . $tab;
+    $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($user_email, $content);
+        return true;
+    } else {
+        logMail($user_email, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
+function reject_expense_mail($request_no, $user_name, $requestor, $requestor_email, $department, $ap_time, $project_name, $date_request, $total_amount, $reason, $request_type)
+{
+    $title = "";
+    $action = "";
+    $tab = "";
+
+    switch ($request_type) {
+        case "Checking Reject":
+            $title = "Expense Application with Request No." . $request_no . " was Rejected";
+            $action = "Checker";
+            $conten1 = "<p>Your expense application was rejected by " . $action . ". Following are the details:</p>";
+            $tab = "<p>Please log on to Feliix >> Payment Request/Claim >> Expense Apply/Liquidate >> Tab Records to view the expense application or re-submit.</p>";
+            break;
+        case "OP Review Reject To User":
+            $title = "Expense Application with Request No." . $request_no . " was Rejected";
+            $action = "OP";
+            $conten1 = "<p>Your expense application was rejected by " . $action . ". Following are the details:</p>";
+            $tab = "<p>Please log on to Feliix >> Payment Request/Claim >> Expense Apply/Liquidate >> Tab Records to view the expense application or re-submit.</p>";
+            break;
+        case "OP Review Reject To Checker":
+            $title = "Expense Application for Re-Check: Request No." . $request_no . " from " . $user_name;
+            $action = "OP";
+            $conten1 = "<p>An expense application was rejected by " . $action . " and is waiting for you to re-check. Following are the details:</p>";
+            $tab = "<p>Please log on to Feliix >> Admin Section >> Expense Review >> Tab Check to view the expense application.</p>";
+            break;
+        case "MD Review Reject To User":
+            $title = "Expense Application with Request No." . $request_no . " was Rejected";
+            $action = "MD";
+            $conten1 = "<p>Your expense application was rejected by " . $action . ". Following are the details:</p>";
+            $tab = "<p>Please log on to Feliix >> Payment Request/Claim >> Expense Apply/Liquidate >> Tab Records to view the expense application or re-submit.</p>";
+            break;
+        case "MD Review Reject To Checker":
+            $title = "Expense Application for Re-Check: Request No." . $request_no . " from " . $user_name;
+            $action = "MD";
+            $conten1 = "<p>An expense application was rejected by " . $action . " and is waiting for you to re-check. Following are the details:</p>";
+            $tab = "<p>Please log on to Feliix >> Admin Section >> Expense Review >> Tab Check to view the expense application.</p>";
+            break;
+        default:
+            return;
+            break;
+     
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $mail->AddAddress($requestor_email, $requestor);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $requestor . ",</p>";
+    $content = $content . $conten1;
+    $content = $content . "<p>Request No.:" . $request_no . "</p>";
+    $content = $content . "<p>Applicant:" . $user_name . "</p>";
+    $content = $content . "<p>Department:" . $department . "</p>";
+    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
+    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
+    $content = $content . "<p>Rejection Reason:" . $reason . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . $tab;
+    $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($requestor_email, $content);
+        return true;
+    } else {
+        logMail($requestor_email, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
+function send_liquidate_mail($request_no,  
+                            $applicant, 
+                            $requestor, 
+                            $requestor_email, 
+                            $department, 
+                            $ap_time, 
+                            $project_name, 
+                            $date_request, 
+                            $total_amount, 
+                            $request_type,
+                            $date_release,
+                            $date_liquidate,
+                            $liquidate_amount,
+                            $remarks
+                            )
+{
+    $title = "";
+    $action = "";
+    $tab = "";
+
+    switch ($request_type) {
+        case "Liquidated":
+            $title = "Expense Application for Verify: Request No." . $request_no . " from " . $applicant;
+            $action = "verify";
+            $tab = "Verify";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $mail->AddAddress($requestor_email, $requestor);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $requestor . ",</p>";
+    $content = $content . "<p>An expense application is waiting for you to " . $action . ". Following are the details:</p>";
+    $content = $content . "<p>Request No.:" . $request_no . "</p>";
+    $content = $content . "<p>Applicant:" . $requestor . "</p>";
+    $content = $content . "<p>Department:" . $department . "</p>";
+    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
+    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
+    $content = $content . "<p>Date Released:" . $date_release . "</p>";
+    $content = $content . "<p>Date Liquidated:" . $date_liquidate . "</p>";
+    $content = $content . "<p>Amount Liquidated:" . $liquidate_amount . "</p>";
+    $content = $content . "<p>Remarks:" . $remarks . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Expense Review >> Tab " . $tab . " to view the expense application.</p>";
+    $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($requestor_email, $content);
+        return true;
+    } else {
+        logMail($requestor_email, $mail->ErrorInfo);
+        return false;
+    }
+}
+
+function send_expense_mail($request_no,  $applicant, $requestor, $requestor_email, $department, $ap_time, $project_name, $date_request, $total_amount, $request_type)
+{
+    $title = "";
+    $action = "";
+    $tab = "";
+
+    switch ($request_type) {
+        case "Send To OP":
+            $title = "Expense Application for Approve: Request No." . $request_no . " from " . $applicant;
+            $action = "approve";
+            $tab = "Review";
+            break;
+        case "Send To MD":
+            $title = "Expense Application for approve: Request No." . $request_no . " from " . $applicant;
+            $action = "approve";
+            $tab = "Review";
+            break;
+        case "Approve_MD":
+            $title = "Expense Application for approve: Request No." . $request_no . " from " . $applicant;
+            $action = "approve";
+            $tab = "Review";
+            break;
+        case "MD Send To Releaser":
+            $title = "Expense Application for Release: Request No." . $request_no . " from " . $applicant;
+            $action = "release";
+            $tab = "Release";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $mail->AddAddress($requestor_email, $requestor);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $requestor . ",</p>";
+    $content = $content . "<p>An expense application is waiting for you to " . $action . ". Following are the details:</p>";
+    $content = $content . "<p>Request No.:" . $request_no . "</p>";
+    $content = $content . "<p>Applicant:" . $requestor . "</p>";
+    $content = $content . "<p>Department:" . $department . "</p>";
+    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
+    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Expense Review >> Tab " . $tab . " to view the expense application.</p>";
+    $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($requestor_email, $content);
+        return true;
+    } else {
+        logMail($requestor_email, $mail->ErrorInfo);
+        return false;
+    }
+}
+
+function GetPettyVoidNotifiers()
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "SELECT username, email FROM expense_flow ap
+    LEFT JOIN user u ON ap.uid = u.id 
+    WHERE flow in (1, 2, 3)";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
 ?>

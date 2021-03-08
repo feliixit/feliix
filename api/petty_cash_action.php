@@ -627,6 +627,10 @@ if (!isset($jwt)) {
 
 
         $db->commit();
+
+        // Send Mail
+        SendNotifyMail($id, $crud);
+
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
     } catch (Exception $e) {
@@ -637,6 +641,246 @@ if (!isset($jwt)) {
         echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
         die();
     }
+}
+
+function SendNotifyMail($id, $action)
+{
+    $requestor = "";
+    $requestor_email = "";
+    $request_no = "";
+    $applicant = "";
+    $department = "";
+    $application_Time = "";
+    $project_name = "";
+    $date_request = "";
+    $total_amount = "";
+    $reject_reason = "";
+
+    $date_release = "";
+    $date_liquidate = "";
+    $liquidate_amount = "";
+    $remarks = "";
+
+    $notifior = array();
+
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $_record = GetPettyDetail($id, $db);
+    $requestor = $_record[0]["username"];
+    $requestor_email = $_record[0]["email"];
+    $request_no = $_record[0]["request_no"];
+    $applicant = $_record[0]["username"];
+    $department = $_record[0]["department"];
+    $application_Time = str_replace($_record[0]["created_at"], "-", "/");
+    $project_name = $_record[0]["project_name"];
+    $date_request = $_record[0]["date_requested"];
+    $total_amount = $_record[0]["total"];
+
+    $liquidate_amount = $_record[0]["amount_liquidated"];
+    $remarks = $_record[0]["remark_liquidated"];
+
+    switch ($action) {
+        case "Checking Reject":
+            $reject_reason = GetRejectReason($id, $action, $db); 
+            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            break;
+        case "Send To OP":
+            $notifior = GetNotifyer(2, $db);
+            foreach($notifior as &$list)
+            {
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
+            }
+            break;
+        case "Send To MD":
+            $notifior = GetNotifyer(3, $db);
+            foreach($notifior as &$list)
+            {
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
+            }
+            break;
+        case "OP Send To MD":
+            $notifior = GetNotifyer(3, $db);
+            foreach($notifior as &$list)
+            {
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
+            }
+            break;
+        case "OP Review Reject To User":
+            $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
+
+            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            break;
+        case "OP Review Reject To Checker":
+            $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
+            $notifior = GetNotifyer(2, $db);
+            foreach($notifior as &$list)
+            {
+                reject_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            }
+            break;
+        case "MD Review Reject To User":
+            $reject_reason = GetRejectReason($id, GetDesc($action), $db);
+            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            break;
+        case "MD Review Reject To Checker":
+            $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
+            $notifior = GetNotifyer(2, $db);
+            foreach($notifior as &$list)
+            {
+                reject_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            }
+            break;
+        case "MD Send To Releaser":
+            $notifior = GetReleasers($db);
+            foreach($notifior as &$list)
+            {
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
+            }
+            break;
+        case "Releasing":
+            $location = 6;
+            break;
+        case "Liquidated":
+            $date_release = GetReleaseHistory($id, $db);
+            $date_liquidate = GetLiquidateHistory($id, $db);
+
+            $notifior = GetNotifyer(7, $db);
+            foreach($notifior as &$list)
+            {
+                send_liquidate_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action, $date_release, $date_liquidate, $liquidate_amount, $remarks);
+            }
+        case "Finish Releasing":
+            $location = 9;
+            break;
+        case "Verifier Rejected":
+            $location = 7;
+            break;
+        case "Verifier Verified":
+            $location = 9;
+            break;
+        case "Void":
+            $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
+
+            void_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            break;
+        default:
+            return;
+            break;
+        }
+}
+
+function GetReleaseHistory($_id, $db)
+{
+    $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
+            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Releaser Released' order by created_at desc limit 1";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row['created_at'];
+    }
+
+    return $merged_results;
+}
+
+function GetLiquidateHistory($_id, $db)
+{
+    $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
+            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Liquidated' order by created_at desc limit 1";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row['created_at'];
+    }
+
+    return $merged_results;
+}
+
+function GetPettyDetail($id, $db)
+{
+    $sql = "SELECT request_no, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
+            (SELECT SUM(price * qty) FROM petty_list WHERE petty_id = :id1) total, ap.amount_liquidated, ap.remark_liquidated
+            FROM apply_for_petty ap 
+            LEFT JOIN user u ON ap.uid = u.id 
+            left JOIN user_department ud ON ud.id = u.apartment_id
+            where ap.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id1',  $id);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetRejectReason($_id, $action, $db)
+{
+    $sql = "select reason from petty_history pm 
+            where `status` <> -1 and petty_id = :id and `action` = :action order by created_at limit 1";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $_id);
+    $stmt->bindParam(':action',  $action);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row['reason'];
+    }
+
+    return $merged_results;
+}
+
+function GetNotifyer($action, $db)
+{
+    $sql = "SELECT username, email FROM expense_flow ap
+    LEFT JOIN user u ON ap.uid = u.id 
+    WHERE flow in (:action)";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':action',  $action);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetReleasers($db)
+{
+    $sql = "SELECT username, email FROM expense_flow ap
+    LEFT JOIN user u ON ap.uid = u.id 
+    WHERE flow in (4,5,6)";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }
 
 function &GetAction($loc)
