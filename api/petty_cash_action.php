@@ -830,7 +830,7 @@ function GetPettyDetail($id, $db)
 function GetRejectReason($_id, $action, $db)
 {
     $sql = "select reason from petty_history pm 
-            where `status` <> -1 and petty_id = :id and `action` = :action order by created_at limit 1";
+            where `status` <> -1 and petty_id = :id and `action` = :action order by created_at desc limit 1";
 
     $merged_results = "";
 
