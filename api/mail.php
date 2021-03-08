@@ -726,6 +726,11 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
     $tab = "";
 
     switch ($request_type) {
+        case "Apply":
+            $title = "Expense Application for Check: Request No." . $request_no . " from " . $applicant;
+            $action = "check";
+            $tab = "Check ";
+            break;
         case "Send To OP":
             $title = "Expense Application for Approve: Request No." . $request_no . " from " . $applicant;
             $action = "approve";

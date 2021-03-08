@@ -327,8 +327,11 @@ else
             die();
         }
        
-
         $db->commit();
+
+        // Send Mail
+        SendNotifyMail($batch_id);
+        
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") . " <br> Request No. is " . $new_request_no));
         
@@ -344,3 +347,57 @@ else
     }
 }
 
+
+function SendNotifyMail($id)
+{
+
+    $request_no = "";
+    $applicant = "";
+    $department = "";
+    $application_Time = "";
+    $project_name = "";
+    $date_request = "";
+    $total_amount = "";
+ 
+
+    $notifior = array();
+
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $_record = GetPettyDetail($id, $db);
+
+    $request_no = $_record[0]["request_no"];
+    $applicant = $_record[0]["username"];
+    $department = $_record[0]["department"];
+    $application_Time = str_replace($_record[0]["created_at"], "-", "/");
+    $project_name = $_record[0]["project_name"];
+    $date_request = $_record[0]["date_requested"];
+    $total_amount = $_record[0]["total"];
+
+    $notifior = GetNotifyer(1, $db);
+    foreach($notifior as &$list)
+    {
+        send_expense_mail($request_no, $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, "Apply");
+    }
+
+}
+
+function GetNotifyer($action, $db)
+{
+    $sql = "SELECT username, email FROM expense_flow ap
+    LEFT JOIN user u ON ap.uid = u.id 
+    WHERE flow in (:action)";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':action',  $action);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
