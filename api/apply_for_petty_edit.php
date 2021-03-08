@@ -720,3 +720,26 @@ function GetNotifyer($action, $db)
 
     return $merged_results;
 }
+
+function GetPettyDetail($id, $db)
+{
+    $sql = "SELECT request_no, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
+            (SELECT SUM(price * qty) FROM petty_list WHERE petty_id = :id1) total, ap.amount_liquidated, ap.remark_liquidated
+            FROM apply_for_petty ap 
+            LEFT JOIN user u ON ap.uid = u.id 
+            left JOIN user_department ud ON ud.id = u.apartment_id
+            where ap.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id1',  $id);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}

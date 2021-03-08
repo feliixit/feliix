@@ -682,7 +682,7 @@ function SendNotifyMail($id, $action)
 
     switch ($action) {
         case "Checking Reject":
-            $reject_reason = GetRejectReason($id, $action, $db); 
+            $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
             reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
             break;
         case "Send To OP":
