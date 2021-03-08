@@ -804,6 +804,62 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
     }
 }
 
+
+function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $department, $ap_time, $project_name, $date_request, $total_amount, $reason, $date_release)
+{
+
+    $title = "Expense Application with Request No." . $request_no . " Needs Liquidation";
+   
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $mail->AddAddress($user_name, $user_email);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $user_name . ",</p>";
+    $content = $content . "<p>An expense application is waiting for you to liquidate. Following are the details:</p>";
+    $content = $content . "<p>Request No.:" . $request_no . "</p>";
+    $content = $content . "<p>Applicant:" . $user_name . "</p>";
+    $content = $content . "<p>Department:" . $department . "</p>";
+    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
+    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
+    $content = $content . "<p>Date Released:" . $date_release . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Payment Request/Claim >> Expense Apply/Liquidate >> Tab Liquidate to view the expense application.</p>";
+    $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($user_email, $content);
+        return true;
+    } else {
+        logMail($user_email, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
 function GetPettyVoidNotifiers()
 {
     $database = new Database();
