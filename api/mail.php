@@ -505,7 +505,7 @@ function void_expense_mail($request_no, $applicant, $user_name, $user_email, $de
 
     $mail->IsHTML(true);
 
-    $mail->AddAddress($user_name, $user_email);
+    $mail->AddAddress($user_email, $user_name);
 
     $notifior = array();
     $notifior = GetPettyVoidNotifiers();
@@ -834,7 +834,7 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
 
     $mail->IsHTML(true);
 
-    $mail->AddAddress($user_name, $user_email);
+    $mail->AddAddress($user_email, $user_name);
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
