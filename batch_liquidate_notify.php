@@ -15,7 +15,7 @@ from apply_for_petty pm
 left join petty_history ph ON petty_id = pm.id and `action` = 'Releaser Released'
 where pm.`status` in (6, 7) 
 AND DATE_FORMAT(ph.created_at, '%Y/%m/%d') <> DATE_FORMAT(NOW(), '%Y/%m/%d') 
-AND MOD(DATEDIFF(DATE_FORMAT(NOW(), '%Y/%m/%d'), DATE_FORMAT(ph.created_at, '%Y/%m/%d')), 4) = 0";
+AND MOD(DATEDIFF(DATE_FORMAT(NOW(), '%Y/%m/%d'), DATE_FORMAT(ph.created_at, '%Y/%m/%d')), 2) = 0";
 
         $stmt = $db->prepare($sql);
         $stmt->execute();

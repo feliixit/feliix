@@ -110,12 +110,14 @@ var app = new Vue({
           {
               //_this.proof_id = _this.receive_records[0].id;
               //_this.detail();
-              _this.proof_id = 0;
+              //_this.proof_id = 0;
           }
         })
         .catch(function(error) {
           console.log(error);
         });
+
+        _this.proof_id = 0;
     },
 
     getUserName: function() {

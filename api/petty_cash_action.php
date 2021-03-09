@@ -661,6 +661,8 @@ function SendNotifyMail($id, $action)
     $liquidate_amount = "";
     $remarks = "";
 
+    $info_account = "";
+
     $notifior = array();
 
     $database = new Database();
@@ -679,6 +681,8 @@ function SendNotifyMail($id, $action)
 
     $liquidate_amount = $_record[0]["amount_liquidated"];
     $remarks = $_record[0]["remark_liquidated"];
+
+    $info_account = $_record[0]["info_account"];
 
     switch ($action) {
         case "Checking Reject":
@@ -732,7 +736,7 @@ function SendNotifyMail($id, $action)
             }
             break;
         case "MD Send To Releaser":
-            $notifior = GetReleasers($db);
+            $notifior = GetReleasers($db, $info_account);
             foreach($notifior as &$list)
             {
                 send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
@@ -807,7 +811,7 @@ function GetLiquidateHistory($_id, $db)
 function GetPettyDetail($id, $db)
 {
     $sql = "SELECT request_no, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
-            (SELECT SUM(price * qty) FROM petty_list WHERE petty_id = :id1) total, ap.amount_liquidated, ap.remark_liquidated
+            (SELECT SUM(price * qty) FROM petty_list WHERE petty_id = :id1) total, ap.amount_liquidated, ap.remark_liquidated, ap.info_account
             FROM apply_for_petty ap 
             LEFT JOIN user u ON ap.uid = u.id 
             left JOIN user_department ud ON ud.id = u.apartment_id
@@ -865,11 +869,19 @@ function GetNotifyer($action, $db)
     return $merged_results;
 }
 
-function GetReleasers($db)
+function GetReleasers($db, $info_account)
 {
+    $flow = 0;
+
+    if($info_account == 'Office Petty Cash')
+        $flow = 4;
+    if($info_account == 'Online Transactions')
+        $flow = 5;
+    if($info_account == 'Security Bank')
+        $flow = 6;
     $sql = "SELECT username, email FROM expense_flow ap
     LEFT JOIN user u ON ap.uid = u.id 
-    WHERE flow in (4,5,6)";
+    WHERE flow = " . $flow;
 
     $merged_results = array();
 

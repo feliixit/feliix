@@ -466,7 +466,7 @@ function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee,
 }
 
 
-function void_expense_mail($request_no, $user_name, $user_email, $department, $ap_time, $project_name, $date_request, $total_amount, $reason, $request_type)
+function void_expense_mail($request_no, $applicant, $user_name, $user_email, $department, $ap_time, $project_name, $date_request, $total_amount, $reason, $request_type)
 {
     $title = "";
     $action = "";
@@ -521,7 +521,7 @@ function void_expense_mail($request_no, $user_name, $user_email, $department, $a
     $content =  "<p>Dear " . $user_name . ",</p>";
     $content = $content . $conten1;
     $content = $content . "<p>Request No.:" . $request_no . "</p>";
-    $content = $content . "<p>Applicant:" . $user_name . "</p>";
+    $content = $content . "<p>Applicant:" . $applicant . "</p>";
     $content = $content . "<p>Department:" . $department . "</p>";
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
@@ -737,6 +737,11 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
             $tab = "Review";
             break;
         case "Send To MD":
+            $title = "Expense Application for approve: Request No." . $request_no . " from " . $applicant;
+            $action = "approve";
+            $tab = "Review";
+            break;
+        case "OP Send To MD":
             $title = "Expense Application for approve: Request No." . $request_no . " from " . $applicant;
             $action = "approve";
             $tab = "Review";
