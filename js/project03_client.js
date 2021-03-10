@@ -83,6 +83,13 @@ var app = new Vue({
     project_id : 0,
     project_name : '',
 
+    client :'',
+    project_status:'',
+    project_proirity:'',
+
+    project_created_by:'',
+    project_created_at:'',
+
   },
 
   created() {
@@ -304,6 +311,12 @@ var app = new Vue({
                   _this.username = res.data[0].username;
                   _this.client_type = res.data[0].client_type;
                   _this.category = res.data[0].category;
+                  _this.client = res.data[0].client;
+                  _this.project_proirity = res.data[0].priority;
+                  _this.project_status = res.data[0].project_status;
+
+                  _this.project_created_by = res.data[0].username;
+                  _this.project_created_at = res.data[0].created_at;
               },
               (err) => {
                   alert(err.response);

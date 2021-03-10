@@ -2124,7 +2124,7 @@ $(function(){
                     <li>Project Category</li>
                 </ul>
                 <ul>
-                    <li>{{ contactor }}</li>
+                    <li>{{ client }}</li>
                     <li>{{ client_type }}</li>
                     <li>{{ username }}</li>
                     <li>{{ category }}</li>
@@ -2234,10 +2234,12 @@ $(function(){
                 </ul>
                 <ul class="head">
                     <li style="text-align: center !important;">Project Status</li>
-                    <li><!--請留空--></li>
+                    <li></li>
                 </ul>
                 <ul>
-                    <li><div v-for='(receive_record, index) in stage_client_status'>{{ receive_record.status }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                    <li>
+                    <div v-if="project_proirity">{{ project_status }}  ({{ project_created_by }} at {{ project_created_at }}</div>
+                        <div v-for='(receive_record, index) in stage_client_status'>{{ receive_record.status }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
                     <li>
@@ -2279,10 +2281,12 @@ $(function(){
                 </ul>
                 <ul class="head">
                     <li style="text-align: center !important;">Project Priority</li>
-                    <li><!--請留空--></li>
+                    <li></li>
                 </ul>
                 <ul>
-                    <li><div v-for='(receive_record, index) in stage_client_priority'>{{ receive_record.priority }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                    <li>
+                        <div v-if="project_proirity">{{ project_proirity }}  ({{ project_created_by }} at {{ project_created_at }}</div>
+                        <div v-for='(receive_record, index) in stage_client_priority'>{{ receive_record.priority }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
                     <li>
