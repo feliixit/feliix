@@ -939,7 +939,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
     
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";

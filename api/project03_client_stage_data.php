@@ -65,11 +65,11 @@ $query = "SELECT prs.id,
                 pm.estimate_close_prob, 
                 user.username, 
                 user.id uid, 
-                DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, 
-                COALESCE(pst.stage, '') stage, 
+                DATE_FORMAT(pm.created_at, '%Y/%m/%d %H:%i:%s') created_at, 
+                COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage, 
                 pm.location, 
                 pm.contactor, 
-                pm.contact_number 
+                pm.contact_number
         FROM project_main pm 
         LEFT JOIN project_stages prs  ON prs.project_id = pm.id  
         LEFT JOIN project_category pc ON pm.catagory_id = pc.id 

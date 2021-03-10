@@ -2238,7 +2238,7 @@ $(function(){
                 </ul>
                 <ul>
                     <li>
-                    <div v-if="project_proirity">{{ project_status }}  ({{ project_created_by }} at {{ project_created_at }}</div>
+                    <div v-if="project_proirity">{{ project_status }}  ({{ project_created_by }} at {{ project_created_at }})</div>
                         <div v-for='(receive_record, index) in stage_client_status'>{{ receive_record.status }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
@@ -2285,7 +2285,7 @@ $(function(){
                 </ul>
                 <ul>
                     <li>
-                        <div v-if="project_proirity">{{ project_proirity }}  ({{ project_created_by }} at {{ project_created_at }}</div>
+                        <div v-if="project_proirity">{{ project_proirity }}  ({{ project_created_by }} at {{ project_created_at }})</div>
                         <div v-for='(receive_record, index) in stage_client_priority'>{{ receive_record.priority }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>

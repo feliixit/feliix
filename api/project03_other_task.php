@@ -301,6 +301,7 @@ function SendNotifyMail($last_id, $stage_id)
     $project_name = $_record[0]["project_name"];
     $task_name = $_record[0]["task_name"];
     $stages_status = $_record[0]["stages_status"];
+    $stages = $_record[0]["stage"];
     $create_id = $_record[0]["create_id"];
 
     $assignee = $_record[0]["assignee"];
@@ -309,7 +310,7 @@ function SendNotifyMail($last_id, $stage_id)
     $due_date = str_replace("-", "/", $_record[0]["due_date"]);
     $detail = $_record[0]["detail"];
 
-    task_notify("create", $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id);
+    task_notify("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id);
 
 }
 
@@ -321,10 +322,11 @@ function GetTaskDetail($id, $db)
             pt.assignee,
             pt.collaborator,
             due_date,
+            stage,
             detail
             FROM project_other_task pt
             LEFT JOIN project_stages ps ON pt.stage_id = ps.id
-            LEFT JOIN project_stage psg ON pt.stage_id = psg.id
+            LEFT JOIN project_stage psg ON ps.stage_id = psg.id
             left JOIN project_main pm ON ps.project_id = pm.id 
             WHERE pt.id = :id";
 
