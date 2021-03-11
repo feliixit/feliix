@@ -953,8 +953,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
-    $content = $content . "<p>Please log on to Feliix website first: https://feliix.myvnc.com/</p>";
-    $content = $content . "<p>Then click this link to view the target webpage: </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
