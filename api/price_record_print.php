@@ -58,7 +58,7 @@ if($jwt){
 
             $merged_results = array();
 
-            $sql = "SELECT account, created_at, category, sub_category, related_account, details, pic_url, payee, paid_date, cash_in, cash_out, remarks from price_record where is_enabled = true";
+            $sql = "SELECT account, created_at, category, sub_category, project_name, related_account, details, pic_url, payee, paid_date, cash_in, cash_out, remarks from price_record where is_enabled = true";
             $sql1 = "";
             $sql2 = "";
             $sql3 = "";
@@ -138,14 +138,16 @@ if($jwt){
             $sheet->setCellValue('A1', 'Account');
             $sheet->setCellValue('B1', 'Date');
             $sheet->setCellValue('C1', 'Category');
-            $sheet->setCellValue('D1', 'Related Account');
-            $sheet->setCellValue('E1', 'Details');
-            $sheet->setCellValue('K1', 'Files');
-            $sheet->setCellValue('F1', 'Payee');
-            $sheet->setCellValue('G1', 'Paid/Received Date');
-            $sheet->setCellValue('H1', 'Cash in');
-            $sheet->setCellValue('I1', 'Cash out');
-            $sheet->setCellValue('J1', 'Remarks');
+            $sheet->setCellValue('D1', 'Sub Category');
+            $sheet->setCellValue('E1', 'Project Name');
+            $sheet->setCellValue('F1', 'Related Account');
+            $sheet->setCellValue('G1', 'Details');
+            $sheet->setCellValue('H1', 'Files');
+            $sheet->setCellValue('I1', 'Payee');
+            $sheet->setCellValue('J1', 'Paid/Received Date');
+            $sheet->setCellValue('K1', 'Cash in');
+            $sheet->setCellValue('L1', 'Cash out');
+            $sheet->setCellValue('M1', 'Remarks');
 
 
             $i = 2;
@@ -153,17 +155,15 @@ if($jwt){
             {
                 $sheet->setCellValue('A' . $i, getAccount($row['account']));
                 $sheet->setCellValue('B' . $i, getFormatDate($row['created_at']));
-                if($row['sub_category'] != ''){
-                    $sheet->setCellValue('C' . $i, $row['category'] .">>". $row['sub_category']);
-                }else{
-                    $sheet->setCellValue('C' . $i, $row['category']);
-                }
-                $sheet->setCellValue('D' . $i, $row['related_account']);
-                $sheet->setCellValue('E' . $i, $row['details']);
+                $sheet->setCellValue('C' . $i, $row['category']);
+                $sheet->setCellValue('D' . $i, $row['sub_category']);
+                $sheet->setCellValue('E' . $i, $row['project_name']);
+                $sheet->setCellValue('F' . $i, $row['related_account']);
+                $sheet->setCellValue('G' . $i, $row['details']);
                 if($row['pic_url'] != '')
                 {
                     $explode_row = explode(",",$row['pic_url']);
-                    $aph = 'K';
+                    $aph = 'M';
                     foreach($explode_row as $pic_urls){
                         //$sheet->getActiveSheet()->unmergeCells('F'.$i:'F'.$i);
                         $link = $mail_ip . $pic_urls;
@@ -176,14 +176,14 @@ if($jwt){
                     //$sheet->fromArray($files, NULL, 'F' . $i);
                 }
                 else
-                    $sheet->setCellValue('K' . $i, '');
+                    $sheet->setCellValue('M' . $i, '');
 
                 
-                $sheet->setCellValue('F' . $i, $row['payee']);
-                $sheet->setCellValue('G' . $i, $row['paid_date']);
-                $sheet->setCellValue('H' . $i, $row['cash_in']);
-                $sheet->setCellValue('I' . $i, $row['cash_out']);
-                $sheet->setCellValue('J' . $i, $row['remarks']);
+                $sheet->setCellValue('H' . $i, $row['payee']);
+                $sheet->setCellValue('I' . $i, $row['paid_date']);
+                $sheet->setCellValue('J' . $i, $row['cash_in']);
+                $sheet->setCellValue('K' . $i, $row['cash_out']);
+                $sheet->setCellValue('L' . $i, $row['remarks']);
                                       
                 $sheet->getStyle('A'. $i. ':' . 'Z' . $i)->applyFromArray($styleArray);
 

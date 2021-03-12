@@ -10,6 +10,7 @@ class PriceRecord
     public $account;
     public $category;
     public $sub_category;
+    public $project_name;
     public $related_account;
     public $details;
     public $pic_url;
@@ -37,7 +38,7 @@ class PriceRecord
     {
         $query = "UPDATE " . $this->table_name . "
                 set account = :account, category = :category, 
-                sub_category = :sub_category, related_account = :related_account, 
+                sub_category = :sub_category, project_name = :project_name, related_account = :related_account, 
                 details = :details, pic_url = :pic_url , payee = :payee, 
                 paid_date = :paid_date, cash_in = :cash_in, cash_out = :cash_out, 
                 remarks = :remarks, is_marked = :is_marked, 
@@ -51,9 +52,10 @@ class PriceRecord
         $this->account = (int)$this->account;
         $this->category = htmlspecialchars(strip_tags($this->category));
         $this->sub_category = htmlspecialchars(strip_tags($this->sub_category));
+        $this->project_name = htmlspecialchars(strip_tags($this->project_name));
         $this->related_account = htmlspecialchars(strip_tags($this->related_account));
 
-        $this->details = htmlspecialchars(strip_tags($this->details));
+        $this->details = $this->details;
         $this->pic_url = htmlspecialchars(strip_tags($this->pic_url));
         $this->payee = htmlspecialchars(strip_tags($this->payee));
         $this->paid_date = htmlspecialchars(strip_tags($this->paid_date));
@@ -69,6 +71,7 @@ class PriceRecord
         $stmt->bindParam(':account', $this->account);
         $stmt->bindParam(':category', $this->category);
         $stmt->bindParam(':sub_category', $this->sub_category);
+        $stmt->bindParam(':project_name', $this->project_name);
         $stmt->bindParam(':related_account', $this->related_account);
 
         $stmt->bindParam(':details', $this->details);
@@ -109,8 +112,8 @@ class PriceRecord
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`account`,`category`, `sub_category`, `related_account`, `details`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
-                VALUES (:account,:category, :sub_category, :related_account, :details, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by)";
+                (`account`,`category`, `sub_category`, `project_name`, `related_account`, `details`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
+                VALUES (:account,:category, :sub_category, :project_name, :related_account, :details, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -120,6 +123,7 @@ class PriceRecord
             $this->account = (int)$this->account;
             $this->category = htmlspecialchars(strip_tags($this->category));
             $this->sub_category = htmlspecialchars(strip_tags($this->sub_category));
+            $this->project_name = htmlspecialchars(strip_tags($this->project_name));
             $this->related_account = htmlspecialchars(strip_tags($this->related_account));
 
             $this->details = htmlspecialchars(strip_tags($this->details));
@@ -137,6 +141,7 @@ class PriceRecord
             $stmt->bindParam(':account', $this->account);
             $stmt->bindParam(':category', $this->category);
             $stmt->bindParam(':sub_category', $this->sub_category);
+            $stmt->bindParam(':project_name', $this->project_name);
             $stmt->bindParam(':related_account', $this->related_account);
 
             $stmt->bindParam(':details', $this->details);

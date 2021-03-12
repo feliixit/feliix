@@ -1142,3 +1142,7 @@ ADD COLUMN `gcp_url` varchar(1024)  default '' AFTER pic_url;
 -- 
 ALTER TABLE apply_for_petty
 ADD COLUMN `info_remark_other` varchar(512) DEFAULT '' AFTER info_remark;
+
+-- 2021/3/11 price record add project_name
+ALTER TABLE price_record
+ADD COLUMN `project_name` varchar(1024)  default '' AFTER sub_category;

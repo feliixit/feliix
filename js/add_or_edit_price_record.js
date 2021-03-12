@@ -10,6 +10,7 @@ var app = new Vue({
     account_name:'',
     category:'',
     sub_category:'',
+    project_name:'',
     related_account : 0,
     details : '',
     pic_url : '',
@@ -68,6 +69,7 @@ var app = new Vue({
         account:0,
         category: '',
         sub_category: '',
+        project_name:'',
         related_account: 0,
         details: '',
         pic_url: '',
@@ -87,6 +89,7 @@ var app = new Vue({
         account:0,
         category: '',
         sub_category: '',
+        project_name:'',
         related_account: 0,
         details: '',
         pic_url: '',
@@ -106,6 +109,7 @@ var app = new Vue({
         account:0,
         category: '',
         sub_category: '',
+        project_name:'',
         related_account: 0,
         details: '',
         pic_url: '',
@@ -125,6 +129,7 @@ var app = new Vue({
         account:0,
         category: '',
         sub_category: '',
+        project_name:'',
         related_account: 0,
         details: '',
         pic_url: '',
@@ -144,6 +149,7 @@ var app = new Vue({
         account:0,
         category: '',
         sub_category: '',
+        project_name: '',
         related_account: 0,
         details: '',
         pic_url: '',
@@ -246,6 +252,7 @@ var app = new Vue({
                   form_Data.append('account', this.account);
                   form_Data.append('category', this.category);
                   form_Data.append('sub_category', this.sub_category);
+                  form_Data.append('project_name', this.project_name);
                   form_Data.append('related_account', this.related_account);
                   form_Data.append('details', this.details);
                   form_Data.append('pic_url', this.filename);
@@ -319,6 +326,7 @@ var app = new Vue({
                             form_Data.append('account', this.account);
                             form_Data.append('category', this.spa[i].category);
                             form_Data.append('sub_category', this.spa[i].sub_category);
+                            form_Data.append('project_name', this.spa[i].project_name);
                             form_Data.append('related_account', this.related_account);
                             form_Data.append('details', this.spa[i].details);
                             form_Data.append('pic_url', this.spa[i].filename);
@@ -393,6 +401,7 @@ var app = new Vue({
                     form_Data.append('account', this.account);
                     form_Data.append('category', this.category);
                     form_Data.append('sub_category', this.sub_category);
+                    form_Data.append('project_name', this.project_name);
                     form_Data.append('related_account', this.related_account);
                     form_Data.append('details', this.details);
                     if(this.filename!=''){
@@ -452,6 +461,7 @@ var app = new Vue({
           form_Data.append('end_date', this.end_date);
             form_Data.append('category', this.category);
             form_Data.append('sub_category', this.sub_category);
+            form_Data.append('project_name', this.project_name);
           axios({
             method: 'post',
             headers: {
@@ -532,6 +542,7 @@ var app = new Vue({
                   _this.account = response.data[0].account;
                   _this.category = response.data[0].category;
                   _this.sub_category = response.data[0].sub_category;
+                  _this.project_name = response.data[0].project_name;
                   if(response.data[0].related_account != '0'){
                   _this.related_account = response.data[0].related_account;
                   }
@@ -673,6 +684,7 @@ var app = new Vue({
           form_Data.append('end_date', this.end_date);
           form_Data.append('category', this.category);
           form_Data.append('sub_category', this.sub_category);
+          form_Data.append('project_name', this.project_name);
           form_Data.append('keyword',this.keyword);
 
           axios({
@@ -770,9 +782,14 @@ var app = new Vue({
           {
               _this.sub_category = '';
           }
+
+          if(_this.category != 'Projects'){
+              _this.project_name = '';
+          }
           const params = {
               category: _this.category,
               sub_category: _this.sub_category,
+              project_name: _this.project_name,
               start_date: _this.start_date,
               end_date: _this.end_date,
               page: _this.page,
@@ -915,6 +932,7 @@ var app = new Vue({
       this.account=0;
       this.category='';
       this.sub_category='';
+      this.project_name= '';
       this.related_account = 0;
       this.details = '';
       this.pic_url = '';
@@ -939,6 +957,7 @@ var app = new Vue({
       this.split1.account=0;
       this.split1.category= '';
       this.split1.sub_category= '';
+      this.split1.project_name= '';
       this.split1.related_account= 0;
       this.split1.details= '';
       this.split1.pic_url= '';
@@ -957,6 +976,7 @@ var app = new Vue({
       this.split2.account=0;
       this.split2.category= '';
       this.split2.sub_category= '';
+      this.split2.project_name= '';
       this.split2.related_account= 0;
       this.split2.details= '';
       this.split2.pic_url= '';
@@ -975,6 +995,7 @@ var app = new Vue({
       this.split3.account=0;
       this.split3.category= '';
       this.split3.sub_category= '';
+      this.split3.project_name= '';
       this.split3.related_account= 0;
       this.split3.details= '';
       this.split3.pic_url= '';
@@ -993,6 +1014,7 @@ var app = new Vue({
       this.split4.account=0;
       this.split4.category= '';
       this.split4.sub_category= '';
+      this.split4.project_name= '';
       this.split4.related_account= 0;
       this.split4.details= '';
       this.split4.pic_url= '';
@@ -1011,6 +1033,7 @@ var app = new Vue({
       this.split5.account=0;
       this.split5.category= '';
       this.split5.sub_category= '';
+      this.split5.project_name='';
       this.split5.related_account= 0;
       this.split5.details= '';
       this.split5.pic_url= '';

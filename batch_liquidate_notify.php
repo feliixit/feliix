@@ -1,6 +1,10 @@
 <?php
 
+include_once 'api/config/core.php';
 include_once 'api/config/database.php';
+include_once 'api/config/conf.php';
+require_once 'vendor/autoload.php';
+
 include_once 'api/mail.php';
 
 $database = new Database();

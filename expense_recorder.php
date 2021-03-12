@@ -270,6 +270,15 @@ try {
 
                         </tr>
 
+                        <tr v-if="category == 'Projects'">
+                            <td style="width: 15vw;">
+                                <label>Project Name</label>
+                            </td>
+                            <td style="text-align: left;">
+                                <input type="text" class="form-control custom-control-inline" style="width: 25vw;" v-model="project_name">
+                            </td>
+                        </tr>
+
 
                         <tr id="relatedaccount">
                             <td>
@@ -496,7 +505,7 @@ try {
 
             <tr>
 
-                <th colspan="10" style="font-size:larger; font-weight:700;">Office Petty Cash</th>
+                <th colspan="11" style="font-size:larger; font-weight:700;">Office Petty Cash</th>
             </tr>
 
             <tr>
@@ -504,7 +513,9 @@ try {
 
                 <th class="text-nowrap" style="width:6vw;">Date</th>
 
-                <th class="text-nowrap" style="width:10vw;">Category</th>
+                <th class="text-nowrap" style="width:7vw;">Category</th>
+
+                <th class="text-nowrap" style="width:7vw;">Project Name</th>
 
                 <th class="text-nowrap" style="width:20vw;">Details</th>
 
@@ -514,9 +525,9 @@ try {
 
                 <th style="width:8vw;">Paid / Received Date</th>
 
-                <th class="text-nowrap" style="width:7vw;">Cash In</th>
+                <th class="text-nowrap" style="width:5vw;">Cash In</th>
 
-                <th class="text-nowrap" style="width:7vw;">Cash Out</th>
+                <th class="text-nowrap" style="width:5vw;">Cash Out</th>
 
                 <th class="text-nowrap" style="width:12vw;">Remarks</th>
 
@@ -532,6 +543,8 @@ try {
                 <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
                 <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
+
+                <td><span v-if="item.category == 'Projects'">{{item.project_name}}</span></td>
 
                 <td style="text-align: left;"><span v-html="item.details.replace('&lt;br&gt;', '<br />')"></span></td>
 
@@ -586,7 +599,7 @@ try {
             <thead class="thead-light">
 
             <tr>
-                <th colspan="4">Total</th>
+                <th colspan="5">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
                 <th style="text-align: right;">{{accountOneCashIn.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: right;">{{accountOneCashOut.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
@@ -608,7 +621,7 @@ try {
 
             <tr>
 
-                <th colspan="10" style="font-size:larger; font-weight:700;">Online Transactions</th>
+                <th colspan="11" style="font-size:larger; font-weight:700;">Online Transactions</th>
             </tr>
 
             <tr>
@@ -616,7 +629,9 @@ try {
 
                 <th class="text-nowrap" style="width:6vw;">Date</th>
 
-                <th class="text-nowrap" style="width:10vw;">Category</th>
+                <th class="text-nowrap" style="width:7vw;">Category</th>
+
+                <th class="text-nowrap" style="width:7vw;">Project Name</th>
 
                 <th class="text-nowrap" style="width:20vw;">Details</th>
 
@@ -626,9 +641,9 @@ try {
 
                 <th style="width:8vw;">Paid / Received Date</th>
 
-                <th class="text-nowrap" style="width:7vw;">Cash In</th>
+                <th class="text-nowrap" style="width:5vw;">Cash In</th>
 
-                <th class="text-nowrap" style="width:7vw;">Cash Out</th>
+                <th class="text-nowrap" style="width:5vw;">Cash Out</th>
 
                 <th class="text-nowrap" style="width:12vw;">Remarks</th>
 
@@ -644,6 +659,8 @@ try {
                 <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
                 <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
+
+                <td><span v-if="item.category == 'Projects'">{{item.project_name}}</span></td>
 
                 <td style="text-align: left;"><span v-html="item.details.replace('&lt;br&gt;', '<br />')"></span></td>
 
@@ -698,7 +715,7 @@ try {
             <thead class="thead-light">
 
             <tr>
-                <th colspan="4">Total</th>
+                <th colspan="5">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
                 <th style="text-align: right;">{{accountThreeCashIn.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: right;">{{accountThreeCashOut.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
@@ -720,7 +737,7 @@ try {
 
             <tr>
 
-                <th colspan="10" style="font-size:larger; font-weight:700;">Security Bank</th>
+                <th colspan="11" style="font-size:larger; font-weight:700;">Security Bank</th>
             </tr>
 
             <tr>
@@ -728,7 +745,9 @@ try {
 
                 <th class="text-nowrap" style="width:6vw;">Date</th>
 
-                <th class="text-nowrap" style="width:10vw;">Category</th>
+                <th class="text-nowrap" style="width:7vw;">Category</th>
+
+                <th class="text-nowrap" style="width:7vw;">Project Name</th>
 
                 <th class="text-nowrap" style="width:20vw;">Details</th>
 
@@ -738,9 +757,9 @@ try {
 
                 <th style="width:8vw;">Paid / Received Date</th>
 
-                <th class="text-nowrap" style="width:7vw;">Cash In</th>
+                <th class="text-nowrap" style="width:5vw;">Cash In</th>
 
-                <th class="text-nowrap" style="width:7vw;">Cash Out</th>
+                <th class="text-nowrap" style="width:5vw;">Cash Out</th>
 
                 <th class="text-nowrap" style="width:12vw;">Remarks</th>
 
@@ -755,7 +774,9 @@ try {
             <tr v-for='item in items' v-if="item.account == 2" :class="[(item.is_marked == '1' ? 'red' : ''), (item.is_marked == '2' ? 'orange' : ''), (item.is_marked == '3' ? 'green' : ''), (item.is_marked == '4' ? 'blue' : '')]">
                 <td>{{item.created_at | dateString('YYYY-MM-DD')}}</td>
 
-                <td>{{item.category}}</td>
+                <td>{{item.category}}<span v-if="item.sub_category != ''">>>{{item.sub_category}}</span></td>
+
+                <td><span v-if="item.category == 'Projects'">{{item.project_name}}</span></td>
 
                 <td style="text-align: left;"><span v-html="item.details.replace('&lt;br&gt;', '<br />')"></span></td>
 
@@ -810,7 +831,7 @@ try {
             <thead class="thead-light">
 
             <tr>
-                <th colspan="4">Total</th>
+                <th colspan="5">Total</th>
                 <th style="text-align: center;" colspan="2"><!--Beginning Balance: 0.00--></th>
                 <th style="text-align: right;">{{accountTwoCashIn.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
                 <th style="text-align: right;">{{accountTwoCashOut.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}</th>
@@ -1069,6 +1090,15 @@ try {
 
                     </tr>
 
+                    <tr v-if="split1.category == 'Projects'">
+                            <td style="width: 15vw;">
+                                <label>Project Name</label>
+                            </td>
+                            <td style="text-align: left;">
+                                <input type="text" class="form-control custom-control-inline" style="width: 25vw;" v-model="split1.project_name">
+                            </td>
+                        </tr>
+
 
                     <tr id="payee">
                         <td>
@@ -1218,6 +1248,15 @@ try {
                                 </select>
                             </td>
 
+                        </tr>
+
+                        <tr v-if="split2.category == 'Projects'">
+                            <td style="width: 15vw;">
+                                <label>Project Name</label>
+                            </td>
+                            <td style="text-align: left;">
+                                <input type="text" class="form-control custom-control-inline" style="width: 25vw;" v-model="split2.project_name">
+                            </td>
                         </tr>
 
 
@@ -1371,6 +1410,15 @@ try {
 
                         </tr>
 
+                        <tr v-if="split3.category == 'Projects'">
+                            <td style="width: 15vw;">
+                                <label>Project Name</label>
+                            </td>
+                            <td style="text-align: left;">
+                                <input type="text" class="form-control custom-control-inline" style="width: 25vw;" v-model="split3.project_name">
+                            </td>
+                        </tr>
+
 
                         <tr id="payee">
                             <td>
@@ -1522,6 +1570,15 @@ try {
 
                         </tr>
 
+                        <tr v-if="split4.category == 'Projects'">
+                            <td style="width: 15vw;">
+                                <label>Project Name</label>
+                            </td>
+                            <td style="text-align: left;">
+                                <input type="text" class="form-control custom-control-inline" style="width: 25vw;" v-model="split4.project_name">
+                            </td>
+                        </tr>
+
 
                         <tr id="payee">
                             <td>
@@ -1671,6 +1728,15 @@ try {
                                 </select>
                             </td>
 
+                        </tr>
+
+                        <tr v-if="split5.category == 'Projects'">
+                            <td style="width: 15vw;">
+                                <label>Project Name</label>
+                            </td>
+                            <td style="text-align: left;">
+                                <input type="text" class="form-control custom-control-inline" style="width: 25vw;" v-model="split5.project_name">
+                            </td>
                         </tr>
 
 

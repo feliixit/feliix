@@ -13,6 +13,7 @@ $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $account = (isset($_POST['account']) ?  $_POST['account']: 0);
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
+$project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
 $related_account = (isset($_POST['related_account']) ?  $_POST['related_account'] : 0);
 $details = (isset($_POST['details']) ?  $_POST['details'] : '');
 $pic_url = (isset($_POST['pic_url']) ?  $_POST['pic_url'] : '');
@@ -84,6 +85,7 @@ else
             $priceRecord->account = $account;
             $priceRecord->category = $category;
             $priceRecord->sub_category = $sub_category;
+            $priceRecord->project_name = $project_name;
             $priceRecord->related_account = $related_account;
             $priceRecord->details = $details;
             $priceRecord->pic_url = $pic_url;
@@ -120,6 +122,7 @@ else
             $priceRecord->account = $account;
             $priceRecord->category = $category;
             $priceRecord->sub_category = $sub_category;
+            $priceRecord->project_name = $project_name;
             $priceRecord->related_account = $related_account;
             $priceRecord->details = $details;
             $priceRecord->pic_url = $pic_url;
