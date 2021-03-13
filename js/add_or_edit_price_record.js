@@ -13,6 +13,7 @@ var app = new Vue({
     project_name:'',
     related_account : 0,
     details : '',
+
     pic_url : '',
     file: '',
     payee: [],
@@ -254,7 +255,10 @@ var app = new Vue({
                   form_Data.append('sub_category', this.sub_category);
                   form_Data.append('project_name', this.project_name);
                   form_Data.append('related_account', this.related_account);
-                  form_Data.append('details', this.details);
+
+                  this.details = this.$refs.detail.value;
+                  form_Data.append('details', this.details.replaceAll('\n', '<br>'));
+
                   form_Data.append('pic_url', this.filename);
                   form_Data.append('payee', payee);
                   form_Data.append('paid_date', paidat);
@@ -328,7 +332,19 @@ var app = new Vue({
                             form_Data.append('sub_category', this.spa[i].sub_category);
                             form_Data.append('project_name', this.spa[i].project_name);
                             form_Data.append('related_account', this.related_account);
-                            form_Data.append('details', this.spa[i].details);
+
+                            if(i===0)
+                                this.spa[i].details = this.$refs.detail1.value;
+                            if(i===1)
+                                this.spa[i].details = this.$refs.detail2.value;
+                            if(i===2)
+                                this.spa[i].details = this.$refs.detail3.value;
+                            if(i===3)
+                                this.spa[i].details = this.$refs.detail4.value;
+                            if(i===4)
+                                this.spa[i].details = this.$refs.detail5.value;
+                            form_Data.append('details', this.spa[i].details.replaceAll('\n', '<br>'));
+
                             form_Data.append('pic_url', this.spa[i].filename);
                             form_Data.append('payee', this.spa[i].payee.toString());
                             form_Data.append('paid_date', paidat);
@@ -403,7 +419,10 @@ var app = new Vue({
                     form_Data.append('sub_category', this.sub_category);
                     form_Data.append('project_name', this.project_name);
                     form_Data.append('related_account', this.related_account);
-                    form_Data.append('details', this.details);
+
+                    this.details = this.$refs.detail.value;
+                    form_Data.append('details', this.details.replaceAll('\n', '<br>'));
+
                     if(this.filename!=''){
                         form_Data.append('pic_url', this.filename);
                     }else{
@@ -546,7 +565,10 @@ var app = new Vue({
                   if(response.data[0].related_account != '0'){
                   _this.related_account = response.data[0].related_account;
                   }
+
                   _this.details = response.data[0].details;
+                  _this.$refs.detail.value = response.data[0].details.replaceAll('<br>', '\n');
+
                   _this.pic_url = response.data[0].pic_url;
                   _this.payee = response.data[0].payee.split(',');
                   _this.paid_date = response.data[0].paid_date;
@@ -1054,6 +1076,13 @@ var app = new Vue({
       this.$refs.file3.value='';
       this.$refs.file4.value='';
       this.$refs.file5.value='';
+
+      this.$refs.detail.value='';
+      this.$refs.detail1.value='';
+      this.$refs.detail2.value='';
+      this.$refs.detail3.value='';
+      this.$refs.detail4.value='';
+      this.$refs.detail5.value='';
   },
   reload : function(){
       let _this = this;

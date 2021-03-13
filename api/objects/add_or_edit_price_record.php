@@ -126,7 +126,7 @@ class PriceRecord
             $this->project_name = htmlspecialchars(strip_tags($this->project_name));
             $this->related_account = htmlspecialchars(strip_tags($this->related_account));
 
-            $this->details = htmlspecialchars(strip_tags($this->details));
+            $this->details = $this->details;
             $this->pic_url = htmlspecialchars(strip_tags($this->pic_url));
             $this->payee = htmlspecialchars(strip_tags($this->payee));
             $this->cash_in = (float)$this->cash_in;

@@ -343,8 +343,8 @@ try {
                                 <label>Details</label>
                             </td>
 
-                            <td style="text-align: left; width:70vw;"><textarea class="form-control" rows="2"
-                                                                               style="width:77vw;" v-model="details"></textarea></td>
+                            <td style="text-align: left; width:70vw;"><textarea class="form-control" rows="2" :ref="'detail'"
+                                                                               style="width:77vw;" v-html="details.replaceAll('&lt;br&gt;', '\n')"></textarea></td>
 
                         </tr>
 
@@ -998,7 +998,7 @@ try {
                         </td>
 
                         <td style="text-align: left;">
-                            <textarea class="form-control" rows="3" style="width:45vw;" v-model="details" readonly></textarea>
+                            <textarea class="form-control" rows="3" style="width:45vw;" v-model="details.replaceAll('&lt;br&gt;', '\n')" readonly></textarea>
                         </td>
 
                     </tr>
@@ -1137,8 +1137,8 @@ try {
                             <label>Details</label>
                         </td>
 
-                        <td style="text-align: left;"><textarea class="form-control" rows="2"
-                                                                            style="width:45vw;" v-model="split1.details"></textarea></td>
+                        <td style="text-align: left;"><textarea class="form-control" rows="2" :ref="'detail1'"
+                                                                            style="width:45vw;" v-html="split1.details.replaceAll('&lt;br&gt;', '\n')"></textarea></td>
 
                     </tr>
 
@@ -1297,8 +1297,8 @@ try {
                                 <label>Details</label>
                             </td>
 
-                            <td style="text-align: left;"><textarea class="form-control" rows="2"
-                                                                    style="width:45vw;" v-model="split2.details"></textarea></td>
+                            <td style="text-align: left;"><textarea class="form-control" rows="2" :ref="'detail2'"
+                                                                    style="width:45vw;" v-html="split2.details.replaceAll('&lt;br&gt;', '\n')"></textarea></td>
 
                         </tr>
 
@@ -1457,8 +1457,8 @@ try {
                                 <label>Details</label>
                             </td>
 
-                            <td style="text-align: left;"><textarea class="form-control" rows="2"
-                                                                    style="width:45vw;" v-model="split3.details"></textarea></td>
+                            <td style="text-align: left;"><textarea class="form-control" rows="2" :ref="'detail3'"
+                                                                    style="width:45vw;" v-html="split3.details.replaceAll('&lt;br&gt;', '\n')"></textarea></td>
 
                         </tr>
 
@@ -1617,8 +1617,8 @@ try {
                                 <label>Details</label>
                             </td>
 
-                            <td style="text-align: left;"><textarea class="form-control" rows="2"
-                                                                    style="width:45vw;" v-model="split4.details"></textarea></td>
+                            <td style="text-align: left;"><textarea class="form-control" rows="2" :ref="'detail4'"
+                                                                    style="width:45vw;" v-html="split4.details.replaceAll('&lt;br&gt;', '\n')"></textarea></td>
 
                         </tr>
 
@@ -1777,8 +1777,8 @@ try {
                                 <label>Details</label>
                             </td>
 
-                            <td style="text-align: left;"><textarea class="form-control" rows="2"
-                                                                    style="width:45vw;" v-model="split5.details"></textarea></td>
+                            <td style="text-align: left;"><textarea class="form-control" rows="2" :ref="'detail5'"
+                                                                    style="width:45vw;" v-html="split5.details.replaceAll('&lt;br&gt;', '\n')"></textarea></td>
 
                         </tr>
 

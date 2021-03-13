@@ -119,6 +119,10 @@ if($jwt){
                         'color' => array('rgb' => '000000'),
                     ),
                 ),
+
+                'alignment' => array(
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP,
+                ),
             );
 
             $spreadsheet = new Spreadsheet();
@@ -142,12 +146,12 @@ if($jwt){
             $sheet->setCellValue('E1', 'Project Name');
             $sheet->setCellValue('F1', 'Related Account');
             $sheet->setCellValue('G1', 'Details');
-            $sheet->setCellValue('H1', 'Files');
-            $sheet->setCellValue('I1', 'Payee');
-            $sheet->setCellValue('J1', 'Paid/Received Date');
-            $sheet->setCellValue('K1', 'Cash in');
-            $sheet->setCellValue('L1', 'Cash out');
-            $sheet->setCellValue('M1', 'Remarks');
+            $sheet->setCellValue('M1', 'Files');
+            $sheet->setCellValue('H1', 'Payee');
+            $sheet->setCellValue('I1', 'Paid/Received Date');
+            $sheet->setCellValue('J1', 'Cash in');
+            $sheet->setCellValue('K1', 'Cash out');
+            $sheet->setCellValue('L1', 'Remarks');
 
 
             $i = 2;
@@ -159,7 +163,15 @@ if($jwt){
                 $sheet->setCellValue('D' . $i, $row['sub_category']);
                 $sheet->setCellValue('E' . $i, $row['project_name']);
                 $sheet->setCellValue('F' . $i, $row['related_account']);
-                $sheet->setCellValue('G' . $i, $row['details']);
+
+                $sheet->getStyle('G' . $i)->getAlignment()->setWrapText(true);
+                $sheet->getStyle('G' . $i)->getAlignment()->setWrapText(true);
+
+                $detail = str_replace("<br>", "\n", $row['details']);
+                // $detail = preg_replace('/<a.*?<\/a>/', '', $detail);
+                $detail = strip_tags($detail);
+                $sheet->setCellValue('G' . $i, $detail);
+
                 if($row['pic_url'] != '')
                 {
                     $explode_row = explode(",",$row['pic_url']);
