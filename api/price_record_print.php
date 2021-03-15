@@ -166,6 +166,7 @@ if($jwt){
 
                 $sheet->getStyle('G' . $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('G' . $i)->getAlignment()->setWrapText(true);
+                $sheet->getColumnDimension('G')->setWidth(50);
 
                 $detail = str_replace("<br>", "\n", $row['details']);
                 // $detail = preg_replace('/<a.*?<\/a>/', '', $detail);
