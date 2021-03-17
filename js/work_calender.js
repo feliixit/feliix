@@ -44,12 +44,18 @@ var app = new Vue({
             form_Data.append("all_day", main.Allday);
             form_Data.append("start_time", main.Starttime);
             form_Data.append("end_time", main.Endtime);
+            
+            if(document.getElementById("sc_color_other").value == "1")
+                form_Data.append("color_other", main.Color_Other);
+
             form_Data.append("color", main.Color);
+
             form_Data.append("text_color", "white");
             form_Data.append("project", main.Project);
             form_Data.append("sales_executive", main.Sales_Executive);
             form_Data.append("project_in_charge", main.Project_in_charge);
             form_Data.append("installer_needed", main.Installer_needed);
+            form_Data.append("installer_needed_other", main.Installer_needed_other);
             form_Data.append(
                 "installer_needed_location",
                 main.Location_Products_to_Bring
@@ -67,6 +73,11 @@ var app = new Vue({
             }
             form_Data.append("service", main.Service);
             form_Data.append("driver", main.Driver);
+
+            if(main.Driver != 6)
+                main.Driver_Other = "";
+
+            form_Data.append("driver_other", main.Driver_Other);
             form_Data.append("back_up_driver", main.Back_up_Driver);
             form_Data.append("photoshoot_request", main.Photoshoot_Request);
             form_Data.append("notes", main.Notes);
@@ -213,12 +224,17 @@ var app = new Vue({
             form_Data.append("all_day", main.Allday);
             form_Data.append("start_time", main.Starttime);
             form_Data.append("end_time", main.Endtime);
+            
+            if(document.getElementById("sc_color_other").value == "1")
+                form_Data.append("color_other", main.Color_Other);
+
             form_Data.append("color", main.Color);
             form_Data.append("text_color", "white");
             form_Data.append("project", main.Project);
             form_Data.append("sales_executive", main.Sales_Executive);
             form_Data.append("project_in_charge", main.Project_in_charge);
             form_Data.append("installer_needed", main.Installer_needed);
+            form_Data.append("installer_needed_other", main.Installer_needed_other);
             form_Data.append(
                 "installer_needed_location",
                 main.Location_Products_to_Bring
@@ -236,6 +252,11 @@ var app = new Vue({
             }
             form_Data.append("service", main.Service);
             form_Data.append("driver", main.Driver);
+
+            if(main.Driver != 6)
+                main.Driver_Other = "";
+
+            form_Data.append("driver_other", main.Driver_Other);
             form_Data.append("back_up_driver", main.Back_up_Driver);
             form_Data.append("photoshoot_request", main.Photoshoot_Request);
             form_Data.append("notes", main.Notes);
@@ -452,10 +473,12 @@ var app = new Vue({
                             ), // will be parsed
                             end: moment(response.data[i].end_time).format("YYYY-MM-DDTHH:mm"),
                             color: response.data[i].color,
+                            color_other: response.data[i].color_other,
                             allDay: isAll,
                             description: {
                                 Title: UnescapeHTML(response.data[i].title),
                                 Color: response.data[i].color,
+                                Color_Other: response.data[i].color_other,
                                 Date: moment(response.data[i].start_time).format("YYYY-MM-DD"),
                                 Allday: isAll,
                                 Starttime: moment(response.data[i].start_time).format("HH:mm"),
@@ -467,6 +490,9 @@ var app = new Vue({
                                 ),
                                 Installer_needed: UnescapeHTML(
                                     response.data[i].installer_needed
+                                ),
+                                Installer_needed_other: UnescapeHTML(
+                                    response.data[i].installer_needed_other
                                 ),
                                 Location_Things_to_Bring: UnescapeHTML(
                                     response.data[i].things_to_bring_location
@@ -482,6 +508,7 @@ var app = new Vue({
                                 File_name: response.data[i].products_to_bring_files,
                                 Service: response.data[i].service,
                                 Driver: response.data[i].driver,
+                                Driver_Other: response.data[i].driver_other,
                                 Back_up_Driver: response.data[i].back_up_driver,
                                 Photoshoot_Request: photoshoot,
                                 Notes: UnescapeHTML(response.data[i].notes),
@@ -576,7 +603,7 @@ var app = new Vue({
                         var files = "";
                         response.data[i].products_to_bring_files.forEach((element) => {
                             var file_str =
-                                "<a href='https://storage.cloud.google.com/calendarfile/" +
+                                "<div><input type='checkbox' class='custom-control-input' checked /></div><a href='https://storage.cloud.google.com/calendarfile/" +
                                 element +
                                 "' target='_blank'>" +
                                 element +
@@ -592,10 +619,12 @@ var app = new Vue({
                             ), // will be parsed
                             end: moment(response.data[i].end_time).format("YYYY-MM-DDTHH:mm"),
                             color: response.data[i].color,
+                            color_other: response.data[i].color_other,
                             allDay: isAll,
                             description: {
                                 Title: UnescapeHTML(response.data[i].title),
                                 Color: response.data[i].color,
+                                Color_Other: response.data[i].color_other,
                                 Date: moment(response.data[i].start_time).format("YYYY-MM-DD"),
                                 Allday: isAll,
                                 Starttime: moment(response.data[i].start_time).format("HH:mm"),
@@ -607,6 +636,9 @@ var app = new Vue({
                                 ),
                                 Installer_needed: UnescapeHTML(
                                     response.data[i].installer_needed
+                                ),
+                                Installer_needed_other: UnescapeHTML(
+                                    response.data[i].installer_needed_other
                                 ),
                                 Location_Things_to_Bring: UnescapeHTML(
                                     response.data[i].things_to_bring_location
@@ -622,6 +654,7 @@ var app = new Vue({
                                 File_name: response.data[i].products_to_bring_files,
                                 Service: response.data[i].service,
                                 Driver: response.data[i].driver,
+                                Driver_Other: response.data[i].driver_other,
                                 Back_up_Driver: response.data[i].back_up_driver,
                                 Photoshoot_Request: photoshoot,
                                 Notes: UnescapeHTML(response.data[i].notes),
@@ -771,11 +804,18 @@ var app = new Vue({
             form_Data.append("start_time", sc_content.Starttime);
             form_Data.append("end_time", sc_content.Endtime);
             form_Data.append("color", sc_content.Color);
+
+            if(document.getElementById("sc_color_other").value == "1")
+                form_Data.append("color_other", sc_content.Color_Other);
+            else
+                form_Data.append("color_other", "");
+
             form_Data.append("text_color", "white");
             form_Data.append("project", sc_content.Project);
             form_Data.append("sales_executive", sc_content.Sales_Executive);
             form_Data.append("project_in_charge", sc_content.Project_in_charge);
             form_Data.append("installer_needed", sc_content.Installer_needed);
+            form_Data.append("installer_needed_other", sc_content.Installer_needed_other);
             form_Data.append(
                 "installer_needed_location",
                 sc_content.Location_Products_to_Bring
@@ -793,6 +833,11 @@ var app = new Vue({
             }
             form_Data.append("service", sc_content.Service);
             form_Data.append("driver", sc_content.Driver);
+
+            if(sc_content.Driver != 6)
+                sc_content.Driver_Other = "";
+
+            form_Data.append("driver_other", sc_content.Driver_Other);
             form_Data.append("back_up_driver", sc_content.Back_up_Driver);
             form_Data.append("photoshoot_request", sc_content.Photoshoot_Request);
             form_Data.append("notes", sc_content.Notes);
@@ -945,11 +990,18 @@ var app = new Vue({
             form_Data.append("start_time", main.Starttime);
             form_Data.append("end_time", main.Endtime);
             form_Data.append("color", main.Color);
+
+            if(document.getElementById("sc_color_other").value == "1")
+                form_Data.append("color_other", main.Color_Other);
+            else
+                form_Data.append("color_other", "");
+
             form_Data.append("text_color", "white");
             form_Data.append("project", main.Project);
             form_Data.append("sales_executive", main.Sales_Executive);
             form_Data.append("project_in_charge", main.Project_in_charge);
             form_Data.append("installer_needed", main.Installer_needed);
+            form_Data.append("installer_needed_other", main.Installer_needed_other);
             form_Data.append(
                 "installer_needed_location",
                 main.Location_Products_to_Bring
@@ -967,6 +1019,11 @@ var app = new Vue({
             }
             form_Data.append("service", main.Service);
             form_Data.append("driver", main.Driver);
+
+            if(main.Driver != 6)
+                main.Driver_Other = "";
+            
+            form_Data.append("driver_other", main.Driver_Other);
             form_Data.append("back_up_driver", main.Back_up_Driver);
             form_Data.append("photoshoot_request", main.Photoshoot_Request);
             form_Data.append("notes", main.Notes);
@@ -1251,6 +1308,12 @@ var initial = () =>  {
             document.getElementById("sc_title").value = sc_content.Title;
             document.getElementById("sc_color").value = sc_content.Color;
 
+            if(sc_content.Color_Other != "")
+            {
+                document.getElementById("sc_color").value = sc_content.Color_Other;
+                document.getElementById("sc_color_other").checked = true;
+            }
+
             //設定最後編輯者資訊
             document.getElementById("sc_editor").value = sc_content.Lasteditor;
             document.getElementById("last_editor").style.display = "inline";
@@ -1263,7 +1326,11 @@ var initial = () =>  {
             document.getElementById("sc_sales").value = sc_content.Sales_Executive;
             document.getElementById("sc_incharge").value =
                 sc_content.Project_in_charge;
+                
+            document.getElementById("sc_Installer_needed_other").value = sc_content.Installer_needed_other;
 
+            
+            
             var installer = sc_content.Installer_needed.split(",");
 
             for (i = 0; i < 5; i++) {
@@ -1332,7 +1399,15 @@ var initial = () =>  {
                 sc_content.File_name;
             document.getElementById("sc_service").value = sc_content.Service;
             document.getElementById("sc_driver1").value = sc_content.Driver;
+
+            document.getElementById("sc_driver_other").value = sc_content.Driver_Other;
+
             document.getElementById("sc_driver2").value = sc_content.Back_up_Driver;
+
+            if(sc_content.Driver != 6)
+                document.getElementById("sc_driver_other").style.display = "none";
+            else
+                document.getElementById("sc_driver_other").style.display = "";
 
             if (sc_content.Photoshoot_Request == "Yes") {
                 document.getElementsByName("sc_Photoshoot_request")[0].checked = true;
@@ -1457,6 +1532,7 @@ $("button[id='btn_add']").click(function () {
         Date: document.getElementById("sc_date").value,
         Title: document.getElementById("sc_project").value,
         Color: document.getElementById("sc_color").value,
+        Color_Other: document.getElementById("sc_color").value,
         Allday: document.getElementById("sc_time").checked,
 
         Starttime: document.getElementById("sc_date").value +
@@ -1470,12 +1546,14 @@ $("button[id='btn_add']").click(function () {
         Project_in_charge: document.getElementById("sc_incharge").value,
         Agenda: agenda_content,
         Installer_needed: selected.join(),
+        Installer_needed_other: document.getElementById("sc_Installer_needed_other").value,
         Location_Things_to_Bring: document.getElementById("sc_location1").value,
         Things_to_Bring: document.getElementById("sc_things").value,
         Location_Products_to_Bring: document.getElementById("sc_location2").value,
         Products_to_Bring: document.getElementById("sc_products").value,
         Service: document.getElementById("sc_service").value,
         Driver: document.getElementById("sc_driver1").value,
+        Driver_Other: document.getElementById("sc_driver_other").value,
         Back_up_Driver: document.getElementById("sc_driver2").value,
         Photoshoot_Request: $("input[name=sc_Photoshoot_request]:checked").val(),
         Notes: document.getElementById("sc_notes").value,
@@ -1522,6 +1600,11 @@ function resetSchedule() {
     $("input[name='sc_Installer_needed']").each(function (i, v) {
         $(v).prop("checked", false);
     });
+
+    document.getElementById("sc_Installer_needed_other").value = "";
+
+    document.getElementById("sc_driver_other").value = "";
+    document.getElementById("sc_driver_other").style.display = "none";
 
     document.getElementById("sc_location1").value = "";
     document.getElementById("sc_things").value = "";
@@ -1577,6 +1660,19 @@ function Change_Schedule_State(status, time_status) {
 
     document.getElementById("add_agenda").disabled = status;
 
+    document.getElementById("sc_color_orange").disabled = status;
+    document.getElementById("sc_color_red").disabled = status;
+    document.getElementById("sc_color_purple").disabled = status;
+    document.getElementById("sc_color_green").disabled = status;
+    document.getElementById("sc_color_blue").disabled = status;
+    document.getElementById("sc_color_teal").disabled = status;
+    document.getElementById("sc_color_other").disabled = status;
+
+    document.getElementById("sc_color").disabled = status;
+
+    if(status && document.getElementById("sc_color_other").checked)
+        document.getElementById("sc_color").disabled = true;
+
     document.getElementsByName("sc_Installer_needed")[0].disabled = status;
     document.getElementsByName("sc_Installer_needed")[1].disabled = status;
     document.getElementsByName("sc_Installer_needed")[2].disabled = status;
@@ -1585,6 +1681,8 @@ function Change_Schedule_State(status, time_status) {
     document.getElementsByName("sc_Installer_needed")[5].disabled = status;
     document.getElementsByName("sc_Installer_needed")[6].disabled = status;
 
+    document.getElementById("sc_Installer_needed_other").disabled = status;
+
     document.getElementById("sc_location1").disabled = status;
     document.getElementById("sc_things").disabled = status;
     document.getElementById("sc_location2").disabled = status;
@@ -1592,6 +1690,8 @@ function Change_Schedule_State(status, time_status) {
     document.getElementById("sc_service").disabled = status;
     document.getElementById("sc_driver1").disabled = status;
     document.getElementById("sc_driver2").disabled = status;
+
+    document.getElementById("sc_driver_other").disabled = status;
 
     document.getElementsByName("sc_Photoshoot_request")[0].disabled = status;
     document.getElementsByName("sc_Photoshoot_request")[1].disabled = status;
@@ -1708,6 +1808,8 @@ $(document).on("click", "#btn_cancel", function () {
             document.getElementsByName("sc_Installer_needed")[6].checked = true;
     }
 
+    document.getElementsByName("sc_Installer_needed_other").value = sc_content.Installer_needed_other;
+
     //加入Agenda內容(先刪除未儲存的)
     var agenda_object = document
         .getElementById("agenda_table")
@@ -1735,6 +1837,8 @@ $(document).on("click", "#btn_cancel", function () {
     document.getElementById("sc_service").value = sc_content.Service;
     document.getElementById("sc_driver1").value = sc_content.Driver;
     document.getElementById("sc_driver2").value = sc_content.Back_up_Driver;
+
+    document.getElementById("sc_driver_other").value = sc_content.Driver_Other;
 
     if (sc_content.Photoshoot_Request == "Yes") {
         document.getElementsByName("sc_Photoshoot_request")[0].checked = true;
@@ -1883,6 +1987,7 @@ $(document).on("click", "#btn_save", function () {
         Date: document.getElementById("sc_date").value,
         Title: document.getElementById("sc_project").value,
         Color: document.getElementById("sc_color").value,
+        Color_Other: document.getElementById("sc_color").value,
         Allday: document.getElementById("sc_time").checked,
         Starttime: document.getElementById("sc_date").value +
             " " +
@@ -1895,6 +2000,7 @@ $(document).on("click", "#btn_save", function () {
         Project_in_charge: document.getElementById("sc_incharge").value,
         Agenda: agenda_content,
         Installer_needed: selected.join(),
+        Installer_needed_other: document.getElementById("sc_Installer_needed_other").value,
         Location_Things_to_Bring: document.getElementById("sc_location1").value,
         Things_to_Bring: document.getElementById("sc_things").value,
         Location_Products_to_Bring: document.getElementById("sc_location2").value,
@@ -1902,6 +2008,7 @@ $(document).on("click", "#btn_save", function () {
         File_name: document.getElementById("sc_product_files_hide").value,
         Service: document.getElementById("sc_service").value,
         Driver: document.getElementById("sc_driver1").value,
+        Driver_Other: document.getElementById("sc_driver_other").value,
         Back_up_Driver: document.getElementById("sc_driver2").value,
         Photoshoot_Request: $("input[name=sc_Photoshoot_request]:checked").val(),
         Notes: document.getElementById("sc_notes").value,

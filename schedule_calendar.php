@@ -233,10 +233,46 @@ try {
                         <label>Color</label>
                     </div>
 
-                    <div class="col-10">
+                    <div class="col-10" style="display:flex; align-items: center;">
+
+                        <div class="custom-control custom-radio" style="display:inline-block;">
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_orange" value="" onchange="enable_forOther(this);" >
+                            <label class="custom-control-label" for="sc_color_orange" style="background-color: orange; width: 18px; height: 18px; margin-left: 2px;"></label>
+                        </div>
+
+                        <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_red" value="" onchange="enable_forOther(this);" >
+                            <label class="custom-control-label" for="sc_color_red" style="background-color: red; width: 18px; height: 18px; margin-left: 2px;"></label>
+                        </div>
+
+                        <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_purple" value="" onchange="enable_forOther(this);" >
+                            <label class="custom-control-label" for="sc_color_purple" style="background-color: mediumpurple; width: 18px; height: 18px; margin-left: 2px;"></label>
+                        </div>
+
+                        <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_green" value="" onchange="enable_forOther(this);" >
+                            <label class="custom-control-label" for="sc_color_green" style="background-color: rgb(1, 198, 60); width: 18px; height: 18px; margin-left: 2px;"></label>
+                        </div>
+
+                        <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_blue" value="" onchange="enable_forOther(this);" >
+                            <label class="custom-control-label" for="sc_color_blue" style="background-color: dodgerblue; width: 18px; height: 18px; margin-left: 2px;"></label>
+                        </div>
+
+                        <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_teal" value="" onchange="enable_forOther(this);" >
+                            <label class="custom-control-label" for="sc_color_teal" style="background-color: teal; width: 18px; height: 18px; margin-left: 2px;"></label>
+                        </div>
+
+                        <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_other" value="1" onchange="enable_forOther(this);" >
+                            <label class="custom-control-label" for="sc_color_other" style="margin-left: 2px;">Other </label>
+                        </div>
+
+                        <input type="color" class="form-control" style="margin-left: 5px; width: 30px; padding: 2px;" id="sc_color">
 
 
-                        <input type="color" class="form-control" style="width: 90%;"  id="sc_color">
 
                     </div>
 
@@ -421,6 +457,13 @@ try {
                             <label class="custom-control-label" for="JM">JM</label>
                         </div>
 
+                        <br>
+
+                        <div style="display: flex; margin-top: 10px;">
+                            <label>Others:</label>
+                            <input type="text" class="form-control" style="margin-left:1%; border-top: 0; border-right: 0; border-left: 0; border-radius: 0; width: 300px;" id="sc_Installer_needed_other" name="sc_Installer_needed_other">
+                        </div>
+
                     </div>
 
                 </div>
@@ -518,14 +561,18 @@ try {
                     <div class="col-10">
 
 
-                        <Select class="form-control" style="width:40%;" id="sc_driver1">
+                        <Select class="form-control" style="width:40%;" onchange="action_forOther(this);"  id="sc_driver1">
                             <option value="0">Choose One</option>
                             <option value="1">MG</option>
                             <option value="2">AY</option>
                             <option value="3">EV</option>
                             <option value="4">JB</option>
                             <option value="5">MA</option>
+                            <option value="6">Others</option>
                         </Select>
+
+                        <input type="text" class="form-control" style="margin-left:2%; width: 48%;"
+                               id="sc_driver_other">
 
                     </div>
 
@@ -658,6 +705,29 @@ try {
     </div>
 
 </div>
+
+<script>
+
+    function enable_forOther(selector){
+        if(selector.value != "1")
+            document.getElementById("sc_color").disabled = true;
+        else
+            document.getElementById("sc_color").disabled = false;
+        
+        console.log(selector.value);
+    }
+
+    function action_forOther(selector){
+
+        if(selector.value != 6){
+            document.getElementById("sc_driver_other").style.display = "none";
+        }else{
+            document.getElementById("sc_driver_other").value = "";
+            document.getElementById("sc_driver_other").style.display = "";
+        }
+    }
+</script>
+
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script>

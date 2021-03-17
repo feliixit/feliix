@@ -35,8 +35,8 @@ $db = $database->getConnection();
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 
 $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
-        project_in_charge, installer_needed, things_to_bring, installer_needed_location, things_to_bring_location, 
-        products_to_bring, service, driver, 
+        project_in_charge, installer_needed, installer_needed_other, things_to_bring, installer_needed_location, things_to_bring_location, 
+        products_to_bring, service, driver, driver_other,
 		back_up_driver, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
 		DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files
 		from work_calendar_main main 
@@ -51,12 +51,14 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $sales_executive = '';
     $project_in_charge = '';
     $installer_needed = '';
+    $installer_needed_other = '';
     $things_to_bring = '';
     $installer_needed_location = '';
     $things_to_bring_location = '';
     $products_to_bring = '';
     $service = '';
     $driver = '';
+    $driver_other = '';
     $back_up_driver = '';
     $photoshoot_request = '';
     $notes = '';
@@ -80,12 +82,14 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $sales_executive = $row['sales_executive'];
     $project_in_charge = $row['project_in_charge'];
     $installer_needed = $row['installer_needed'];
+    $installer_needed_other = $row['installer_needed_other'];
     $things_to_bring = $row['things_to_bring'];
     $installer_needed_location = $row['installer_needed_location'];
     $things_to_bring_location = $row['things_to_bring_location'];
     $products_to_bring = $row['products_to_bring'];
     $service = $row['service'];
     $driver = $row['driver'];
+    $driver_other = $row['driver_other'];
     $back_up_driver = $row['back_up_driver'];
     $photoshoot_request = $row['photoshoot_request'];
     $notes = $row['notes'];
@@ -104,8 +108,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 if($onrecord == 0)
 {
     $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
-        project_in_charge, installer_needed, things_to_bring, installer_needed_location, things_to_bring_location, 
-        products_to_bring, service, driver, 
+        project_in_charge, installer_needed, installer_needed_other,things_to_bring, installer_needed_location, things_to_bring_location, 
+        products_to_bring, service, driver, driver_other,
 		back_up_driver, photoshoot_request, notes, '' location, '' agenda, '' appoint_time, 
 		'' end_time, products_to_bring_files
 		from work_calendar_main main 
@@ -123,12 +127,14 @@ if($onrecord == 0)
         $sales_executive = $row['sales_executive'];
         $project_in_charge = $row['project_in_charge'];
         $installer_needed = $row['installer_needed'];
+        $installer_needed_other = $row['installer_needed_other'];
         $things_to_bring = $row['things_to_bring'];
         $installer_needed_location = $row['installer_needed_location'];
         $things_to_bring_location = $row['things_to_bring_location'];
         $products_to_bring = $row['products_to_bring'];
         $service = $row['service'];
         $driver = $row['driver'];
+        $driver_other = $row['driver_other'];
         $back_up_driver = $row['back_up_driver'];
         $photoshoot_request = $row['photoshoot_request'];
         $notes = $row['notes'];
@@ -183,7 +189,7 @@ $table->addCell(8500, ['borderSize' => 6])->addText($project_in_charge);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($installer_needed);
+$table->addCell(8500, ['borderSize' => 6])->addText($installer_needed . " " . $installer_needed_other);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Things to Bring:", array('bold' => true));
@@ -217,7 +223,7 @@ $table->addCell(8500, ['borderSize' => 6])->addText(getService($service));
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Driver:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText(getDriver($driver));
+$table->addCell(8500, ['borderSize' => 6])->addText(getDriver($driver) . ' ' . $driver_other);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Back-up Driver:", array('bold' => true));
@@ -389,6 +395,8 @@ else
             $leave_type = "JB";
         if($type =="5")
             $leave_type = "MA";
+        if($type =="6")
+            $leave_type = "Other";
     
         return $leave_type;
     }

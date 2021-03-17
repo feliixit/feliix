@@ -12,11 +12,13 @@ class WorkCalenderMain
     public $start_time;
     public $end_time;
     public $color;
+    public $color_other;
     public $text_color;
     public $project;
     public $sales_executive;
     public $project_in_charge;
     public $installer_needed;
+    public $installer_needed_other;
     public $installer_needed_location;
     public $things_to_bring;
     public $things_to_bring_location;
@@ -24,6 +26,7 @@ class WorkCalenderMain
     public $products_to_bring_files;
     public $service;
     public $driver;
+    public $driver_other;
     public $back_up_driver;
     public $photoshoot_request;
     public $notes;
@@ -79,12 +82,12 @@ class WorkCalenderMain
     {
         $query = "UPDATE " . $this->table_name . "
                 set title = :title, all_day = :all_day, start_time = :start_time, 
-                end_time = :end_time, color = :color, 
+                end_time = :end_time, color = :color, color_other = :color_other, 
                 text_color = :text_color, project = :project , sales_executive = :sales_executive, 
-                project_in_charge = :project_in_charge, installer_needed = :installer_needed, installer_needed_location = :installer_needed_location, 
+                project_in_charge = :project_in_charge, installer_needed = :installer_needed, installer_needed_other = :installer_needed_other, installer_needed_location = :installer_needed_location, 
                 things_to_bring = :things_to_bring, things_to_bring_location = :things_to_bring_location, 
                 products_to_bring = :products_to_bring, products_to_bring_files = :products_to_bring_files,
-                service = :service, driver = :driver, back_up_driver = :back_up_driver,
+                service = :service, driver = :driver, driver_other = :driver_other, back_up_driver = :back_up_driver,
                 photoshoot_request = :photoshoot_request, notes = :notes, 
                 updated_at = now(), updated_by = :updated_by where id = :id";
 
@@ -98,6 +101,7 @@ class WorkCalenderMain
         $this->start_time = htmlspecialchars(strip_tags($this->start_time));
         $this->end_time = htmlspecialchars(strip_tags($this->end_time));
         $this->color = htmlspecialchars(strip_tags($this->color));
+        $this->color_other = htmlspecialchars(strip_tags($this->color_other));
 
         $this->text_color = htmlspecialchars(strip_tags($this->text_color));
         $this->project = htmlspecialchars(strip_tags($this->project));
@@ -105,6 +109,7 @@ class WorkCalenderMain
         $this->project_in_charge = htmlspecialchars(strip_tags($this->project_in_charge));
         
         $this->installer_needed = htmlspecialchars(strip_tags($this->installer_needed));
+        $this->installer_needed_other = htmlspecialchars(strip_tags($this->installer_needed_other));
         $this->installer_needed_location = htmlspecialchars(strip_tags($this->installer_needed_location));
         $this->things_to_bring = htmlspecialchars(strip_tags($this->things_to_bring));
         $this->things_to_bring_location = htmlspecialchars(strip_tags($this->things_to_bring_location));
@@ -113,6 +118,7 @@ class WorkCalenderMain
         
         $this->service = htmlspecialchars(strip_tags($this->service));
         $this->driver = htmlspecialchars(strip_tags($this->driver));
+        $this->driver_other = htmlspecialchars(strip_tags($this->driver_other));
         $this->back_up_driver = htmlspecialchars(strip_tags($this->back_up_driver));
         $photoshoot = filter_var($this->photoshoot_request,FILTER_VALIDATE_INT);
         $this->notes = htmlspecialchars(strip_tags($this->notes));
@@ -126,6 +132,7 @@ class WorkCalenderMain
         $stmt->bindParam(':start_time', $this->start_time);
         $stmt->bindParam(':end_time', $this->end_time);
         $stmt->bindParam(':color', $this->color);
+        $stmt->bindParam(':color_other', $this->color_other);
 
         $stmt->bindParam(':text_color', $this->text_color);
         $stmt->bindParam(':project', $this->project);
@@ -133,6 +140,7 @@ class WorkCalenderMain
         $stmt->bindParam(':project_in_charge', $this->project_in_charge);
 
         $stmt->bindParam(':installer_needed', $this->installer_needed);
+        $stmt->bindParam(':installer_needed_other', $this->installer_needed_other);
         $stmt->bindParam(':installer_needed_location', $this->installer_needed_location);
         $stmt->bindParam(':things_to_bring', $this->things_to_bring);
         $stmt->bindParam(':things_to_bring_location', $this->things_to_bring_location);
@@ -141,6 +149,7 @@ class WorkCalenderMain
         $stmt->bindParam(':service', $this->service);
         
         $stmt->bindParam(':driver', $this->driver);
+        $stmt->bindParam(':driver_other', $this->driver_other);
         $stmt->bindParam(':back_up_driver', $this->back_up_driver);
         
         $stmt->bindParam(':photoshoot_request',  $photoshoot);
@@ -173,8 +182,8 @@ class WorkCalenderMain
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`title`, `all_day`,`start_time`, `end_time`, `color`, `text_color`, `project`, `sales_executive`, `project_in_charge`, `installer_needed`, `installer_needed_location`, `things_to_bring`,`things_to_bring_location`,`products_to_bring`,`products_to_bring_files`,`service`,`driver`,`back_up_driver`,`photoshoot_request`,`notes`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:title, :all_day,:start_time, :end_time, :color, :text_color, :project, :sales_executive, :project_in_charge, :installer_needed, :installer_needed_location, :things_to_bring, :things_to_bring_location, :products_to_bring, :products_to_bring_files, :service, :driver, :back_up_driver, :photoshoot_request, :notes, 1, now(),:created_by)";
+                (`title`, `all_day`,`start_time`, `end_time`, `color`, `color_other`, `text_color`, `project`, `sales_executive`, `project_in_charge`, `installer_needed`, `installer_needed_other`, `installer_needed_location`, `things_to_bring`,`things_to_bring_location`,`products_to_bring`,`products_to_bring_files`,`service`,`driver`,`driver_other`,`back_up_driver`,`photoshoot_request`,`notes`,`is_enabled`,`created_at`,`created_by`) 
+                VALUES (:title, :all_day,:start_time, :end_time, :color, :color_other, :text_color, :project, :sales_executive, :project_in_charge, :installer_needed, :installer_needed_other, :installer_needed_location, :things_to_bring, :things_to_bring_location, :products_to_bring, :products_to_bring_files, :service, :driver, :driver_other, :back_up_driver, :photoshoot_request, :notes, 1, now(),:created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -186,6 +195,7 @@ class WorkCalenderMain
             $this->start_time = htmlspecialchars(strip_tags($this->start_time));
             $this->end_time = htmlspecialchars(strip_tags($this->end_time));
             $this->color = htmlspecialchars(strip_tags($this->color));
+            $this->color_other = htmlspecialchars(strip_tags($this->color_other));
     
             $this->text_color = htmlspecialchars(strip_tags($this->text_color));
             $this->project = htmlspecialchars(strip_tags($this->project));
@@ -193,6 +203,7 @@ class WorkCalenderMain
             $this->project_in_charge = htmlspecialchars(strip_tags($this->project_in_charge));
             
             $this->installer_needed = htmlspecialchars(strip_tags($this->installer_needed));
+            $this->installer_needed_other = htmlspecialchars(strip_tags($this->installer_needed_other));
             $this->installer_needed_location = htmlspecialchars(strip_tags($this->installer_needed_location));
             $this->things_to_bring = htmlspecialchars(strip_tags($this->things_to_bring));
             $this->things_to_bring_location = htmlspecialchars(strip_tags($this->things_to_bring_location));
@@ -201,6 +212,7 @@ class WorkCalenderMain
             
             $this->service = htmlspecialchars(strip_tags($this->service));
             $this->driver = htmlspecialchars(strip_tags($this->driver));
+            $this->driver_other = htmlspecialchars(strip_tags($this->driver_other));
             $this->back_up_driver = htmlspecialchars(strip_tags($this->back_up_driver));
             $photoshoot = filter_var($this->photoshoot_request,FILTER_VALIDATE_INT);
             $this->notes = htmlspecialchars(strip_tags($this->notes));
@@ -213,6 +225,8 @@ class WorkCalenderMain
             $stmt->bindParam(':start_time', $this->start_time);
             $stmt->bindParam(':end_time', $this->end_time);
             $stmt->bindParam(':color', $this->color);
+
+            $stmt->bindParam(':color_other', $this->color_other);
     
             $stmt->bindParam(':text_color', $this->text_color);
             $stmt->bindParam(':project', $this->project);
@@ -220,6 +234,7 @@ class WorkCalenderMain
             $stmt->bindParam(':project_in_charge', $this->project_in_charge);
     
             $stmt->bindParam(':installer_needed', $this->installer_needed);
+            $stmt->bindParam(':installer_needed_other', $this->installer_needed_other);
             $stmt->bindParam(':installer_needed_location', $this->installer_needed_location);
             $stmt->bindParam(':things_to_bring', $this->things_to_bring);
             $stmt->bindParam(':things_to_bring_location', $this->things_to_bring_location);
@@ -228,6 +243,7 @@ class WorkCalenderMain
             $stmt->bindParam(':service', $this->service);
             
             $stmt->bindParam(':driver', $this->driver);
+            $stmt->bindParam(':driver_other', $this->driver_other);
             $stmt->bindParam(':back_up_driver', $this->back_up_driver);
             
             $stmt->bindParam(':photoshoot_request',  $photoshoot);
