@@ -45,10 +45,29 @@ var app = new Vue({
             form_Data.append("start_time", main.Starttime);
             form_Data.append("end_time", main.Endtime);
             
-            if(document.getElementById("sc_color_other").value == "1")
+            if(document.getElementById("sc_color_other").checked)
                 form_Data.append("color_other", main.Color_Other);
+            else
+                form_Data.append("color_other", "");
 
-            form_Data.append("color", main.Color);
+            var colors = document.getElementsByName("sc_color");
+            var color = "";
+            for(var i=0; i<colors.length; i++)
+            {
+                if(colors[i].checked)
+                    color = color[i].value;
+            }
+            if(color == "" && !document.getElementById("sc_color_other").checked)
+            {
+                Swal.fire({
+                    text: JSON.stringify("Please choose color for schedule."),
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                });
+                return;
+            }
+
+            form_Data.append("color", color);
 
             form_Data.append("text_color", "white");
             form_Data.append("project", main.Project);
@@ -225,7 +244,7 @@ var app = new Vue({
             form_Data.append("start_time", main.Starttime);
             form_Data.append("end_time", main.Endtime);
             
-            if(document.getElementById("sc_color_other").value == "1")
+            if(document.getElementById("sc_color_other").checked)
                 form_Data.append("color_other", main.Color_Other);
 
             form_Data.append("color", main.Color);
@@ -603,7 +622,7 @@ var app = new Vue({
                         var files = "";
                         response.data[i].products_to_bring_files.forEach((element) => {
                             var file_str =
-                                "<div><input type='checkbox' class='custom-control-input' checked /></div><a href='https://storage.cloud.google.com/calendarfile/" +
+                                "<input type='checkbox' checked style='margin-right:5px;' name='file_elements' value='" + element + "'/><a href='https://storage.cloud.google.com/calendarfile/" +
                                 element +
                                 "' target='_blank'>" +
                                 element +
@@ -618,8 +637,8 @@ var app = new Vue({
                                 "YYYY-MM-DDTHH:mm"
                             ), // will be parsed
                             end: moment(response.data[i].end_time).format("YYYY-MM-DDTHH:mm"),
-                            color: response.data[i].color,
-                            color_other: response.data[i].color_other,
+                            color: ((response.data[i].color_other !== '') ? response.data[i].color_other : response.data[i].color),
+                            // color_other: response.data[i].color_other,
                             allDay: isAll,
                             description: {
                                 Title: UnescapeHTML(response.data[i].title),
@@ -805,7 +824,7 @@ var app = new Vue({
             form_Data.append("end_time", sc_content.Endtime);
             form_Data.append("color", sc_content.Color);
 
-            if(document.getElementById("sc_color_other").value == "1")
+            if(document.getElementById("sc_color_other").checked)
                 form_Data.append("color_other", sc_content.Color_Other);
             else
                 form_Data.append("color_other", "");
@@ -827,9 +846,29 @@ var app = new Vue({
             );
             form_Data.append("products_to_bring", sc_content.Products_to_Bring);
             if (_this.filename != "") {
-                form_Data.append("products_to_bring_files", _this.filename);
+                var file_str = "";
+                for (var i = 0; i < _this.filename.length; i++) {
+                    let file = _this.filename[i];
+                    file_str += file + ","
+                }
+                var file_elements = document.getElementsByName("file_elements")
+                for(let i = 0;i < file_elements.length; i++)
+                {
+                    if(file_elements[i].checked)
+                        file_str += file_elements[i].value + ","
+                }
+                form_Data.append("products_to_bring_files", file_str.slice(0, -1));
             } else {
-                form_Data.append("products_to_bring_files", sc_content.File_name);
+                var file_str = "";
+            
+                var file_elements = document.getElementsByName("file_elements")
+                for(let i = 0;i < file_elements.length; i++)
+                {
+                    if(file_elements[i].checked)
+                        file_str += file_elements[i].value + ","
+                }
+
+                form_Data.append("products_to_bring_files", file_str.slice(0, -1));
             }
             form_Data.append("service", sc_content.Service);
             form_Data.append("driver", sc_content.Driver);
@@ -991,7 +1030,7 @@ var app = new Vue({
             form_Data.append("end_time", main.Endtime);
             form_Data.append("color", main.Color);
 
-            if(document.getElementById("sc_color_other").value == "1")
+            if(document.getElementById("sc_color_other").checked)
                 form_Data.append("color_other", main.Color_Other);
             else
                 form_Data.append("color_other", "");
@@ -1308,11 +1347,24 @@ var initial = () =>  {
             document.getElementById("sc_title").value = sc_content.Title;
             document.getElementById("sc_color").value = sc_content.Color;
 
+            if(sc_content.Color != "")
+            {
+                var colors = document.getElementsByName("sc_color");
+
+                for(var i = 0; i < colors.length; i++)
+                {
+                    if(colors[i].value == sc_content.Color)
+                        colors[i].checked = true;
+                }
+            }
+
             if(sc_content.Color_Other != "")
             {
                 document.getElementById("sc_color").value = sc_content.Color_Other;
                 document.getElementById("sc_color_other").checked = true;
             }
+            else
+                document.getElementById("sc_color").value = "#000000";
 
             //設定最後編輯者資訊
             document.getElementById("sc_editor").value = sc_content.Lasteditor;
@@ -1697,6 +1749,12 @@ function Change_Schedule_State(status, time_status) {
     document.getElementsByName("sc_Photoshoot_request")[1].disabled = status;
 
     document.getElementById("sc_notes").disabled = status;
+
+    var file_elements = document.getElementsByName("file_elements")
+    for(let i = 0;i < file_elements.length; i++)
+    {
+        file_elements[i].disabled = status;
+    }
 }
 
 $(document).on("click", "#btn_edit", function () {
@@ -1983,11 +2041,25 @@ $(document).on("click", "#btn_save", function () {
         });
     }
 
+    var Color_Other = "";
+    var Color = "";
+    if(document.getElementById("sc_color_other").checked)
+        Color_Other = document.getElementById("sc_color").value;
+    else
+        Color_Other = "";
+
+    var colors = document.getElementsByName("sc_color");
+    for(var i=0; i<colors.length; i++)
+    {
+        if(colors[i].checked)
+            Color = colors[i].value;
+    }
+
     var sc_content = {
         Date: document.getElementById("sc_date").value,
         Title: document.getElementById("sc_project").value,
-        Color: document.getElementById("sc_color").value,
-        Color_Other: document.getElementById("sc_color").value,
+        Color: Color,
+        Color_Other: Color_Other,
         Allday: document.getElementById("sc_time").checked,
         Starttime: document.getElementById("sc_date").value +
             " " +
@@ -2096,6 +2168,7 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
     var td_5 = document.createElement("td");
     var input_1 = document.createElement("input");
     var input_2 = document.createElement("input");
+    var div_input_2 = document.createElement("div");
     var input_3 = document.createElement("input");
     var input_4 = document.createElement("input");
     var Icon_1 = document.createElement("i");
@@ -2116,6 +2189,7 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
     input_4.type = "time";
     input_1.className = "form-control";
     input_2.className = "form-control";
+    div_input_2.className = "agendatext";
     input_3.className = "form-control";
     input_4.className = "form-control";
     input_1.disabled = true;
@@ -2123,11 +2197,13 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
     input_3.disabled = true;
     input_4.disabled = true;
     input_1.style.cssText = "border: none; background-color: white;";
-    input_2.style.cssText = "border: none; background-color: white;";
+    input_2.style.cssText = "border: none; background-color: white; display:none";
+    div_input_2.style.cssText = "border: none; background-color: white;";
     input_3.style.cssText = "border: none; background-color: white;";
     input_4.style.cssText = "border: none; background-color: white;";
     input_1.value = location;
     input_2.value = agenda;
+    div_input_2.innerHTML = agenda;
     input_3.value = appointtime;
     input_4.value = endtime;
 
@@ -2142,6 +2218,7 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
     //添加元素，形成父子關係
     td_1.appendChild(input_1);
     td_2.appendChild(input_2);
+    td_2.appendChild(div_input_2);
     td_3.appendChild(input_3);
     td_4.appendChild(input_4);
     td_5.appendChild(Icon_1);
@@ -2172,6 +2249,11 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
 
                 input_1.disabled = false;
                 input_2.disabled = false;
+                div_input_2.disabled = false;
+
+                input_2.style.cssText = "border: none; background-color: white;";
+                div_input_2.style.cssText = "border: none; background-color: white; display:none;";
+
                 input_3.disabled = false;
                 input_4.disabled = false;
                 input_1.focus();
@@ -2188,8 +2270,14 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
                     ) {
                         input_1.disabled = true;
                         input_2.disabled = true;
+                        div_input_2.disabled = true;
                         input_3.disabled = true;
                         input_4.disabled = true;
+
+                        input_2.style.cssText = "border: none; background-color: white; display:none;";
+                        div_input_2.innerHTML = input_2.value;
+                        div_input_2.style.cssText = "border: none; background-color: white;";
+
                         controlEdit = true;
                     }
                 };

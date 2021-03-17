@@ -1146,3 +1146,13 @@ ADD COLUMN `info_remark_other` varchar(512) DEFAULT '' AFTER info_remark;
 -- 2021/3/11 price record add project_name
 ALTER TABLE price_record
 ADD COLUMN `project_name` varchar(1024)  default '' AFTER sub_category;
+
+-- 2021/03/15 work_calendar_main
+ALTER TABLE work_calendar_main
+ADD COLUMN `installer_needed_other` varchar(1024)  default '' AFTER installer_needed;
+
+ALTER TABLE work_calendar_main
+ADD COLUMN `driver_other` varchar(1024)  default '' AFTER back_up_driver;
+
+ALTER TABLE work_calendar_main
+ADD COLUMN `color_other` varchar(100)  default '' AFTER color;

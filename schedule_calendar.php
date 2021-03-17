@@ -142,6 +142,38 @@ try {
 
         }
 
+        .agenda__text{
+            text-align: left;
+            padding: .375rem .75rem;
+        }
+
+        .fc-daygrid-event {
+            white-space: initial!important;
+        }
+
+        .fc-event-title {
+            display: inline!important;
+        }
+
+        @media (min-width: 576px) {
+
+            .modal-xl {
+                max-width: 90vw;
+            }
+        }
+
+        @media (min-width: 992px){
+            .modal-xl {
+                max-width: 800px;
+            }
+
+        }
+
+        @media (min-width: 1200px){
+            .modal-xl {
+                max-width: 1140px;
+            }
+        }
 
     </style>
 
@@ -236,32 +268,32 @@ try {
                     <div class="col-10" style="display:flex; align-items: center;">
 
                         <div class="custom-control custom-radio" style="display:inline-block;">
-                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_orange" value="" onchange="enable_forOther(this);" >
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_orange" value="#ffa500" onchange="enable_forOther(this);" >
                             <label class="custom-control-label" for="sc_color_orange" style="background-color: orange; width: 18px; height: 18px; margin-left: 2px;"></label>
                         </div>
 
                         <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
-                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_red" value="" onchange="enable_forOther(this);" >
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_red" value="#ff0000" onchange="enable_forOther(this);" >
                             <label class="custom-control-label" for="sc_color_red" style="background-color: red; width: 18px; height: 18px; margin-left: 2px;"></label>
                         </div>
 
                         <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
-                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_purple" value="" onchange="enable_forOther(this);" >
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_purple" value="#9370db" onchange="enable_forOther(this);" >
                             <label class="custom-control-label" for="sc_color_purple" style="background-color: mediumpurple; width: 18px; height: 18px; margin-left: 2px;"></label>
                         </div>
 
                         <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
-                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_green" value="" onchange="enable_forOther(this);" >
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_green" value="#01c63c" onchange="enable_forOther(this);" >
                             <label class="custom-control-label" for="sc_color_green" style="background-color: rgb(1, 198, 60); width: 18px; height: 18px; margin-left: 2px;"></label>
                         </div>
 
                         <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
-                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_blue" value="" onchange="enable_forOther(this);" >
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_blue" value="#1e90ff" onchange="enable_forOther(this);" >
                             <label class="custom-control-label" for="sc_color_blue" style="background-color: dodgerblue; width: 18px; height: 18px; margin-left: 2px;"></label>
                         </div>
 
                         <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
-                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_teal" value="" onchange="enable_forOther(this);" >
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_teal" value="#008080" onchange="enable_forOther(this);" >
                             <label class="custom-control-label" for="sc_color_teal" style="background-color: teal; width: 18px; height: 18px; margin-left: 2px;"></label>
                         </div>
 
