@@ -829,6 +829,16 @@ var app = new Vue({
             else
                 form_Data.append("color_other", "");
 
+            if(sc_content.Color == "" && !document.getElementById("sc_color_other").checked)
+            {
+                Swal.fire({
+                    text: JSON.stringify("Please choose color for schedule."),
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                });
+                return;
+            }
+
             form_Data.append("text_color", "white");
             form_Data.append("project", sc_content.Project);
             form_Data.append("sales_executive", sc_content.Sales_Executive);
