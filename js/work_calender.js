@@ -1357,24 +1357,39 @@ var initial = () =>  {
             document.getElementById("sc_title").value = sc_content.Title;
             document.getElementById("sc_color").value = sc_content.Color;
 
-            if(sc_content.Color != "")
-            {
-                var colors = document.getElementsByName("sc_color");
-
-                for(var i = 0; i < colors.length; i++)
-                {
-                    if(colors[i].value == sc_content.Color)
-                        colors[i].checked = true;
-                }
-            }
-
             if(sc_content.Color_Other != "")
             {
                 document.getElementById("sc_color").value = sc_content.Color_Other;
                 document.getElementById("sc_color_other").checked = true;
             }
             else
+            {
                 document.getElementById("sc_color").value = "#000000";
+                document.getElementById("sc_color_other").checked = false;
+            }
+
+            if(sc_content.Color != "")
+            {
+                var checked = 0;
+                var colors = document.getElementsByName("sc_color");
+
+                for(var i = 0; i < colors.length; i++)
+                {
+                    if(colors[i].value == sc_content.Color)
+                    {
+                        checked = 1;
+                        colors[i].checked = true;
+                    }
+
+                    if(checked == 0 && sc_content.Color_Other == "")
+                    {
+                        document.getElementById("sc_color").value = sc_content.Color;
+                        document.getElementById("sc_color_other").checked = true;
+                    }
+                }
+            }
+
+            
 
             //設定最後編輯者資訊
             document.getElementById("sc_editor").value = sc_content.Lasteditor;
