@@ -632,7 +632,7 @@ var app = new Vue({
                         response.data[i].products_to_bring_files.forEach((element) => {
                             var file_str =
                                 "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "'/>" + 
-                                "<label class='custom-control-label' style='justify-content: left;' for='" + element + "'>" +
+                                "<label class='custom-control-label' style='justify-content: flex-start;' for='" + element + "'>" +
                                 "<a href='" +
                                 element +
                                 "' target='_blank'>" +
