@@ -590,7 +590,7 @@ try {
                         <label>Driver</label>
                     </div>
 
-                    <div class="col-10">
+                    <div class="col-10" style="display: flex;">
 
 
                         <Select class="form-control" style="width:40%;" onchange="action_forOther(this);"  id="sc_driver1">
@@ -618,7 +618,7 @@ try {
                         <label>Back-up Driver</label>
                     </div>
 
-                    <div class="col-10">
+                    <div class="col-10" style="display: flex;">
 
 
                         <Select class="form-control" style="width:40%;" onchange="action_forOther_Backup(this);" id="sc_driver2">

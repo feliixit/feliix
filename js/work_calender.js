@@ -631,13 +631,17 @@ var app = new Vue({
                         var files = "";
                         response.data[i].products_to_bring_files.forEach((element) => {
                             var file_str =
-                                "<input type='checkbox' checked style='margin-right:5px;' name='file_elements' value='" + element + "'/><a href='https://storage.cloud.google.com/calendarfile/" +
+                                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "'/>" + 
+                                "<label class='custom-control-label' style='justify-content: left;' for='" + element + "'>" +
+                                "<a href='" +
                                 element +
                                 "' target='_blank'>" +
                                 element +
-                                "</a>&emsp;";
+                                "</a></label>";
                             files += file_str;
                         });
+
+                        files = "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + files + "</div>";
                         _this.items.push({
                             id: response.data[i].id,
                             title: response.data[i].title,
