@@ -621,14 +621,18 @@ try {
                     <div class="col-10">
 
 
-                        <Select class="form-control" style="width:40%;" id="sc_driver2">
+                        <Select class="form-control" style="width:40%;" onchange="action_forOther_Backup(this);" id="sc_driver2">
                             <option value="0">Choose One</option>
                             <option value="1">MG</option>
                             <option value="2">AY</option>
                             <option value="3">EV</option>
                             <option value="4">JB</option>
                             <option value="5">MA</option>
+                            <option value="6">Others</option>
                         </Select>
+
+                        <input type="text" class="form-control" style="margin-left:2%; width: 48%;"
+                               id="sc_backup_driver_other">
 
                     </div>
 
@@ -758,6 +762,16 @@ try {
             document.getElementById("sc_driver_other").style.display = "";
         }
     }
+
+    function action_forOther_Backup(selector){
+
+    if(selector.value != 6){
+        document.getElementById("sc_backup_driver_other").style.display = "none";
+    }else{
+        document.getElementById("sc_backup_driver_other").value = "";
+        document.getElementById("sc_backup_driver_other").style.display = "";
+    }
+}
 </script>
 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>

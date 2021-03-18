@@ -1156,3 +1156,6 @@ ADD COLUMN `driver_other` varchar(1024)  default '' AFTER back_up_driver;
 
 ALTER TABLE work_calendar_main
 ADD COLUMN `color_other` varchar(100)  default '' AFTER color;
+
+ALTER TABLE work_calendar_main
+ADD COLUMN `back_up_driver_other` varchar(1024)  default '' AFTER driver_other;

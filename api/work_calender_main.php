@@ -33,6 +33,7 @@ $service = (isset($_POST['service']) ?  $_POST['service'] : '');
 $driver = (isset($_POST['driver']) ?  $_POST['driver'] : '');
 $driver_other = (isset($_POST['driver_other']) ?  $_POST['driver_other'] : '');
 $back_up_driver = (isset($_POST['back_up_driver']) ?  $_POST['back_up_driver'] : '');
+$back_up_driver_other = (isset($_POST['back_up_driver_other']) ?  $_POST['back_up_driver_other'] : '');
 $photoshoot_request = (isset($_POST['photoshoot_request']) && $_POST['photoshoot_request'] === "Yes" ? 1 : 0);
 $notes = (isset($_POST['notes']) ?  $_POST['notes'] : '');
 $lock = (isset($_POST['lock']) ?  $_POST['lock'] : '');
@@ -128,6 +129,7 @@ if (!isset($jwt)) {
             $workCalenderMain->driver = $driver;
             $workCalenderMain->driver_other = $driver_other;
             $workCalenderMain->back_up_driver = $back_up_driver;
+            $workCalenderMain->back_up_driver_other = $back_up_driver_other;
             $workCalenderMain->photoshoot_request = $photoshoot_request;
             $workCalenderMain->notes = $notes;
             $workCalenderMain->is_enabled = $is_enabled;
@@ -174,6 +176,7 @@ if (!isset($jwt)) {
             $workCalenderMain->driver = $driver;
             $workCalenderMain->driver_other = $driver_other;
             $workCalenderMain->back_up_driver = $back_up_driver;
+            $workCalenderMain->back_up_driver_other = $back_up_driver_other;
             $workCalenderMain->photoshoot_request = $photoshoot_request;
             $workCalenderMain->notes = $notes;
             $workCalenderMain->is_enabled = $is_enabled;
@@ -331,6 +334,7 @@ if (!isset($jwt)) {
             $workCalenderMain->driver = $driver;
             $workCalenderMain->driver_other = $driver_other;
             $workCalenderMain->back_up_driver = $back_up_driver;
+            $workCalenderMain->back_up_driver_other = $back_up_driver_other;
             $workCalenderMain->photoshoot_request = $photoshoot_request;
             $workCalenderMain->notes = $notes;
             $workCalenderMain->is_enabled = $is_enabled;
@@ -479,6 +483,7 @@ if (!isset($jwt)) {
             $workCalenderMain->driver = $driver;
             $workCalenderMain->driver_other = $driver_other;
             $workCalenderMain->back_up_driver = $back_up_driver;
+            $workCalenderMain->back_up_driver_other = $back_up_driver_other;
             $workCalenderMain->photoshoot_request = $photoshoot_request;
             $workCalenderMain->notes = $notes;
             $workCalenderMain->is_enabled = $is_enabled;

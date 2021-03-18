@@ -55,7 +55,7 @@ var app = new Vue({
             for(var i=0; i<colors.length; i++)
             {
                 if(colors[i].checked)
-                    color = color[i].value;
+                    color = colors[i].value;
             }
             if(color == "" && !document.getElementById("sc_color_other").checked)
             {
@@ -97,7 +97,14 @@ var app = new Vue({
                 main.Driver_Other = "";
 
             form_Data.append("driver_other", main.Driver_Other);
+
             form_Data.append("back_up_driver", main.Back_up_Driver);
+
+            if(main.Back_up_Driver != 6)
+                main.Back_up_Driver_Other = "";
+            
+            form_Data.append("backup_driver_other", main.Back_up_Driver_Other);
+
             form_Data.append("photoshoot_request", main.Photoshoot_Request);
             form_Data.append("notes", main.Notes);
             form_Data.append("is_enabled", main.is_enabled);
@@ -277,6 +284,7 @@ var app = new Vue({
 
             form_Data.append("driver_other", main.Driver_Other);
             form_Data.append("back_up_driver", main.Back_up_Driver);
+
             form_Data.append("photoshoot_request", main.Photoshoot_Request);
             form_Data.append("notes", main.Notes);
             form_Data.append("is_enabled", main.is_enabled);
@@ -529,6 +537,7 @@ var app = new Vue({
                                 Driver: response.data[i].driver,
                                 Driver_Other: response.data[i].driver_other,
                                 Back_up_Driver: response.data[i].back_up_driver,
+                                Back_up_Driver_Other: response.data[i].back_up_driver_other,
                                 Photoshoot_Request: photoshoot,
                                 Notes: UnescapeHTML(response.data[i].notes),
                                 Lock: response.data[i].lock,
@@ -675,6 +684,7 @@ var app = new Vue({
                                 Driver: response.data[i].driver,
                                 Driver_Other: response.data[i].driver_other,
                                 Back_up_Driver: response.data[i].back_up_driver,
+                                Back_up_Driver_Other: response.data[i].back_up_driver_other,
                                 Photoshoot_Request: photoshoot,
                                 Notes: UnescapeHTML(response.data[i].notes),
                                 Lock: response.data[i].lock,
@@ -888,6 +898,12 @@ var app = new Vue({
 
             form_Data.append("driver_other", sc_content.Driver_Other);
             form_Data.append("back_up_driver", sc_content.Back_up_Driver);
+            
+            if(sc_content.Back_up_Driver != 6)
+                sc_content.Back_up_Driver_Other = "";
+
+            form_Data.append("back_up_driver_other", sc_content.Back_up_Driver_Other);
+
             form_Data.append("photoshoot_request", sc_content.Photoshoot_Request);
             form_Data.append("notes", sc_content.Notes);
             form_Data.append("is_enabled", sc_content.is_enabled);
@@ -1481,10 +1497,17 @@ var initial = () =>  {
 
             document.getElementById("sc_driver2").value = sc_content.Back_up_Driver;
 
+            document.getElementById("sc_backup_driver_other").value = sc_content.Back_up_Driver_Other;
+
             if(sc_content.Driver != 6)
                 document.getElementById("sc_driver_other").style.display = "none";
             else
                 document.getElementById("sc_driver_other").style.display = "";
+
+            if(sc_content.Back_up_Driver != 6)
+                document.getElementById("sc_backup_driver_other").style.display = "none";
+            else
+                document.getElementById("sc_backup_driver_other").style.display = "";
 
             if (sc_content.Photoshoot_Request == "Yes") {
                 document.getElementsByName("sc_Photoshoot_request")[0].checked = true;
@@ -1632,6 +1655,7 @@ $("button[id='btn_add']").click(function () {
         Driver: document.getElementById("sc_driver1").value,
         Driver_Other: document.getElementById("sc_driver_other").value,
         Back_up_Driver: document.getElementById("sc_driver2").value,
+        Back_up_Driver_Other: document.getElementById("sc_backup_driver_other").value,
         Photoshoot_Request: $("input[name=sc_Photoshoot_request]:checked").val(),
         Notes: document.getElementById("sc_notes").value,
         Lock: "",
@@ -1682,6 +1706,9 @@ function resetSchedule() {
 
     document.getElementById("sc_driver_other").value = "";
     document.getElementById("sc_driver_other").style.display = "none";
+
+    document.getElementById("sc_backup_driver_other").value = "";
+    document.getElementById("sc_backup_driver_other").style.display = "none";
 
     document.getElementById("sc_location1").value = "";
     document.getElementById("sc_things").value = "";
@@ -1769,6 +1796,7 @@ function Change_Schedule_State(status, time_status) {
     document.getElementById("sc_driver2").disabled = status;
 
     document.getElementById("sc_driver_other").disabled = status;
+    document.getElementById("sc_backup_driver_other").disabled = status;
 
     document.getElementsByName("sc_Photoshoot_request")[0].disabled = status;
     document.getElementsByName("sc_Photoshoot_request")[1].disabled = status;
@@ -1922,6 +1950,8 @@ $(document).on("click", "#btn_cancel", function () {
     document.getElementById("sc_driver2").value = sc_content.Back_up_Driver;
 
     document.getElementById("sc_driver_other").value = sc_content.Driver_Other;
+
+    document.getElementById("sc_backup_driver_other").value = sc_content.Back_up_Driver_Other;
 
     if (sc_content.Photoshoot_Request == "Yes") {
         document.getElementsByName("sc_Photoshoot_request")[0].checked = true;
@@ -2107,6 +2137,7 @@ $(document).on("click", "#btn_save", function () {
         Driver: document.getElementById("sc_driver1").value,
         Driver_Other: document.getElementById("sc_driver_other").value,
         Back_up_Driver: document.getElementById("sc_driver2").value,
+        Back_up_Driver_Other: document.getElementById("sc_backup_driver_other").value,
         Photoshoot_Request: $("input[name=sc_Photoshoot_request]:checked").val(),
         Notes: document.getElementById("sc_notes").value,
         Lock: document.getElementById("lock").value,
@@ -2192,6 +2223,7 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
     var td_4 = document.createElement("td");
     var td_5 = document.createElement("td");
     var input_1 = document.createElement("input");
+    var div_input_1 = document.createElement("div");
     var input_2 = document.createElement("input");
     var div_input_2 = document.createElement("div");
     var input_3 = document.createElement("input");
@@ -2213,20 +2245,23 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
     input_3.type = "time";
     input_4.type = "time";
     input_1.className = "form-control";
+    div_input_1.className = "agenda__text";
     input_2.className = "form-control";
-    div_input_2.className = "agendatext";
+    div_input_2.className = "agenda__text";
     input_3.className = "form-control";
     input_4.className = "form-control";
     input_1.disabled = true;
     input_2.disabled = true;
     input_3.disabled = true;
     input_4.disabled = true;
-    input_1.style.cssText = "border: none; background-color: white;";
+    input_1.style.cssText = "border: none; background-color: white; display:none";
+    div_input_1.style.cssText = "border: none; background-color: white;";
     input_2.style.cssText = "border: none; background-color: white; display:none";
     div_input_2.style.cssText = "border: none; background-color: white;";
     input_3.style.cssText = "border: none; background-color: white;";
     input_4.style.cssText = "border: none; background-color: white;";
     input_1.value = location;
+    div_input_1.innerHTML = location;
     input_2.value = agenda;
     div_input_2.innerHTML = agenda;
     input_3.value = appointtime;
@@ -2242,6 +2277,7 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
 
     //添加元素，形成父子關係
     td_1.appendChild(input_1);
+    td_1.appendChild(div_input_1);
     td_2.appendChild(input_2);
     td_2.appendChild(div_input_2);
     td_3.appendChild(input_3);
@@ -2273,6 +2309,11 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
                 controlEdit = false;
 
                 input_1.disabled = false;
+                div_input_1.disabled = false;
+
+                input_1.style.cssText = "border: none; background-color: white;";
+                div_input_1.style.cssText = "border: none; background-color: white; display:none;";
+
                 input_2.disabled = false;
                 div_input_2.disabled = false;
 
@@ -2294,10 +2335,15 @@ function addAgendaitem(location, agenda, appointtime, endtime) {
                         event.target != input_4
                     ) {
                         input_1.disabled = true;
+                        div_input_1.disabled = true;
                         input_2.disabled = true;
                         div_input_2.disabled = true;
                         input_3.disabled = true;
                         input_4.disabled = true;
+
+                        input_1.style.cssText = "border: none; background-color: white; display:none;";
+                        div_input_1.innerHTML = input_1.value;
+                        div_input_1.style.cssText = "border: none; background-color: white;";
 
                         input_2.style.cssText = "border: none; background-color: white; display:none;";
                         div_input_2.innerHTML = input_2.value;

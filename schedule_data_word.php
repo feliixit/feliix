@@ -37,7 +37,7 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
         project_in_charge, installer_needed, installer_needed_other, things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, driver_other,
-		back_up_driver, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
+		back_up_driver, back_up_driver_other, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
 		DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files
 		from work_calendar_main main 
 		left join work_calendar_details detail on detail.main_id = main.id where coalesce(detail.is_enabled, 1) = 1 and main.id = " . $id . " order by sort " ;
@@ -60,6 +60,7 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $driver = '';
     $driver_other = '';
     $back_up_driver = '';
+    $back_up_driver_other = '';
     $photoshoot_request = '';
     $notes = '';
 
@@ -91,6 +92,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $driver = $row['driver'];
     $driver_other = $row['driver_other'];
     $back_up_driver = $row['back_up_driver'];
+    $back_up_driver_other = $row['back_up_driver_other'];
     $photoshoot_request = $row['photoshoot_request'];
     $notes = $row['notes'];
 
@@ -110,7 +112,7 @@ if($onrecord == 0)
     $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
         project_in_charge, installer_needed, installer_needed_other,things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, driver_other,
-		back_up_driver, photoshoot_request, notes, '' location, '' agenda, '' appoint_time, 
+		back_up_driver, back_up_driver_other, photoshoot_request, notes, '' location, '' agenda, '' appoint_time, 
 		'' end_time, products_to_bring_files
 		from work_calendar_main main 
 		where main.id = " . $id . " " ;
@@ -136,6 +138,7 @@ if($onrecord == 0)
         $driver = $row['driver'];
         $driver_other = $row['driver_other'];
         $back_up_driver = $row['back_up_driver'];
+        $back_up_driver_other = $row['back_up_driver_other'];
         $photoshoot_request = $row['photoshoot_request'];
         $notes = $row['notes'];
 
@@ -227,7 +230,7 @@ $table->addCell(8500, ['borderSize' => 6])->addText(getDriver($driver) . ' ' . $
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Back-up Driver:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText(getDriver($back_up_driver));
+$table->addCell(8500, ['borderSize' => 6])->addText(getDriver($back_up_driver) . ' ' . $back_up_driver_other);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Photoshoot Request:", array('bold' => true));
