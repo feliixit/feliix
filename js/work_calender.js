@@ -1404,12 +1404,12 @@ var initial = () =>  {
                         checked = 1;
                         colors[i].checked = true;
                     }
+                }
 
-                    if(checked == 0 && sc_content.Color_Other == "")
-                    {
-                        document.getElementById("sc_color").value = sc_content.Color;
-                        document.getElementById("sc_color_other").checked = true;
-                    }
+                if(checked == 0 && sc_content.Color_Other == "")
+                {
+                    document.getElementById("sc_color").value = sc_content.Color;
+                    document.getElementById("sc_color_other").checked = true;
                 }
             }
 
