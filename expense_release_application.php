@@ -183,7 +183,7 @@ $table->addCell(7500, ['borderSize' => 6])->addText($project_name, ['bold' => fa
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Total Amount Requested", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText(number_format($total), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText(number_format($total, 2), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Attachments", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
@@ -222,9 +222,9 @@ foreach ($list as &$value) {
     $table1->addRow();
     $table1->addCell(2600, ['borderSize' => 6])->addText($value['payee'], [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     $table1->addCell(6100, ['borderSize' => 6])->addText($value['particulars'], [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['price']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['price'], 2), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['qty']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['price'] * $value['qty']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['price'] * $value['qty'], 2), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 }
 
 
