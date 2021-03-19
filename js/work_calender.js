@@ -103,7 +103,7 @@ var app = new Vue({
             if(main.Back_up_Driver != 6)
                 main.Back_up_Driver_Other = "";
             
-            form_Data.append("backup_driver_other", main.Back_up_Driver_Other);
+            form_Data.append("back_up_driver_other", main.Back_up_Driver_Other);
 
             form_Data.append("photoshoot_request", main.Photoshoot_Request);
             form_Data.append("notes", main.Notes);
@@ -489,7 +489,8 @@ var app = new Vue({
                                 "' target='_blank'>" +
                                 element +
                                 "</a>&emsp;";
-                            files += file_str;
+                            if(element.trim() !== '')
+                                files += file_str;
                         });
                         _this.items.push({
                             id: response.data[i].id,
@@ -638,7 +639,10 @@ var app = new Vue({
                                 "' target='_blank'>" +
                                 element +
                                 "</a></label>";
-                            files += file_str;
+                            if(element.trim() !== '')
+                            {
+                                files += file_str;
+                            }
                         });
 
                         files = "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + files + "</div>";
@@ -1734,6 +1738,12 @@ function resetSchedule() {
 
     for (i = agenda_object.length - 1; i > 1; i--) {
         agenda_object[i].remove();
+    }
+
+    var colors = document.getElementsByName("sc_color");
+    for (var i = 0; i < colors.length; i++)
+    {
+        color = colors[i].checked = false;
     }
 }
 
