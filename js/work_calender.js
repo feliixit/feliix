@@ -632,7 +632,7 @@ var app = new Vue({
                         var files = "";
                         response.data[i].products_to_bring_files.forEach((element) => {
                             var file_str =
-                                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "'/>" + 
+                                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "'>" + 
                                 "<label class='custom-control-label' style='justify-content: flex-start;' for='" + element + "'>" +
                                 "<a href='" +
                                 element +
@@ -1491,7 +1491,7 @@ var initial = () =>  {
                 sc_content.Products_to_bring_files;
             if (
                 sc_content.Products_to_bring_files !=
-                "<a href='https://storage.cloud.google.com/calendarfile/' target='_blank'></a>&emsp;"
+                "<div class='custom-control custom-checkbox' style='padding-top: 1%;'></div>"
             )
                 app.download_type = "zip";
             else app.download_type = "docx";
@@ -2036,27 +2036,67 @@ $(document).on("click", "#btn_save", function () {
     if (app.filename != "") {
         app.filename.forEach((element) => {
             var file_str =
+                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "'>" + 
+                "<label class='custom-control-label' style='justify-content: flex-start;' for='" + element + "'>" +
                 "<a href='https://storage.cloud.google.com/calendarfile/" +
                 element +
                 "' target='_blank'>" +
                 element +
-                "</a>&emsp;";
-            files += file_str;
+                "</a></label>";
+            // files += file_str;
+            if(element.trim() !== '')
+            {
+                files += file_str;
+            }
         });
+
+        var file_elements = document.getElementsByName("file_elements")
+        for(let i = 0;i < file_elements.length; i++)
+        {
+            if(file_elements[i].checked)
+            {
+                var file_str =
+                "<input type='checkbox' class='custom-control-input' id='" + file_elements[i].value + "' checked name='file_elements' value='" + file_elements[i].value + "'>" + 
+                "<label class='custom-control-label' style='justify-content: flex-start;' for='" + file_elements[i].value + "'>" +
+                "<a href='https://storage.cloud.google.com/calendarfile/" +
+                file_elements[i].value +
+                "' target='_blank'>" +
+                file_elements[i].value +
+                "</a></label>";
+                // files += file_str;
+                if(file_elements[i].value.trim() !== '')
+                {
+                    files += file_str;
+                }
+            }
+                
+        }
+
     } else if (document.getElementById("sc_product_files_hide").value != "") {
-        var splits_array = document
-            .getElementById("sc_product_files_hide")
-            .value.split(",");
-        splits_array.forEach((element) => {
-            var file_str =
+        var file_elements = document.getElementsByName("file_elements")
+        for(let i = 0;i < file_elements.length; i++)
+        {
+            if(file_elements[i].checked)
+            {
+                var file_str =
+                "<input type='checkbox' class='custom-control-input' id='" + file_elements[i].value + "' checked name='file_elements' value='" + file_elements[i].value + "'>" + 
+                "<label class='custom-control-label' style='justify-content: flex-start;' for='" + file_elements[i].value + "'>" +
                 "<a href='https://storage.cloud.google.com/calendarfile/" +
-                element +
+                file_elements[i].value +
                 "' target='_blank'>" +
-                element +
-                "</a>&emsp;";
-            files += file_str;
-        });
+                file_elements[i].value +
+                "</a></label>";
+                // files += file_str;
+                if(file_elements[i].value.trim() !== '')
+                {
+                    files += file_str;
+                }
+            }
+                
+        }
     }
+
+    files = "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + files + "</div>";
 
     var time = new Date();
     time =
