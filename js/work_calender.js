@@ -632,7 +632,7 @@ var app = new Vue({
                         var files = "";
                         response.data[i].products_to_bring_files.forEach((element) => {
                             var file_str =
-                                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "'>" + 
+                                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "' />" + 
                                 "<label class='custom-control-label' style='justify-content: flex-start;' for='" + element + "'>" +
                                 "<a href='" +
                                 element +
@@ -641,7 +641,7 @@ var app = new Vue({
                                 "</a></label>";
                             if(element.trim() !== '')
                             {
-                                files += file_str;
+                                files += "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + file_str + "</div>";
                             }
                         });
 
@@ -1996,6 +1996,12 @@ $(document).on("click", "#btn_cancel", function () {
         document.getElementById("btn_lock").style.display = "inline";
         document.getElementById("btn_unlock").style.display = "none";
     }
+
+    var file_elements = document.getElementsByName("file_elements")
+    for(let i = 0;i < file_elements.length; i++)
+    {
+        file_elements[i].checked = true;
+    }
 });
 
 $(document).on("click", "#btn_lock", async function () {
@@ -2046,7 +2052,7 @@ $(document).on("click", "#btn_save", function () {
             // files += file_str;
             if(element.trim() !== '')
             {
-                files += file_str;
+                files += "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + file_str + "</div>";
             }
         });
 
@@ -2066,7 +2072,7 @@ $(document).on("click", "#btn_save", function () {
                 // files += file_str;
                 if(file_elements[i].value.trim() !== '')
                 {
-                    files += file_str;
+                    files += "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + file_str + "</div>";
                 }
             }
                 
@@ -2089,7 +2095,7 @@ $(document).on("click", "#btn_save", function () {
                 // files += file_str;
                 if(file_elements[i].value.trim() !== '')
                 {
-                    files += file_str;
+                    files += "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + file_str + "</div>";
                 }
             }
                 
