@@ -192,7 +192,7 @@ addMultiLineAttach($cell, $items);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Payable to", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText(($payable_other != '') ? $payable_other : $payable_to, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText(($payable_other != '') ? 'Other:' . $payable_other : 'Requestor', ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Remarks or Payment Instructions", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
