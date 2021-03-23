@@ -550,7 +550,7 @@ try {
                         <div id="upload_input" style="display: flex; align-items: center; margin-top:1%;">
                             Upload PO/Quote <input type="file" ref="file" id="fileload" name="file[]" onChange="onChangeFileUpload(event)" class="form-control" style="width:70%; margin-left:1%;" multiple>
                         </div>
-						<div  id="sc_product_files" style="display: flex; align-items: center; margin-top:1%;">
+						<div  id="sc_product_files" style="display: flex; align-items: center;">
                         </div>
 						<input  id="sc_product_files_hide" style="display: none;" value="">
                     </div>

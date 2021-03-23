@@ -103,7 +103,7 @@ var app = new Vue({
             if(main.Back_up_Driver != 6)
                 main.Back_up_Driver_Other = "";
             
-            form_Data.append("backup_driver_other", main.Back_up_Driver_Other);
+            form_Data.append("back_up_driver_other", main.Back_up_Driver_Other);
 
             form_Data.append("photoshoot_request", main.Photoshoot_Request);
             form_Data.append("notes", main.Notes);
@@ -489,7 +489,8 @@ var app = new Vue({
                                 "' target='_blank'>" +
                                 element +
                                 "</a>&emsp;";
-                            files += file_str;
+                            if(element.trim() !== '')
+                                files += file_str;
                         });
                         _this.items.push({
                             id: response.data[i].id,
@@ -631,14 +632,17 @@ var app = new Vue({
                         var files = "";
                         response.data[i].products_to_bring_files.forEach((element) => {
                             var file_str =
-                                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "'/>" + 
+                                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "' />" + 
                                 "<label class='custom-control-label' style='justify-content: flex-start;' for='" + element + "'>" +
                                 "<a href='" +
                                 element +
                                 "' target='_blank'>" +
                                 element +
                                 "</a></label>";
-                            files += file_str;
+                            if(element.trim() !== '')
+                            {
+                                files += "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + file_str + "</div>";
+                            }
                         });
 
                         files = "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + files + "</div>";
@@ -1400,12 +1404,12 @@ var initial = () =>  {
                         checked = 1;
                         colors[i].checked = true;
                     }
+                }
 
-                    if(checked == 0 && sc_content.Color_Other == "")
-                    {
-                        document.getElementById("sc_color").value = sc_content.Color;
-                        document.getElementById("sc_color_other").checked = true;
-                    }
+                if(checked == 0 && sc_content.Color_Other == "")
+                {
+                    document.getElementById("sc_color").value = sc_content.Color;
+                    document.getElementById("sc_color_other").checked = true;
                 }
             }
 
@@ -1487,7 +1491,7 @@ var initial = () =>  {
                 sc_content.Products_to_bring_files;
             if (
                 sc_content.Products_to_bring_files !=
-                "<a href='https://storage.cloud.google.com/calendarfile/' target='_blank'></a>&emsp;"
+                "<div class='custom-control custom-checkbox' style='padding-top: 1%;'></div>"
             )
                 app.download_type = "zip";
             else app.download_type = "docx";
@@ -1734,6 +1738,12 @@ function resetSchedule() {
 
     for (i = agenda_object.length - 1; i > 1; i--) {
         agenda_object[i].remove();
+    }
+
+    var colors = document.getElementsByName("sc_color");
+    for (var i = 0; i < colors.length; i++)
+    {
+        color = colors[i].checked = false;
     }
 }
 
@@ -1986,6 +1996,12 @@ $(document).on("click", "#btn_cancel", function () {
         document.getElementById("btn_lock").style.display = "inline";
         document.getElementById("btn_unlock").style.display = "none";
     }
+
+    var file_elements = document.getElementsByName("file_elements")
+    for(let i = 0;i < file_elements.length; i++)
+    {
+        file_elements[i].checked = true;
+    }
 });
 
 $(document).on("click", "#btn_lock", async function () {
@@ -2026,27 +2042,67 @@ $(document).on("click", "#btn_save", function () {
     if (app.filename != "") {
         app.filename.forEach((element) => {
             var file_str =
+                "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "'>" + 
+                "<label class='custom-control-label' style='justify-content: flex-start;' for='" + element + "'>" +
                 "<a href='https://storage.cloud.google.com/calendarfile/" +
                 element +
                 "' target='_blank'>" +
                 element +
-                "</a>&emsp;";
-            files += file_str;
+                "</a></label>";
+            // files += file_str;
+            if(element.trim() !== '')
+            {
+                files += "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + file_str + "</div>";
+            }
         });
+
+        var file_elements = document.getElementsByName("file_elements")
+        for(let i = 0;i < file_elements.length; i++)
+        {
+            if(file_elements[i].checked)
+            {
+                var file_str =
+                "<input type='checkbox' class='custom-control-input' id='" + file_elements[i].value + "' checked name='file_elements' value='" + file_elements[i].value + "'>" + 
+                "<label class='custom-control-label' style='justify-content: flex-start;' for='" + file_elements[i].value + "'>" +
+                "<a href='https://storage.cloud.google.com/calendarfile/" +
+                file_elements[i].value +
+                "' target='_blank'>" +
+                file_elements[i].value +
+                "</a></label>";
+                // files += file_str;
+                if(file_elements[i].value.trim() !== '')
+                {
+                    files += "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + file_str + "</div>";
+                }
+            }
+                
+        }
+
     } else if (document.getElementById("sc_product_files_hide").value != "") {
-        var splits_array = document
-            .getElementById("sc_product_files_hide")
-            .value.split(",");
-        splits_array.forEach((element) => {
-            var file_str =
+        var file_elements = document.getElementsByName("file_elements")
+        for(let i = 0;i < file_elements.length; i++)
+        {
+            if(file_elements[i].checked)
+            {
+                var file_str =
+                "<input type='checkbox' class='custom-control-input' id='" + file_elements[i].value + "' checked name='file_elements' value='" + file_elements[i].value + "'>" + 
+                "<label class='custom-control-label' style='justify-content: flex-start;' for='" + file_elements[i].value + "'>" +
                 "<a href='https://storage.cloud.google.com/calendarfile/" +
-                element +
+                file_elements[i].value +
                 "' target='_blank'>" +
-                element +
-                "</a>&emsp;";
-            files += file_str;
-        });
+                file_elements[i].value +
+                "</a></label>";
+                // files += file_str;
+                if(file_elements[i].value.trim() !== '')
+                {
+                    files += "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + file_str + "</div>";
+                }
+            }
+                
+        }
     }
+
+    files = "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + files + "</div>";
 
     var time = new Date();
     time =
