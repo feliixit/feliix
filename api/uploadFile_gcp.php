@@ -74,10 +74,17 @@ if(isset($_FILES['file']['name']))
 
         $upload_name = time() . '_' . pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
 
-        if($bucket->upload(
-          fopen($_FILES['file']['tmp_name'], 'r'),
-          ['name' => $upload_name]
-        ))
+        $file_size = filesize($_FILES['file']['tmp_name']);
+        $size = 0;
+
+        $obj = $bucket->upload(
+            fopen($_FILES['file']['tmp_name'], 'r'),
+            ['name' => $upload_name]);
+
+        $info = $obj->info();
+        $size = $info['size'];
+
+        if($size == $file_size && $file_size != 0 && $size != 0)
         {
             $query = "INSERT INTO gcp_storage_file
             SET
@@ -124,12 +131,16 @@ if(isset($_FILES['file']['name']))
         }
         else
         {
+            $code = 502;
             $message = 'There is an error while uploading file';
+            $image = $image_name;
         }
     }
     else
     {
+        $code = 502;
         $message = 'Only Images or Office files allowed to upload';
+        $image = $image_name;
     }
 }
 else
