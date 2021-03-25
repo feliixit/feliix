@@ -1,11 +1,10 @@
 <?php
+include_once 'config/core.php';
+include_once 'config/conf.php';
+require_once '../vendor/autoload.php';
+include_once 'config/database.php';
 
-include_once 'api/config/core.php';
-include_once 'api/config/database.php';
-include_once 'api/config/conf.php';
-require_once 'vendor/autoload.php';
-
-include_once 'api/mail.php';
+include_once 'mail.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -19,14 +18,14 @@ from apply_for_petty pm
 left join petty_history ph ON petty_id = pm.id and `action` = 'Releaser Released'
 where pm.`status` in (6, 7) 
 AND DATE_FORMAT(ph.created_at, '%Y/%m/%d') <> DATE_FORMAT(NOW(), '%Y/%m/%d') 
-AND MOD(DATEDIFF(DATE_FORMAT(NOW(), '%Y/%m/%d'), DATE_FORMAT(ph.created_at, '%Y/%m/%d')), 2) = 0";
+AND MOD(DATEDIFF(DATE_FORMAT(NOW(), '%Y/%m/%d'), DATE_FORMAT(ph.created_at, '%Y/%m/%d')), 4) = 0";
 
-        $stmt = $db->prepare($sql);
+$stmt = $db->prepare($sql);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
-            SendNotifyMail($id, $db);
-        }
+	    SendNotifyMail($id, $db);
+	}
 
 function SendNotifyMail($id, $db)
 {
@@ -37,6 +36,7 @@ function SendNotifyMail($id, $db)
     $department = "";
     $application_Time = "";
     $project_name = "";
+    $project_name1 = "";
     $date_request = "";
     $total_amount = "";
     $reject_reason = "";
@@ -52,13 +52,14 @@ function SendNotifyMail($id, $db)
     $department = $_record[0]["department"];
     $application_Time = str_replace("-", "/", $_record[0]["created_at"]);
     $project_name = $_record[0]["project_name"];
+    $project_name1 = $_record[0]["project_name1"];
     $date_request = $_record[0]["date_requested"];
     $total_amount = $_record[0]["total"];
 
 
     $date_release = GetReleaseHistory($id, $db);
 
-    batch_liquidate_notify_mail($request_no, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $date_release);
+    batch_liquidate_notify_mail($request_no, $requestor, $requestor_email, $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $date_release);
       
 }
 
@@ -82,7 +83,7 @@ function GetReleaseHistory($_id, $db)
 
 function GetPettyDetail($id, $db)
 {
-    $sql = "SELECT request_no, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
+    $sql = "SELECT request_no, project_name1, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
             (SELECT SUM(price * qty) FROM petty_list WHERE petty_id = :id1) total, ap.amount_liquidated,
                         ap.remark_liquidated
             FROM apply_for_petty ap 

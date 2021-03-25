@@ -67,6 +67,7 @@ switch ($method) {
                         DATE_FORMAT(pm.date_requested, '%Y/%m/%d') date_requested,
                         p.username requestor,
                         request_type,
+                        project_name1,
                         project_name,
                         payable_to,
                         payable_other,
@@ -112,6 +113,7 @@ switch ($method) {
         $request_no = "";
         $date_requested = "";
         $request_type = "";
+        $project_name1 = "";
         $project_name = "";
         $payable_to = "";
         $payable_other = "";
@@ -139,6 +141,7 @@ switch ($method) {
             $date_requested = $row['date_requested'];
             $request_type = $row['request_type'];
             $requestor = $row['requestor'];
+            $project_name1 = $row['project_name1'];
             $project_name = $row['project_name'];
             $payable_to = $row['payable_to'];
             $payable_other = $row['payable_other'];
@@ -167,6 +170,7 @@ switch ($method) {
                 "date_requested" => $date_requested,
                 "request_type" => $request_type,
                 "requestor" => $requestor,
+                "project_name1" => $project_name1,
                 "project_name" => $project_name,
                 "payable_to" => $payable_to,
                 "payable_other" => $payable_other,
@@ -204,17 +208,18 @@ switch ($method) {
         $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
         $date_requested = (isset($_POST['date_requested']) ?  $_POST['date_requested'] : '');
         $request_type = (isset($_POST['request_type']) ?  $_POST['request_type'] : '');
+        $project_name1 = (isset($_POST['project_name1']) ?  $_POST['project_name1'] : '');
         $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
         $payable_to = (isset($_POST['payable_to']) ?  $_POST['payable_to'] : '');
         $payable_other = (isset($_POST['payable_other']) ?  $_POST['payable_other'] : '');
         $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
         $petty_list = (isset($_POST['petty_list']) ?  $_POST['petty_list'] : '');
-        $petty_array = json_decode(stripslashes($petty_list),true);
+        $petty_array = json_decode(stripslashes($petty_list), true);
         $items_to_delete = (isset($_POST['items_to_delete']) ?  $_POST['items_to_delete'] : "[]");
-        $items_array = json_decode(stripslashes($items_to_delete),true);
+        $items_array = json_decode(stripslashes($items_to_delete), true);
 
-        if ( $pid == 0 ) {
+        if ($pid == 0) {
             http_response_code(401);
             echo json_encode(array("message" => "Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Access denied."));
             die();
@@ -226,6 +231,7 @@ switch ($method) {
                 SET
                     `date_requested` = :date_requested,
                     `request_type` = :request_type,
+                    `project_name1` = :project_name1,
                     `project_name` = :project_name,
                     `payable_to` = :payable_to,
                     `payable_other` = :payable_other,
@@ -239,11 +245,12 @@ switch ($method) {
             // bind the values
             $stmt->bindParam(':date_requested', $date_requested);
             $stmt->bindParam(':request_type', $request_type);
+            $stmt->bindParam(':project_name1', $project_name1);
             $stmt->bindParam(':project_name', $project_name);
             $stmt->bindParam(':payable_to', $payable_to);
-            if($payable_to == 1)
+            if ($payable_to == 1)
                 $payable_other = "";
-                
+
             $stmt->bindParam(':payable_other', $payable_other);
             $stmt->bindParam(':remark', $remark);
             $stmt->bindParam(':id', $pid);
@@ -350,7 +357,7 @@ switch ($method) {
 
                 // bind the values
                 $stmt->bindParam(':_id', $items_array[$i]);
-       
+
                 try {
                     // execute the query, also check if query was successful
                     if (!$stmt->execute()) {
@@ -373,8 +380,7 @@ switch ($method) {
             $batch_id = $last_id;
             $batch_type = "petty";
 
-            if(isset($_FILES['files']['name']))
-            {
+            if (isset($_FILES['files']['name'])) {
                 try {
                     $total = count($_FILES['files']['name']);
                     // Loop through each file
@@ -396,10 +402,18 @@ switch ($method) {
 
                                 $upload_name = time() . '_' . pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
 
-                                if ($bucket->upload(
+                                $file_size = filesize($_FILES['files']['tmp_name'][$i]);
+                                $size = 0;
+
+                                $obj = $bucket->upload(
                                     fopen($_FILES['files']['tmp_name'][$i], 'r'),
-                                    ['name' => $upload_name]
-                                )) {
+                                    ['name' => $upload_name]);
+
+                                $info = $obj->info();
+                                $size = $info['size'];
+
+                                if($size == $file_size && $file_size != 0 && $size != 0)
+                                {
                                     $query = "INSERT INTO gcp_storage_file
                                         SET
                                             batch_id = :batch_id,
@@ -444,9 +458,17 @@ switch ($method) {
                                     $image = $image_name;
                                 } else {
                                     $message = 'There is an error while uploading file';
+                                    $db->rollback();
+                                    http_response_code(501);
+                                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                                    die();
                                 }
                             } else {
                                 $message = 'Only Images or Office files allowed to upload';
+                                $db->rollback();
+                                http_response_code(501);
+                                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                                die();
                             }
                         }
                     }
@@ -498,7 +520,7 @@ switch ($method) {
 
             // Send Mail
             SendNotifyMail($batch_id);
-            
+
             http_response_code(200);
             echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
         } catch (Exception $e) {
@@ -676,10 +698,11 @@ function SendNotifyMail($id)
     $applicant = "";
     $department = "";
     $application_Time = "";
+    $project_name1 = "";
     $project_name = "";
     $date_request = "";
     $total_amount = "";
- 
+
 
     $notifior = array();
 
@@ -692,16 +715,15 @@ function SendNotifyMail($id)
     $applicant = $_record[0]["username"];
     $department = $_record[0]["department"];
     $application_Time = str_replace("-", "/", $_record[0]["created_at"]);
+    $project_name1 = $_record[0]["project_name1"];
     $project_name = $_record[0]["project_name"];
     $date_request = $_record[0]["date_requested"];
     $total_amount = $_record[0]["total"];
 
     $notifior = GetNotifyer(1, $db);
-    foreach($notifior as &$list)
-    {
-        send_expense_mail($request_no, $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, "Apply");
+    foreach ($notifior as &$list) {
+        send_expense_mail($request_no, $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, "Apply");
     }
-
 }
 
 function GetNotifyer($action, $db)
@@ -725,7 +747,7 @@ function GetNotifyer($action, $db)
 
 function GetPettyDetail($id, $db)
 {
-    $sql = "SELECT request_no, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
+    $sql = "SELECT request_no, project_name1, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
             (SELECT SUM(price * qty) FROM petty_list WHERE petty_id = :id1) total, ap.amount_liquidated, ap.remark_liquidated
             FROM apply_for_petty ap 
             LEFT JOIN user u ON ap.uid = u.id 

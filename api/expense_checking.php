@@ -88,6 +88,7 @@ switch ($method) {
                         DATE_FORMAT(pm.date_requested, '%Y/%m/%d') date_requested,
                         p.username requestor,
                         request_type,
+                        project_name1,
                         project_name,
                         u.username payable_to,
                         payable_other,
@@ -134,6 +135,7 @@ switch ($method) {
         $request_no = "";
         $date_requested = "";
         $request_type = "";
+        $project_name1 = "";
         $project_name = "";
         $payable_to = "";
         $payable_other = "";
@@ -161,6 +163,7 @@ switch ($method) {
             $date_requested = $row['date_requested'];
             $request_type = GetPettyType($row['request_type']);
             $requestor = $row['requestor'];
+            $project_name1 = $row['project_name1'];
             $project_name = $row['project_name'];
             $payable_to = $row['payable_to'];
             $payable_other = $row['payable_other'];
@@ -189,6 +192,7 @@ switch ($method) {
                 "date_requested" => $date_requested,
                 "request_type" => $request_type,
                 "requestor" => $requestor,
+                "project_name1" => $project_name1,
                 "project_name" => $project_name,
                 "payable_to" => $payable_to,
                 "payable_other" => $payable_other,

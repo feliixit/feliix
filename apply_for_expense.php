@@ -342,7 +342,10 @@ body.green input[type=date] {
                             </select>
                         </li>
 
-                        <li><b>Project Name / Reason</b></li>
+                        <li><b>Project Name</b></li>
+                        <li><input type="text" style="width:100%" v-model="project_name1"></li>
+
+                        <li><b>Reason</b></li>
                         <li><input type="text" style="width:100%" v-model="project_name"></li>
 
                         <li><b>Listing</b>

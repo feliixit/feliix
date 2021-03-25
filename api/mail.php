@@ -466,7 +466,7 @@ function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee,
 }
 
 
-function void_expense_mail($request_no, $applicant, $user_name, $user_email, $department, $ap_time, $project_name, $date_request, $total_amount, $reason, $request_type)
+function void_expense_mail($request_no, $applicant, $user_name, $user_email, $department, $ap_time, $project_name1, $project_name, $date_request, $total_amount, $reason, $request_type)
 {
     $title = "";
     $action = "";
@@ -524,7 +524,8 @@ function void_expense_mail($request_no, $applicant, $user_name, $user_email, $de
     $content = $content . "<p>Applicant:" . $applicant . "</p>";
     $content = $content . "<p>Department:" . $department . "</p>";
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
+    $content = $content . "<p>Reason:" . $project_name . "</p>";
     $content = $content . "<p>Date Requested:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Voiding Reason:" . $reason . "</p>";
@@ -543,7 +544,7 @@ function void_expense_mail($request_no, $applicant, $user_name, $user_email, $de
 
 }
 
-function reject_expense_mail($request_no, $user_name, $requestor, $requestor_email, $department, $ap_time, $project_name, $date_request, $total_amount, $reason, $request_type)
+function reject_expense_mail($request_no, $user_name, $requestor, $requestor_email, $department, $ap_time, $project_name1, $project_name, $date_request, $total_amount, $reason, $request_type)
 {
     $title = "";
     $action = "";
@@ -617,7 +618,8 @@ function reject_expense_mail($request_no, $user_name, $requestor, $requestor_ema
     $content = $content . "<p>Applicant:" . $user_name . "</p>";
     $content = $content . "<p>Department:" . $department . "</p>";
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
+    $content = $content . "<p>Reason:" . $project_name . "</p>";
     $content = $content . "<p>Date Requested:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Rejection Reason:" . $reason . "</p>";
@@ -642,6 +644,7 @@ function send_liquidate_mail($request_no,
                             $requestor_email, 
                             $department, 
                             $ap_time, 
+                            $project_name1, 
                             $project_name, 
                             $date_request, 
                             $total_amount, 
@@ -698,7 +701,8 @@ function send_liquidate_mail($request_no,
     $content = $content . "<p>Applicant:" . $applicant . "</p>";
     $content = $content . "<p>Department:" . $department . "</p>";
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
+    $content = $content . "<p>Reason:" . $project_name . "</p>";
     $content = $content . "<p>Date Requested:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Date Released:" . $date_release . "</p>";
@@ -719,7 +723,7 @@ function send_liquidate_mail($request_no,
     }
 }
 
-function send_expense_mail($request_no,  $applicant, $requestor, $requestor_email, $department, $ap_time, $project_name, $date_request, $total_amount, $request_type)
+function send_expense_mail($request_no,  $applicant, $requestor, $requestor_email, $department, $ap_time, $project_name1, $project_name, $date_request, $total_amount, $request_type)
 {
     $title = "";
     $action = "";
@@ -792,7 +796,8 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
     $content = $content . "<p>Applicant:" . $applicant . "</p>";
     $content = $content . "<p>Department:" . $department . "</p>";
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
+    $content = $content . "<p>Reason:" . $project_name . "</p>";
     $content = $content . "<p>Date Requested:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p> </p>";
@@ -810,7 +815,7 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
 }
 
 
-function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $department, $ap_time, $project_name, $date_request, $total_amount, $reason, $date_release)
+function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $department, $ap_time, $project_name1, $project_name, $date_request, $total_amount, $reason, $date_release)
 {
 
     $title = "Expense Application with Request No." . $request_no . " Needs Liquidation";
@@ -846,7 +851,8 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
     $content = $content . "<p>Applicant:" . $user_name . "</p>";
     $content = $content . "<p>Department:" . $department . "</p>";
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name/Reason:" . $project_name . "</p>";
+    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
+    $content = $content . "<p>Reason:" . $project_name . "</p>";
     $content = $content . "<p>Date Requested:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Date Released:" . $date_release . "</p>";

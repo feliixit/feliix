@@ -89,6 +89,7 @@ switch ($method) {
                         p.username requestor,
                         request_type,
                         project_name,
+                        project_name1,
                         u.username payable_to,
                         payable_other,
                         remark,
@@ -137,6 +138,7 @@ switch ($method) {
         $request_type_id = 0;
         $request_type = "";
         $project_name = "";
+        $project_name1 = "";
         $payable_to = "";
         $payable_other = "";
         $remark = "";
@@ -165,6 +167,7 @@ switch ($method) {
             $request_type = GetPettyType($row['request_type']);
             $requestor = $row['requestor'];
             $project_name = $row['project_name'];
+            $project_name1 = $row['project_name1'];
             $payable_to = $row['payable_to'];
             $payable_other = $row['payable_other'];
             $remark = $row['remark'];
@@ -194,6 +197,7 @@ switch ($method) {
                 "request_type" => $request_type,
                 "requestor" => $requestor,
                 "project_name" => $project_name,
+                "project_name1" => $project_name1,
                 "payable_to" => $payable_to,
                 "payable_other" => $payable_other,
                 "remark" => $remark,

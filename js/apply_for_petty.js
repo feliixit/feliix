@@ -8,6 +8,7 @@ var app = new Vue({
 
     date_requested: "",
     request_type: "",
+    project_name1: "",
     project_name: "",
     payable_to: 1,
     payable_other: "",
@@ -163,6 +164,7 @@ var app = new Vue({
             "-"
           );
           _this.request_type = response.data[0].request_type;
+          _this.project_name1 = response.data[0].project_name1;
           _this.project_name = response.data[0].project_name;
           _this.payable_to = response.data[0].payable_to;
 
@@ -225,9 +227,9 @@ var app = new Vue({
         return false;
       }
 
-      if (this.project_name == "") {
+      if (this.project_name == "" && this.project_name1 == "") {
         Swal.fire({
-          text: "Please Input project name (reason)",
+          text: "Please Input project name or reason",
           icon: "warning",
           confirmButtonText: "OK",
         });
@@ -306,9 +308,9 @@ var app = new Vue({
         return false;
       }
 
-      if (this.project_name == "") {
+      if (this.project_name == "" && this.project_name1 == "") {
         Swal.fire({
-          text: "Please Input project name (reason)",
+          text: "Please Input project name or reason",
           icon: "warning",
           confirmButtonText: "OK",
         });
@@ -367,6 +369,7 @@ var app = new Vue({
       form_Data.append("date_requested", this.date_requested);
       form_Data.append("request_type", this.request_type);
       form_Data.append("project_name", this.project_name);
+      form_Data.append("project_name1", this.project_name1);
       form_Data.append("payable_to", this.payable_to);
       form_Data.append("payable_other", this.payable_other);
       form_Data.append("remark", this.remark);
@@ -422,6 +425,7 @@ var app = new Vue({
       form_Data.append("date_requested", this.date_requested.replaceAll('-', '/'));
       form_Data.append("request_type", this.request_type);
       form_Data.append("project_name", this.project_name);
+      form_Data.append("project_name1", this.project_name1);
       form_Data.append("payable_to", this.payable_to);
       form_Data.append("payable_other", this.payable_other);
       form_Data.append("remark", this.remark);
@@ -483,6 +487,7 @@ var app = new Vue({
       this.date_requested = "";
       this.request_type = "";
       this.project_name = "";
+      this.project_name1 = "";
       this.payable_to = 1;
       this.$refs.payable_other.style.display = "none";
       this.payable_other = "";

@@ -187,7 +187,11 @@ $(function(){
                             <li>{{record.request_type}}</li>
                         </ul>
                         <ul>
-                            <li class="head">Project Name / Reason</li>
+                            <li class="head">Project Name</li>
+                            <li>{{ record.project_name1}}</li>
+                        </ul>
+                        <ul>
+                            <li class="head">Reason</li>
                             <li>{{ record.project_name}}</li>
                         </ul>
                         <ul>

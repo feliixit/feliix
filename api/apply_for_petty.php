@@ -12,6 +12,7 @@ $request_no = (isset($_POST['request_no']) ?  $_POST['request_no'] : '');
 $date_requested = (isset($_POST['date_requested']) ?  $_POST['date_requested'] : '');
 $request_type = (isset($_POST['request_type']) ?  $_POST['request_type'] : '');
 $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
+$project_name1 = (isset($_POST['project_name1']) ?  $_POST['project_name1'] : '');
 $payable_to = (isset($_POST['payable_to']) ?  $_POST['payable_to'] : '');
 $payable_other = (isset($_POST['payable_other']) ?  $_POST['payable_other'] : '');
 $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
@@ -70,6 +71,7 @@ else
             `date_requested` = :date_requested,
             `request_type` = :request_type,
             `project_name` = :project_name,
+            `project_name1` = :project_name1,
             `payable_to` = :payable_to,
             `payable_other` = :payable_other,
             `remark` = :remark,
@@ -85,6 +87,7 @@ else
         $stmt->bindParam(':date_requested', $date_requested);
         $stmt->bindParam(':request_type', $request_type);
         $stmt->bindParam(':project_name', $project_name);
+        $stmt->bindParam(':project_name1', $project_name1);
         $stmt->bindParam(':payable_to', $payable_to);
         $stmt->bindParam(':payable_other', $payable_other);
         $stmt->bindParam(':remark', $remark);
@@ -221,10 +224,17 @@ else
 
                         $upload_name = time() . '_' . pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
 
-                        if($bucket->upload(
-                        fopen($_FILES['files']['tmp_name'][$i], 'r'),
-                        ['name' => $upload_name]
-                        ))
+                        $file_size = filesize($_FILES['files']['tmp_name'][$i]);
+                        $size = 0;
+
+                        $obj = $bucket->upload(
+                            fopen($_FILES['files']['tmp_name'][$i], 'r'),
+                            ['name' => $upload_name]);
+
+                        $info = $obj->info();
+                        $size = $info['size'];
+
+                        if($size == $file_size && $file_size != 0 && $size != 0)
                         {
                             $query = "INSERT INTO gcp_storage_file
                             SET
@@ -276,11 +286,20 @@ else
                         else
                         {
                             $message = 'There is an error while uploading file';
+                            $db->rollback();
+                            http_response_code(501);
+                            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                            die();
+                            
                         }
                     }
                     else
                     {
                         $message = 'Only Images or Office files allowed to upload';
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                        die();
                     }
                 }
 
@@ -356,6 +375,7 @@ function SendNotifyMail($id)
     $department = "";
     $application_Time = "";
     $project_name = "";
+    $project_name1 = "";
     $date_request = "";
     $total_amount = "";
  
@@ -372,13 +392,14 @@ function SendNotifyMail($id)
     $department = $_record[0]["department"];
     $application_Time = str_replace("-", "/", $_record[0]["created_at"]);
     $project_name = $_record[0]["project_name"];
+    $project_name1 = $_record[0]["project_name1"];
     $date_request = $_record[0]["date_requested"];
     $total_amount = $_record[0]["total"];
 
     $notifior = GetNotifyer(1, $db);
     foreach($notifior as &$list)
     {
-        send_expense_mail($request_no, $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, "Apply");
+        send_expense_mail($request_no, $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, "Apply");
     }
 
 }
@@ -404,7 +425,7 @@ function GetNotifyer($action, $db)
 
 function GetPettyDetail($id, $db)
 {
-    $sql = "SELECT request_no, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
+    $sql = "SELECT request_no, project_name1, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
             (SELECT SUM(price * qty) FROM petty_list WHERE petty_id = :id1) total, ap.amount_liquidated, ap.remark_liquidated
             FROM apply_for_petty ap 
             LEFT JOIN user u ON ap.uid = u.id 

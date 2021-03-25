@@ -222,10 +222,18 @@ if (!isset($jwt)) {
 
                             $upload_name = time() . '_' . pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
 
-                            if ($bucket->upload(
+                            $file_size = filesize($_FILES['files']['tmp_name'][$i]);
+                            $size = 0;
+
+                            $obj = $bucket->upload(
                                 fopen($_FILES['files']['tmp_name'][$i], 'r'),
-                                ['name' => $upload_name]
-                            )) {
+                                ['name' => $upload_name]);
+
+                            $info = $obj->info();
+                            $size = $info['size'];
+
+                            if($size == $file_size && $file_size != 0 && $size != 0)
+                            {
                                 $query = "INSERT INTO gcp_storage_file
                                 SET
                                     batch_id = :batch_id,
@@ -275,9 +283,17 @@ if (!isset($jwt)) {
 
                             } else {
                                 $message = 'There is an error while uploading file';
+                                $db->rollback();
+                                http_response_code(501);
+                                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                                die();
                             }
                         } else {
                             $message = 'Only Images or Office files allowed to upload';
+                            $db->rollback();
+                            http_response_code(501);
+                            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                            die();
                         }
                     }
                 }
@@ -306,6 +322,7 @@ if (!isset($jwt)) {
 
             $_request_no = "";
             $_project_name = "";
+            $_project_name1 = "";
 
             $_payee = "";
 
@@ -337,12 +354,14 @@ if (!isset($jwt)) {
                 $_payee = $_record[0]["username"];
                 $_request_no = $_record[0]["request_no"];
                 $_project_name = $_record[0]["project_name"];
+                $_project_name1 = $_record[0]["project_name1"];
                 $_id = $_record[0]["id"];
             }
 
             $_details = 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
 
-            $_details = $_details . 'Project Name / Reason: ' . $_project_name . '<br>';
+            if($_project_name != "")
+                $_details = $_details . 'Reason: ' . $_project_name . '<br>';
             
             foreach ($_record_list as &$list) {
                 $_details .= "● " . $list["payee"] . ", " . $list["particulars"] . ", Price = " . $list["price"]*1 . ", Qty = " . $list["qty"]*1 . ", Amount = " . $list["price"] * $list["qty"] . "<br>";
@@ -356,8 +375,8 @@ if (!isset($jwt)) {
             }
 
             $query = "INSERT INTO price_record
-                (`account`,`category`, `sub_category`, `related_account`, `details`, `gcp_url`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
-                VALUES (:account,:category, :sub_category, :related_account, :details, :gcp_url, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by) ";
+                (`account`,`category`, `sub_category`, `related_account`, `project_name`, `details`, `gcp_url`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
+                VALUES (:account,:category, :sub_category, :related_account, :project_name, :details, :gcp_url, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by) ";
 
             // prepare the query
             $stmt = $db->prepare($query);
@@ -369,6 +388,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':category', $_category);
             $stmt->bindParam(':sub_category', $_subcategory);
             $stmt->bindParam(':related_account', $_related_account);
+
+            $stmt->bindParam(':project_name', $_project_name1);
 
             $stmt->bindParam(':details', rtrim($_details, "<br>"));
             $stmt->bindParam(':gcp_url', rtrim($_gcp_url, ","));
@@ -422,6 +443,7 @@ if (!isset($jwt)) {
 
             $_request_no = "";
             $_project_name = "";
+            $_project_name1 = "";
 
             $_payee = "";
 
@@ -454,6 +476,7 @@ if (!isset($jwt)) {
                 $_payee = $_record[0]["username"];
                 $_request_no = $_record[0]["request_no"];
                 $_project_name = $_record[0]["project_name"];
+                $_project_name1 = $_record[0]["project_name1"];
                 $_id = $_record[0]["id"];
                 $_amount_verified = (int)$_record[0]["amount_verified"];
             }
@@ -472,7 +495,8 @@ if (!isset($jwt)) {
 
             $_details = $_details . 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
 
-            $_details = $_details . 'Project Name / Reason: ' . $_project_name . '<br>';
+            if($_project_name != "")
+                $_details = $_details . 'Reason: ' . $_project_name . '<br>';
 
             $_details = $_details . $_details_list;
 
@@ -487,8 +511,8 @@ if (!isset($jwt)) {
             }
 */
             $query = "INSERT INTO price_record
-                (`account`,`category`, `sub_category`, `related_account`, `details`, `gcp_url`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
-                VALUES (:account,:category, :sub_category, :related_account, :details, :gcp_url, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by) ";
+                (`account`,`category`, `sub_category`, `related_account`, `project_name`, `details`, `gcp_url`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
+                VALUES (:account,:category, :sub_category, :related_account, :project_name, :details, :gcp_url, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by) ";
 
             // prepare the query
             $stmt = $db->prepare($query);
@@ -511,6 +535,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':category', $_category);
             $stmt->bindParam(':sub_category', $_subcategory);
             $stmt->bindParam(':related_account', $_related_account);
+
+            $stmt->bindParam(':project_name', $project_name1);
 
             $stmt->bindParam(':details', rtrim($_details, "<br>"));
             $stmt->bindParam(':gcp_url', rtrim($_gcp_url, ","));
@@ -652,6 +678,7 @@ function SendNotifyMail($id, $action)
     $department = "";
     $application_Time = "";
     $project_name = "";
+    $project_name1 = "";
     $date_request = "";
     $total_amount = "";
     $reject_reason = "";
@@ -676,6 +703,7 @@ function SendNotifyMail($id, $action)
     $department = $_record[0]["department"];
     $application_Time = str_replace("-", "/", $_record[0]["created_at"]);
     $project_name = $_record[0]["project_name"];
+    $project_name1 = $_record[0]["project_name1"];
     $date_request = $_record[0]["date_requested"];
     $total_amount = $_record[0]["total"];
 
@@ -687,59 +715,59 @@ function SendNotifyMail($id, $action)
     switch ($action) {
         case "Checking Reject":
             $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
-            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $action);
             break;
         case "Send To OP":
             $notifior = GetNotifyer(2, $db);
             foreach($notifior as &$list)
             {
-                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $action);
             }
             break;
         case "Send To MD":
             $notifior = GetNotifyer(3, $db);
             foreach($notifior as &$list)
             {
-                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $action);
             }
             break;
         case "OP Send To MD":
             $notifior = GetNotifyer(3, $db);
             foreach($notifior as &$list)
             {
-                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $action);
             }
             break;
         case "OP Review Reject To User":
             $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
 
-            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $action);
             break;
         case "OP Review Reject To Checker":
             $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
             $notifior = GetNotifyer(2, $db);
             foreach($notifior as &$list)
             {
-                reject_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+                reject_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $action);
             }
             break;
         case "MD Review Reject To User":
             $reject_reason = GetRejectReason($id, GetDesc($action), $db);
-            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            reject_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $action);
             break;
         case "MD Review Reject To Checker":
             $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
             $notifior = GetNotifyer(2, $db);
             foreach($notifior as &$list)
             {
-                reject_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+                reject_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $action);
             }
             break;
         case "MD Send To Releaser":
             $notifior = GetReleasers($db, $info_account);
             foreach($notifior as &$list)
             {
-                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action);
+                send_expense_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $action);
             }
             break;
         case "Releasing":
@@ -752,7 +780,7 @@ function SendNotifyMail($id, $action)
             $notifior = GetNotifyer(7, $db);
             foreach($notifior as &$list)
             {
-                send_liquidate_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name, $date_request, $total_amount, $action, $date_release, $date_liquidate, $liquidate_amount, $remarks);
+                send_liquidate_mail($request_no,  $applicant, $list["username"], $list["email"], $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $action, $date_release, $date_liquidate, $liquidate_amount, $remarks);
             }
         case "Finish Releasing":
             $location = 9;
@@ -766,7 +794,7 @@ function SendNotifyMail($id, $action)
         case "Void":
             $reject_reason = GetRejectReason($id, GetDesc($action), $db); 
 
-            void_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name, $date_request, $total_amount, $reject_reason, $action);
+            void_expense_mail($request_no, $applicant, $requestor, $requestor_email, $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $action);
             break;
         default:
             return;
@@ -810,7 +838,7 @@ function GetLiquidateHistory($_id, $db)
 
 function GetPettyDetail($id, $db)
 {
-    $sql = "SELECT request_no, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
+    $sql = "SELECT request_no, project_name1, project_name, u.username, u.email, ud.department, ap.created_at, ap.date_requested, 
             (SELECT SUM(price * qty) FROM petty_list WHERE petty_id = :id1) total, ap.amount_liquidated, ap.remark_liquidated, ap.info_account
             FROM apply_for_petty ap 
             LEFT JOIN user u ON ap.uid = u.id 
@@ -1005,7 +1033,7 @@ function &GetDesc($loc)
 
 function GetRecordDetail($_id, $db)
 {
-    $sql = "SELECT ap.id, request_no, project_name, info_account, info_category, info_sub_category, u.username, amount_verified
+    $sql = "SELECT ap.id, request_no, project_name1, project_name, info_account, info_category, info_sub_category, u.username, amount_verified
             FROM apply_for_petty ap 
             LEFT JOIN user u ON ap.uid = u.id 
             where ap.id = :id";

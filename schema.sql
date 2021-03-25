@@ -1159,3 +1159,8 @@ ADD COLUMN `color_other` varchar(100)  default '' AFTER color;
 
 ALTER TABLE work_calendar_main
 ADD COLUMN `back_up_driver_other` varchar(1024)  default '' AFTER driver_other;
+
+
+-- 頁面 和 郵件內容 調整 2021/3/25
+ALTER TABLE apply_for_petty
+ADD COLUMN `project_name1`  varchar(512) DEFAULT '' AFTER project_name;

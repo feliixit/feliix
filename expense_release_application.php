@@ -43,6 +43,7 @@ $sql = "SELECT  pm.id,
         DATE_FORMAT(pm.date_requested, '%Y/%m/%d') date_requested,
         p.username requestor,
         request_type,
+        project_name1,
         project_name,
         u.username payable_to,
         payable_other,
@@ -70,6 +71,7 @@ $date_requested = "";
 $request_type_id = 0;
 $request_type = "";
 $project_name = "";
+$project_name1 = "";
 $payable_to = "";
 $payable_other = "";
 $remark = "";
@@ -102,6 +104,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $request_type = GetPettyType($row['request_type']);
     $requestor = $row['requestor'];
     $project_name = $row['project_name'];
+    $project_name1 = $row['project_name1'];
     $payable_to = $row['payable_to'];
     $payable_other = $row['payable_other'];
     $remark = $row['remark'];
@@ -177,9 +180,12 @@ $table->addCell(3000, ['borderSize' => 6])->addText("Type", ['bold' => false], [
 $table->addCell(7500, ['borderSize' => 6])->addText($request_type, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
-$table->addCell(3000, ['borderSize' => 6])->addText("Project Name / Reason", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText($project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(3000, ['borderSize' => 6])->addText("Project Name", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText($project_name1, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
+$table->addRow();
+$table->addCell(3000, ['borderSize' => 6])->addText("Reason", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText($project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Total Amount Requested", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
