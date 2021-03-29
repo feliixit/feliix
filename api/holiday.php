@@ -46,7 +46,7 @@ $subquery = "";
 $merged_results = array();
 
 $mdate = date('Ymd', strtotime(date('Ymd'). ' + 0 days'));
-$edate = date('Ymd', strtotime(date('Ymd'). ' + 6 days'));
+$edate = date('Ymd', strtotime(date('Ymd'). ' + 13 days'));
 
 $subquery = "SELECT holiday, from_date, year, location FROM holiday WHERE  from_date between '" . $mdate . "' and '" . $edate . "' and holiday <> '' ORDER BY from_date, location ";
 
