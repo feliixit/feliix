@@ -110,6 +110,7 @@ try {
             <li class="sec03">
                 <a class="uni">Project<br>Management</a>
                 <a class="list" href="../project01">Project Management</a>
+                <a class="list" href="../quotation_and_payment_mgt">Quotation and Payment Mgt.</a>
                 <a class="list" href="../schedule_calendar">Schedule Calendar</a>
             </li>
             <!--
