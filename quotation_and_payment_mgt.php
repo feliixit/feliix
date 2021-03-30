@@ -92,11 +92,11 @@ $(function(){
             height: 100%;
             top: 0;
             z-index: 1;
-            display: none;
+            
         }
 
         #modal_Details {
-            display: none;
+           
             position: absolute;
             top: 150px;
             left: 0;
@@ -469,12 +469,12 @@ $(function(){
 
 <body class="fourth">
  	
-<div class="bodybox">
-    <div class="mask"></div>
+<div id="app" class="bodybox">
+    <div class="mask" :ref="'mask'" style="display:none"></div>
     <!-- header -->
 	<header>header</header>
     <!-- header end -->
-    <div id="app" class="mainContent">
+    <div class="mainContent">
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="block ">
             <div class="list_function">
@@ -506,6 +506,7 @@ $(function(){
                                 <dt>Project Creator</dt>
                                 <dd>
                                     <select v-model="fil_creator">
+                                        <option value="">
                                         <option v-for="item in creators" :value="item.username"
                                                 :key="item.username">
                                             {{ item.username }}
@@ -673,7 +674,7 @@ $(function(){
                  </ul>
                   <ul v-for='(receive_record, index) in displayedPosts'>
                       <li><input type="radio" name="project_id" class="alone black"
-                                 onclick="ToggleWindow(1, '#modal_Details')"></li>
+                            @click="show_detail(receive_record.id)"></li>
                       <li>{{ receive_record.category }}</li>
                       <li><a :href="'project02?p=' + receive_record.id">{{ receive_record.project_name }}</a></li>
                       <li>{{ receive_record.project_status }}</li>
@@ -701,23 +702,23 @@ $(function(){
 
 
             <!-- modal begin -->
-            <div id="modal_Details" class="modal">
+            <div id="modal_Details" class="modal" v-if="view_detail == true">
 
                 <!-- Modal content -->
-                <div class="modal-content" style="overflow-x: hidden">
+                <div class="modal-content">
 
-                    <a style="font-size: 18px;" onclick="ToggleWindow(1, '#modal_Details')"><i aria-hidden="true" class="fa fa-times fa-lg" ></i></a>
+                    <a style="font-size: 18px;" @click="hide_detail()"><i aria-hidden="true" class="fa fa-times fa-lg" ></i></a>
 
                     <!-- tags js在 main.js -->
                     <div class="tags">
-                        <a class="tag A focus" onclick="ToggleWindow(2, 'A')">Upload Quotation</a>
-                        <a class="tag B" onclick="ToggleWindow(2, 'B')">Manage Quotation</a>
-                        <a class="tag C" onclick="ToggleWindow(2, 'C')">Submit Payment Proof</a>
-                        <a class="tag D" onclick="ToggleWindow(2, 'D')">Manage Payment Proof</a>
+                        <a class="tag A" v-bind:class="{ focus: view_a }" @click="togle_a()">Upload Quotation</a>
+                        <a class="tag B" v-bind:class="{ focus: view_b }" @click="togle_b()">Manage Quotation</a>
+                        <a class="tag C" v-bind:class="{ focus: view_c }" @click="togle_c()">Submit Payment Proof</a>
+                        <a class="tag D" v-bind:class="{ focus: view_d }" @click="togle_d()">Manage Payment Proof</a>
                     </div>
 
 
-                    <div class="block A">
+                    <div class="block A"  v-if="view_a == true">
 
                         <div class="formbox">
                             <dl>
@@ -776,7 +777,7 @@ $(function(){
                     </div>
 
 
-                    <div class="block B">
+                    <div class="block B"  v-if="view_b == true">
 
                         <div class="box-amount">
                             <span>Final Amount: </span>
@@ -851,7 +852,7 @@ $(function(){
                     </div>
 
 
-                    <div class="block C">
+                    <div class="block C"  v-if="view_c == true">
 
                         <div class="formbox">
                             <dl>
@@ -917,7 +918,7 @@ $(function(){
                     </div>
 
 
-                    <div class="block D">
+                    <div class="block D"  v-if="view_d == true">
 
                         <div class="list_function">
 

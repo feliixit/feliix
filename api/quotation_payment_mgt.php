@@ -42,6 +42,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 $uid = (isset($_GET['uid']) ?  $_GET['uid'] : '');
+$id = (isset($_GET['id']) ?  $_GET['id'] : '');
 $fc = (isset($_GET['fc']) ?  $_GET['fc'] : '');
 $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
 $ft = (isset($_GET['ft']) ?  $_GET['ft'] : '');
@@ -77,6 +78,7 @@ if($ft != "" && $ft != "0")
 {
     $query = $query . " and user.username = '" . $ft . "' ";
 }
+
 
 $query = $query . " order by pm.created_at desc ";
 

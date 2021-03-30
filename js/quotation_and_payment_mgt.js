@@ -58,6 +58,16 @@ var app = new Vue({
     od_factor1_order: "",
     od_factor2: "",
     od_factor2_order: "",
+
+    id : "",
+
+    proof_id: "",
+    view_detail: false,
+
+    view_a: false,
+    view_b: false,
+    view_c: false,
+    view_d: false,
   },
 
   created() {
@@ -107,6 +117,9 @@ var app = new Vue({
             case "ofd2":
               _this.od_factor2_order = tmp[1];
               break;
+            case "id":
+              _this.id = tmp[1];
+              break;
             default:
               console.log(`Too many args`);
           }
@@ -142,6 +155,10 @@ var app = new Vue({
       console.log("Vue watch receive_records");
       this.setPages();
     },
+
+    proof_id() {
+      this.detail();
+    },
   },
 
   methods: {
@@ -168,10 +185,71 @@ var app = new Vue({
       return this.receive_records.slice(from, to);
     },
 
+    show_detail:function(id){
+      this.proof_id = id;
+    },
+
+    hide_detail:function(){
+      this.proof_id = 0;
+
+      this.view_a = false;
+      this.view_b = false;
+      this.view_c = false;
+      this.view_d = false;
+    },
+
+    togle_a:function(){
+      this.view_a = true;
+      this.view_b = false;
+      this.view_c = false;
+      this.view_d = false;
+    },
+
+    togle_b:function(){
+      this.view_a = false;
+      this.view_b = true;
+      this.view_c = false;
+      this.view_d = false;
+    },
+
+    togle_c:function(){
+      this.view_a = false;
+      this.view_b = false;
+      this.view_c = true;
+      this.view_d = false;
+    },
+
+    togle_d:function(){
+      this.view_a = false;
+      this.view_b = false;
+      this.view_c = false;
+      this.view_d = true;
+    },
+
+    detail: function() {
+      let _this = this;
+
+
+      if (this.proof_id == 0) {
+        this.view_detail = false;
+        this.$refs.mask.style.display = 'none';
+        return;
+      }
+
+      this.record = this.shallowCopy(
+        this.receive_records.find((element) => element.id == this.proof_id)
+      );
+      
+      this.$refs.mask.style.display = 'block';
+      this.view_detail = true;
+      this.view_a = true;
+    },
+
     filter_apply: function() {
       let _this = this;
-      
-      window.location.href = 'quotation_and_payment_mgt?fc=' + _this.fil_category 
+
+      window.location.href = 'quotation_and_payment_mgt?id=' + _this.id 
+                                                    + '&fc=' + _this.fil_category 
                                                     + '&fs=' + _this.fil_status
                                                     + '&ft=' + _this.fil_creator
                                                     + '&fal=' + _this.fil_amount_lower
@@ -189,6 +267,7 @@ var app = new Vue({
       let _this = this;
 
       const params = {
+        id: _this.id,
         fc: _this.fil_category,
         fs: _this.fil_status,
         ft: _this.fil_creator,
