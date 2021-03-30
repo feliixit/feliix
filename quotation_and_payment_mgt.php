@@ -41,8 +41,12 @@
 <script>
 $(function(){
     $('header').load('include/header.php');
-    toggleme($('.list_function .new_function a.filter'),$('.list_function .dialog.A'),'show');
-    toggleme($('.list_function .new_function a.sort'),$('.list_function .dialog.B'),'show');
+    //toggleme($('.list_function .new_function a.filter'),$('.list_function .dialog.A'),'show');
+    //toggleme($('.list_function .new_function a.sort'),$('.list_function .dialog.B'),'show');
+
+    dialogshow($('.list_function .new_function a.filter'),$('.list_function .dialog.A'));
+    dialogshow($('.list_function .new_function a.sort'),$('.list_function .dialog.B'));
+
     $('.tablebox').click(function(){
         $('.list_function .dialog').removeClass('show');
     })
@@ -55,7 +59,7 @@ $(function(){
             color: black;
         }
 
-        a, a:link {
+        .tableframe .tablebox.lv1 a, a:link {
             color: #1e6ba8;
             display: inline-block;
         }
@@ -416,7 +420,9 @@ $(function(){
             margin-left: 0;
         }
 
-
+        body.fourth .mainContent > .block {
+            margin-top: 20px;
+        }
 
     </style>
 
@@ -473,65 +479,33 @@ $(function(){
         <div class="block ">
             <div class="list_function">
                 <div class="new_function">
-                    <a class="filter"></a>
-                    <div class="dialog A"><h6>Filter Function:</h6>
+                    <a id="dialog_f1" class="filter"></a>
+                    <div class="dialog A" id="add_f1"><h6>Filter Function:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt>Project Category</dt>
                                 <dd>
-                                    <select>
-                                        <option value="0">
-                                        </option>
-                                        <option value="1">
-                                            Office Systems
-                                        </option>
-                                        <option value="2">
-                                            Lighting
-                                        </option>
+                                    <select v-model="fil_category">
+                                      <option value="0">
+                                      <option v-for="item in categorys" :value="item.id" :key="item.category">
+                                          {{ item.category }}
+                                      </option>
                                     </select>
                                 </dd>
 
                                 <dt>Project Status</dt>
                                 <dd>
-                                    <select>
+                                    <select v-model="fil_status">
                                         <option value="0">
-                                        </option>
-                                        <option value="1">
-                                            Planning
-                                        </option>
-                                        <option value="2">
-                                            Pending Review
-                                        </option>
-                                        <option value="3">
-                                            Pending Approval
-                                        </option>
-                                        <option value="4">
-                                            For Revision
-                                        </option>
-                                        <option value="5">
-                                            On Hold
-                                        </option>
-                                        <option value="6">
-                                            Disapproved
-                                        </option>
-                                        <option value="7">
-                                            Approved
-                                        </option>
-                                        <option value="8">
-                                            On Progress
-                                        </option>
-                                        <option value="9">
-                                            Completed
-                                        </option>
-                                        <option value="10">
-                                            Special
-                                        </option>
-                                    </select>
+                                          <option v-for="item in statuses" :value="item.id" :key="item.project_status">
+                                              {{ item.project_status }}
+                                          </option>
+                                        </select>
                                 </dd>
 
                                 <dt>Project Creator</dt>
                                 <dd>
-                                    <select name="" id="" v-model="fil_creator">
+                                    <select v-model="fil_creator">
                                         <option v-for="item in creators" :value="item.username"
                                                 :key="item.username">
                                             {{ item.username }}
@@ -542,32 +516,32 @@ $(function(){
                                 <dt style="margin-bottom:-18px;">Amount</dt>
                                 <div class="half">
                                     <dt>lower bound</dt>
-                                    <dd><input type="number"></dd>
+                                    <dd><input type="number" v-model="fil_amount_lower"></dd>
                                 </div>
 
                                 <div class="half">
                                     <dt>upper bound</dt>
-                                    <dd><input type="number"></dd>
+                                    <dd><input type="number" v-model="fil_amount_upper"></dd>
 
                                 </div>
 
                                 <dt style="margin-bottom:-18px;">Down Payment</dt>
                                 <div class="half">
                                     <dt>lower bound</dt>
-                                    <dd><input type="number"></dd>
+                                    <dd><input type="number" v-model="fil_payment_lower"></dd>
                                 </div>
 
                                 <div class="half">
                                     <dt>upper bound</dt>
-                                    <dd><input type="number"></dd>
+                                    <dd><input type="number" v-model="fil_payment_upper"></dd>
 
                                 </div>
 
                                 <dt>Specific Keyword</dt>
-                                <dd><input type="text"></dd>
+                                <dd><input type="text" v-model="fil_keyowrd"></dd>
 
                             </dl>
-                            <div class="btnbox"><a class="btn small">Cancel</a> <a class="btn small green">Apply</a>
+                            <div class="btnbox"><a class="btn small" @click="filter_clear">Cancel</a> <a class="btn small green" @click="filter_apply">Apply</a>
                             </div>
                         </div>
                     </div>
@@ -575,14 +549,14 @@ $(function(){
 
 
                 <div class="new_function">
-                    <a class="sort"></a>
-                    <div class="dialog B"><h6>Sort Function:</h6>
+                    <a id="dialog_a1" class="sort"></a>
+                    <div class="dialog B" id="add_a1"><h6>Sort Function:</h6>
                         <div class="formbox">
                             <dl>
                                 <div class="half">
                                     <dt>1st Criterion</dt>
                                     <dd>
-                                        <select>
+                                        <select v-model="od_factor1">
                                             <option value="0"></option>
                                             <option value="1">
                                                 Execution Period -- Start Date
@@ -609,7 +583,7 @@ $(function(){
                                 <div class="half">
                                     <dt></dt>
                                     <dd>
-                                        <select>
+                                        <select v-model="od_factor1_order">
                                             <option value="1">
                                                 Ascending
                                             </option>
@@ -623,7 +597,7 @@ $(function(){
                                 <div class="half">
                                     <dt>2nd Criterion</dt>
                                     <dd>
-                                        <select>
+                                        <select v-model="od_factor2">
                                             <option value="0"></option>
                                             <option value="1">
                                                 Execution Period -- Start Date
@@ -650,7 +624,7 @@ $(function(){
                                 <div class="half">
                                     <dt></dt>
                                     <dd>
-                                        <select>
+                                        <select v-model="od_factor2_order">
                                             <option value="1">
                                                 Ascending
                                             </option>
@@ -662,7 +636,7 @@ $(function(){
                                 </div>
 
                             </dl>
-                            <div class="btnbox"><a class="btn small">Cancel</a> <a class="btn small green">Apply</a>
+                            <div class="btnbox"><a class="btn small" @click="order_clear">Cancel</a> <a class="btn small green" @click="filter_apply">Apply</a>
                             </div>
                         </div>
                     </div>
@@ -700,11 +674,11 @@ $(function(){
                   <ul v-for='(receive_record, index) in displayedPosts'>
                       <li><input type="radio" name="project_id" class="alone black"
                                  onclick="ToggleWindow(1, '#modal_Details')"></li>
-                      <li>Lighting</li>
-                      <li><a href="project02?p=133">R.G Simbulan and Partners Corp - STP Roadway Lighting</a></li>
-                      <li>On Progress</li>
-                      <li>Ruvileen C. Martirez</li>
-                      <li>2021-02-22 ~</li>
+                      <li>{{ receive_record.category }}</li>
+                      <li><a :href="'project02?p=' + receive_record.id">{{ receive_record.project_name }}</a></li>
+                      <li>{{ receive_record.project_status }}</li>
+                      <li>{{ receive_record.username }}</li>
+                      <li>{{ receive_record.created_at }} ~ {{ receive_record.end_at }}</li>
                       <li>1,838,988.06</li>
                       <li>919,495</li>
                       <li>200,000</li>
@@ -718,24 +692,6 @@ $(function(){
                       </li>
                   </ul>
 
-                  <ul v-for='(receive_record, index) in displayedPosts'>
-                      <li><input type="radio" name="project_id" class="alone black"
-                                 onclick="ToggleWindow(1, '#modal_Details')"></li>
-                      <li>Office Systems</li>
-                      <li><a href="project02?p=129">Camacho Residence - Additional Order</a></li>
-                      <li>Planning</li>
-                      <li>Stan Fernandez</li>
-                      <li>2021-02-18 ~</li>
-                      <li>406,600.00</li>
-                      <li></li>
-                      <li></li>
-                      <li></li>
-                      <li style="padding-left: 10px; text-align: left;">
-                          <a href="https://storage.cloud.google.com/feliiximg\1613694189_LQ-484A Camacho Residence. Additional Lights. 210218.pdf"
-                             target="_blank" class="attch">• LQ-484A Camacho Residence. Additional Lights.
-                              210218.pdf</a>
-                      </li>
-                  </ul>
                 
              </div>
            </div>

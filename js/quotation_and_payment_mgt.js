@@ -9,13 +9,6 @@ var app = new Vue({
     project_name: "",
     special_note: "",
 
-    fil_project_category: "",
-    fil_client_type: "",
-    fil_priority: "",
-    fil_status: "",
-    fil_stage: "",
-    fil_creator: "",
-
     probability: 0,
 
     receive_records: [],
@@ -41,7 +34,7 @@ var app = new Vue({
       { name: "100", id: 100 },
       { name: "All", id: 10000 },
     ],
-    perPage: 20,
+    perPage: 10,
 
     prof_remark: "",
     prof_fileArray: [],
@@ -51,10 +44,78 @@ var app = new Vue({
 
     payment_type: "",
 
+    fil_category: "",
+    fil_status: "",
+    fil_creator: "",
+
+    fil_amount_upper: "",
+    fil_amount_lower: "",
+    fil_payment_upper: "",
+    fil_payment_lower: "",
+    fil_keyowrd: "",
+
+    od_factor1: "",
+    od_factor1_order: "",
+    od_factor2: "",
+    od_factor2_order: "",
   },
 
   created() {
+    let _this = this;
+    let uri = window.location.href.split("?");
+    if (uri.length >= 2) {
+      let vars = uri[1].split("&");
+
+      let tmp = "";
+      vars.forEach(async function(v) {
+        tmp = v.split("=");
+        if (tmp.length == 2) {
+          switch (tmp[0]) {
+            case "fc":
+              _this.fil_category = tmp[1];
+              break;
+            case "fs":
+              _this.fil_status = tmp[1];
+              break;
+            case "ft":
+              _this.fil_creator = tmp[1];
+              break;
+            case "fal":
+              _this.fil_amount_lower = tmp[1];
+              break;
+            case "fau":
+              _this.fil_amount_upper = tmp[1];
+              break;
+            case "fpl":
+              _this.fil_payment_lower = tmp[1];
+              break;
+            case "fpu":
+              _this.fil_payment_upper = tmp[1];
+              break;
+            case "fk":
+              _this.fil_keyowrd = tmp[1];
+              break;
+            case "of1":
+              _this.od_factor1 = tmp[1];
+              break;
+            case "ofd1":
+              _this.od_factor1_order = tmp[1];
+              break;
+            case "of2":
+              _this.od_factor2 = tmp[1];
+              break;
+            case "ofd2":
+              _this.od_factor2_order = tmp[1];
+              break;
+            default:
+              console.log(`Too many args`);
+          }
+        }
+      });
+    }
+    
     this.getRecords();
+
     this.getProjectCategorys();
     this.getClientTypes();
     this.getPrioritys();
@@ -80,25 +141,6 @@ var app = new Vue({
     receive_records() {
       console.log("Vue watch receive_records");
       this.setPages();
-    },
-
-    fil_project_category(value) {
-      this.getRecords(value);
-    },
-    fil_client_type(value) {
-      this.getRecords(value);
-    },
-    fil_priority(value) {
-      this.getRecords(value);
-    },
-    fil_status(value) {
-      this.getRecords(value);
-    },
-    fil_stage(value) {
-      this.getRecords(value);
-    },
-    fil_creator(value) {
-      this.getRecords(value);
     },
   },
 
@@ -126,22 +168,45 @@ var app = new Vue({
       return this.receive_records.slice(from, to);
     },
 
+    filter_apply: function() {
+      let _this = this;
+      
+      window.location.href = 'quotation_and_payment_mgt?fc=' + _this.fil_category 
+                                                    + '&fs=' + _this.fil_status
+                                                    + '&ft=' + _this.fil_creator
+                                                    + '&fal=' + _this.fil_amount_lower
+                                                    + '&fau=' + _this.fil_amount_upper
+                                                    + '&fpl=' + _this.fil_payment_lower
+                                                    + '&fpu=' + _this.fil_payment_upper
+                                                    + '&fk=' + _this.fil_keyowrd
+                                                    + '&of1=' + _this.od_factor1
+                                                    + '&ofd1=' + _this.od_factor1_order
+                                                    + '&of2=' + _this.od_factor2
+                                                    + '&ofd2=' + _this.od_factor2_order;
+    },
+
     getRecords: function(keyword) {
       let _this = this;
 
       const params = {
-        fpc: _this.fil_project_category,
-        fct: _this.fil_client_type,
-        fp: _this.fil_priority,
+        fc: _this.fil_category,
         fs: _this.fil_status,
-        fcs: _this.fil_stage,
-        fpt: _this.fil_creator,
+        ft: _this.fil_creator,
+        fal: _this.fil_amount_lower,
+        fau: _this.fil_amount_upper,
+        fpl: _this.fil_payment_lower,
+        fpu: _this.fil_payment_upper,
+        fk: _this.fil_keyowrd,
+        of1: _this.od_factor1,
+        ofd1: _this.od_factor1_order,
+        of2: _this.od_factor2,
+        ofd2: _this.od_factor2_order,
       };
 
       let token = localStorage.getItem("accessToken");
 
       axios
-        .get("api/project01", {
+        .get("api/quotation_payment_mgt", {
           params,
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -425,6 +490,16 @@ var app = new Vue({
         result[i] = obj[i];
       }
       return result;
+    },
+
+    order_clear() {
+      document.getElementById("dialog_a1").classList.remove("focus");
+      document.getElementById("add_a1").classList.remove("show");
+    },
+
+    filter_clear() {
+      document.getElementById("dialog_f1").classList.remove("focus");
+      document.getElementById("add_f1").classList.remove("show");
     },
 
     quote_canSub() {},
