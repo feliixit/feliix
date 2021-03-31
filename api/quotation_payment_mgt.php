@@ -62,7 +62,7 @@ $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
 $merged_results = array();
 
-$query = "SELECT pm.id, COALESCE(pc.category, '') category, pct.client_type, pct.class_name pct_class, pp.priority, pp.class_name pp_class, pm.project_name, COALESCE(ps.project_status, '') project_status, COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage FROM project_main pm LEFT JOIN project_category pc ON pm.catagory_id = pc.id LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id LEFT JOIN project_priority pp ON pm.priority_id = pp.id LEFT JOIN project_status ps ON pm.project_status_id = ps.id LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
+$query = "SELECT pm.id, COALESCE(pc.category, '') category, pct.client_type, pct.class_name pct_class, pp.priority, pp.class_name pp_class, pm.project_name, pm.final_amount, COALESCE(ps.project_status, '') project_status, COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage FROM project_main pm LEFT JOIN project_category pc ON pm.catagory_id = pc.id LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id LEFT JOIN project_priority pp ON pm.priority_id = pp.id LEFT JOIN project_status ps ON pm.project_status_id = ps.id LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
 
 if($fc != "" && $fc != "0")
 {
@@ -116,9 +116,29 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $estimate_close_prob = $row['estimate_close_prob'];
     $username = $row['username'];
 
+    $final_amount = $row['final_amount'];
+
+    $payment_amount = GetPaymentAmount($row['id'], $db);
+    $down_payment_amount = GetDownPaymentAmount($row['id'], $db);
+
+    $ar = null;
+    if($final_amount != null)
+    {
+        $pay = 0;
+        if($payment_amount != null)
+            $pay = $payment_amount;
+        $down_pay = 0;
+        if($down_payment_amount != null)
+            $down_pay = $down_payment_amount;
+
+        $ar = $final_amount - $pay - $down_pay;
+    }
+
     $created_at = $row['created_at'];
     $stage = $row['stage'];
-    $recent = GetRecentPost($row['id'], $db);
+    $quote = GetQuote($row['id'], $db);
+    $payment = GetPayment($row['id'], $db);
+    $final_quotation = GetFinalQuote($row['id'], $db);
 
     $merged_results[] = array(
         "id" => $id,
@@ -129,35 +149,34 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "pp_class" => $pp_class,
         "project_name" => $project_name,
         "project_status" => $project_status,
-        "estimate_close_prob" => $estimate_close_prob,
+        "payment_amount" => $payment_amount,
+        "down_payment_amount" => $down_payment_amount,
+        "ar" => $ar,
+        "final_quotation" => $final_quotation,
         "username" => $username,
         "created_at" => $created_at,
         "stage" => $stage,
-        "recent" => $recent,
+        "final_amount" => $final_amount,
+        "quote" => $quote,
+        "payment" => $payment,
     );
 }
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
-
-function GetRecentPost($project_id, $db){
-    $query = "SELECT u.username, pm.created_at FROM project_stage_client pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id WHERE p.project_id = " . $project_id . " and pm.status <> -1  
-    UNION all
-    SELECT  u.username, pc.created_at FROM project_stage_client_task pc left join user u on u.id = pc.create_id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
-    UNION ALL
-    SELECT  u.username, pt.created_at FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
-    UNION ALL
-    SELECT  u.username, pm.created_at FROM project_other_task pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION ALL
-    SELECT  u.username, pm.created_at FROM project_other_task_message pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION all
-    SELECT  u.username, pm.created_at FROM project_other_task_message_reply pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message ps ON pm.message_id = ps.id  LEFT JOIN project_other_task pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION ALL
-    SELECT  u.username, pm.created_at FROM project_other_task_r pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION ALL
-    SELECT  u.username, pm.created_at FROM project_other_task_message_r pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task_r pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION all
-    SELECT  u.username, pm.created_at FROM project_other_task_message_reply_r pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message_r ps ON pm.message_id = ps.id  LEFT JOIN project_other_task_r pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+function GetFinalQuote($project_id, $db){
+    $query = "
+        SELECT 
+            COALESCE(f.filename, '') filename, 
+            COALESCE(f.bucketname, '') bucket, 
+            COALESCE(f.gcp_name, '') gcp_name
+        FROM   project_quotation pm
+           
+        LEFT JOIN gcp_storage_file f 
+            ON f.batch_id = pm.id AND f.batch_type = 'quote' 
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+            AND pm.final_quotation = 1
     ";
 
     // prepare the query
@@ -170,20 +189,188 @@ function GetRecentPost($project_id, $db){
         $merged_results[] = $row;
     }
 
-    $str = "";
+    return $merged_results;
+}
 
-    if(count($merged_results) > 0)
-    {
-        usort($merged_results, function ($item1, $item2) {
-            return $item2['created_at'] <=> $item1['created_at'];
-        });
-    
-        foreach ($merged_results as $arr)
-        {
-            $str = $arr['created_at'] . " " . $arr['username'];
-            break;
-        }
+function GetQuote($project_id, $db){
+    $query = "
+        SELECT pm.id,
+            pm.remark comment,
+            u.username,
+            pm.created_at,
+            final_quotation
+        FROM   project_quotation pm
+            LEFT JOIN user u
+                    ON u.id = pm.create_id
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $comment = $row['comment'];
+        $username = $row['username'];
+        $created_at = $row['created_at'];
+        $final_quotation = $row['final_quotation'];
+
+        $items = GetItem($row['id'], $db, 'quote');
+       
+        $merged_results[] = array(
+            "id" => $id,
+            "comment" => $comment,
+            "username" => $username,
+            "created_at" => $created_at,
+            "final_quotation" => $final_quotation,
+            "items" => $items,
+        );
     }
 
-    return $str;
+    return $merged_results;
+}
+
+function GetPaymentAmount($project_id, $db){
+    $amount = null;
+    $query = "
+        SELECT 
+            pm.amount
+        FROM   project_proof pm
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+            AND pm.kind = 1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if($row['amount'] != null)
+            $amount += $row['amount'];
+    }
+
+    return $amount;
+}
+
+function GetDownPaymentAmount($project_id, $db){
+    $amount = null;
+    $query = "
+        SELECT 
+            pm.amount
+        FROM   project_proof pm
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+            AND pm.kind = 0
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if($row['amount'] != null)
+            $amount += $row['amount'];
+    }
+
+    return $amount;
+}
+
+function GetPayment($project_id, $db){
+    $query = "
+        SELECT pm.id,
+            pm.remark,
+            u.username,
+            pm.created_at,
+            pm.received_date,
+            pm.kind,
+            pm.amount,
+            pm.invoice,
+            pm.detail,
+            pm.checked,
+            pm.checked_id,
+            pm.checked_at
+        FROM   project_proof pm
+            LEFT JOIN user u
+                ON u.id = pm.create_id
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $remark = $row['remark'];
+        $username = $row['username'];
+        $created_at = $row['created_at'];
+        $received_date = $row['received_date'];
+        $kind = $row['kind'];
+        $amount = $row['amount'];
+        $invoice = $row['invoice'];
+        $detail = $row['detail'];
+        $checked = $row['checked'];
+        $checked_id = $row['checked_id'];
+        $checked_at = $row['checked_at'];
+
+        $items = GetItem($row['id'], $db, 'proof');
+       
+        $merged_results[] = array(
+            "id" => $id,
+            "remark" => $remark,
+            "username" => $username,
+            "created_at" => $created_at,
+            "received_date" => $received_date,
+            "kind" => $kind,
+            "amount" => $amount,
+            "invoice" => $invoice,
+            "detail" => $detail,
+            "checked" => $checked,
+            "checked_id" => $checked_id,
+            "checked_at" => $checked_at,
+            "items" => $items,
+        );
+    }
+
+    return $merged_results;
+}
+
+
+function GetItem($batch_id, $db, $type){
+    $query = "
+        
+        SELECT f.id,
+            coalesce(f.filename, '')   filename,
+            coalesce(f.bucketname, '') bucket,
+            coalesce(f.gcp_name, '')   gcp_name,
+            u.username,
+            f.created_at
+        FROM   gcp_storage_file f
+
+            LEFT JOIN user u
+                ON u.id = f.create_id
+        WHERE batch_id = " . $batch_id . "
+        AND f.batch_type = '" . $type . "'
+            AND f.status <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }

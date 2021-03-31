@@ -680,16 +680,14 @@ $(function(){
                       <li>{{ receive_record.project_status }}</li>
                       <li>{{ receive_record.username }}</li>
                       <li>{{ receive_record.created_at }} ~ {{ receive_record.end_at }}</li>
-                      <li>1,838,988.06</li>
-                      <li>919,495</li>
-                      <li>200,000</li>
-                      <li>719,493.06</li>
+                      <li>{{ isNaN(parseInt(receive_record.final_amount)) ? "" : Number(receive_record.final_amount).toLocaleString() }}</li>
+                      <li>{{ isNaN(parseInt(receive_record.down_payment_amount)) ? "" : Number(receive_record.down_payment_amount).toLocaleString() }}</li>
+                      <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>
+                      <li>{{ isNaN(parseInt(receive_record.ar)) ? "" : Number(receive_record.ar).toLocaleString() }}</li>
                       <li style="padding-left: 10px; text-align: left;">
-                          <a href="https://storage.cloud.google.com/feliiximg\1613727623_LQ# 687. Clinica de Salvacion. IDReal Studio. 210215.pdf"
-                             target="_blank" class="attch">• LQ-687. Clinica de Salvacion. IDReal Studio. 210215.pdf</a>
-                          <br>
-                          <a href="https://storage.cloud.google.com/feliiximg\1613727623_LQ# 688. Clinica de Salvacion. IDReal Studio. 210215.pdf"
-                             target="_blank" class="attch">• LQ-688. Clinica de Salvacion. IDReal Studio. 210215.pdf</a>
+                        <span v-for="item in receive_record.final_quotation">
+                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">• {{item.filename}}</a>
+                        </span>
                       </li>
                   </ul>
 
@@ -788,16 +786,16 @@ $(function(){
                         <div class="list_function">
 
                             <div class="box-search">
-                                <input type="text" placeholder="Searching Keyword Here">
-                                <button><i class="fas fa-filter"></i></button>
+                                <input type="text" placeholder="Searching Keyword Here" v-model="quote_keyword">
+                                <button @click="quote_search()"><i class="fas fa-filter"></i></button>
                             </div>
 
                             <div class="pagenation">
-                                <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                                <a class="prev" :disabled="quote_page == 1" @click="quote_page < 1 ? quote_page = 1 : quote_page--">Previous</a>
 
-                                <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                                <a class="page" v-for="pg in quote_pages" @click="quote_page=pg">{{ pg }}</a>
 
-                                <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                                <a class="next" :disabled="quote_page == quote_pages.length" @click="quote_page++">Next</a>
                             </div>
                         </div>
 
@@ -811,36 +809,18 @@ $(function(){
                                     <li>Final Quotation</li>
 
                                 </ul>
-                                <ul v-for='(receive_record, index) in displayedPosts'>
+                                <ul v-for='(receive_record, index) in displayedQuote'>
                                     <li><input type="checkbox" name="quotation_id" class="alone black"></li>
                                     <li>
-                                        <a href="https://storage.cloud.google.com/feliiximg\1613727623_LQ# 687. Clinica de Salvacion. IDReal Studio. 210215.pdf"
-                                           target="_blank" class="attch">LQ-687. Clinica de Salvacion. IDReal Studio.
-                                            210215.pdf</a></li>
-                                    <li>Proposal for the 4 seater chair</li>
-                                    <li>Ruvileen C. Martirez at 2021-02-19 08:21:42</li>
-                                    <li>Y</li>
+                                        <span v-for="item in receive_record.items" style="display:block;">
+                                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
+                                        </span>
+                                    </li>
+                                    <li>{{ receive_record.comment }}</li>
+                                    <li>{{ receive_record.username }} at {{ receive_record.created_at }}</li>
+                                    <li>{{ (receive_record.final_quotation == 0) ? "N" : "Y" }}</li>
                                 </ul>
-                                <ul v-for='(receive_record, index) in displayedPosts'>
-                                    <li><input type="checkbox" name="quotation_id" class="alone black"></li>
-                                    <li>
-                                        <a href="https://storage.cloud.google.com/feliiximg\1613727623_LQ# 688. Clinica de Salvacion. IDReal Studio. 210215.pdf"
-                                           target="_blank" class="attch">LQ-688. Clinica de Salvacion. IDReal Studio.
-                                            210216.pdf</a></li>
-                                    <li>Proposal for the 4 seater chair</li>
-                                    <li>Ruvileen C. Martirez at 2021-02-19 08:21:42</li>
-                                    <li>Y</li>
-                                </ul>
-                                <ul v-for='(receive_record, index) in displayedPosts'>
-                                    <li><input type="checkbox" name="quotation_id" class="alone black"></li>
-                                    <li>
-                                        <a href="https://storage.cloud.google.com/feliiximg\1613727623_LQ# 687. Clinica de Salvacion. IDReal Studio. 210215.pdf"
-                                           target="_blank" class="attch">LQ-689. Clinica de Salvacion. IDReal Studio.
-                                            210217.pdf</a></li>
-                                    <li>Proposal for the 4 seater chair</li>
-                                    <li>Ruvileen C. Martirez at 2021-02-19 08:21:42</li>
-                                    <li>N</li>
-                                </ul>
+                                
                             </div>
                         </div>
 
@@ -859,8 +839,8 @@ $(function(){
                                 <dt class="head">Type:</dt>
                                 <dd>
                                     <select v-model="payment_type">
-                                        <option value="1">Down Payment</option>
-                                        <option value="2">Payment</option>
+                                        <option value="0">Down Payment</option>
+                                        <option value="1">Payment</option>
                                     </select>
                                 </dd>
                                 <dt class="head">Remarks:</dt>
@@ -909,8 +889,8 @@ $(function(){
                                 </div>
 
                                 <div class="btnbox">
-                                    <a class="btn" @click="quote_clear">Cancel</a>
-                                    <a class="btn green" @click="quote_create">Submit</a>
+                                    <a class="btn" @click="prof_clear">Cancel</a>
+                                    <a class="btn green" @click="prof_create">Submit</a>
                                 </div>
                             </dl>
 
@@ -923,16 +903,16 @@ $(function(){
                         <div class="list_function">
 
                             <div class="box-search">
-                                <input type="text" placeholder="Searching Keyword Here">
-                                <button><i class="fas fa-filter"></i></button>
+                                <input type="text" placeholder="Searching Keyword Here" v-model="payment_keyword">
+                                <button @click="payment_search()"><i class="fas fa-filter"></i></button>
                             </div>
 
                             <div class="pagenation">
-                                <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                                <a class="prev" :disabled="pay_page == 1" @click="pay_page < 1 ? pay_page = 1 : pay_page--">Previous</a>
 
-                                <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                                <a class="page" v-for="pg in pay_pages" @click="pay_page=pg">{{ pg }}</a>
 
-                                <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                                <a class="next" :disabled="pay_page == pay_pages.length" @click="pay_page++">Next</a>
                             </div>
                         </div>
 
@@ -948,29 +928,20 @@ $(function(){
                                     <li>Amount Received</li>
 
                                 </ul>
-                                <ul v-for='(receive_record, index) in displayedPosts'>
+                                <ul v-for='(receive_record, index) in displayedPayment'>
                                     <li><input type="checkbox" class="alone black"></li>
-                                    <li>Down Payment</li>
-                                    <li>50% DP</li>
+                                    <li>{{ (receive_record.kind == 0) ? "Down Payment" : "Payment" }}</li>
+                                    <li>{{ receive_record.remark }}</li>
                                     <li style="padding-left: 10px; text-align: left;">
-                                        <a href="" target="_blank" class="attch">• B7649BD4-E07D-429D-ABA6-B1884C7DCA62.jpeg</a><br>
-                                        <a href="" target="_blank" class="attch">• 53027465-7512-4876-A0B2-C5295C312799.png</a>
+                                        <span v-for="item in receive_record.items" style="display: block;">
+                                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">• {{item.filename}}</a>
+                                        </span>
                                     </li>
-                                    <li>Stan Fernandez at 2021-03-01 12:05:01</li>
-                                    <li>Checked: True</li>
-                                    <li>919,495</li>
+                                    <li>{{ receive_record.username }} at {{ receive_record.created_at }}</li>
+                                    <li>Checked: {{ (receive_record.checked == 0) ? "False" : "True" }}</li>
+                                    <li>{{ isNaN(parseInt(receive_record.amount)) ? "" : Number(receive_record.amount).toLocaleString() }}</li>
                                 </ul>
-                                <ul v-for='(receive_record, index) in displayedPosts'>
-                                    <li><input type="checkbox" class="alone black"></li>
-                                    <li>Payment</li>
-                                    <li>another payment</li>
-                                    <li style="padding-left: 10px; text-align: left;">
-                                        <a href="" target="_blank" class="attch">• receipt.jpeg</a><br>
-                                    </li>
-                                    <li>Stan Fernandez at 2021-03-12 10:47:25</li>
-                                    <li>Checked: True</li>
-                                    <li>200,000</li>
-                                </ul>
+                            
 
                             </div>
                         </div>

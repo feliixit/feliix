@@ -12,7 +12,9 @@ var app = new Vue({
     probability: 0,
 
     receive_records: [],
-    record: {},
+    record: [],
+
+    record_filter: [],
 
     categorys: {},
     client_types: {},
@@ -27,6 +29,22 @@ var app = new Vue({
     //perPage: 10,
     pages: [],
 
+    // paging
+    quote_page: 1,
+    //perPage: 10,
+    quote_pages: [],
+
+    quote_keyword: "",
+
+    // paging
+    pay_page: 1,
+    //perPage: 10,
+    pay_pages: [],
+
+    payment_keyword: "",
+
+    baseURL: "https://storage.cloud.google.com/",
+
     inventory: [
       { name: "10", id: 10 },
       { name: "25", id: 25 },
@@ -36,13 +54,14 @@ var app = new Vue({
     ],
     perPage: 10,
 
+    prof_canSub: true,
     prof_remark: "",
+    payment_type: "",
     prof_fileArray: [],
 
+    quote_canSub: true,
     quote_remark: "",
     quote_fileArray: [],
-
-    payment_type: "",
 
     fil_category: "",
     fil_status: "",
@@ -59,9 +78,9 @@ var app = new Vue({
     od_factor2: "",
     od_factor2_order: "",
 
-    id : "",
+    id: "",
 
-    proof_id: "",
+    proof_id: 0,
     view_detail: false,
 
     view_a: false,
@@ -126,7 +145,7 @@ var app = new Vue({
         }
       });
     }
-    
+
     this.getRecords();
 
     this.getProjectCategorys();
@@ -145,6 +164,16 @@ var app = new Vue({
 
     showExtra: function() {
       return this.status == 10;
+    },
+
+    displayedQuote() {
+      this.setQuotePages();
+      return this.quote_paginate(this.record.quote);
+    },
+
+    displayedPayment() {
+      this.setPayPages();
+      return this.pay_paginate(this.record.payment);
     },
   },
 
@@ -173,6 +202,28 @@ var app = new Vue({
       }
     },
 
+    setQuotePages() {
+      console.log("setQuotePages");
+      this.quote_pages = [];
+      let numberOfPages = Math.ceil(this.record.quote.length / this.perPage);
+
+      if (numberOfPages == 1) this.quote_page = 1;
+      for (let index = 1; index <= numberOfPages; index++) {
+        this.quote_pages.push(index);
+      }
+    },
+
+    setPayPages() {
+      console.log("setPayPages");
+      this.pay_pages = [];
+      let numberOfPages = Math.ceil(this.record.payment.length / this.perPage);
+
+      if (numberOfPages == 1) this.pay_page = 1;
+      for (let index = 1; index <= numberOfPages; index++) {
+        this.pay_pages.push(index);
+      }
+    },
+
     paginate: function(posts) {
       console.log("paginate");
       if (this.page < 1) this.page = 1;
@@ -185,11 +236,37 @@ var app = new Vue({
       return this.receive_records.slice(from, to);
     },
 
-    show_detail:function(id){
+    quote_paginate: function(posts) {
+      console.log("quote_paginate");
+      if (this.quote_page < 1) this.quote_page = 1;
+      if (this.quote_page > this.quote_pages.length)
+        this.quote_page = this.quote_pages.length;
+
+      let page = this.quote_page;
+      let perPage = this.perPage;
+      let from = page * perPage - perPage;
+      let to = page * perPage;
+      return this.record.quote.slice(from, to);
+    },
+
+    pay_paginate: function(posts) {
+      console.log("pay_paginate");
+      if (this.pay_page < 1) this.pay_page = 1;
+      if (this.pay_page > this.pay_pages.length)
+        this.pay_page = this.pay_pages.length;
+
+      let page = this.pay_page;
+      let perPage = this.perPage;
+      let from = page * perPage - perPage;
+      let to = page * perPage;
+      return this.record.payment.slice(from, to);
+    },
+
+    show_detail: function(id) {
       this.proof_id = id;
     },
 
-    hide_detail:function(){
+    hide_detail: function() {
       this.proof_id = 0;
 
       this.view_a = false;
@@ -198,28 +275,28 @@ var app = new Vue({
       this.view_d = false;
     },
 
-    togle_a:function(){
+    togle_a: function() {
       this.view_a = true;
       this.view_b = false;
       this.view_c = false;
       this.view_d = false;
     },
 
-    togle_b:function(){
+    togle_b: function() {
       this.view_a = false;
       this.view_b = true;
       this.view_c = false;
       this.view_d = false;
     },
 
-    togle_c:function(){
+    togle_c: function() {
       this.view_a = false;
       this.view_b = false;
       this.view_c = true;
       this.view_d = false;
     },
 
-    togle_d:function(){
+    togle_d: function() {
       this.view_a = false;
       this.view_b = false;
       this.view_c = false;
@@ -229,18 +306,17 @@ var app = new Vue({
     detail: function() {
       let _this = this;
 
-
       if (this.proof_id == 0) {
         this.view_detail = false;
-        this.$refs.mask.style.display = 'none';
+        this.$refs.mask.style.display = "none";
         return;
       }
 
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
-      
-      this.$refs.mask.style.display = 'block';
+
+      this.$refs.mask.style.display = "block";
       this.view_detail = true;
       this.view_a = true;
     },
@@ -248,19 +324,33 @@ var app = new Vue({
     filter_apply: function() {
       let _this = this;
 
-      window.location.href = 'quotation_and_payment_mgt?id=' + _this.id 
-                                                    + '&fc=' + _this.fil_category 
-                                                    + '&fs=' + _this.fil_status
-                                                    + '&ft=' + _this.fil_creator
-                                                    + '&fal=' + _this.fil_amount_lower
-                                                    + '&fau=' + _this.fil_amount_upper
-                                                    + '&fpl=' + _this.fil_payment_lower
-                                                    + '&fpu=' + _this.fil_payment_upper
-                                                    + '&fk=' + _this.fil_keyowrd
-                                                    + '&of1=' + _this.od_factor1
-                                                    + '&ofd1=' + _this.od_factor1_order
-                                                    + '&of2=' + _this.od_factor2
-                                                    + '&ofd2=' + _this.od_factor2_order;
+      window.location.href =
+        "quotation_and_payment_mgt?id=" +
+        _this.id +
+        "&fc=" +
+        _this.fil_category +
+        "&fs=" +
+        _this.fil_status +
+        "&ft=" +
+        _this.fil_creator +
+        "&fal=" +
+        _this.fil_amount_lower +
+        "&fau=" +
+        _this.fil_amount_upper +
+        "&fpl=" +
+        _this.fil_payment_lower +
+        "&fpu=" +
+        _this.fil_payment_upper +
+        "&fk=" +
+        _this.fil_keyowrd +
+        "&of1=" +
+        _this.od_factor1 +
+        "&ofd1=" +
+        _this.od_factor1_order +
+        "&of2=" +
+        _this.od_factor2 +
+        "&ofd2=" +
+        _this.od_factor2_order;
     },
 
     getRecords: function(keyword) {
@@ -292,6 +382,9 @@ var app = new Vue({
         .then(
           (res) => {
             _this.receive_records = res.data;
+            _this.quote_search();
+            _this.payment_search();
+
           },
           (err) => {
             alert(err.response);
@@ -464,6 +557,28 @@ var app = new Vue({
         });
     },
 
+    quote_search: function() {
+      if(this.proof_id == 0)
+        return;
+      this.record_filter = this.shallowCopy(
+        this.receive_records.find((element) => element.id == this.proof_id)
+      );
+      this.record.quote = this.record_filter.quote.filter((searchResult) =>
+        searchResult.comment.match(this.quote_keyword)
+      );
+    },
+
+    payment_search: function() {
+      if(this.proof_id == 0)
+        return;
+      this.record_filter = this.shallowCopy(
+        this.receive_records.find((element) => element.id == this.proof_id)
+      );
+      this.record.payment = this.record_filter.payment.filter((searchResult) =>
+        searchResult.remark.match(this.payment_keyword)
+      );
+    },
+
     approve: function() {
       let _this = this;
 
@@ -581,16 +696,182 @@ var app = new Vue({
       document.getElementById("add_f1").classList.remove("show");
     },
 
-    quote_canSub() {},
+    quote_deleteFile(index) {
+      this.quote_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.quote_file;
+      fileTarget.value = "";
+    },
 
-    quote_clear() {},
+    quote_changeFile() {
+      var fileTarget = this.$refs.quote_file;
 
-    quote_create() {},
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.quote_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+          this.quote_fileArray.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.quote_fileArray.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
 
-    prof_canSub() {},
+    quote_clear() {
+      this.quote_remark = "";
+      this.quote_fileArray = [];
+      this.$refs.quote_file.value = "";
 
-    prof_clear() {},
+      this.quote_canSub = true;
+    },
 
-    prof_create() {},
+    quote_create() {
+      let _this = this;
+      if (this.quote_remark.trim() == "") {
+        Swal.fire({
+          text: "Please enter description!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      _this.submit = true;
+
+      var form_Data = new FormData();
+      var token = localStorage.getItem("token");
+
+      form_Data.append("jwt", token);
+      form_Data.append("pid", this.proof_id);
+      form_Data.append("remark", this.quote_remark.trim());
+
+      for (var i = 0; i < this.quote_fileArray.length; i++) {
+        let file = this.quote_fileArray[i];
+        form_Data.append("files[" + i + "]", file);
+      }
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/project_quote_new",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.quote_clear();
+          _this.getRecords();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
+
+    prof_deleteFile(index) {
+      this.prof_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.prof_file;
+      fileTarget.value = "";
+    },
+
+    prof_changeFile() {
+      var fileTarget = this.$refs.prof_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.prof_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+          this.prof_fileArray.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.prof_fileArray.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    prof_clear() {
+      this.prof_remark = "";
+      this.payment_type = "";
+      this.prof_fileArray = [];
+      this.$refs.prof_file.value = "";
+
+      this.prof_canSub = true;
+    },
+
+    prof_create() {
+      let _this = this;
+      if (this.prof_remark.trim() == "") {
+        Swal.fire({
+          text: "Please enter Remarks!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      _this.submit = true;
+
+      var form_Data = new FormData();
+      var token = localStorage.getItem("token");
+
+      form_Data.append("jwt", token);
+      form_Data.append("pid", this.proof_id);
+      form_Data.append("remark", this.prof_remark.trim());
+      form_Data.append("kind", this.payment_type.trim());
+
+      for (var i = 0; i < this.prof_fileArray.length; i++) {
+        let file = this.prof_fileArray[i];
+        form_Data.append("files[" + i + "]", file);
+      }
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/project_proof_new",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.prof_clear();
+          _this.getRecords();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
   },
 });

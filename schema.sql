@@ -1164,3 +1164,35 @@ ADD COLUMN `back_up_driver_other` varchar(1024)  default '' AFTER driver_other;
 -- 頁面 和 郵件內容 調整 2021/3/25
 ALTER TABLE apply_for_petty
 ADD COLUMN `project_name1`  varchar(512) DEFAULT '' AFTER project_name;
+
+
+-- quotation and payment
+ALTER TABLE project_main
+ADD COLUMN `final_amount`  decimal(10, 2) null default null AFTER close_reason;
+
+ALTER TABLE project_quotation
+ADD COLUMN `final_quotation` int(11) DEFAULT 0 AFTER project_id;
+
+ALTER TABLE project_proof
+ADD COLUMN `received_date` varchar(10) DEFAULT '' AFTER status;
+
+ALTER TABLE project_proof
+ADD COLUMN `kind` int(11) DEFAULT 0 AFTER status;
+
+ALTER TABLE project_proof
+ADD COLUMN `amount` decimal(10, 2) null default null AFTER received_date;
+
+ALTER TABLE project_proof
+ADD COLUMN `invoice` varchar(512) DEFAULT '' AFTER amount;
+
+ALTER TABLE project_proof
+ADD COLUMN `detail` varchar(512) DEFAULT '' AFTER invoice;
+
+ALTER TABLE project_proof
+ADD COLUMN `checked` int(11) DEFAULT 0 AFTER detail;
+
+ALTER TABLE project_proof
+ADD COLUMN `checked_id` int(11) DEFAULT 0 AFTER checked;
+
+ALTER TABLE project_proof
+ADD COLUMN `checked_at` timestamp null AFTER checked_id;
