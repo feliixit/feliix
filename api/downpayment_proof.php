@@ -49,7 +49,36 @@ $pid = (isset($_GET['pid']) ?  $_GET['pid'] : 0);
 
 $merged_results = array();
 
-$query = "SELECT pp.id, pp.batch_id, pm.project_name, COALESCE(pp.status, 0) status, COALESCE(f.filename, '') filename, pp.remark, COALESCE(f.gcp_name, '') gcp_name, user.username, user.id uid, DATE_FORMAT(pp.created_at, '%Y-%m-%d %H:%i:%s') created_at, pp.proof_remark FROM project_proof pp LEFT JOIN project_main pm ON pp.project_id = pm.id LEFT JOIN user ON pp.create_id = user.id LEFT JOIN gcp_storage_file f ON f.batch_id = pp.id AND f.batch_type = 'proof' where 1= 1 ";
+$query = "SELECT pm.id pid,
+            pp.id,
+            pp.batch_id,
+            pm.project_name,
+            Coalesce(pp.status, 0)                          status,
+            Coalesce(f.filename, '')                        filename,
+            pp.remark,
+            Coalesce(f.gcp_name, '')                        gcp_name,
+            user.username,
+            user.id                                         uid,
+            Date_format(pp.created_at, '%Y-%m-%d %H:%i:%s') created_at,
+            pp.proof_remark,
+            pp.received_date,
+            pp.kind,
+            pp.amount,
+            pp.invoice,
+            pp.detail,
+            pp.checked,
+            pp.checked_id,
+            pp.checked_at,
+            pm.final_amount
+          FROM   project_proof pp
+          LEFT JOIN project_main pm
+                ON pp.project_id = pm.id
+          LEFT JOIN user
+                ON pp.create_id = user.id
+          LEFT JOIN gcp_storage_file f
+                ON f.batch_id = pp.id
+          AND f.batch_type = 'proof'
+          WHERE  1 = 1  ";
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -87,6 +116,17 @@ $status = 0;
 $username = "";
 $created_at = "";
 $proof_remark = "";
+$proof_remark   = "";
+$received_date = "";
+$kind = "";
+$amount = "";
+$invoice = "";
+$detail = "";
+$checked = "";
+$checked_at = "";
+$final_amount = "";
+$pid = 0;
+
 $items = [];
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -97,6 +137,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         $merged_results[] = array( 
                                 "is_checked" => 0,
+                                "pid" => $pid,
                                 "id" => $id,
                                 "sid" => $sid,
                                 "project_name" => $project_name,
@@ -105,7 +146,17 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 "items" => $items,
                                 "username" => $username,
                                 "created_at" => $created_at,
-                                "proof_remark" => $proof_remark
+                                "proof_remark" => $proof_remark,
+                                "received_date" => $received_date,
+                                "kind" => $kind,
+                                "amount" => $amount,
+                                "invoice" => $invoice,
+                                "detail" => $detail,
+                                "checked" => $checked,
+                                "checked_id" => $checked_id,
+                                "created_at" => $created_at,
+                                "final_quotation" => $final_quotation,
+                                "final_amount" => $final_amount,
         );
 
         $items = [];
@@ -113,6 +164,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     }
 
     $id = $row['id'];
+    $pid = $row['pid'];
     $created_at = $row['created_at'];
     $batch_id = $row['batch_id'];
     $username = $row['username'];
@@ -122,6 +174,18 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $project_name = $row['project_name'];
     $status = $row['status'];
     $proof_remark = $row['proof_remark'];
+
+    $received_date = $row['received_date'];
+    $kind = $row['kind'];
+    $amount = $row['amount'];
+    $invoice = $row['invoice'];
+    $detail = $row['detail'];
+    $checked = $row['checked'];
+    $checked_id = $row['checked_id'];
+    $checked_at = $row['checked_at'];
+    $final_amount = $row['final_amount'];
+
+    $final_quotation = GetFinalQuote($row['pid'], $db);
 
     if($filename != "")
       $items[] = array('filename' => $filename,
@@ -134,6 +198,7 @@ if($id != 0)
 
     $merged_results[] = array( "is_checked" => 0,
                                 "id" => $id,
+                                "pid" => $pid,
                                 "sid" => $sid,
                                 "project_name" => $project_name,
                                 "status" => $status,
@@ -141,7 +206,17 @@ if($id != 0)
                                 "items" => $items,
                                 "username" => $username,
                                 "created_at" => $created_at,
-                                "proof_remark" => $proof_remark
+                                "proof_remark" => $proof_remark,
+                                "received_date" => $received_date,
+                                "kind" => $kind,
+                                "amount" => $amount,
+                                "invoice" => $invoice,
+                                "detail" => $detail,
+                                "checked" => $checked,
+                                "checked_id" => $checked_id,
+                                "created_at" => $created_at,
+                                "final_quotation" => $final_quotation,
+                                "final_amount" => $final_amount,
             );
 }
 
@@ -153,3 +228,30 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
 
+function GetFinalQuote($project_id, $db){
+    $query = "
+        SELECT 
+            COALESCE(f.filename, '') filename, 
+            COALESCE(f.bucketname, '') bucket, 
+            COALESCE(f.gcp_name, '') gcp_name
+        FROM   project_quotation pm
+           
+        LEFT JOIN gcp_storage_file f 
+            ON f.batch_id = pm.id AND f.batch_type = 'quote' 
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+            AND pm.final_quotation = 1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}

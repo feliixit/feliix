@@ -177,7 +177,9 @@ var app = new Vue({
     },
   },
 
-  mounted() {},
+  mounted() {
+ 
+  },
 
   watch: {
     receive_records() {
@@ -325,9 +327,8 @@ var app = new Vue({
       let _this = this;
 
       window.location.href =
-        "quotation_and_payment_mgt?id=" +
-        _this.id +
-        "&fc=" +
+        "quotation_and_payment_mgt?" +
+        "fc=" +
         _this.fil_category +
         "&fs=" +
         _this.fil_status +
@@ -558,8 +559,7 @@ var app = new Vue({
     },
 
     quote_search: function() {
-      if(this.proof_id == 0)
-        return;
+      if (this.proof_id == 0) return;
       this.record_filter = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
@@ -569,8 +569,7 @@ var app = new Vue({
     },
 
     payment_search: function() {
-      if(this.proof_id == 0)
-        return;
+      if (this.proof_id == 0) return;
       this.record_filter = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
@@ -702,6 +701,233 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    final_quotation_clear() {
+      var finals = document.getElementsByName("quotation_id");
+      for (var i = 0; i < finals.length; i++) {
+        finals[i].checked = false;
+      }
+    },
+
+    payment_clear() {
+      var finals = document.getElementsByName("payment_id");
+      for (var i = 0; i < finals.length; i++) {
+        finals[i].checked = false;
+      }
+    },
+
+    payment_withdraw() {
+      var finals = document.getElementsByName("payment_id");
+      var final_id = "";
+      for (var i = 0; i < finals.length; i++) {
+        if (finals[i].checked) final_id += finals[i].value + ",";
+      }
+      if (final_id !== "") 
+        final_id = final_id.slice(0, -1);
+      else
+      { 
+        Swal.fire({
+          text: "Please select records to withdraw",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      let _this = this;
+
+      var form_Data = new FormData();
+      var token = localStorage.getItem("token");
+
+      form_Data.append("jwt", token);
+      form_Data.append("pid", this.proof_id);
+      form_Data.append("final", final_id);
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/project_payment_withdraw",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.getRecords();
+          _this.payment_clear();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
+    final_quotation() {
+      var finals = document.getElementsByName("quotation_id");
+      var final_id = "";
+      for (var i = 0; i < finals.length; i++) {
+        if (finals[i].checked) final_id += finals[i].value + ",";
+      }
+      if (final_id !== "") final_id = final_id.slice(0, -1);
+
+      let _this = this;
+
+      var form_Data = new FormData();
+      var token = localStorage.getItem("token");
+
+      form_Data.append("jwt", token);
+      form_Data.append("pid", this.proof_id);
+      form_Data.append("final", final_id);
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/project_final_quotation",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.getRecords();
+          _this.final_quotation_clear();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
+
+    final_amount() {
+      let _this = this;
+
+      var form_Data = new FormData();
+      var token = localStorage.getItem("token");
+
+      var final_amount = document.getElementById('final_amount').value;
+
+      if(isNaN(final_amount)) {
+        Swal.fire({
+          text: "Please enter a valid amount",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      form_Data.append("jwt", token);
+      form_Data.append("pid", this.proof_id);
+      form_Data.append("amount", final_amount);
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/project_final_amount",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.getRecords();
+   
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
+    delete_quotation() {
+      let _this = this;
+      Swal.fire({
+        title: "Delete",
+        text: "Are you sure to delete?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.value) {
+          var finals = document.getElementsByName("quotation_id");
+          var final_id = "";
+          for (var i = 0; i < finals.length; i++) {
+            if (finals[i].checked) final_id += finals[i].value + ",";
+          }
+          if (final_id !== "") final_id = final_id.slice(0, -1);
+
+          var form_Data = new FormData();
+          var token = localStorage.getItem("token");
+
+          form_Data.append("jwt", token);
+          form_Data.append("pid", this.proof_id);
+          form_Data.append("final", final_id);
+
+          axios({
+            method: "post",
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+            url: "api/project_delete_quotation",
+            data: form_Data,
+          })
+            .then(function(response) {
+              //handle success
+              Swal.fire({
+                text: response.data.message,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+              _this.getRecords();
+              _this.final_quotation_clear();
+            })
+            .catch(function(response) {
+              //handle error
+              Swal.fire({
+                text: response.data,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+            });
+        } else {
+          return;
+        }
+      });
+    },
+
     quote_changeFile() {
       var fileTarget = this.$refs.quote_file;
 
@@ -782,7 +1008,6 @@ var app = new Vue({
           });
         });
     },
-
 
     prof_deleteFile(index) {
       this.prof_fileArray.splice(index, 1);
@@ -872,6 +1097,5 @@ var app = new Vue({
           });
         });
     },
-
   },
 });

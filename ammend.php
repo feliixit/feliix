@@ -116,7 +116,7 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <!-- <a class="tag A">Attendance</a> -->
-            <a class="tag B focus">Leave Review</a>
+            <a class="tag B focus">Leaves</a>
             <a class="tag D" href="leave_void">Leave Void</a>
             <a class="tag C" href="downpayment_proof">Project</a>
         </div>

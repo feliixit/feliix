@@ -113,6 +113,51 @@ $(function(){
         color: white;
     }
 
+    div.searching{
+         float: left;
+    }
+
+    div.searching input{
+        font-size: 12px;
+        padding: 4px 7px;
+    }
+
+    div.searching i {
+        font-size: 18px;
+        margin-left: 5px;
+    }
+
+
+    div.box-content form, div.info form {
+        border: 3px solid var(--black01);
+        margin-top: 40px;
+        padding: 15px 15px 0;
+        box-sizing: border-box;
+    }
+
+    div.box-content form input, div.box-content form textarea {
+        width: 100%;
+    }
+
+    div.box-content form li:nth-of-type(odd) {
+        margin-top: 15px;
+    }
+
+    div.box-content form li:first-of-type {
+        margin-top: 0;
+    }
+
+    div.info>span {
+        font-size: x-large;
+        font-weight: 700;
+        color: var(--black01);
+        display: block;
+    }
+
+    div.btnbox a.btn.red {
+        background-color: var(--pri01a);
+    }
+
 </style>
 
 </head>
@@ -127,7 +172,7 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <!-- <a class="tag A">Attendance</a> -->
-            <a class="tag B" href="ammend">Leave Review</a>
+            <a class="tag B" href="ammend">Leaves</a>
             <a class="tag D" href="leave_void">Leave Void</a>
             <a class="tag C focus">Project</a>
         </div>
@@ -151,10 +196,17 @@ $(function(){
             
         </div>
         <div class="block C focus">
-            <h6>Downpayment Proof</h6>
+            <h6>Payment Proof</h6>
             <div class="box-content">
              
                 <div class="list_function" style="margin-bottom:5px;">
+
+                    <!-- 搜尋 -->
+                    <div class="searching">
+                        <input type="text" placeholder="Searching Keyword Here">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+
                     <!-- 分頁 -->
                     <div class="pagenation">
                         <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
@@ -175,7 +227,7 @@ $(function(){
                     </ul>
                     <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
-                            <input type="radio" name="record_id" class="alone black" :value="record.id" v-model="proof_id">
+                            <input type="radio" name="record_id" class="alone black" :value="record.id" @click="detail(record.id)">
                         </li>
                        
                         <li>{{ record.created_at }}</li>
@@ -185,16 +237,23 @@ $(function(){
                     </ul>
                 </div>
 
-                
 
-                <div class="btnbox">
-                    <a class="btn" @click="detail">Detail</a>
-                </div>
-
-                <div class="tablebox" v-if="view_detail">
+                <div class="tablebox" v-if="view_detail" style="margin-top: 40px;">
                     <ul class="head">
                         <li class="head">Project Name</li>
-                        <li>{{ record.project_name }}</li>
+                        <li><a :href="'quotation_and_payment_mgt?id=' + record.pid"  class="attch">{{ record.project_name }}</a></li>
+                    </ul>
+                    <ul class="head">
+                        <li class="head">Amount</li>
+                        <li>{{ isNaN(parseInt(record.final_amount)) ? "" : Number(record.final_amount).toLocaleString() }}</li>
+                    </ul>
+                    <ul class="head">
+                        <li class="head">Final Quotation</li>
+                        <li>
+                            <span v-for="item in record.final_quotation">
+                                <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">• {{item.filename}}</a>
+                            </span>
+                        </li>
                     </ul>
                     <ul>
                         <li class="head">Submission Time</li>
@@ -205,11 +264,15 @@ $(function(){
                         <li>{{ record.username }}</li>
                     </ul>
                     <ul>
+                        <li class="head">Type</li>
+                        <li>{{ (record.kind == 0) ? "Down Payment" : "Payment" }}</li>
+                    </ul>
+                    <ul>
                         <li class="head">Status</li>
                         <li>{{ (record.status == 0) ? "Under Checking" : ((record.status == 1) ? "Checked: True" : ((record.status == -1) ? "Checked: False" : 'Under Checking')) }}</li>
                     </ul>
                     <ul>
-                        <li class="head">Downpayment Proof</li>
+                        <li class="head">Proof Files</li>
                         <li>
                             <span v-for="item in record.items">
                                 <a :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>&nbsp&nbsp
@@ -222,15 +285,55 @@ $(function(){
                     </ul>
                 </div>
 
-                <div class="btnbox" v-if="record.status == 0 && is_approval">
-                    <a class="btn" @click="approve" :disabled="submit">Checked: True</a>
-                    <a class="btn" @click="reject" :disabled="submit">Checked: False</a>
+                 <form  v-if="view_detail && record.status == 0">
+                    <ul>
+                        <li><b>Date of Receiving Payment</b></li>
+                        <li><input type="date" id="receive_date"></li>
+                        <li><b>Amount of Receiving Payment</b></li>
+                        <li><input type="number" id="amount"></li>
+                        <li><b>Invoice Number</b></li>
+                        <li><input type="text" id="invoice"></li>
+                        <li><b>Detail/WarrantyCard Number</b></li>
+                        <li><input type="text" id="detail"></li>
+                        <li><b>Remarks (Required if Checked: False)</b></li>
+                        <li><textarea id="remark"></textarea></li>
+                    </ul>
+
+                    <div class="btnbox" v-if="record.status == 0 && is_approval">
+                        <a class="btn" @click="approve" :disabled="submit">Checked: True</a>
+                        <a class="btn" @click="reject" :disabled="submit">Checked: False</a>
+                    </div>
+
+                </form>
+            
+                <div class="info" style="margin-top: 40px;" v-if="view_detail && record.status != 0">
+                    <span>Info After Check</span>
+                    <div class="tablebox" v-if="view_detail">
+                        <ul>
+                            <li class="head">Date of Receiving Payment</li>
+                            <li>{{ record.received_date }}</li>
+                        </ul>
+                        <ul>
+                            <li class="head">Amount of Receiving Payment</li>
+                            <li>{{ isNaN(parseInt(record.amount)) ? "" : Number(record.amount).toLocaleString() }}</li>
+                        </ul>
+                        <ul>
+                            <li class="head">Invoice Number</li>
+                            <li>{{ record.invoice }}</li>
+                        </ul>
+                        <ul>
+                            <li class="head">Detail/WarrantyCard Number</li>
+                            <li>{{ record.detail }}</li>
+                        </ul>
+                        <ul>
+                            <li class="head">Remarks</li>
+                            <li>{{ record.remark }}
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
 
-                <textarea placeholder="Additional Remarks (Optional)" style=" width: 100%; margin-top:5px;" rows="5" v-if="record.status == 0 && is_approval" v-model="proof_remark"></textarea>
-
-                <textarea style="color:#000; width: 100%; margin-top:5px;" rows="5" v-if="record.proof_remark !== '' && view_detail" :value="record.proof_remark"></textarea>
-                
             </div>
             
         </div>
@@ -254,4 +357,8 @@ $(function(){
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="js/downpayment_proof.js"></script>
+
+<!-- Awesome Font for current webpage -->
+<script src="js/a076d05399.js"></script>
+
 </html>

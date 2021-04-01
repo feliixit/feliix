@@ -779,8 +779,8 @@ $(function(){
 
                         <div class="box-amount">
                             <span>Final Amount: </span>
-                            <input type="number">
-                            <a class="btn small green">Save</a>
+                            <input type="number" id="final_amount" v-model="record.final_amount">
+                            <a class="btn small green" @click="final_amount()">Save</a>
                         </div>
 
                         <div class="list_function">
@@ -810,7 +810,7 @@ $(function(){
 
                                 </ul>
                                 <ul v-for='(receive_record, index) in displayedQuote'>
-                                    <li><input type="checkbox" name="quotation_id" class="alone black"></li>
+                                    <li><input type="checkbox" name="quotation_id" class="alone black" :value="receive_record.id"></li>
                                     <li>
                                         <span v-for="item in receive_record.items" style="display:block;">
                                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
@@ -825,8 +825,8 @@ $(function(){
                         </div>
 
                         <div class="btnbox">
-                            <a class="btn green">Final Quotation</a>
-                            <a class="btn red">Delete</a>
+                            <a class="btn green" @click="final_quotation()">Final Quotation</a>
+                            <a class="btn red" @click="delete_quotation()">Delete</a>
                         </div>
 
                     </div>
@@ -929,7 +929,7 @@ $(function(){
 
                                 </ul>
                                 <ul v-for='(receive_record, index) in displayedPayment'>
-                                    <li><input type="checkbox" class="alone black"></li>
+                                    <li><input type="checkbox" name="payment_id" class="alone black" :value="receive_record.id"></li>
                                     <li>{{ (receive_record.kind == 0) ? "Down Payment" : "Payment" }}</li>
                                     <li>{{ receive_record.remark }}</li>
                                     <li style="padding-left: 10px; text-align: left;">
@@ -947,7 +947,7 @@ $(function(){
                         </div>
 
                         <div class="btnbox">
-                            <a class="btn red">Withdraw</a>
+                            <a class="btn red" @click="payment_withdraw()">Withdraw</a>
                         </div>
 
                     </div>

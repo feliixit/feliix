@@ -46,17 +46,32 @@ $db = $database->getConnection();
 $merged_results = [];
 
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
+$receive_date = (isset($_POST['receive_date']) ?  $_POST['receive_date'] : '');
+$amount = (isset($_POST['amount']) ?  $_POST['amount'] : 0);
+$invoice = (isset($_POST['invoice']) ?  $_POST['invoice'] : '');
+$detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
 $query = "
-    update project_proof a 
-    set a.updated_id = :updated_id, a.updated_at = NOW(), a.STATUS = -1, proof_remark = :proof_remark
-    WHERE a.STATUS = 0
-    AND a.id = :id";
+        UPDATE project_proof a
+        SET    a.updated_id = :updated_id,
+            a.updated_at = Now(),
+            a.status = -1,
+            a.received_date = :receive_date, 
+            a.amount = :amount, 
+            a.invoice = :invoice, 
+            a.detail = :detail, 
+            a.proof_remark = :proof_remark
+        WHERE  a.status = 0
+            AND a.id = :id ";
 
 $stmt = $db->prepare( $query );
 
 $stmt->bindParam(':updated_id', $user_id);
+$stmt->bindParam(':receive_date', $receive_date);
+$stmt->bindParam(':amount', $amount);
+$stmt->bindParam(':invoice', $invoice);
+$stmt->bindParam(':detail', $detail);
 $stmt->bindParam(':proof_remark', $remark);
 $stmt->bindParam(':id', $id);
 
@@ -64,6 +79,9 @@ if (!$stmt->execute())
 {
     $arr = $stmt->errorInfo();
     error_log($arr[2]);
+    http_response_code(501);
+    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+    die();
 }
 else
 {
@@ -98,4 +116,5 @@ else
     send_check_notify_mail($leaver, $email1, $project_name, $remark, $subtime, $proof_remark, "False", $category);
 }
 
-echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+http_response_code(200);
+echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));

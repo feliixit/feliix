@@ -79,6 +79,20 @@ if($ft != "" && $ft != "0")
     $query = $query . " and user.username = '" . $ft . "' ";
 }
 
+if($id != "" && $id != "0")
+{
+    $query = $query . " and pm.id = " . $id . " ";
+}
+
+if($fal != "" && $fal != "0")
+{
+    $query = $query . " and pm.final_amount >= " . $fal . " ";
+}
+
+if($fau != "" && $fau != "0")
+{
+    $query = $query . " and pm.final_amount <= " . $fau . " ";
+}
 
 $query = $query . " order by pm.created_at desc ";
 
@@ -241,7 +255,7 @@ function GetPaymentAmount($project_id, $db){
             pm.amount
         FROM   project_proof pm
         WHERE  project_id = " . $project_id . "
-            AND pm.status <> -1 
+            AND pm.status = 1
             AND pm.kind = 1
     ";
 
@@ -264,7 +278,7 @@ function GetDownPaymentAmount($project_id, $db){
             pm.amount
         FROM   project_proof pm
         WHERE  project_id = " . $project_id . "
-            AND pm.status <> -1 
+            AND pm.status = 1
             AND pm.kind = 0
     ";
 
@@ -291,7 +305,7 @@ function GetPayment($project_id, $db){
             pm.amount,
             pm.invoice,
             pm.detail,
-            pm.checked,
+            pm.status checked,
             pm.checked_id,
             pm.checked_at
         FROM   project_proof pm
