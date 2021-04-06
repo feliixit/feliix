@@ -46,6 +46,7 @@ $page = (isset($_GET['page']) ?  $_GET['page'] : "");
 $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
 $pid = (isset($_GET['pid']) ?  $_GET['pid'] : 0);
+$fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
 
 $merged_results = array();
 
@@ -79,6 +80,10 @@ $query = "SELECT pm.id pid,
                 ON f.batch_id = pp.id
           AND f.batch_type = 'proof'
           WHERE  1 = 1  ";
+
+if($fk != "") {
+    $query .= " AND (user.username like '%" . $fk . "%' or  pm.project_name like '%" . $fk . "%') ";
+}
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);

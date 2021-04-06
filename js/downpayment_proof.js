@@ -25,10 +25,36 @@ var app = new Vue({
 
     perPage: 5,
 
+    fil_keyowrd: "",
+
     is_approval: false,
   },
 
   created() {
+
+    let _this = this;
+    let uri = window.location.href.split("?");
+    if (uri.length >= 2) {
+      let vars = uri[1].split("&");
+
+      let tmp = "";
+      vars.forEach(async function(v) {
+        tmp = v.split("=");
+        if (tmp.length == 2) {
+          switch (tmp[0]) {
+           
+            case "fk":
+              _this.fil_keyowrd = tmp[1];
+              break;
+           
+            default:
+              console.log(`Too many args`);
+          }
+        }
+      });
+    }
+
+
     this.getUserName();
   },
 
@@ -94,8 +120,18 @@ var app = new Vue({
     getLeaveCredit: function() {
       let _this = this;
 
+      const params = {
+        fk: _this.fil_keyowrd,
+      
+      };
+
+      let token = localStorage.getItem("accessToken");
+
       axios
-        .get("api/downpayment_proof")
+        .get("api/downpayment_proof", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;

@@ -208,8 +208,8 @@ $(function(){
 
                     <!-- 搜尋 -->
                     <div class="searching">
-                        <input type="text" placeholder="Searching Keyword Here">
-                        <i class="fas fa-search-plus"></i>
+                        <input type="text" placeholder="Searching Keyword Here"  v-model="fil_keyowrd">
+                        <i class="fas fa-search-plus" @click="getLeaveCredit()"></i>
                     </div>
 
                     <!-- 分頁 -->
