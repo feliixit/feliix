@@ -256,7 +256,7 @@ $(function(){
                         <li class="head">Final Quotation</li>
                         <li>
                             <span v-for="item in record.final_quotation">
-                                <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
+                                <a :href="baseURL + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
                             </span>
                         </li>
                     </ul>
