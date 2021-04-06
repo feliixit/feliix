@@ -152,39 +152,39 @@ if($of1 != "" && $of1 != "0")
     {
         case 1:
             if($ofd1 == 2)
-                $sOrder = "Coalesce(pm.created_at, '9999-99-99') desc";
+                $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
             else
-                $sOrder = "Coalesce(pm.created_at, '0000-00-00') ";
+                $sOrder = "Coalesce(pm.created_at, '9999-99-99') ";
             break;  
         case 2:
             if($ofd1 == 2)
-                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') desc";
+                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') desc";
             else
-                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') ";
+                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
             break;  
         case 3:
             if($ofd1 == 2)
                 $sOrder = "Coalesce(pm.final_amount, 0) desc";
             else
-                $sOrder = "Coalesce(pm.final_amount, 0)";
+                $sOrder = "Coalesce(pm.final_amount, 99999999)";
             break;  
         case 4:
             if($ofd1 == 2)
                 $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) desc";
             else
-                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0)";
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 99999999)";
             break;
         case 5:
             if($ofd1 == 2)
                 $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) desc";
             else
-                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0)";
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 99999999)";
             break;
         case 6:
             if($ofd1 == 2)
                 $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) desc";
             else
-                $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) ";
+                $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 99999999) ";
             break;
         default:
     }
@@ -196,39 +196,39 @@ if($of2 != "" && $of2 != "0" && $sOrder != "")
     {
         case 1:
             if($ofd2 == 2)
-                $sOrder .= ", Coalesce(pm.created_at, '9999-99-99') desc";
+                $sOrder .= ", Coalesce(pm.created_at, '0000-00-00') desc";
             else
-                $sOrder .= ", Coalesce(pm.created_at, '0000-00-00') ";
+                $sOrder .= ", Coalesce(pm.created_at, '9999-99-99') ";
             break;  
         case 2:
             if($ofd2 == 2)
-                $sOrder .= ", Coalesce(pm.updated_at, '9999-99-99') desc";
+                $sOrder .= ", Coalesce(pm.updated_at, '0000-00-00') desc";
             else
-                $sOrder .= ", Coalesce(pm.updated_at, '0000-00-00') ";
+                $sOrder .= ", Coalesce(pm.updated_at, '9999-99-99') ";
             break;  
         case 3:
             if($ofd2 == 2)
                 $sOrder .= ", Coalesce(pm.final_amount, 0) desc";
             else
-                $sOrder .= ", Coalesce(pm.final_amount, 0)";
+                $sOrder .= ", Coalesce(pm.final_amount, 99999999)";
             break;  
         case 4:
             if($ofd2 == 2)
                 $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) desc";
             else
-                $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0)";
+                $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 99999999)";
             break;
         case 5:
             if($ofd2 == 2)
                 $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) desc";
             else
-                $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0)";
+                $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 99999999)";
             break;
         case 6:
             if($ofd2 == 2)
                 $sOrder .= ", Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) desc";
             else
-                $sOrder .= ", Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) ";
+                $sOrder .= ", Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 99999999) ";
             break;
         default:
     }
@@ -241,39 +241,39 @@ if($of2 != "" && $of2 != "0" && $sOrder == "")
     {
         case 1:
             if($ofd2 == 2)
-                $sOrder = "Coalesce(pm.created_at, '9999-99-99') desc";
+                $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
             else
-                $sOrder = "Coalesce(pm.created_at, '0000-00-00') ";
+                $sOrder = "Coalesce(pm.created_at, '9999-99-99') ";
             break;  
         case 2:
             if($ofd2 == 2)
-                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') desc";
+                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') desc";
             else
-                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') ";
+                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
             break;  
         case 3:
             if($ofd2 == 2)
                 $sOrder = "Coalesce(pm.final_amount, 0) desc";
             else
-                $sOrder = "Coalesce(pm.final_amount, 0)";
+                $sOrder = "Coalesce(pm.final_amount, 99999999)";
             break;  
         case 4:
             if($ofd2 == 2)
                 $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) desc";
             else
-                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0)";
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 99999999)";
             break;
         case 5:
             if($ofd2 == 2)
                 $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) desc";
             else
-                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0)";
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 99999999)";
             break;
         case 6:
             if($ofd2 == 2)
                 $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) desc";
             else
-                $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) ";
+                $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 99999999) ";
             break;
         default:
     }
