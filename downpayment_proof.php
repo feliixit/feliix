@@ -157,6 +157,11 @@ $(function(){
     div.btnbox a.btn.red {
         background-color: var(--pri01a);
     }
+    
+    .tablebox li span {
+        display: block;
+    }
+
 
 </style>
 
@@ -211,7 +216,7 @@ $(function(){
                     <div class="pagenation">
                         <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
                       
-                        <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                        <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'grey', 'color': 'white'} : { }]">{{ pg }}</a>
                       
                         <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                     </div>
@@ -241,7 +246,7 @@ $(function(){
                 <div class="tablebox" v-if="view_detail" style="margin-top: 40px;">
                     <ul class="head">
                         <li class="head">Project Name</li>
-                        <li><a :href="'quotation_and_payment_mgt?id=' + record.pid"  class="attch">{{ record.project_name }}</a></li>
+                        <li><a :href="'quotation_and_payment_mgt?id=' + record.pid" target="_blank"  class="attch">{{ record.project_name }}</a></li>
                     </ul>
                     <ul class="head">
                         <li class="head">Amount</li>
@@ -251,7 +256,7 @@ $(function(){
                         <li class="head">Final Quotation</li>
                         <li>
                             <span v-for="item in record.final_quotation">
-                                <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">• {{item.filename}}</a>
+                                <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
                             </span>
                         </li>
                     </ul>
@@ -327,7 +332,7 @@ $(function(){
                         </ul>
                         <ul>
                             <li class="head">Remarks</li>
-                            <li>{{ record.remark }}
+                            <li>{{ record.proof_remark }}
                             </li>
                         </ul>
                     </div>

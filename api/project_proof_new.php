@@ -21,6 +21,7 @@ include_once 'config/database.php';
 
 include_once 'config/conf.php';
 require_once '../vendor/autoload.php';
+include_once 'mail.php';
 
 
 $database = new Database();
@@ -215,6 +216,7 @@ if (!isset($jwt)) {
 
         $db->commit();
 
+        SendNotifyMail($last_id);
 
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -226,4 +228,36 @@ if (!isset($jwt)) {
         echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
         die();
     }
+}
+
+
+function SendNotifyMail($bid)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, p.catagory_id, pm.kind FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status <> -1 ";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    $project_name = "";
+    $remark = "";
+    $leaver = "";
+    $subtime = "";
+    $email1 = "";
+    $category = "";
+    $kind = 0;
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $project_name = $row['project_name'];
+        $remark = $row['remark'];
+        $leaver = $row['username'];
+        $subtime = $row['created_at'];
+        $email1 = $row['email'];
+        $category = $row['catagory_id'];
+        $kind = $row['kind'];
+    }
+
+    send_pay_notify_mail_new($leaver, $email1, $leaver, $project_name, $remark, $subtime, $category, $kind);
 }

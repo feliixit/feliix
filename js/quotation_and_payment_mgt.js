@@ -261,6 +261,7 @@ var app = new Vue({
       let perPage = this.perPage;
       let from = page * perPage - perPage;
       let to = page * perPage;
+
       return this.record.payment.slice(from, to);
     },
 
@@ -719,7 +720,37 @@ var app = new Vue({
       var finals = document.getElementsByName("payment_id");
       var final_id = "";
       for (var i = 0; i < finals.length; i++) {
-        if (finals[i].checked) final_id += finals[i].value + ",";
+        if (finals[i].checked)
+        {
+
+          var record = this.shallowCopy(
+            this.record.payment.find((element) => element.id == finals[i].value)
+          );
+
+          if (record.checked === "-1") {
+            Swal.fire({
+              text:
+                "Checked proof cannot be deleted.",
+              icon: "warning",
+              confirmButtonText: "OK",
+            });
+
+            return;
+          }
+
+          if (record.checked === "1") {
+            Swal.fire({
+              text:
+                "Checked proof cannot be deleted.",
+              icon: "warning",
+              confirmButtonText: "OK",
+            });
+
+            return;
+          }
+
+          final_id += finals[i].value + ",";
+        }
       }
       if (final_id !== "") 
         final_id = final_id.slice(0, -1);

@@ -57,6 +57,10 @@ var app = new Vue({
     picked() {
       this.getLeaveCredit();
     },
+
+    proof_id() {
+      this.detail(this.proof_id);
+    },
   },
 
   methods: {
@@ -71,8 +75,12 @@ var app = new Vue({
       }
     },
 
+
     paginate: function(posts) {
       console.log("paginate");
+
+      this.proof_id = 0;
+
       if (this.page < 1) this.page = 1;
       if (this.page > this.pages.length) this.page = this.pages.length;
 
@@ -135,6 +143,14 @@ var app = new Vue({
       }
       //$(".alone").prop("checked", false);
       //this.clicked = false;
+
+      var finals = document.getElementsByName("record_id");
+      for (var i = 0; i < finals.length; i++) {
+        if (finals[i].checked)
+        {
+          finals[i].checked = false;
+        }
+      }
     },
 
     showPic(pic) {
@@ -258,14 +274,11 @@ var app = new Vue({
       //}
 
       if (this.proof_id == 0) {
-        Swal.fire({
-          text: "Please select row to see the detail!",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        //$(window).scrollTop(0);
+           //$(window).scrollTop(0);
         this.view_detail = false;
+
+        this.unCheckCheckbox();
+
         return;
       }
 

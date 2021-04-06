@@ -66,6 +66,7 @@ $(function(){
 
         .tableframe .tablebox.lv1 li{
             min-width: auto;
+            color:#14456c;
         }
 
         .tableframe .tablebox.lv1 li:nth-of-type(3) {
@@ -74,6 +75,10 @@ $(function(){
 
         .tableframe .tablebox.lv1 li:nth-of-type(n+7) {
             min-width: 110px;
+        }
+
+        .tableframe .tablebox.lv1 li:nth-of-type(10) {
+            color:#EA0029;
         }
 
         .tableframe .tablebox.lv1 li:nth-of-type(11) {
@@ -424,6 +429,15 @@ $(function(){
             margin-top: 20px;
         }
 
+        li.display_file{
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: left;
+        }
+
+        li.display_file span{
+            display: block;
+        }
     </style>
 
 
@@ -648,7 +662,7 @@ $(function(){
                 <div class="pagenation">
                     <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
                   
-                    <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
                   
                     <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                 </div>
@@ -676,7 +690,7 @@ $(function(){
                       <li><input type="radio" name="project_id" class="alone black"
                             @click="show_detail(receive_record.id)"></li>
                       <li>{{ receive_record.category }}</li>
-                      <li><a :href="'project02?p=' + receive_record.id">{{ receive_record.project_name }}</a></li>
+                      <li><a :href="'project02?p=' + receive_record.id" target="_blank">{{ receive_record.project_name }}</a></li>
                       <li>{{ receive_record.project_status }}</li>
                       <li>{{ receive_record.username }}</li>
                       <li>{{ receive_record.created_at }} ~ {{ receive_record.end_at }}</li>
@@ -684,7 +698,7 @@ $(function(){
                       <li>{{ isNaN(parseInt(receive_record.down_payment_amount)) ? "" : Number(receive_record.down_payment_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.ar)) ? "" : Number(receive_record.ar).toLocaleString() }}</li>
-                      <li style="padding-left: 10px; text-align: left;">
+                      <li class="display_file">
                         <span v-for="item in receive_record.final_quotation">
                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">• {{item.filename}}</a>
                         </span>
@@ -793,7 +807,7 @@ $(function(){
                             <div class="pagenation">
                                 <a class="prev" :disabled="quote_page == 1" @click="quote_page < 1 ? quote_page = 1 : quote_page--">Previous</a>
 
-                                <a class="page" v-for="pg in quote_pages" @click="quote_page=pg">{{ pg }}</a>
+                                <a class="page" v-for="pg in quote_pages" @click="quote_page=pg" v-bind:style="[pg == quote_page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
 
                                 <a class="next" :disabled="quote_page == quote_pages.length" @click="quote_page++">Next</a>
                             </div>
@@ -811,7 +825,7 @@ $(function(){
                                 </ul>
                                 <ul v-for='(receive_record, index) in displayedQuote'>
                                     <li><input type="checkbox" name="quotation_id" class="alone black" :value="receive_record.id"></li>
-                                    <li>
+                                    <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display:block;">
                                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
                                         </span>
@@ -910,7 +924,7 @@ $(function(){
                             <div class="pagenation">
                                 <a class="prev" :disabled="pay_page == 1" @click="pay_page < 1 ? pay_page = 1 : pay_page--">Previous</a>
 
-                                <a class="page" v-for="pg in pay_pages" @click="pay_page=pg">{{ pg }}</a>
+                                <a class="page" v-for="pg in pay_pages" @click="pay_page=pg" v-bind:style="[pg == pay_page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
 
                                 <a class="next" :disabled="pay_page == pay_pages.length" @click="pay_page++">Next</a>
                             </div>
@@ -932,13 +946,13 @@ $(function(){
                                     <li><input type="checkbox" name="payment_id" class="alone black" :value="receive_record.id"></li>
                                     <li>{{ (receive_record.kind == 0) ? "Down Payment" : "Payment" }}</li>
                                     <li>{{ receive_record.remark }}</li>
-                                    <li style="padding-left: 10px; text-align: left;">
+                                    <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display: block;">
                                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">• {{item.filename}}</a>
                                         </span>
                                     </li>
                                     <li>{{ receive_record.username }} at {{ receive_record.created_at }}</li>
-                                    <li>Checked: {{ (receive_record.checked == 0) ? "False" : "True" }}</li>
+                                    <li>Checked: {{ (receive_record.checked == 0) ? "Under Checking" : ((receive_record.checked == 1) ? "Checked: True" : ((receive_record.checked == -1) ? "Checked: False" : 'Under Checking')) }}</li>
                                     <li>{{ isNaN(parseInt(receive_record.amount)) ? "" : Number(receive_record.amount).toLocaleString() }}</li>
                                 </ul>
                             
@@ -947,7 +961,7 @@ $(function(){
                         </div>
 
                         <div class="btnbox">
-                            <a class="btn red" @click="payment_withdraw()">Withdraw</a>
+                            <a class="btn red" @click="payment_withdraw()">Delete</a>
                         </div>
 
                     </div>

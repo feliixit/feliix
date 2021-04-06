@@ -89,6 +89,91 @@ function sendGridMail($name, $email1,  $leaver, $projectname, $remark)
 }
 
 
+function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress($email1, $name);
+
+    if($kind == 0)
+        $payment = "DownPayment";
+    
+    if($kind == 1)
+        $payment = "Payment";
+
+    if($category == '1')
+        $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
+
+    if($category == '2')
+        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
+
+    $mail->AddCC('kuan@feliix.com', 'Kuan');
+    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
+    $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>Glen has checked " . $payment . " proof, Following are the details:</p>";
+
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $name . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+
+
+    $content = $content . "<p>Status: Checked: " . $status . "</p>";
+    /*
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Checked:" . $status . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+    */
+
+    if($reason != "")
+        $content = $content . "<p>Additional Remark:" . $reason . "</p>";
+
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to view the downpayment proof.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category)
 {
     $conf = new Conf();
@@ -110,6 +195,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 
     $mail->IsHTML(true);
     $mail->AddAddress($email1, $name);
+
 
     if($category == '1')
         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
@@ -168,6 +254,75 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 
 }
 
+function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
+    if($category == '1')
+        $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
+
+    if($category == '2')
+        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
+
+    $pay = "Payment";
+    if($kind == 0)
+        $pay = "Downpayment";
+
+    $mail->AddCC('kuan@feliix.com', 'Kuan');
+    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    $mail->AddCC($email1, $name);
+    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Payment Proof Submitted by " . $leaver . "(" . $projectname . ")";
+    $content =  "<p>Dear Glen,</p>";
+    $content = $content . "<p>" . $leaver . " has submitted payment proof, Following are the details:</p>";
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Type:" . $pay . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to review the downpayment proof.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
 
 function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $subtime, $category)
 {

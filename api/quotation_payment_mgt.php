@@ -61,8 +61,49 @@ $page = (isset($_GET['page']) ?  $_GET['page'] : "");
 $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
 $merged_results = array();
+$return_result = array();
 
-$query = "SELECT pm.id, COALESCE(pc.category, '') category, pct.client_type, pct.class_name pct_class, pp.priority, pp.class_name pp_class, pm.project_name, pm.final_amount, COALESCE(ps.project_status, '') project_status, COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage FROM project_main pm LEFT JOIN project_category pc ON pm.catagory_id = pc.id LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id LEFT JOIN project_priority pp ON pm.priority_id = pp.id LEFT JOIN project_status ps ON pm.project_status_id = ps.id LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
+$query = "SELECT pm.id,
+            Coalesce(pc.category, '')                    category,
+            pct.client_type,
+            pct.class_name                               pct_class,
+            pp.priority,
+            pp.class_name                                pp_class,
+            pm.project_name,
+            pm.final_amount,
+            (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1) payment,
+            (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0) dp_payment,
+            Coalesce(ps.project_status, '')              project_status,
+            Coalesce((SELECT project_est_prob.prob
+                    FROM   project_est_prob
+                    WHERE  project_est_prob.project_id = pm.id
+                    ORDER  BY created_at DESC
+                    LIMIT  1), pm.estimate_close_prob) estimate_close_prob,
+            user.username,
+            Date_format(pm.created_at, '%Y-%m-%d')       created_at,
+            Date_format(pm.updated_at, '%Y-%m-%d')       updated_at,
+            Coalesce((SELECT project_stage.stage
+                    FROM   project_stages
+                            LEFT JOIN project_stage
+                                    ON project_stage.id = project_stages.stage_id
+                    WHERE  project_stages.project_id = pm.id
+                            AND project_stages.stages_status_id = 1
+                    ORDER  BY `sequence` DESC
+                    LIMIT  1), '')                     stage
+            FROM   project_main pm
+            LEFT JOIN project_category pc
+                ON pm.catagory_id = pc.id
+            LEFT JOIN project_client_type pct
+                ON pm.client_type_id = pct.id
+            LEFT JOIN project_priority pp
+                ON pm.priority_id = pp.id
+            LEFT JOIN project_status ps
+                ON pm.project_status_id = ps.id
+            LEFT JOIN project_stage pst
+                ON pm.stage_id = pst.id
+            LEFT JOIN user
+                ON pm.create_id = user.id
+            WHERE  1 = 1 ";
 
 if($fc != "" && $fc != "0")
 {
@@ -94,7 +135,152 @@ if($fau != "" && $fau != "0")
     $query = $query . " and pm.final_amount <= " . $fau . " ";
 }
 
-$query = $query . " order by pm.created_at desc ";
+if($fpl != "" && $fpl != "0")
+{
+    $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) >= " . $fpl . " ";
+}
+
+if($fpu != "" && $fpu != "0")
+{
+    $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
+}
+
+$sOrder = "";
+if($of1 != "" && $of1 != "0")
+{
+    switch ($of1)
+    {
+        case 1:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce(pm.created_at, '9999-99-99') desc";
+            else
+                $sOrder = "Coalesce(pm.created_at, '0000-00-00') ";
+            break;  
+        case 2:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') desc";
+            else
+                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') ";
+            break;  
+        case 3:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce(pm.final_amount, 0) desc";
+            else
+                $sOrder = "Coalesce(pm.final_amount, 0)";
+            break;  
+        case 4:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) desc";
+            else
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0)";
+            break;
+        case 5:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) desc";
+            else
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0)";
+            break;
+        case 6:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) desc";
+            else
+                $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) ";
+            break;
+        default:
+    }
+}
+
+if($of2 != "" && $of2 != "0" && $sOrder != "")
+{
+    switch ($of2)
+    {
+        case 1:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce(pm.created_at, '9999-99-99') desc";
+            else
+                $sOrder .= ", Coalesce(pm.created_at, '0000-00-00') ";
+            break;  
+        case 2:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce(pm.updated_at, '9999-99-99') desc";
+            else
+                $sOrder .= ", Coalesce(pm.updated_at, '0000-00-00') ";
+            break;  
+        case 3:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce(pm.final_amount, 0) desc";
+            else
+                $sOrder .= ", Coalesce(pm.final_amount, 0)";
+            break;  
+        case 4:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) desc";
+            else
+                $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0)";
+            break;
+        case 5:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) desc";
+            else
+                $sOrder .= ", Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0)";
+            break;
+        case 6:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) desc";
+            else
+                $sOrder .= ", Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) ";
+            break;
+        default:
+    }
+}
+
+
+if($of2 != "" && $of2 != "0" && $sOrder == "")
+{
+    switch ($of2)
+    {
+        case 1:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce(pm.created_at, '9999-99-99') desc";
+            else
+                $sOrder = "Coalesce(pm.created_at, '0000-00-00') ";
+            break;  
+        case 2:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') desc";
+            else
+                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') ";
+            break;  
+        case 3:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce(pm.final_amount, 0) desc";
+            else
+                $sOrder = "Coalesce(pm.final_amount, 0)";
+            break;  
+        case 4:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) desc";
+            else
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0)";
+            break;
+        case 5:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) desc";
+            else
+                $sOrder = "Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0)";
+            break;
+        case 6:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) desc";
+            else
+                $sOrder = "Coalesce(pm.final_amount - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1), 0), 0) ";
+            break;
+        default:
+    }
+}
+
+if($sOrder != "")
+    $query = $query . " order by  " . $sOrder;
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -120,6 +306,7 @@ $stmt->execute();
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id = $row['id'];
     $category = $row['category'];
+    $category_name = GetCategory($row['category'], $db);
     $client_type = $row['client_type'];
     $pct_class = $row['pct_class'];
     $priority = $row['priority'];
@@ -130,7 +317,12 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $estimate_close_prob = $row['estimate_close_prob'];
     $username = $row['username'];
 
+    $pm = $row['payment'];
+    $dpm = $row['dp_payment'];
+
     $final_amount = $row['final_amount'];
+
+    $quote_file_string = GetQuoteFileString($row['id'], $db);
 
     $payment_amount = GetPaymentAmount($row['id'], $db);
     $down_payment_amount = GetDownPaymentAmount($row['id'], $db);
@@ -149,6 +341,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     }
 
     $created_at = $row['created_at'];
+    $updated_at = $row['updated_at'];
     $stage = $row['stage'];
     $quote = GetQuote($row['id'], $db);
     $payment = GetPayment($row['id'], $db);
@@ -157,6 +350,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $merged_results[] = array(
         "id" => $id,
         "category" => $category,
+        "category_name" => $category_name,
         "client_type" => $client_type,
         "pct_class" => $pct_class,
         "priority" => $priority,
@@ -169,14 +363,35 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "final_quotation" => $final_quotation,
         "username" => $username,
         "created_at" => $created_at,
+        "updated_at" => $updated_at,
         "stage" => $stage,
         "final_amount" => $final_amount,
         "quote" => $quote,
         "payment" => $payment,
+        "pm" => $pm,
+        "dpm" => $dpm,
+        "quote_file_string" => $quote_file_string,
     );
 }
 
-echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+if($fk != "")
+{
+    foreach ($merged_results as &$value) {
+        if(preg_match("/{$fk}/i", $value['category_name']) || 
+            preg_match("/{$fk}/i", $value['project_name']) || 
+            preg_match("/{$fk}/i", $value['project_status']) || 
+            preg_match("/{$fk}/i", $value['username']) || 
+            preg_match("/{$fk}/i", $value['quote_file_string']))
+        {
+            $return_result[] = $value;
+        }
+    }
+}
+else
+    $return_result = $merged_results;
+
+
+echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
 
 function GetFinalQuote($project_id, $db){
     $query = "
@@ -218,6 +433,7 @@ function GetQuote($project_id, $db){
                     ON u.id = pm.create_id
         WHERE  project_id = " . $project_id . "
             AND pm.status <> -1 
+        ORDER BY final_quotation desc, created_at
     ";
 
     // prepare the query
@@ -384,6 +600,49 @@ function GetItem($batch_id, $db, $type){
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetCategory($id, $db)
+{
+    $category = "";
+    $query = "SELECT category FROM project_category  where status <> -1 ".($id ? " and id=$id" : '');
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if($row['category'] != null)
+            $category = $row['category'];
+    }
+
+    return $category;
+}
+
+function GetQuoteFileString($project_id, $db){
+    $query = "
+        SELECT 
+            COALESCE(f.filename, '') filename
+        FROM   project_quotation pm
+           
+        LEFT JOIN gcp_storage_file f 
+            ON f.batch_id = pm.id AND f.batch_type = 'quote' 
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+            AND pm.final_quotation = 1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = "";
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results .= $row['filename'] . " ";
     }
 
     return $merged_results;
