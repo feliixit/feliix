@@ -79,7 +79,7 @@ $query = "SELECT pm.id pid,
           LEFT JOIN gcp_storage_file f
                 ON f.batch_id = pp.id
           AND f.batch_type = 'proof'
-          WHERE  1 = 1  ";
+          WHERE  pp.`status` <> -2  ";
 
 if($fk != "") {
     $query .= " AND (user.username like '%" . $fk . "%' or  pm.project_name like '%" . $fk . "%') ";

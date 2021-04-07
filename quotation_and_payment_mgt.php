@@ -552,7 +552,7 @@ $(function(){
 
                                 </div>
 
-                                <dt>Specific Keyword</dt>
+                                <dt>Keyword (only for project name or final quotation)</dt>
                                 <dd><input type="text" v-model="fil_keyowrd"></dd>
 
                             </dl>
@@ -660,11 +660,11 @@ $(function(){
 
                 <!-- 分頁 -->
                 <div class="pagenation">
-                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; filter_apply();">Previous</a>
                   
-                    <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages" @click="page=pg; filter_apply();" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
                   
-                    <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                    <a class="next" :disabled="page == pages.length" @click="page++; filter_apply();">Next</a>
                 </div>
             </div>
 
@@ -952,7 +952,7 @@ $(function(){
                                         </span>
                                     </li>
                                     <li>{{ receive_record.username }} at {{ receive_record.created_at }}</li>
-                                    <li>Checked: {{ (receive_record.checked == 0) ? "Under Checking" : ((receive_record.checked == 1) ? "Checked: True" : ((receive_record.checked == -1) ? "Checked: False" : 'Under Checking')) }}</li>
+                                    <li>{{ (receive_record.checked == 0) ? "Under Checking" : ((receive_record.checked == 1) ? "Checked: True" : ((receive_record.checked == -1) ? "Checked: False" : 'Under Checking')) }}</li>
                                     <li>{{ isNaN(parseInt(receive_record.amount)) ? "" : Number(receive_record.amount).toLocaleString() }}</li>
                                 </ul>
                             

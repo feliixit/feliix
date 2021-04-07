@@ -50,7 +50,7 @@ if (!isset($jwt)) {
         $uid = $user_id;
 
         $query = "update project_proof 
-                    set status = -1,
+                    set status = -2,
                     updated_id = :updated_id,
                     updated_at = now()
                   where project_id = :project_id and id in (" . $final .")";

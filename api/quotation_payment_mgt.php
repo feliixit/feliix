@@ -46,11 +46,16 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : '');
 $fc = (isset($_GET['fc']) ?  $_GET['fc'] : '');
 $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
 $ft = (isset($_GET['ft']) ?  $_GET['ft'] : '');
+
+$ft = urldecode($ft);
+
 $fal = (isset($_GET['fal']) ?  $_GET['fal'] : '');
 $fau = (isset($_GET['fau']) ?  $_GET['fau'] : '');
 $fpl = (isset($_GET['fpl']) ?  $_GET['fpl'] : '');
 $fpu = (isset($_GET['fpu']) ?  $_GET['fpu'] : '');
 $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
+
+$fk = urldecode($fk);
 
 $of1 = (isset($_GET['of1']) ?  $_GET['of1'] : '');
 $ofd1 = (isset($_GET['ofd1']) ?  $_GET['ofd1'] : '');
@@ -281,6 +286,8 @@ if($of2 != "" && $of2 != "0" && $sOrder == "")
 
 if($sOrder != "")
     $query = $query . " order by  " . $sOrder;
+else
+    $query = $query . " order by pm.created_at desc ";
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -377,10 +384,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 if($fk != "")
 {
     foreach ($merged_results as &$value) {
-        if(preg_match("/{$fk}/i", $value['category_name']) || 
+        if(
             preg_match("/{$fk}/i", $value['project_name']) || 
-            preg_match("/{$fk}/i", $value['project_status']) || 
-            preg_match("/{$fk}/i", $value['username']) || 
             preg_match("/{$fk}/i", $value['quote_file_string']))
         {
             $return_result[] = $value;
@@ -528,7 +533,7 @@ function GetPayment($project_id, $db){
             LEFT JOIN user u
                 ON u.id = pm.create_id
         WHERE  project_id = " . $project_id . "
-            AND pm.status <> -1 
+            AND pm.status <> -2
     ";
 
     // prepare the query

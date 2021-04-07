@@ -58,7 +58,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.id, pm.remark, u.username, pm.created_at FROM project_proof pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -1 ";
+            $sql = "SELECT pm.id, pm.remark, u.username, pm.created_at FROM project_proof pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -2 ";
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);

@@ -26,6 +26,7 @@ var app = new Vue({
     submit: false,
     // paging
     page: 1,
+    pg:0,
     //perPage: 10,
     pages: [],
 
@@ -139,6 +140,9 @@ var app = new Vue({
             case "id":
               _this.id = tmp[1];
               break;
+            case "pg":
+              _this.pg = tmp[1];
+              break;
             default:
               console.log(`Too many args`);
           }
@@ -158,6 +162,9 @@ var app = new Vue({
 
   computed: {
     displayedPosts() {
+      if(this.pg == 0)
+        this.filter_apply();
+
       this.setPages();
       return this.paginate(this.receive_records);
     },
@@ -190,6 +197,7 @@ var app = new Vue({
     proof_id() {
       this.detail();
     },
+
   },
 
   methods: {
@@ -235,6 +243,7 @@ var app = new Vue({
       let perPage = this.perPage;
       let from = page * perPage - perPage;
       let to = page * perPage;
+
       return this.receive_records.slice(from, to);
     },
 
@@ -352,7 +361,9 @@ var app = new Vue({
         "&of2=" +
         _this.od_factor2 +
         "&ofd2=" +
-        _this.od_factor2_order;
+        _this.od_factor2_order +
+        "&pg=" +
+        _this.page;
     },
 
     getRecords: function(keyword) {
@@ -386,6 +397,12 @@ var app = new Vue({
             _this.receive_records = res.data;
             _this.quote_search();
             _this.payment_search();
+
+            if(_this.pg !== 0)
+            { 
+              _this.page = _this.pg;
+              _this.setPages();
+            }
 
           },
           (err) => {

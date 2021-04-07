@@ -131,9 +131,9 @@ else
             $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
                                 FROM project_main pm
                     JOIN project_proof pac ON pm.id = pac.project_id
-                                join gcp_storage_file on batch_id = pac.id and batch_type = 'proof'
+                                join gcp_storage_file on gcp_storage_file.batch_id = pac.id and batch_type = 'proof'
                     join user on user.id = gcp_storage_file.create_id
-                    where pm.id =" . $pid . " and pm.status <> -1";
+                    where pm.id =" . $pid . " and pm.status <> -1 AND pac.`status` <> -2 ";
 
             $stmt = $db->prepare($sql);
             $stmt->execute();
@@ -204,7 +204,7 @@ else
                     JOIN project_proof pac ON pm.id = pac.project_id
                                 join gcp_storage_file on gcp_storage_file.batch_id = pac.id and batch_type = 'proof'
                     join user on user.id = gcp_storage_file.create_id
-                    where pm.id =" . $pid . " and pm.status <> -1";
+                    where pm.id =" . $pid . " and pm.status <> -1  AND pac.`status` <> -2 ";
 
             $stmt = $db->prepare($sql);
             $stmt->execute();

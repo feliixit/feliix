@@ -87,7 +87,7 @@ else
 {
 
     // send mail
-    $subquery = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, pm.status, pm.proof_remark, p.catagory_id, pm.kind  FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $id . "  ";
+    $subquery = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, pm.status, pm.proof_remark, p.catagory_id, pm.kind  FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $id . " and pm.status <> -2  ";
 
     $stmt = $db->prepare( $subquery );
     $stmt->execute();
