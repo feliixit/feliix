@@ -429,13 +429,13 @@ $(function(){
             margin-top: 20px;
         }
 
-        li.display_file{
+        .block .tablebox > ul > li.display_file{
             padding-left: 10px;
             padding-right: 10px;
             text-align: left;
         }
 
-        li.display_file span{
+        .block .tablebox > ul > li.display_file span{
             display: block;
         }
     </style>
@@ -700,7 +700,7 @@ $(function(){
                       <li>{{ isNaN(parseInt(receive_record.ar)) ? "" : Number(receive_record.ar).toLocaleString() }}</li>
                       <li class="display_file">
                         <span v-for="item in receive_record.final_quotation">
-                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">• {{item.filename}}</a>
+                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
                         </span>
                       </li>
                   </ul>
@@ -827,7 +827,7 @@ $(function(){
                                     <li><input type="checkbox" name="quotation_id" class="alone black" :value="receive_record.id"></li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display:block;">
-                                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
+                                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
                                         </span>
                                     </li>
                                     <li>{{ receive_record.comment }}</li>
@@ -948,7 +948,7 @@ $(function(){
                                     <li>{{ receive_record.remark }}</li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display: block;">
-                                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">• {{item.filename}}</a>
+                                            <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
                                         </span>
                                     </li>
                                     <li>{{ receive_record.username }} at {{ receive_record.created_at }}</li>
