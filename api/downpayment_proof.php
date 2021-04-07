@@ -248,7 +248,7 @@ if($fk != "")
     foreach ($merged_results as &$value) {
         if(
             preg_match("/{$fk}/i", $value['project_name']) || 
-            preg_match("/{$fk}/i", $value['submitted_at']) || 
+            ($fk == $value['submitted_at']) || 
             preg_match("/{$fk}/i", $value['username']) || 
             preg_match("/{$fk}/i", $value['status_string']) )
         {
