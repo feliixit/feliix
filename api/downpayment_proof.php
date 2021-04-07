@@ -48,7 +48,10 @@ $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 $pid = (isset($_GET['pid']) ?  $_GET['pid'] : 0);
 $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
 
+$fk = urldecode($fk);
+
 $merged_results = array();
+$return_result = array();
 
 $query = "SELECT pm.id pid,
             pp.id,
@@ -63,6 +66,7 @@ $query = "SELECT pm.id pid,
             Date_format(pp.created_at, '%Y-%m-%d %H:%i:%s') created_at,
             pp.proof_remark,
             pp.received_date,
+            Date_format(pp.created_at, '%Y-%m-%d') submitted_at,
             pp.kind,
             pp.amount,
             pp.invoice,
@@ -81,9 +85,9 @@ $query = "SELECT pm.id pid,
           AND f.batch_type = 'proof'
           WHERE  pp.`status` <> -2  ";
 
-if($fk != "") {
-    $query .= " AND (user.username like '%" . $fk . "%' or  pm.project_name like '%" . $fk . "%') ";
-}
+//if($fk != "") {
+//    $query .= " AND (user.username like '%" . $fk . "%' or  pm.project_name like '%" . $fk . "%' or Date_format(pp.created_at, '%Y-%m-%d') = '" . $fk . "' ) ";
+//}
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -123,6 +127,7 @@ $created_at = "";
 $proof_remark = "";
 $proof_remark   = "";
 $received_date = "";
+$submitted_at = "";
 $kind = "";
 $amount = "";
 $invoice = "";
@@ -131,6 +136,7 @@ $checked = "";
 $checked_at = "";
 $final_amount = "";
 $pid = 0;
+$status_string = "";
 
 $items = [];
 
@@ -153,6 +159,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 "created_at" => $created_at,
                                 "proof_remark" => $proof_remark,
                                 "received_date" => $received_date,
+                                "submitted_at" => $submitted_at,
                                 "kind" => $kind,
                                 "amount" => $amount,
                                 "invoice" => $invoice,
@@ -162,6 +169,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 "created_at" => $created_at,
                                 "final_quotation" => $final_quotation,
                                 "final_amount" => $final_amount,
+                                "status_string" => $status_string,
         );
 
         $items = [];
@@ -181,6 +189,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $proof_remark = $row['proof_remark'];
 
     $received_date = $row['received_date'];
+    $submitted_at = $row['submitted_at'];
     $kind = $row['kind'];
     $amount = $row['amount'];
     $invoice = $row['invoice'];
@@ -191,6 +200,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $final_amount = $row['final_amount'];
 
     $final_quotation = GetFinalQuote($row['pid'], $db);
+
+    $status_string = GetStatus($row['status']);
 
     if($filename != "")
       $items[] = array('filename' => $filename,
@@ -213,6 +224,7 @@ if($id != 0)
                                 "created_at" => $created_at,
                                 "proof_remark" => $proof_remark,
                                 "received_date" => $received_date,
+                                "submitted_at" => $submitted_at,
                                 "kind" => $kind,
                                 "amount" => $amount,
                                 "invoice" => $invoice,
@@ -222,6 +234,7 @@ if($id != 0)
                                 "created_at" => $created_at,
                                 "final_quotation" => $final_quotation,
                                 "final_amount" => $final_amount,
+                                "status_string" => $status_string,
             );
 }
 
@@ -230,7 +243,23 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $merged_results[] = $row;
 }
 
-echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+if($fk != "")
+{
+    foreach ($merged_results as &$value) {
+        if(
+            preg_match("/{$fk}/i", $value['project_name']) || 
+            preg_match("/{$fk}/i", $value['submitted_at']) || 
+            preg_match("/{$fk}/i", $value['username']) || 
+            preg_match("/{$fk}/i", $value['status_string']) )
+        {
+            $return_result[] = $value;
+        }
+    }
+}
+else
+    $return_result = $merged_results;
+
+echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
 
 
 function GetFinalQuote($project_id, $db){
@@ -259,4 +288,17 @@ function GetFinalQuote($project_id, $db){
     }
 
     return $merged_results;
+}
+
+function GetStatus($type){
+    $leave_type = '';
+
+    if($type =="0")
+        $leave_type = "Under Checking";
+    if($type =="1")
+        $leave_type = "Checked: True";
+    if($type =="-1")
+        $leave_type = "Checked: False";
+
+    return $leave_type;
 }

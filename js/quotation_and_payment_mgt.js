@@ -108,7 +108,7 @@ var app = new Vue({
               _this.fil_status = tmp[1];
               break;
             case "ft":
-              _this.fil_creator = tmp[1];
+              _this.fil_creator = decodeURI(tmp[1]);
               break;
             case "fal":
               _this.fil_amount_lower = tmp[1];
@@ -123,7 +123,7 @@ var app = new Vue({
               _this.fil_payment_upper = tmp[1];
               break;
             case "fk":
-              _this.fil_keyowrd = tmp[1];
+              _this.fil_keyowrd = decodeURI(tmp[1]);
               break;
             case "of1":
               _this.od_factor1 = tmp[1];
