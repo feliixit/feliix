@@ -64,7 +64,9 @@ if(trim($status) == "")
 if(trim($probability) == "")
     $probability = 0;
 
-$query = "INSERT INTO project_main
+
+
+    $query = "INSERT INTO project_main
                 SET
                     catagory_id = :catagory_id,
                     client_type_id = :client_type_id,
@@ -76,6 +78,24 @@ $query = "INSERT INTO project_main
                     estimate_close_prob = :probability,
                     create_id = :create_id,
                     created_at = now()";
+
+    if($status == 6 || $status == 9)
+    {
+        $query = "INSERT INTO project_main
+        SET
+            catagory_id = :catagory_id,
+            client_type_id = :client_type_id,
+            priority_id = :priority_id,
+            project_status_id = :project_status_id,
+            project_name = :project_name,
+            close_reason = :close_reason,
+            special_note = :special_note,
+            estimate_close_prob = :probability,
+            create_id = :create_id,
+            created_at = now(),
+            updated_id = :create_id,
+            updated_at = now()";
+    }
     
         // prepare the query
         $stmt = $db->prepare($query);

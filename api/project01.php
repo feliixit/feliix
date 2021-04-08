@@ -59,7 +59,33 @@ $merged_results = array();
 
 
 
-$query = "SELECT pm.id, COALESCE(pc.category, '') category, pct.client_type, pct.class_name pct_class, pp.priority, pp.class_name pp_class, pm.project_name, COALESCE(ps.project_status, '') project_status, COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage FROM project_main pm LEFT JOIN project_category pc ON pm.catagory_id = pc.id LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id LEFT JOIN project_priority pp ON pm.priority_id = pp.id LEFT JOIN project_status ps ON pm.project_status_id = ps.id LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
+$query = "SELECT pm.id, 
+                COALESCE(pc.category, '') category, 
+                pct.client_type, 
+                pct.class_name pct_class, 
+                pp.priority, 
+                pp.class_name pp_class, 
+                pm.project_name, 
+                COALESCE(ps.project_status, '') project_status, 
+                COALESCE((SELECT project_est_prob.prob 
+                            FROM project_est_prob 
+                            WHERE project_est_prob.project_id = pm.id 
+                            order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob, 
+                user.username, 
+                DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, 
+                DATE_FORMAT(pm.updated_at, '%Y-%m-%d') updated_at, 
+                COALESCE((SELECT project_stage.stage 
+                            FROM project_stages 
+                            LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id 
+                            WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 
+                            ORDER BY `sequence` desc LIMIT 1), '') stage 
+                FROM project_main pm 
+                LEFT JOIN project_category pc ON pm.catagory_id = pc.id 
+                LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id 
+                LEFT JOIN project_priority pp ON pm.priority_id = pp.id 
+                LEFT JOIN project_status ps ON pm.project_status_id = ps.id 
+                LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
+                LEFT JOIN user ON pm.create_id = user.id where 1= 1 ";
 
 if($fpc != "")
 {
@@ -165,6 +191,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $username = $row['username'];
 
     $created_at = $row['created_at'];
+    $updated_at = $row['updated_at'];
     $stage = $row['stage'];
     $recent = GetRecentPost($row['id'], $db);
 
@@ -180,6 +207,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "estimate_close_prob" => $estimate_close_prob,
         "username" => $username,
         "created_at" => $created_at,
+        "updated_at" => $updated_at,
         "stage" => $stage,
         "recent" => $recent,
     );

@@ -74,12 +74,14 @@ $query = "INSERT INTO project_statuses
             if ($stmt->execute()) {
                 $last_id = $db->lastInsertId();
 
-                if($project_status_edit !== '9')
+                if($project_status_edit != '9' && $project_status_edit != '6')
                 {
                     $query = "update project_main
                     SET
                         
-                        project_status_id = :status
+                        project_status_id = :status,
+                        updated_at = NULL,
+                        updated_id = 0
                     
                     where id = :project_id ";
 
@@ -95,7 +97,7 @@ $query = "INSERT INTO project_statuses
                     SET
                         project_status_id = :status,
                         updated_at = now(),
-                        updated_id = :id
+                        updated_id = :uid
                     
                     where id = :project_id ";
 
@@ -104,7 +106,7 @@ $query = "INSERT INTO project_statuses
 
                     $stmt1->bindParam(':project_id', $pid);
                     $stmt1->bindParam(':status', $project_status_edit);
-                    $stmt->bindParam(':id', $user_id);
+                    $stmt1->bindParam(':uid', $user_id);
                 }
 
                 $stmt1->execute();

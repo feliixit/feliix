@@ -693,7 +693,7 @@ $(function(){
                       <li><a :href="'project02?p=' + receive_record.id" target="_blank">{{ receive_record.project_name }}</a></li>
                       <li>{{ receive_record.project_status }}</li>
                       <li>{{ receive_record.username }}</li>
-                      <li>{{ receive_record.created_at }} ~ {{ receive_record.end_at }}</li>
+                      <li>{{ receive_record.created_at }} ~ {{ receive_record.updated_at }}</li>
                       <li>{{ isNaN(parseInt(receive_record.final_amount)) ? "" : Number(receive_record.final_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.down_payment_amount)) ? "" : Number(receive_record.down_payment_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>

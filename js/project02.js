@@ -2073,7 +2073,7 @@ var app = new Vue({
 
             if (this.project_status_reason.trim() == '') {
               Swal.fire({
-                text: 'Please enter Stage Sequence!',
+                text: 'Please enter reason!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })
