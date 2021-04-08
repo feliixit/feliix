@@ -80,9 +80,10 @@ if (!isset($jwt)) {
         }
 
         $db->commit();
+        
 
         http_response_code(200);
-        echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        echo json_encode(array("message" => " at " . date("Y-m-d") . " " . date("h:i:sa")));
     } catch (Exception $e) {
 
         error_log($e->getMessage());

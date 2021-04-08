@@ -23,6 +23,10 @@ var app = new Vue({
     stages: {},
     creators: {},
 
+    department:'',
+    title: '',
+    username:'',
+
     submit: false,
     // paging
     page: 1,
@@ -158,6 +162,7 @@ var app = new Vue({
     this.getStatuses();
     this.getStages();
     this.getCreators();
+    this.getUserName();
   },
 
   computed: {
@@ -563,8 +568,10 @@ var app = new Vue({
       })
         .then(function(response) {
           //handle success
-          _this.name = response.data.username;
+          _this.username = response.data.username;
           _this.is_manager = response.data.is_manager;
+          _this.department = response.data.department;
+          _this.title = response.data.title;
         })
         .catch(function(response) {
           //handle error
@@ -734,8 +741,11 @@ var app = new Vue({
     },
 
     payment_withdraw() {
+      var candeletebool = this.CanSaveFinalAmount();
+
       var finals = document.getElementsByName("payment_id");
       var final_id = "";
+      var final_cnt = 0;
       for (var i = 0; i < finals.length; i++) {
         if (finals[i].checked)
         {
@@ -766,18 +776,42 @@ var app = new Vue({
             return;
           }
 
-          final_id += finals[i].value + ",";
+          if(!candeletebool)
+          {
+            if(record.username == this.username)
+            { 
+              final_id += finals[i].value + ",";
+              final_cnt++;
+            }
+          }
+          else
+          {
+            final_id += finals[i].value + ",";
+            final_cnt++;
+          }
         }
       }
+
       if (final_id !== "") 
         final_id = final_id.slice(0, -1);
       else
       { 
-        Swal.fire({
-          text: "Please select records to withdraw",
-          icon: "info",
-          confirmButtonText: "OK",
-        });
+        if(!candeletebool)
+        { 
+          Swal.fire({
+            text: "Permission denied",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        }
+        else
+        {
+          Swal.fire({
+            text: "Please select records to withdraw",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        }
         return;
       }
 
@@ -802,7 +836,7 @@ var app = new Vue({
         .then(function(response) {
           //handle success
           Swal.fire({
-            text: response.data.message,
+            text: "Finished deleting " + final_cnt + " selected record(s) " + response.data.message,
             icon: "info",
             confirmButtonText: "OK",
           });
@@ -820,6 +854,17 @@ var app = new Vue({
     },
 
     final_quotation() {
+
+      if(!this.CanSaveFinalAmount()){
+        Swal.fire({
+          text: "Permission denied",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
       var finals = document.getElementsByName("quotation_id");
       var final_id = "";
       for (var i = 0; i < finals.length; i++) {
@@ -865,8 +910,96 @@ var app = new Vue({
         });
     },
 
+    CanSaveFinalAmount() {
+      var can_save = false;
+
+      if(this.department == 'SALES')
+      { 
+        if(this.title == 'ASSISTANT SALES MANAGER')
+          can_save = true;
+
+        if(this.title == 'SALES MANAGER')
+          can_save = true;
+      }
+
+      if(this.department == 'LIGHTING')
+      { 
+        if(this.title == 'ASSISTANT LIGHTING MANAGER')
+          can_save = true;
+
+        if(this.title == 'LIGHTING MANAGER')
+          can_save = true;
+      }
+
+      if(this.department == 'OFFICE')
+      { 
+        if(this.title == 'ASSISTANT OFFICE SYSTEMS MANAGER')
+          can_save = true;
+
+        if(this.title == 'OFFICE SYSTEMS MANAGER')
+          can_save = true;
+      }
+
+      if(this.department == 'DESIGN')
+      { 
+        if(this.title == 'ASSISTANT BRAND MANAGER')
+          can_save = true;
+
+        if(this.title == 'BRAND MANAGER')
+          can_save = true;
+      }
+
+      if(this.department == 'SERVICE')
+      { 
+        if(this.title == 'ENGINERING MANAGER')
+          can_save = true;
+      }
+
+      if(this.department == 'ADMIN')
+      { 
+        if(this.title == 'OPERATIONS MANAGER')
+          can_save = true;
+      }
+
+      if(this.department == 'TW')
+      { 
+        if(this.title == 'Supply Chain Manager')
+          can_save = true;
+      }
+
+      if(this.department == '')
+      { 
+        if(this.title == 'Owner')
+          can_save = true;
+
+        if(this.title == 'Managing Director')
+          can_save = true;
+
+        if(this.title == 'Chief Advisor')
+          can_save = true;
+      }
+
+      for (var i = 0; i < this.creators.length; i++) {
+        if(this.username == this.creators[i].username)
+          can_save = true;
+      }
+      
+
+      return can_save;
+    },
 
     final_amount() {
+      if(!this.CanSaveFinalAmount()){
+        Swal.fire({
+          text: "Permission denied",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+
       let _this = this;
 
       var form_Data = new FormData();
@@ -919,6 +1052,56 @@ var app = new Vue({
 
     delete_quotation() {
       let _this = this;
+
+      var candeletemyfile = "";
+      var candeletemyfilecnt = 0;
+      var selectedcnt = 0;
+
+      var candeletebool = this.CanSaveFinalAmount();
+   
+      var to_delete = document.getElementsByName("quotation_id");
+  
+      for (var i = 0; i < to_delete.length; i++) {
+        if (to_delete[i].checked){
+
+          var record = this.shallowCopy(
+            this.record.quote.find((element) => element.id == to_delete[i].value)
+          );
+          if(record.username == this.username)
+          {
+            candeletemyfile += to_delete[i].value + ",";
+            candeletemyfilecnt++;
+          }
+          selectedcnt++;
+          
+        }
+      }
+
+      if (candeletemyfile !== "") 
+        candeletemyfile = candeletemyfile.slice(0, -1);
+    
+      if(selectedcnt < 1)
+      { 
+        Swal.fire({
+          text: "Please select a record to delete",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if(candeletemyfilecnt < 1 && !candeletebool)
+      { 
+        Swal.fire({
+          text: "Permission denied",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+      
       Swal.fire({
         title: "Delete",
         text: "Are you sure to delete?",
@@ -929,19 +1112,31 @@ var app = new Vue({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.value) {
+
+          
           var finals = document.getElementsByName("quotation_id");
           var final_id = "";
-          for (var i = 0; i < finals.length; i++) {
-            if (finals[i].checked) final_id += finals[i].value + ",";
+          if(candeletebool)
+          {
+            candeletemyfilecnt = 0;
+            for (var i = 0; i < finals.length; i++) {
+              if (finals[i].checked) {
+                final_id += finals[i].value + ",";
+                candeletemyfilecnt++;
+              }
+            }
+            if (final_id !== "") final_id = final_id.slice(0, -1);
           }
-          if (final_id !== "") final_id = final_id.slice(0, -1);
 
           var form_Data = new FormData();
           var token = localStorage.getItem("token");
 
           form_Data.append("jwt", token);
           form_Data.append("pid", this.proof_id);
-          form_Data.append("final", final_id);
+          if(!candeletebool)
+            form_Data.append("final", candeletemyfile);
+          else
+            form_Data.append("final", final_id);
 
           axios({
             method: "post",
@@ -955,7 +1150,7 @@ var app = new Vue({
             .then(function(response) {
               //handle success
               Swal.fire({
-                text: response.data.message,
+                text: "Finished deleting " + candeletemyfilecnt + " selected record(s) " + response.data.message,
                 icon: "info",
                 confirmButtonText: "OK",
               });
