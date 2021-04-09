@@ -455,6 +455,8 @@ function GetQuote($project_id, $db){
         $final_quotation = $row['final_quotation'];
 
         $items = GetItem($row['id'], $db, 'quote');
+
+        $searchstr = $comment . " " . GetItemString($row['id'], $db, 'quote') . " " . $username . " " . ($final_quotation ==  '0' ? 'N' : 'Y');
        
         $merged_results[] = array(
             "id" => $id,
@@ -463,6 +465,7 @@ function GetQuote($project_id, $db){
             "created_at" => $created_at,
             "final_quotation" => $final_quotation,
             "items" => $items,
+            "searchstr" => $searchstr,
         );
     }
 
@@ -557,6 +560,24 @@ function GetPayment($project_id, $db){
         $checked_at = $row['checked_at'];
 
         $items = GetItem($row['id'], $db, 'proof');
+
+        $status = "";
+        switch ($checked)
+        {
+            case "0":
+                $status = "Under Checking";
+                break;
+            case "1":
+                $status = "Checked: True";
+                break;
+            case "-1":
+                $status = "Checked: False";
+                break;
+            default:
+                $status = "Under Checking";
+        }
+
+        $searchstr = ($kind ==  '0' ? 'Down Payment' : 'Payment') . " " . $remark . " " . $status . " " . GetItemString($row['id'], $db, 'proof') . " " . $username . " " . $amount;
        
         $merged_results[] = array(
             "id" => $id,
@@ -572,12 +593,39 @@ function GetPayment($project_id, $db){
             "checked_id" => $checked_id,
             "checked_at" => $checked_at,
             "items" => $items,
+            "searchstr" => $searchstr,
         );
     }
 
     return $merged_results;
 }
 
+function GetItemString($batch_id, $db, $type){
+    $query = "
+        
+        SELECT f.id,
+            coalesce(f.filename, '')   filename 
+        FROM   gcp_storage_file f
+
+            LEFT JOIN user u
+                ON u.id = f.create_id
+        WHERE batch_id = " . $batch_id . "
+        AND f.batch_type = '" . $type . "'
+            AND f.status <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = "";
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results .= " " . $row['filename'];
+    }
+
+    return $merged_results;
+}
 
 function GetItem($batch_id, $db, $type){
     $query = "
