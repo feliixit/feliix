@@ -913,74 +913,74 @@ var app = new Vue({
     CanSaveFinalAmount() {
       var can_save = false;
 
-      if(this.department == 'SALES')
+      if(this.department.trim() == 'SALES')
       { 
-        if(this.title == 'ASSISTANT SALES MANAGER')
+        if(this.title.trim() == 'ASSISTANT SALES MANAGER')
           can_save = true;
 
-        if(this.title == 'SALES MANAGER')
+        if(this.title.trim() == 'SALES MANAGER')
           can_save = true;
       }
 
-      if(this.department == 'LIGHTING')
+      if(this.department.trim() == 'LIGHTING')
       { 
-        if(this.title == 'ASSISTANT LIGHTING MANAGER')
+        if(this.title.trim() == 'ASSISTANT LIGHTING MANAGER')
           can_save = true;
 
-        if(this.title == 'LIGHTING MANAGER')
+        if(this.title.trim() == 'LIGHTING MANAGER')
           can_save = true;
       }
 
-      if(this.department == 'OFFICE')
+      if(this.department.trim() == 'OFFICE')
       { 
-        if(this.title == 'ASSISTANT OFFICE SYSTEMS MANAGER')
+        if(this.title.trim() == 'ASSISTANT OFFICE SYSTEMS MANAGER')
           can_save = true;
 
-        if(this.title == 'OFFICE SYSTEMS MANAGER')
+        if(this.title.trim() == 'OFFICE SYSTEMS MANAGER')
           can_save = true;
       }
 
-      if(this.department == 'DESIGN')
+      if(this.department.trim() == 'DESIGN')
       { 
-        if(this.title == 'ASSISTANT BRAND MANAGER')
+        if(this.title.trim() == 'ASSISTANT BRAND MANAGER')
           can_save = true;
 
-        if(this.title == 'BRAND MANAGER')
+        if(this.title.trim() == 'BRAND MANAGER')
           can_save = true;
       }
 
-      if(this.department == 'SERVICE')
+      if(this.department.trim() == 'SERVICE')
       { 
-        if(this.title == 'ENGINERING MANAGER')
+        if(this.title.trim() == 'ENGINERING MANAGER')
           can_save = true;
       }
 
-      if(this.department == 'ADMIN')
+      if(this.department.trim() == 'ADMIN')
       { 
-        if(this.title == 'OPERATIONS MANAGER')
+        if(this.title.trim() == 'OPERATIONS MANAGER')
           can_save = true;
       }
 
-      if(this.department == 'TW')
+      if(this.department.trim() == 'TW')
       { 
-        if(this.title == 'Supply Chain Manager')
+        if(this.title.trim() == 'Supply Chain Manager')
           can_save = true;
       }
 
-      if(this.department == '')
+      if(this.department.trim() == '')
       { 
-        if(this.title == 'Owner')
+        if(this.title.trim() == 'Owner')
           can_save = true;
 
-        if(this.title == 'Managing Director')
+        if(this.title.trim() == 'Managing Director')
           can_save = true;
 
-        if(this.title == 'Chief Advisor')
+        if(this.title.trim() == 'Chief Advisor')
           can_save = true;
       }
 
       for (var i = 0; i < this.creators.length; i++) {
-        if(this.username == this.creators[i].username)
+        if(this.username.trim() == this.creators[i].username.trim())
           can_save = true;
       }
       
