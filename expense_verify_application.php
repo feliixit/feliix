@@ -675,7 +675,7 @@ function GetReleaser($_id, $db)
     $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results = $row['created_at'];
+        $merged_results = $row['actor'];
     }
 
     return $merged_results;
