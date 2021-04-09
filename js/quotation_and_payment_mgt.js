@@ -978,13 +978,10 @@ var app = new Vue({
         if(this.title.trim() == 'Chief Advisor')
           can_save = true;
       }
-
-      for (var i = 0; i < this.creators.length; i++) {
-        if(this.username.trim() == this.creators[i].username.trim())
-          can_save = true;
-      }
       
-
+      if(this.username.trim() == this.record.username.trim())
+        can_save = true;
+      
       return can_save;
     },
 
