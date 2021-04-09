@@ -102,6 +102,8 @@ $remark_liquidated = "";
 
 $amount_verified = 0;
 
+$releasor = "";
+
 $total = 0;
 
 $history = [];
@@ -132,6 +134,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $release_items = GetReleaseAttachment($row['id'], $db);
     $liquidate_date = GetLiquidateHistory($row['id'], $db);
     $liquidate_items = GetLiquidateAttachment($row['id'], $db);
+
+    $releasor = GetReleaser($row['id'], $db);
 
     $amount_liquidated = $row['amount_liquidated'];
     $remark_liquidated = $row['remark_liquidated'];
@@ -365,15 +369,22 @@ $table3->addRow();
 $table3->addCell(5250, ['borderSize' => 'none'])->addText("_________________________________", [], []);
 $table3->addCell(5250, ['borderSize' => 'none'])->addText("_________________________________",  [], []);
 
-$wording = "";
-if($total >= $amount_verified)
-    $wording = "Released by ";
+$wording1 = "";
+$wording2 = "";
+if($amount_liquidated >= $total)
+{
+    $wording1 = "Released by " . $user_name;
+    $wording2 = "Received by " . $requestor;
+}
 else
-    $wording = "Returned by ";
+{
+    $wording1 = "Returned by " . $requestor;
+    $wording2 = "Received by " . $user_name;
+}
 
 $table3->addRow();
-$table3->addCell(5250, ['borderSize' => 'none'])->addText($wording . $user_name, [], []);
-$table3->addCell(5250, ['borderSize' => 'none'])->addText("Received by " . $requestor,  [], []);
+$table3->addCell(5250, ['borderSize' => 'none'])->addText($wording1, [], []);
+$table3->addCell(5250, ['borderSize' => 'none'])->addText($wording2,  [], []);
 
 $section->addText("");
 
@@ -639,6 +650,23 @@ function GetHistory($_id, $db)
 function GetReleaseHistory($_id, $db)
 {
     $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') created_at from petty_history pm 
+            where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Releaser Released' order by created_at desc limit 1";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row['created_at'];
+    }
+
+    return $merged_results;
+}
+
+function GetReleaser($_id, $db)
+{
+    $sql = "select actor from petty_history pm 
             where `status` <> -1 and petty_id = " . $_id . " and `action` = 'Releaser Released' order by created_at desc limit 1";
 
     $merged_results = "";
