@@ -313,6 +313,7 @@ $(function(){
                             </li>
 
                         <div class="btnbox">
+                            <a class="btn" @click="export_petty">Export Voucher</a>
                             <a class="btn" @click="approve_op">Finish Verifying</a>
                         </div>
 
