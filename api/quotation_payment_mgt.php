@@ -454,6 +454,8 @@ function GetQuote($project_id, $db){
         $created_at = $row['created_at'];
         $final_quotation = $row['final_quotation'];
 
+        $create = substr($row['created_at'], 0, 10);
+
         $items = GetItem($row['id'], $db, 'quote');
 
         $searchstr = $comment . " " . GetItemString($row['id'], $db, 'quote') . " " . $username . " " . ($final_quotation ==  '0' ? 'N' : 'Y');
@@ -465,7 +467,8 @@ function GetQuote($project_id, $db){
             "created_at" => $created_at,
             "final_quotation" => $final_quotation,
             "items" => $items,
-            "searchstr" => $searchstr,
+            "create" => $create,
+            "searchstr" => strtolower($searchstr),
         );
     }
 
@@ -578,7 +581,7 @@ function GetPayment($project_id, $db){
         }
 
         $searchstr = ($kind ==  '0' ? 'Down Payment' : 'Payment') . " " . $remark . " " . $status . " " . GetItemString($row['id'], $db, 'proof') . " " . $username . " " . $amount;
-       
+        $create = substr($created_at, 0, 10);
         $merged_results[] = array(
             "id" => $id,
             "remark" => $remark,
@@ -593,7 +596,8 @@ function GetPayment($project_id, $db){
             "checked_id" => $checked_id,
             "checked_at" => $checked_at,
             "items" => $items,
-            "searchstr" => $searchstr,
+            "create" => $create,
+            "searchstr" => strtolower($searchstr),
         );
     }
 

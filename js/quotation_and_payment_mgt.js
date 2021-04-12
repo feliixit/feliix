@@ -589,7 +589,7 @@ var app = new Vue({
         this.receive_records.find((element) => element.id == this.proof_id)
       );
       this.record.quote = this.record_filter.quote.filter((searchResult) =>
-        searchResult.searchstr.match(this.quote_keyword)
+        searchResult.searchstr.match(this.quote_keyword.toLowerCase().trim()) || searchResult.create === this.quote_keyword.toLowerCase().trim()
       );
     },
 
@@ -599,7 +599,7 @@ var app = new Vue({
         this.receive_records.find((element) => element.id == this.proof_id)
       );
       this.record.payment = this.record_filter.payment.filter((searchResult) =>
-        searchResult.searchstr.match(this.payment_keyword)
+        searchResult.searchstr.match(this.payment_keyword.toLowerCase().trim()) || searchResult.create === this.payment_keyword.toLowerCase().trim()
       );
     },
 
