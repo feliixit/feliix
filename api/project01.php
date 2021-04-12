@@ -217,23 +217,23 @@ echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
 
 function GetRecentPost($project_id, $db){
-    $query = "SELECT u.username, pm.created_at FROM project_stage_client pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id WHERE p.project_id = " . $project_id . " and pm.status <> -1  
+    $query = "SELECT u.username, pm.created_at, '' `url` FROM project_stage_client pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id WHERE p.project_id = " . $project_id . " and pm.status <> -1  
     UNION all
-    SELECT  u.username, pc.created_at FROM project_stage_client_task pc left join user u on u.id = pc.create_id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
+    SELECT  u.username, pc.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task pc left join user u on u.id = pc.create_id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
     UNION ALL
-    SELECT  u.username, pt.created_at FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
+    SELECT  u.username, pt.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
     UNION ALL
-    SELECT  u.username, pm.created_at FROM project_other_task pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pm.stage_id) `url` FROM project_other_task pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
     UNION ALL
-    SELECT  u.username, pm.created_at FROM project_other_task_message pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
     UNION all
-    SELECT  u.username, pm.created_at FROM project_other_task_message_reply pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message ps ON pm.message_id = ps.id  LEFT JOIN project_other_task pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message_reply pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message ps ON pm.message_id = ps.id  LEFT JOIN project_other_task pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
     UNION ALL
-    SELECT  u.username, pm.created_at FROM project_other_task_r pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pm.stage_id) `url` FROM project_other_task_r pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
     UNION ALL
-    SELECT  u.username, pm.created_at FROM project_other_task_message_r pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task_r pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message_r pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task_r pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
     UNION all
-    SELECT  u.username, pm.created_at FROM project_other_task_message_reply_r pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message_r ps ON pm.message_id = ps.id  LEFT JOIN project_other_task_r pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message_reply_r pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message_r ps ON pm.message_id = ps.id  LEFT JOIN project_other_task_r pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
     ";
 
     // prepare the query
@@ -246,7 +246,7 @@ function GetRecentPost($project_id, $db){
         $merged_results[] = $row;
     }
 
-    $str = "";
+    $return_results = [];
 
     if(count($merged_results) > 0)
     {
@@ -256,10 +256,16 @@ function GetRecentPost($project_id, $db){
     
         foreach ($merged_results as $arr)
         {
-            $str = $arr['created_at'] . " " . $arr['username'];
+            $return_results[] = array(
+                "created_at" => $arr['created_at'],
+                "username" => $arr['username'],
+                "url" => $arr['url'],
+             
+            );
+         
             break;
         }
     }
 
-    return $str;
+    return $return_results;
 }

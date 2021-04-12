@@ -269,7 +269,7 @@ $(function(){
                      <li>{{ receive_record.username }}</li>
                      <li>{{ receive_record.created_at }} ~ {{ receive_record.updated_at }}</li>
                      <li>{{ receive_record.stage }}</li>
-                     <li v-if="receive_record.recent != ''">{{ receive_record.recent }}</li>
+                     <li v-if="receive_record.recent != ''"><a v-bind:href="receive_record.recent[0].url" target="_blank">{{ receive_record.recent[0].created_at}} {{ receive_record.recent[0].username }}</a></li>
                    <li v-else>{{ receive_record.created_at }} {{ receive_record.username }}</li>
                  </ul>
                 
