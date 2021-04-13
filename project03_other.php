@@ -3606,7 +3606,7 @@ catch (Exception $e) {
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript" src="js/project03_other.js" defer></script>
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script defer src="js/a076d05399.js"></script>
 
 
 </html>

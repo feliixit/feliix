@@ -24,7 +24,6 @@ else
   try {
           // decode jwt
           $decoded = JWT::decode($jwt, $key, array('HS256'));
-          $user_id = $decoded->data->id;
           //if(!$decoded->data->is_admin)
           //{
           //  http_response_code(401);
@@ -58,7 +57,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.id, pm.remark, u.username, pm.created_at FROM project_proof pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -2 ";
+            $sql = "SELECT pm.id, pm.remark comment, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at, pm.final_approve final_quotation FROM project_approve pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'quote' where project_id = " . $pid . " and pm.status <> -1 ";
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -85,6 +84,55 @@ else
             $stmt = $db->prepare( $sql );
             $stmt->execute();
 
+            $id = 0;
+            $comment = "";
+            $filename = "";
+            $gcp_name = "";
+            $username = "";
+            $created_at = "";
+            $final_quotation = "";
+            $items = [];
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                if($id != $row['id'] && $id != 0)
+                {
+                    $merged_results[] = array( "comment" => $comment,
+                                            "items" => $items,
+                                            "username" => $username,
+                                            "created_at" => $created_at,
+                                            "final_quotation" => $final_quotation,
+                    );
+
+                    $items = [];
+
+                }
+
+                $id = $row['id'];
+                $created_at = $row['created_at'];
+                $username = $row['username'];
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+                $bucket = $row['bucket'];
+                $comment = $row['comment'];
+                $final_quotation = $row['final_quotation'];
+
+                if($filename != "")
+                  $items[] = array('filename' => $filename,
+                                 'gcp_name' => $gcp_name,
+                                 'bucket' => $bucket );
+            }
+
+            if($id != 0)
+            {
+                $merged_results[] = array( "comment" => $comment,
+                                                "items" => $items,
+                                                "username" => $username,
+                                                "created_at" => $created_at,
+                                                "final_quotation" => $final_quotation,
+                        );
+            }
+
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
@@ -93,66 +141,6 @@ else
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
             break;
-
-          case 'POST':
-              // get database connection
-            $uid = $user_id;
-            $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
-            $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
-
-            $batch_id = 1;
-            $query = "select coalesce(max(batch_id) + 1, 1) cnt from project_proof";
-            $stmt = $db->prepare( $query );
-            $stmt->execute();
-
-
-            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $batch_id = $row['cnt'];
-            }
-
-                         
-            $query = "INSERT INTO project_proof
-                SET
-                    project_id = :project_id,
-                    remark = :remark,
-                    batch_id = :batch_id,
-                    create_id = :create_id,
-                    created_at = now()";
-    
-                // prepare the query
-                $stmt = $db->prepare($query);
-            
-                // bind the values
-                $stmt->bindParam(':project_id', $pid);
-                $stmt->bindParam(':remark', $remark);
-                $stmt->bindParam(':batch_id', $batch_id);
-                $stmt->bindParam(':create_id', $user_id);
-
-                $last_id = 0;
-                // execute the query, also check if query was successful
-                try {
-                    // execute the query, also check if query was successful
-                    if ($stmt->execute()) {
-                        $last_id = $db->lastInsertId();
-
-                    }
-                    else
-                    {
-                        $arr = $stmt->errorInfo();
-                        error_log($arr[2]);
-                    }
-                }
-                catch (Exception $e)
-                {
-                    error_log($e->getMessage());
-                }
-
-              $returnArray = array('batch_id' => $last_id);
-              $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
-
-              echo $jsonEncodedReturnArray;
-                
-                break;
 
       }
 

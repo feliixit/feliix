@@ -874,7 +874,7 @@ $(function(){
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script defer src="js/project02.js"></script>
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
+<script defer src="js/a076d05399.js"></script> 
 <style scoped>
 .extendex-top {
   background: none;

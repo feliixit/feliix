@@ -97,7 +97,9 @@ $(function(){
     
 })
 </script>
-
+<style>
+    .tablebox.lv1 li:nth-of-type(10) a {color:var(--fth01);}
+</style>
 </head>
 
 <body class="fourth">

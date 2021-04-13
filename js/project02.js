@@ -10,6 +10,7 @@ var app = new Vue({
 
     project_comments: {},
     project_probs: {},
+    project_approves: {},
     project_quotes: {},
     project_action_detials: {},
 
@@ -30,6 +31,7 @@ var app = new Vue({
     baseURL:'https://storage.cloud.google.com/',
 
     pageURL:'https://feliix.myvnc.com/',
+  
 
     project_name: '',
     category: '',
@@ -127,6 +129,12 @@ var app = new Vue({
     prof_canSub: true,
     prof_finish: false,
 
+    // approve plan
+    approve_remark:'',
+    approve_fileArray: [],
+    approve_canSub: true,
+    approve_finish: false,
+
     // Downpayment Quotation
     quote_remark:'',
     quote_fileArray: [],
@@ -174,6 +182,7 @@ var app = new Vue({
         _this.getProjectProbs(_this.project_id);
         _this.getProjectProof(_this.project_id);
         _this.getProjectQuotation(_this.project_id);
+        _this.getProjectApprove(_this.project_id);
         _this.getProjectActionDetails(_this.project_id);
         _this.getUsers();
         _this.getFileManagement(_this.project_id);
@@ -301,6 +310,33 @@ var app = new Vue({
       deep: true
     },
 
+    approve_fileArray: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.approve_fileArray.length) {
+          this.approve_finish = true;
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon"
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.approve_finish = true;
+            _this.getProjectActionDetails(_this.project_id);
+
+          });;
+          this.approve_clear();
+        }
+      },
+      deep: true
+    },
+
 
     comm_fileArray: {
       handler(newValue, oldValue) {
@@ -348,6 +384,12 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    approve_deleteFile(index) {
+      this.approve_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.approve_file;
+      fileTarget.value = "";
+    },
+
     quote_deleteFile(index) {
       this.quote_fileArray.splice(index, 1);
       var fileTarget = this.$refs.quote_file;
@@ -365,6 +407,23 @@ var app = new Vue({
           ) {
             var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
             this.prof_fileArray.push(fileItem);
+          }else{
+            fileTarget.value = "";
+          }
+        }
+    },
+
+    approve_changeFile() {
+      var fileTarget = this.$refs.approve_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+          // remove duplicate
+          if (
+            this.approve_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+            this.approve_fileArray.length == 0
+          ) {
+            var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+            this.approve_fileArray.push(fileItem);
           }else{
             fileTarget.value = "";
           }
@@ -688,6 +747,33 @@ var app = new Vue({
                     
                 });
         },
+
+        getProjectApprove: function(keyword) {
+          let _this = this;
+    
+          if(keyword == 0)
+            return;
+    
+          const params = {
+                  pid : keyword,
+                };
+    
+              let token = localStorage.getItem('accessToken');
+        
+              axios
+                  .get('api/project_approve_get', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                  .then(
+                  (res) => {
+                      _this.project_approves = res.data;
+                  },
+                  (err) => {
+                      alert(err.response);
+                  },
+                  )
+                  .finally(() => {
+                      
+                  });
+          },
 
       getProjectInfo(pid) {
 
@@ -1220,6 +1306,21 @@ var app = new Vue({
             document.getElementById('status_fn6').classList.remove("focus");
         },
 
+        approve_clear() {
+
+          this.approve_remark = '';
+          this.approve_fileArray = [];
+          this.$refs.approve_file.value = '';
+
+          //this.getProjectDetail(this.project_id);
+          this.approve_canSub = true;
+
+          this.getProjectActionDetails(this.approve_id);
+          
+          document.getElementById('approve_dialog').classList.remove("show");
+          document.getElementById('status_fn8').classList.remove("focus");
+      },
+
         quote_clear() {
 
           this.quote_remark = '';
@@ -1353,6 +1454,63 @@ var app = new Vue({
                     console.log(response)
                 });
         },
+
+        approve_create() {
+          let _this = this;
+
+          if (this.approve_remark.trim() == '') {
+            Swal.fire({
+              text: 'Please enter description!',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+              
+              //$(window).scrollTop(0);
+              return;
+          }
+
+          var token = localStorage.getItem("token");
+
+          _this.submit = true;
+          var form_Data = new FormData();
+
+          form_Data.append('pid', this.project_id);
+          form_Data.append('remark', this.approve_remark.trim());
+          form_Data.append("jwt", token);
+
+          for (var i = 0; i < this.approve_fileArray.length; i++) {
+            let file = this.approve_fileArray[i];
+            form_Data.append("files[" + i + "]", file);
+          }
+
+          axios({
+                  method: 'post',
+                  headers: {
+                      'Content-Type': 'multipart/form-data',
+                      Authorization: `Bearer ${token}`
+                  },
+                  url: 'api/project_approve',
+                  data: form_Data
+              })
+              .then(function(response) {
+                  Swal.fire({
+                    text: response.data.message,
+                    icon: "info",
+                    confirmButtonText: "OK",
+                  });
+                  _this.approve_clear();
+                  _this.getProject(_this.project_id);
+                  _this.getFileManagement(_this.project_id);
+              })
+              .catch(function(response) {
+                  //handle error
+                  Swal.fire({
+                    text: response.data,
+                    icon: "info",
+                    confirmButtonText: "OK",
+                  });
+              });
+      },
 
 
         prof_create() {

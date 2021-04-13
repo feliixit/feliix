@@ -8,8 +8,7 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
-$id = (isset($_POST['id']) ?  $_POST['id'] : '');
-$remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
+
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -52,10 +51,10 @@ if (!isset($jwt)) {
         // now you can apply
         $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
         $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
-        $kind = (isset($_POST['kind']) ?  $_POST['kind'] : 0);
+  
 
         $batch_id = 1;
-        $query = "select coalesce(max(batch_id) + 1, 1) cnt from project_proof";
+        $query = "select coalesce(max(batch_id) + 1, 1) cnt from project_approve";
 
         $stmt = $db->prepare( $query );
         $stmt->execute();
@@ -64,12 +63,11 @@ if (!isset($jwt)) {
             $batch_id = $row['cnt'];
         }
 
-        $query = "INSERT INTO project_proof
+        $query = "INSERT INTO project_approve
                 SET
                     project_id = :project_id,
                     remark = :remark,
                     batch_id = :batch_id,
-                    kind = :kind,
                     create_id = :create_id,
                     created_at = now()";
     
@@ -80,7 +78,6 @@ if (!isset($jwt)) {
         $stmt->bindParam(':project_id', $pid);
         $stmt->bindParam(':remark', $remark);
         $stmt->bindParam(':batch_id', $batch_id);
-        $stmt->bindParam(':kind', $kind);
         $stmt->bindParam(':create_id', $user_id);
 
         $last_id = 0;
@@ -107,7 +104,7 @@ if (!isset($jwt)) {
         }
 
         $batch_id = $last_id;
-        $batch_type = 'proof';
+        $batch_type = 'approve';
 
         $_pic_url = "";
         $_real_url = "";
@@ -216,7 +213,7 @@ if (!isset($jwt)) {
 
         $db->commit();
 
-        SendNotifyMail($last_id);
+        // SendNotifyMail($last_id);
 
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -236,7 +233,7 @@ function SendNotifyMail($bid)
     $database = new Database();
     $db = $database->getConnection();
 
-    $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, p.catagory_id, pm.kind FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status <> -2 ";
+    $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, p.catagory_id, pm.kind FROM project_approve pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status >= 0 ";
 
     $stmt = $db->prepare( $sql );
     $stmt->execute();

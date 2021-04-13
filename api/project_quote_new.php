@@ -53,7 +53,7 @@ if (!isset($jwt)) {
         $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
         $batch_id = 1;
-        $query = "select max(batch_id) + 1 cnt from project_quotation";
+        $query = "select coalesce(max(batch_id) + 1, 1) cnt from project_quotation";
 
         $stmt = $db->prepare( $query );
         $stmt->execute();

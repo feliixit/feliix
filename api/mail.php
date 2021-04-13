@@ -1169,4 +1169,111 @@ function GetPettyVoidNotifiers()
     return $merged_results;
 }
 
+
+function project01_notify_mail($request_type, $project_name, $username, $created_at, $category, $client_type, $priority, $project_status, $estimate_close_prob, $project_id)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "01":
+            $title = 'Project "'. $project_name .'" was created by ' . $username;
+            $tab = '<p>A new project named "'. $project_name .'" was created by ' . $username . '. Following are the details:</p>';
+            break;
+        default:
+            $title = 'Project "'. $project_name .'" was created by ' . $username;
+            $tab = '<p>A new project named "'. $project_name .'" was created by ' . $username . '. Following are the details:</p>';
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $notifior = GetProjectNotifiers();
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Project Category:" . $category . "</p>";
+    $content = $content . "<p>Client Type:" . $client_type . "</p>";
+    $content = $content . "<p>Priority:" . $priority . "</p>";
+    $content = $content . "<p>Project Status:" . $project_status . "</p>";
+    $content = $content . "<p>Estimated Closing Prob.:" . $estimate_close_prob . "</p>";
+    $content = $content . "<p>Project Creator:" . $username . " at " . $created_at . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project02?p=" . $project_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($username, $content);
+        return true;
+    } else {
+        logMail($username, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
+
+function GetProjectNotifiers()
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "
+        SELECT username, email, title 
+        FROM user u
+        LEFT JOIN user_title ut
+        ON u.title_id = ut.id 
+        WHERE title IN(
+            'Jr. Account Executive',
+            'Account Executive',
+            'Sr. Account Executive',
+            'Assistant Sales Manager',
+            'Sales Manager',
+            'Lighting Manager',
+            'Lighting Assistant Manager',
+            'Office Systems Manager',
+            'Office Systems Assistant Manager',
+            'Operations Manager',
+            'Managing Director') ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
 ?>

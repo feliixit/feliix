@@ -160,6 +160,39 @@ else
                 );
             }
 
+            // approve
+            $sql = "SELECT bucketname, filename, gcp_name, username, gcp_storage_file.created_at
+                                FROM project_main pm
+                    JOIN project_approve pac ON pm.id = pac.project_id
+                                join gcp_storage_file on gcp_storage_file.batch_id = pac.id and batch_type = 'approve'
+                    join user on user.id = gcp_storage_file.create_id
+                    where pm.id =" . $pid . " and pm.status <> -1 AND pac.`status` <> -2 ";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $reply = $row['username'];
+                $reply_date = $row['created_at'];
+
+
+                $gcp_name = $row['gcp_name'];
+                $filename = $row['filename'];
+                $bucket = $row['bucketname'];
+
+                $merged_results[] = array(
+                    "messager" => $reply,
+                    "message_date" => explode(" ", $reply_date)[0],
+                    "message_time" => explode(" ", $reply_date)[1],
+                    "message_datetime" => $reply_date,
+                    "gcp_name" => $gcp_name,
+                    "filename" => $filename,
+                    "url" => 'project02?p=' . $pid,
+                    "stage" => 'Approved Plan',
+                    "bucket" => $bucket,
+                );
+            }
+
 
             if($title != "technician")
             {

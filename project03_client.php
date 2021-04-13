@@ -2,6 +2,7 @@
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
 if (!isset($jwt)) {
+    setcookie("userurl", $_SERVER['REQUEST_URI']);
     header('location:index');
 }
 
@@ -3054,7 +3055,7 @@ $(function(){
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript" src="js/project03_client.js" defer></script>
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
+<script defer src="js/a076d05399.js"></script> 
 
 <style scoped>
 

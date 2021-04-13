@@ -1196,3 +1196,18 @@ ADD COLUMN `checked_id` int(11) DEFAULT 0 AFTER checked;
 
 ALTER TABLE project_proof
 ADD COLUMN `checked_at` timestamp null AFTER checked_id;
+
+-- project approve plan
+CREATE TABLE IF NOT EXISTS `project_approve` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `batch_id` int(11) DEFAULT 0 NOT NULL,
+  `final_approve` int(11) DEFAULT 0 NOT NULL,
+  `remark` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';

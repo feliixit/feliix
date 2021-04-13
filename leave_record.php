@@ -147,7 +147,7 @@ $(function(){
 <script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
 <script src="//unpkg.com/element-ui"></script>
 <script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script> 
+<script defer src="js/a076d05399.js"></script> 
 
 <script>
   ELEMENT.locale(ELEMENT.lang.en)
