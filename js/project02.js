@@ -1501,6 +1501,7 @@ var app = new Vue({
                   _this.approve_clear();
                   _this.getProject(_this.project_id);
                   _this.getFileManagement(_this.project_id);
+                  _this.getProjectApprove(_this.project_id);
               })
               .catch(function(response) {
                   //handle error
