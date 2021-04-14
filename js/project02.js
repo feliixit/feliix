@@ -1315,7 +1315,7 @@ var app = new Vue({
           //this.getProjectDetail(this.project_id);
           this.approve_canSub = true;
 
-          this.getProjectActionDetails(this.approve_id);
+          this.getProjectApprove(this.approve_id);
           
           document.getElementById('approve_dialog').classList.remove("show");
           document.getElementById('status_fn8').classList.remove("focus");
