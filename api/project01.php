@@ -234,6 +234,14 @@ function GetRecentPost($project_id, $db){
     SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message_r pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task_r pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
     UNION all
     SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message_reply_r pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message_r ps ON pm.message_id = ps.id  LEFT JOIN project_other_task_r pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
+    UNION all
+    SELECT  u.username, pm.created_at, CONCAT('project02?p=', ps.id) `url` FROM project_comments pm left join user u on u.id = pm.create_id  LEFT JOIN project_main ps ON pm.project_id = ps.id  where pm.project_id = " . $project_id . " and pm.status <> -1 
+    UNION all
+    SELECT  u.username, pm.created_at, CONCAT('project02?p=', ps.id) `url` FROM project_probability pm left join user u on u.id = pm.create_id  LEFT JOIN project_main ps ON pm.project_id = ps.id  where pm.project_id = " . $project_id . " and pm.status <> -1 
+    UNION all
+    SELECT  u.username, pm.created_at, CONCAT('project02?p=', ps.id) `url` FROM project_detail pm left join user u on u.id = pm.create_id  LEFT JOIN project_main ps ON pm.project_id = ps.id  where pm.project_id = " . $project_id . " and pm.status <> -1 
+    UNION all
+    SELECT  u.username, pm.created_at, CONCAT('project02?p=', ps.id) `url` FROM project_approve pm left join user u on u.id = pm.create_id  LEFT JOIN project_main ps ON pm.project_id = ps.id  where pm.project_id = " . $project_id . " and pm.status <> -1 
     ";
 
     // prepare the query

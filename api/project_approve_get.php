@@ -57,7 +57,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.id, pm.remark comment, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at, pm.final_approve final_quotation FROM project_approve pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'quote' where project_id = " . $pid . " and pm.status <> -1 ";
+            $sql = "SELECT pm.id, pm.remark comment, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at, pm.final_approve final_quotation FROM project_approve pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'approve' where project_id = " . $pid . " and pm.status <> -1 ";
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
