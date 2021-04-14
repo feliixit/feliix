@@ -137,12 +137,12 @@ if(trim($probability) == "")
         }
 
         if($last_id != 0)
-            SendNotifyMail($last_id, $user_id);
+            SendNotifyMail($last_id);
 
         return $last_id;
 
 
-function SendNotifyMail($bid, $user_id)
+function SendNotifyMail($bid)
 {
     $database = new Database();
     $db = $database->getConnection();
@@ -168,7 +168,7 @@ function SendNotifyMail($bid, $user_id)
                     pm.contractor, 
                     user.username, 
                     user.id uid, 
-                    DATE_FORMAT(pm.created_at, '%Y-%m-%d') created_at, 
+                    DATE_FORMAT(pm.created_at, '%Y-%m-%d %T') created_at, 
                     DATE_FORMAT(pm.updated_at, '%Y-%m-%d') updated_at, 
                     COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage, 
                     pm.location, 
@@ -203,7 +203,6 @@ function SendNotifyMail($bid, $user_id)
         $created_at = $row['created_at'];
         $category = $row['category'];
         $client_type = $row['client_type'];
-        $category = $row['catagory_id'];
         $priority = $row['priority'];
         $project_status = $row['project_status'];
         $estimate_close_prob = $row['estimate_close_prob'];

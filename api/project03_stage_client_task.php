@@ -46,7 +46,7 @@ else
       header('Access-Control-Allow-Origin: *');  
 
       include_once 'config/database.php';
-
+      include_once 'mail.php';
 
       $database = new Database();
       $db = $database->getConnection();
@@ -199,12 +199,57 @@ else
                  $returnArray = array('batch_id' => $last_id);
                 $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
 
+                if($last_id != 0)
+                    SendNotifyMail($last_id, $stage_id);
+
                 echo $jsonEncodedReturnArray;
                 
                 break;
 
       }
 
+function SendNotifyMail($bid, $stage_id)
+{
+    $database = new Database();
+    $db = $database->getConnection();
 
+    $sql = "SELECT p.id,
+                p.create_id,
+                p.project_name,
+                pm.message,
+                pc.category,
+                user.username, 
+                DATE_FORMAT(pm.created_at, '%Y-%m-%d %T') created_at
+            from project_stage_client_task pm
+            LEFT JOIN project_stages ps ON pm.stage_id = ps.id
+            LEFT JOIN project_main p ON ps.project_id = p.id
+            LEFT JOIN project_category pc ON p.catagory_id = pc.id
+            LEFT JOIN user ON pm.create_id = user.id 
+            WHERE pm.id = " . $bid . "  ";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    $project_name = "";
+    $username = "";
+    $created_at = "";
+    $project_creator_id = "";
+    $message = "";
+    $category = "";
+  
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $project_name = $row['project_name'];
+        $username = $row['username'];
+        $created_at = $row['created_at'];
+        $project_creator_id = $row['create_id'];
+        $message = $row['message'];
+        $category = $row['category'];
+  
+    }
+
+    project03_stage_client_task_notify_mail($project_name, $username, $created_at, $project_creator_id, $message, $category, $stage_id);
+
+}
 
 ?>
