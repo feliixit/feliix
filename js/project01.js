@@ -41,6 +41,7 @@ var app = new Vue({
     submit : false,
     // paging
     page: 1,
+    pg:0,
     //perPage: 10,
     pages: [],
 
