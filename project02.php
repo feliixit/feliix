@@ -1188,7 +1188,7 @@ $(function(){
                 <div class="pagenation">
                     <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
 
-                    <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
 
                     <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                 </div>
