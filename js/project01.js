@@ -68,43 +68,43 @@ var app = new Vue({
         if (tmp.length == 2) {
           switch (tmp[0]) {
             case "fpc":
-              _this.fil_project_category = tmp[1];
+              _this.fil_project_category = decodeURI(tmp[1]);
               break;
             case "fct":
-              _this.fil_client_type = tmp[1];
+              _this.fil_client_type = decodeURI(tmp[1]);
               break;
             case "fp":
-              _this.fil_priority = tmp[1];
+              _this.fil_priority = decodeURI(tmp[1]);
               break;
             case "fs":
-              _this.fil_status = tmp[1];
+              _this.fil_status = decodeURI(tmp[1]);
               break;
             case "fcs":
-              _this.fil_stage = tmp[1];
+              _this.fil_stage = decodeURI(tmp[1]);
               break;
             case "fpt":
               _this.fil_creator = decodeURI(tmp[1]);
               break;
             case "flo":
-              _this.fil_lower = tmp[1];
+              _this.fil_lower = decodeURI(tmp[1]);
               break;
             case "fup":
-              _this.fil_upper = tmp[1];
+              _this.fil_upper = decodeURI(tmp[1]);
               break;
             case "key":
               _this.fil_keyword = decodeURI(tmp[1]);
               break;
             case "op1":
-              _this.od_opt1 = tmp[1];
+              _this.od_opt1 = decodeURI(tmp[1]);
               break;
             case "od1":
-              _this.od_ord1 = tmp[1];
+              _this.od_ord1 = decodeURI(tmp[1]);
               break;
             case "op2":
-              _this.od_opt2 = tmp[1];
+              _this.od_opt2 = decodeURI(tmp[1]);
               break;
             case "od2":
-              _this.od_ord2 = tmp[1];
+              _this.od_ord2 = decodeURI(tmp[1]);
               break;
             case "id":
               _this.id = tmp[1];
