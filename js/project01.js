@@ -528,6 +528,14 @@ var app = new Vue({
 
       },
 
+      cancel_filters:function() {
+        document.getElementById('filter_dialog').classList.remove("show");
+      },
+
+      cancel_orders:function() {
+        document.getElementById('order_dialog').classList.remove("show");
+      },
+
       clear_orders: function() {
         this.od_opt1 = '';
         this.od_ord1 = '';

@@ -710,6 +710,39 @@ var app = new Vue({
       return result;
     },
 
+    filter_remove: function() {
+      this.fil_category = '';
+      this.fil_status = '';
+      this.fil_creator = '';
+      this.fil_amount_upper = '';
+      this.fil_amount_lower = '';
+      this.fil_payment_upper = '';
+      this.fil_payment_lower = '';
+      this.fil_keyowrd = '';
+      
+      document.getElementById("dialog_f1").classList.remove("focus");
+      document.getElementById("add_f1").classList.remove("show");
+
+      this.receive_records = [];
+
+      this.getRecords();
+    },
+
+    order_remove: function() {
+      this.od_factor1 = '';
+      this.od_factor1_order = '';
+      this.od_factor2 = '';
+      this.od_factor2_order = '';
+   
+      
+      document.getElementById("dialog_a1").classList.remove("focus");
+      document.getElementById("add_a1").classList.remove("show");
+
+      this.receive_records = [];
+
+      this.getRecords();
+    },
+
     order_clear() {
       document.getElementById("dialog_a1").classList.remove("focus");
       document.getElementById("add_a1").classList.remove("show");

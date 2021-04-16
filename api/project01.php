@@ -41,33 +41,33 @@ include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$uid = (isset($_GET['uid']) ?  $_GET['uid'] : '');
-$fpc = (isset($_GET['fpc']) ?  $_GET['fpc'] : '');
-$fct = (isset($_GET['fct']) ?  $_GET['fct'] : '');
-$fp = (isset($_GET['fp']) ?  $_GET['fp'] : '');
-$fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
-$fcs = (isset($_GET['fcs']) ?  $_GET['fcs'] : '');
+$uid = (isset($_GET['uid']) ?  urldecode($_GET['uid']) : '');
+$fpc = (isset($_GET['fpc']) ?  urldecode($_GET['fpc']) : '');
+$fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
+$fp = (isset($_GET['fp']) ?  urldecode($_GET['fp']) : '');
+$fs = (isset($_GET['fs']) ?  urldecode($_GET['fs']) : '');
+$fcs = (isset($_GET['fcs']) ?  urldecode($_GET['fcs']) : '');
 $fpt = (isset($_GET['fpt']) ?  $_GET['fpt'] : '');
 
 $fpt = urldecode($fpt);
 
-$flo = (isset($_GET['flo']) ?  $_GET['flo'] : '');
-$fup = (isset($_GET['fup']) ?  $_GET['fup'] : '');
+$flo = (isset($_GET['flo']) ?  urldecode($_GET['flo']) : '');
+$fup = (isset($_GET['fup']) ?  urldecode($_GET['fup']) : '');
 $key = (isset($_GET['key']) ?  $_GET['key'] : '');
 
 $key = urldecode($key);
 
-$op1 = (isset($_GET['op1']) ?  $_GET['op1'] : '');
-$od1 = (isset($_GET['od1']) ?  $_GET['od1'] : '');
+$op1 = (isset($_GET['op1']) ?  urldecode($_GET['op1']) : '');
+$od1 = (isset($_GET['od1']) ?  urldecode($_GET['od1']) : '');
 
-$op2 = (isset($_GET['op2']) ?  $_GET['op2'] : '');
-$od2 = (isset($_GET['od2']) ?  $_GET['od2'] : '');
+$op2 = (isset($_GET['op2']) ?  urldecode($_GET['op2']) : '');
+$od2 = (isset($_GET['od2']) ?  urldecode($_GET['od2']) : '');
 
-$page = (isset($_GET['page']) ?  $_GET['page'] : "");
-$size = (isset($_GET['size']) ?  $_GET['size'] : "");
+$page = (isset($_GET['page']) ?  urldecode($_GET['page']) : "");
+$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : "");
 
 
-$type = (isset($_GET['type']) ?  $_GET['type'] : '');
+$type = (isset($_GET['type']) ?  urldecode($_GET['type']) : '');
 
 $merged_results = array();
 
@@ -329,21 +329,21 @@ if($fcs != "")
         {
             case 1:
                 if($od1 == 2)
-                    $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
+                    $sOrder = "Coalesce(t.created_at, '0000-00-00') desc";
                 else
-                    $sOrder = "Coalesce(pm.created_at, '9999-99-99') ";
+                    $sOrder = "Coalesce(t.created_at, '9999-99-99') ";
                 break;  
             case 2:
                 if($od1 == 2)
-                    $sOrder = "Coalesce(pm.updated_at, '0000-00-00') desc";
+                    $sOrder = "Coalesce(t.updated_at, '0000-00-00') desc";
                 else
-                    $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
+                    $sOrder = "Coalesce(t.updated_at, '9999-99-99') ";
                 break;  
             case 3:
                 if($od1 == 2)
-                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) desc";
+                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) desc";
                 else
-                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) ";
+                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) ";
                 break;  
             
             default:
@@ -356,21 +356,21 @@ if($fcs != "")
         {
             case 1:
                 if($od2 == 2)
-                    $sOrder .= ", Coalesce(pm.created_at, '0000-00-00') desc";
+                    $sOrder .= ", Coalesce(t.created_at, '0000-00-00') desc";
                 else
-                    $sOrder .= ", Coalesce(pm.created_at, '9999-99-99') ";
+                    $sOrder .= ", Coalesce(t.created_at, '9999-99-99') ";
                 break;  
             case 2:
                 if($od2 == 2)
-                    $sOrder .= ", Coalesce(pm.updated_at, '0000-00-00') desc";
+                    $sOrder .= ", Coalesce(t.updated_at, '0000-00-00') desc";
                 else
-                    $sOrder .= ", Coalesce(pm.updated_at, '9999-99-99') ";
+                    $sOrder .= ", Coalesce(t.updated_at, '9999-99-99') ";
                 break;  
             case 3:
                 if($od2 == 2)
-                    $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) desc";
+                    $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) desc";
                 else
-                    $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) ";
+                    $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) ";
                 break;  
           
             default:
@@ -384,21 +384,21 @@ if($fcs != "")
         {
             case 1:
                 if($od2 == 2)
-                    $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
+                    $sOrder = "Coalesce(t.created_at, '0000-00-00') desc";
                 else
-                    $sOrder = "Coalesce(pm.created_at, '9999-99-99') ";
+                    $sOrder = "Coalesce(t.created_at, '9999-99-99') ";
                 break;  
             case 2:
                 if($od2 == 2)
-                    $sOrder = "Coalesce(pm.updated_at, '0000-00-00') desc";
+                    $sOrder = "Coalesce(t.updated_at, '0000-00-00') desc";
                 else
-                    $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
+                    $sOrder = "Coalesce(t.updated_at, '9999-99-99') ";
                 break;  
             case 3:
                 if($od2 == 2)
-                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) desc";
+                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) desc";
                 else
-                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) ";
+                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) ";
                 break;  
            
             default:

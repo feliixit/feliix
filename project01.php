@@ -246,7 +246,7 @@ $(function(){
                 <!-- 篩選 -->
                 <div class="new_project">
                     <a class="filter"></a>
-                    <div class="dialog d-filter"><h6>Filter Function:</h6>
+                    <div id="filter_dialog" class="dialog d-filter"><h6>Filter Function:</h6>
                         <div class="formbox">
                             <dl>
                                 <dt>Project Category</dt>
@@ -356,7 +356,7 @@ $(function(){
                                 <dd><input type="text" v-model="fil_keyword"></dd>
 
                             </dl>
-                            <div class="btnbox"><a class="btn small" @click="clear_filters()">Clear</a> <a class="btn small green" @click="apply_filters()">Apply</a>
+                            <div class="btnbox"><a class="btn small" @click="cancel_filters()">Cancel</a><a class="btn small" @click="clear_filters()">Clear</a> <a class="btn small green" @click="apply_filters()">Apply</a>
                             </div>
                         </div>
                     </div>
@@ -366,7 +366,7 @@ $(function(){
                 <!-- 排序 -->
                 <div class="new_project">
                     <a class="sort"></a>
-                    <div class="dialog d-sort"><h6>Sort Function:</h6>
+                    <div id="order_dialog" class="dialog d-sort"><h6>Sort Function:</h6>
                         <div class="formbox">
                             <dl>
                                 <div class="half">
@@ -434,7 +434,7 @@ $(function(){
                                 </div>
 
                             </dl>
-                            <div class="btnbox"><a class="btn small" @click="clear_orders()">Clear</a> <a class="btn small green" @click="apply_orders()">Apply</a>
+                            <div class="btnbox"><a class="btn small" @click="cancel_orders()">Cancel</a><a class="btn small" @click="clear_orders()">Clear</a> <a class="btn small green" @click="apply_orders()">Apply</a>
                             </div>
                         </div>
                     </div>
