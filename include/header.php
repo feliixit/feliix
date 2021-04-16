@@ -18,6 +18,7 @@ use \Firebase\JWT\JWT;
     $access3 = false;
     $access4 = false;
     $access5 = false;
+    $access6 = false;
 
     $pic_url = "man6.jpg";
 
@@ -59,14 +60,82 @@ try {
         if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
             $access2 = true;
 
-        // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41)
+        // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(41), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41)
         //為了測試先加入testmanager byBB
-        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87)
+        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87 || $user_id == 99)
             $access3 = true;
 
         // 5. 針對 Reporting Section的內容，只有 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到 幫Mary Jude Jeng Articulo(9) 和 Glendon Wendell Co(41)
-        if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 9 || $user_id == 41)
+        if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 9 || $user_id == 41 || $user_id == 99)
             $access5 = true;
+
+        // QOUTE AND PAYMENT Management
+        if(trim($department) == 'SALES')
+        {
+            if(trim($position) == 'ASSISTANT SALES MANAGER' || trim($position) == 'SALES MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim($department) == 'LIGHTING')
+        {
+            if(trim($position) == 'ASSISTANT LIGHTING MANAGER' || trim($position) == 'LIGHTING MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim($department) == 'OFFICE')
+        {
+            if(trim($position) == 'ASSISTANT OFFICE SYSTEMS MANAGER' || trim($position) == 'OFFICE SYSTEMS MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim($department) == 'DESIGN')
+        {
+            if(trim($position) == 'ASSISTANT BRAND MANAGER' || trim($position) == 'BRAND MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim($department) == 'SERVICE')
+        {
+            if(trim($position) == "ENGINERING MANAGER")
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim($department) == 'ADMIN')
+        {
+            if(trim($position) == 'OPERATIONS MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim($department) == 'TW')
+        {
+            if(trim($position) == 'Supply Chain Manager')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim($department) == '')
+        {
+            if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+            {
+                $access6 = true;
+            }
+        }
+
+        if($user_id == 1 || $user_id == 99 || $user_id == 41 )
+            $access6 = true;
 
         $pic_url = $decoded->data->pic_url;
 
@@ -113,6 +182,14 @@ try {
             <li class="sec03">
                 <a class="uni">Project<br>Management</a>
                 <a class="list" href="project01">Project Management</a>
+            <?php 
+            if($access6 == true)
+            {
+            ?>
+                <a class="list" href="quotation_and_payment_mgt?fc=&fs=&ft=&fal=&fau=&fpl=&fpu=&fk=&of1=&ofd1=&of2=&ofd2=&pg=1">Quotation and Payment Mgt.</a>
+            <?php 
+            }
+            ?>
                 <a class="list" href="schedule_calendar">Schedule Calendar</a>
             </li>
             <!--

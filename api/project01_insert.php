@@ -40,6 +40,8 @@ else
 }
 
 include_once 'config/database.php';
+include_once 'mail.php';
+
 $database = new Database();
 $db = $database->getConnection();
 
@@ -64,7 +66,9 @@ if(trim($status) == "")
 if(trim($probability) == "")
     $probability = 0;
 
-$query = "INSERT INTO project_main
+
+
+    $query = "INSERT INTO project_main
                 SET
                     catagory_id = :catagory_id,
                     client_type_id = :client_type_id,
@@ -76,6 +80,24 @@ $query = "INSERT INTO project_main
                     estimate_close_prob = :probability,
                     create_id = :create_id,
                     created_at = now()";
+
+    if($status == 6 || $status == 9)
+    {
+        $query = "INSERT INTO project_main
+        SET
+            catagory_id = :catagory_id,
+            client_type_id = :client_type_id,
+            priority_id = :priority_id,
+            project_status_id = :project_status_id,
+            project_name = :project_name,
+            close_reason = :close_reason,
+            special_note = :special_note,
+            estimate_close_prob = :probability,
+            create_id = :create_id,
+            created_at = now(),
+            updated_id = :create_id,
+            updated_at = now()";
+    }
     
         // prepare the query
         $stmt = $db->prepare($query);
@@ -114,6 +136,77 @@ $query = "INSERT INTO project_main
             error_log($e->getMessage());
         }
 
+        if($last_id != 0)
+            SendNotifyMail($last_id);
 
         return $last_id;
 
+
+function SendNotifyMail($bid)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "SELECT pm.id, 
+                    COALESCE(pc.category, '') category, 
+                    pc.id category_id, 
+                    pct.client_type, 
+                    pct.id client_type_id, 
+                    pct.class_name pct_class, 
+                    pp.priority, 
+                    pp.id priority_id, 
+                    pp.class_name pp_class, 
+                    pm.project_name, 
+                    COALESCE(ps.project_status, '') project_status, 
+                    pm.estimate_close_prob, 
+                    pm.designer,       
+                    pm.`type`,       
+                    pm.scope,       
+                    pm.office_location,       
+                    pm.background_client,       
+                    pm.background_project,       
+                    pm.contractor, 
+                    user.username, 
+                    user.id uid, 
+                    DATE_FORMAT(pm.created_at, '%Y-%m-%d %T') created_at, 
+                    DATE_FORMAT(pm.updated_at, '%Y-%m-%d') updated_at, 
+                    COALESCE((SELECT project_stage.stage FROM project_stages LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 ORDER BY `sequence` desc LIMIT 1), '') stage, 
+                    pm.location, 
+                    pm.contactor, 
+                    pm.contact_number, 
+                    pm.client, 
+                    pm.edit_reason 
+            FROM project_main pm 
+            LEFT JOIN project_category pc ON pm.catagory_id = pc.id 
+            LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id 
+            LEFT JOIN project_priority pp ON pm.priority_id = pp.id 
+            LEFT JOIN project_status ps ON pm.project_status_id = ps.id 
+            LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
+            LEFT JOIN user ON pm.create_id = user.id  WHERE pm.id = " . $bid . "  ";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    $project_name = "";
+    $username = "";
+    $created_at = "";
+    $category = "";
+    $client_type = "";
+    $category = "";
+    $priority = "";
+    $project_status = "";
+    $estimate_close_prob = "";
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $project_name = $row['project_name'];
+        $username = $row['username'];
+        $created_at = $row['created_at'];
+        $category = $row['category'];
+        $client_type = $row['client_type'];
+        $priority = $row['priority'];
+        $project_status = $row['project_status'];
+        $estimate_close_prob = $row['estimate_close_prob'];
+    }
+
+    project01_notify_mail('01', $project_name, $username, $created_at, $category, $client_type, $priority, $project_status, $estimate_close_prob, $bid);
+}

@@ -89,6 +89,91 @@ function sendGridMail($name, $email1,  $leaver, $projectname, $remark)
 }
 
 
+function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress($email1, $name);
+
+    if($kind == 0)
+        $payment = "DownPayment";
+    
+    if($kind == 1)
+        $payment = "Payment";
+
+    if($category == '1')
+        $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
+
+    if($category == '2')
+        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
+
+    $mail->AddCC('kuan@feliix.com', 'Kuan');
+    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
+    $content =  "<p>Dear " . $name . ",</p>";
+    $content = $content . "<p>Glen has checked " . $payment . " proof, Following are the details:</p>";
+
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $name . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+
+
+    $content = $content . "<p>Status: Checked: " . $status . "</p>";
+    /*
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Checked:" . $status . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+    */
+
+    if($reason != "")
+        $content = $content . "<p>Additional Remark:" . $reason . "</p>";
+
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to view the downpayment proof.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category)
 {
     $conf = new Conf();
@@ -110,6 +195,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 
     $mail->IsHTML(true);
     $mail->AddAddress($email1, $name);
+
 
     if($category == '1')
         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
@@ -168,6 +254,75 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 
 }
 
+function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
+    if($category == '1')
+        $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
+
+    if($category == '2')
+        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
+
+    $pay = "Payment";
+    if($kind == 0)
+        $pay = "Downpayment";
+
+    $mail->AddCC('kuan@feliix.com', 'Kuan');
+    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    $mail->AddCC($email1, $name);
+    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Payment Proof Submitted by " . $leaver . "(" . $projectname . ")";
+    $content =  "<p>Dear Glen,</p>";
+    $content = $content . "<p>" . $leaver . " has submitted payment proof, Following are the details:</p>";
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Project Name:" . $projectname . "</p>";
+    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
+    $content = $content . "<p>Submitter:" . $leaver . "</p>";
+    $content = $content . "<p>Type:" . $pay . "</p>";
+    $content = $content . "<p>Remark:" . $remark . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to review the downpayment proof.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
 
 function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $subtime, $category)
 {
@@ -1001,6 +1156,335 @@ function GetPettyVoidNotifiers()
     $sql = "SELECT username, email FROM expense_flow ap
     LEFT JOIN user u ON ap.uid = u.id 
     WHERE flow in (1, 2, 3)";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+
+function project01_notify_mail($request_type, $project_name, $username, $created_at, $category, $client_type, $priority, $project_status, $estimate_close_prob, $project_id)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "01":
+            $title = 'Project "'. $project_name .'" was created by ' . $username;
+            $tab = '<p>A new project named "'. $project_name .'" was created by ' . $username . '. Following are the details:</p>';
+            break;
+        default:
+            $title = 'Project "'. $project_name .'" was created by ' . $username;
+            $tab = '<p>A new project named "'. $project_name .'" was created by ' . $username . '. Following are the details:</p>';
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $notifior = GetProjectNotifiers();
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Project Category:" . $category . "</p>";
+    $content = $content . "<p>Client Type:" . $client_type . "</p>";
+    $content = $content . "<p>Priority:" . $priority . "</p>";
+    $content = $content . "<p>Project Status:" . $project_status . "</p>";
+    $content = $content . "<p>Estimated Closing Prob.:" . $estimate_close_prob . "</p>";
+    $content = $content . "<p>Project Creator:" . $username . " at " . $created_at . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project02?p=" . $project_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($username, $content);
+        return true;
+    } else {
+        logMail($username, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
+function project02_stage_notify_mail($stage_name, $project_name, $username, $created_at, $stage_status, $project_id)
+{
+
+    $title = 'Stage "'. $stage_name .'" was created in Project "' . $project_name . '" ';
+    $tab = '<p>Stage "'. $stage_name .'" was created in Project "' . $project_name . '" by ' . $username . '. Following are the details:</p>';
+    
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $notifior = GetProjectNotifiers();
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stage_name . "</p>";
+    $content = $content . "<p>Status of Stage:" . $stage_status . "</p>";
+    $content = $content . "<p>Stage Creator:" . $username . " at " . $created_at . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project02?p=" . $project_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($username, $content);
+        return true;
+    } else {
+        logMail($username, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
+function project03_stage_client_task_notify_mail($project_name, $username, $created_at, $project_creator_id, $message, $category, $stage_id)
+{
+    $title = '[Message Notification] New message in client stage of project "' . $project_name . '" ';
+    $tab = '<p>A new message in client stage of project "' . $project_name . '" was created by ' . $username . '. Following are the details:</p>';
+    
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $notifior = GetNotifiers($project_creator_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $notifior = GetProjectNotifiersByCatagory($category);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Message Creator:" . $username . " at " . $created_at . "</p>";
+    $content = $content . "<p>Content:" . $message . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_client?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($username, $content);
+        return true;
+    } else {
+        logMail($username, $mail->ErrorInfo);
+        return false;
+    }
+}
+
+function project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id)
+{
+
+    $title = 'Status of project "' . $project_name . '" changed to "' . $project_status . '" ';
+    $tab = '<p>Status of project "' . $project_name . '" changed to "' . $project_status . '". Following are the details:</p>';
+    
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $notifior = GetProjectNotifiers();
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Project Category:" . $project_category . "</p>";
+    $content = $content . "<p>Client Type:" . $client_type . "</p>";
+    $content = $content . "<p>Priority:" . $priority . "</p>";
+    $content = $content . "<p>Project Status:" . $pre_status . " => " . $project_status.  "</p>";
+    $content = $content . "<p>Estimated Closing Prob.:" . $estimate_close_prob . "</p>";
+    $content = $content . "<p>Project Creator:" . $username . " at " . $created_at . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project02?p=" . $project_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($username, $content);
+        return true;
+    } else {
+        logMail($username, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
+function GetProjectNotifiersByCatagory($catagory)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    if($catagory == 'Office Systems')
+    {
+        $sql = "
+            SELECT username, email, title 
+            FROM user u
+            LEFT JOIN user_title ut
+            ON u.title_id = ut.id 
+            WHERE title IN(
+                'Office Systems Manager',
+                'Managing Director') ";
+    }
+    else
+    {
+        $sql = "
+            SELECT username, email, title 
+            FROM user u
+            LEFT JOIN user_title ut
+            ON u.title_id = ut.id 
+            WHERE title IN(
+                'Lighting Manager',
+                'Managing Director') ";
+    }
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetProjectNotifiers()
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "
+        SELECT username, email, title 
+        FROM user u
+        LEFT JOIN user_title ut
+        ON u.title_id = ut.id 
+        WHERE title IN(
+            'Jr. Account Executive',
+            'Account Executive',
+            'Sr. Account Executive',
+            'Assistant Sales Manager',
+            'Sales Manager',
+            'Lighting Manager',
+            'Lighting Assistant Manager',
+            'Office Systems Manager',
+            'Office Systems Assistant Manager',
+            'Operations Manager',
+            'Managing Director') ";
 
     $merged_results = array();
 
