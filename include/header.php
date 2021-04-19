@@ -70,55 +70,55 @@ try {
             $access5 = true;
 
         // QOUTE AND PAYMENT Management
-        if(trim($department) == 'SALES')
+        if(trim(strtoupper($department)) == 'SALES')
         {
-            if(trim($position) == 'ASSISTANT SALES MANAGER' || trim($position) == 'SALES MANAGER')
+            if(trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER' || trim(strtoupper($position)) == 'SALES MANAGER')
             {
                 $access6 = true;
             }
         }
 
-        if(trim($department) == 'LIGHTING')
+        if(trim(strtoupper($department)) == 'LIGHTING')
         {
-            if(trim($position) == 'ASSISTANT LIGHTING MANAGER' || trim($position) == 'LIGHTING MANAGER')
+            if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER' || trim(strtoupper($position)) == 'LIGHTING MANAGER')
             {
                 $access6 = true;
             }
         }
 
-        if(trim($department) == 'OFFICE')
+        if(trim(strtoupper($department)) == 'OFFICE')
         {
-            if(trim($position) == 'ASSISTANT OFFICE SYSTEMS MANAGER' || trim($position) == 'OFFICE SYSTEMS MANAGER')
+            if(trim(strtoupper($position)) == 'ASSISTANT OFFICE SYSTEMS MANAGER' || trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
             {
                 $access6 = true;
             }
         }
 
-        if(trim($department) == 'DESIGN')
+        if(trim(strtoupper($department)) == 'DESIGN')
         {
-            if(trim($position) == 'ASSISTANT BRAND MANAGER' || trim($position) == 'BRAND MANAGER')
+            if(trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER' || trim(strtoupper($position)) == 'BRAND MANAGER')
             {
                 $access6 = true;
             }
         }
 
-        if(trim($department) == 'SERVICE')
+        if(trim(strtoupper($department)) == 'SERVICE')
         {
-            if(trim($position) == "ENGINERING MANAGER")
+            if(trim(strtoupper($position)) == "ENGINERING MANAGER")
             {
                 $access6 = true;
             }
         }
 
-        if(trim($department) == 'ADMIN')
+        if(trim(strtoupper($department)) == 'ADMIN')
         {
-            if(trim($position) == 'OPERATIONS MANAGER')
+            if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
             {
                 $access6 = true;
             }
         }
 
-        if(trim($department) == 'TW')
+        if(trim(strtoupper($department)) == 'TW')
         {
             if(trim($position) == 'Supply Chain Manager')
             {

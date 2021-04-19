@@ -18,6 +18,7 @@ $access2 = false;
 $access3 = false;
 $access4 = false;
 $access5 = false;
+$access6 = false;
 
 $pic_url = "man6.jpg";
 
@@ -60,12 +61,81 @@ try {
             $access2 = true;
 
         $access3 = false;
-        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9)
+        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87 || $user_id == 99)
             $access3 = true;
 
         // 5. 針對 Reporting Section的內容，只有 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到
-        if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 9 || $user_id == 41)
+        if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 9 || $user_id == 41 || $user_id == 99)
             $access5 = true;
+
+        
+        // QOUTE AND PAYMENT Management
+        if(trim(strtoupper($department)) == 'SALES')
+        {
+            if(trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER' || trim(strtoupper($position)) == 'SALES MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'LIGHTING')
+        {
+            if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER' || trim(strtoupper($position)) == 'LIGHTING MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'OFFICE')
+        {
+            if(trim(strtoupper($position)) == 'ASSISTANT OFFICE SYSTEMS MANAGER' || trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'DESIGN')
+        {
+            if(trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER' || trim(strtoupper($position)) == 'BRAND MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'SERVICE')
+        {
+            if(trim(strtoupper($position)) == "ENGINERING MANAGER")
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'ADMIN')
+        {
+            if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'TW')
+        {
+            if(trim($position) == 'Supply Chain Manager')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == '')
+        {
+            if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+            {
+                $access6 = true;
+            }
+        }
+
+        if($user_id == 1 || $user_id == 99 || $user_id == 41 )
+            $access6 = true;
 
         $pic_url = $decoded->data->pic_url;
 
@@ -110,6 +180,16 @@ try {
             <li class="sec03">
                 <a class="uni">Project<br>Management</a>
                 <a class="list" href="../project01">Project Management</a>
+                <?php 
+                if($access6 == true)
+                {
+                ?>
+                    <a class="list" href="../quotation_and_payment_mgt?fc=&fs=&ft=&fal=&fau=&fpl=&fpu=&fk=&of1=&ofd1=&of2=&ofd2=&pg=1">Quotation and Payment Mgt.</a>
+                <?php 
+                }
+                ?>
+                    <a class="list" href="schedule_calendar">Schedule Calendar</a>
+                </li>
                 <a class="list" href="../schedule_calendar">Schedule Calendar</a>
             </li>
             <!--
@@ -118,7 +198,7 @@ try {
             </li>
 -->
             <?php 
-                if($access1 == true || $access2 == true || $access3 == true)
+                if($access1 == true || $access2 == true || $access3 == true || $access4 == true)
                 {
             ?>
             <li class="gray05" style="border: 3px solid var(--black01);">
