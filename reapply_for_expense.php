@@ -438,6 +438,6 @@
 <script src="js/apply_for_leave.js"></script>
 
 <!-- Awesome Font for current webpage -->
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script defer src="js/a076d05399.js"></script>
 
 </html>

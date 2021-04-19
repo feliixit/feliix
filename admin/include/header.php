@@ -166,7 +166,7 @@ try {
     <div class="middle">
         <ul class="info">
             <!-- 大頭照可由此處style修改 -->
-            <li class="photo" style="background-image: url(images/man/<?=$pic_url ?>)"></li>
+            <li class="photo" style="background-image: url(../images/man/<?=$pic_url ?>)"></li>
             <li class="name"><?= isset($username) ? $username : "" ?> <br /> <b style="font-size: 26px;"><?= isset($position) ? $position : "" ?></b></li>
         </ul>
         <?php

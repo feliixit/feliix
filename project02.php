@@ -2,6 +2,7 @@
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
 if ( !isset( $jwt ) ) {
+  setcookie("userurl", $_SERVER['REQUEST_URI']);
   header( 'location:index' );
 }
 
@@ -124,6 +125,7 @@ $(function(){
     dialogshow($('.list_function a.fn5'),$('.list_function .dialog.fn5'));
     dialogshow($('.list_function a.fn6'),$('.list_function .dialog.fn6'));
     dialogshow($('.list_function a.fn7'),$('.list_function .dialog.fn7'));
+    dialogshow($('.list_function a.fn8'),$('.list_function .dialog.fn8'));
     
     $('header').click(function(){dialogclear()});
     $('.block.left').click(function(){dialogclear()});
@@ -789,7 +791,7 @@ $(function(){
                         </div>
                     </div>
                 </div>
-
+<!--
 
                 <div class="popupblock">
                     <a id="a_fn7" class="fn7" :ref="'a_fn7'">Upload Quotation</a>
@@ -914,6 +916,68 @@ $(function(){
                         </div>
                     </div>
                 </div>
+-->
+                <div class="popupblock">
+                    <a id="status_fn8" class="fn8" :ref="'a_fn8'">Upload Approved Plan</a>
+                    <div id="approve_dialog" class="dialog fn8" :ref="'dlg_fn8'">
+                        <h6>Upload Approved Plan:</h6>
+                        <div class="formbox">
+                            <dl>
+                                <dt class="head">Description:</dt>
+                                <dd><textarea name="" id="" v-model="approve_remark"></textarea></dd>
+
+                                <dd style="display: flex; justify-content: flex_start;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                          <span class="upload-des">choose file</span>
+                                          <input
+                                            class="input"
+                                            type="file"
+                                            name="approve_file"
+                                            value
+                                            placeholder="choose file"
+                                            ref="approve_file"
+                                            v-show="approve_canSub"
+                                            @change="approve_changeFile()"
+                                            multiple
+                                          />
+                                    </div>
+                                  </div>
+                                </dd>
+
+                                <div class="file-list">
+                                  <div class="file-item" v-for="(item,index) in approve_fileArray" :key="index">
+                                    <p>
+                                      {{item.name}}
+                                      <span
+                                        @click="approve_deleteFile(index)"
+                                        v-show="item.progress==0"
+                                        class="upload-delete"
+                                      ><i class="fas fa-backspace"></i>
+                                        </span>
+                                    </p>
+                                    <div class="progress-container" v-show="item.progress!=0">
+                                      <div class="progress-wrapper">
+                                        <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                      </div>
+                                      <div class="progress-rate">
+                                        <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                        <span v-else><i class="fas fa-check-circle"></i></span>  
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="btnbox">
+                                    <a class="btn small" @click="approve_clear">Cancel</a>
+                                    <a class="btn small green" @click="approve_create">Submit</a>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="block left">
@@ -1003,7 +1067,24 @@ $(function(){
                     </ul>
                     <ul>
                         <li class="morespace">
-                            <div v-for='(receive_record, index) in project_quotes'>• {{ receive_record.comment }} <br
+                            <div v-for='(receive_record, index) in project_quotes' v-bind:style="[receive_record.final_quotation == 1 ? { 'color':'#F37058', '': ''} : { }]">• {{ receive_record.comment }} <br
+                                    v-if="receive_record.items.length > 0">
+                                <span v-for="item in receive_record.items">
+                                <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
+                            </span>
+                                <br>({{ receive_record.username }} at {{ receive_record.created_at }})
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Approved Plan</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                            <div v-for='(receive_record, index) in project_approves'>• {{ receive_record.comment }} <br
                                     v-if="receive_record.items.length > 0">
                                 <span v-for="item in receive_record.items">
                                 <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
@@ -1107,7 +1188,7 @@ $(function(){
                 <div class="pagenation">
                     <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
 
-                    <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
 
                     <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                 </div>
@@ -1146,7 +1227,7 @@ $(function(){
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script defer src="js/project02.js"></script>
-<script defer src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script src="js/a076d05399.js"></script>
 <script>
 
     function change_Project_Info(obj_checkbox){

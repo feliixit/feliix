@@ -16,6 +16,15 @@ var app = new Vue({
     fil_status : '',
     fil_stage : '',
     fil_creator : '',
+    fil_keyword : '',
+    fil_lower : '',
+    fil_upper : '',
+
+    od_opt1 : '',
+    od_ord1 : '',
+
+    od_opt2 : '',
+    od_ord2 : '',
 
     probability : 0,
 
@@ -32,6 +41,7 @@ var app = new Vue({
     submit : false,
     // paging
     page: 1,
+    pg:0,
     //perPage: 10,
     pages: [],
 
@@ -47,6 +57,68 @@ var app = new Vue({
   },
 
   created () {
+    let _this = this;
+    let uri = window.location.href.split("?");
+    if (uri.length >= 2) {
+      let vars = uri[1].split("&");
+
+      let tmp = "";
+      vars.forEach(async function(v) {
+        tmp = v.split("=");
+        if (tmp.length == 2) {
+          switch (tmp[0]) {
+            case "fpc":
+              _this.fil_project_category = decodeURI(tmp[1]);
+              break;
+            case "fct":
+              _this.fil_client_type = decodeURI(tmp[1]);
+              break;
+            case "fp":
+              _this.fil_priority = decodeURI(tmp[1]);
+              break;
+            case "fs":
+              _this.fil_status = decodeURI(tmp[1]);
+              break;
+            case "fcs":
+              _this.fil_stage = decodeURI(tmp[1]);
+              break;
+            case "fpt":
+              _this.fil_creator = decodeURI(tmp[1]);
+              break;
+            case "flo":
+              _this.fil_lower = decodeURI(tmp[1]);
+              break;
+            case "fup":
+              _this.fil_upper = decodeURI(tmp[1]);
+              break;
+            case "key":
+              _this.fil_keyword = decodeURI(tmp[1]);
+              break;
+            case "op1":
+              _this.od_opt1 = decodeURI(tmp[1]);
+              break;
+            case "od1":
+              _this.od_ord1 = decodeURI(tmp[1]);
+              break;
+            case "op2":
+              _this.od_opt2 = decodeURI(tmp[1]);
+              break;
+            case "od2":
+              _this.od_ord2 = decodeURI(tmp[1]);
+              break;
+            case "id":
+              _this.id = tmp[1];
+              break;
+            case "pg":
+              _this.pg = tmp[1];
+              break;
+            default:
+              console.log(`Too many args`);
+          }
+        }
+      });
+    }
+
     this.getRecords();
     this.getProjectCategorys();
     this.getClientTypes();
@@ -58,6 +130,9 @@ var app = new Vue({
 
   computed: {
     displayedPosts () {
+      if(this.pg == 0)
+        this.apply_filters();
+
       this.setPages();
         return this.paginate(this.receive_records);
     },
@@ -78,7 +153,7 @@ var app = new Vue({
         console.log('Vue watch receive_records');
         this.setPages();
       },
-
+/*
     fil_project_category (value) {
         this.getRecords(value);
         },
@@ -97,6 +172,7 @@ var app = new Vue({
     fil_creator (value) {
         this.getRecords(value);
         },
+  */
   },
 
 
@@ -139,6 +215,14 @@ var app = new Vue({
                 fs: _this.fil_status,
                 fcs: _this.fil_stage,
                 fpt: _this.fil_creator,
+                flo: _this.fil_lower,
+                fup: _this.fil_upper,
+                key: _this.fil_keyword,
+
+                op1: _this.od_opt1,
+                od1: _this.od_ord1,
+                op2: _this.od_opt2,
+                od2: _this.od_ord2,
             };
 
       
@@ -150,6 +234,12 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.receive_records = res.data;
+
+                  if(_this.pg !== 0)
+                  { 
+                    _this.page = _this.pg;
+                    _this.setPages();
+                  }
               },
               (err) => {
                   alert(err.response);
@@ -438,6 +528,168 @@ var app = new Vue({
 
       },
 
+      cancel_filters:function() {
+        document.getElementById('filter_dialog').classList.remove("show");
+      },
+
+      cancel_orders:function() {
+        document.getElementById('order_dialog').classList.remove("show");
+      },
+
+      clear_orders: function() {
+        this.od_opt1 = '';
+        this.od_ord1 = '';
+        this.od_opt2 = '';
+        this.od_ord2 = '';
+
+        let _this = this;
+
+        window.location.href =
+          "project01?" +
+          "fpc=" +
+          _this.fil_project_category +
+          "&fct=" +
+          _this.fil_client_type +
+          "&fp=" +
+          _this.fil_priority +
+          "&fs=" +
+          _this.fil_status +
+          "&fcs=" +
+          _this.fil_stage +
+          "&fpt=" +
+          _this.fil_creator +
+          "&flo=" +
+          _this.fil_lower +
+          "&fup=" +
+          _this.fil_upper +
+          "&key=" +
+          _this.fil_keyword +
+          "&op1=" +
+          _this.od_opt1 +
+          "&od1=" +
+          _this.od_ord1 +
+          "&op2=" +
+          _this.od_opt2 +
+          "&od2=" +
+          _this.od_ord2 +
+          "&pg=" +
+          _this.page;
+      },
+
+      clear_filters: function() {
+        this.fil_project_category = '';
+        this.fil_client_type = '';
+        this.fil_priority = '';
+        this.fil_status = '';
+        this.fil_stage = '';
+        this.fil_creator = '';
+        this.fil_lower = '';
+        this.fil_upper = '';
+        this.fil_keyword = '';
+
+        let _this = this;
+
+        window.location.href =
+          "project01?" +
+          "fpc=" +
+          _this.fil_project_category +
+          "&fct=" +
+          _this.fil_client_type +
+          "&fp=" +
+          _this.fil_priority +
+          "&fs=" +
+          _this.fil_status +
+          "&fcs=" +
+          _this.fil_stage +
+          "&fpt=" +
+          _this.fil_creator +
+          "&flo=" +
+          _this.fil_lower +
+          "&fup=" +
+          _this.fil_upper +
+          "&key=" +
+          _this.fil_keyword +
+          "&op1=" +
+          _this.od_opt1 +
+          "&od1=" +
+          _this.od_ord1 +
+          "&op2=" +
+          _this.od_opt2 +
+          "&od2=" +
+          _this.od_ord2 +
+          "&pg=" +
+          _this.page;
+      },
+
+      apply_filters: function() {
+        let _this = this;
+
+        window.location.href =
+          "project01?" +
+          "fpc=" +
+          _this.fil_project_category +
+          "&fct=" +
+          _this.fil_client_type +
+          "&fp=" +
+          _this.fil_priority +
+          "&fs=" +
+          _this.fil_status +
+          "&fcs=" +
+          _this.fil_stage +
+          "&fpt=" +
+          _this.fil_creator +
+          "&flo=" +
+          _this.fil_lower +
+          "&fup=" +
+          _this.fil_upper +
+          "&key=" +
+          _this.fil_keyword +
+          "&op1=" +
+          _this.od_opt1 +
+          "&od1=" +
+          _this.od_ord1 +
+          "&op2=" +
+          _this.od_opt2 +
+          "&od2=" +
+          _this.od_ord2 +
+          "&pg=" +
+          _this.page;
+      },
+
+      apply_orders: function() {
+        let _this = this;
+
+        window.location.href =
+          "project01?" +
+          "fpc=" +
+          _this.fil_project_category +
+          "&fct=" +
+          _this.fil_client_type +
+          "&fp=" +
+          _this.fil_priority +
+          "&fs=" +
+          _this.fil_status +
+          "&fcs=" +
+          _this.fil_stage +
+          "&fpt=" +
+          _this.fil_creator +
+          "&flo=" +
+          _this.fil_lower +
+          "&fup=" +
+          _this.fil_upper +
+          "&key=" +
+          _this.fil_keyword +
+          "&op1=" +
+          _this.od_opt1 +
+          "&od1=" +
+          _this.od_ord1 +
+          "&op2=" +
+          _this.od_opt2 +
+          "&od2=" +
+          _this.od_ord2 +
+          "&pg=" +
+          _this.page;
+      },
 
         shallowCopy(obj) {
           console.log("shallowCopy");

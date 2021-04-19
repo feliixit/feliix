@@ -90,14 +90,59 @@ try {
 <script>
 $(function(){
     $('header').load('include/header.php');
-    toggleme($('.list_function .new_project a.add'),$('.list_function .dialog'),'show');
+    // toggleme($('.list_function .new_project a.add'),$('.list_function .dialog'),'show');
+    // toggleme($('.list_function .new_project a.filter'),$('.list_function .dialog.d-filter'),'show');
+    // toggleme($('.list_function .new_project a.sort'),$('.list_function .dialog.d-sort'),'show');
+
+    dialogshow($('.list_function .new_project a.add'),$('.list_function .dialog.d-add'));
+    dialogshow($('.list_function .new_project a.filter'),$('.list_function .dialog.d-filter'));
+    dialogshow($('.list_function .new_project a.sort'),$('.list_function .dialog.d-sort'));
+
     $('.tablebox').click(function(){
         $('.list_function .dialog').removeClass('show');
     })
     
 })
 </script>
+<style>
+    .tablebox.lv1 li:nth-of-type(10) a {color:var(--fth01);}
 
+    .list_function .new_project {
+            margin-top: -15px;
+        }
+
+        body.fourth .mainContent > .block {
+            margin-top: 20px;
+        }
+
+        .list_function .new_project a.filter {
+            font-size: 0;
+            background-color: #00811e;
+            background-image: url(images/ui/btn_filter.svg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 46px;
+            height: 46px;
+            line-height: 36px;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .list_function .new_project a.sort  {
+            font-size: 0;
+            background-color: #00811e;
+            background-image: url(images/ui/btn_sort.svg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 46px;
+            height: 46px;
+            line-height: 36px;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+        }
+</style>
 </head>
 
 <body class="fourth">
@@ -117,7 +162,7 @@ $(function(){
   if ($test_manager[0]  == "1")
   {
 ?>
-                    <div id="insert_dialog" class="dialog">
+                    <div id="insert_dialog" class="dialog d-add">
                         <h6>Create New Project:</h6>
                         <div class="formbox">
                             <dl>
@@ -195,7 +240,208 @@ $(function(){
 ?>
                     
                 </div>
-                <!-- Filter -->
+
+
+                
+                <!-- 篩選 -->
+                <div class="new_project">
+                    <a class="filter"></a>
+                    <div id="filter_dialog" class="dialog d-filter"><h6>Filter Function:</h6>
+                        <div class="formbox">
+                            <dl>
+                                <dt>Project Category</dt>
+                                <dd>
+                                    <select  v-model="fil_project_category">
+                                    <option value=""></option>
+                                    <option v-for="item in categorys" :value="item.id" :key="item.category">
+                                        {{ item.category }}
+                                    </option>
+                                    </select>
+                                </dd>
+
+                                <dt>Client Type</dt>
+                                <dd>
+                                    <select v-model="fil_client_type">
+                                    <option value=""></option>
+                                    <option v-for="item in client_types" :value="item.id" :key="item.client_type">
+                                        {{ item.client_type }}
+                                    </option>
+                                    </select>
+                                </dd>
+
+                                <dt>Priority</dt>
+                                <dd>
+                                    <select v-model="fil_priority">
+                                    <option value=""></option>
+                                    <option v-for="item in priorities" :value="item.id" :key="item.priority">
+                                        {{ item.priority }}
+                                    </option>
+                                    </select>
+                                </dd>
+
+                                <dt>Project Status</dt>
+                                <dd>
+                                    <select v-model="fil_status">
+                                    <option value=""></option>
+                                    <option v-for="item in statuses" :value="item.id" :key="item.project_status">
+                                        {{ item.project_status }}
+                                    </option>
+                                    </select>
+                                </dd>
+
+                                <dt>Project Creator</dt>
+                                <dd>
+                                    <select v-model="fil_creator">
+                                    <option value=""></option>
+                                    <option v-for="item in creators" :value="item.username" :key="item.username">
+                                        {{ item.username }}
+                                    </option>
+                                    </select>
+                                </dd>
+
+                                <dt>Current Stage</dt>
+                                <dd>
+                                    <select v-model="fil_stage">
+                                    <option value=""></option>
+                                    <option value="Empty">Empty</option>
+                                    <option v-for="item in stages" :value="item.stage" :key="item.stage">
+                                        {{ item.stage }}
+                                    </option>
+                                    </select>
+                                </dd>
+
+
+                                <dt style="margin-bottom:-18px;">Estimated Closing Prob.</dt>
+                                <div class="half">
+                                    <dt>lower bound</dt>
+                                    <dd>
+                                        <select v-model="fil_lower">
+                                            <option value=""></option>
+                                            <option value="0">0</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                            <option value="60">60</option>
+                                            <option value="70">70</option>
+                                            <option value="80">80</option>
+                                            <option value="90">90</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </dd>
+                                </div>
+                                <div class="half">
+                                    <dt>upper bound</dt>
+                                    <dd>
+                                        <select v-model="fil_upper">
+                                            <option value=""></option>
+                                            <option value="0">0</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                            <option value="60">60</option>
+                                            <option value="70">70</option>
+                                            <option value="80">80</option>
+                                            <option value="90">90</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </dd>
+                                </div>
+
+
+                                <dt>Keyword (only for project name and recent message)</dt>
+                                <dd><input type="text" v-model="fil_keyword"></dd>
+
+                            </dl>
+                            <div class="btnbox"><a class="btn small" @click="cancel_filters()">Cancel</a><a class="btn small" @click="clear_filters()">Clear</a> <a class="btn small green" @click="apply_filters()">Apply</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 排序 -->
+                <div class="new_project">
+                    <a class="sort"></a>
+                    <div id="order_dialog" class="dialog d-sort"><h6>Sort Function:</h6>
+                        <div class="formbox">
+                            <dl>
+                                <div class="half">
+                                    <dt>1st Criterion</dt>
+                                    <dd>
+                                        <select v-model="od_opt1">
+                                            <option value=""></option>
+                                            <option value="1">
+                                                Execution Period -- Start Date
+                                            </option>
+                                            <option value="2">
+                                                Execution Period -- End Date
+                                            </option>
+                                            <option value="3">
+                                                Estimated Closing Prob.
+                                            </option>
+                                        </select>
+                                    </dd>
+                                </div>
+
+                                <div class="half">
+                                    <dt></dt>
+                                    <dd>
+                                        <select v-model="od_ord1">
+                                            <option value="1">
+                                                Ascending
+                                            </option>
+                                            <option value="2">
+                                                Descending
+                                            </option>
+                                        </select>
+                                    </dd>
+                                </div>
+
+                                <div class="half">
+                                    <dt>2nd Criterion</dt>
+                                    <dd>
+                                        <select v-model="od_opt2">
+                                            <option value=""></option>
+                                            <option value="1">
+                                                Execution Period -- Start Date
+                                            </option>
+                                            <option value="2">
+                                                Execution Period -- End Date
+                                            </option>
+                                            <option value="3">
+                                                Estimated Closing Prob.
+                                            </option>
+                                        </select>
+                                    </dd>
+                                </div>
+
+                                <div class="half">
+                                    <dt></dt>
+                                    <dd>
+                                        <select v-model="od_ord2">
+                                            <option value="1">
+                                                Ascending
+                                            </option>
+                                            <option value="2">
+                                                Descending
+                                            </option>
+                                        </select>
+                                    </dd>
+                                </div>
+
+                            </dl>
+                            <div class="btnbox"><a class="btn small" @click="cancel_orders()">Cancel</a><a class="btn small" @click="clear_orders()">Clear</a> <a class="btn small green" @click="apply_orders()">Apply</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Filter 
                 <div class="filter">
                     <select name="" id="" v-model="fil_project_category">
                         <option value="">Project Category</option>
@@ -235,13 +481,17 @@ $(function(){
                         </option>
                     </select>
                 </div>
+
+                    -->
+
+
                 <!-- 分頁 -->
                 <div class="pagenation">
-                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; apply_filters()">Previous</a>
                   
-                    <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages" @click="page=pg; apply_filters()" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
                   
-                    <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                    <a class="next" :disabled="page == pages.length" @click="page++; apply_filters()">Next</a>
                 </div>
             </div>
             <!-- list -->
@@ -269,8 +519,8 @@ $(function(){
                      <li>{{ receive_record.username }}</li>
                      <li>{{ receive_record.created_at }} ~ {{ receive_record.updated_at }}</li>
                      <li>{{ receive_record.stage }}</li>
-                     <li v-if="receive_record.recent != ''">{{ receive_record.recent }}</li>
-                   <li v-else>{{ receive_record.created_at }} {{ receive_record.username }}</li>
+                     <li v-if="receive_record.recent != ''"><a v-bind:href="receive_record.recent[0].url" target="_blank">{{ receive_record.recent[0].created_at}} {{ receive_record.recent[0].username }}</a></li>
+                   <li v-else></li>
                  </ul>
                 
              </div>
@@ -280,7 +530,7 @@ $(function(){
                <!-- 分頁 -->
                <div class="pagenation">
                   <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
-                  <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                  <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
                   <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
               </div>
            </div>

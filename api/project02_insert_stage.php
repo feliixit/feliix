@@ -40,6 +40,8 @@ else
 }
 
 include_once 'config/database.php';
+include_once 'mail.php';
+
 $database = new Database();
 $db = $database->getConnection();
 
@@ -89,6 +91,55 @@ $query = "INSERT INTO project_stages
             error_log($e->getMessage());
         }
 
+        if($last_id != 0)
+            SendNotifyMail($last_id);
 
         return $last_id;
 
+function SendNotifyMail($bid)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "SELECT pm.id, 
+                `sequence`, 
+                p.id pid,
+                p.project_name,
+                pst.id project_stage_id, 
+                pst.`stage`, 
+                (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, 
+                `stages_status_id`, 
+                DATE_FORMAT(pm.created_at, '%Y-%m-%d') START, 
+                user.username, 
+                DATE_FORMAT(pm.created_at, '%Y-%m-%d %T') created_at, 
+                0 replies, 
+                0 post, 
+                '' recent 
+            FROM project_stages pm 
+            LEFT JOIN project_main p ON pm.project_id = p.id
+            LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
+            LEFT JOIN user ON pm.create_id = user.id 
+            WHERE pm.id = " . $bid . "  ";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    $project_name = "";
+    $username = "";
+    $created_at = "";
+    $stage_name = "";
+    $stage_status = "";
+    $project_id = "";
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $project_name = $row['project_name'];
+        $username = $row['username'];
+        $created_at = $row['created_at'];
+        $stage_name = $row['stage'];
+        $stage_status = $row['stages_status'];
+        $project_id = $row['pid'];
+    }
+
+    project02_stage_notify_mail($stage_name, $project_name, $username, $created_at, $stage_status, $project_id);
+
+}
