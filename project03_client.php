@@ -3015,6 +3015,8 @@ $(function(){
 
     $(document).on("click", "#btn_delete", function() {
 
+        var _app1 = app1;
+
         if($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>")
         {
             app1.warning('Only meeting creator can execute this action!');
@@ -3059,7 +3061,7 @@ $(function(){
                         //從日曆中刪除該會議
                         eventObj.remove();
                         
-                        app1.notify_mail(id, 3);
+                        _app1.notify_mail(id, 3);
                     },
 
                     // show error message to user

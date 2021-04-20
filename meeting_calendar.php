@@ -740,7 +740,7 @@ try {
                     title: $("#oldSubject").val().trim(),
                     project_name: $("#oldProject").val().trim(),
                     attendee: names.toString().trim(),
-                    items: _app1.old_attendee,
+                    items: _func.old_attendee,
                     start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
                     end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
                     content: $("#oldContent").val(),
@@ -780,7 +780,8 @@ try {
 
     $(document).on("click", "#btn_delete", function () {
 
-        if ($("#oldCreator")[0].value !== "Dennis Lin") {
+        var _app1 = app;
+        if ($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>") {
             app1.warning('Only meeting creator can execute this action!');
             return;
         }
@@ -823,7 +824,7 @@ try {
                         //從日曆中刪除該會議
                         eventObj.remove();
 
-                        app1.notify_mail(id, 3);
+                        _app1.notify_mail(id, 3);
                     },
 
                     // show error message to user
