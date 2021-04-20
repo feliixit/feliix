@@ -188,9 +188,9 @@ try {
                 <?php 
                 }
                 ?>
-                    <a class="list" href="schedule_calendar">Schedule Calendar</a>
-                </li>
                 <a class="list" href="../schedule_calendar">Schedule Calendar</a>
+                <a class="list" href="../task_calendar">Task Due Date Calendar</a>
+                <a class="list" href="../meeting_calendar">Meeting Calendar</a>
             </li>
             <!--
             <li class="sec02">

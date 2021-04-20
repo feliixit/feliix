@@ -2232,6 +2232,8 @@ var app1 = new Vue({
     attendee:[],
     old_attendee:[],
     add_id: 0,
+
+    attachments:[],
   
   },
 
@@ -2327,7 +2329,7 @@ var app1 = new Vue({
       })
     },
 
-    addMeetings:function(subject, message, attendee, start_time, end_time, username){
+    addMeetings:function(project_name, subject, message, attendee, start_time, end_time, username){
       this.action = 2;//add
       var token = localStorage.getItem('token');
       var form_Data = new FormData();
@@ -2335,6 +2337,7 @@ var app1 = new Vue({
       let _this = this;
               form_Data.append('jwt', token);
               form_Data.append('subject', subject);
+              form_Data.append('project_name', project_name);
               form_Data.append('message', message);
               form_Data.append('attendee', attendee);
               form_Data.append('start_time', start_time);
@@ -2342,6 +2345,27 @@ var app1 = new Vue({
               form_Data.append('is_enabled', true);
               form_Data.append('action', this.action);
               form_Data.append('created_by', username);
+
+              var file_elements = document.getElementsByName("file_elements");
+
+              var item = 0;
+              for(let i = 0;i < file_elements.length; i++)
+              {
+                  if(file_elements[i].checked)
+                  {
+                      for( var j = 0; j < this.attachments.length; j++ ){
+                        let file = this.attachments[j];
+                        if(file.name === file_elements[i].value)
+                        {
+                          form_Data.append('files[' + item++ + ']', file);
+                          break;
+                        }
+                      }
+                  }
+                      
+              }
+
+
               axios({
                   method: 'post',
                   headers: {

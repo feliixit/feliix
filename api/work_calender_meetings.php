@@ -11,6 +11,8 @@ $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : '');
 $action = (isset($_POST['action']) ?  $_POST['action'] : 4);
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $subject = (isset($_POST['subject']) ?  $_POST['subject'] : '');
+$project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
+$remove = (isset($_POST['remove']) ?  $_POST['remove'] : '');
 $message = (isset($_POST['message']) ?  $_POST['message'] : '');
 $attendee = (isset($_POST['attendee']) ?  $_POST['attendee'] : '');
 $start_time = (isset($_POST['start_time']) ?  $_POST['start_time'] : '');
@@ -29,9 +31,13 @@ include_once 'libs/php-jwt-master/src/JWT.php';
 include_once 'config/database.php';
 include_once 'objects/work_calender_meetings.php';
 include_once 'config/conf.php';
+require_once '../vendor/autoload.php';
 
 $database = new Database();
 $db = $database->getConnection();
+$conf = new Conf();
+
+use Google\Cloud\Storage\StorageClient;
 
 $workCalenderMeetings = new WorkCalenderMeetings($db);
 //$le = new Leave($db);
@@ -57,6 +63,7 @@ else
 
             $id = 0;
             $subject = "";
+            $project_name = "";
             $message = "";
             $attendee = "";
             $start_time = "";
@@ -69,11 +76,14 @@ else
             $updated_by = "";
             $deleted_by = "";
 
+            $attach = [];
+
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 if ($id != $row['id'] && $id != 0) {
                     $merged_results[] = array(
                         "id" => $id,
                         "subject" => $subject,
+                        "project_name" => $project_name,
                         "message" => $message,
                         "attendee" => $attendee,
                         "start_time" => $start_time,
@@ -86,6 +96,7 @@ else
                         "updated_by" => $updated_by,
                         "deleted_by" => $deleted_by,
                         "items" => $items,
+                        "attach" => $attach,
                         
                     );
     
@@ -94,6 +105,7 @@ else
     
                 $id = $row['id'];
                 $subject = $row['subject'];
+                $project_name = $row['project_name'];
                 $message = $row['message'];
                 $attendee = $row['attendee'];
                 $start_time = $row['start_time'];
@@ -108,6 +120,8 @@ else
                 $updated_by = $row['updated_by'];
                 $deleted_by = $row['deleted_by'];
 
+                $attach = GetItem($row['id'], $db, 'meeting');
+
                 if(!empty($attendee ))
                     $items = GetUserInfo($row['attendee'], $db);
             }
@@ -116,6 +130,7 @@ else
                 $merged_results[] = array(
                     "id" => $id,
                     "subject" => $subject,
+                    "project_name" => $project_name,
                     "message" => $message,
                     "attendee" => $attendee,
                     "start_time" => $start_time,
@@ -128,7 +143,7 @@ else
                     "updated_by" => $updated_by,
                     "deleted_by" => $deleted_by,
                     "items" => $items,
-    
+                    "attach" => $attach,
                 );
             }
 
@@ -148,6 +163,7 @@ else
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
 
             $workCalenderMeetings->subject = $subject;
+            $workCalenderMeetings->project_name = $project_name;
             $workCalenderMeetings->message = $message;
             $workCalenderMeetings->attendee = $attendee;
             $workCalenderMeetings->start_time = $start_time;
@@ -156,8 +172,117 @@ else
             $workCalenderMeetings->created_by = $created_by;
             $arr = $workCalenderMeetings->create();
 
+
+            $batch_id = $arr;
+            $batch_type = 'meeting';
+
+            $_pic_url = "";
+            $_real_url = "";
+
+            if(isset($_FILES['files']['name']))
+            {
+                try {
+                    $total = count($_FILES['files']['name']);
+                    // Loop through each file
+                    for ($i = 0; $i < $total; $i++) {
+
+                        if (isset($_FILES['files']['name'][$i])) {
+                            $image_name = $_FILES['files']['name'][$i];
+                            $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
+                            $extension = pathinfo($image_name, PATHINFO_EXTENSION);
+                            if (in_array(strtolower($extension), $valid_extensions)) {
+                                //$upload_path = 'img/' . time() . '.' . $extension;
+
+                                $storage = new StorageClient([
+                                    'projectId' => 'predictive-fx-284008',
+                                    'keyFilePath' => $conf::$gcp_key
+                                ]);
+
+                                $bucket = $storage->bucket('feliiximg');
+
+                                $upload_name = pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
+
+                                $file_size = filesize($_FILES['files']['tmp_name'][$i]);
+                                $size = 0;
+
+                                $obj = $bucket->upload(
+                                    fopen($_FILES['files']['tmp_name'][$i], 'r'),
+                                    ['name' => $upload_name]);
+
+                                $info = $obj->info();
+                                $size = $info['size'];
+
+                                if($size == $file_size && $file_size != 0 && $size != 0)
+                                {
+                                    $query = "INSERT INTO gcp_storage_file
+                                    SET
+                                        batch_id = :batch_id,
+                                        batch_type = :batch_type,
+                                        filename = :filename,
+                                        gcp_name = :gcp_name,
+
+                                        create_id = :create_id,
+                                        created_at = now()";
+
+                                    // prepare the query
+                                    $stmt = $db->prepare($query);
+
+                                    // bind the values
+                                    $stmt->bindParam(':batch_id', $batch_id);
+                                    $stmt->bindParam(':batch_type', $batch_type);
+                                    $stmt->bindParam(':filename', $image_name);
+                                    $stmt->bindParam(':gcp_name', $upload_name);
+
+                                    $stmt->bindParam(':create_id', $user_id);
+
+                                    try {
+                                        // execute the query, also check if query was successful
+                                        if ($stmt->execute()) {
+                                            $last_id = $db->lastInsertId();
+                                        } else {
+                                            $arr = $stmt->errorInfo();
+                                            error_log($arr[2]);
+                                        }
+                                    } catch (Exception $e) {
+                                        error_log($e->getMessage());
+     
+                                        http_response_code(501);
+                                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                                        die();
+                                    }
+
+
+                                    $message = 'Uploaded';
+                                    $code = 0;
+                                    $upload_id = $last_id;
+                                    $image = $image_name;
+
+                                } else {
+                                    $message = 'There is an error while uploading file';
+              
+                                    http_response_code(501);
+                                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                                    die();
+                                }
+                            } else {
+                                $message = 'Only Images or Office files allowed to upload';
+                       
+                                http_response_code(501);
+                                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                                die();
+                            }
+                        }
+                    }
+                } catch (Exception $e) {
+             
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Error uploading, Please use laptop to upload again."));
+                    die();
+                }
+            }
+
             http_response_code(200);
-            echo json_encode(array($arr));
+            echo json_encode(array("message" => " Add success at " . date("Y-m-d") . " " . date("h:i:sa"), "id" => $arr));
             //echo json_encode(array("message" => " Add success at " . date("Y-m-d") . " " . date("h:i:sa")));
 
         } // if decode fails, it means jwt is invalid
@@ -176,6 +301,7 @@ else
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
             $workCalenderMeetings->id = $id;
             $workCalenderMeetings->subject = $subject;
+            $workCalenderMeetings->project_name = $project_name;
             $workCalenderMeetings->message = $message;
             $workCalenderMeetings->attendee = $attendee;
             $workCalenderMeetings->start_time = $start_time;
@@ -183,6 +309,143 @@ else
             $workCalenderMeetings->is_enabled = $is_enabled;
             $workCalenderMeetings->updated_by = $updated_by;
             $arr = $workCalenderMeetings->update();
+
+            if($remove != "")
+            {
+                // items to delete
+                $query = "DELETE FROM gcp_storage_file
+                    WHERE `batch_id` = " . $id ." AND filename in (" . $remove . ")";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+            
+                        http_response_code(501);
+                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+            
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+            }
+
+            $batch_id = $id;
+            $batch_type = 'meeting';
+
+            $_pic_url = "";
+            $_real_url = "";
+
+            if(isset($_FILES['files']['name']))
+            {
+                try {
+                    $total = count($_FILES['files']['name']);
+                    // Loop through each file
+                    for ($i = 0; $i < $total; $i++) {
+
+                        if (isset($_FILES['files']['name'][$i])) {
+                            $image_name = $_FILES['files']['name'][$i];
+                            $valid_extensions = array("jpg", "jpeg", "png", "gif", "pdf", "docx", "doc", "xls", "xlsx", "ppt", "pptx", "zip", "rar", "7z", "txt", "dwg", "skp", "psd", "evo");
+                            $extension = pathinfo($image_name, PATHINFO_EXTENSION);
+                            if (in_array(strtolower($extension), $valid_extensions)) {
+                                //$upload_path = 'img/' . time() . '.' . $extension;
+
+                                $storage = new StorageClient([
+                                    'projectId' => 'predictive-fx-284008',
+                                    'keyFilePath' => $conf::$gcp_key
+                                ]);
+
+                                $bucket = $storage->bucket('feliiximg');
+
+                                $upload_name = pathinfo($image_name, PATHINFO_FILENAME) . '.' . $extension;
+
+                                $file_size = filesize($_FILES['files']['tmp_name'][$i]);
+                                $size = 0;
+
+                                $obj = $bucket->upload(
+                                    fopen($_FILES['files']['tmp_name'][$i], 'r'),
+                                    ['name' => $upload_name]);
+
+                                $info = $obj->info();
+                                $size = $info['size'];
+
+                                if($size == $file_size && $file_size != 0 && $size != 0)
+                                {
+                                    $query = "INSERT INTO gcp_storage_file
+                                    SET
+                                        batch_id = :batch_id,
+                                        batch_type = :batch_type,
+                                        filename = :filename,
+                                        gcp_name = :gcp_name,
+
+                                        create_id = :create_id,
+                                        created_at = now()";
+
+                                    // prepare the query
+                                    $stmt = $db->prepare($query);
+
+                                    // bind the values
+                                    $stmt->bindParam(':batch_id', $batch_id);
+                                    $stmt->bindParam(':batch_type', $batch_type);
+                                    $stmt->bindParam(':filename', $image_name);
+                                    $stmt->bindParam(':gcp_name', $upload_name);
+
+                                    $stmt->bindParam(':create_id', $user_id);
+
+                                    try {
+                                        // execute the query, also check if query was successful
+                                        if ($stmt->execute()) {
+                                            $last_id = $db->lastInsertId();
+                                        } else {
+                                            $arr = $stmt->errorInfo();
+                                            error_log($arr[2]);
+                                        }
+                                    } catch (Exception $e) {
+                                        error_log($e->getMessage());
+     
+                                        http_response_code(501);
+                                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                                        die();
+                                    }
+
+
+                                    $message = 'Uploaded';
+                                    $code = 0;
+                                    $upload_id = $last_id;
+                                    $image = $image_name;
+
+                                } else {
+                                    $message = 'There is an error while uploading file';
+              
+                                    http_response_code(501);
+                                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                                    die();
+                                }
+                            } else {
+                                $message = 'Only Images or Office files allowed to upload';
+                       
+                                http_response_code(501);
+                                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $message));
+                                die();
+                            }
+                        }
+                    }
+                } catch (Exception $e) {
+             
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Error uploading, Please use laptop to upload again."));
+                    die();
+                }
+            }
+
 
             http_response_code(200);
             echo json_encode(array($arr));
@@ -305,6 +568,37 @@ function GetUserInfo($users, $db)
 
     $stmt = $db->prepare($sql);
     $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetItem($batch_id, $db, $type){
+    $query = "
+        
+        SELECT f.id,
+            coalesce(f.filename, '')   filename,
+            coalesce(f.bucketname, '') bucket,
+            coalesce(f.gcp_name, '')   gcp_name,
+            u.username,
+            f.created_at
+        FROM   gcp_storage_file f
+
+            LEFT JOIN user u
+                ON u.id = f.create_id
+        WHERE batch_id = " . $batch_id . "
+        AND f.batch_type = '" . $type . "'
+            AND f.status <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $merged_results[] = $row;

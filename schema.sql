@@ -1211,3 +1211,8 @@ CREATE TABLE IF NOT EXISTS `project_approve` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+-- Meeting Calendar 2021/4/19
+ALTER TABLE work_calendar_meetings
+ADD COLUMN `project_name` varchar(512) COLLATE utf8mb4_unicode_ci default '' AFTER subject;
