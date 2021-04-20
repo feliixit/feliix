@@ -780,7 +780,7 @@ try {
 
     $(document).on("click", "#btn_delete", function () {
 
-        var _app1 = app;
+        var _app1 = app1;
         if ($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>") {
             app1.warning('Only meeting creator can execute this action!');
             return;
