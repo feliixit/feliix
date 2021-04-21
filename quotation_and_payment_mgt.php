@@ -42,7 +42,11 @@ try {
         // QOUTE AND PAYMENT Management
         if(trim(strtoupper($department)) == 'SALES')
         {
-            if(trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER' || trim(strtoupper($position)) == 'SALES MANAGER')
+            if(trim(strtoupper($position)) == 'JR. ACCOUNT EXECUTIVE' 
+            || trim(strtoupper($position)) == 'ACCOUNT EXECUTIVE'
+            || trim(strtoupper($position)) == 'SR. ACCOUNT EXECUTIVE'
+            || trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
+            || trim(strtoupper($position)) == 'SALES MANAGER')
             {
                 $access6 = true;
             }
