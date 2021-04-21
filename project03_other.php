@@ -3220,7 +3220,7 @@ catch (Exception $e) {
                         if(obj[i].project_name.trim() === '')
                             title = obj[i].subject.trim();
                         else
-                            title = '[' + obj[i].project_name.trim() + '] ' + obj[i].subject.trim();
+                            title = '[ ' + obj[i].project_name.trim() + ' ] ' + obj[i].subject.trim();
 
                         var attach = "";
                         for(var j = 0; j < obj[i].attach.length; j++)
@@ -3572,12 +3572,17 @@ catch (Exception $e) {
                 };
                 $("#oldCreator").val(obj_meeting.creator);
 
+                var title = $("#oldSubject").val().trim();
+                if(_app.project_name !== "")
+                    title = '[ ' + _app.project_name + ' ] ' + $("#oldSubject").val().trim();
+
                 //把修改後的會議資訊 update 到日曆上
                 eventObj.setStart(obj_meeting.start);
                 eventObj.setEnd(obj_meeting.end);
-                eventObj.setProp("title", obj_meeting.title);
+                eventObj.setProp("title", title);
                 eventObj.setExtendedProp("description", obj_meeting);
 
+                refreshFileList(attach);
             },
 
             // show error message to user
@@ -3779,7 +3784,7 @@ catch (Exception $e) {
                 //##寄送通知信件給會議參與者,告知修改後訊息
                 _app1.notify_mail(obj.id, 1);
 
-                var title = '[' + _app.project_name + '] ' + $("#newSubject").val().trim();
+                var title = '[ ' + _app.project_name + ' ] ' + $("#newSubject").val().trim();
 
                 //把新增會議 呈現於日曆上
                 if(obj.id != 0)
@@ -3858,6 +3863,27 @@ catch (Exception $e) {
             {
                 fileTarget[0].value = "";
             }
+        }
+    }
+
+    function refreshFileList(attach) {
+        $('#sc_product_files_old').empty();
+
+        var container = $("#sc_product_files_old");
+
+        if(attach !== "")
+        {
+            var files = attach.split(",");
+            files.forEach((element) => {
+                var elm = '<div class="file-element">' +
+                    '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
+                    '<label for="' + element + '">' + 
+                        '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                    '</label>' +
+                    '</div>';
+
+                $(elm).appendTo(container);
+            });
         }
     }
 

@@ -237,6 +237,7 @@ function SendNotifyMail($bid, $pre_status)
         $project_status = $row['project_status'];
     }
 
-    project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id);
+    if($project_status != 'Pending Review' && $project_status != 'On Progress')
+        project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id);
 
 }
