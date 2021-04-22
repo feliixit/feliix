@@ -34,7 +34,7 @@
             font-size: 14px;
         }
 
-        #calendar {
+        #task_calendar {
             max-width: 90%;
             margin: 40px auto 30px;
         }
@@ -106,7 +106,7 @@
                 localStorage.getItem('token');
                 var form_Data = new FormData();
                 form_Data.append('jwt', token);
-                form_Data.append('action', 1);
+                form_Data.append('uid', 1);
 
                 $.ajax({
                     url: "api/project03_other_task_calendar",
