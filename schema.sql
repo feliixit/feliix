@@ -1216,3 +1216,7 @@ CREATE TABLE IF NOT EXISTS `project_approve` (
 -- Meeting Calendar 2021/4/19
 ALTER TABLE work_calendar_meetings
 ADD COLUMN `project_name` varchar(512) COLLATE utf8mb4_unicode_ci default '' AFTER subject;
+
+-- Task Calendar 2021/4/21
+ALTER TABLE project_other_task
+ADD COLUMN `due_time` varchar(10) COLLATE utf8mb4_unicode_ci default '' AFTER `due_date`;

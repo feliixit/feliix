@@ -63,7 +63,7 @@ switch ($method) {
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
-        $sql = "SELECT pm.id task_id, title, priority, due_date, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
+        $sql = "SELECT pm.id task_id, title, priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
         pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name
         from project_other_task pm 
         LEFT JOIN user u ON u.id = pm.create_id 
@@ -111,6 +111,7 @@ switch ($method) {
         $title = "";
         $priority = "";
         $due_date = "";
+        $due_time = "";
         $task_status = "";
         $creator = "";
         $creator_id = 0;
@@ -134,6 +135,7 @@ switch ($method) {
                     "priority" => $priority,
                     "priority_id" => $priority_id,
                     "due_date" => $due_date,
+                    "due_time" => $due_time,
                     "task_status" => $task_status,
                     "creator" => $creator,
                     "creator_id" => $creator_id,
@@ -160,6 +162,7 @@ switch ($method) {
             $priority = GetPriority($row['priority']);
             $priority_id = $row['priority'];
             $due_date = $row['due_date'];
+            $due_time = $row['due_time'];
             $task_status = $row['task_status'];
             $creator = $row['creator'];
             $creator_id = $row['uid'];
@@ -192,6 +195,7 @@ switch ($method) {
                 "priority" => $priority,
                 "priority_id" => $priority_id,
                 "due_date" => $due_date,
+                "due_time" => $due_time,
                 "task_status" => $task_status,
                 "creator" => $creator,
                 "creator_id" => $creator_id,
@@ -221,6 +225,7 @@ switch ($method) {
         $assignee = (isset($_POST['assignee']) ?  $_POST['assignee'] : '');
         $collaborator = (isset($_POST['collaborator']) ?  $_POST['collaborator'] : '');
         $due_date = (isset($_POST['due_date']) ?  $_POST['due_date'] : '');
+        $due_time = (isset($_POST['due_time']) ?  $_POST['due_time'] : '');
         $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 
 
@@ -232,6 +237,7 @@ switch ($method) {
             `assignee` = :assignee,
             `collaborator` = :collaborator,
             `due_date` = :due_date,
+            `due_time` = :due_time,
             `detail` = :detail,
             
             `create_id` = :create_id,
@@ -247,6 +253,7 @@ switch ($method) {
         $stmt->bindParam(':assignee', $assignee);
         $stmt->bindParam(':collaborator', $collaborator);
         $stmt->bindParam(':due_date', $due_date);
+        $stmt->bindParam(':due_time', $due_time);
         $stmt->bindParam(':detail', $detail);
 
         $stmt->bindParam(':create_id', $uid);

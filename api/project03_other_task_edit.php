@@ -58,6 +58,7 @@ $status = (isset($_POST['status']) ?  $_POST['status'] : 0);
 $assignee = (isset($_POST['assignee']) ?  $_POST['assignee'] : '');
 $collaborator = (isset($_POST['collaborator']) ?  $_POST['collaborator'] : '');
 $due_date = (isset($_POST['due_date']) ?  $_POST['due_date'] : '');
+$due_time = (isset($_POST['due_time']) ?  $_POST['due_time'] : '');
 $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 
 try{
@@ -69,6 +70,7 @@ try{
         `assignee` = :assignee,
         `collaborator` = :collaborator,
         `due_date` = :due_date,
+        `due_time` = :due_time,
         `detail` = :detail,
         updated_id = :updated_id,
         updated_at = now()
@@ -84,6 +86,7 @@ try{
     $stmt->bindParam(':assignee', $assignee);
     $stmt->bindParam(':collaborator', $collaborator);
     $stmt->bindParam(':due_date', $due_date);
+    $stmt->bindParam(':due_time', $due_time);
     $stmt->bindParam(':detail', $detail);
 
     $stmt->bindParam(':updated_id', $uid);

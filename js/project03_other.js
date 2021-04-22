@@ -43,6 +43,7 @@ var app = new Vue({
     assignee: [],
     collaborator: [],
     due_date: '',
+    due_time: '',
     detail: '',
 
 
@@ -1297,6 +1298,18 @@ var app = new Vue({
       }
 
 
+      if (this.due_date.trim() == '' && this.due_time.trim() != '') {
+        Swal.fire({
+          text: 'Please enter due date!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
       _this.submit = true;
       var form_Data = new FormData();
 
@@ -1306,6 +1319,7 @@ var app = new Vue({
       form_Data.append('assignee', Array.prototype.map.call(this.assignee, function(item) { return item.id; }).join(","));
       form_Data.append('collaborator', Array.prototype.map.call(this.collaborator, function(item) { return item.id; }).join(",") );
       form_Data.append('due_date', this.due_date.trim());
+      form_Data.append('due_time', this.due_time.trim());
       form_Data.append('detail', this.detail.trim());
 
       const token = sessionStorage.getItem('token');
@@ -1407,6 +1421,17 @@ var app = new Vue({
         return;
       }
 
+      if (this.record.due_date.trim() == '' && this.record.due_time.trim() != '') {
+        Swal.fire({
+          text: 'Please enter due date!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
 
       _this.submit = true;
       var form_Data = new FormData();
@@ -1418,6 +1443,7 @@ var app = new Vue({
       form_Data.append('assignee', Array.prototype.map.call(this.record.assignee, function(item) { return item.id; }).join(","));
       form_Data.append('collaborator', Array.prototype.map.call(this.record.collaborator, function(item) { return item.id; }).join(","));
       form_Data.append('due_date', this.record.due_date.trim());
+      form_Data.append('due_time', this.record.due_time.trim());
       form_Data.append('detail', this.record.detail.trim());
 
       const token = sessionStorage.getItem('token');
