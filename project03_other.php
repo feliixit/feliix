@@ -3195,6 +3195,9 @@ catch (Exception $e) {
 <script>
     var eventObj;
 
+    var calendarT1 = document.getElementById('task_calendar');
+    var calendar_task;
+
     $(document).on("click", "#btn_arrange", function() {
 
         $('#meeting').show();
@@ -3202,12 +3205,62 @@ catch (Exception $e) {
 
     $(document).on("click", "#btn_view", function() {
 
+        //刪除當前在日曆上的所有任務資訊
+        calendar_task.removeAllEvents();
+
+        //從資料庫中取出符合當前條件的任務
+
+        let temp = [];
+        //將符合條件的任務加入到日曆中
+        // task status = Pending，則該任務顏色為 gray
+        // task status = Close，則該任務顏色為 green
+        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
+        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
+        var token = localStorage.getItem('token');
+
+        localStorage.getItem('token');
+        var form_Data = new FormData();
+
+
+        $.ajax({
+            url: "api/project03_other_task_calendar",
+            type: "POST",
+            contentType: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            data: form_Data,
+
+            success: function(result) {
+                console.log(result);
+                var obj = JSON.parse(result);
+                if (obj !== undefined) {
+                    var arrayLength = obj.length;
+                    for (var i = 0; i < arrayLength; i++) {
+                        console.log(obj[i]);
+
+                        var obj_meeting = {
+                            id: obj[i].stage_id,
+                            title: obj[i].title,
+                            url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
+                            backgroundColor: obj[i].color,
+                            borderColor: obj[i].color,
+                        };
+
+                        temp.push(obj_meeting);
+                    }
+                }
+
+
+                calendar_task.addEventSource(temp);
+
+            }
+        });
+
         $('#tasks').show();
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-
-        var calendarT1 = document.getElementById('task_calendar');
 
         let event_array_task = [];
         //將Task從資料庫中加入array
@@ -3251,7 +3304,7 @@ catch (Exception $e) {
                     }
                 }
 
-                var calendar_task = new FullCalendar.Calendar(calendarT1, {
+                calendar_task = new FullCalendar.Calendar(calendarT1, {
 
                     contentHeight: 'auto',
 
