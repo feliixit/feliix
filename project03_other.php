@@ -3201,6 +3201,7 @@ catch (Exception $e) {
     $(document).on("click", "#btn_arrange", function() {
 
         $('#meeting').show();
+        $('#tasks').hide();
     });
 
     $(document).on("click", "#btn_view", function() {
@@ -3258,6 +3259,7 @@ catch (Exception $e) {
             }
         });
 
+        $('#meeting').hide();
         $('#tasks').show();
     });
 
