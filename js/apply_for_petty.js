@@ -260,17 +260,6 @@ var app = new Vue({
         return false;
       }
 
-      if (!this.$refs.file.files[0]) {
-        Swal.fire({
-          text: "File Attachment required",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-        //this.err_msg = 'Location Photo required';
-        //$(window).scrollTop(0);
-        return false;
-      }
-
       if (!this.sum_amonut > 0) {
         Swal.fire({
           text: "Petty list required",
