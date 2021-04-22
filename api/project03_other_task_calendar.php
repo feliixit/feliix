@@ -157,13 +157,13 @@ function GetTaskColor($task_status, $due_date, $due_time)
 {
     $color = 'red';
 
-    if($task_status == '2')
+    if($task_status == '1')
         $color = 'gray';
 
-    if($task_status == '3')
+    if($task_status == '2')
         $color = 'green';
 
-    if($task_status == '1')
+    if($task_status == '0')
     {
         $dueDate = $due_date . " 23:59";
 
