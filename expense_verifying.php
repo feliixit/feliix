@@ -314,7 +314,7 @@ $(function(){
 
                         <div class="btnbox">
                             <a class="btn" @click="export_petty">Export Voucher</a>
-                            <a class="btn" @click="approve_op">Finish Verifying</a>
+                            <a class="btn" :disabled="submit == true" @click="approve_op">Finish Verifying</a>
                         </div>
 
                     </form>

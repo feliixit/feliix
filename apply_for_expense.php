@@ -404,8 +404,8 @@ body.green input[type=date] {
 
                     <div class="btnbox">
                         <a class="btn" @click="reset">Reset</a>
-                        <a class="btn" v-if="pid == 0" @click="apply">Submit</a>
-                        <a class="btn" v-if="pid != 0" @click="apply_edit">Submit</a>
+                        <a class="btn" :disabled="submit == true" v-if="pid == 0" @click="apply">Submit</a>
+                        <a class="btn" :disabled="submit == true" v-if="pid != 0" @click="apply_edit">Submit</a>
                     </div>
 
                 </form>

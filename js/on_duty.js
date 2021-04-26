@@ -296,10 +296,12 @@ var app = new Vue({
 
       upload: function() {
 
+        if(this.submit == true) {
+          return;
+        }
+
         if(!this.validateForm())
           return;
-
-          this.submit = true;
 
           var file;
           var ptime;
@@ -330,6 +332,8 @@ var app = new Vue({
             });
             return;
           }
+
+          this.submit = true;
 
           var token = localStorage.getItem('token');
           var form_Data = new FormData();
@@ -376,9 +380,10 @@ var app = new Vue({
                   icon: 'error',
                   confirmButtonText: 'OK'
                 })
+
+                _this.reset();
               });
 
-              this.submit = false;
       },
 
       reset: function() {

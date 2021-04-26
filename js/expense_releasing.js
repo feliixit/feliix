@@ -169,7 +169,6 @@ var app = new Vue({
 
     export_petty: function() {
    
-      submit = 1;
       let _this = this;
       var form_Data = new FormData();
 
@@ -203,6 +202,11 @@ var app = new Vue({
   },
 
     approveReceiveRecord_OP: function(id) {
+
+      if(this.submit == true) return;
+
+      this.submit = true;
+
       let _this = this;
       targetId = this.record.id;
       var form_Data = new FormData();
@@ -236,7 +240,9 @@ var app = new Vue({
             icon: "info",
             confirmButtonText: "OK",
           });
+
           _this.resetForm();
+          
         })
         .catch(function(response) {
           //handle error
@@ -245,10 +251,16 @@ var app = new Vue({
             icon: "warning",
             confirmButtonText: "OK",
           });
+
+          _this.resetForm();
         });
     },
 
     approveReceiveRecord_MD: function(id) {
+
+      if(this.submit == true) return;
+      this.submit = true;
+
       let _this = this;
       targetId = this.record.id;
       var form_Data = new FormData();
@@ -291,10 +303,16 @@ var app = new Vue({
             icon: "info",
             confirmButtonText: "OK",
           });
+
+          _this.resetForm();
         });
     },
 
     rejectReceiveRecord_Checker: function(id) {
+      if(this.submit == true) return;
+
+      this.submit = true;
+
         let _this = this;
         targetId = this.record.id;
         var form_Data = new FormData();
@@ -332,10 +350,17 @@ var app = new Vue({
               icon: "info",
               confirmButtonText: "OK",
             });
+
+            _this.resetForm();
           });
       },
 
     rejectReceiveRecord: function(id) {
+
+      if(this.submit == true) return;
+
+      this.submit = true;
+
       let _this = this;
       targetId = this.record.id;
       var form_Data = new FormData();
@@ -373,6 +398,8 @@ var app = new Vue({
             icon: "info",
             confirmButtonText: "OK",
           });
+
+          _this.resetForm();
         });
     },
 
@@ -430,6 +457,7 @@ var app = new Vue({
             })
             //this.err_msg = 'Location Photo required';
             //$(window).scrollTop(0);
+   
             return false;
           }
 
@@ -443,11 +471,7 @@ var app = new Vue({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.value) {
-          _this.submit = true;
           _this.approveReceiveRecord_OP(this.proof_id);
-
-          _this.resetForm();
-
         }
       });
     },
@@ -488,10 +512,9 @@ var app = new Vue({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.value) {
-          _this.submit = true;
+  
           _this.approveReceiveRecord_MD(this.proof_id);
 
-          _this.resetForm();
 
         }
       });
@@ -532,10 +555,9 @@ var app = new Vue({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.value) {
-          _this.submit = true;
+
           _this.rejectReceiveRecord(this.proof_id);
 
-          _this.resetForm();
         }
       });
     },
@@ -575,10 +597,9 @@ var app = new Vue({
           confirmButtonText: "Yes",
         }).then((result) => {
           if (result.value) {
-            _this.submit = true;
+
             _this.rejectReceiveRecord_Checker(this.proof_id);
   
-            _this.resetForm();
           }
         });
       },
@@ -588,6 +609,7 @@ var app = new Vue({
       this.record = [];
       this.reject_reason = "";
       this.getLeaveCredit();
+      this.submit = false;
     },
 
     shallowCopy(obj) {

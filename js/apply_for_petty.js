@@ -347,6 +347,8 @@ var app = new Vue({
     apply: function() {
       if (!this.validateForm()) return;
 
+      if(this.submit == true) return;
+
       this.submit = true;
 
       var token = localStorage.getItem("token");
@@ -385,8 +387,9 @@ var app = new Vue({
             icon: "info",
             confirmButtonText: "OK",
           });
-
+          
           _this.reset();
+          
         })
         .catch(function(error) {
           //handle error
@@ -395,13 +398,16 @@ var app = new Vue({
             icon: "info",
             confirmButtonText: "OK",
           });
+
+          _this.reset();
         });
 
-      this.submit = false;
     },
 
     apply_edit: function() {
       if (!this.validateForm_edit()) return;
+
+      if(this.submit == true) return;
 
       this.submit = true;
 
@@ -459,9 +465,10 @@ var app = new Vue({
             icon: "info",
             confirmButtonText: "OK",
           });
+
+          _this.reset();
         });
 
-      this.submit = false;
     },
 
     reset: function() {

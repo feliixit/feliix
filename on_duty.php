@@ -245,7 +245,7 @@ $(function(){
                     </dl>
                     <div class="btnbox">
                         <a class="btn" @click="reset">Reset</a>
-                        <a class="btn" @click="upload" :disabled="submit">Submit</a>
+                        <a class="btn" @click="upload" :disabled="submit == true">Submit</a>
                     </div>
                 </div>
                 <!-- 表單樣式 -->

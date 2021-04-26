@@ -267,9 +267,9 @@ $(function(){
                         </ul>
 
                         <div class="btnbox">
-                            <a class="btn" @click="export_petty">Export Voucher</a>
-                            <a class="btn" @click="approve_op" v-if="record.request_type_id == 1">Finish Releasing</a>
-                            <a class="btn" @click="approve_md" v-if="record.request_type_id == 2">Finish Releasing</a>
+                            <a class="btn"  @click="export_petty">Export Voucher</a>
+                            <a class="btn" :disabled="submit == true" @click="approve_op" v-if="record.request_type_id == 1">Finish Releasing</a>
+                            <a class="btn" :disabled="submit == true" @click="approve_md" v-if="record.request_type_id == 2">Finish Releasing</a>
                         </div>
                     </form>
 
