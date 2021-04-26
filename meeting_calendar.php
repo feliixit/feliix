@@ -241,7 +241,7 @@ try {
 
 <div id='calendar'></div>
 
-<div id='app'>
+<div id='app' style='padding-bottom: 20px;'>
 <form id="addmeeting-form" style="display: none;">
     <fieldset>
         <legend> Meeting Information</legend>
