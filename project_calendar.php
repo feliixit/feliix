@@ -16,6 +16,12 @@
                 </div>
 
                 <div class="meetingform-item">
+                    <label>Project:</label>
+                    <input type="text" id="newProject"
+                           placeholder="">
+                </div>
+
+                <div class="meetingform-item">
                     <label>Attendee:</label>
                     <v-select id="newAttendee" :options="users" attach chips label="username" v-model=attendee multiple></v-select>
                 </div>
@@ -33,6 +39,18 @@
 
                 </div>
 
+                <div class="meetingform-item" id="upload_input">
+                    <label>File:</label>
+                    <input type="file" ref="file" id="fileload" name="file[]" onChange="onChangeFileUpload(event)" multiple>
+                </div>
+
+                <div class="file-container" id="sc_product_files">
+
+
+                </div>
+
+                <input id="sc_product_files_hide" style="display: none;" value="">
+
                 <div class="meetingform-buttons">
                     <a class="btn small" href="javascript: void(0)" onclick="hideWindow('#addmeeting-form')">Close</a>
 
@@ -49,6 +67,11 @@
                 <div class="meetingform-item">
                     <label>Subject:</label>
                     <input type="text" id="oldSubject">
+                </div>
+
+                <div class="meetingform-item">
+                    <label>Project:</label>
+                    <input type="text" id="oldProject" placeholder="">
                 </div>
 
                 <div class="meetingform-item">
@@ -73,6 +96,19 @@
                     <textarea style="flex-grow: 1; resize: none;" rows="2" id="oldContent"></textarea>
 
                 </div>
+
+                <div class="meetingform-item" id="upload_input_old">
+                    <label>File:</label>
+                    <input type="file" ref="file_old" id="fileload_old" name="file_old[]" onChange="onChangeFileUploadOld(event)" multiple>
+                </div>
+
+                <div class="file-container" id="sc_product_files_old">
+
+                  
+
+                </div>
+
+                <input id="sc_product_files_hide" style="display: none;" value="">
 
                 <div class="meetingform-buttons">
                     <a class="btn small" href="javascript: void(0)" onclick="hideWindow('#editmeeting-form')" id="btn_close">Close</a>
