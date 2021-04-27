@@ -1220,3 +1220,31 @@ ADD COLUMN `project_name` varchar(512) COLLATE utf8mb4_unicode_ci default '' AFT
 -- Task Calendar 2021/4/21
 ALTER TABLE project_other_task
 ADD COLUMN `due_time` varchar(10) COLLATE utf8mb4_unicode_ci default '' AFTER `due_date`;
+
+-- performance view
+CREATE TABLE IF NOT EXISTS `performance_template` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `title_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `version`  varchar(512) DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `performance_template_detail` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `template_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `type` int(11) DEFAULT 0 NOT NULL,
+  `order` int(11) DEFAULT 0 NOT NULL,
+  `category`  varchar(2048) DEFAULT '',
+  `criterion`  varchar(2048) DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';

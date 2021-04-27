@@ -369,15 +369,15 @@
                             <a class="create" href="javascript: void(0)" onclick="ToggleModal(1)"></a>
 
                             <div class="searching">
-                                <input type="text" placeholder="Searching Keyword Here">
-                                <button style="border: none;"><i class="fas fa-search-plus"></i></button>
+                                <input type="text" placeholder="Searching Keyword Here" v-model="keyword">
+                                <button style="border: none;" @click="search()"><i class="fas fa-search-plus"></i></button>
                             </div>
                         </div>
 
                         <div class="pagenation">
-                            <a class="prev" disabled="disabled">Previous</a>
-                            <a class="page">1</a>
-                            <a class="next">Next</a>
+                            <a class="prev" :disabled="page == 1"  @click="page < 1 ? page = 1 : page--" v-on:click="getLeaveCredit">Previous</a>
+                            <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" v-on:click="getLeaveCredit">{{ pg }}</a>
+                            <a class="next" :disabled="page == pages.length" @click="page++" v-on:click="getLeaveCredit">Next</a>
                         </div>
                     </div>
                 </div>
@@ -392,24 +392,24 @@
                         <li>Times Cited</li>
                     </ul>
 
-                    <ul>
+                    <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
-                            <input type="radio" class="alone green">
+                        <input type="radio" name="record_id" class="alone green" :value="record.id" v-model="proof_id">
                         </li>
-                        <li>Office Admin Associate (Admin)</li>
-                        <li>A</li>
-                        <li>2021/03/12 15:50</li>
-                        <li>2021/03/12 15:50</li>
+                        <li>{{ record.title }} ({{ record.department }})</li>
+                        <li>{{ record.version }}</li>
+                        <li>{{ record.created_at }}</li>
+                        <li>{{ record.updated_at }}</li>
                         <li>3</li>
                     </ul>
                 </div>
 
                 <div class="btnbox" style="display: flex; justify-content: center;">
 
-                    <a class="btn green" href="javascript: void(0)" onclick="ToggleModal(2)">Detail</a>
-                    <a class="btn green">Duplicate</a>
-                    <a class="btn green" href="javascript: void(0)" onclick="ToggleModal(3)">Edit</a>
-                    <a class="btn">Delete</a>
+                    <a class="btn green" @click="view_detai()">Detail</a>
+                    <a class="btn green" @click="duplicate()">Duplicate</a>
+                    <a class="btn green" @click="edit_detai()">Edit</a>
+                    <a class="btn" @click="remove()">Delete</a>
                 </div>
 
 
@@ -431,23 +431,17 @@
                             <ul>
                                 <li><b>Applicable Position</b></li>
                                 <li>
-                                    <select>
-                                        <option>Department</option>
-                                        <option>Admin</option>
+                                    <select v-model="department">
+                                        <option v-for="(item, index) in position" :value="item.did" :key="item.department">{{ item.department }}</option>
                                     </select>
 
-                                    <select style="margin-top: 5px;">
-                                        <option>Position</option>
-                                        <option>Jr. Office Admin Associate</option>
-                                        <option>Office Admin Associate</option>
-                                        <option>Sr. Office Admin Associate</option>
-                                        <option>Assistant Office Admin Associate</option>
-                                        <option>Operations Manager</option>
+                                    <select style="margin-top: 5px;" v-model="title_id">
+                                        <option v-for="(item, index) in title" :value="item.tid" :key="item.title">{{ item.title }}</option>
                                     </select>
                                 </li>
 
                                 <li><b>Version Name</b></li>
-                                <li><input type="text" required style="width:100%"></li>
+                                <li><input type="text" required style="width:100%" v-model="version"></li>
                             </ul>
 
                         </div>
@@ -459,24 +453,24 @@
                             <ul>
                                 <li><b>Category</b></li>
                                 <li>
-                                    <select>
-                                        <option>PART I: SELF-IMPROVEMENT SKILLS</option>
-                                        <option>PART II: BASIC SKILLS</option>
+                                    <select v-model="type">
+                                        <option value="1">PART I: SELF-IMPROVEMENT SKILLS</option>
+                                        <option value="2">PART II: BASIC SKILLS</option>
                                     </select>
                                 </li>
 
                                 <li><b>Sub Category</b></li>
-                                <li><input type="text" required style="width:100%"></li>
+                                <li><input type="text" required style="width:100%" v-model="category"></li>
 
                                 <li><b>Criterion</b></li>
-                                <li><input type="text" required style="width:100%"></li>
+                                <li><input type="text" required style="width:100%" v-model="criterion"></li>
 
                             </ul>
 
                             <div class="btnbox">
-                                <a class="btn green">Add Criterion</a>
-                                <a class="btn" style="display: none;">Cancel</a>
-                                <a class="btn green" style="display: none;">Update Criterion</a>
+                                <a class="btn green" @click="add_criterion" v-if="!editing">Add Criterion</a>
+                                <a class="btn" v-if="editing" @click="cancel_criterion" >Cancel</a>
+                                <a class="btn green" v-if="editing" @click="update_criterion">Update Criterion</a>
                             </div>
 
 
@@ -495,178 +489,13 @@
                                         {{ record.category }}
                                     </td>
                                     <td>
-                                        {{ record.question }}
+                                        {{ record.criterion }}
                                     </td>
                                     <td>
                                         <i class="fas fa-arrow-alt-circle-up" @click="set_up(index, record.id)"></i>
                                         <i class="fas fa-arrow-alt-circle-down" @click="set_down(index, record.id)"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Attendance1 and Punctuality
-                                    </td>
-                                    <td>
-                                        Arrives on time in office
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Works well with their manager
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Works collabroratively with fellow teammates
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Always cordial and willing to help other coworkers.
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Takes initiative and demonstrates "team player" behavior
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Possess skill at planning, organizing and prioritizing workload
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Willing to take additional responsibilities
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Proactively shares ideas, methods, solutions that may help the team
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Asks questions and seek guidance if need be
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Effectively communicates with other colleauges
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Corteous with other people related to the company
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-edit" @click="edit(record.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="del(record.id)"></i>
                                     </td>
                                 </tr>
 
@@ -685,170 +514,21 @@
 
                                 <tbody>
 
-                                <tr>
+                                <tr v-for='(record, index) in agenda1'>
                                     <td>
-                                        Scheduling
+                                        {{ record.category }}
                                     </td>
                                     <td>
-                                        Consolidates schedule and assigns service
+                                        {{ record.criterion }}
                                     </td>
                                     <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Company Transactions
-                                    </td>
-                                    <td>
-                                        Timely processing of store rental, bills, office rental payment
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-arrow-alt-circle-up" @click="set_up1(index, record.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down" @click="set_down1(index, record.id)"></i>
+                                        <i class="fas fa-edit" @click="edit1(record.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="del1(record.id)"></i>
                                     </td>
                                 </tr>
 
-                                <tr>
-                                    <td>
-                                        Company Transactions
-                                    </td>
-                                    <td>
-                                        Timely advice of payments received
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Office
-                                    </td>
-                                    <td>
-                                        Make sure that office supplies are enough and office is kept clean
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Office
-                                    </td>
-                                    <td>
-                                        Accomplishes weekly report/ inventory
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Phone Inquiries
-                                    </td>
-                                    <td>
-                                        Creates good impression for clients
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Phone Inquiries
-                                    </td>
-                                    <td>
-                                        Takes notes on important details, forwards to right department
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Petty cash & reimbursements
-                                    </td>
-                                    <td>
-                                        Issuance and processing of approval
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Petty cash & reimbursements
-                                    </td>
-                                    <td>
-                                        Processing of liquidation and reimbursements
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Documentation
-                                    </td>
-                                    <td>
-                                        Make expense reports up to date
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Bank Transactions
-                                    </td>
-                                    <td>
-                                        Timely deposits and withdrawal from banks
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
                                 </tbody>
 
                             </table>
@@ -858,7 +538,7 @@
                         <!-- Button to save template -->
                         <div class="modal-footer">
                             <div class="btnbox">
-                                <a class="btn green">Create Template</a>
+                                <a class="btn green" @click="create_template()">Create Template</a>
                             </div>
                         </div>
 
@@ -885,16 +565,16 @@
 
                             <ul>
                                 <li><b>Applicable Position</b></li>
-                                <li class="content">Office Admin Associate (Admin)</li>
+                                <li class="content">{{ record.title }} ({{ record.department }})</li>
 
                                 <li><b>Version Name</b></li>
-                                <li class="content">A</li>
+                                <li class="content">{{ record.version }}</li>
 
                                 <li><b>Created Time</b></li>
-                                <li class="content">Dennis Lin at 2021/03/12 15:50</li>
+                                <li class="content">{{ record.created_name }} at {{ record.created_at }}</li>
 
                                 <li><b>Updated Time</b></li>
-                                <li class="content">Dennis Lin at 2021/03/12 15:50</li>
+                                <li class="content">{{ ( record.updated_name == null ) ? "": record.updated_name + " at " + record.updated_at }}</li>
 
                                 <li><b>Times Cited</b></li>
                                 <li class="content">3</li>
@@ -915,102 +595,12 @@
                                 </thead>
 
                                 <tbody>
-                                <tr>
+                                <tr v-for='(item, index) in record.agenda' :key="index">
                                     <td>
-                                        Attendance and Punctuality
+                                        {{ item.category }}
                                     </td>
                                     <td>
-                                        Arrives on time in office
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Works well with their manager
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Works collabroratively with fellow teammates
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Always cordial and willing to help other coworkers.
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Takes initiative and demonstrates "team player" behavior
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Possess skill at planning, organizing and prioritizing workload
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Willing to take additional responsibilities
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Proactively shares ideas, methods, solutions that may help the team
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Asks questions and seek guidance if need be
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Effectively communicates with other colleauges
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Corteous with other people related to the company
+                                        {{ item.criterion }}
                                     </td>
                                 </tr>
 
@@ -1029,104 +619,15 @@
 
                                 <tbody>
 
-                                <tr>
+                                <tr v-for='(item, index) in record.agenda1' :key="index">
                                     <td>
-                                        Scheduling
+                                        {{ item.category }}
                                     </td>
                                     <td>
-                                        Consolidates schedule and assigns service
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Company Transactions
-                                    </td>
-                                    <td>
-                                        Timely processing of store rental, bills, office rental payment
+                                    {{ item.criterion }}
                                     </td>
                                 </tr>
 
-                                <tr>
-                                    <td>
-                                        Company Transactions
-                                    </td>
-                                    <td>
-                                        Timely advice of payments received
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Office
-                                    </td>
-                                    <td>
-                                        Make sure that office supplies are enough and office is kept clean
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Office
-                                    </td>
-                                    <td>
-                                        Accomplishes weekly report/ inventory
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Phone Inquiries
-                                    </td>
-                                    <td>
-                                        Creates good impression for clients
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Phone Inquiries
-                                    </td>
-                                    <td>
-                                        Takes notes on important details, forwards to right department
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Petty cash & reimbursements
-                                    </td>
-                                    <td>
-                                        Issuance and processing of approval
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Petty cash & reimbursements
-                                    </td>
-                                    <td>
-                                        Processing of liquidation and reimbursements
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Documentation
-                                    </td>
-                                    <td>
-                                        Make expense reports up to date
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Bank Transactions
-                                    </td>
-                                    <td>
-                                        Timely deposits and withdrawal from banks
-                                    </td>
-                                </tr>
                                 </tbody>
 
                             </table>
@@ -1157,23 +658,17 @@
                             <ul>
                                 <li><b>Applicable Position</b></li>
                                 <li>
-                                    <select>
-                                        <option>Department</option>
-                                        <option>Admin</option>
+                                    <select v-model="e_department">
+                                        <option v-for="(item, index) in position" :value="item.did" :key="item.department">{{ item.department }}</option>
                                     </select>
 
-                                    <select style="margin-top: 5px;">
-                                        <option>Position</option>
-                                        <option>Jr. Office Admin Associate</option>
-                                        <option>Office Admin Associate</option>
-                                        <option>Sr. Office Admin Associate</option>
-                                        <option>Assistant Office Admin Associate</option>
-                                        <option>Operations Manager</option>
+                                    <select style="margin-top: 5px;" v-model="e_tid">
+                                        <option v-for="(item, index) in e_title" :value="item.tid" :key="item.title">{{ item.title }}</option>
                                     </select>
                                 </li>
 
                                 <li><b>Version Name</b></li>
-                                <li><input type="text" required style="width:100%"></li>
+                                <li><input type="text" required style="width:100%" v-model="record.version"></li>
                             </ul>
 
                         </div>
@@ -1185,24 +680,24 @@
                             <ul>
                                 <li><b>Category</b></li>
                                 <li>
-                                    <select>
-                                        <option>PART I: SELF-IMPROVEMENT SKILLS</option>
-                                        <option>PART II: BASIC SKILLS</option>
+                                    <select v-model="e_type">
+                                        <option value="1">PART I: SELF-IMPROVEMENT SKILLS</option>
+                                        <option value="2">PART II: BASIC SKILLS</option>
                                     </select>
                                 </li>
 
                                 <li><b>Sub Category</b></li>
-                                <li><input type="text" required style="width:100%"></li>
+                                <li><input type="text" required style="width:100%" v-model="e_category"></li>
 
                                 <li><b>Criterion</b></li>
-                                <li><input type="text" required style="width:100%"></li>
+                                <li><input type="text" required style="width:100%" v-model="e_criterion"></li>
 
                             </ul>
 
                             <div class="btnbox">
-                                <a class="btn green">Add Criterion</a>
-                                <a class="btn" style="display: none;">Cancel</a>
-                                <a class="btn green" style="display: none;">Update Criterion</a>
+                                <a class="btn green" @click="e_add_criterion" v-if="!e_editing">Add Criterion</a>
+                                <a class="btn" v-if="e_editing" @click="e_cancel_criterion" >Cancel</a>
+                                <a class="btn green" v-if="e_editing" @click="e_update_criterion">Update Criterion</a>
                             </div>
 
 
@@ -1216,168 +711,18 @@
 
                                 <tbody>
 
-                                <tr v-for='(record, index) in agenda'>
+                                <tr v-for='(record, index) in record.agenda'>
                                     <td>
                                         {{ record.category }}
                                     </td>
                                     <td>
-                                        {{ record.question }}
+                                        {{ record.criterion }}
                                     </td>
                                     <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Works well with their manager
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Works collabroratively with fellow teammates
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Teamwork/Interpersonal relations
-                                    </td>
-                                    <td>
-                                        Always cordial and willing to help other coworkers.
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Takes initiative and demonstrates "team player" behavior
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Possess skill at planning, organizing and prioritizing workload
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Dependability
-                                    </td>
-                                    <td>
-                                        Willing to take additional responsibilities
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Proactively shares ideas, methods, solutions that may help the team
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Asks questions and seek guidance if need be
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Effectively communicates with other colleauges
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Communication
-                                    </td>
-                                    <td>
-                                        Corteous with other people related to the company
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-arrow-alt-circle-up" @click="e_set_up(index, record.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down" @click="e_set_down(index, record.id)"></i>
+                                        <i class="fas fa-edit" @click="e_edit(record.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="e_del(record.id)"></i>
                                     </td>
                                 </tr>
 
@@ -1396,170 +741,21 @@
 
                                 <tbody>
 
-                                <tr>
+                                <tr v-for='(record, index) in record.agenda1'> 
                                     <td>
-                                        Scheduling
+                                        {{ record.category }}
                                     </td>
                                     <td>
-                                        Consolidates schedule and assigns service
+                                        {{ record.criterion }}
                                     </td>
                                     <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Company Transactions
-                                    </td>
-                                    <td>
-                                        Timely processing of store rental, bills, office rental payment
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
+                                    <i class="fas fa-arrow-alt-circle-up" @click="e_set_up1(index, record.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down" @click="e_set_down1(index, record.id)"></i>
+                                        <i class="fas fa-edit" @click="e_edit1(record.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="e_del1(record.id)"></i>
                                     </td>
                                 </tr>
 
-                                <tr>
-                                    <td>
-                                        Company Transactions
-                                    </td>
-                                    <td>
-                                        Timely advice of payments received
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Office
-                                    </td>
-                                    <td>
-                                        Make sure that office supplies are enough and office is kept clean
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Office
-                                    </td>
-                                    <td>
-                                        Accomplishes weekly report/ inventory
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Phone Inquiries
-                                    </td>
-                                    <td>
-                                        Creates good impression for clients
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Phone Inquiries
-                                    </td>
-                                    <td>
-                                        Takes notes on important details, forwards to right department
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Petty cash & reimbursements
-                                    </td>
-                                    <td>
-                                        Issuance and processing of approval
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Petty cash & reimbursements
-                                    </td>
-                                    <td>
-                                        Processing of liquidation and reimbursements
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Documentation
-                                    </td>
-                                    <td>
-                                        Make expense reports up to date
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        Bank Transactions
-                                    </td>
-                                    <td>
-                                        Timely deposits and withdrawal from banks
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-edit"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </td>
-                                </tr>
                                 </tbody>
 
                             </table>
@@ -1570,7 +766,7 @@
                         <!-- Button to save template -->
                         <div class="modal-footer">
                             <div class="btnbox">
-                                <a class="btn green">Update Template</a>
+                                <a class="btn green" @click="update_template()">Update Template</a>
                             </div>
                         </div>
 
