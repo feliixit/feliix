@@ -158,7 +158,7 @@ var app = new Vue({
   
         window.location.href =
           "template_management?" +
-          "&kw=" +
+          "kw=" +
           _this.keyword +
           "&pg=" +
           _this.page;
