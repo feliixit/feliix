@@ -20,7 +20,7 @@ $info_remark = (isset($_POST['info_remark']) ?  $_POST['info_remark'] : '');
 $info_remark_other = (isset($_POST['info_remark_other']) ?  $_POST['info_remark_other'] : '');
 
 $items_to_delete = (isset($_POST['items_to_delete']) ?  $_POST['items_to_delete'] : "[]");
-$items_array = json_decode(stripslashes($items_to_delete),true);
+$items_array = json_decode($items_to_delete,true);
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';

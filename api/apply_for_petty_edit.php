@@ -215,9 +215,9 @@ switch ($method) {
         $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
         $petty_list = (isset($_POST['petty_list']) ?  $_POST['petty_list'] : '');
-        $petty_array = json_decode(stripslashes($petty_list), true);
+        $petty_array = json_decode($petty_list, true);
         $items_to_delete = (isset($_POST['items_to_delete']) ?  $_POST['items_to_delete'] : "[]");
-        $items_array = json_decode(stripslashes($items_to_delete), true);
+        $items_array = json_decode($items_to_delete, true);
 
         if ($pid == 0) {
             http_response_code(401);
