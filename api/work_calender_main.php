@@ -48,7 +48,7 @@ $updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
 $deleted_by = (isset($_POST['deleted_by']) ?  $_POST['deleted_by'] : '');
 
 $detail_list = (isset($_POST['detail_list']) ?  $_POST['detail_list'] : '');
-$detail_array = json_decode(stripslashes($detail_list), true);
+$detail_array = json_decode($detail_list, true);
 
 $today = (isset($_POST['today']) ?  $_POST['today'] : '');
 
