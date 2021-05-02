@@ -401,7 +401,7 @@ try {
     <div id="app" class="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A">Performance Review</a>
+            <a class="tag A" href="performance_review">Performance Review</a>
             <a class="tag B focus">Template Management</a>
 
         </div>
@@ -587,7 +587,7 @@ try {
                         <!-- Button to save template -->
                         <div class="modal-footer">
                             <div class="btnbox">
-                                <a class="btn green" @click="create_template()">Create Template</a>
+                                <a class="btn green" :disabled="submit == true" @click="create_template()">Create Template</a>
                             </div>
                         </div>
 

@@ -9,7 +9,6 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $jwt = (isset($_GET['jwt']) ?  $_GET['jwt'] : '');
 $kw = (isset($_GET['kw']) ?  $_GET['kw'] : '');
-$id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $kw = urldecode($kw);
 
 include_once 'config/core.php';
@@ -38,7 +37,8 @@ if (!isset($jwt)) {
 } else {
 
     $merged_results = array();
-    $return_result = array();
+
+    $title = (isset($_GET['title']) ? $_GET['title'] : 0);
 
     $query = "SELECT pt.id, pt.version, ud.id did, department, ut.id tid, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at
                     FROM performance_template pt
@@ -46,7 +46,8 @@ if (!isset($jwt)) {
                     LEFT JOIN user_department ud ON ud.id = ut.department_id
                     LEFT JOIN user u ON u.id = pt.create_id
                     LEFT JOIN user u1 ON u1.id = pt.updated_id
-                    WHERE pt.status <> -1 " . ($id != 0 ? " and pt.title_id=$id" : ' ');
+                    WHERE pt.status <> -1 " . ($title != 0 ? " and pt.title_id=$title" : ' and 1 <> 1');
+
 
 
     $query = $query . " order by pt.created_at desc ";
@@ -77,8 +78,7 @@ if (!isset($jwt)) {
         $version = $row['version'];
         $did = $row['did'];
         $tid = $row['tid'];
-        $agenda = GetAgenda($row['id'], 1, $db);
-        $agenda1 = GetAgenda($row['id'], 2, $db);
+ 
         $department = $row['department'];
         $title = $row['title'];
         $created_name = $row['created_name'];
@@ -91,8 +91,7 @@ if (!isset($jwt)) {
             "did" => $did,
             "tid" => $tid,
             "version" => $version,
-            "agenda" => $agenda,
-            "agenda1" => $agenda1,
+
             "department" => $department,
             "title" => $title,
             "created_name" => $created_name,
@@ -103,61 +102,7 @@ if (!isset($jwt)) {
         );
     }
 
-    if ($kw != "") {
-        foreach ($merged_results as &$value) {
-            if (
-                preg_match("/{$kw}/i", $value['version']) ||
-                preg_match("/{$kw}/i", $value['department']) ||
-                preg_match("/{$kw}/i", $value['title']) ||
-                $kw == ($value['created_at'] != "" ? substr($value['created_at'], 0, 10) : "") ||
-                $kw == ($value['updated_at'] != "" ? substr($value['updated_at'], 0, 10) : "")
-            ) {
-                $return_result[] = $value;
-            }
-        }
-    } else
-        $return_result = $merged_results;
 
 
-    echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
-}
-
-
-function GetAgenda($tid, $type, $db){
-    $query = "
-        SELECT pm.id,
-            pm.`order`,
-            pm.category,
-            pm.criterion
-          
-        FROM   performance_template_detail pm
-           
-        WHERE  template_id = " . $tid . "
-            AND pm.`type` = " . $type . "
-            AND pm.`status` <> -1 
-        ORDER BY `order`
-    ";
-
-    // prepare the query
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-
-    $merged_results = [];
-
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $id = $row['id'];
-        $order = $row['order'];
-        $category = $row['category'];
-        $criterion = $row['criterion'];
-
-        $merged_results[] = array(
-            "id" => $id,
-            "order" => $order,
-            "category" => $category,
-            "criterion" => $criterion,
-          
-        );
-    }
-
-    return $merged_results;
+    echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 }

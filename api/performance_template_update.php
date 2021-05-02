@@ -178,7 +178,7 @@ switch ($method) {
                         error_log($arr[2]);
                         $db->rollback();
                         http_response_code(501);
-                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . array($arr[2]));
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
                         die();
                     }
                 } catch (Exception $e) {
@@ -222,7 +222,7 @@ switch ($method) {
                         error_log($arr[2]);
                         $db->rollback();
                         http_response_code(501);
-                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . array($arr[2]));
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
                         die();
                     }
                 } catch (Exception $e) {

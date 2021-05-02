@@ -40,16 +40,26 @@ if (!isset($jwt)) {
     $merged_results = array();
     $return_result = array();
 
-    $query = "SELECT pt.id, pt.version, ud.id did, department, ut.id tid, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at
-                    FROM performance_template pt
-                    LEFT JOIN user_title ut ON ut.id = pt.title_id
-                    LEFT JOIN user_department ud ON ud.id = ut.department_id
-                    LEFT JOIN user u ON u.id = pt.create_id
-                    LEFT JOIN user u1 ON u1.id = pt.updated_id
-                    WHERE pt.status <> -1 " . ($id != 0 ? " and pt.title_id=$id" : ' ');
+    $query = "SELECT pr.id, 
+                pr.review_month, 
+                pr.template_id,
+                ud.department,  
+                ut.title, 
+                pt.version,
+                u.username manager,
+                u1.username employee, 
+                COALESCE(pr.user_complete_at, '') user_complete_at, 
+                COALESCE(pr.manager_complete_at, '') manager_complete_at
+                FROM performance_review pr
+                LEFT JOIN performance_template pt ON pr.template_id = pt.id
+                LEFT JOIN user_title ut ON ut.id = pt.title_id
+                LEFT JOIN user_department ud ON ud.id = ut.department_id
+                LEFT JOIN user u ON u.id = pr.create_id
+                LEFT JOIN user u1 ON u1.id = pr.user_id
+              WHERE pr.status <> -1  " . ($id != 0 ? " and pr.id=$id" : ' ');
 
 
-    $query = $query . " order by pt.created_at desc ";
+    $query = $query . " order by pr.created_at desc ";
 
     if (!empty($_GET['page'])) {
         $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -74,43 +84,59 @@ if (!isset($jwt)) {
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
-        $version = $row['version'];
-        $did = $row['did'];
-        $tid = $row['tid'];
-        $agenda = GetAgenda($row['id'], 1, $db);
-        $agenda1 = GetAgenda($row['id'], 2, $db);
+        $review_month = $row['review_month'];
         $department = $row['department'];
         $title = $row['title'];
-        $created_name = $row['created_name'];
-        $created_at = $row['created_at'];
-        $updated_name = $row['updated_name'];
-        $updated_at = $row['updated_at'];
-       
+        $template_id = $row['template_id'];
+        $employee = $row['employee'];
+        $manager = $row['manager'];
+        $version = $row['version'];
+        $user_complete_at = $row['user_complete_at'];
+        $manager_complete_at = $row['manager_complete_at'];
+
+        $status = "Nobody cares";
+        if($user_complete_at == "" && $manager_complete_at != "")
+            $status = "Lack of subordinate's opinion";
+        if($user_complete_at != "" && $manager_complete_at == "")
+            $status = "Lack of supervisor's opinion";
+        if($user_complete_at != "" && $manager_complete_at != "")
+            $status = "Done";
+
+        if($id != 0)
+        {
+            $agenda = GetAgenda($row['template_id'], 1, $db);
+            $agenda1 = GetAgenda($row['template_id'], 2, $db);
+        }
+        else
+        {
+            $agenda = [];
+            $agenda1 = [];
+        }
+    
         $merged_results[] = array(
             "id" => $id,
-            "did" => $did,
-            "tid" => $tid,
+            "review_month" => $review_month,
+            "department" => $department,
+            "template_id" => $template_id,
+            "title" => $title,
             "version" => $version,
+            "employee" => $employee,
+            "manager" => $manager,
+            "user_complete_at" => $user_complete_at,
+            "manager_complete_at" => $manager_complete_at,
+            "status" => $status,
             "agenda" => $agenda,
             "agenda1" => $agenda1,
-            "department" => $department,
-            "title" => $title,
-            "created_name" => $created_name,
-            "created_at" => $created_at,
-            "updated_name" => $updated_name,
-            "updated_at" => $updated_at,
-           
         );
     }
 
     if ($kw != "") {
         foreach ($merged_results as &$value) {
             if (
-                preg_match("/{$kw}/i", $value['version']) ||
-                preg_match("/{$kw}/i", $value['department']) ||
+                preg_match("/{$kw}/i", $value['employee']) ||
                 preg_match("/{$kw}/i", $value['title']) ||
-                $kw == ($value['created_at'] != "" ? substr($value['created_at'], 0, 10) : "") ||
-                $kw == ($value['updated_at'] != "" ? substr($value['updated_at'], 0, 10) : "")
+                preg_match("/{$kw}/i", $value['department']) ||
+                preg_match("/{$kw}/i", $value['status']) 
             ) {
                 $return_result[] = $value;
             }
@@ -121,7 +147,6 @@ if (!isset($jwt)) {
 
     echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
 }
-
 
 function GetAgenda($tid, $type, $db){
     $query = "
