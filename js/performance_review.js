@@ -39,6 +39,10 @@ var app = new Vue({
 
     // view
     views:{},
+    emp_avg:10.0,
+    mag_avg:10.0,
+    emp_avg1:10.0,
+    mag_avg1:10.0,
 
     // search
     keyword: "",
@@ -391,6 +395,29 @@ var app = new Vue({
           _this.record = response.data;
           if (_this.record.length > 0) {
             _this.views = _this.record[0];
+
+            var e_score = 0.0;
+            var m_score = 0.0;
+            for(var i = 0; i < _this.views.agenda.length; i++)
+            {
+              e_score += parseInt((_this.views.agenda[i].emp_score) === '' ? "0" : _this.views.agenda[i].emp_score);
+              m_score += parseInt((_this.views.agenda[i].mag_score) === '' ? "0" : _this.views.agenda[i].mag_score);
+            }
+
+            _this.emp_avg = (e_score / i).toFixed(1);
+            _this.mag_avg = (m_score / i).toFixed(1);
+
+            var e_score1 = 0.0;
+            var m_score1 = 0.0;
+            for(var i = 0; i < _this.views.agenda1.length; i++)
+            {
+              e_score1 += parseInt((_this.views.agenda1[i].emp_score) === '' ? "0" : _this.views.agenda1[i].emp_score);
+              m_score1 += parseInt((_this.views.agenda1[i].mag_score) === '' ? "0" : _this.views.agenda1[i].mag_score);
+            }
+
+            _this.emp_avg1 = (e_score1 / i).toFixed(1);
+            _this.mag_avg1 = (m_score1 / i).toFixed(1);
+
             _window.jQuery(".mask").toggle();
             _window.jQuery("#Modal_3").toggle();
           }

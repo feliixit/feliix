@@ -911,7 +911,7 @@ try {
 
                                 <tbody>
                                 <template v-for='(record, index) in views.agenda'>
-                                    <tr>
+                                    <tr style="height: 45px;">
                                         <td rowspan="2">
                                             {{ record.category }}
                                         </td>
@@ -941,18 +941,18 @@ try {
                                  <tr>
                                      <th colspan="2">AVERAGE</th>
                                      <th>
-                                         <span>7.4</span>
+                                         <span>{{ (emp_avg / 1).toFixed(1) }}</span>
                                          <br>
-                                         <span>10.0</span>
+                                         <span>{{ (mag_avg / 1).toFixed(1) }}</span>
                                      </th>
                                      <th></th>
                                  </tr>
                                  <tr>
                                      <th colspan="2">SUBTOTAL (60%)</th>
                                      <th>
-                                         <span>4.4</span>
+                                         <span>{{ ( emp_avg * 0.6 ).toFixed(1) }}</span>
                                          <br>
-                                         <span>6.0</span>
+                                         <span>{{ ( mag_avg * 0.6 ).toFixed(1) }}</span>
                                      </th>
                                      <th></th>
                                  </tr>
@@ -969,7 +969,7 @@ try {
 
                                 <tbody>
                                 <template v-for='(record, index) in views.agenda1'>
-                                    <tr>
+                                    <tr style="height: 45px;">
                                         <td rowspan="2">
                                             {{ record.category }}
                                         </td>
@@ -999,18 +999,18 @@ try {
                                  <tr>
                                      <th colspan="2">AVERAGE</th>
                                      <th>
-                                         <span>6.8</span>
+                                         <span>{{ (emp_avg1 / 1).toFixed(1) }}</span>
                                          <br>
-                                         <span>10.0</span>
+                                         <span>{{ (mag_avg1 / 1).toFixed(1) }}</span>
                                      </th>
                                      <th></th>
                                  </tr>
                                  <tr>
                                      <th colspan="2">SUBTOTAL (40%)</th>
                                      <th>
-                                         <span>2.7</span>
+                                         <span>{{ ( emp_avg1 * 0.4 ).toFixed(1) }}</span>
                                          <br>
-                                         <span>4.0</span>
+                                         <span>{{ ( mag_avg1 * 0.4 ).toFixed(1) }}</span>
                                      </th>
                                      <th></th>
                                  </tr>
@@ -1021,9 +1021,9 @@ try {
                             <ul class="summary">
                                 <li><b>TOTAL:</b></li>
                                 <li class="content">
-                                    <span>7.2</span>
+                                    <span>{{ ( emp_avg * 0.6 + emp_avg1 * 0.4 ).toFixed(1) }}</span>
                                     <br>
-                                    <span>10.0</span>
+                                    <span>{{ ( mag_avg * 0.6 + mag_avg1 * 0.4 ).toFixed(1) }}</span>
                                 </li>
 
                                 <li><b>Noteworthy accomplishment</b></li>
