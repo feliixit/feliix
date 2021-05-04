@@ -508,7 +508,7 @@ try {
                     <div class="list_function">
 
                         <div class="front">
-                            <a class="create" href="javascript: void(0)" onclick="ToggleModal(1)"></a>
+                            <a class="create"  @click="open_review"></a>
 
                             <div class="searching">
                                 <input type="text" placeholder="Searching Keyword Here" v-model="keyword">
@@ -517,9 +517,9 @@ try {
                         </div>
 
                         <div class="pagenation">
-                            <a class="prev" :disabled="page == 1"  @click="page < 1 ? page = 1 : page--" v-on:click="getLeaveCredit">Previous</a>
-                            <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" v-on:click="getLeaveCredit">{{ pg }}</a>
-                            <a class="next" :disabled="page == pages.length" @click="page++" v-on:click="getLeaveCredit">Next</a>
+                            <a class="prev" :disabled="page == 1"  @click="page < 1 ? page = 1 : page--; filter_apply();" >Previous</a>
+                            <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" v-on:click="filter_apply">{{ pg }}</a>
+                            <a class="next" :disabled="page == pages.length" @click="page++; filter_apply();" >Next</a>
                         </div>
                     </div>
                 </div>
@@ -546,9 +546,9 @@ try {
                 </div>
 
                 <div class="btnbox" style="display: flex; justify-content: center;">
-                    <a class="btn green" @click="evaluate()">Evaluate</a>
+                    <a class="btn green" @click="evalua()">Evaluate</a>
                     <a class="btn green" @click="view()">View</a>
-                    <a class="btn">Delete</a>
+                    <a class="btn"  @click="remove()">Delete</a>
                 </div>
 
 
@@ -847,8 +847,8 @@ try {
                                 <li class="content">{{ views.version }}</li>
 
                                 <li><b>Date of Evaluation:</b></li>
-                                <li class="content" style="color:#999;">{{ views.user_complete_at }} ({{ views.employee }})</li>
-                                <li class="content">{{ views.manager_complete_at }} ({{ views.manager }})</li>
+                                <li class="content" style="color:#999;"><template v-if="views.user_complete_at != ''">{{ views.user_complete_at }} ({{ views.employee }})</template></li>
+                                <li class="content"><template v-if="views.manager_complete_at != ''">{{ views.manager_complete_at }} ({{ views.manager }})</template></li>
                             </ul>
 
                         </div>
@@ -925,7 +925,7 @@ try {
                                             {{ record.emp_opt }}
                                         </td>
                                     </tr>
-                                    <tr class="supervisor">
+                                    <tr class="supervisor" style="height: 45px;">
                                         <td>
                                             {{ record.mag_score }}
                                         </td>
@@ -983,7 +983,7 @@ try {
                                             {{ record.emp_opt }}
                                         </td>
                                     </tr>
-                                    <tr class="supervisor">
+                                    <tr class="supervisor" style="height: 45px;">
                                         <td>
                                             {{ record.mag_score }}
                                         </td>
@@ -1028,20 +1028,20 @@ try {
 
                                 <li><b>Noteworthy accomplishment</b></li>
                                 <li class="content_disabled">
-                                    <span>{{ views.emp_comment_1 }}</span>
-                                    <span>{{ views.mag_comment_1 }}</span>
+                                    <span v-if="views.emp_comment_1" v-html="views.emp_comment_1.split('\n').join('<br />')"></span>
+                                    <span v-if="views.mag_comment_1" v-html="views.mag_comment_1.split('\n').join('<br />')"></span>
                                 </li>
 
                                 <li><b>Areas for improvement and action plan</b></li>
                                 <li class="content_disabled">
-                                    <span>{{ views.emp_comment_2 }}</span>
-                                    <span>{{ views.mag_comment_2 }}</span>
+                                    <span v-if="views.emp_comment_2" v-html="views.emp_comment_2.split('\n').join('<br />')"></span>
+                                    <span v-if="views.mag_comment_2" v-html="views.mag_comment_2.split('\n').join('<br />')"></span>
                                 </li>
 
                                 <li><b>Employee comments</b></li>
                                 <li class="content_disabled">
-                                    <span>{{ views.emp_comment_3 }}</span>
-                                    <span>{{ views.mag_comment_3 }}</span>
+                                    <span v-if="views.emp_comment_3" v-html="views.emp_comment_3.split('\n').join('<br />')"></span>
+                                    <span v-if="views.mag_comment_3" v-html="views.mag_comment_3.split('\n').join('<br />')"></span>
                                 </li>
 
                             </ul>

@@ -108,6 +108,12 @@ var app = new Vue({
   },
 
   watch: {
+
+    receive_records() {
+      console.log("Vue watch receive_records");
+      this.setPages();
+    },
+    
     department() {
       this.title = this.shallowCopy(
         this.position.find((element) => element.did == this.department)
@@ -379,6 +385,17 @@ var app = new Vue({
 
         return;
       }
+
+      if(this.record.cited != 0)
+      {
+        Swal.fire({
+          text: "This template has been used for someone's evaluation, so cannot be deleted.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      };
 
       let _this = this;
 

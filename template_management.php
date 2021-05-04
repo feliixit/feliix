@@ -424,9 +424,9 @@ try {
                         </div>
 
                         <div class="pagenation">
-                            <a class="prev" :disabled="page == 1"  @click="page < 1 ? page = 1 : page--" v-on:click="getLeaveCredit">Previous</a>
-                            <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" v-on:click="getLeaveCredit">{{ pg }}</a>
-                            <a class="next" :disabled="page == pages.length" @click="page++" v-on:click="getLeaveCredit">Next</a>
+                            <a class="prev" :disabled="page == 1"  @click="page < 1 ? page = 1 : page--; filter_apply();" >Previous</a>
+                            <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" v-on:click="filter_apply();">{{ pg }}</a>
+                            <a class="next" :disabled="page == pages.length" @click="page++; filter_apply();" >Next</a>
                         </div>
                     </div>
                 </div>
@@ -449,7 +449,7 @@ try {
                         <li>{{ record.version }}</li>
                         <li>{{ record.created_at }}</li>
                         <li>{{ record.updated_at }}</li>
-                        <li>3</li>
+                        <li>{{ record.cited }}</li>
                     </ul>
                 </div>
 

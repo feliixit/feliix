@@ -37,6 +37,12 @@ var app = new Vue({
     comment2:"",
     comment3:"",
 
+    // I&AM
+    department:'',
+    title: '',
+    username:'',
+    user_id:'',
+
     // view
     views:{},
     emp_avg:10.0,
@@ -73,7 +79,7 @@ var app = new Vue({
     }
 
     this.getEmployees();
-
+    this.getUserName();
     this.getLeaveCredit();
   },
 
@@ -92,10 +98,15 @@ var app = new Vue({
     employee() {
       this.getTemplatesByTitle();
     },
-
+    
+    receive_records() {
+      console.log("Vue watch receive_records");
+      this.setPages();
+    },
   },
 
   methods: {
+    
     search() {
       this.filter_apply();
     },
@@ -121,6 +132,39 @@ var app = new Vue({
       let from = page * perPage - perPage;
       let to = page * perPage;
       return this.receive_records.slice(from, to);
+    },
+
+    getUserName: function() {
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append("jwt", token);
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/on_duty_get_myname",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          _this.username = response.data.username;
+          _this.is_manager = response.data.is_manager;
+          _this.department = response.data.department;
+          _this.title = response.data.title;
+          _this.user_id = response.data.user_id;
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        });
     },
 
     filter_apply: function() {
@@ -154,6 +198,14 @@ var app = new Vue({
 
       this.avg1 = (score / i).toFixed(1);
 
+    },
+
+    open_review: function() {
+      if(this.is_add_review_privilege())
+      {
+        window.jQuery(".mask").toggle();
+        window.jQuery("#Modal_1").toggle();
+      }
     },
 
     add_review: function() {
@@ -224,7 +276,7 @@ var app = new Vue({
 
       Swal.fire({
         title: "Submit",
-        text: "Submitted review can't be changed, are you sure to submit?",
+        text: "Are you sure to submit? Once submitted, you cannot revise the evaluation result anymore.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -301,6 +353,9 @@ var app = new Vue({
 
               _this.reset();
             });
+
+            window.jQuery(".mask").toggle();
+            window.jQuery("#Modal_2").toggle();
         } else {
           return;
         }
@@ -428,7 +483,7 @@ var app = new Vue({
       }
     },
 
-    evaluate: function() {
+    evalua: function() {
       if (this.proof_id == 0) {
         Swal.fire({
           text: "Please select row to evaluate",
@@ -437,6 +492,19 @@ var app = new Vue({
         });
         return;
       } else {
+
+      var record = this.shallowCopy(
+          this.receive_records.find((element) => element.id == this.proof_id)
+        );
+
+      if(record.user_id == this.user_id && record.user_complete_at != "")
+        return;
+
+      if(record.create_id == this.user_id && record.manager_complete_at != "")
+        return;
+
+      if(record.create_id != this.user_id && record.user_id != this.user_id)
+        return;
 
       let _this = this;
       let _window = window;
@@ -504,120 +572,93 @@ var app = new Vue({
       this.e_sn1 = this.record.agenda1.length;
     },
 
-    create_template() {
-      if (this.title_id == 0 || this.version.trim() == "") {
-        Swal.fire({
-          text: "Please enter the required fields",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
+    can_delete(manager){
+      var can_save = false;
 
-        return;
+      if(manager === this.user_id)
+        can_save = true;
+
+      if(this.department.trim() == '')
+      { 
+        if(this.title.trim() == 'Owner')
+          can_save = true;
+
+        if(this.title.trim() == 'Managing Director')
+          can_save = true;
+
+        if(this.title.trim() == 'Chief Advisor')
+          can_save = true;
       }
-
-      if (this.submit == true) return;
-
-      this.submit = true;
-
-      var token = localStorage.getItem("token");
-      var form_Data = new FormData();
-      let _this = this;
-
-      form_Data.append("jwt", token);
-      form_Data.append("title_id", this.title_id);
-      form_Data.append("version", this.version);
-
-      form_Data.append("agenda", JSON.stringify(this.agenda));
-      form_Data.append("agenda1", JSON.stringify(this.agenda1));
-
-      axios({
-        method: "post",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        url: "api/performance_template_insert",
-        data: form_Data,
-      })
-        .then(function(response) {
-          //handle success
-          Swal.fire({
-            html: response.data.message,
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-
-          _this.reset();
-        })
-        .catch(function(error) {
-          //handle error
-          Swal.fire({
-            text: JSON.stringify(error),
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-
-          _this.reset();
-        });
-
-      window.jQuery(".mask").toggle();
-      window.jQuery("#Modal_1").toggle();
+      
+      return can_save;
     },
 
-    duplicate() {
-      if (this.proof_id == 0) {
-        Swal.fire({
-          text: "Please select a record to duplicate",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
+    is_add_review_privilege() {
+      var can_save = false;
 
-        return;
+      if(this.department.trim() == 'SALES')
+      { 
+        if(this.title.trim() == 'ASSISTANT SALES MANAGER')
+          can_save = true;
+
+        if(this.title.trim() == 'SALES MANAGER')
+          can_save = true;
       }
 
-      if (this.submit == true) return;
+      if(this.department.trim() == 'LIGHTING')
+      { 
+        if(this.title.trim() == 'LIGHTING MANAGER')
+          can_save = true;
+      }
 
-      this.submit = true;
+      if(this.department.trim() == 'OFFICE')
+      { 
+        if(this.title.trim() == 'OFFICE SYSTEMS MANAGER')
+          can_save = true;
+      }
 
-      var token = localStorage.getItem("token");
-      var form_Data = new FormData();
-      let _this = this;
+      if(this.department.trim() == 'DESIGN')
+      { 
+        if(this.title.trim() == 'ASSISTANT BRAND MANAGER')
+          can_save = true;
 
-      form_Data.append("jwt", token);
-      form_Data.append("title_id", this.record.tid);
-      form_Data.append("version", this.record.version);
+        if(this.title.trim() == 'BRAND MANAGER')
+          can_save = true;
+      }
 
-      form_Data.append("agenda", JSON.stringify(this.record.agenda));
-      form_Data.append("agenda1", JSON.stringify(this.record.agenda1));
+      if(this.department.trim() == 'SERVICE')
+      { 
+        if(this.title.trim() == 'ENGINERING MANAGER')
+          can_save = true;
+      }
 
-      axios({
-        method: "post",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        url: "api/performance_template_insert",
-        data: form_Data,
-      })
-        .then(function(response) {
-          //handle success
-          Swal.fire({
-            html: response.data.message,
-            icon: "info",
-            confirmButtonText: "OK",
-          });
+      if(this.department.trim() == 'ADMIN')
+      { 
+        if(this.title.trim() == 'OPERATIONS MANAGER')
+          can_save = true;
+      }
 
-          _this.reset();
-        })
-        .catch(function(error) {
-          //handle error
-          Swal.fire({
-            text: JSON.stringify(error),
-            icon: "info",
-            confirmButtonText: "OK",
-          });
+      if(this.department.trim() == 'TW')
+      { 
+        if(this.title.trim() == 'Supply Chain Manager')
+          can_save = true;
+      }
 
-          _this.reset();
-        });
+      if(this.department.trim() == '')
+      { 
+        if(this.title.trim() == 'Owner')
+          can_save = true;
+
+        if(this.title.trim() == 'Managing Director')
+          can_save = true;
+
+        if(this.title.trim() == 'Chief Advisor')
+          can_save = true;
+      }
+      
+      return can_save;
     },
+
 
     remove() {
       if (this.proof_id == 0) {
@@ -629,6 +670,21 @@ var app = new Vue({
 
         return;
       }
+
+      this.record = this.shallowCopy(
+        this.receive_records.find((element) => element.id == this.proof_id)
+      );
+
+    if(this.record.status != "Nobody cares" || !this.can_delete(this.record.create_id))
+    {
+      Swal.fire({
+        text: "Review cannot be deleted",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+
+      return;
+    };
 
       let _this = this;
 
@@ -656,7 +712,7 @@ var app = new Vue({
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            url: "api/performance_template_delete",
+            url: "api/performance_review_delete",
             data: form_Data,
           })
             .then(function(response) {
@@ -685,145 +741,6 @@ var app = new Vue({
       });
     },
 
-    update_template() {
-      if (this.e_tid == 0 || this.record.version.trim() == "") {
-        Swal.fire({
-          text: "Please enter the required fields",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.submit == true) return;
-
-      this.submit = true;
-
-      var token = localStorage.getItem("token");
-      var form_Data = new FormData();
-      let _this = this;
-
-      form_Data.append("jwt", token);
-      form_Data.append("pid", this.record.id);
-      form_Data.append("title_id", this.e_tid);
-      form_Data.append("version", this.record.version);
-
-      form_Data.append("agenda", JSON.stringify(this.record.agenda));
-      form_Data.append("agenda1", JSON.stringify(this.record.agenda1));
-
-      axios({
-        method: "post",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        url: "api/performance_template_update",
-        data: form_Data,
-      })
-        .then(function(response) {
-          //handle success
-          Swal.fire({
-            html: response.data.message,
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-
-          _this.reset();
-        })
-        .catch(function(error) {
-          //handle error
-          Swal.fire({
-            text: JSON.stringify(error),
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-
-          _this.reset();
-        });
-
-      window.jQuery(".mask").toggle();
-      window.jQuery("#Modal_3").toggle();
-    },
-
-    add_criterion: function() {
-      if (
-        this.type == 0 ||
-        this.category.trim() == "" ||
-        this.criterion.trim() == ""
-      ) {
-        Swal.fire({
-          text: "Please enter the required fields",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.type == 1) {
-        var ad = {
-          id: ++this.sn,
-          category: this.category,
-          criterion: this.criterion,
-        };
-        this.agenda.push(ad);
-      }
-
-      if (this.type == 2) {
-        var ad = {
-          id: ++this.sn1,
-          category: this.category,
-          criterion: this.criterion,
-        };
-        this.agenda1.push(ad);
-      }
-
-      this.criterion = "";
-    },
-
-    clear_edit: function() {
-      this.org_type = 0;
-      this.org_id = 0;
-      this.org_category = "";
-      this.org_criterion = "";
-      this.editing = false;
-    },
-
-    cancel_criterion: function() {
-      this.type = this.org_type;
-      this.category = "";
-      this.criterion = "";
-
-      this.clear_edit();
-    },
-
-    update_criterion: function() {
-      if (this.category.trim() == "" || this.criterion.trim() == "") {
-        Swal.fire({
-          text: "Please enter the required fields",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.org_type == 1) {
-        var element = this.agenda.find(({ id }) => id === this.org_id);
-        element.category = this.category;
-        element.criterion = this.criterion;
-      }
-
-      if (this.org_type == 2) {
-        var element = this.agenda1.find(({ id }) => id === this.org_id);
-        element.category = this.category;
-        element.criterion = this.criterion;
-      }
-
-      this.criterion = "";
-
-      this.clear_edit();
-    },
 
     getEmployees: function() {
       let _this = this;
@@ -845,122 +762,15 @@ var app = new Vue({
         .finally(() => {});
     },
 
-    set_agenda: function() {
-      this.agenda = [];
-
-      this.agenda1 = [];
-    },
-
-    set_up: function(fromIndex, eid) {
-      var toIndex = fromIndex - 1;
-
-      if (toIndex < 0) toIndex = 0;
-
-      var element = this.agenda.find(({ id }) => id === eid);
-      this.agenda.splice(fromIndex, 1);
-      this.agenda.splice(toIndex, 0, element);
-    },
-
-    set_down: function(fromIndex, eid) {
-      var toIndex = fromIndex + 1;
-
-      if (toIndex > this.agenda.length - 1) toIndex = this.agenda.length - 1;
-
-      var element = this.agenda.find(({ id }) => id === eid);
-      this.agenda.splice(fromIndex, 1);
-      this.agenda.splice(toIndex, 0, element);
-    },
-
-    edit: function(eid) {
-      this.type = 1;
-      var element = this.agenda.find(({ id }) => id === eid);
-
-      this.org_id = eid;
-      this.org_category = element.category;
-      this.org_criterion = element.criterion;
-
-      this.category = element.category;
-      this.criterion = element.criterion;
-
-      this.org_type = 1;
-
-      this.editing = true;
-    },
-
-    del: function(eid) {
-      var index = this.agenda.findIndex(({ id }) => id === eid);
-      if (index > -1) {
-        this.agenda.splice(index, 1);
-      }
-    },
-
-    set_up1: function(fromIndex, eid) {
-      var toIndex = fromIndex - 1;
-
-      if (toIndex < 0) toIndex = 0;
-
-      var element = this.agenda1.find(({ id }) => id === eid);
-      this.agenda1.splice(fromIndex, 1);
-      this.agenda1.splice(toIndex, 0, element);
-    },
-
-    set_down1: function(fromIndex, eid) {
-      var toIndex = fromIndex + 1;
-
-      if (toIndex > this.agenda1.length - 1) toIndex = this.agenda1.length - 1;
-
-      var element = this.agenda1.find(({ id }) => id === eid);
-      this.agenda1.splice(fromIndex, 1);
-      this.agenda1.splice(toIndex, 0, element);
-    },
-
-    edit1: function(eid) {
-      this.type = 2;
-      var element = this.agenda1.find(({ id }) => id === eid);
-
-      this.org_id = eid;
-      this.org_category = element.category;
-      this.org_criterion = element.criterion;
-
-      this.category = element.category;
-      this.criterion = element.criterion;
-
-      this.org_type = 2;
-
-      this.editing = true;
-    },
-
-    del1: function(eid) {
-      var index = this.agenda1.findIndex(({ id }) => id === eid);
-      if (index > -1) {
-        this.agenda1.splice(index, 1);
-      }
-    },
 
     reset: function() {
       this.submit = false;
 
-      this.agenda = [];
-      this.agenda1 = [];
-
-      this.sn = 0;
-      this.sn1 = 0;
-
-      this.type = 0;
-      this.version = "";
-      this.category = "";
-      this.criterion = "";
-
-      this.org_category = "";
-      this.org_criterion = "";
-      this.org_id = 0;
-      this.org_type = 0;
-
       this.editing = false;
 
-      this.e_type = 0;
-      this.e_category = "";
-      this.e_criterion = "";
+      this.comment1 = "";
+      this.comment2 = "";
+      this.comment3 = "";
 
       this.getLeaveCredit();
     },
@@ -974,181 +784,5 @@ var app = new Vue({
       return result;
     },
 
-    // editing
-
-    e_add_criterion: function() {
-      if (
-        this.e_type == 0 ||
-        this.e_category.trim() == "" ||
-        this.e_criterion.trim() == ""
-      ) {
-        Swal.fire({
-          text: "Please enter the required fields",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.e_type == 1) {
-        var ad = {
-          id: ++this.e_sn,
-          category: this.e_category,
-          criterion: this.e_criterion,
-        };
-        this.record.agenda.push(ad);
-      }
-
-      if (this.e_type == 2) {
-        var ad = {
-          id: ++this.e_sn1,
-          category: this.e_category,
-          criterion: this.e_criterion,
-        };
-        this.record.agenda1.push(ad);
-      }
-
-      this.e_criterion = "";
-    },
-
-    e_cancel_criterion: function() {
-      this.e_type = this.e_org_type;
-      this.e_category = "";
-      this.e_criterion = "";
-
-      this.e_clear_edit();
-    },
-
-    e_update_criterion: function() {
-      if (this.e_category.trim() == "" || this.e_criterion.trim() == "") {
-        Swal.fire({
-          text: "Please enter the required fields",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.e_org_type == 1) {
-        var element = this.record.agenda.find(({ id }) => id === this.e_org_id);
-        element.category = this.e_category;
-        element.criterion = this.e_criterion;
-      }
-
-      if (this.e_org_type == 2) {
-        var element = this.record.agenda1.find(
-          ({ id }) => id === this.e_org_id
-        );
-        element.category = this.e_category;
-        element.criterion = this.e_criterion;
-      }
-
-      this.e_criterion = "";
-
-      this.e_clear_edit();
-    },
-
-    e_clear_edit: function() {
-      this.e_org_type = 0;
-      this.e_org_id = 0;
-      this.e_org_category = "";
-      this.e_org_criterion = "";
-
-      this.e_type = 0;
-      this.e_category = "";
-      this.e_criterion = "";
-
-      this.e_editing = false;
-    },
-
-    e_set_up: function(fromIndex, eid) {
-      var toIndex = fromIndex - 1;
-
-      if (toIndex < 0) toIndex = 0;
-
-      var element = this.record.agenda.find(({ id }) => id === eid);
-      this.record.agenda.splice(fromIndex, 1);
-      this.record.agenda.splice(toIndex, 0, element);
-    },
-
-    e_set_down: function(fromIndex, eid) {
-      var toIndex = fromIndex + 1;
-
-      if (toIndex > this.record.agenda.length - 1)
-        toIndex = this.record.agenda.length - 1;
-
-      var element = this.record.agenda.find(({ id }) => id === eid);
-      this.record.agenda.splice(fromIndex, 1);
-      this.record.agenda.splice(toIndex, 0, element);
-    },
-
-    e_edit: function(eid) {
-      var element = this.record.agenda.find(({ id }) => id === eid);
-
-      this.e_org_id = eid;
-      this.e_org_category = element.category;
-      this.e_org_criterion = element.criterion;
-
-      this.e_category = element.category;
-      this.e_criterion = element.criterion;
-
-      this.e_org_type = 1;
-      this.e_type = 1;
-
-      this.e_editing = true;
-    },
-
-    e_del: function(eid) {
-      var index = this.record.agenda.findIndex(({ id }) => id === eid);
-      if (index > -1) {
-        this.record.agenda.splice(index, 1);
-      }
-    },
-
-    e_set_up1: function(fromIndex, eid) {
-      var toIndex = fromIndex - 1;
-
-      if (toIndex < 0) toIndex = 0;
-
-      var element = this.record.agenda1.find(({ id }) => id === eid);
-      this.record.agenda1.splice(fromIndex, 1);
-      this.record.agenda1.splice(toIndex, 0, element);
-    },
-
-    e_set_down1: function(fromIndex, eid) {
-      var toIndex = fromIndex + 1;
-
-      if (toIndex > this.record.agenda1.length - 1)
-        toIndex = this.record.agenda1.length - 1;
-
-      var element = this.record.agenda1.find(({ id }) => id === eid);
-      this.record.agenda1.splice(fromIndex, 1);
-      this.record.agenda1.splice(toIndex, 0, element);
-    },
-
-    e_edit1: function(eid) {
-      var element = this.record.agenda1.find(({ id }) => id === eid);
-
-      this.e_org_id = eid;
-      this.e_org_category = element.category;
-      this.e_org_criterion = element.criterion;
-
-      this.e_category = element.category;
-      this.e_criterion = element.criterion;
-
-      this.e_org_type = 2;
-      this.e_type = 2;
-
-      this.e_editing = true;
-    },
-
-    e_del1: function(eid) {
-      var index = this.record.agenda1.findIndex(({ id }) => id === eid);
-      if (index > -1) {
-        this.record.agenda1.splice(index, 1);
-      }
-    },
   },
 });

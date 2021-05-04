@@ -7,7 +7,7 @@ header("Access-Control-Allow-Methods: *");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-$jwt = (isset($_GET['jwt']) ?  $_GET['jwt'] : '');
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : '');
 $kw = (isset($_GET['kw']) ?  $_GET['kw'] : '');
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $kw = urldecode($kw);
@@ -37,6 +37,32 @@ if (!isset($jwt)) {
     die();
 } else {
 
+    // decode jwt
+    $decoded = JWT::decode($jwt, $key, array('HS256'));
+    $user_id = $decoded->data->id;
+
+    $username = $decoded->data->username;
+    $position = $decoded->data->position;
+    $department = $decoded->data->department;
+
+    $access6 = false;
+
+    if(trim(strtoupper($department)) == 'ADMIN')
+    {
+        if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
+        {
+            $access6 = true;
+        }
+    }
+
+    if(trim($department) == '')
+    {
+        if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+        {
+            $access6 = true;
+        }
+    }
+
     $merged_results = array();
     $return_result = array();
 
@@ -48,6 +74,8 @@ if (!isset($jwt)) {
                 pt.version,
                 u.username manager,
                 u1.username employee, 
+                pr.create_id,
+                pr.user_id,
                 COALESCE(pr.user_complete_at, '') user_complete_at, 
                 COALESCE(pr.manager_complete_at, '') manager_complete_at,
                 COALESCE(pr.mag_comment_1, '') mag_comment_1,
@@ -118,8 +146,75 @@ if (!isset($jwt)) {
 
         if($id != 0)
         {
-            $agenda = GetAgenda($row['template_id'],  1, $db);
-            $agenda1 = GetAgenda($row['template_id'],  2, $db);
+            
+            if($user_complete_at != "" && $manager_complete_at != "" && $access6 == true)
+            {
+                // supervisor can see
+                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2);
+                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2);
+            }
+            elseif($user_complete_at != "" && $manager_complete_at != "")
+            {
+                // mananger and employee all finished
+                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2);
+                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2);
+            }
+            elseif($user_complete_at == "" && $manager_complete_at != "")
+            {
+                // mananger finished and employee yet
+
+                // manager
+                if($row['create_id'] == $user_id)
+                {
+                    $agenda = GetAgenda($row['template_id'],  1, $db, 0, 2);
+                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 2);
+                }
+
+                // employee
+                if($row['user_id'] == $user_id)
+                {
+                    $agenda = GetAgenda($row['template_id'],  1, $db, 1, 0);
+                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 0);
+
+                    $mag_comment_1 = "";
+                    $mag_comment_2 = "";
+                    $mag_comment_3 = "";
+                }
+            }
+            elseif($user_complete_at != "" && $manager_complete_at == "")
+            {
+                // mananger yet and employee finished
+
+                // manager
+                if($row['create_id'] == $user_id)
+                {
+                    $agenda = GetAgenda($row['template_id'],  1, $db, 0, 2);
+                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 2);
+
+                    $emp_comment_1 = "";
+                    $emp_comment_2 = "";
+                    $emp_comment_3 = "";
+                }
+
+                // employee
+                if($row['user_id'] == $user_id)
+                {
+                    $agenda = GetAgenda($row['template_id'],  1, $db, 1, 0);
+                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 0);
+                }
+            }
+             elseif($user_complete_at != "" && $manager_complete_at != "")
+            {
+                // mananger finished and employee finished
+
+                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2);
+                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2);
+            }
+            else
+            {
+                $agenda = GetAgenda($row['template_id'],  1, $db, 0, 0);
+                $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 0);
+            }
         }
         else
         {
@@ -170,7 +265,7 @@ if (!isset($jwt)) {
     echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
 }
 
-function GetAgenda($tid, $type, $db){
+function GetAgenda($tid, $type, $db, $emp, $mag){
     $query = "
             SELECT pm.id,
             pm.`order`,
@@ -185,8 +280,8 @@ function GetAgenda($tid, $type, $db){
             
         
         FROM   performance_template_detail pm
-        LEFT JOIN (SELECT * from performance_review_detail WHERE review_type = 1) pr ON pm.id = pr.review_question_id
-        LEFT JOIN (SELECT * from performance_review_detail WHERE review_type = 2) pd ON pm.id = pd.review_question_id
+        LEFT JOIN (SELECT * from performance_review_detail WHERE review_type = " . $emp . ") pr ON pm.id = pr.review_question_id
+        LEFT JOIN (SELECT * from performance_review_detail WHERE review_type =  " . $mag . ") pd ON pm.id = pd.review_question_id
            
         WHERE  template_id = " . $tid . "
             AND pm.`type` = " . $type . "

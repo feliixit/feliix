@@ -7,7 +7,7 @@ header("Access-Control-Allow-Methods: *");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-$jwt = (isset($_GET['jwt']) ?  $_GET['jwt'] : '');
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : '');
 $kw = (isset($_GET['kw']) ?  $_GET['kw'] : '');
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $kw = urldecode($kw);
@@ -37,6 +37,33 @@ if (!isset($jwt)) {
     die();
 } else {
 
+    // decode jwt
+    $decoded = JWT::decode($jwt, $key, array('HS256'));
+    $user_id = $decoded->data->id;
+
+    $username = $decoded->data->username;
+    $position = $decoded->data->position;
+    $department = $decoded->data->department;
+
+    $access6 = false;
+
+    if(trim(strtoupper($department)) == 'ADMIN')
+    {
+        if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
+        {
+            $access6 = true;
+        }
+    }
+
+    if(trim($department) == '')
+    {
+        if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+        {
+            $access6 = true;
+        }
+    }
+
+
     $merged_results = array();
     $return_result = array();
 
@@ -46,6 +73,8 @@ if (!isset($jwt)) {
                 ud.department,  
                 ut.title, 
                 pt.version,
+                pr.create_id,
+                pr.user_id,
                 u.username manager,
                 u1.username employee, 
                 COALESCE(pr.user_complete_at, '') user_complete_at, 
@@ -58,6 +87,10 @@ if (!isset($jwt)) {
                 LEFT JOIN user u1 ON u1.id = pr.user_id
               WHERE pr.status <> -1  " . ($id != 0 ? " and pr.id=$id" : ' ');
 
+    if($access6 != true)
+    {
+        $query .= " and (pr.create_id = " . $user_id . " or pr.user_id = " . $user_id . ") ";
+    }
 
     $query = $query . " order by pr.created_at desc ";
 
@@ -94,6 +127,9 @@ if (!isset($jwt)) {
         $user_complete_at = $row['user_complete_at'];
         $manager_complete_at = $row['manager_complete_at'];
 
+        $create_id = $row['create_id'];
+        $user_id = $row['user_id'];
+
         $status = "Nobody cares";
         if($user_complete_at == "" && $manager_complete_at != "")
             $status = "Lack of subordinate's opinion";
@@ -122,6 +158,8 @@ if (!isset($jwt)) {
             "version" => $version,
             "employee" => $employee,
             "manager" => $manager,
+            "create_id" => $create_id,
+            "user_id" => $user_id,
             "user_complete_at" => $user_complete_at,
             "manager_complete_at" => $manager_complete_at,
             "status" => $status,

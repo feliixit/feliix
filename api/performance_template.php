@@ -40,7 +40,8 @@ if (!isset($jwt)) {
     $merged_results = array();
     $return_result = array();
 
-    $query = "SELECT pt.id, pt.version, ud.id did, department, ut.id tid, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at
+    $query = "SELECT pt.id, pt.version, ud.id did, department, ut.id tid, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at,
+                    (SELECT COUNT(*) FROM performance_review WHERE template_id = pt.id and performance_review.status <> -1) cited
                     FROM performance_template pt
                     LEFT JOIN user_title ut ON ut.id = pt.title_id
                     LEFT JOIN user_department ud ON ud.id = ut.department_id
@@ -85,6 +86,7 @@ if (!isset($jwt)) {
         $created_at = $row['created_at'];
         $updated_name = $row['updated_name'];
         $updated_at = $row['updated_at'];
+        $cited = $row['cited'];
        
         $merged_results[] = array(
             "id" => $id,
@@ -99,7 +101,7 @@ if (!isset($jwt)) {
             "created_at" => $created_at,
             "updated_name" => $updated_name,
             "updated_at" => $updated_at,
-           
+            "cited" => $cited,
         );
     }
 
