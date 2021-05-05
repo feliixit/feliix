@@ -20,6 +20,7 @@ var app = new Vue({
     statuses : {},
     stages : {},
     users : {},
+    users_del : {},
 
     uid:0,
     org_uid:0,
@@ -185,6 +186,7 @@ var app = new Vue({
         _this.getProjectApprove(_this.project_id);
         _this.getProjectActionDetails(_this.project_id);
         _this.getUsers();
+        _this.getUsersDeleted(_this.project_id);
         _this.getFileManagement(_this.project_id);
         _this.getProjectInfo(_this.project_id);
         _this.getKeyPerson(_this.project_id);
@@ -1092,6 +1094,32 @@ var app = new Vue({
                   
               });
       },
+
+      getUsersDeleted (id) {
+
+        let _this = this;
+  
+        let token = localStorage.getItem('accessToken');
+
+        const params = {
+          pid : id,
+         
+        };
+  
+        axios
+            .get('api/project02_user_with_deleted', { params, headers: {"Authorization" : `Bearer ${token}`} })
+            .then(
+            (res) => {
+                _this.users_del = res.data;
+            },
+            (err) => {
+                alert(err.response);
+            },
+            )
+            .finally(() => {
+                
+            });
+    },
 
       getClientTypes () {
 

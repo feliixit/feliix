@@ -2431,7 +2431,7 @@ catch (Exception $e) {
                                     <dt>Assignee:</dt>
                                     <dd>
                                         <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record.assignee" :id="record.assignee_id" :options="users" attach chips label="username" multiple></v-select>
+                                            <v-select v-model="record.assignee" :id="record.assignee_id" :options="users_del" attach chips label="username" multiple></v-select>
 
                                         </div>
 
@@ -2442,7 +2442,7 @@ catch (Exception $e) {
                                     <dd>
 
                                         <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record.collaborator" :id="record.collaborator_id" :options="users" attach chips label="username" multiple></v-select>
+                                            <v-select v-model="record.collaborator" :id="record.collaborator_id" :options="users_del" attach chips label="username" multiple></v-select>
 
                                         </div>
                                     </dd>
@@ -2632,7 +2632,7 @@ catch (Exception $e) {
                                     <dt>Assignee:</dt>
                                     <dd>
                                         <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record_r.assignee" :id="record_r.assignee_id" :options="users" attach chips label="username" multiple></v-select>
+                                            <v-select v-model="record_r.assignee" :id="record_r.assignee_id" :options="users_del_r" attach chips label="username" multiple></v-select>
 
                                         </div>
 
@@ -2903,7 +2903,7 @@ catch (Exception $e) {
                     <div class="pagenation">
                         <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
 
-                        <a class="page" v-for="pg in pages" @click="page=pg">{{ pg }}</a>
+                        <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'#707070', 'color': 'white'} : { }]">{{ pg }}</a>
 
                         <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
                     </div>
