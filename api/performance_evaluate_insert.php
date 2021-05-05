@@ -92,6 +92,7 @@ if (!isset($jwt)) {
                         `emp_comment_2` = :emp_comment2,
                         `emp_comment_3` = :emp_comment3,
                         `user_complete_at` = now() 
+                        WHERE  id = " . $pid . "
                     ";
 
             // prepare the query
@@ -134,6 +135,7 @@ if (!isset($jwt)) {
                         `mag_comment_2` = :mag_comment2,
                         `mag_comment_3` = :mag_comment3,
                         `manager_complete_at` = now() 
+                        WHERE  id = " . $pid . "
                     ";
 
             // prepare the query
