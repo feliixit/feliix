@@ -50,7 +50,7 @@ $merged_results = array();
 
 
 
-$query = "SELECT id, username, pic_url  FROM `user` where 1= 1 ";
+$query = "SELECT id, username, pic_url  FROM `user` where status <> -1 ";
 
 
 

@@ -1298,3 +1298,10 @@ CREATE TABLE IF NOT EXISTS `performance_review_detail` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- user improvement
+ALTER TABLE user
+ADD COLUMN `updated_id`  int(11) DEFAULT 0 after created_at;
+
+ALTER TABLE user
+ADD COLUMN `created_id`  int(11) DEFAULT 0 after pic_url;
