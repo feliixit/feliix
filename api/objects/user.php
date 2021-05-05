@@ -325,7 +325,7 @@ class User{
         $disable_status = -1;
 
         // unique ID of record to be edited
-        $stmt->bindParam(':need_punch', $disable);
+        $stmt->bindParam(':need_punch', $a = 0);
         $stmt->bindParam(':status', $disable_status);
         $stmt->bindParam(':is_admin', $disable);
         $stmt->bindParam(':updated_id', $user_id);
