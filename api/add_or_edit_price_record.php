@@ -181,7 +181,7 @@ else
     }else if($action == 5) {
         //get members
         try{
-            $query = "SELECT * from user";
+            $query = "SELECT * from user where status <> -1 order by username";
             $stmt = $db->prepare( $query );
             $stmt->execute();
 

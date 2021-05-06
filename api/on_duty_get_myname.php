@@ -51,10 +51,11 @@ else
         $manager_leave = $user->manager_leave;
         $head_of_department = $user->head_of_department;
         $is_viewer = $user->is_viewer;
+        $user_id = $user->id;
 
         //echo json_encode(array("username" => $user, "department" => $department, "title" => $title));
 
-        echo json_encode(array("username" => $user->username, "department" => $department, "title" => $title, "is_manager" => $is_manager, "sick_leave" => $sick_leave, "annual_leave" => $annual_leave, "manager_leave" => $manager_leave,  "head_of_department" => $head_of_department , "is_viewer" => $is_viewer));
+        echo json_encode(array("username" => $user->username, "department" => $department, "title" => $title, "is_manager" => $is_manager, "sick_leave" => $sick_leave, "annual_leave" => $annual_leave, "manager_leave" => $manager_leave,  "head_of_department" => $head_of_department , "is_viewer" => $is_viewer, "user_id" => $user_id));
 
     }
         // if decode fails, it means jwt is invalid

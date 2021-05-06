@@ -31,6 +31,8 @@ else
             echo json_encode(array("message" => "Access denied."));
             die();
           }
+
+          $user_id = $decoded->data->id;
       }
       // if decode fails, it means jwt is invalid
       catch (Exception $e){
@@ -181,7 +183,7 @@ else
                 $ids = explode(",", $id);
                 foreach($ids as $item) {
                     $user->id = trim($item);
-                    $user->delete();
+                    $user->delete($user_id);
                 }
 
                 $out['message'] = "Member Deleted Successfully";

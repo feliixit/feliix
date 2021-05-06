@@ -12,6 +12,8 @@ var app = new Vue({
     project03_other_task_r: [],
 
     users: [],
+    users_del: [],
+    users_del_r: [],
 
     submit: false,
     submit_r:false,
@@ -133,6 +135,7 @@ var app = new Vue({
         _this.getProjectOtherTask_r(_this.stage_id);
         _this.getDueDate(_this.stage_id);
         _this.getProjectInfo(_this.stage_id);
+        _this.getUsersDeleted(_this.stage_id);
       });
     }
 
@@ -582,6 +585,8 @@ var app = new Vue({
       {
         this.record = {};
         this.record = this.shallowCopy(this.project03_other_task.find(element => element.task_id == this.task_id_to_load));
+
+        this.getUsersDeleted(this.task_id_to_load);
       }
     },
 
@@ -590,6 +595,8 @@ var app = new Vue({
       {
         this.record_r = {};
         this.record_r = this.shallowCopy(this.project03_other_task_r.find(element => element.task_id == this.task_id_to_load_r));
+
+        this.getUsersDeleted_R(this.task_id_to_load_r);
       }
     },
 
@@ -794,6 +801,58 @@ var app = new Vue({
         .then(
           (res) => {
             _this.users = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
+    },
+
+    getUsersDeleted(id) {
+
+      let _this = this;
+
+      let token = localStorage.getItem('accessToken');
+
+      const params = {
+        pid : id,
+       
+      };
+
+      axios
+        .get('api/project03_user_other_deleted', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.users_del = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
+    },
+
+    getUsersDeleted_R(id) {
+
+      let _this = this;
+
+      let token = localStorage.getItem('accessToken');
+
+      const params = {
+        pid : id,
+       
+      };
+
+      axios
+        .get('api/project03_user_other_deleted_r', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.users_del_r = res.data;
           },
           (err) => {
             alert(err.response);

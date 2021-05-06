@@ -50,7 +50,21 @@ $merged_results = array();
 
 
 
-$query = "SELECT id, username, pic_url  FROM `user` where status <> -1 ";
+$query = "
+    SELECT 
+        id, 
+        username, 
+        pic_url  
+    FROM `user` 
+    where status <> -1 
+    UNION
+    SELECT 
+        u.id, 
+        u.username, 
+        u.pic_url 
+    FROM project_other_task_r pm 
+    LEFT JOIN `user` u ON u.id = pm.create_id 
+    WHERE pm.id = " . $pid;
 
 
 

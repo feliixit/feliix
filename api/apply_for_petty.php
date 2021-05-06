@@ -17,7 +17,7 @@ $payable_to = (isset($_POST['payable_to']) ?  $_POST['payable_to'] : '');
 $payable_other = (isset($_POST['payable_other']) ?  $_POST['payable_other'] : '');
 $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
-$petty_list = (isset($_POST['petty_list']) ?  $_POST['petty_list'] : '');
+$petty_list = (isset($_POST['petty_list']) ?  $_POST['petty_list'] : '[]');
 $petty_array = json_decode($petty_list,true);
 
 include_once 'config/core.php';
@@ -104,7 +104,7 @@ else
                 error_log($arr[2]);
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . array($arr[2]));
+                echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
                 die();
             }
         } catch (Exception $e) {
@@ -185,7 +185,7 @@ else
                     error_log($arr[2]);
                     $db->rollback();
                     http_response_code(501);
-                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . array($arr[2]));
+                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
                     die();
                 }
             } catch (Exception $e) {

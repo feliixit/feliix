@@ -484,7 +484,7 @@ $(function(){
                                     <dd>
                                         <div class="browser_group">
                                             <select v-model="uid">
-                                                <option v-for="(item, index) in users" :value="item.id"
+                                                <option v-for="(item, index) in users_del" :value="item.id"
                                                         :key="item.username">
                                                     {{ item.username }}
                                                 </option>

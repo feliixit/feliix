@@ -304,10 +304,15 @@ class User{
     }
 
     // update a user record
-    public function delete(){
+    public function delete($user_id){
 
-        $query = "delete from " . $this->table_name . "
-                
+        $query = "UPDATE " . $this->table_name . "
+                SET
+                    need_punch = :need_punch,
+                    status = :status,
+                    is_admin = :is_admin,
+                    updated_id = :updated_id,
+                    updated_at = now()
                 WHERE id = :id";
 
         // prepare the query
@@ -316,7 +321,14 @@ class User{
         // bind the values from the form
         //$stmt->bindParam(':status', $a = -1);
 
+        $disable = 'N';
+        $disable_status = -1;
+
         // unique ID of record to be edited
+        $stmt->bindParam(':need_punch', $a = 0);
+        $stmt->bindParam(':status', $disable_status);
+        $stmt->bindParam(':is_admin', $disable);
+        $stmt->bindParam(':updated_id', $user_id);
         $stmt->bindParam(':id', $this->id);
 
         // execute the query
