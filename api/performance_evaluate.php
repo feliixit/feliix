@@ -81,9 +81,13 @@ if (!isset($jwt)) {
                 COALESCE(pr.mag_comment_1, '') mag_comment_1,
                 COALESCE(pr.mag_comment_2, '') mag_comment_2,
                 COALESCE(pr.mag_comment_3, '') mag_comment_3,
+                COALESCE(pr.mag_comment_4, '') mag_comment_4,
+                COALESCE(pr.mag_comment_5, '') mag_comment_5,
                 COALESCE(pr.emp_comment_1, '') emp_comment_1,
                 COALESCE(pr.emp_comment_2, '') emp_comment_2,
-                COALESCE(pr.emp_comment_3, '') emp_comment_3
+                COALESCE(pr.emp_comment_3, '') emp_comment_3,
+                COALESCE(pr.emp_comment_4, '') emp_comment_4,
+                COALESCE(pr.emp_comment_5, '') emp_comment_5
                 FROM performance_review pr
                 LEFT JOIN performance_template pt ON pr.template_id = pt.id
                 LEFT JOIN user_title ut ON ut.id = pt.title_id
@@ -131,10 +135,14 @@ if (!isset($jwt)) {
         $mag_comment_1 = $row['mag_comment_1'];
         $mag_comment_2 = $row['mag_comment_2'];
         $mag_comment_3 = $row['mag_comment_3'];
+        $mag_comment_4 = $row['mag_comment_4'];
+        $mag_comment_5 = $row['mag_comment_5'];
 
         $emp_comment_1 = $row['emp_comment_1'];
         $emp_comment_2 = $row['emp_comment_2'];
         $emp_comment_3 = $row['emp_comment_3'];
+        $emp_comment_4 = $row['emp_comment_4'];
+        $emp_comment_5 = $row['emp_comment_5'];
 
         $status = "Nobody cares";
         if($user_complete_at == "" && $manager_complete_at != "")
@@ -179,6 +187,8 @@ if (!isset($jwt)) {
                     $mag_comment_1 = "";
                     $mag_comment_2 = "";
                     $mag_comment_3 = "";
+                    $mag_comment_4 = "";
+                    $mag_comment_5 = "";
                 }
             }
             elseif($user_complete_at != "" && $manager_complete_at == "")
@@ -194,6 +204,8 @@ if (!isset($jwt)) {
                     $emp_comment_1 = "";
                     $emp_comment_2 = "";
                     $emp_comment_3 = "";
+                    $emp_comment_4 = "";
+                    $emp_comment_5 = "";
                 }
 
                 // employee
@@ -240,10 +252,14 @@ if (!isset($jwt)) {
             "mag_comment_1" => $mag_comment_1,
             "mag_comment_2" => $mag_comment_2,
             "mag_comment_3" => $mag_comment_3,
+            "mag_comment_4" => $mag_comment_4,
+            "mag_comment_5" => $mag_comment_5,
 
             "emp_comment_1" => $emp_comment_1,
             "emp_comment_2" => $emp_comment_2,
             "emp_comment_3" => $emp_comment_3,
+            "emp_comment_4" => $emp_comment_4,
+            "emp_comment_5" => $emp_comment_5,
         );
     }
 

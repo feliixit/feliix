@@ -16,6 +16,8 @@ $answers_array = json_decode($answers, true);
 $comment1 = (isset($_POST['commet1']) ?  $_POST['commet1'] : '');
 $comment2 = (isset($_POST['commet2']) ?  $_POST['commet2'] : '');
 $comment3 = (isset($_POST['commet3']) ?  $_POST['commet3'] : '');
+$comment4 = (isset($_POST['commet4']) ?  $_POST['commet4'] : '');
+$comment5 = (isset($_POST['commet5']) ?  $_POST['commet5'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -91,6 +93,8 @@ if (!isset($jwt)) {
                         `emp_comment_1` = :emp_comment1,
                         `emp_comment_2` = :emp_comment2,
                         `emp_comment_3` = :emp_comment3,
+                        `emp_comment_4` = :emp_comment4,
+                        `emp_comment_5` = :emp_comment5,
                         `user_complete_at` = now() 
                         WHERE  id = " . $pid . "
                     ";
@@ -102,7 +106,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':emp_comment1', $comment1);
             $stmt->bindParam(':emp_comment2', $comment2);
             $stmt->bindParam(':emp_comment3', $comment3);
-
+            $stmt->bindParam(':emp_comment4', $comment4);
+            $stmt->bindParam(':emp_comment5', $comment5);
 
             $last_id = 0;
             // execute the query, also check if query was successful
@@ -134,6 +139,8 @@ if (!isset($jwt)) {
                         `mag_comment_1` = :mag_comment1,
                         `mag_comment_2` = :mag_comment2,
                         `mag_comment_3` = :mag_comment3,
+                        `mag_comment_4` = :mag_comment4,
+                        `mag_comment_5` = :mag_comment5,
                         `manager_complete_at` = now() 
                         WHERE  id = " . $pid . "
                     ";
@@ -145,7 +152,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':mag_comment1', $comment1);
             $stmt->bindParam(':mag_comment2', $comment2);
             $stmt->bindParam(':mag_comment3', $comment3);
-
+            $stmt->bindParam(':mag_comment4', $comment4);
+            $stmt->bindParam(':mag_comment5', $comment5);
 
             $last_id = 0;
             // execute the query, also check if query was successful

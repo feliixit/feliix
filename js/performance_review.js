@@ -36,6 +36,8 @@ var app = new Vue({
     comment1:"",
     comment2:"",
     comment3:"",
+    comment4:"",
+    comment5:"",
 
     // I&AM
     department:'',
@@ -324,6 +326,8 @@ var app = new Vue({
           form_Data.append("commet1", _this.comment1);
           form_Data.append("commet2", _this.comment2);
           form_Data.append("commet3", _this.comment3);
+          form_Data.append("commet4", _this.comment4);
+          form_Data.append("commet5", _this.comment5);
 
           axios({
             method: "post",
@@ -527,6 +531,8 @@ var app = new Vue({
             _this.evals = _this.record[0];
             _window.jQuery(".mask").toggle();
             _window.jQuery("#Modal_2").toggle();
+
+            _this.reset_evaluate();
           }
         })
         .catch(function(error) {
@@ -678,7 +684,7 @@ var app = new Vue({
     if(this.record.status != "Nobody cares" || !this.can_delete(this.record.create_id))
     {
       Swal.fire({
-        text: "Review cannot be deleted",
+        text: "Partially or completely done performance evaluation cannot be deleted. ",
         icon: "warning",
         confirmButtonText: "OK",
       });
@@ -762,6 +768,38 @@ var app = new Vue({
         .finally(() => {});
     },
 
+    reset_evaluate: function() {
+      this.comment1 = "";
+      this.comment2 = "";
+      this.comment3 = "";
+      this.comment5 = "";
+      this.comment4 = "";
+
+      var opt = this.$refs.opt;
+      for (i = 0; i < opt.length; i++) {
+        opt[i].value = "";
+      }
+
+      var opt1 = this.$refs.opt1;
+      for (i = 0; i < opt1.length; i++) {
+        opt1[i].value = "";
+      }
+
+      var grade1 = this.$refs.grade1;
+      for (i = 0; i < grade1.length; i++) {
+        grade1[i].value = 10;
+      }
+
+      var grade = this.$refs.grade;
+      for (i = 0; i < grade.length; i++) {
+        grade[i].value = 10;
+      }
+
+      this.avg = 10.0;
+      this.avg1 = 10.0;
+
+    },
+
 
     reset: function() {
       this.submit = false;
@@ -771,6 +809,8 @@ var app = new Vue({
       this.comment1 = "";
       this.comment2 = "";
       this.comment3 = "";
+      this.comment5 = "";
+      this.comment4 = "";
 
       this.getLeaveCredit();
     },

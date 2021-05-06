@@ -1305,3 +1305,17 @@ ADD COLUMN `updated_id`  int(11) DEFAULT 0 after created_at;
 
 ALTER TABLE user
 ADD COLUMN `created_id`  int(11) DEFAULT 0 after pic_url;
+
+
+-- performance view part II
+ALTER TABLE performance_review
+ADD COLUMN `emp_comment_4` varchar(512)  COLLATE utf8mb4_unicode_ci default '' AFTER `emp_comment_3`;
+
+ALTER TABLE performance_review
+ADD COLUMN `emp_comment_5` varchar(512)  COLLATE utf8mb4_unicode_ci default '' AFTER `emp_comment_4`;
+
+ALTER TABLE performance_review
+ADD COLUMN `mag_comment_4` varchar(512)  COLLATE utf8mb4_unicode_ci default '' AFTER `mag_comment_3`;
+
+ALTER TABLE performance_review
+ADD COLUMN `mag_comment_5` varchar(512)  COLLATE utf8mb4_unicode_ci default '' AFTER `mag_comment_4`;
