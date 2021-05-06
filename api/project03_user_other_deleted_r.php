@@ -75,7 +75,7 @@ if(!empty($_GET['page'])) {
     }
 }
 
-$query = $query . " order by id ";
+$query = $query . " order by username ";
 
 if(!empty($_GET['size'])) {
     $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
