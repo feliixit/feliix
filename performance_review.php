@@ -855,8 +855,8 @@ try {
                                 <li class="content">{{ views.version }}</li>
 
                                 <li><b>Date of Evaluation:</b></li>
-                                <li class="content" style="color:#999;"><template v-if="views.user_complete_at != ''">{{ views.user_complete_at }} ({{ views.employee }})</template></li>
-                                <li class="content"><template v-if="views.manager_complete_at != ''">{{ views.manager_complete_at }} ({{ views.manager }})</template></li>
+                                <li class="content" style="color:#999; height:27px;"><template v-if="views.user_complete_at != ''">{{ views.user_complete_at }} ({{ views.employee }})</template><b>  </b></li>
+                                <li class="content" style="height:27px;"><template v-if="views.manager_complete_at != ''">{{ views.manager_complete_at }} ({{ views.manager }})</template><b>  </b></li>
                             </ul>
 
                         </div>
@@ -1052,6 +1052,18 @@ try {
                                 <li class="content_disabled">
                                     <span v-if="views.emp_comment_3" v-html="views.emp_comment_3.split('\n').join('<br />')"></span>
                                     <span v-if="views.mag_comment_3" v-html="views.mag_comment_3.split('\n').join('<br />')"></span>
+                                </li>
+
+                                <li><b>Q4</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_4" v-html="views.emp_comment_4.split('\n').join('<br />')"></span>
+                                    <span v-if="views.mag_comment_4" v-html="views.mag_comment_4.split('\n').join('<br />')"></span>
+                                </li>
+
+                                <li><b>Q5</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_5" v-html="views.emp_comment_5.split('\n').join('<br />')"></span>
+                                    <span v-if="views.mag_comment_5" v-html="views.mag_comment_5.split('\n').join('<br />')"></span>
                                 </li>
 
                             </ul>
