@@ -20,7 +20,7 @@ var app = new Vue({
     pg: 0,
     pages: [],
 
-    perPage: 5,
+    perPage: 10,
 
     receive_records: [],
     view_detail: false,
@@ -680,6 +680,17 @@ var app = new Vue({
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
+
+      if(!this.can_delete(this.record.create_id))
+    {
+      Swal.fire({
+        text: "Permission denied. ",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+
+      return;
+    };
 
     if(this.record.status != "Nobody cares" || !this.can_delete(this.record.create_id))
     {

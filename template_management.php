@@ -475,7 +475,7 @@ try {
 
 
                         <!-- Template general description -->
-                        <div class="box-content">
+                        <div class="box-content" :ref="'addto'">
 
                             <ul>
                                 <li><b>Applicable Position</b></li>
@@ -626,7 +626,7 @@ try {
                                 <li class="content">{{ ( record.updated_name == null ) ? "": record.updated_name + " at " + record.updated_at }}</li>
 
                                 <li><b>Times Cited</b></li>
-                                <li class="content">3</li>
+                                <li class="content">{{ record.cited }}</li>
                             </ul>
 
                         </div>
@@ -702,7 +702,7 @@ try {
 
 
                         <!-- Template general description -->
-                        <div class="box-content">
+                        <div class="box-content" :ref="'porto'">
 
                             <ul>
                                 <li><b>Applicable Position</b></li>

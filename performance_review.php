@@ -351,7 +351,7 @@ try {
         }
 
         .modal .box-content ul li.content_disabled {
-            padding: 8px 8px 5px 30px;
+            padding: 8px 8px 30px 30px;
             font-size: 17px;
             font-weight: 500;
             font-family: Lato, Arial, Helvetica, 'Noto Sans TC', 'LiHei Pro', '微軟正黑體', '新細明體', 'Microsoft JhengHei', sans-serif;

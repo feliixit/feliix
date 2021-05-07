@@ -31,7 +31,7 @@ var app = new Vue({
     pg:0,
     pages: [],
 
-    perPage: 5,
+    perPage: 10,
 
     receive_records: [],
     view_detail: false,
@@ -640,6 +640,7 @@ var app = new Vue({
     },
 
     edit: function(eid) {
+      this.scrollMeTo('addto');
       this.type = 1;
       var element = this.agenda.find(({ id }) => id === eid);
 
@@ -683,6 +684,7 @@ var app = new Vue({
     },
 
     edit1: function(eid) {
+      this.scrollMeTo('addto');
       this.type = 2;
       var element = this.agenda1.find(({ id }) => id === eid);
 
@@ -703,6 +705,12 @@ var app = new Vue({
       if (index > -1) {
         this.agenda1.splice(index, 1);
       }
+    },
+
+    scrollMeTo(refName) {
+      var element = this.$refs[refName];
+      element.scrollIntoView({ behavior: 'smooth' });
+  
     },
 
     reset: function() {
@@ -854,6 +862,7 @@ var app = new Vue({
     },
 
     e_edit: function(eid) {
+      this.scrollMeTo('porto');
       var element = this.record.agenda.find(({ id }) => id === eid);
 
       this.e_org_id = eid;
@@ -898,6 +907,7 @@ var app = new Vue({
     },
 
     e_edit1: function(eid) {
+      this.scrollMeTo('porto');
       var element = this.record.agenda1.find(({ id }) => id === eid);
 
       this.e_org_id = eid;
