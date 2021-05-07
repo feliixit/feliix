@@ -351,11 +351,10 @@ try {
         }
 
         .modal .box-content ul li.content_disabled {
-            padding: 8px 8px 8px 15px;
-            font-size: 18px;
+            padding: 8px 8px 5px 30px;
+            font-size: 17px;
             font-weight: 500;
             font-family: Lato, Arial, Helvetica, 'Noto Sans TC', 'LiHei Pro', '微軟正黑體', '新細明體', 'Microsoft JhengHei', sans-serif;
-            color: rgb(84,84,84);
         }
 
         .rating_table{
@@ -470,14 +469,16 @@ try {
             margin-top: 40px;
         }
 
-        ul.summary li.content_disabled span:nth-of-type(1){
+        ul.summary li.content_disabled span.subordinate{
             display: block;
             color: #999;
             margin-bottom: 8px;
         }
-        ul.summary li.content_disabled span:nth-of-type(2){
+
+        ul.summary li.content_disabled span.supervisor{
             display: block;
             color: #000;
+            margin-bottom: 8px;
         }
 
     </style>
@@ -855,8 +856,8 @@ try {
                                 <li class="content">{{ views.version }}</li>
 
                                 <li><b>Date of Evaluation:</b></li>
-                                <li class="content" style="color:#999; height:27px;"><template v-if="views.user_complete_at != ''">{{ views.user_complete_at }} ({{ views.employee }})</template><b>  </b></li>
-                                <li class="content" style="height:27px;"><template v-if="views.manager_complete_at != ''">{{ views.manager_complete_at }} ({{ views.manager }})</template><b>  </b></li>
+                                <li class="content" style="color:#999; height:27px;"><template v-if="views.user_complete_at != ''">{{ views.user_complete_at }} ({{ views.employee }})</template><b>&ensp;</b></li>
+                                <li class="content" style="height:27px;"><template v-if="views.manager_complete_at != ''">{{ views.manager_complete_at }} ({{ views.manager }})</template><b>&ensp;</b></li>
                             </ul>
 
                         </div>
@@ -1038,32 +1039,47 @@ try {
 
                                 <li><b>Noteworthy accomplishment</b></li>
                                 <li class="content_disabled">
-                                    <span v-if="views.emp_comment_1" v-html="views.emp_comment_1.split('\n').join('<br />')"></span>
-                                    <span v-if="views.mag_comment_1" v-html="views.mag_comment_1.split('\n').join('<br />')"></span>
+                                    <span v-if="views.emp_comment_1" v-html="views.emp_comment_1.split('\n').join('<br />')" class="subordinate"></span>
+                                    <span v-if="views.mag_comment_1" v-html="views.mag_comment_1.split('\n').join('<br />')" class="supervisor"></span>
                                 </li>
 
-                                <li><b>Areas for improvement and action plan</b></li>
+                                <li><b>What is your opinion about the progress of your objective in the past two months? What ability, attitude, or
+                                    method makes you deliver this progress? Anything else can be done or changed to make you execute better?</b>
+                                </li>
                                 <li class="content_disabled">
-                                    <span v-if="views.emp_comment_2" v-html="views.emp_comment_2.split('\n').join('<br />')"></span>
-                                    <span v-if="views.mag_comment_2" v-html="views.mag_comment_2.split('\n').join('<br />')"></span>
+                                    <span v-if="views.emp_comment_2" v-html="views.emp_comment_2.split('\n').join('<br />')" class="subordinate"></span>
                                 </li>
 
-                                <li><b>Employee comments</b></li>
+                                <li><b>What is your opinion about the progress of subordinate's objective in the past two months? What ability,
+                                    attitude, or method makes subordinate deliver this progress? Anything else can be done or changed to make
+                                    subordinate execute better?</b>
+                                </li>
                                 <li class="content_disabled">
-                                    <span v-if="views.emp_comment_3" v-html="views.emp_comment_3.split('\n').join('<br />')"></span>
-                                    <span v-if="views.mag_comment_3" v-html="views.mag_comment_3.split('\n').join('<br />')"></span>
+                                    <span v-if="views.mag_comment_2" v-html="views.mag_comment_2.split('\n').join('<br />')" class="supervisor"></span>
                                 </li>
 
-                                <li><b>Q4</b></li>
+                                <li><b>What is your planning objective for the next two months? What is your role and responsibility in the
+                                    objective? How do you define your success and failure in the objective?</b></li>
                                 <li class="content_disabled">
-                                    <span v-if="views.emp_comment_4" v-html="views.emp_comment_4.split('\n').join('<br />')"></span>
-                                    <span v-if="views.mag_comment_4" v-html="views.mag_comment_4.split('\n').join('<br />')"></span>
+                                    <span v-if="views.emp_comment_3" v-html="views.emp_comment_3.split('\n').join('<br />')" class="subordinate"></span>
                                 </li>
 
-                                <li><b>Q5</b></li>
+                                <li><b>What is your expectation of subordinate's objective for the next two months? What is subordinate's role and
+                                    responsibility in the objective? How do you define subordinate's success and failure in the objective?</b></li>
                                 <li class="content_disabled">
-                                    <span v-if="views.emp_comment_5" v-html="views.emp_comment_5.split('\n').join('<br />')"></span>
-                                    <span v-if="views.mag_comment_5" v-html="views.mag_comment_5.split('\n').join('<br />')"></span>
+                                    <span v-if="views.mag_comment_3" v-html="views.mag_comment_3.split('\n').join('<br />')" class="supervisor"></span>
+                                </li>
+
+                                <li><b>What are your career goals? Did the current job arrangement fit your career goals? If not, any
+                                    suggestions?</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_4" v-html="views.emp_comment_4.split('\n').join('<br />')" class="subordinate"></span>
+                                </li>
+
+                                <li><b>Other comments</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_5" v-html="views.emp_comment_5.split('\n').join('<br />')" class="subordinate"></span>
+                                    <span v-if="views.mag_comment_5" v-html="views.mag_comment_5.split('\n').join('<br />')" class="supervisor"></span>
                                 </li>
 
                             </ul>
