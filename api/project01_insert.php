@@ -192,10 +192,10 @@ function SendNotifyMail($bid)
     $created_at = "";
     $category = "";
     $client_type = "";
-    $category = "";
     $priority = "";
     $project_status = "";
     $estimate_close_prob = "";
+    $create_id = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
@@ -206,7 +206,8 @@ function SendNotifyMail($bid)
         $priority = $row['priority'];
         $project_status = $row['project_status'];
         $estimate_close_prob = $row['estimate_close_prob'];
+        $create_id = $row['uid'];
     }
 
-    project01_notify_mail('01', $project_name, $username, $created_at, $category, $client_type, $priority, $project_status, $estimate_close_prob, $bid);
+    project01_notify_mail('01', $project_name, $username, $created_at, $category, $client_type, $priority, $project_status, $estimate_close_prob, $bid, $create_id);
 }
