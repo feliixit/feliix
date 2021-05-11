@@ -266,26 +266,26 @@
         <div class="block C focus">
             <h6>Performance Dashboard</h6>
 
-            <div class="box-content">
+            <div class="box-content" v-if="record.length == 0">
                 <h5> No result of performance review  was found!!</h5>
             </div>
 
-            <div class="box-content">
+            <div class="box-content" v-if="record.length > 0">
                 <ul>
                     <li><b>Name:</b></li>
-                    <li class="content">Raymond John Casero</li>
+                    <li class="content">{{ views.employee }}</li>
 
                     <li><b>Position:</b></li>
-                    <li class="content">Office Admin Associate</li>
+                    <li class="content">{{ views.title }}</li>
 
                     <li><b>Department:</b></li>
-                    <li class="content">Admin</li>
+                    <li class="content">{{ views.department }}</li>
 
                     <li><b>Supervisor:</b></li>
-                    <li class="content">Thalassa Wren Benzon</li>
+                    <li class="content">{{ views.manager }}</li>
 
                     <li><b>Review Period (Latest):</b></li>
-                    <li class="content">2021/02</li>
+                    <li class="content">{{ views.review_month }}</li>
                 </ul>
 
                 <table class="list_table" style="margin-top:40px;">
@@ -296,136 +296,15 @@
                     </thead>
 
                     <tbody>
-                    <tr>
+                    <tr v-for='(record, index) in views.agenda'>
                         <td>
-                            Attendance and Punctuality
+                            {{ record.category }}
                         </td>
                         <td>
-                            Arrives on time in office
+                            {{ record.criterion }}
                         </td>
                         <td>
-                            ★★★★★★★★★☆
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Teamwork/Interpersonal relations
-                        </td>
-                        <td>
-                            Works well with their manager
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Teamwork/Interpersonal relations
-                        </td>
-                        <td>
-                            Works collabroratively with fellow teammates
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Teamwork/Interpersonal relations
-                        </td>
-                        <td>
-                            Always cordial and willing to help other coworkers.
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Dependability
-                        </td>
-                        <td>
-                            Takes initiative and demonstrates "team player" behavior
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Dependability
-                        </td>
-                        <td>
-                            Possess skill at planning, organizing and prioritizing workload
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Dependability
-                        </td>
-                        <td>
-                            Willing to take additional responsibilities
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Communication
-                        </td>
-                        <td>
-                            Proactively shares ideas, methods, solutions that may help the team
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Communication
-                        </td>
-                        <td>
-                            Asks questions and seek guidance if need be
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Communication
-                        </td>
-                        <td>
-                            Effectively communicates with other colleauges
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Communication
-                        </td>
-                        <td>
-                            Corteous with other people related to the company
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
+                            <template v-for="n in parseInt(record.mag_score, 10)">★</template><template v-for="n in 10 - parseInt(record.mag_score, 10)">☆</template>
                         </td>
                     </tr>
 
@@ -434,11 +313,11 @@
                     <tfoot>
                     <tr>
                         <th colspan="2">AVERAGE</th>
-                        <th>7.4</th>
+                        <th>{{ (mag_avg / 1).toFixed(1) }}</th>
                     </tr>
                     <tr>
                         <th colspan="2">SUBTOTAL (60%)</th>
-                        <th>4.5</th>
+                        <th>{{ ( mag_avg * 0.6 ).toFixed(1) }}</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -452,135 +331,15 @@
                     </thead>
 
                     <tbody>
-                    <tr>
+                    <tr v-for='(record, index) in views.agenda1'>
                         <td>
-                            Scheduling
+                            {{ record.category }}
                         </td>
                         <td>
-                            Consolidates schedule and assigns service
+                            {{ record.criterion }}
                         </td>
                         <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Company Transactions
-                        </td>
-                        <td>
-                            Timely processing of store rental, bills, office rental payment
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Company Transactions
-                        </td>
-                        <td>
-                            Timely advice of payments received
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Office
-                        </td>
-                        <td>
-                            Make sure that office supplies are enough and office is kept clean
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Office
-                        </td>
-                        <td>
-                            Accomplishes weekly report/ inventory
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Phone Inquiries
-                        </td>
-                        <td>
-                            Creates good impression for clients
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Phone Inquiries
-                        </td>
-                        <td>
-                            Takes notes on important details, forwards to right department
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Petty cash & reimbursements
-                        </td>
-                        <td>
-                            Issuance and processing of approval
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Petty cash & reimbursements
-                        </td>
-                        <td>
-                            Processing of liquidation and reimbursements
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Documentation
-                        </td>
-                        <td>
-                            Make expense reports up to date
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            Bank Transactions
-                        </td>
-                        <td>
-                            Timely deposits and withdrawal from banks
-                        </td>
-                        <td>
-                            ★★★★★★★★★☆
+                            <template v-for="n in parseInt(record.mag_score, 10)">★</template><template v-for="n in 10 - parseInt(record.mag_score, 10)">☆</template>
                         </td>
                     </tr>
 
@@ -589,18 +348,18 @@
                     <tfoot>
                     <tr>
                         <th colspan="2">AVERAGE</th>
-                        <th>6.8</th>
+                        <th>{{ (mag_avg1 / 1).toFixed(1) }}</th>
                     </tr>
                     <tr>
                         <th colspan="2">SUBTOTAL (40%)</th>
-                        <th>2.7</th>
+                        <th>{{ ( mag_avg1 * 0.4 ).toFixed(1) }}</th>
                     </tr>
                     </tfoot>
                 </table>
 
                 <ul style="margin-top: 30px;">
                     <li><b>TOTAL:</b></li>
-                    <li class="content" style="font-weight: 700;">7.2</li>
+                    <li class="content" style="font-weight: 700;">{{ ( mag_avg * 0.6 + mag_avg1 * 0.4 ).toFixed(1) }}</li>
                 </ul>
 
                 <div class="promotion">
@@ -653,5 +412,5 @@
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/leave_record.js"></script>
+<script src="js/performance_dashboard.js"></script>
 </html>
