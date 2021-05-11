@@ -449,7 +449,7 @@ if (!isset($jwt)) {
 
             $_cash_in = 0;
             $_cash_out = 0;
-            $_amount_verified = 0;
+            $_amount_verified = 0.0;
             $_remarks = "";
             $_is_marked = 0;
             $_is_locked = 0;
@@ -478,7 +478,7 @@ if (!isset($jwt)) {
                 $_project_name = $_record[0]["project_name"];
                 $_project_name1 = $_record[0]["project_name1"];
                 $_id = $_record[0]["id"];
-                $_amount_verified = (int)$_record[0]["amount_verified"];
+                $_amount_verified = $_record[0]["amount_verified"];
             }
 
             $_details_list = "";

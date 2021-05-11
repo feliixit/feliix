@@ -495,9 +495,10 @@ try {
     <div id="app" class="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
+            <a class="tag C" href="performance_dashboard">Performance Dashboard</a>
             <a class="tag A focus">Performance Review</a>
+            <a class="tag D" href="template_library">Template Library</a>
             <a class="tag B" href="template_management?kw=&pg=1">Template Management</a>
-
         </div>
         <!-- Blocks -->
         <div class="block A focus">

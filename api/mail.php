@@ -1027,25 +1027,97 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
 }
 
 
-
-function task_notify($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+function task_notify01($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
-    $tab = "";
 
-    switch ($request_type) {
-        case "create":
-            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
-            break;
-        case "edit":
-            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
-            break;
-        case "del":
-            $tab = "<p>A existing task was deleted. Below is the details:</p>";
-            break;
-        default:
-            return;
-            break;
+    $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
     }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stage . "</p>";
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
+function task_notify02($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+{
+
+    $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
 
     $conf = new Conf();
 
@@ -1108,6 +1180,12 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $content = $content . "<p>Project Name:" . $project_name . "</p>";
     $content = $content . "<p>Stage:" . $stages_status . "</p>";
     $content = $content . "<p>Task:" . $task_name . "</p>";
+
+    if($old_status != $task_status)
+        $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    else
+        $content = $content . "<p>Task Status:" . $task_status . "</p>";
+
     $content = $content . "<p>Creator:" . $creators . "</p>";
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
@@ -1170,7 +1248,7 @@ function GetPettyVoidNotifiers()
 }
 
 
-function project01_notify_mail($request_type, $project_name, $username, $created_at, $category, $client_type, $priority, $project_status, $estimate_close_prob, $project_id)
+function project01_notify_mail($request_type, $project_name, $username, $created_at, $category, $client_type, $priority, $project_status, $estimate_close_prob, $project_id, $project_creator_id)
 {
     $tab = "";
 
@@ -1205,7 +1283,13 @@ function project01_notify_mail($request_type, $project_name, $username, $created
 
     $notifior = array();
 
-    $notifior = GetProjectNotifiers();
+    $notifior = GetNotifiers($project_creator_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $notifior = GetProject01NotifiersByCatagory($category);
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -1240,7 +1324,7 @@ function project01_notify_mail($request_type, $project_name, $username, $created
 
 }
 
-function project02_stage_notify_mail($stage_name, $project_name, $username, $created_at, $stage_status, $project_id)
+function project02_stage_notify_mail($stage_name, $project_name, $username, $created_at, $stage_status, $project_id, $project_creator_id, $category)
 {
 
     $title = 'Stage "'. $stage_name .'" was created in Project "' . $project_name . '" ';
@@ -1267,7 +1351,13 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
 
     $notifior = array();
 
-    $notifior = GetProjectNotifiers();
+    $notifior = GetNotifiers($project_creator_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $notifior = GetProject01NotifiersByCatagory($category);
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -1361,7 +1451,7 @@ function project03_stage_client_task_notify_mail($project_name, $username, $crea
     }
 }
 
-function project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id)
+function project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id, $create_id)
 {
 
     $title = 'Status of project "' . $project_name . '" changed to "' . $project_status . '" ';
@@ -1388,7 +1478,13 @@ function project02_status_change_notify_mail($project_name, $project_category, $
 
     $notifior = array();
 
-    $notifior = GetProjectNotifiers();
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $notifior = GetProject01NotifiersByCatagory($project_category);
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -1421,6 +1517,54 @@ function project02_status_change_notify_mail($project_name, $project_category, $
         return false;
     }
 
+}
+
+function GetProject01NotifiersByCatagory($catagory)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    if($catagory == 'Office Systems')
+    {
+        $sql = "
+            SELECT username, email, title 
+            FROM user u
+            LEFT JOIN user_title ut
+            ON u.title_id = ut.id 
+            WHERE title IN(
+                'Assistant Sales Manager',
+                'Sales Manager',
+                'Office Systems Manager',
+                'Office Systems Assistant Manager',
+                'Operations Manager',
+                'Managing Director') ";
+    }
+    else
+    {
+        $sql = "
+            SELECT username, email, title 
+            FROM user u
+            LEFT JOIN user_title ut
+            ON u.title_id = ut.id 
+            WHERE title IN(
+                'Assistant Sales Manager',
+                'Sales Manager',
+                'Lighting Manager',
+                'Lighting Assistant Manager',
+                'Operations Manager',
+                'Managing Director') ";
+    }
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }
 
 function GetProjectNotifiersByCatagory($catagory)

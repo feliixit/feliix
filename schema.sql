@@ -1319,3 +1319,18 @@ ADD COLUMN `mag_comment_4` varchar(512)  COLLATE utf8mb4_unicode_ci default '' A
 
 ALTER TABLE performance_review
 ADD COLUMN `mag_comment_5` varchar(512)  COLLATE utf8mb4_unicode_ci default '' AFTER `mag_comment_4`;
+
+
+-- template library
+CREATE TABLE IF NOT EXISTS `template_library` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `title_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `salary`  varchar(512) DEFAULT '',
+  `kpi`  varchar(1024) DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';

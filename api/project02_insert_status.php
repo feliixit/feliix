@@ -224,6 +224,7 @@ function SendNotifyMail($bid, $pre_status)
     $priority = "";
     $estimate_close_prob = "";
     $project_status = "";
+    $create_id = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
@@ -235,9 +236,10 @@ function SendNotifyMail($bid, $pre_status)
         $priority = $row['priority'];
         $estimate_close_prob = $row['estimate_close_prob'];
         $project_status = $row['project_status'];
+        $create_id = $row['uid'];
     }
 
     if($project_status != 'Pending Review' && $project_status != 'On Progress')
-        project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id);
+        project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id, $create_id);
 
 }
