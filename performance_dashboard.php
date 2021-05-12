@@ -366,19 +366,19 @@
                     <ul>
                         <li>Congratulations!! Your recent performance meets the requirement of
                             position promotion. Before you submit the promotion request, please view the performance
-                            criteria of your target position first (in Tab <a href=" ">Template Library</a>) and make sure you are willing to bear the related
+                            criteria of your target position first (in Tab <a href="template_library">Template Library</a>) and make sure you are willing to bear the related
                             responsibility.
                         </li>
 
 
                         <li>Choose Your Target Position for Promotion:</li>
                         <li>
-                            <select>
-                                <option>Department Name</option>
+                            <select v-model="department">
+                                <option v-for="(item, index) in position" :value="item.did" :key="item.department">{{ item.department }}</option>
                             </select>
 
-                            <select>
-                                <option>Position Name</option>
+                            <select v-model="title_id">
+                                <option v-for="(item, index) in title" :value="item.tid" :key="item.title">{{ item.title }}</option>
                             </select>
                         </li>
                     </ul>

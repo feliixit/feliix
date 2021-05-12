@@ -54,6 +54,12 @@ var app = new Vue({
 
     // search
     keyword: "",
+
+    position: [],
+    title: [],
+    department: "",
+    title_id: 0,
+
   },
 
   created() {
@@ -61,6 +67,7 @@ var app = new Vue({
     this.getEmployees();
     this.getUserName();
     this.getLeaveCredit();
+    this.get_positions();
   },
 
   computed: {
@@ -79,16 +86,34 @@ var app = new Vue({
       this.getTemplatesByTitle();
     },
     
-    receive_records() {
-      console.log("Vue watch receive_records");
-      this.setPages();
+    department() {
+      this.title = this.shallowCopy(
+        this.position.find((element) => element.did == this.department)
+      ).items;
+
     },
   },
 
   methods: {
     
-    search() {
-      this.filter_apply();
+    get_positions: function() {
+      let _this = this;
+
+      let token = localStorage.getItem("accessToken");
+
+      axios
+        .get("api/position_get", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(
+          (res) => {
+            _this.position = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          }
+        )
+        .finally(() => {});
     },
 
     setPages() {
@@ -146,204 +171,6 @@ var app = new Vue({
           });
         });
     },
-
-    filter_apply: function() {
-      let _this = this;
-
-      window.location.href =
-        "performance_review?" + "kw=" + _this.keyword + "&pg=" + _this.page;
-    },
-
-    on_grade_change:function(event) {
-      console.log(event.target.value);
-      var grade = this.$refs.grade;
-
-      var score =0.0;
-      for (i = 0; i < grade.length; i++) {
-        score += parseInt(grade[i].value);
-      }
-
-      this.avg = (score / i).toFixed(1);
-
-    },
-
-    on_grade1_change:function(event) {
-      console.log(event.target.value);
-      var grade = this.$refs.grade1;
-
-      var score =0.0;
-      for (i = 0; i < grade.length; i++) {
-        score += parseInt(grade[i].value);
-      }
-
-      this.avg1 = (score / i).toFixed(1);
-
-    },
-
-    open_review: function() {
-      if(this.is_add_review_privilege())
-      {
-        window.jQuery(".mask").toggle();
-        window.jQuery("#Modal_1").toggle();
-      }
-    },
-
-    add_review: function() {
-      if (
-        typeof this.employee.title_id == 'undefined' ||
-        this.review_month.trim() == "" ||
-        typeof this.template.id == 'undefined'
-      ) {
-        Swal.fire({
-          text: "Please enter the required fields",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      if (this.submit == true) return;
-
-      this.submit = true;
-
-      var token = localStorage.getItem("token");
-      var form_Data = new FormData();
-      let _this = this;
-
-      form_Data.append("jwt", token);
-      form_Data.append("user_id", this.employee.id);
-      form_Data.append("review_month", this.review_month);
-      form_Data.append("template_id", this.template.id);
-
-
-      axios({
-        method: "post",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        url: "api/performance_review_insert",
-        data: form_Data,
-      })
-        .then(function(response) {
-          //handle success
-          Swal.fire({
-            html: response.data.message,
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-
-          _this.reset();
-        })
-        .catch(function(error) {
-          //handle error
-          Swal.fire({
-            text: JSON.stringify(error),
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-
-          _this.reset();
-        });
-
-      window.jQuery(".mask").toggle();
-      window.jQuery("#Modal_1").toggle();
-    },
-
-    review_submit() {
-
-      let _this = this;
-
-      Swal.fire({
-        title: "Submit",
-        text: "Are you sure to submit? Once submitted, you cannot revise the evaluation result anymore.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes",
-      }).then((result) => {
-        if (result.value) {
-          if (_this.submit == true) return;
-
-          _this.submit = true;
-
-          var qid = _this.$refs.qid;
-          var opt = _this.$refs.opt;
-
-          var qid1 = _this.$refs.qid1;
-          var opt1 = _this.$refs.opt1;
-
-          var grade = _this.$refs.grade;
-          var grade1 = _this.$refs.grade1;
-
-          let temp = [];
-          for(var i=0; i<grade.length; i++) {
-            var obj = {
-                id: qid[i].value,
-                grade: grade[i].value,
-                opt: opt[i].value
-            };
-            temp.push(obj);
-          }
-
-          for(var i=0; i<grade1.length; i++) {
-            var obj = {
-                id: qid1[i].value,
-                grade: grade1[i].value,
-                opt: opt1[i].value
-            };
-            temp.push(obj);
-          }
-
-          var token = localStorage.getItem("token");
-          var form_Data = new FormData();
-          form_Data.append("jwt", token);
-          form_Data.append("pid", _this.record[0].id);
-          form_Data.append("answers", JSON.stringify(temp));
-          form_Data.append("commet1", _this.comment1);
-          form_Data.append("commet2", _this.comment2);
-          form_Data.append("commet3", _this.comment3);
-          form_Data.append("commet4", _this.comment4);
-          form_Data.append("commet5", _this.comment5);
-
-          axios({
-            method: "post",
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            url: "api/performance_evaluate_insert",
-            data: form_Data,
-          })
-            .then(function(response) {
-              //handle success
-              Swal.fire({
-                html: response.data.message,
-                icon: "info",
-                confirmButtonText: "OK",
-              });
-
-              _this.reset();
-            })
-            .catch(function(error) {
-              //handle error
-              Swal.fire({
-                text: JSON.stringify(error),
-                icon: "info",
-                confirmButtonText: "OK",
-              });
-
-              _this.reset();
-            });
-
-            window.jQuery(".mask").toggle();
-            window.jQuery("#Modal_2").toggle();
-        } else {
-          return;
-        }
-      });
-    },
-
 
     getTemplatesByTitle: function() {
       let _this = this;
@@ -424,277 +251,6 @@ var app = new Vue({
       
     },
 
-    evalua: function() {
-      if (this.proof_id == 0) {
-        Swal.fire({
-          text: "Please select row to evaluate",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-        return;
-      } else {
-
-      var record = this.shallowCopy(
-          this.receive_records.find((element) => element.id == this.proof_id)
-        );
-
-      if(record.user_id == this.user_id && record.user_complete_at != "")
-        return;
-
-      if(record.create_id == this.user_id && record.manager_complete_at != "")
-        return;
-
-      if(record.create_id != this.user_id && record.user_id != this.user_id)
-        return;
-
-      let _this = this;
-      let _window = window;
-
-      const params = {
-        id: this.proof_id,
-      };
-
-      let token = localStorage.getItem("accessToken");
-
-      axios
-        .get("api/performance_review", {
-          params,
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then(function(response) {
-          console.log(response.data);
-          _this.record = response.data;
-          if (_this.record.length > 0) {
-            _this.evals = _this.record[0];
-            _window.jQuery(".mask").toggle();
-            _window.jQuery("#Modal_2").toggle();
-
-            _this.reset_evaluate();
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-      }
-    },
-
-    edit_detai: function() {
-      if (this.proof_id == 0) {
-        Swal.fire({
-          text: "Please select row to edit",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-        return;
-      } else {
-        window.jQuery(".mask").toggle();
-        window.jQuery("#Modal_3").toggle();
-      }
-    },
-
-    detail: function() {
-      let _this = this;
-
-      if (this.proof_id == 0) {
-        //this.view_detail = false;
-        return;
-      }
-
-      this.record = this.shallowCopy(
-        this.receive_records.find((element) => element.id == this.proof_id)
-      );
-
-      this.e_title = this.shallowCopy(
-        this.position.find((element) => element.did == this.record.did)
-      ).items;
-
-      this.e_department = this.record.did;
-      this.e_tid = this.record.tid;
-
-      this.e_sn = this.record.agenda.length;
-      this.e_sn1 = this.record.agenda1.length;
-    },
-
-    can_delete(manager){
-      var can_save = false;
-
-      if(manager === this.user_id)
-        can_save = true;
-
-      if(this.department.trim() == '')
-      { 
-        if(this.title.trim() == 'Owner')
-          can_save = true;
-
-        if(this.title.trim() == 'Managing Director')
-          can_save = true;
-
-        if(this.title.trim() == 'Chief Advisor')
-          can_save = true;
-      }
-      
-      return can_save;
-    },
-
-    is_add_review_privilege() {
-      var can_save = false;
-
-      if(this.department.trim() == 'SALES')
-      { 
-        if(this.title.trim() == 'ASSISTANT SALES MANAGER')
-          can_save = true;
-
-        if(this.title.trim() == 'SALES MANAGER')
-          can_save = true;
-      }
-
-      if(this.department.trim() == 'LIGHTING')
-      { 
-        if(this.title.trim() == 'LIGHTING MANAGER')
-          can_save = true;
-      }
-
-      if(this.department.trim() == 'OFFICE')
-      { 
-        if(this.title.trim() == 'OFFICE SYSTEMS MANAGER')
-          can_save = true;
-      }
-
-      if(this.department.trim() == 'DESIGN')
-      { 
-        if(this.title.trim() == 'ASSISTANT BRAND MANAGER')
-          can_save = true;
-
-        if(this.title.trim() == 'BRAND MANAGER')
-          can_save = true;
-      }
-
-      if(this.department.trim() == 'SERVICE')
-      { 
-        if(this.title.trim() == 'ENGINERING MANAGER')
-          can_save = true;
-      }
-
-      if(this.department.trim() == 'ADMIN')
-      { 
-        if(this.title.trim() == 'OPERATIONS MANAGER')
-          can_save = true;
-      }
-
-      if(this.department.trim() == 'TW')
-      { 
-        if(this.title.trim() == 'Supply Chain Manager')
-          can_save = true;
-      }
-
-      if(this.department.trim() == '')
-      { 
-        if(this.title.trim() == 'Owner')
-          can_save = true;
-
-        if(this.title.trim() == 'Managing Director')
-          can_save = true;
-
-        if(this.title.trim() == 'Chief Advisor')
-          can_save = true;
-      }
-      
-      return can_save;
-    },
-
-
-    remove() {
-      if (this.proof_id == 0) {
-        Swal.fire({
-          text: "Please select a record to delete",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
-
-      this.record = this.shallowCopy(
-        this.receive_records.find((element) => element.id == this.proof_id)
-      );
-
-      if(!this.can_delete(this.record.create_id))
-    {
-      Swal.fire({
-        text: "Permission denied. ",
-        icon: "warning",
-        confirmButtonText: "OK",
-      });
-
-      return;
-    };
-
-    if(this.record.status != "Nobody cares" || !this.can_delete(this.record.create_id))
-    {
-      Swal.fire({
-        text: "Partially or completely done performance evaluation cannot be deleted. ",
-        icon: "warning",
-        confirmButtonText: "OK",
-      });
-
-      return;
-    };
-
-      let _this = this;
-
-      Swal.fire({
-        title: "Delete",
-        text: "Are you sure to delete?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes",
-      }).then((result) => {
-        if (result.value) {
-          if (_this.submit == true) return;
-
-          _this.submit = true;
-
-          var token = localStorage.getItem("token");
-          var form_Data = new FormData();
-          form_Data.append("jwt", token);
-          form_Data.append("pid", _this.record.id);
-
-          axios({
-            method: "post",
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            url: "api/performance_review_delete",
-            data: form_Data,
-          })
-            .then(function(response) {
-              //handle success
-              Swal.fire({
-                html: response.data.message,
-                icon: "info",
-                confirmButtonText: "OK",
-              });
-
-              _this.reset();
-            })
-            .catch(function(error) {
-              //handle error
-              Swal.fire({
-                text: JSON.stringify(error),
-                icon: "info",
-                confirmButtonText: "OK",
-              });
-
-              _this.reset();
-            });
-        } else {
-          return;
-        }
-      });
-    },
-
 
     getEmployees: function() {
       let _this = this;
@@ -714,38 +270,6 @@ var app = new Vue({
           }
         )
         .finally(() => {});
-    },
-
-    reset_evaluate: function() {
-      this.comment1 = "";
-      this.comment2 = "";
-      this.comment3 = "";
-      this.comment5 = "";
-      this.comment4 = "";
-
-      var opt = this.$refs.opt;
-      for (i = 0; i < opt.length; i++) {
-        opt[i].value = "";
-      }
-
-      var opt1 = this.$refs.opt1;
-      for (i = 0; i < opt1.length; i++) {
-        opt1[i].value = "";
-      }
-
-      var grade1 = this.$refs.grade1;
-      for (i = 0; i < grade1.length; i++) {
-        grade1[i].value = 10;
-      }
-
-      var grade = this.$refs.grade;
-      for (i = 0; i < grade.length; i++) {
-        grade[i].value = 10;
-      }
-
-      this.avg = 10.0;
-      this.avg1 = 10.0;
-
     },
 
 
