@@ -60,6 +60,8 @@ var app = new Vue({
     department: "",
     title_id: 0,
 
+    view_promotion: false,
+
   },
 
   created() {
