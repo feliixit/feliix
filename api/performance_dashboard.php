@@ -77,7 +77,7 @@ if (!isset($jwt)) {
                 LEFT JOIN user u ON u.id = pr.create_id
                 LEFT JOIN user u1 ON u1.id = pr.user_id
               WHERE pr.status <> -1
-              AND pr.user_complete_at <> '' AND pr.manager_complete_at <> ''
+              AND pr.user_complete_at is not null AND pr.manager_complete_at is not null
               AND pr.user_id = " . $user_id;
 
 
