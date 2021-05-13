@@ -1,5 +1,6 @@
 <?php
 
+date_default_timezone_set('Asia/Taipei');
 $date = date('d');
 $show0 = false;
 

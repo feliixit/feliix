@@ -447,6 +447,8 @@ var app = new Vue({
 
       let token = localStorage.getItem("accessToken");
 
+      this.total = 0;
+
       axios
         .get("api/quotation_payment_mgt", {
           params,
