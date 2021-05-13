@@ -14,6 +14,8 @@ var app = new Vue({
     receive_records: [],
     record: [],
 
+    total: 0,
+
     record_filter: [],
 
     categorys: {},
@@ -147,6 +149,12 @@ var app = new Vue({
             case "pg":
               _this.pg = tmp[1];
               break;
+            case "page":
+              _this.page = tmp[1];
+              break;
+            case "size":
+              _this.perPage = tmp[1];
+              break;
             default:
               console.log(`Too many args`);
           }
@@ -194,11 +202,7 @@ var app = new Vue({
   },
 
   watch: {
-    receive_records() {
-      console.log("Vue watch receive_records");
-      this.setPages();
-    },
-
+ 
     proof_id() {
       this.detail();
     },
@@ -209,9 +213,10 @@ var app = new Vue({
     setPages() {
       console.log("setPages");
       this.pages = [];
-      let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+      let numberOfPages = Math.ceil(this.total / this.perPage);
 
       if (numberOfPages == 1) this.page = 1;
+      if (this.page < 1) this.page = 1;
       for (let index = 1; index <= numberOfPages; index++) {
         this.pages.push(index);
       }
@@ -249,7 +254,7 @@ var app = new Vue({
       let from = page * perPage - perPage;
       let to = page * perPage;
 
-      return this.receive_records.slice(from, to);
+      return this.receive_records;
     },
 
     quote_paginate: function(posts) {
@@ -338,8 +343,12 @@ var app = new Vue({
       this.view_a = true;
     },
 
-    filter_apply: function() {
+    filter_apply_new: function() {
       let _this = this;
+
+      if(_this.page < 1) _this.page = 1;
+      if (_this.page > _this.pages.length) _this.page = _this.pages.length;
+      _this.page = 1;
 
       window.location.href =
         "quotation_and_payment_mgt?" +
@@ -368,7 +377,51 @@ var app = new Vue({
         "&ofd2=" +
         _this.od_factor2_order +
         "&pg=" +
-        _this.page;
+        _this.page +
+        "&page=" +
+        _this.page +
+        "&size=" +
+        _this.perPage;
+    },
+
+    filter_apply: function() {
+      let _this = this;
+
+      if(_this.page < 1) _this.page = 1;
+      if (_this.page > _this.pages.length) _this.page = _this.pages.length;
+
+      window.location.href =
+        "quotation_and_payment_mgt?" +
+        "fc=" +
+        _this.fil_category +
+        "&fs=" +
+        _this.fil_status +
+        "&ft=" +
+        _this.fil_creator +
+        "&fal=" +
+        _this.fil_amount_lower +
+        "&fau=" +
+        _this.fil_amount_upper +
+        "&fpl=" +
+        _this.fil_payment_lower +
+        "&fpu=" +
+        _this.fil_payment_upper +
+        "&fk=" +
+        _this.fil_keyowrd +
+        "&of1=" +
+        _this.od_factor1 +
+        "&ofd1=" +
+        _this.od_factor1_order +
+        "&of2=" +
+        _this.od_factor2 +
+        "&ofd2=" +
+        _this.od_factor2_order +
+        "&pg=" +
+        _this.page +
+        "&page=" +
+        _this.page +
+        "&size=" +
+        _this.perPage;
     },
 
     getRecords: function(keyword) {
@@ -388,6 +441,8 @@ var app = new Vue({
         ofd1: _this.od_factor1_order,
         of2: _this.od_factor2,
         ofd2: _this.od_factor2_order,
+        page: _this.page,
+        size: _this.perPage,
       };
 
       let token = localStorage.getItem("accessToken");
@@ -400,6 +455,7 @@ var app = new Vue({
         .then(
           (res) => {
             _this.receive_records = res.data;
+            _this.total = _this.receive_records[0].cnt;
             _this.quote_search();
             _this.payment_search();
 
@@ -723,9 +779,10 @@ var app = new Vue({
       document.getElementById("dialog_f1").classList.remove("focus");
       document.getElementById("add_f1").classList.remove("show");
 
-      this.receive_records = [];
+      //this.receive_records = [];
 
-      this.getRecords();
+      //this.getRecords();
+      this.filter_apply_new();
     },
 
     order_remove: function() {
