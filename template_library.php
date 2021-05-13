@@ -25,11 +25,72 @@ try {
             $user_id = $decoded->data->id;
             $username = $decoded->data->username;
 
-            $GLOBALS['position'] = $decoded->data->position;
-            $GLOBALS['department'] = $decoded->data->department;
+            $position = $decoded->data->position;
+            $department = $decoded->data->department;
             
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
             $test_manager = $decoded->data->test_manager;
+
+            $access6 = false;
+
+            // QOUTE AND PAYMENT Management
+            if(trim(strtoupper($department)) == 'SALES')
+            {
+                if(trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
+                || trim(strtoupper($position)) == 'SALES MANAGER')
+                {
+                    $access6 = true;
+                }
+            }
+
+            if(trim(strtoupper($department)) == 'LIGHTING')
+            {
+                if(trim(strtoupper($position)) == 'LIGHTING MANAGER')
+                {
+                    $access6 = true;
+                }
+            }
+
+            if(trim(strtoupper($department)) == 'OFFICE')
+            {
+                if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+                {
+                    $access6 = true;
+                }
+            }
+
+            if(trim(strtoupper($department)) == 'DESIGN')
+            {
+                if(trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER' || trim(strtoupper($position)) == 'BRAND MANAGER')
+                {
+                    $access6 = true;
+                }
+            }
+
+            if(trim(strtoupper($department)) == 'SERVICE')
+            {
+                if(trim(strtoupper($position)) == "ENGINERING MANAGER")
+                {
+                    $access6 = true;
+                }
+            }
+
+            if(trim(strtoupper($department)) == 'ADMIN')
+            {
+                if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
+                {
+                    $access6 = true;
+                }
+            }
+
+
+            if(trim($department) == '')
+            {
+                if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+                {
+                    $access6 = true;
+                }
+            }
 
         }
         catch (Exception $e){
@@ -377,7 +438,7 @@ try {
                 <a class="tag C" href="performance_dashboard">Performance Dashboard</a>
                 <a class="tag A" href="performance_review">Performance Review</a>
                 <a class="tag D focus">Template Library</a>
-                <a class="tag B" href="template_management?kw=&pg=1">Template Management</a>
+                <?php if($access6 == true) echo('<a class="tag B" href="template_management?kw=&pg=1">Template Management</a>'); ?>
             </div>
             <!-- Blocks -->
             <div class="block D focus">
