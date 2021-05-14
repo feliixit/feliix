@@ -139,7 +139,7 @@ $(function(){
                         <li><i class="micons">view_list</i></li>
                         <li>Request No.</li>
                         <li>Requestor</li>
-                        <li>Date Requested</li>
+                        <li>Date Needed</li>
                         <li>Total Amount Requested</li>
                     </ul>
 
@@ -180,7 +180,7 @@ $(function(){
                             </li>
                         </ul>
                         <ul>
-                            <li class="head">Date Requested</li>
+                            <li class="head">Date Needed</li>
                             <li>{{ record.date_requested }}</li>
                         </ul>
                         <ul>

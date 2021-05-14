@@ -681,7 +681,7 @@ function void_expense_mail($request_no, $applicant, $user_name, $user_email, $de
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Voiding Reason:" . $reason . "</p>";
     $content = $content . "<p> </p>";
@@ -775,7 +775,7 @@ function reject_expense_mail($request_no, $user_name, $requestor, $requestor_ema
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Rejection Reason:" . $reason . "</p>";
     $content = $content . "<p> </p>";
@@ -858,7 +858,7 @@ function send_liquidate_mail($request_no,
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Date Released:" . $date_release . "</p>";
     $content = $content . "<p>Date Liquidated:" . $date_liquidate . "</p>";
@@ -953,7 +953,7 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please log on to Feliix >> Admin Section >> Expense Review >> Tab " . $tab . " to view the expense application.</p>";
@@ -1008,7 +1008,7 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Date Released:" . $date_release . "</p>";
     $content = $content . "<p> </p>";

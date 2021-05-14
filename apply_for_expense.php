@@ -331,7 +331,7 @@ body.green input[type=date] {
                         <li v-if="pid != 0"><input type="text" required style="width:100%" readonly v-model="request_no"
                                                                 placeholder="Auto Given"></li>
 
-                        <li><b>Date Requested</b></li>
+                        <li><b>Date Needed</b></li>
                         <li><input type="date" style="width:100%" v-model="date_requested"></li>
 
                         <li><b>Type</b></li>
