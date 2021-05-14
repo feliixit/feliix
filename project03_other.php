@@ -2856,7 +2856,7 @@ catch (Exception $e) {
                                     <li v-if="item.message_status == -1">
                                         <div class="msg">
                                             <div class="msgbox">
-                                                <p><del>{{ item.message }}</del><br> by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
+                                                <p><del>{{ item.message }}</del><br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
                                             </div>
                                         </div>
                                     </li>
