@@ -332,6 +332,7 @@ function GetMessage($task_id, $db)
                 "message_status" => $message_status,
                 "messager" => $messager,
                 "messager_pic" => $messager_pic,
+                "messager_id" => $messager_id,
 
                 "message_date" => explode(" ", $message_date)[0],
                 "message_time" => explode(" ", $message_date)[1],
@@ -385,6 +386,7 @@ function GetMessage($task_id, $db)
             "message_status" => $message_status,
             "messager" => $messager,
             "messager_pic" => $messager_pic,
+            "messager_id" => $messager_id,
 
             "message_date" => explode(" ", $message_date)[0],
             "message_time" => explode(" ", $message_date)[1],
