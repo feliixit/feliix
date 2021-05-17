@@ -62,11 +62,27 @@ $ofd1 = (isset($_GET['ofd1']) ?  $_GET['ofd1'] : '');
 $of2 = (isset($_GET['of2']) ?  $_GET['of2'] : '');
 $ofd2 = (isset($_GET['ofd2']) ?  $_GET['ofd2'] : '');
 
-$page = (isset($_GET['page']) ?  $_GET['page'] : "");
-$size = (isset($_GET['size']) ?  $_GET['size'] : "");
+$page = (isset($_GET['page']) ?  $_GET['page'] : 1);
+$size = (isset($_GET['size']) ?  $_GET['size'] : 10);
 
 $merged_results = array();
 $return_result = array();
+
+$query_cnt = "SELECT count(*) cnt
+                FROM   project_main pm
+                LEFT JOIN project_category pc
+                    ON pm.catagory_id = pc.id
+                LEFT JOIN project_client_type pct
+                    ON pm.client_type_id = pct.id
+                LEFT JOIN project_priority pp
+                    ON pm.priority_id = pp.id
+                LEFT JOIN project_status ps
+                    ON pm.project_status_id = ps.id
+                LEFT JOIN project_stage pst
+                    ON pm.stage_id = pst.id
+                LEFT JOIN user
+                    ON pm.create_id = user.id
+                WHERE  1 = 1 ";
 
 $query = "SELECT pm.id,
             Coalesce(pc.category, '')                    category,
@@ -113,41 +129,49 @@ $query = "SELECT pm.id,
 if($fc != "" && $fc != "0")
 {
     $query = $query . " and pm.catagory_id = " . $fc . " ";
+    $query_cnt = $query_cnt . " and pm.catagory_id = " . $fc . " ";
 }
 
 if($fs != "" && $fs != "0")
 {
     $query = $query . " and pm.project_status_id = '" . $fs . "' ";
+    $query_cnt = $query_cnt . " and pm.project_status_id = '" . $fs . "' ";
 }
 
 if($ft != "" && $ft != "0")
 {
     $query = $query . " and user.username = '" . $ft . "' ";
+    $query_cnt = $query_cnt . " and user.username = '" . $ft . "' ";
 }
 
 if($id != "" && $id != "0")
 {
     $query = $query . " and pm.id = " . $id . " ";
+    $query_cnt = $query_cnt . " and pm.id = " . $id . " ";
 }
 
 if($fal != "" && $fal != "0")
 {
     $query = $query . " and pm.final_amount >= " . $fal . " ";
+    $query_cnt = $query_cnt . " and pm.final_amount >= " . $fal . " ";
 }
 
 if($fau != "" && $fau != "0")
 {
     $query = $query . " and pm.final_amount <= " . $fau . " ";
+    $query_cnt = $query_cnt . " and pm.final_amount <= " . $fau . " ";
 }
 
 if($fpl != "" && $fpl != "0")
 {
     $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) >= " . $fpl . " ";
+    $query_cnt = $query_cnt . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) >= " . $fpl . " ";
 }
 
 if($fpu != "" && $fpu != "0")
 {
     $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
+    $query_cnt = $query_cnt . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
 }
 
 $sOrder = "";
@@ -296,16 +320,35 @@ if(!empty($_GET['page'])) {
     }
 }
 
-if(!empty($_GET['size'])) {
-    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
-    if(false === $size) {
-        $size = 10;
+if($fk == "")
+{
+    if(!empty($_GET['page'])) {
+        $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+        if(false === $page) {
+            $page = 1;
+        }
     }
 
-    $offset = ($page - 1) * $size;
+    if(!empty($_GET['size'])) {
+        $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
+        if(false === $size) {
+            $size = 10;
+        }
 
-    $query = $query . " LIMIT " . $offset . "," . $size;
+        $offset = ($page - 1) * $size;
+
+        $query = $query . " LIMIT " . $offset . "," . $size;
+    }
 }
+
+$cnt = 0;
+$stmt_cnt = $db->prepare( $query_cnt );
+$stmt_cnt->execute();
+
+while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+    $cnt = $row['cnt'];
+}
+
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -378,18 +421,35 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "pm" => $pm,
         "dpm" => $dpm,
         "quote_file_string" => $quote_file_string,
+        "cnt" => $cnt,
     );
 }
 
+$cnt = 0;
+
 if($fk != "")
 {
+    $_result = array();
+
     foreach ($merged_results as &$value) {
         if(
             preg_match("/{$fk}/i", $value['project_name']) || 
             preg_match("/{$fk}/i", $value['quote_file_string']))
         {
-            $return_result[] = $value;
+            $_result[] = $value;
         }
+    }
+
+    $cnt = count($_result);
+
+    if($cnt > 0)
+    {
+        $return_result = array_slice($_result, ($page - 1) * $size, $size);
+        $return_result[0]['cnt'] = $cnt;
+    }
+    else
+    {
+        $return_result = $_result;
     }
 }
 else

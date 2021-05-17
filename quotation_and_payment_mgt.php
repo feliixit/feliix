@@ -683,7 +683,7 @@ $(function(){
                                 <dd><input type="text" v-model="fil_keyowrd"></dd>
 
                             </dl>
-                            <div class="btnbox"><a class="btn small" @click="filter_clear">Cancel</a><a class="btn small" @click="filter_remove">Clear</a><a class="btn small green" @click="filter_apply">Apply</a>
+                            <div class="btnbox"><a class="btn small" @click="filter_clear">Cancel</a><a class="btn small" @click="filter_remove">Clear</a><a class="btn small green" @click="filter_apply_new">Apply</a>
                             </div>
                         </div>
                     </div>
