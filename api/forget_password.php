@@ -87,7 +87,7 @@ if($login_history->uid != 0){
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
 
-    $msg = "Hi ". $user->username. ", click on this <a href=" . $conf::$mail_ip . "\"/new_password.php?token=" . $token . "\">link</a> to reset your password on our site";
+    $msg = "Hi ". $user->username. ", click on this <a href=" . $conf::$mail_ip . "/new_password.php?token=" . $token . ">link</a> to reset your password on our site";
     $msg = wordwrap($msg,70);
 
     $content = "";
@@ -97,12 +97,12 @@ if($login_history->uid != 0){
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
-        logMail($email, $content);
+        //logMail($email, $content);
         return true;
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email, $mail->ErrorInfo);
+        //logMail($email, $mail->ErrorInfo);
         return false;
 //        echo "Email sent successfully";
     }
