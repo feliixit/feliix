@@ -85,6 +85,8 @@ if($login_history->uid != 0){
     $mail->IsHTML(true);
     $mail->AddAddress($email, $user->username);
 
+    $mail->Subject = "Reset your password";
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
 
     $msg = "Hi ". $user->username. ", click on this <a href=" . $conf::$mail_ip . "/new_password.php?token=" . $token . ">link</a> to reset your password on our site";
