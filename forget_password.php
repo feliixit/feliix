@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Password Reset</title>
 </head>
 
 <style>
@@ -76,7 +76,7 @@
     }
 
     .main .submit{
-        width: 100px;
+        width: 150px;
         border-radius: 5px;
         line-height: 30px;
         border: none;
@@ -105,20 +105,17 @@
         <div class="wrap">
             <div class="main">
                 <div class="logo"><img src="images/ui/logo_dark.svg" alt=""></div>
-                <div class="user"><input type="text" placeholder="Email" v-model='uid'></div>
-                <div class="password"><input type="password" placeholder="Password" v-model='password'></div>
-                <div class="forgot"><input type="button" value="Sign Up" @click="register();"></div>
-                <div class="forgot"><input type="button" value="Forgot Password" onclick="window.location.href='forget_password'"></div>
+                <div class="user"><div class="user">please enter email to reset your password</div><input type="email" placeholder="Email" v-model='email' ref="email"></div>
+
                 <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
-                <input type="button" class="submit" value="Login" @click='checkLogin()'>
+                <div><input type="button" class="submit" value="Send Reset e-mail" @click="forget_password();"></div>
             </div>
         </div>
     </div>
 </body>
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
-<script defer src="js/login.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/forget_password.js"></script>
 <script src="https://www.google.com/recaptcha/api.js?render=6Le2uvQUAAAAAOhI5CxFxFMMn1oiQCy5YZQFUu5j"></script>
 <script>
     //grecaptcha.ready(function () {
