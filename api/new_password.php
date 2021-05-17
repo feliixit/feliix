@@ -114,6 +114,8 @@ if($email != ''){
         echo json_encode(array("error" => $e->getMessage()));
         die();
     }
+
+    echo json_encode(array("error" => ''));
 }
 
 ?>
