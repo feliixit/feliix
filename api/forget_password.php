@@ -89,7 +89,7 @@ if($login_history->uid != 0){
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
 
-    $msg = "Hi ". $user->username. ", click on this <a href=" . $conf::$mail_ip . "/new_password.php?token=" . $token . ">link</a> to reset your password on our site";
+    $msg = "Hi ". $user->username. ", click on this <a href=" . $conf::$mail_ip . "new_password.php?token=" . $token . ">link</a> to reset your password on our site";
     $msg = wordwrap($msg,70);
 
     $content = "";
