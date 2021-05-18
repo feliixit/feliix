@@ -88,6 +88,158 @@ function sendGridMail($name, $email1,  $leaver, $projectname, $remark)
     }
 }
 
+function send_review_mail_adm($s_date, $e_date, $adm_id, $emp_id){
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    
+    $admin = GetNotifiers($adm_id);
+    $admin_name = '';
+    $admin_email = '';
+    foreach($admin as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $admin_name = $list["username"];
+        $admin_email = $list["email"];
+    }
+
+    $emp = GetNotifiers($emp_id);
+    $emp_name = '';
+    $emp_title = '';
+    $emp_department = '';
+    foreach($emp as &$list)
+    {
+        $emp_name = $list["username"];
+        $emp_title = $list["title"];
+        $emp_department = $list["department"];
+    }
+
+    $title = "[Notification] " . $emp_name . "'s Performance Review Form over " . $s_date . " ~ " . $e_date . " is Open";
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $admin_name . ",</p>";
+    $content = $content . "<p>" . $emp_name . "'s Performance Review Form over " . $s_date . " ~ " . $e_date . " is open now. As evaluation on your subordinate, you can record your scores and comments against each performance criterion. We encourage you to give your inputs on a regular basis as this will help in clear discussion between you and your subordinate.</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Following are the details:</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
+    $content = $content . "<p>Review Period:" . $s_date . " ~ " . $e_date . "</p>";
+    
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Performance Evaluation >> Tab Performance Review to start the evaluation.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($admin_email, $content);
+        return true;
+    } else {
+        logMail($admin_email, $mail->ErrorInfo);
+        return false;
+    }
+}
+
+function send_review_mail($s_date, $e_date, $adm_id, $emp_id){
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    
+    $admin = GetNotifiers($adm_id);
+    $admin_name = '';
+    $admin_email = '';
+    foreach($admin as &$list)
+    {
+        $admin_name = $list["username"];
+        $admin_email = $list["email"];
+    }
+
+    $emp = GetNotifiers($emp_id);
+    $emp_name = '';
+    $emp_email = '';
+    $emp_title = '';
+    $emp_department = '';
+    foreach($emp as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $emp_name = $list["username"];
+        $emp_title = $list["title"];
+        $emp_department = $list["department"];
+        $emp_email = $list["email"];
+    }
+
+    $title = "[Notification] Your Performance Review Form over " . $s_date . " ~ " . $e_date . " is Open";
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $emp_name . ",</p>";
+    $content = $content . "<p>Your Performance Review Form over " . $s_date . " ~ " . $e_date . " is open now. As self-evaluation, you can record your scores and comments against each performance criterion. We encourage you to give your inputs on a regular basis as this will help in clear discussion between you and your supervisor.</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Following are the details:</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
+    $content = $content . "<p>Review Period:" . $s_date . " ~ " . $e_date . "</p>";
+    
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Performance Evaluation >> Tab Performance Review to start the evaluation.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($emp_email, $content);
+        return true;
+    } else {
+        logMail($emp_email, $mail->ErrorInfo);
+        return false;
+    }
+}
+
 
 function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind)
 {
@@ -681,7 +833,7 @@ function void_expense_mail($request_no, $applicant, $user_name, $user_email, $de
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Voiding Reason:" . $reason . "</p>";
     $content = $content . "<p> </p>";
@@ -775,7 +927,7 @@ function reject_expense_mail($request_no, $user_name, $requestor, $requestor_ema
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Rejection Reason:" . $reason . "</p>";
     $content = $content . "<p> </p>";
@@ -858,7 +1010,7 @@ function send_liquidate_mail($request_no,
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Date Released:" . $date_release . "</p>";
     $content = $content . "<p>Date Liquidated:" . $date_liquidate . "</p>";
@@ -953,7 +1105,7 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please log on to Feliix >> Admin Section >> Expense Review >> Tab " . $tab . " to view the expense application.</p>";
@@ -1008,7 +1160,7 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
     $content = $content . "<p>Application Time:" . $ap_time . "</p>";
     $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
     $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Requested:" . $date_request . "</p>";
+    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
     $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
     $content = $content . "<p>Date Released:" . $date_release . "</p>";
     $content = $content . "<p> </p>";
@@ -1211,8 +1363,9 @@ function GetNotifiers($id)
     $database = new Database();
     $db = $database->getConnection();
 
-    $sql = "SELECT username, email FROM user
-    WHERE id in (" . $id . ")";
+    $sql = "SELECT user.id, username, email, title, department FROM user 
+    LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id
+        WHERE user.id in (" . $id . ")";
 
     $merged_results = array();
 

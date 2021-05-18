@@ -148,6 +148,7 @@ try {
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.21.0/moment.js"></script>
 
     <!-- import CSS -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -604,7 +605,7 @@ try {
                         <li>{{ record.status }}</li>
                         <li>{{ record.employee }}</li>
                         <li>{{ record.title }} ({{ record.department }})</li>
-                        <li>{{ record.review_month }}</li>
+                        <li>{{ record.review_month }} ~ {{ record.review_next_month }}</li>
                     </ul>
 
                 </div>
@@ -639,7 +640,7 @@ try {
 
                                 <li><b>Review Period</b></li>
                                 <li>
-                                    <input type="month" v-model="review_month">
+                                    <input style="width: 49%; margin-right: 1.5%;" type="month" v-model="review_month" min="2021-04" step="2"><input style="width: 49%" type="month" v-model="review_next_month" readonly="">
                                 </li>
 
                                 <li><b>Version of Template</b></li>
@@ -692,7 +693,7 @@ try {
                                 <li class="content">{{ evals.manager }}</li>
 
                                 <li><b>Review Period:</b></li>
-                                <li class="content">{{ evals.review_month }}</li>
+                                <li class="content">{{ evals.review_month }} ~ {{ evals.review_next_month }}</li>
 
                                 <li><b>Version of Template:</b></li>
                                 <li class="content">{{ evals.version }}</li>
@@ -913,7 +914,7 @@ try {
                                 <li class="content">{{ views.manager }}</li>
 
                                 <li><b>Review Period:</b></li>
-                                <li class="content">{{ views.review_month }}</li>
+                                <li class="content">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
 
                                 <li><b>Version of Template:</b></li>
                                 <li class="content">{{ views.version }}</li>

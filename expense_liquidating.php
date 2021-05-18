@@ -325,7 +325,7 @@ $(function(){
                             </li>
                         </ul>
                         <ul>
-                            <li class="head">Date Requested</li>
+                            <li class="head">Date Needed</li>
                             <li>{{ record.date_requested }}</li>
                         </ul>
                         <ul>

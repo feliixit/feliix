@@ -579,7 +579,7 @@ body.fourth .mainContent > .block .teskbox .tablebox2 > ul > li{ background-colo
 .tablebox.m02 .msgbox a.attch,
 .tablebox.m02 .btnbox a{ width: 100%; }
 .tablebox.m02 .btnbox a{ margin-top: 5px;}
-.tablebox.m02 .deleted .msg{background-color: #b9b9b9; padding: 20px 10px;}
+.tablebox.m02 .deleted .msg{background-color: #e0e0e0; padding: 20px 10px;}
 .tableframe .tablebox .dialog .btnbox a.btn{ width: 82px;}
 .teskbox.red .tablebox.m02 .msg{background-color: #93d105;padding: 20px 10px;}
 .teskbox.red .tablebox.m02 .deleted .msg{background-color: var(--cat01); color: #FFF;}

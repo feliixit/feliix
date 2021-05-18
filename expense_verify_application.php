@@ -199,7 +199,7 @@ $cell = $table->addCell(7500, ['borderSize' => 6]);
 addMultiLineText($cell, $history);
 
 $table->addRow();
-$table->addCell(3000, ['borderSize' => 6])->addText("Date Requested", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(3000, ['borderSize' => 6])->addText("Date Needed", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 $table->addCell(7500, ['borderSize' => 6])->addText($date_requested, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();

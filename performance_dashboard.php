@@ -396,7 +396,7 @@ try {
                     <li class="content">{{ views.manager }}</li>
 
                     <li><b>Review Period (Latest):</b></li>
-                    <li class="content">{{ views.review_month }}</li>
+                    <li class="content">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
                 </ul>
 
                 <table class="list_table" style="margin-top:40px;">

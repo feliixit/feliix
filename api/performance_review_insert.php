@@ -23,6 +23,8 @@ include_once 'config/database.php';
 include_once 'config/conf.php';
 require_once '../vendor/autoload.php';
 
+include_once 'mail.php';
+
 $database = new Database();
 $db = $database->getConnection();
 $db->beginTransaction();
@@ -92,6 +94,12 @@ else
 
         $db->commit();
 
+        $s_date = $review_month;
+        $e_date = GetNextMonth($review_month);
+
+        send_review_mail_adm($s_date, $e_date, $user_id, $employee_id);
+        send_review_mail($s_date, $e_date, $user_id, $employee_id);
+
         
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") ));
@@ -108,3 +116,8 @@ else
     }
 }
 
+function GetNextMonth($d)
+{
+    $date = date('Y-m', strtotime('+1 month', strtotime($d . '-01')));
+    return $date;
+}

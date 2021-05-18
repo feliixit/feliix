@@ -123,6 +123,9 @@ if (!isset($jwt)) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
         $review_month = $row['review_month'];
+
+        $review_next_month = GetNextMonth($review_month);
+
         $department = $row['department'];
         $title = $row['title'];
         $template_id = $row['template_id'];
@@ -237,6 +240,7 @@ if (!isset($jwt)) {
         $merged_results[] = array(
             "id" => $id,
             "review_month" => $review_month,
+            "review_next_month" => $review_next_month,
             "department" => $department,
             "template_id" => $template_id,
             "title" => $title,
@@ -281,6 +285,11 @@ if (!isset($jwt)) {
     echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
 }
 
+function GetNextMonth($d)
+{
+    $date = date('Y-m', strtotime('+1 month', strtotime($d . '-01')));
+    return $date;
+}
 function GetAgenda($tid, $type, $db, $emp, $mag){
     $query = "
             SELECT pm.id,

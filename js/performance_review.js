@@ -11,6 +11,7 @@ var app = new Vue({
     template: "",
 
     review_month: "",
+    review_next_month: "",
 
     editing: false,
 
@@ -104,6 +105,12 @@ var app = new Vue({
     receive_records() {
       console.log("Vue watch receive_records");
       this.setPages();
+    },
+
+    review_month(d) {
+      var d = new Date(d + '-01');
+      var d_next = new Date(d.setMonth(d.getMonth() + 1));
+      this.review_next_month = moment(d_next).format('YYYY-MM');
     },
   },
 

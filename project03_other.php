@@ -154,8 +154,6 @@ catch (Exception $e) {
             top: 15px;
         }
 
-
-
         body.fourth .mainContent>.block .tablebox.lv3c {
             margin: 15px auto;
         }
@@ -2858,7 +2856,7 @@ catch (Exception $e) {
                                     <li v-if="item.message_status == -1">
                                         <div class="msg">
                                             <div class="msgbox">
-                                                <p>Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
+                                                <p><del>{{ item.message }}</del><br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
                                             </div>
                                         </div>
                                     </li>
@@ -3016,7 +3014,11 @@ catch (Exception $e) {
                                             <li v-if="item.message_status == -1">
                                                 <div class="msg">
                                                     <div class="msgbox">
-                                                        <p>Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
+                                                        <p>
+                                                            <del>{{ item.message }}</del>
+                                                            <br>
+                                                            Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </li>

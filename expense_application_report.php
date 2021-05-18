@@ -230,7 +230,7 @@
                             <li>Requested Amount</li>
                             <li>Actual Amount</li>
 
-                            <li>Date Requested</li>
+                            <li>Date Needed</li>
                             <li>Date Checked</li>
                             <li>Date Approved</li>
                             <li>Date Released</li>
@@ -298,7 +298,7 @@
                                     </li>
                                 </ul>
                                 <ul>
-                                    <li class="head">Date Requested</li>
+                                    <li class="head">Date Needed</li>
                                     <li>{{record.date_requested}}</li>
                                 </ul>
                                 <ul>
@@ -371,7 +371,7 @@
                             </div>
 
 
-                            <div class="tablebox" style="margin-top: 60px;">
+                            <div class="tablebox" style="margin-top: 60px; margin-bottom: 20px;">
                                 <ul class="head">
                                     <li class="head">Request No.</li>
                                     <li>{{record.request_no}}</li>
@@ -424,6 +424,8 @@
                                     </li>
                                 </ul>
                             </div>
+
+                            <div class="btnbox"><a class="btn" @click="export_petty">Export Voucher</a></div>
 
                         </div>
                     </div>
