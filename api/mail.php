@@ -1221,7 +1221,6 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
     {
         $mail->AddAddress($list["email"], $list["username"]);
         $collaborators = $collaborators . $list["username"] . ", ";
-<<<<<<< HEAD
     }
 
     $notifior = GetNotifiers($create_id);
@@ -1265,51 +1264,6 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
         return false;
     }
 
-=======
-    }
-
-    $notifior = GetNotifiers($create_id);
-    foreach($notifior as &$list)
-    {
-        $mail->AddCC($list["email"], $list["username"]);
-        $creators = $creators . $list["username"] . ", ";
-    }
-
-    $creators = rtrim($creators, ", ");
-    $assignees = rtrim($assignees, ", ");
-    $collaborators = rtrim($collaborators, ", ");
-    
-    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
-    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
-
-    $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
-    
-    $mail->Subject = $title;
-    $content =  "<p>Dear all,</p>";
-    $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stage . "</p>";
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
-    $content = $content . "<p> </p>";
-    $content = $content . "<p>Please click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
-
-    $mail->MsgHTML($content);
-    if($mail->Send()) {
-        logMail($creators, $content);
-        return true;
-    } else {
-        logMail($creators, $mail->ErrorInfo);
-        return false;
-    }
-
->>>>>>> performance_review
 }
 
 function task_notify02($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
