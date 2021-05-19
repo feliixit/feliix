@@ -371,7 +371,7 @@
                             </div>
 
 
-                            <div class="tablebox" style="margin-top: 60px;">
+                            <div class="tablebox" style="margin-top: 60px; margin-bottom: 20px;">
                                 <ul class="head">
                                     <li class="head">Request No.</li>
                                     <li>{{record.request_no}}</li>
@@ -424,6 +424,8 @@
                                     </li>
                                 </ul>
                             </div>
+
+                            <div class="btnbox"><a class="btn" @click="export_petty">Export Voucher</a></div>
 
                         </div>
                     </div>

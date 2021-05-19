@@ -174,7 +174,7 @@ $(function(){
                                 <option value="A">Vacation Leave</option>
                                 <option value="B">Emerency/Sick Leave</option>
                                 <option value="C">Unpaid Leave</option>
-                                <option value="D">Absence</option>
+                              
                             </select>
                         </li>
                     </ul>
