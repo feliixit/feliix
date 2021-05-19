@@ -166,7 +166,7 @@ try {
                 </h4>
             </div>
 
-            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" :ref="'collapseOne'">
 
                 <div class="panel-body" style="border: 3px solid rgb(222,226,230); border-top:none;">
 
@@ -368,6 +368,22 @@ try {
                             <td style="text-align: left;"><input type="file" ref="file0" @change="onChangeFileUpload($event,0)" multiple>
                             </td>
                             
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                        <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array" :key="index">
+                                            <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
+                                                    <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements" :value="item.pic_url">
+                                                    <label class="custom-control-label" :for="item.id">
+                                                        <a :href="baseURL + item.pic_url" target="_blank">{{item.pic_url}}</a>
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </td>
                         </tr>
                         
                         <tr>
@@ -697,7 +713,7 @@ try {
                     </button>
 
 
-                    <button data-toggle="modal"
+                    <button data-toggle="modal" 
                             data-target="#exampleModalScrollable" v-on:click="edit(item.id)"><i class="fas fa-project-diagram"></i>
                     </button>
 
@@ -1164,6 +1180,22 @@ try {
                     </tr>
 
                     <tr>
+                            <td></td>
+                            <td>
+                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                        <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array1" :key="index">
+                                            <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
+                                                    <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements1" :value="item.pic_url">
+                                                    <label class="custom-control-label" :for="item.id">
+                                                        <a :href="baseURL + item.pic_url" target="_blank">{{item.pic_url}}</a>
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    <tr>
                         <td>
                             <label>Record Color</label>
                         </td>
@@ -1321,6 +1353,22 @@ try {
                             <td style="text-align: left;"><input type="file" ref="file2" @change="onChangeFileUpload($event,2)" multiple>
                             </td>
 
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                        <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array2" :key="index">
+                                            <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
+                                                    <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements2" :value="item.pic_url">
+                                                    <label class="custom-control-label" :for="item.id">
+                                                        <a :href="baseURL + item.pic_url" target="_blank">{{item.pic_url}}</a>
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </td>
                         </tr>
 
                         <tr>
@@ -1484,6 +1532,22 @@ try {
                         </tr>
 
                         <tr>
+                            <td></td>
+                            <td>
+                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                        <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array3" :key="index">
+                                            <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
+                                                    <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements3" :value="item.pic_url">
+                                                    <label class="custom-control-label" :for="item.id">
+                                                        <a :href="baseURL + item.pic_url" target="_blank">{{item.pic_url}}</a>
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
                         <td>
                             <label>Record Color</label>
                         </td>
@@ -1644,6 +1708,22 @@ try {
                         </tr>
 
                         <tr>
+                            <td></td>
+                            <td>
+                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                        <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array4" :key="index">
+                                            <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
+                                                    <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements4" :value="item.pic_url">
+                                                    <label class="custom-control-label" :for="item.id">
+                                                        <a :href="baseURL + item.pic_url" target="_blank">{{item.pic_url}}</a>
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
                         <td>
                             <label>Record Color</label>
                         </td>
@@ -1801,6 +1881,22 @@ try {
                             <td style="text-align: left;"><input type="file" ref="file5" @change="onChangeFileUpload($event,5)" multiple>
                             </td>
 
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                        <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array5" :key="index">
+                                            <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
+                                                    <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements5" :value="item.pic_url">
+                                                    <label class="custom-control-label" :for="item.id">
+                                                        <a :href="baseURL + item.pic_url" target="_blank">{{item.pic_url}}</a>
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </td>
                         </tr>
 
                         <tr>
