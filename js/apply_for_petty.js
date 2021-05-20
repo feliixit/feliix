@@ -100,7 +100,7 @@ var app = new Vue({
         return false;
       }
 
-      if (this.list_price < 0 || !this.validateNumber(this.list_price)) {
+      if (!this.validateNumber(this.list_price)) {
         Swal.fire({
           text: "Please input Price.",
           icon: "warning",
