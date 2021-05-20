@@ -12,11 +12,11 @@ $title_id = (isset($_POST['title_id']) ?  $_POST['title_id'] : '');
 $version = (isset($_POST['version']) ?  $_POST['version'] : '');
 
 $agenda = (isset($_POST['agenda']) ?  $_POST['agenda'] : '[]');
-$agenda = preg_replace('/(\w+):/i', '"\1":', $agenda);
+//$agenda = preg_replace('/(\w+):/i', '"\1":', $agenda);
 $agenda_array = json_decode($agenda,true);
 
 $agenda1 = (isset($_POST['agenda1']) ?  $_POST['agenda1'] : '[]');
-$agenda1 = preg_replace('/(\w+):/i', '"\1":', $agenda1);
+//$agenda1 = preg_replace('/(\w+):/i', '"\1":', $agenda1);
 $agenda_array1 = json_decode($agenda1,true);
 
 
