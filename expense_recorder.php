@@ -117,6 +117,14 @@ try {
         div.record_color > input:not(:first-child) {
             margin-left: 15px;
         }
+
+        .custom-control-label::before {
+            top: 0.75rem!important;
+        }
+
+        .custom-control-label::after {
+            top: 0.75rem!important;
+        }
         
     </style>
 
@@ -373,7 +381,7 @@ try {
                         <tr>
                             <td></td>
                             <td>
-                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                <div id="sc_product_files" style="display: flex; flex-direction:column; text-align: left;">
                                         <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array" :key="index">
                                             <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
                                                     <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements" :value="item.pic_url">
@@ -1182,7 +1190,7 @@ try {
                     <tr>
                             <td></td>
                             <td>
-                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                <div id="sc_product_files" style="display: flex; flex-direction:column; text-align: left;">
                                         <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array1" :key="index">
                                             <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
                                                     <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements1" :value="item.pic_url">
@@ -1358,7 +1366,7 @@ try {
                         <tr>
                             <td></td>
                             <td>
-                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                <div id="sc_product_files" style="display: flex; flex-direction:column; text-align: left;">
                                         <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array2" :key="index">
                                             <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
                                                     <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements2" :value="item.pic_url">
@@ -1534,7 +1542,7 @@ try {
                         <tr>
                             <td></td>
                             <td>
-                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                <div id="sc_product_files" style="display: flex; flex-direction:column; text-align: left;">
                                         <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array3" :key="index">
                                             <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
                                                     <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements3" :value="item.pic_url">
@@ -1710,7 +1718,7 @@ try {
                         <tr>
                             <td></td>
                             <td>
-                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                <div id="sc_product_files" style="display: flex; flex-direction:column; text-align: left;">
                                         <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array4" :key="index">
                                             <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
                                                     <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements4" :value="item.pic_url">
@@ -1886,7 +1894,7 @@ try {
                         <tr>
                             <td></td>
                             <td>
-                                <div id="sc_product_files" style="display: flex; text-align: left;">
+                                <div id="sc_product_files" style="display: flex; flex-direction:column; text-align: left;">
                                         <div class="custom-control custom-checkbox" v-for="(item,index) in pic_url_array5" :key="index">
                                             <div class="custom-control custom-checkbox" style="padding-top: 1%;" >
                                                     <input type="checkbox" class="custom-control-input" :id="item.id" v-model="item.is_checked" name="file_elements5" :value="item.pic_url">
