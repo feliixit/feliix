@@ -138,4 +138,28 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $merged_results[] = $row;
 }
 
-echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+$_result = array();
+
+foreach ($merged_results as &$value) {
+    $value['pic_array'] = GetPicArray($value['pic_url']);
+    $_result[] = $value;
+}
+
+echo json_encode($_result, JSON_UNESCAPED_SLASHES);
+
+function GetPicArray($pic_url){
+    if(trim($pic_url) == '') {
+        return array();
+    }
+    $merged_results = explode(",", $pic_url);
+    $_result = array();
+    $id = 1;
+    foreach ($merged_results as &$value) {
+         $_result[] = array(
+             "is_checked" => true,
+             "id" => $id++,
+             "pic_url" => $value,
+         );
+     }
+     return $_result;
+ }

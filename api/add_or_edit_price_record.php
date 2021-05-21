@@ -17,6 +17,11 @@ $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
 $related_account = (isset($_POST['related_account']) ?  $_POST['related_account'] : 0);
 $details = (isset($_POST['details']) ?  $_POST['details'] : '');
 $pic_url = (isset($_POST['pic_url']) ?  $_POST['pic_url'] : '');
+
+$del_url = (isset($_POST['del_url']) ?  $_POST['del_url'] : '[]');
+$del_url = preg_replace('/(\w+):/i', '"\1":', $del_url);
+$del_url_array = json_decode($del_url,true);
+
 $payee = (isset($_POST['payee']) ?  $_POST['payee'] : '');
 $paid_date = (isset($_POST['paid_date']) ?  $_POST['paid_date'] : '');
 $cash_in = (isset($_POST['cash_in']) ?  $_POST['cash_in'] : 0);
@@ -40,12 +45,18 @@ include_once 'libs/php-jwt-master/src/JWT.php';
 include_once 'config/database.php';
 include_once 'objects/add_or_edit_price_record.php';
 include_once 'config/conf.php';
+require_once '../vendor/autoload.php';
+
+
+use Google\Cloud\Storage\StorageClient;
 
 $database = new Database();
 $db = $database->getConnection();
 
 $priceRecord = new PriceRecord($db);
 //$le = new Leave($db);
+
+$conf = new Conf();
 
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
@@ -135,6 +146,19 @@ else
             $priceRecord->updated_by = $updated_by;
             $arr = $priceRecord->update();
 
+            $storage = new StorageClient([
+                'projectId' => 'predictive-fx-284008',
+                'keyFilePath' => $conf::$gcp_key
+            ]);
+    
+            $bucket = $storage->bucket('feliiximg');
+
+            for($i=0 ; $i < count($del_url_array) ; $i++)
+            {
+                $object = $bucket->object($del_url_array[$i]);
+                $object->delete();
+            }
+
             http_response_code(200);
             echo json_encode(array($arr));
             echo json_encode(array("message" => " Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -171,7 +195,15 @@ else
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
-            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
+            $_result = array();
+
+            foreach ($merged_results as &$value) {
+                $value['pic_array'] = GetPicArray($value['pic_url']);
+                $_result[] = $value;
+            }
+            
+            echo json_encode($_result, JSON_UNESCAPED_SLASHES);
         }
         catch(Exception $e){
             http_response_code(401);
@@ -204,7 +236,15 @@ else
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
-            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
+            $_result = array();
+
+            foreach ($merged_results as &$value) {
+                $value['pic_array'] = GetPicArray($value['pic_url']);
+                $_result[] = $value;
+            }
+
+            echo json_encode($_result, JSON_UNESCAPED_SLASHES);
         }
         catch(Exception $e){
             http_response_code(401);
@@ -256,4 +296,23 @@ else
             echo json_encode(array("message" => "Access denied."));
         }
     }
+}
+
+function GetPicArray($pic_url){
+
+    if(trim($pic_url) == '') {
+        return array();
+    }
+    
+   $merged_results = explode(",", $pic_url);
+   $_result = array();
+   $id = 1;
+   foreach ($merged_results as &$value) {
+        $_result[] = array(
+            "is_checked" => true,
+            "id" => $id++,
+            "pic_url" => $value,
+        );
+    }
+    return $_result;
 }
