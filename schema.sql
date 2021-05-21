@@ -1348,3 +1348,8 @@ CREATE TABLE IF NOT EXISTS `password_reset` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+-- expense checking 05/21
+ALTER TABLE petty_list
+ADD COLUMN `check_remark` varchar(512)  COLLATE utf8mb4_unicode_ci default '' AFTER `qty`;

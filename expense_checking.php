@@ -47,6 +47,12 @@
 $(function(){
     $('header').load('include/header.php');
 })
+
+function EditListing() {
+    $(".mask").toggle();
+    $("#modal_EditListing").toggle();
+}
+
 </script>
 
 
@@ -70,7 +76,7 @@ $(function(){
         }
 
         div.tablebox.listing {
-            margin-top: 15px;
+            margin-top: 3px;
         }
 
         div.tablebox.listing ul.head li{
@@ -102,6 +108,69 @@ $(function(){
 
         body input.alone.black[type=radio]::before{
             font-size: 25px; color: var(--black01);}
+
+        #modal_EditListing {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 2;
+        }
+
+        #modal_EditListing > .modal-content {
+            width: 90%;
+            margin: auto;
+            border: 2px solid var(--black01);
+            padding: 20px 25px;
+            background-color: white;
+            max-height: calc( 100vh - 40px);
+            overflow-y: auto;
+        }
+
+        #modal_EditListing .modal-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #modal_EditListing .modal-heading h6 {
+            color: var(--black01);
+            border-bottom: none;
+        }
+
+        #modal_EditListing .modal-heading a {
+            font-size: 20px;
+        }
+
+        #modal_EditListing .box-content {
+            padding: 20px 20px 30px;
+        }
+
+        #modal_EditListing .box-content ul:first-of-type li:nth-of-type(even) {
+            padding-bottom: 10px;
+        }
+
+        .style_Remarks {
+            max-width: 300px!important;
+            text-align: left!important;
+        }
+
+        .style_Icons {
+            font-size: 25px!important;
+        }
+
+        .bodybox .mask {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            z-index: 1;
+            display: none;
+        }
+
     </style>
 
 
@@ -111,6 +180,7 @@ $(function(){
 <body class="black">
 
 <div class="bodybox">
+    <div class="mask" :ref="'mask'" style="display:none"></div>
     <!-- header -->
 	<header>header</header>
     <!-- header end -->
@@ -219,6 +289,68 @@ $(function(){
                             <li>{{ record.remark }}</li>
                         </ul>
                     </div>
+                    <div style="margin-top: 20px;">
+                        <b>Listing</b> <a href="javascript: void(0)" onclick="EditListing()" style="background-image: url('images/ui/btn_edit_black.svg'); width: 16px; height: 16px; display: inline-block; margin-left: 10px;"></a>
+                    </div>
+
+                    <div id="modal_EditListing" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-heading"><h6>Edit Listing</h6> <a href="javascript: void(0)"
+                                                                                onclick="EditListing()"><i aria-hidden="true"
+                                                                                                        class="fa fa-times fa-lg"></i></a>
+                            </div>
+                            <div class="box-content" :ref="'porto'">
+                                <ul>
+                                    <li><b>Payee</b></li>
+                                    <li><input type="text" required="required" style="width: 100%;" v-model="e_payee"></li>
+                                    <li><b>Particulars</b></li>
+                                    <li><input type="text" required="required" style="width: 100%;" v-model="e_particulars"></li>
+                                    <li><b>Price</b></li>
+                                    <li><input type="text" required="required"
+                                            onclick="this.setSelectionRange(0, this.value.length)" style="width: 100%;" v-model="e_price"></li>
+                                    <li><b>Qty</b></li>
+                                    <li><input type="text" required="required"
+                                            onclick="this.setSelectionRange(0, this.value.length)" style="width: 100%;" v-model="e_qty"></li>
+                                    <li><b>Amount</b></li>
+                                    <li><input type="text" required="required" readonly="readonly"
+                                            placeholder="Auto calculation" style="width: 100%;" :value="Number(e_qty * e_price).toLocaleString()"></li>
+                                    <li><b>Remarks</b></li>
+                                    <li><input type="text" style="width: 100%;" v-model="e_check_remark"></li>
+                                </ul>
+                                <div class="btnbox">
+                                    <a class="btn green" @click="e_add_criterion" v-if="!e_editing">Add</a>
+                                    <a class="btn" v-if="e_editing" @click="e_cancel_criterion" >Cancel</a>
+                                    <a class="btn green" v-if="e_editing" @click="e_update_criterion">Update</a>
+                                </div>
+                                <div class="tablebox">
+                                    <ul class="head">
+                                        <li>Payee</li>
+                                        <li>Particulars</li>
+                                        <li>Price</li>
+                                        <li>Qty</li>
+                                        <li>Amount</li>
+                                        <li>Remarks</li>
+                                        <li></li>
+                                    </ul>
+                                    <ul v-for='(item, index) in record.list' :key="index">
+                                        <li>{{ item.payee }}</li>
+                                        <li>{{ item.particulars }}</li>
+                                        <li>{{ Number(item.price).toLocaleString() }}</li>
+                                        <li>{{ Number(item.qty).toLocaleString() }}</li>
+                                        <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
+                                        <li class="style_Remarks">{{ item.check_remark }}</li>
+                                        <li class="style_Icons">
+                                            <i aria-hidden="true" class="fas fa-arrow-alt-circle-up" @click="e_set_up(index, item.id)"></i>
+                                            <i aria-hidden="true" class="fas fa-arrow-alt-circle-down" @click="e_set_down(index, item.id)"></i>
+                                            <br>
+                                            <i aria-hidden="true" class="fas fa-edit" @click="e_edit(item.id)"></i>
+                                            <i aria-hidden="true" class="fas fa-trash-alt" @click="e_del(item.id)"></i>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="tablebox listing">
                         <ul class="head">
@@ -227,6 +359,7 @@ $(function(){
                             <li>Price</li>
                             <li>Qty</li>
                             <li>Amount</li>
+                            <li>Remarks</li>
                         </ul>
                         <ul v-for='(item, index) in record.list' :key="index" >
                             <li>{{ item.payee }}</li>
@@ -234,6 +367,7 @@ $(function(){
                             <li>{{ Number(item.price).toLocaleString() }}</li>
                             <li>{{ Number(item.qty).toLocaleString() }}</li>
                             <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
+                            <li class="style_Remarks">{{ item.check_remark }}</li>
                         </ul>
                     </div>
 

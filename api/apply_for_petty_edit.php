@@ -312,6 +312,8 @@ switch ($method) {
                         `particulars` = :particulars,
                         `price` = :price,
                         `qty` = :qty,
+                        `sn` = :order,
+                        `check_remark` = :check_remark,
                        
                         `status` = 1,
                         `created_at` = now()";
@@ -325,7 +327,8 @@ switch ($method) {
                 $stmt->bindParam(':particulars', $petty_array[$i]['particulars']);
                 $stmt->bindParam(':price', $petty_array[$i]['price']);
                 $stmt->bindParam(':qty', $petty_array[$i]['qty']);
-
+                $stmt->bindParam(':order', $i);
+                $stmt->bindParam(':check_remark', $petty_array[$i]['check_remark']);
 
                 try {
                     // execute the query, also check if query was successful
@@ -657,7 +660,7 @@ function GetStatus($loc)
 
 function GetList($_id, $db)
 {
-    $sql = "select pm.id, sn, payee, particulars, price, qty, `status`
+    $sql = "select pm.id, sn, payee, particulars, price, qty, check_remark, `status`
     from petty_list pm 
     where `status` <> -1 and petty_id = " . $_id . " order by sn ";
 

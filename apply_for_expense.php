@@ -52,6 +52,7 @@
     <!-- JS for current webpage -->
     <script>
         function EditListing() {
+            $(".mask").toggle();
             $("#modal_EditListing").toggle();
         }
     </script>
@@ -141,6 +142,16 @@
         body.green select {
             background-image: url(./images/ui/icon_form_select_arrow_green.svg) !important;
         }
+
+        .style_Remarks {
+            max-width: 300px!important;
+            text-align: left!important;
+        }
+
+        .style_Icons {
+            font-size: 25px!important;
+        }
+
     </style>
 
 <style type="text/css">
@@ -248,6 +259,7 @@ body.green input[type=date] {
     left: 0;
     right: 0;
     margin: auto;
+    z-index: 2;
 }
 
 #modal_EditListing > .modal-content {
@@ -301,6 +313,16 @@ body.green input[type=date] {
     margin: 0 0 0 5px;
     font-weight: 500;
 }
+
+.bodybox .mask {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 1;
+    display: none;
+}
 </style>
 
 
@@ -309,6 +331,7 @@ body.green input[type=date] {
 <body class="green">
 
 <div class="bodybox">
+<div class="mask" :ref="'mask'" style="display:none"></div>
     <!-- header -->
     <header>header</header>
     <!-- header end -->
@@ -360,6 +383,7 @@ body.green input[type=date] {
                                     <li>Price</li>
                                     <li>Qty</li>
                                     <li>Amount</li>
+                                    <li v-if="pid != 0">Remarks</li>
                                 </ul>
                                 <ul v-for="(item,index) in petty_list" :key="index">
                                     <li>{{ item.payee }}</li>
@@ -367,6 +391,7 @@ body.green input[type=date] {
                                     <li>{{ Number(item.price).toLocaleString() }}</li>
                                     <li>{{ Number(item.qty).toLocaleString() }}</li>
                                     <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
+                                    <li v-if="pid != 0" class="style_Remarks">{{ item.check_remark }}</li>
                                 </ul>
                             </div>
 
@@ -424,7 +449,7 @@ body.green input[type=date] {
                     </div>
 
 
-                    <div class="box-content">
+                    <div class="box-content" :ref="'porto'">
 
                         <ul>
                             <li><b>Payee</b></li>
@@ -446,26 +471,35 @@ body.green input[type=date] {
                         </ul>
 
                         <div class="btnbox">
-                            <a class="btn" @click="add_list">Add</a>
-                            <a class="btn" @click="remove_list">Delete</a>
+                            <a class="btn green" @click="e_add_criterion" v-if="!e_editing">Add</a>
+                            <a class="btn" v-if="e_editing" @click="e_cancel_criterion" >Cancel</a>
+                            <a class="btn green" v-if="e_editing" @click="e_update_criterion">Update</a>
                         </div>
 
                         <div class="tablebox">
                             <ul class="head">
-                                <li><i class="micons">view_list</i></li>
                                 <li>Payee</li>
                                 <li>Particulars</li>
                                 <li>Price</li>
                                 <li>Qty</li>
                                 <li>Amount</li>
+                                <li>Remarks</li>
+                                <li></li>
                             </ul>
                             <ul v-for="(item,index) in petty_list" :key="index">
-                                <li><input type="checkbox"  class="alone black" v-model="item.is_checked"></li>
                                 <li>{{ item.payee }}</li>
                                 <li>{{ item.particulars }}</li>
                                 <li>{{ Number(item.price).toLocaleString() }}</li>
                                 <li>{{ Number(item.qty).toLocaleString() }}</li>
                                 <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
+                                <li>{{ item.check_remark }}</li>
+                                <li class="style_Icons">
+                                    <i aria-hidden="true" class="fas fa-arrow-alt-circle-up" @click="e_set_up(index, item.id)"></i>
+                                    <i aria-hidden="true" class="fas fa-arrow-alt-circle-down" @click="e_set_down(index, item.id)"></i>
+                                    <br>
+                                    <i aria-hidden="true" class="fas fa-edit" @click="e_edit(item.id)"></i>
+                                    <i aria-hidden="true" class="fas fa-trash-alt" @click="e_del(item.id)"></i>
+                                </li>
                             </ul>
                         </div>
 

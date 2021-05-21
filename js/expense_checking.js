@@ -27,6 +27,27 @@ var app = new Vue({
     perPage: 10000,
 
     is_approval: false,
+
+    // editing
+    e_title: [],
+
+    e_sn: 0,
+
+    e_org_payee: "",
+    e_org_particulars: "",
+    e_org_price: 0,
+    e_org_qty: 0,
+    e_org_check_remark: "",
+
+    e_payee: "",
+    e_particulars: "",
+    e_price: 0,
+    e_qty: 0,
+    e_check_remark: "",
+   
+    e_org_id: 0,
+
+    e_editing: false,
   },
 
   created() {
@@ -187,6 +208,8 @@ var app = new Vue({
       form_Data.append("info_remark", this.record.info_remark);
       form_Data.append("info_remark_other", this.record.info_remark_other);
 
+      form_Data.append("petty_list", JSON.stringify(this.record.list));
+
       axios({
         method: "post",
         headers: {
@@ -236,6 +259,8 @@ var app = new Vue({
       form_Data.append("info_remark", this.record.info_remark);
       form_Data.append("info_remark_other", this.record.info_remark_other);
 
+      form_Data.append("petty_list", JSON.stringify(this.record.list));
+
       axios({
         method: "post",
         headers: {
@@ -276,6 +301,8 @@ var app = new Vue({
       form_Data.append("crud", "Checking Reject");
       form_Data.append("id", id);
       form_Data.append("remark", this.reject_reason);
+
+      form_Data.append("petty_list", JSON.stringify(this.record.list));
 
       axios({
         method: "post",
@@ -335,6 +362,8 @@ var app = new Vue({
 
       this.reject_reason = "";
       this.view_detail = true;
+
+      this.e_sn = this.record.list.length;
 
     },
 
@@ -566,6 +595,139 @@ var app = new Vue({
         result[i] = obj[i];
       }
       return result;
+    },
+
+    e_set_up: function(fromIndex, eid) {
+      var toIndex = fromIndex - 1;
+
+      if (toIndex < 0) toIndex = 0;
+
+      var element = this.record.list.find(({ id }) => id === eid);
+      this.record.list.splice(fromIndex, 1);
+      this.record.list.splice(toIndex, 0, element);
+    },
+
+    e_set_down: function(fromIndex, eid) {
+      var toIndex = fromIndex + 1;
+
+      if (toIndex > this.record.list.length - 1)
+        toIndex = this.record.list.length - 1;
+
+      var element = this.record.list.find(({ id }) => id === eid);
+      this.record.list.splice(fromIndex, 1);
+      this.record.list.splice(toIndex, 0, element);
+    },
+
+    e_edit: function(eid) {
+      this.scrollMeTo('porto');
+      var element = this.record.list.find(({ id }) => id === eid);
+
+      this.e_org_id = eid;
+      this.e_org_payee = element.payee;
+      this.e_org_particulars = element.particulars;
+      this.e_org_price = element.price;
+      this.e_org_qty = element.qty;
+      this.e_org_check_remark = element.check_remark;
+
+      this.e_id = eid;
+      this.e_payee = element.payee;
+      this.e_particulars = element.particulars;
+      this.e_price = element.price;
+      this.e_qty = element.qty;
+      this.e_check_remark = element.check_remark;
+
+      this.e_editing = true;
+    },
+
+    e_del: function(eid) {
+      var index = this.record.list.findIndex(({ id }) => id === eid);
+      if (index > -1) {
+        this.record.list.splice(index, 1);
+      }
+    },
+
+    e_add_criterion: function() {
+      if (
+        this.e_payee.trim() == "" ||
+        this.e_particulars.trim() == "" 
+      ) {
+        Swal.fire({
+          text: "Please enter the required fields",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+        var ad = {
+          id: ++this.e_sn,
+          sn: ++this.e_sn,
+          payee: this.e_payee,
+          particulars: this.e_particulars,
+          price: this.e_price,
+          qty: this.e_qty,
+          status : 1,
+          check_remark: this.e_check_remark,
+        };
+        this.record.list.push(ad);
+      
+
+    },
+
+    e_cancel_criterion: function() {
+      this.e_payee = this.e_org_payee;
+      this.e_particulars = this.e_org_particulars;
+      this.e_price = this.e_org_price;
+      this.e_qty = this.e_org_qty;
+      this.e_check_remark = this.e_org_check_remark;
+
+      this.e_clear_edit();
+    },
+
+    e_update_criterion: function() {
+      if (this.e_payee.trim() == "" || this.e_particulars.trim() == "") {
+        Swal.fire({
+          text: "Please enter the required fields",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      var element = this.record.list.find(({ id }) => id === this.e_org_id);
+      element.payee = this.e_payee;
+      element.particulars = this.e_particulars;
+      element.price = this.e_price;
+      element.qty = this.e_qty;
+      element.check_remark = this.e_check_remark;
+    
+      this.e_clear_edit();
+    },
+
+    e_clear_edit: function() {
+
+      this.e_org_id = 0;
+      this.e_org_payee = "";
+      this.e_org_particulars = "";
+      this.e_org_price = 0;
+      this.e_org_qty = 0;
+      this.e_org_check_remark = "";
+
+      this.e_payee = "";
+      this.e_particulars = "";
+      this.e_price = 0;
+      this.e_qty = 0;
+      this.e_check_remark = "";
+
+      this.e_editing = false;
+    },
+
+    scrollMeTo(refName) {
+      var element = this.$refs[refName];
+      element.scrollIntoView({ behavior: 'smooth' });
+  
     },
   },
 });
