@@ -330,7 +330,7 @@ function EditListing() {
                                         <li>Qty</li>
                                         <li>Amount</li>
                                         <li>Remarks</li>
-                                        <li></li>
+                                        <li>Actions</li>
                                     </ul>
                                     <ul v-for='(item, index) in record.list' :key="index">
                                         <li>{{ item.payee }}</li>

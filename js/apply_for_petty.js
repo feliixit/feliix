@@ -27,6 +27,7 @@ var app = new Vue({
 
     pid: 0,
 
+    list_sn:0,
     e_sn: 0,
 
     e_org_payee: "",
@@ -465,10 +466,12 @@ var app = new Vue({
             text: response.data.message,
             icon: "info",
             confirmButtonText: "OK",
+          }).then(function() {
+            window.location = "apply_for_expense";
+            //_this.reset();
           });
 
-          _this.reset();
-        })
+      })
         .catch(function(error) {
           //handle error
           Swal.fire({
@@ -502,6 +505,7 @@ var app = new Vue({
       this.remark = "";
 
       this.pid = 0;
+      this.list_sn = 0;
       this.item_list = [];
 
       this.submit = false;
@@ -566,6 +570,58 @@ var app = new Vue({
       }
     },
 
+
+    _set_up: function(fromIndex, eid) {
+      var toIndex = fromIndex - 1;
+
+      if (toIndex < 0) toIndex = 0;
+
+      var element = this.petty_list.find(({ id }) => id === eid);
+      this.petty_list.splice(fromIndex, 1);
+      this.petty_list.splice(toIndex, 0, element);
+    },
+
+    _set_down: function(fromIndex, eid) {
+      var toIndex = fromIndex + 1;
+
+      if (toIndex > this.petty_list.length - 1)
+        toIndex = this.petty_list.length - 1;
+
+      var element = this.petty_list.find(({ id }) => id === eid);
+      this.petty_list.splice(fromIndex, 1);
+      this.petty_list.splice(toIndex, 0, element);
+    },
+
+    _edit: function(eid) {
+      this.scrollMeTo('porto');
+      var element = this.petty_list.find(({ id }) => id === eid);
+
+      this.e_org_id = eid;
+      this.e_org_payee = element.payee;
+      this.e_org_particulars = element.particulars;
+      this.e_org_price = element.price;
+      this.e_org_qty = element.qty;
+      this.e_org_check_remark = element.check_remark;
+
+      this.list_id = eid;
+      this.list_payee = element.payee;
+      this.list_particulars = element.particulars;
+      this.list_price = element.price;
+      this.list_qty = element.qty;
+      this.list_check_remark = element.check_remark;
+
+      this.e_editing = true;
+    },
+
+    _del: function(eid) {
+      var index = this.petty_list.findIndex(({ id }) => id === eid);
+      if (index > -1) {
+        this.petty_list.splice(index, 1);
+      }
+    },
+
+
+
     e_add_criterion: function() {
       if (
         this.list_payee.trim() == "" ||
@@ -625,6 +681,82 @@ var app = new Vue({
     },
 
     e_clear_edit: function() {
+
+      this.e_org_id = 0;
+      this.e_org_payee = "";
+      this.e_org_particulars = "";
+      this.e_org_price = 0;
+      this.e_org_qty = 0;
+      this.e_org_check_remark = "";
+
+      this.list_payee = "";
+      this.list_particulars = "";
+      this.list_price = 0;
+      this.list_qty = 0;
+
+      this.e_editing = false;
+    },
+
+
+    _add_criterion: function() {
+      if (
+        this.list_payee.trim() == "" ||
+        this.list_particulars.trim() == "" 
+      ) {
+        Swal.fire({
+          text: "Please enter the required fields",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+        var ad = {
+          id: ++this.list_sn,
+          sn: ++this.list_sn,
+          payee: this.list_payee,
+          particulars: this.list_particulars,
+          price: this.list_price,
+          qty: this.list_qty,
+          status : 1,
+          check_remark: '',
+        };
+        this.petty_list.push(ad);
+      
+
+    },
+
+    _cancel_criterion: function() {
+      this.list_payee = this.e_org_payee;
+      this.list_particulars = this.e_org_particulars;
+      this.list_price = this.e_org_price;
+      this.list_qty = this.e_org_qty;
+
+      this.e_clear_edit();
+    },
+
+    _update_criterion: function() {
+      if (this.list_payee.trim() == "" || this.list_particulars.trim() == "") {
+        Swal.fire({
+          text: "Please enter the required fields",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      var element = this.petty_list.find(({ id }) => id === this.e_org_id);
+      element.payee = this.list_payee;
+      element.particulars = this.liste_particulars;
+      element.price = this.list_price;
+      element.qty = this.list_qty;
+    
+      this.e_clear_edit();
+    },
+
+    _clear_edit: function() {
 
       this.e_org_id = 0;
       this.e_org_payee = "";

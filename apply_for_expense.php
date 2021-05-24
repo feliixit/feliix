@@ -470,10 +470,16 @@ body.green input[type=date] {
 
                         </ul>
 
-                        <div class="btnbox">
+                        <div class="btnbox" v-if="pid != 0">
                             <a class="btn green" @click="e_add_criterion" v-if="!e_editing">Add</a>
                             <a class="btn" v-if="e_editing" @click="e_cancel_criterion" >Cancel</a>
                             <a class="btn green" v-if="e_editing" @click="e_update_criterion">Update</a>
+                        </div>
+
+                        <div class="btnbox" v-if="pid == 0">
+                            <a class="btn green" @click="_add_criterion" v-if="!e_editing">Add</a>
+                            <a class="btn" v-if="e_editing" @click="_cancel_criterion" >Cancel</a>
+                            <a class="btn green" v-if="e_editing" @click="_update_criterion">Update</a>
                         </div>
 
                         <div class="tablebox">
@@ -483,8 +489,9 @@ body.green input[type=date] {
                                 <li>Price</li>
                                 <li>Qty</li>
                                 <li>Amount</li>
-                                <li>Remarks</li>
-                                <li></li>
+                                <li v-if="pid != 0">Remarks</li>
+                                <li v-if="pid != 0">Actions</li>
+                                <li v-if="pid == 0">Actions</li>
                             </ul>
                             <ul v-for="(item,index) in petty_list" :key="index">
                                 <li>{{ item.payee }}</li>
@@ -492,13 +499,21 @@ body.green input[type=date] {
                                 <li>{{ Number(item.price).toLocaleString() }}</li>
                                 <li>{{ Number(item.qty).toLocaleString() }}</li>
                                 <li>{{ Number(item.price * item.qty).toLocaleString() }}</li>
-                                <li>{{ item.check_remark }}</li>
-                                <li class="style_Icons">
+                                <li v-if="pid != 0">{{ item.check_remark }}</li>
+                                <li class="style_Icons" v-if="pid != 0">
                                     <i aria-hidden="true" class="fas fa-arrow-alt-circle-up" @click="e_set_up(index, item.id)"></i>
                                     <i aria-hidden="true" class="fas fa-arrow-alt-circle-down" @click="e_set_down(index, item.id)"></i>
                                     <br>
                                     <i aria-hidden="true" class="fas fa-edit" @click="e_edit(item.id)"></i>
                                     <i aria-hidden="true" class="fas fa-trash-alt" @click="e_del(item.id)"></i>
+                                </li>
+
+                                <li class="style_Icons" v-if="pid == 0">
+                                    <i aria-hidden="true" class="fas fa-arrow-alt-circle-up" @click="_set_up(index, item.id)"></i>
+                                    <i aria-hidden="true" class="fas fa-arrow-alt-circle-down" @click="_set_down(index, item.id)"></i>
+                                    <br>
+                                    <i aria-hidden="true" class="fas fa-edit" @click="_edit(item.id)"></i>
+                                    <i aria-hidden="true" class="fas fa-trash-alt" @click="_del(item.id)"></i>
                                 </li>
                             </ul>
                         </div>
