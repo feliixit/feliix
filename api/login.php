@@ -48,10 +48,9 @@ if($user_exists)
 else
     $login_history->uid = 0;
 
-$login_history->ip = $_SERVER['REMOTE_ADDR'];
+$login_history->ip = get_ip();
 
 
- 
 // generate json web token
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -139,5 +138,16 @@ else{
     echo $jsonEncodedReturnArray;
 }
 
+function get_ip(){
+    $myip = "";
 
+    if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+        $myip = $_SERVER['HTTP_CLIENT_IP'];
+     }else if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+        $myip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+     }else{
+        $myip= $_SERVER['REMOTE_ADDR'];
+     }
+     return $myip;
+}
 ?>

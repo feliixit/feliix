@@ -1862,11 +1862,15 @@ $(document).on("click", "#btn_duplicate", function () {
         sc_content.Endtime = sc_content.Date + " 23:59:59";
     } else {
         if (
-            sc_content.Starttime != "" &&
-            sc_content.Endtime != "" &&
-            sc_content.Endtime >= sc_content.Starttime
+            sc_content.Starttime != "" 
         ) {
             sc_content.Starttime = sc_content.Date + " " + sc_content.Starttime;
+      
+        }
+
+        if (
+            sc_content.Endtime != "" 
+        ) {
             sc_content.Endtime = sc_content.Date + " " + sc_content.Endtime;
         }
     }
