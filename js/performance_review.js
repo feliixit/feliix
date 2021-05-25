@@ -328,7 +328,7 @@ var app = new Vue({
           var token = localStorage.getItem("token");
           var form_Data = new FormData();
           form_Data.append("jwt", token);
-          form_Data.append("pid", _this.record[0].id);
+          form_Data.append("pid", _this.proof_id);
           form_Data.append("answers", JSON.stringify(temp));
           form_Data.append("commet1", _this.comment1);
           form_Data.append("commet2", _this.comment2);
