@@ -85,7 +85,7 @@ try {
 
             if(trim($department) == '')
             {
-                if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+                if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
                 {
                     $access6 = true;
                 }

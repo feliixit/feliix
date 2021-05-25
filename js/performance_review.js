@@ -593,13 +593,13 @@ var app = new Vue({
 
       if(this.department.trim() == '')
       { 
-        if(this.title.trim() == 'Owner')
+        if(this.title.trim().toUpperCase() == 'OWNER')
           can_save = true;
 
-        if(this.title.trim() == 'Managing Director')
+        if(this.title.trim().toUpperCase() == 'MANAGING DIRECTOR')
           can_save = true;
 
-        if(this.title.trim() == 'Chief Advisor')
+        if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
       
@@ -609,63 +609,63 @@ var app = new Vue({
     is_add_review_privilege() {
       var can_save = false;
 
-      if(this.department.trim() == 'SALES')
+      if(this.department.trim().toUpperCase() == 'SALES')
       { 
-        if(this.title.trim() == 'ASSISTANT SALES MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT SALES MANAGER')
           can_save = true;
 
-        if(this.title.trim() == 'SALES MANAGER')
+        if(this.title.trim().toUpperCase() == 'SALES MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'LIGHTING')
+      if(this.department.trim().toUpperCase() == 'LIGHTING')
       { 
-        if(this.title.trim() == 'LIGHTING MANAGER')
+        if(this.title.trim().toUpperCase() == 'LIGHTING MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'OFFICE')
+      if(this.department.trim().toUpperCase() == 'OFFICE')
       { 
-        if(this.title.trim() == 'OFFICE SYSTEMS MANAGER')
+        if(this.title.trim().toUpperCase() == 'OFFICE SYSTEMS MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'DESIGN')
+      if(this.department.trim().toUpperCase() == 'DESIGN')
       { 
-        if(this.title.trim() == 'ASSISTANT BRAND MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT BRAND MANAGER')
           can_save = true;
 
-        if(this.title.trim() == 'BRAND MANAGER')
-          can_save = true;
-      }
-
-      if(this.department.trim() == 'SERVICE')
-      { 
-        if(this.title.trim() == 'ENGINERING MANAGER')
+        if(this.title.trim().toUpperCase() == 'BRAND MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'ADMIN')
+      if(this.department.trim().toUpperCase() == 'SERVICE')
       { 
-        if(this.title.trim() == 'OPERATIONS MANAGER')
+        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'TW')
+      if(this.department.trim().toUpperCase() == 'ADMIN')
       { 
-        if(this.title.trim() == 'Supply Chain Manager')
+        if(this.title.trim().toUpperCase() == 'OPERATIONS MANAGER')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == 'TW')
+      { 
+        if(this.title.trim().toUpperCase() == 'SUPPLY CHAIN MANAGER')
           can_save = true;
       }
 
       if(this.department.trim() == '')
       { 
-        if(this.title.trim() == 'Owner')
+        if(this.title.trim().toUpperCase() == 'OWNER')
           can_save = true;
 
-        if(this.title.trim() == 'Managing Director')
+        if(this.title.trim().toUpperCase() == 'MANAGING DIRECTOR')
           can_save = true;
 
-        if(this.title.trim() == 'Chief Advisor')
+        if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
       
