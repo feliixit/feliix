@@ -86,7 +86,7 @@ try {
 
             if(trim($department) == '')
             {
-                if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+                if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
                 {
                     $access6 = true;
                 }
@@ -715,37 +715,37 @@ try {
                                 <tbody>
                                 <tr>
                                     <td>10</td>
-                                    <td>Exceptional</td>
+                                    <td>Meets Expectation</td>
                                     <td>5</td>
-                                    <td>Average</td>
-                                </tr>
-
-                                <tr>
-                                    <td>9</td>
-                                    <td>Perfect</td>
-                                    <td>4</td>
                                     <td>Below Average</td>
                                 </tr>
 
                                 <tr>
-                                    <td>8</td>
-                                    <td>Very Good</td>
-                                    <td>3</td>
+                                    <td>9</td>
+                                    <td>Very good</td>
+                                    <td>4</td>
                                     <td>Needs Improvement</td>
                                 </tr>
 
                                 <tr>
-                                    <td>7</td>
+                                    <td>8</td>
                                     <td>Good</td>
-                                    <td>2</td>
+                                    <td>3</td>
                                     <td>Poor</td>
+                                </tr>
+
+                                <tr>
+                                    <td>7</td>
+                                    <td>Above Average</td>
+                                    <td>2</td>
+                                    <td>Unacceptable</td>
                                 </tr>
 
                                 <tr>
                                     <td>6</td>
                                     <td>OK</td>
                                     <td>1</td>
-                                    <td>Unacceptable</td>
+                                    <td>Very Unacceptable</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -778,6 +778,7 @@ try {
                                             <option value="3">3</option>
                                             <option value="2">2</option>
                                             <option value="1">1</option>
+                                            <option value="-1">N/A</option>
                                         </select>
                                     </td>
                                     <td><input hidden name="qid" ref="qid" :value="record.id" v-show="false"><input name="opt" ref="opt" type="text"></td>
@@ -789,12 +790,12 @@ try {
                                  <tfoot>
                                  <tr>
                                      <th colspan="2">AVERAGE</th>
-                                     <th>{{ (avg / 1).toFixed(1) }}</th>
+                                     <th>{{ avg == 0? "N/A" : (avg / 1).toFixed(1) }}</th>
                                      <th></th>
                                  </tr>
                                  <tr>
                                      <th colspan="2">SUBTOTAL (60%)</th>
-                                     <th>{{ ( avg * 0.6 ).toFixed(1) }}</th>
+                                     <th>{{ avg == 0 ? "N/A" : ( avg * 0.6 ).toFixed(1) }}</th>
                                      <th></th>
                                  </tr>
                                  </tfoot>
@@ -829,6 +830,7 @@ try {
                                             <option value="3">3</option>
                                             <option value="2">2</option>
                                             <option value="1">1</option>
+                                            <option value="-1">N/A</option>
                                         </select>
                                     </td>
                                     <td><input hidden name="qid1" ref="qid1" :value="record.id" v-show="false"><input name="opt1" ref="opt1" type="text"></td>
@@ -840,12 +842,12 @@ try {
                                 <tfoot>
                                  <tr>
                                      <th colspan="2">AVERAGE</th>
-                                     <th>{{ (avg1 / 1).toFixed(1) }}</th>
+                                     <th>{{ avg1 == 0 ? "N/A" : (avg1 / 1).toFixed(1) }}</th>
                                      <th></th>
                                  </tr>
                                  <tr>
                                      <th colspan="2">SUBTOTAL (40%)</th>
-                                     <th>{{ ( avg1 * 0.4 ).toFixed(1) }}</th>
+                                     <th>{{ avg1 == 0 ? "N/A" : ( avg1 * 0.4 ).toFixed(1) }}</th>
                                      <th></th>
                                  </tr>
                                  </tfoot>
@@ -854,7 +856,7 @@ try {
 
                             <ul style="margin-top: 30px;">
                                 <li><b>TOTAL:</b></li>
-                                <li class="content" style="font-weight: 700;">{{ ( avg * 0.6 + avg1 * 0.4 ).toFixed(1) }}</li>
+                                <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 ).toFixed(1) }}</li>
 
                                 <li style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">Noteworthy accomplishment</template><template v-if="evals.create_id == user_id">Noteworthy accomplishment</template></b></li>
                                 <li><textarea rows="5" v-model="comment1"></textarea></li>
@@ -940,37 +942,37 @@ try {
                                 <tbody>
                                 <tr>
                                     <td>10</td>
-                                    <td>Exceptional</td>
+                                    <td>Meets Expectation</td>
                                     <td>5</td>
-                                    <td>Average</td>
-                                </tr>
-
-                                <tr>
-                                    <td>9</td>
-                                    <td>Perfect</td>
-                                    <td>4</td>
                                     <td>Below Average</td>
                                 </tr>
 
                                 <tr>
-                                    <td>8</td>
-                                    <td>Very Good</td>
-                                    <td>3</td>
+                                    <td>9</td>
+                                    <td>Very good</td>
+                                    <td>4</td>
                                     <td>Needs Improvement</td>
                                 </tr>
 
                                 <tr>
-                                    <td>7</td>
+                                    <td>8</td>
                                     <td>Good</td>
-                                    <td>2</td>
+                                    <td>3</td>
                                     <td>Poor</td>
+                                </tr>
+
+                                <tr>
+                                    <td>7</td>
+                                    <td>Above Average</td>
+                                    <td>2</td>
+                                    <td>Unacceptable</td>
                                 </tr>
 
                                 <tr>
                                     <td>6</td>
                                     <td>OK</td>
                                     <td>1</td>
-                                    <td>Unacceptable</td>
+                                    <td>Very Unacceptable</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -993,7 +995,7 @@ try {
                                             {{ record.criterion }}
                                         </td>
                                         <td>
-                                            {{ record.emp_score }}
+                                            {{ record.emp_score == -1 ? "N/A" : record.emp_score }}
                                         </td>
                                         <td>
                                             {{ record.emp_opt }}
@@ -1001,7 +1003,7 @@ try {
                                     </tr>
                                     <tr class="supervisor" style="height: 45px;">
                                         <td>
-                                            {{ record.mag_score }}
+                                            {{ record.mag_score == -1 ? "N/A" : record.mag_score }}
                                         </td>
                                         <td>
                                             {{ record.mag_opt }}
@@ -1015,18 +1017,18 @@ try {
                                  <tr>
                                      <th colspan="2">AVERAGE</th>
                                      <th>
-                                         <span>{{ (emp_avg / 1).toFixed(1) }}</span>
+                                         <span>{{ emp_avg == 0 ? "N/A" : (emp_avg / 1).toFixed(1) }}</span>
                                          <br>
-                                         <span>{{ (mag_avg / 1).toFixed(1) }}</span>
+                                         <span>{{ mag_avg == 0 ? "N/A" : (mag_avg / 1).toFixed(1) }}</span>
                                      </th>
                                      <th></th>
                                  </tr>
                                  <tr>
                                      <th colspan="2">SUBTOTAL (60%)</th>
                                      <th>
-                                         <span>{{ ( emp_avg * 0.6 ).toFixed(1) }}</span>
+                                         <span>{{ emp_avg == 0 ? "N/A" : ( emp_avg * 0.6 ).toFixed(1) }}</span>
                                          <br>
-                                         <span>{{ ( mag_avg * 0.6 ).toFixed(1) }}</span>
+                                         <span>{{ mag_avg == 0 ? "N/A" : ( mag_avg * 0.6 ).toFixed(1) }}</span>
                                      </th>
                                      <th></th>
                                  </tr>
@@ -1052,7 +1054,7 @@ try {
                                             {{ record.criterion }}
                                         </td>
                                         <td>
-                                            {{ record.emp_score }}
+                                            {{ record.emp_score == -1 ? "N/A" : record.emp_score }}
                                         </td>
                                         <td>
                                             {{ record.emp_opt }}
@@ -1060,7 +1062,7 @@ try {
                                     </tr>
                                     <tr class="supervisor" style="height: 45px;">
                                         <td>
-                                            {{ record.mag_score }}
+                                            {{ record.mag_score == -1 ? "N/A" : record.mag_score }}
                                         </td>
                                         <td>
                                             {{ record.mag_opt }}
@@ -1074,18 +1076,18 @@ try {
                                  <tr>
                                      <th colspan="2">AVERAGE</th>
                                      <th>
-                                         <span>{{ (emp_avg1 / 1).toFixed(1) }}</span>
+                                         <span>{{ emp_avg1 == 0 ? "N/A" : (emp_avg1 / 1).toFixed(1) }}</span>
                                          <br>
-                                         <span>{{ (mag_avg1 / 1).toFixed(1) }}</span>
+                                         <span>{{ mag_avg1 == 0 ? "N/A" : (mag_avg1 / 1).toFixed(1) }}</span>
                                      </th>
                                      <th></th>
                                  </tr>
                                  <tr>
                                      <th colspan="2">SUBTOTAL (40%)</th>
                                      <th>
-                                         <span>{{ ( emp_avg1 * 0.4 ).toFixed(1) }}</span>
+                                         <span>{{ emp_avg1 == 0 ? "N/A" : ( emp_avg1 * 0.4 ).toFixed(1) }}</span>
                                          <br>
-                                         <span>{{ ( mag_avg1 * 0.4 ).toFixed(1) }}</span>
+                                         <span>{{ mag_avg1 == 0 ? "N/A" : ( mag_avg1 * 0.4 ).toFixed(1) }}</span>
                                      </th>
                                      <th></th>
                                  </tr>
@@ -1096,9 +1098,9 @@ try {
                             <ul class="summary">
                                 <li><b>TOTAL:</b></li>
                                 <li class="content">
-                                    <span>{{ ( emp_avg * 0.6 + emp_avg1 * 0.4 ).toFixed(1) }}</span>
+                                    <span>{{ (emp_avg == 0 && emp_avg1 == 0) ? "N/A" : ( emp_avg * 0.6 + emp_avg1 * 0.4 ).toFixed(1) }}</span>
                                     <br>
-                                    <span>{{ ( mag_avg * 0.6 + mag_avg1 * 0.4 ).toFixed(1) }}</span>
+                                    <span>{{ (mag_avg == 0 && mag_avg1 == 0) ? "N/A" : ( mag_avg * 0.6 + mag_avg1 * 0.4 ).toFixed(1) }}</span>
                                 </li>
 
                                 <li><b>Noteworthy accomplishment</b></li>

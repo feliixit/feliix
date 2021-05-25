@@ -128,14 +128,14 @@ if (!isset($jwt)) {
             if($user_complete_at != "" && $manager_complete_at != "")
             {
                 // supervisor can see
-                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2);
-                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2);
+                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2, $id);
+                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2, $id);
             }
             elseif($user_complete_at != "" && $manager_complete_at != "")
             {
                 // mananger and employee all finished
-                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2);
-                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2);
+                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2, $id);
+                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2, $id);
             }
             elseif($user_complete_at == "" && $manager_complete_at != "")
             {
@@ -144,15 +144,15 @@ if (!isset($jwt)) {
                 // manager
                 if($row['create_id'] == $user_id)
                 {
-                    $agenda = GetAgenda($row['template_id'],  1, $db, 0, 2);
-                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 2);
+                    $agenda = GetAgenda($row['template_id'],  1, $db, 0, 2, $id);
+                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 2, $id);
                 }
 
                 // employee
                 if($row['user_id'] == $user_id)
                 {
-                    $agenda = GetAgenda($row['template_id'],  1, $db, 1, 0);
-                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 0);
+                    $agenda = GetAgenda($row['template_id'],  1, $db, 1, 0, $id);
+                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 0, $id);
 
                     $mag_comment_1 = "";
                     $mag_comment_2 = "";
@@ -168,8 +168,8 @@ if (!isset($jwt)) {
                 // manager
                 if($row['create_id'] == $user_id)
                 {
-                    $agenda = GetAgenda($row['template_id'],  1, $db, 0, 2);
-                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 2);
+                    $agenda = GetAgenda($row['template_id'],  1, $db, 0, 2, $id);
+                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 2, $id);
 
                     $emp_comment_1 = "";
                     $emp_comment_2 = "";
@@ -181,21 +181,21 @@ if (!isset($jwt)) {
                 // employee
                 if($row['user_id'] == $user_id)
                 {
-                    $agenda = GetAgenda($row['template_id'],  1, $db, 1, 0);
-                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 0);
+                    $agenda = GetAgenda($row['template_id'],  1, $db, 1, 0, $id);
+                    $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 0, $id);
                 }
             }
              elseif($user_complete_at != "" && $manager_complete_at != "")
             {
                 // mananger finished and employee finished
 
-                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2);
-                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2);
+                $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2, $id);
+                $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2, $id);
             }
             else
             {
-                $agenda = GetAgenda($row['template_id'],  1, $db, 0, 0);
-                $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 0);
+                $agenda = GetAgenda($row['template_id'],  1, $db, 0, 0, $id);
+                $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 0, $id);
             }
         }
         else
@@ -258,7 +258,7 @@ function GetNextMonth($d)
     return $date;
 }
 
-function GetAgenda($tid, $type, $db, $emp, $mag){
+function GetAgenda($tid, $type, $db, $emp, $mag, $rid){
     $query = "
             SELECT pm.id,
             pm.`order`,
@@ -273,8 +273,8 @@ function GetAgenda($tid, $type, $db, $emp, $mag){
             
         
         FROM   performance_template_detail pm
-        LEFT JOIN (SELECT * from performance_review_detail WHERE review_type = " . $emp . ") pr ON pm.id = pr.review_question_id
-        LEFT JOIN (SELECT * from performance_review_detail WHERE review_type =  " . $mag . ") pd ON pm.id = pd.review_question_id
+        LEFT JOIN (SELECT * from performance_review_detail WHERE review_type = " . $emp . " AND review_id = " . $rid . ") pr ON pm.id = pr.review_question_id
+        LEFT JOIN (SELECT * from performance_review_detail WHERE review_type = " . $mag . " AND review_id = " . $rid . ") pd ON pm.id = pd.review_question_id
            
         WHERE  template_id = " . $tid . "
             AND pm.`type` = " . $type . "

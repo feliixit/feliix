@@ -94,7 +94,7 @@ try {
 
         if(trim(strtoupper($department)) == 'TW')
         {
-            if(trim($position) == 'Supply Chain Manager')
+            if(trim(strtoupper($position)) == 'SUPPLY CHAIN MANAGER')
             {
                 $access6 = true;
             }
@@ -102,7 +102,7 @@ try {
 
         if(trim($department) == '')
         {
-            if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+            if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
             {
                 $access6 = true;
             }

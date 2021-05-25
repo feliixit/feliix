@@ -644,6 +644,8 @@ var app = new Vue({
       if (index > -1) {
         this.record.list.splice(index, 1);
       }
+
+      this.record.total = this.count_total(this.record.list);
     },
 
     e_add_criterion: function() {
@@ -672,7 +674,16 @@ var app = new Vue({
         };
         this.record.list.push(ad);
       
+        this.record.total = this.count_total(this.record.list);
 
+    },
+
+    count_total: function(list) {
+      var total = 0.0;
+      for (let index = 0; index < list.length; index++) {
+        total += list[index].qty * list[index].price;
+      }
+      return total;
     },
 
     e_cancel_criterion: function() {
@@ -702,6 +713,8 @@ var app = new Vue({
       element.price = this.e_price;
       element.qty = this.e_qty;
       element.check_remark = this.e_check_remark;
+
+      this.record.total = this.count_total(this.record.list);
     
       this.e_clear_edit();
     },

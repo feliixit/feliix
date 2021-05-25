@@ -207,11 +207,21 @@ var app = new Vue({
         var grade = this.$refs.grade;
   
         var score =0.0;
+        var cnt = 0;
         for (i = 0; i < grade.length; i++) {
-          score += parseInt(grade[i].value);
+          if(grade[i].value === 'N/A')
+            score += 0;
+          else
+          {
+            score += parseInt(grade[i].value);
+            cnt += 1;
+          }
         }
   
-        this.avg = (score / i).toFixed(1);
+        if(cnt === 0)
+          this.avg = 0;
+        else
+          this.avg = (score / cnt).toFixed(1);
   
       },
   
@@ -220,11 +230,21 @@ var app = new Vue({
         var grade = this.$refs.grade1;
   
         var score =0.0;
+        var cnt = 0;
         for (i = 0; i < grade.length; i++) {
-          score += parseInt(grade[i].value);
+          if(grade[i].value === 'N/A')
+            score += 0;
+          else
+          {
+            score += parseInt(grade[i].value);
+            cnt += 1;
+          }
         }
   
-        this.avg1 = (score / i).toFixed(1);
+        if(cnt === 0)
+          this.avg1 = 0;
+        else
+          this.avg1 = (score / cnt).toFixed(1);
   
       },
 

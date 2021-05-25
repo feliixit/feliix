@@ -647,7 +647,8 @@ var app = new Vue({
           check_remark: '',
         };
         this.petty_list.push(ad);
-      
+
+        this.e_clear_edit();
 
     },
 
@@ -673,7 +674,7 @@ var app = new Vue({
 
       var element = this.petty_list.find(({ id }) => id === this.e_org_id);
       element.payee = this.list_payee;
-      element.particulars = this.liste_particulars;
+      element.particulars = this.list_particulars;
       element.price = this.list_price;
       element.qty = this.list_qty;
     
@@ -724,7 +725,7 @@ var app = new Vue({
         };
         this.petty_list.push(ad);
       
-
+        this.e_clear_edit();
     },
 
     _cancel_criterion: function() {
@@ -749,7 +750,7 @@ var app = new Vue({
 
       var element = this.petty_list.find(({ id }) => id === this.e_org_id);
       element.payee = this.list_payee;
-      element.particulars = this.liste_particulars;
+      element.particulars = this.list_particulars;
       element.price = this.list_price;
       element.qty = this.list_qty;
     

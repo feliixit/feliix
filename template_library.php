@@ -86,7 +86,7 @@ try {
 
             if(trim($department) == '')
             {
-                if(trim($position) == 'Owner' || trim($position) == 'Managing Director' || trim($position) == 'Chief Advisor')
+                if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
                 {
                     $access6 = true;
                 }
@@ -504,39 +504,39 @@ try {
                             </thead>
 
                             <tbody>
-                                <tr>
+                            <tr>
                                     <td>10</td>
-                                    <td>Exceptional</td>
+                                    <td>Meets Expectation</td>
                                     <td>5</td>
-                                    <td>Average</td>
-                                </tr>
-
-                                <tr>
-                                    <td>9</td>
-                                    <td>Perfect</td>
-                                    <td>4</td>
                                     <td>Below Average</td>
                                 </tr>
 
                                 <tr>
-                                    <td>8</td>
-                                    <td>Very Good</td>
-                                    <td>3</td>
+                                    <td>9</td>
+                                    <td>Very good</td>
+                                    <td>4</td>
                                     <td>Needs Improvement</td>
                                 </tr>
 
                                 <tr>
-                                    <td>7</td>
+                                    <td>8</td>
                                     <td>Good</td>
-                                    <td>2</td>
+                                    <td>3</td>
                                     <td>Poor</td>
+                                </tr>
+
+                                <tr>
+                                    <td>7</td>
+                                    <td>Above Average</td>
+                                    <td>2</td>
+                                    <td>Unacceptable</td>
                                 </tr>
 
                                 <tr>
                                     <td>6</td>
                                     <td>OK</td>
                                     <td>1</td>
-                                    <td>Unacceptable</td>
+                                    <td>Very Unacceptable</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -569,6 +569,7 @@ try {
                                             <option>3</option>
                                             <option>2</option>
                                             <option>1</option>
+                                            <option>N/A</option>
                                         </select>
                                     </td>
                                     <td><input type="text"></td>
@@ -579,12 +580,12 @@ try {
                             <tfoot>
                                 <tr>
                                     <th colspan="2">AVERAGE</th>
-                                    <th>{{ (avg / 1).toFixed(1) }}</th>
+                                    <th>{{ avg == 0 ? "N/A" : (avg / 1).toFixed(1) }}</th>
                                     <th></th>
                                 </tr>
                                 <tr>
                                     <th colspan="2">SUBTOTAL (60%)</th>
-                                    <th>{{ ( avg * 0.6 ).toFixed(1) }}</th>
+                                    <th>{{ avg == 0 ? "N/A" : ( avg * 0.6 ).toFixed(1) }}</th>
                                     <th></th>
                                 </tr>
                             </tfoot>
@@ -619,6 +620,7 @@ try {
                                             <option>3</option>
                                             <option>2</option>
                                             <option>1</option>
+                                            <option>N/A</option>
                                         </select>
                                     </td>
                                     <td><input type="text"></td>
@@ -630,12 +632,12 @@ try {
                             <tfoot>
                                 <tr>
                                     <th colspan="2">AVERAGE</th>
-                                    <th>{{ (avg1 / 1).toFixed(1) }}</th>
+                                    <th>{{ avg1 == 0 ? "N/A" : (avg1 / 1).toFixed(1) }}</th>
                                     <th></th>
                                 </tr>
                                 <tr>
                                     <th colspan="2">SUBTOTAL (40%)</th>
-                                    <th>{{ ( avg1 * 0.4 ).toFixed(1) }}</th>
+                                    <th>{{ avg1 == 0 ? "N/A" : ( avg1 * 0.4 ).toFixed(1) }}</th>
                                     <th></th>
                                 </tr>
                             </tfoot>
@@ -644,7 +646,7 @@ try {
 
                         <ul v-if="template.length > 0"  style="margin-top: 30px;">
                             <li><b>TOTAL:</b></li>
-                            <li class="content" style="font-weight: 700;">{{ ( avg * 0.6 + avg1 * 0.4 ).toFixed(1) }}</li>
+                            <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 ).toFixed(1) }}</li>
 
                             <li style="margin-top: 40px;"><b>Noteworthy accomplishment</b></li>
                             <li><textarea rows="5"></textarea></li>

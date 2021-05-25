@@ -188,11 +188,21 @@ var app = new Vue({
       var grade = this.$refs.grade;
 
       var score =0.0;
+      var cnt = 0;
       for (i = 0; i < grade.length; i++) {
-        score += parseInt(grade[i].value);
+        if(grade[i].value == -1)
+          score += 0;
+        else
+        {
+          score += parseInt(grade[i].value);
+          cnt += 1;
+        }
       }
 
-      this.avg = (score / i).toFixed(1);
+      if(cnt === 0)
+        this.avg = 0;
+      else
+        this.avg = (score / cnt).toFixed(1);
 
     },
 
@@ -201,11 +211,21 @@ var app = new Vue({
       var grade = this.$refs.grade1;
 
       var score =0.0;
+      var cnt = 0;
       for (i = 0; i < grade.length; i++) {
-        score += parseInt(grade[i].value);
+        if(grade[i].value == -1)
+          score += 0;
+        else
+        {
+          score += parseInt(grade[i].value);
+          cnt += 1;
+        }
       }
 
-      this.avg1 = (score / i).toFixed(1);
+      if(cnt === 0)
+        this.avg1 = 0;
+      else
+        this.avg1 = (score / cnt).toFixed(1);
 
     },
 
@@ -328,7 +348,7 @@ var app = new Vue({
           var token = localStorage.getItem("token");
           var form_Data = new FormData();
           form_Data.append("jwt", token);
-          form_Data.append("pid", _this.record[0].id);
+          form_Data.append("pid", _this.proof_id);
           form_Data.append("answers", JSON.stringify(temp));
           form_Data.append("commet1", _this.comment1);
           form_Data.append("commet2", _this.comment2);
@@ -464,25 +484,62 @@ var app = new Vue({
 
             var e_score = 0.0;
             var m_score = 0.0;
+            var e_cnt = 0;
+            var m_cnt = 0;
             for(var i = 0; i < _this.views.agenda.length; i++)
             {
-              e_score += parseInt((_this.views.agenda[i].emp_score) === '' ? "0" : _this.views.agenda[i].emp_score);
-              m_score += parseInt((_this.views.agenda[i].mag_score) === '' ? "0" : _this.views.agenda[i].mag_score);
+              if(_this.views.agenda[i].emp_score != -1)
+              {
+                e_score += parseInt((_this.views.agenda[i].emp_score) === '' ? "0" : _this.views.agenda[i].emp_score);
+                e_cnt += 1;
+              }
+              
+              if(_this.views.agenda[i].mag_score != -1)
+              {
+                m_score += parseInt((_this.views.agenda[i].mag_score) === '' ? "0" : _this.views.agenda[i].mag_score);
+                m_cnt += 1;
+              }
             }
 
-            _this.emp_avg = (e_score / i).toFixed(1);
-            _this.mag_avg = (m_score / i).toFixed(1);
+            if(e_cnt === 0)
+              _this.emp_avg = 0;
+            else
+              _this.emp_avg = (e_score / e_cnt).toFixed(1);
+
+            if(m_cnt === 0)
+              _this.mag_avg = 0;
+            else
+              _this.mag_avg = (m_score / m_cnt).toFixed(1);
+            
 
             var e_score1 = 0.0;
             var m_score1 = 0.0;
+            var e_cnt1 = 0;
+            var m_cnt1 = 0;
             for(var i = 0; i < _this.views.agenda1.length; i++)
             {
-              e_score1 += parseInt((_this.views.agenda1[i].emp_score) === '' ? "0" : _this.views.agenda1[i].emp_score);
-              m_score1 += parseInt((_this.views.agenda1[i].mag_score) === '' ? "0" : _this.views.agenda1[i].mag_score);
+              if(_this.views.agenda1[i].emp_score != -1)
+              {
+                e_score1 += parseInt((_this.views.agenda1[i].emp_score) === '' ? "0" : _this.views.agenda1[i].emp_score);
+                e_cnt1 += 1;
+              }
+              
+              if(_this.views.agenda1[i].mag_score != -1)
+              {
+                m_score1 += parseInt((_this.views.agenda1[i].mag_score) === '' ? "0" : _this.views.agenda1[i].mag_score);
+                m_cnt1 += 1;
+              }
             }
 
-            _this.emp_avg1 = (e_score1 / i).toFixed(1);
-            _this.mag_avg1 = (m_score1 / i).toFixed(1);
+            if(e_cnt1 === 0)
+              _this.emp_avg1 = 0;
+            else
+              _this.emp_avg1 = (e_score1 / e_cnt1).toFixed(1);
+
+            if(m_cnt1 === 0)
+              _this.mag_avg1 = 0;
+            else
+              _this.mag_avg1 = (m_score1 / m_cnt1).toFixed(1);
 
             _window.jQuery(".mask").toggle();
             _window.jQuery("#Modal_3").toggle();
@@ -593,13 +650,13 @@ var app = new Vue({
 
       if(this.department.trim() == '')
       { 
-        if(this.title.trim() == 'Owner')
+        if(this.title.trim().toUpperCase() == 'OWNER')
           can_save = true;
 
-        if(this.title.trim() == 'Managing Director')
+        if(this.title.trim().toUpperCase() == 'MANAGING DIRECTOR')
           can_save = true;
 
-        if(this.title.trim() == 'Chief Advisor')
+        if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
       
@@ -609,63 +666,63 @@ var app = new Vue({
     is_add_review_privilege() {
       var can_save = false;
 
-      if(this.department.trim() == 'SALES')
+      if(this.department.trim().toUpperCase() == 'SALES')
       { 
-        if(this.title.trim() == 'ASSISTANT SALES MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT SALES MANAGER')
           can_save = true;
 
-        if(this.title.trim() == 'SALES MANAGER')
+        if(this.title.trim().toUpperCase() == 'SALES MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'LIGHTING')
+      if(this.department.trim().toUpperCase() == 'LIGHTING')
       { 
-        if(this.title.trim() == 'LIGHTING MANAGER')
+        if(this.title.trim().toUpperCase() == 'LIGHTING MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'OFFICE')
+      if(this.department.trim().toUpperCase() == 'OFFICE')
       { 
-        if(this.title.trim() == 'OFFICE SYSTEMS MANAGER')
+        if(this.title.trim().toUpperCase() == 'OFFICE SYSTEMS MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'DESIGN')
+      if(this.department.trim().toUpperCase() == 'DESIGN')
       { 
-        if(this.title.trim() == 'ASSISTANT BRAND MANAGER')
+        if(this.title.trim().toUpperCase() == 'ASSISTANT BRAND MANAGER')
           can_save = true;
 
-        if(this.title.trim() == 'BRAND MANAGER')
-          can_save = true;
-      }
-
-      if(this.department.trim() == 'SERVICE')
-      { 
-        if(this.title.trim() == 'ENGINERING MANAGER')
+        if(this.title.trim().toUpperCase() == 'BRAND MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'ADMIN')
+      if(this.department.trim().toUpperCase() == 'SERVICE')
       { 
-        if(this.title.trim() == 'OPERATIONS MANAGER')
+        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER')
           can_save = true;
       }
 
-      if(this.department.trim() == 'TW')
+      if(this.department.trim().toUpperCase() == 'ADMIN')
       { 
-        if(this.title.trim() == 'Supply Chain Manager')
+        if(this.title.trim().toUpperCase() == 'OPERATIONS MANAGER')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == 'TW')
+      { 
+        if(this.title.trim().toUpperCase() == 'SUPPLY CHAIN MANAGER')
           can_save = true;
       }
 
       if(this.department.trim() == '')
       { 
-        if(this.title.trim() == 'Owner')
+        if(this.title.trim().toUpperCase() == 'OWNER')
           can_save = true;
 
-        if(this.title.trim() == 'Managing Director')
+        if(this.title.trim().toUpperCase() == 'MANAGING DIRECTOR')
           can_save = true;
 
-        if(this.title.trim() == 'Chief Advisor')
+        if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
       
