@@ -229,11 +229,22 @@ var app = new Vue({
                 confirmButtonText: "OK",
               });
             return;
-          }else
-          {
-            window.jQuery(".mask").toggle();
-            window.jQuery('#Modal_3').toggle();
           }
+          
+          if(this.record.cited != 0)
+          {
+            Swal.fire({
+              text: "This template has been used by someone's evaluation, so it cannot be edited. Instead, user might try to duplicate it and do editing on the duplicated template.",
+              icon: "warning",
+              confirmButtonText: "OK",
+            });
+            return;
+          };
+
+          
+          window.jQuery(".mask").toggle();
+          window.jQuery('#Modal_3').toggle();
+          
         
     },
 

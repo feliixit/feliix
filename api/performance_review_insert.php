@@ -96,9 +96,10 @@ else
 
         $s_date = $review_month;
         $e_date = GetNextMonth($review_month);
+        $dead_date = GetDeadMonth($review_month);
 
-        send_review_mail_adm($s_date, $e_date, $user_id, $employee_id);
-        send_review_mail($s_date, $e_date, $user_id, $employee_id);
+        send_review_mail_adm($s_date, $e_date, $user_id, $employee_id, $dead_date);
+        send_review_mail($s_date, $e_date, $user_id, $employee_id, $dead_date);
 
         
         http_response_code(200);
@@ -119,5 +120,11 @@ else
 function GetNextMonth($d)
 {
     $date = date('Y-m', strtotime('+1 month', strtotime($d . '-01')));
+    return $date;
+}
+
+function GetDeadMonth($d)
+{
+    $date = date('Y-m-d', strtotime('+2 month', strtotime($d . '-10')));
     return $date;
 }

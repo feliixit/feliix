@@ -676,6 +676,8 @@ var app = new Vue({
       
         this.record.total = this.count_total(this.record.list);
 
+        this.e_clear_edit();
+
     },
 
     count_total: function(list) {
