@@ -2216,6 +2216,16 @@ catch (Exception $e) {
             border-color: #d1dbe5;
 
         }
+
+        .other .tablebox a.attch_pic {
+            margin: 3px 13px 3px 0;
+        }
+
+        .other .tablebox a.attch_pic>img {
+            width: 200px;
+            vertical-align: bottom;
+        }
+
     </style>
 
 </head>
@@ -2777,7 +2787,8 @@ catch (Exception $e) {
                                 <li><b>Attachments</b></li>
                                 <li>
                                     <i v-for="item in receive_record.items">
-                                        <a class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                        <a v-if="item.gcp_name.split('.').pop().toLowerCase() === 'jpg' || item.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + item.gcp_name" target="_blank"><img :src="baseURL + item.gcp_name"></a>
+                                        <a v-if="item.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && item.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                     </i>
                                 </li>
 
@@ -2805,7 +2816,8 @@ catch (Exception $e) {
                                                 <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
                                                 <p>{{ item.message }}</p>
                                                 <i v-for="file in item.items">
-                                                    <a class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
+                                                    <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
+                                                    <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                 </i>
 
                                             </div>
@@ -2846,7 +2858,8 @@ catch (Exception $e) {
                                             <div class="msgbox dialogclear" v-for="reply in item.reply">
                                                 <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
                                                 <i v-for="file in reply.items">
-                                                    <a class="attch" :href="baseURL + reply.gcp_name" target="_blank">{{reply.filename}}</a>
+                                                    <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
+                                                    <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                 </i>
 
                                             </div>
@@ -2938,7 +2951,8 @@ catch (Exception $e) {
                                         <li><b>Attachments</b></li>
                                         <li>
                                             <i v-for="item in receive_record.items">
-                                                <a class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                                <a v-if="item.gcp_name.split('.').pop().toLowerCase() === 'jpg' || item.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + item.gcp_name" target="_blank"><img :src="baseURL + item.gcp_name"></a>
+                                                <a v-if="item.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && item.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                             </i>
                                         </li>
                                     </ul>
@@ -2963,7 +2977,8 @@ catch (Exception $e) {
                                                         <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
                                                         <p>{{ item.message }}</p>
                                                         <i v-for="file in item.items">
-                                                            <a class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
+                                                            <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
+                                                            <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                         </i>
                                                     </div>
                                                     <div class="btnbox">
@@ -3003,7 +3018,9 @@ catch (Exception $e) {
                                                     <div class="msgbox dialogclear" v-for="reply in item.reply">
                                                         <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
                                                         <i v-for="file in reply.items">
-                                                            <a class="attch" :href="baseURL + reply.gcp_name" target="_blank">{{reply.filename}}</a>
+                                                            
+                                                            <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
+                                                            <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                         </i>
 
                                                     </div>
