@@ -415,7 +415,8 @@ try {
                             {{ record.criterion }}
                         </td>
                         <td>
-                            <template v-for="n in parseInt(record.mag_score, 10)">★</template><template v-for="n in 10 - parseInt(record.mag_score, 10)">☆</template>
+                            <template v-if="record.mag_score == '-1'">N/A</template>
+                            <template v-if="record.mag_score != '-1'" v-for="n in parseInt((record.mag_score > -1) ? record.mag_score : 0, 10)">★</template><template v-if="record.mag_score != '-1'" v-for="n in 10 - parseInt((record.mag_score > -1) ? record.mag_score : 0, 10)">☆</template>
                         </td>
                     </tr>
 
@@ -424,11 +425,11 @@ try {
                     <tfoot>
                     <tr>
                         <th colspan="2">AVERAGE</th>
-                        <th>{{ (mag_avg / 1).toFixed(1) }}</th>
+                        <th>{{ mag_avg == 0 ? "N/A" : (mag_avg / 1).toFixed(1) }}</th>
                     </tr>
                     <tr>
                         <th colspan="2">SUBTOTAL (60%)</th>
-                        <th>{{ ( mag_avg * 0.6 ).toFixed(1) }}</th>
+                        <th>{{ mag_avg == 0 ? "N/A" : ( mag_avg * 0.6 ).toFixed(1) }}</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -450,7 +451,8 @@ try {
                             {{ record.criterion }}
                         </td>
                         <td>
-                            <template v-for="n in parseInt(record.mag_score, 10)">★</template><template v-for="n in 10 - parseInt(record.mag_score, 10)">☆</template>
+                            <template v-if="record.mag_score == '-1'">N/A</template>
+                            <template v-if="record.mag_score != '-1'" v-for="n in parseInt((record.mag_score > -1) ? record.mag_score : 0, 10)">★</template><template v-if="record.mag_score != '-1'" v-for="n in 10 - parseInt((record.mag_score > -1) ? record.mag_score : 0, 10)">☆</template>
                         </td>
                     </tr>
 
@@ -459,18 +461,18 @@ try {
                     <tfoot>
                     <tr>
                         <th colspan="2">AVERAGE</th>
-                        <th>{{ (mag_avg1 / 1).toFixed(1) }}</th>
+                        <th>{{ mag_avg1 == 0 ? "N/A" : (mag_avg1 / 1).toFixed(1) }}</th>
                     </tr>
                     <tr>
                         <th colspan="2">SUBTOTAL (40%)</th>
-                        <th>{{ ( mag_avg1 * 0.4 ).toFixed(1) }}</th>
+                        <th>{{ mag_avg1 == 0 ? "N/A" : ( mag_avg1 * 0.4 ).toFixed(1) }}</th>
                     </tr>
                     </tfoot>
                 </table>
 
                 <ul style="margin-top: 30px;">
                     <li><b>TOTAL:</b></li>
-                    <li class="content" style="font-weight: 700;">{{ ( mag_avg * 0.6 + mag_avg1 * 0.4 ).toFixed(1) }}</li>
+                    <li class="content" style="font-weight: 700;">{{ (mag_avg == 0 && mag_avg1 == 0) ? "N/A" : ( mag_avg * 0.6 + mag_avg1 * 0.4 ).toFixed(1) }}</li>
                 </ul>
 
                 <div class="promotion" v-if="view_promotion == true">

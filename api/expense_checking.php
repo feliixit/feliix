@@ -348,7 +348,7 @@ function GetStatus($loc)
 
 function GetList($_id, $db)
 {
-    $sql = "select pm.id, sn, payee, particulars, price, qty, `status`
+    $sql = "select pm.id, sn, payee, particulars, price, qty, check_remark, `status`
     from petty_list pm 
     where `status` <> -1 and petty_id = " . $_id . " order by sn ";
 

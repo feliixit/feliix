@@ -61,6 +61,91 @@ if (!isset($jwt)) {
         $user_department = $decoded->data->department;
 
         $uid = $user_id;
+
+        if($crud == "Send To OP" || $crud == "Send To MD" || $crud == "Checking Reject")
+        {
+            $petty_list = (isset($_POST['petty_list']) ?  $_POST['petty_list'] : '[]');
+            $list_array = json_decode($petty_list, true);
+
+            // petty_list
+            $query = "DELETE FROM petty_list
+                      WHERE
+                      `petty_id` = :petty_id";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            // bind the values
+            $stmt->bindParam(':petty_id', $id);
+
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+
+            // agenda
+            for ($i = 0; $i < count($list_array); $i++) {
+                $query = "INSERT INTO petty_list
+            SET
+                `petty_id` = :petty_id,
+                `sn` = :order,
+                `payee` = :payee,
+                `particulars` = :particulars,
+                `price` = :price,
+                `qty` = :qty,
+                `check_remark` = :check_remark,
+                
+                `status` = 1,
+                `updated_id` = :updated_id,
+                `updated_at` = now()";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+
+                // bind the values
+                $stmt->bindParam(':petty_id', $id);
+                $stmt->bindParam(':order', $i);
+                $stmt->bindParam(':payee', $list_array[$i]['payee']);
+                $stmt->bindParam(':particulars', $list_array[$i]['particulars']);
+                $stmt->bindParam(':price', $list_array[$i]['price']);
+                $stmt->bindParam(':qty', $list_array[$i]['qty']);
+                $stmt->bindParam(':check_remark', $list_array[$i]['check_remark']);
+                
+                $stmt->bindParam(':updated_id', $user_id);
+
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+            }
+        }
+
         // now you can apply
         if ($crud == "Send To OP" || $crud == "Send To MD") {
 
