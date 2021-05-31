@@ -172,8 +172,11 @@ foreach ($merged_results as &$value) {
         $o3 += $value['cash_out'];
     }
 
-    $ai += $value['cash_in'];
-    $ao += $value['cash_out'];
+    if($value['account'] == 1 || $value['account'] == 2 || $value['account'] == 3)
+    {
+        $ai += $value['cash_in'];
+        $ao += $value['cash_out'];
+    }
 
     $_result[] = $value;
 }
