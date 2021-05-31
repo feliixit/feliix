@@ -90,7 +90,21 @@ else
 {
 
     // send mail
-    $subquery = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, pm.status, pm.proof_remark, p.catagory_id, pm.kind FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $id . " and pm.status <> -1 ";
+    $subquery = "SELECT p.project_name, 
+                        pm.remark, 
+                        u.username, 
+                        u.email, 
+                        pm.created_at, 
+                        pm.status, 
+                        pm.proof_remark, 
+                        p.catagory_id, 
+                        pm.kind, 
+                        pm.amount, 
+                        pm.received_date 
+                    FROM project_proof pm 
+                    left join user u on u.id = pm.create_id 
+                    LEFT JOIN project_main p ON p.id = pm.project_id  
+                    WHERE pm.id = " . $id . " and pm.status <> -1 ";
 
     $stmt = $db->prepare( $subquery );
     $stmt->execute();
@@ -104,6 +118,8 @@ else
     $email1 = "";
     $category = "";
     $kind = 0;
+    $amount = 0.0;
+    $receive_date = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
@@ -115,9 +131,11 @@ else
         $email1 = $row['email'];
         $category = $row['catagory_id'];
         $kind = $row['kind'];
+        $amount = $row['amount'];
+        $receive_date = $row['receive_date'];
     }
 
-    send_check_notify_mail_new($leaver, $email1, $project_name, $remark, $subtime, $proof_remark, "True", $category, $kind);
+    send_check_notify_mail_new($leaver, $email1, $project_name, $remark, $subtime, $proof_remark, "True", $category, $kind, $amount, $receive_date);
 
     
 }

@@ -214,11 +214,11 @@ $(function(){
 
                     <!-- 分頁 -->
                     <div class="pagenation">
-                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                        <a class="prev" :disabled="page == 1" @click="pre_page()">Previous</a>
                       
-                        <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'grey', 'color': 'white'} : { }]">{{ pg }}</a>
+                        <a class="page" v-for="pg in pages_10" @click="page=pg" v-bind:style="[pg == page ? { 'background':'grey', 'color': 'white'} : { }]">{{ pg }}</a>
                       
-                        <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                        <a class="next" :disabled="page == pages.length" @click="nex_page()">Next</a>
                     </div>
                 </div>
 
