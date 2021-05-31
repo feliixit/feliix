@@ -57,7 +57,7 @@ $merged_results = array();
 
 
 
-$query = "SELECT * from price_record where is_enabled = true ";
+$query = "SELECT *, 0 i1, 0 i2, 0 i3, 0 o1, 0 o2, 0 o3, 0 ai, 0 ao from price_record where is_enabled = true ";
 $sql = "";
 $sql2 = "";
 $sql3 = "";
@@ -140,9 +140,54 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 $_result = array();
 
+$i1 = 0.0;
+$i2 = 0.0;
+$i3 = 0.0;
+
+$o1 = 0.0;
+$o2 = 0.0;
+$o3 = 0.0;
+
+$ai = 0.0;
+$ao = 0.0;
+
 foreach ($merged_results as &$value) {
     $value['pic_array'] = GetPicArray($value['pic_url']);
+
+    if($value['account'] == 1)
+    {
+        $i1 += $value['cash_in'];
+        $o1 += $value['cash_out'];
+    }
+
+    if($value['account'] == 2)
+    {
+        $i2 += $value['cash_in'];
+        $o2 += $value['cash_out'];
+    }
+
+    if($value['account'] == 3)
+    {
+        $i3 += $value['cash_in'];
+        $o3 += $value['cash_out'];
+    }
+
+    $ai += $value['cash_in'];
+    $ao += $value['cash_out'];
+
     $_result[] = $value;
+}
+
+if(count($_result) > 0)
+{
+    $_result[0]['i1'] = $i1;
+    $_result[0]['o1'] = $o1;
+    $_result[0]['i2'] = $i2;
+    $_result[0]['o2'] = $o2;
+    $_result[0]['i3'] = $i3;
+    $_result[0]['o3'] = $o3;
+    $_result[0]['ai'] = $ai;
+    $_result[0]['ao'] = $ao;
 }
 
 echo json_encode($_result, JSON_UNESCAPED_SLASHES);
