@@ -133,7 +133,7 @@ var app = new Vue({
     pre_page: function(){
       let tenPages = Math.floor((this.page - 1) / 10) + 1;
 
-        this.page = this.page - 10;
+        this.page = parseInt(this.page) - 10;
         if(this.page < 1)
           this.page = 1;
  
@@ -149,7 +149,7 @@ var app = new Vue({
     nex_page: function(){
       let tenPages = Math.floor((this.page - 1) / 10) + 1;
 
-      this.page = this.page + 10;
+      this.page = parseInt(this.page) + 10;
       if(this.page > this.pages.length)
         this.page = this.pages.length;
 
