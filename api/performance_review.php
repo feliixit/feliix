@@ -80,11 +80,11 @@ if (!isset($jwt)) {
                 COALESCE(pr.user_complete_at, '') user_complete_at, 
                 COALESCE(pr.manager_complete_at, '') manager_complete_at
                 FROM performance_review pr
-                LEFT JOIN performance_template pt ON pr.template_id = pt.id
-                LEFT JOIN user_title ut ON ut.id = pt.title_id
-                LEFT JOIN user_department ud ON ud.id = ut.department_id
                 LEFT JOIN user u ON u.id = pr.create_id
                 LEFT JOIN user u1 ON u1.id = pr.user_id
+                LEFT JOIN performance_template pt ON pr.template_id = pt.id
+                LEFT JOIN user_title ut ON ut.id = u1.title_id
+                LEFT JOIN user_department ud ON ud.id = u1.apartment_id
               WHERE pr.status <> -1  " . ($id != 0 ? " and pr.id=$id" : ' ');
 
     if($access6 != true)
