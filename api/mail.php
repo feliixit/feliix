@@ -449,7 +449,7 @@ function send_review_mail($s_date, $e_date, $adm_id, $emp_id, $dead_date){
 }
 
 
-function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind)
+function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date)
 {
     $conf = new Conf();
 
@@ -503,6 +503,10 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
 
     $content = $content . "<p>Status: Checked: " . $status . "</p>";
+
+    $content = $content . "<p>Date of Receiving Payment: " . $receive_date . "</p>";
+
+    $content = $content . "<p>Amount of Receiving Payment: " . number_format($amount) . "</p>";
     /*
     $content = $content . "<p>Project Name:" . $projectname . "</p>";
     $content = $content . "<p>Submission Time:" . $subtime . "</p>";

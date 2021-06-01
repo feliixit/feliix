@@ -1097,9 +1097,10 @@ var app = new Vue({
                 element.pic_url = '["' + element.pic_url + '"]';
                 element.pic_url = JSON.parse(element.pic_url);
               }
-              console.log(element.pic_url);
+              // console.log(element.pic_url);
             });
-            console.log(_this.items);
+            // console.log(_this.items);
+            /*
             res.data.forEach((element, index) => {
               if (index < this.perPage) {
                 if (element.is_enabled == 1) {
@@ -1124,13 +1125,31 @@ var app = new Vue({
                 }
               }
             });
-            _this.allBalance = _this.allCashIn - _this.allCashOut;
-            _this.accountOneBalance =
-              _this.accountOneCashIn - _this.accountOneCashOut;
-            _this.accountTwoBalance =
-              _this.accountTwoCashIn - _this.accountTwoCashOut;
-            _this.accountThreeBalance =
-              _this.accountThreeCashIn - _this.accountThreeCashOut;
+            */
+
+            if(res.data.length > 0)
+            {
+              _this.allCashIn = parseFloat(res.data[0]['ai']);
+              _this.allCashOut = parseFloat(res.data[0]['ao']);
+
+              _this.accountOneCashIn = parseFloat(res.data[0]['i1']);
+              _this.accountOneCashOut = parseFloat(res.data[0]['o1']);
+
+              _this.accountTwoCashIn = parseFloat(res.data[0]['i2']);
+              _this.accountTwoCashOut = parseFloat(res.data[0]['o2']);
+
+              _this.accountThreeCashIn = parseFloat(res.data[0]['i3']);
+              _this.accountThreeCashOut = parseFloat(res.data[0]['o3']);
+
+              _this.allBalance = _this.allCashIn - _this.allCashOut;
+              _this.accountOneBalance =
+                _this.accountOneCashIn - _this.accountOneCashOut;
+              _this.accountTwoBalance =
+                _this.accountTwoCashIn - _this.accountTwoCashOut;
+              _this.accountThreeBalance =
+                _this.accountThreeCashIn - _this.accountThreeCashOut;
+            }
+            
             this.displayedPosts();
           },
           (err) => {

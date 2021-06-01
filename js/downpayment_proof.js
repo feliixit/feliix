@@ -23,6 +23,8 @@ var app = new Vue({
     //perPage: 10,
     pages: [],
 
+    pages_10: [],
+
     perPage: 5,
 
     fil_keyowrd: "",
@@ -93,6 +95,8 @@ var app = new Vue({
     setPages() {
       console.log("setPages");
       this.pages = [];
+      this.pages_10 = [];
+
       let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
 
       if (numberOfPages == 1) this.page = 1;
@@ -110,11 +114,52 @@ var app = new Vue({
       if (this.page < 1) this.page = 1;
       if (this.page > this.pages.length) this.page = this.pages.length;
 
+      let tenPages = Math.floor((this.page - 1) / 10);
+      if(tenPages < 0)
+        tenPages = 0;
+      this.pages_10 = [];
+      let from = tenPages * 10;
+      let to = (tenPages + 1) * 10;
+      this.pages_10 = this.pages.slice(from, to);
+
       let page = this.page;
       let perPage = this.perPage;
-      let from = page * perPage - perPage;
-      let to = page * perPage;
+      from = page * perPage - perPage;
+      to = page * perPage;
+
       return this.receive_records.slice(from, to);
+    },
+
+    pre_page: function(){
+      let tenPages = Math.floor((this.page - 1) / 10) + 1;
+
+        this.page = parseInt(this.page) - 10;
+        if(this.page < 1)
+          this.page = 1;
+ 
+        this.pages_10 = [];
+
+        let from = tenPages * 10;
+        let to = (tenPages + 1) * 10;
+
+        this.pages_10 = this.pages.slice(from, to);
+      
+    },
+
+    nex_page: function(){
+      let tenPages = Math.floor((this.page - 1) / 10) + 1;
+
+      this.page = parseInt(this.page) + 10;
+      if(this.page > this.pages.length)
+        this.page = this.pages.length;
+
+      let from = tenPages * 10;
+      let to = (tenPages + 1) * 10;
+      let pages_10 = this.pages.slice(from, to);
+
+      if(pages_10.length > 0)
+        this.pages_10 = pages_10;
+
     },
 
     getLeaveCredit: function() {
