@@ -887,6 +887,12 @@ var app = new Vue({
       this.comment5 = "";
       this.comment4 = "";
 
+      this.employee = "";
+      this.review_month = "";
+      this.review_next_month = "";
+      this.template = "";
+      this.templates = [];
+
       this.getLeaveCredit();
     },
 
