@@ -56,7 +56,7 @@ switch ($method) {
     case 'GET':
 
         $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
-        $fs = (isset($_GET['fs']) ?  $_GET['fs'] : 0);
+        $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
         $fp = (isset($_GET['fp']) ?  $_GET['fp'] : 0);
         $fc = (isset($_GET['fc']) ?  $_GET['fc'] : '');
         $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
@@ -74,7 +74,7 @@ switch ($method) {
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task_a'
         where pm.`status` <> -1 " . ($id != 0 ? " and pm.id=$id" : ' ');
 
-        if ($fs != 0) {
+        if ($fs != '') {
             $sql = $sql . " and pm.`status` = " . $fs . " ";
         }
 
@@ -93,7 +93,7 @@ switch ($method) {
             }
         }
 
-        $sql = $sql . " ORDER BY pm.id ";
+        $sql = $sql . " ORDER BY pm.created_at desc ";
 
         if (!empty($_GET['size'])) {
             $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
@@ -263,6 +263,7 @@ switch ($method) {
         $stage_id = (isset($_POST['stage_id']) ?  $_POST['stage_id'] : 0);
         $title = (isset($_POST['title']) ?  $_POST['title'] : '');
         $priority = (isset($_POST['priority']) ?  $_POST['priority'] : 0);
+        $status = (isset($_POST['status']) ?  $_POST['status'] : 0);
         $assignee = (isset($_POST['assignee']) ?  $_POST['assignee'] : '');
         $collaborator = (isset($_POST['collaborator']) ?  $_POST['collaborator'] : '');
         $due_date = (isset($_POST['due_date']) ?  $_POST['due_date'] : '');
@@ -275,6 +276,7 @@ switch ($method) {
             `stage_id` = :stage_id,
             `title` = :title,
             `priority` = :priority,
+            `status` = :status,
             `assignee` = :assignee,
             `collaborator` = :collaborator,
             `due_date` = :due_date,
@@ -291,6 +293,7 @@ switch ($method) {
         $stmt->bindParam(':stage_id', $stage_id);
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':priority', $priority);
+        $stmt->bindParam(':status', $status);
         $stmt->bindParam(':assignee', $assignee);
         $stmt->bindParam(':collaborator', $collaborator);
         $stmt->bindParam(':due_date', $due_date);
@@ -433,13 +436,13 @@ function GetStatus($loc)
 {
     $location = "";
     switch ($loc) {
-        case "1":
+        case "0":
             $location = "Ongoing";
             break;
-        case "2":
+        case "1":
             $location = "Pending";
             break;
-        case "3":
+        case "2":
             $location = "Close";
             break;
                 

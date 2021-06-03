@@ -42,9 +42,9 @@ var app = new Vue({
     ],
 
     statuses: [
-      { "project_status": "Ongoing", "id": 1 },
-      { "project_status": "Pending", "id": 2 },
-      { "project_status": "Close", "id": 3 },
+      { "project_status": "Ongoing", "id": 0 },
+      { "project_status": "Pending", "id": 1 },
+      { "project_status": "Close", "id": 2 },
     ],
 
     perPage: 5,
@@ -1021,11 +1021,7 @@ var app = new Vue({
           if (response.data["batch_id"] != 0) {
             _this.task_upload(response.data["batch_id"]);
 
-            Swal.fire({
-              text: "Created.",
-              icon: "success",
-              confirmButtonText: "OK",
-            });
+            
           } else {
             _this.task_clear();
           }

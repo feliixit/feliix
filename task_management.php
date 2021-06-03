@@ -2491,9 +2491,9 @@ catch (Exception $e) {
                                     <dt>Status:</dt>
                                     <dd>
                                         <select name="" id="" v-model="record.task_status">
-                                            <option value="1">Ongoing</option>
-                                            <option value="2">Pending</option>
-                                            <option value="3">Close</option>
+                                            <option value="0">Ongoing</option>
+                                            <option value="1">Pending</option>
+                                            <option value="2">Close</option>
                                         </select>
                                     </dd>
                                 </dl>
@@ -2671,9 +2671,9 @@ catch (Exception $e) {
                         <ul v-for='(receive_record, index) in displayedStagePosts'>
                             <li><i class="pt03">{{ receive_record.priority }}</i></li>
                             <li>
-                                <a class="btn small yellow" v-if="receive_record.task_status == '1'">Ongoing</a>
-                                <a class="btn small yellow" v-if="receive_record.task_status == '2'">Pending</a>
-                                <a class="btn small green" v-if="receive_record.task_status == '3'">Close</a>
+                                <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
+                                <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
+                                <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
                             </li>
                             <li><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
                             <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
@@ -2699,9 +2699,9 @@ catch (Exception $e) {
                 <div>
                     <div class="teskbox dialogclear">
                         <a class="btn small red">{{ receive_record.priority }}</a>
-                        <a class="btn small yellow" v-if="receive_record.task_status == '1'">Ongoing</a>
-                        <a class="btn small yellow" v-if="receive_record.task_status == '2'">Pending</a>
-                        <a class="btn small green" v-if="receive_record.task_status == '3'">Close</a>
+                        <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
+                        <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
+                        <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
                         <b>[Task] {{ receive_record.title }}</b>
                         <!-- <a class="btn small blue right" id="btn_arrange">Arrange Meeting</a> -->
                     </div>
