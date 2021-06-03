@@ -199,6 +199,9 @@ catch (Exception $e) {
         .list_function.main a.filtering {
             width: 30px;
             height: 30px;
+            background-color: #00811e; 
+            background-size: contain; 
+            background-repeat: no-repeat;
             background-image: url(images/ui/btn_filter.svg);
         }
 
