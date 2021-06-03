@@ -87,7 +87,7 @@ var app = new Vue({
 
     // filter
     fil_priority: 0,
-    fil_status: 0,
+    fil_status: '',
     fil_due_date: "",
     opt_due_date: [],
 
