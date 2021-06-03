@@ -1,55 +1,67 @@
-Vue.component('v-select', VueSelect.VueSelect)
+Vue.component("v-select", VueSelect.VueSelect);
 
 var app = new Vue({
-  el: '#app',
+  el: "#app",
   data: {
     stage_id: 0,
-  
-    record : {},
-    receive_record: {},
- 
-    project03_other_task: [],
 
+    record: {},
+    receive_record: {},
+
+    project03_other_task: [],
 
     users: [],
     users_del: [],
-  
 
     submit: false,
 
-    contactor: '',
-    username: '',
-    client_type: '',
-    category: '',
+    contactor: "",
+    username: "",
+    client_type: "",
+    category: "",
     // paging
     page: 1,
+    pg:0,
     //perPage: 10,
     pages: [],
 
     inventory: [
-      { name: '10', id: 10 },
-      { name: '25', id: 25 },
-      { name: '50', id: 50 },
-      { name: '100', id: 100 },
-      { name: 'All', id: 10000 }
+      { name: "10", id: 10 },
+      { name: "25", id: 25 },
+      { name: "50", id: 50 },
+      { name: "100", id: 100 },
+      { name: "All", id: 10000 },
     ],
+
+    priorities: [
+      { "priority": "No Priority", "id": 1 },
+      { "priority": "Low", "id": 2 },
+      { "priority": "Normal", "id": 3 },
+      { "priority": "High", "id": 4 },
+      { "priority": "Urgent", "id": 5 },
+    ],
+
+    statuses: [
+      { "project_status": "Ongoing", "id": 1 },
+      { "project_status": "Pending", "id": 2 },
+      { "project_status": "Close", "id": 3 },
+    ],
+
     perPage: 5,
 
-    baseURL: 'https://storage.cloud.google.com/feliiximg/',
-
+    baseURL: "https://storage.cloud.google.com/feliiximg/",
 
     // TASKS
-    title: '',
+    title: "",
     priority: 0,
     assignee: [],
     collaborator: [],
-    due_date: '',
-    due_time: '',
-    detail: '',
+    due_date: "",
+    due_time: "",
+    detail: "",
 
     proof_id: 0,
     view_detail: false,
-
 
     fileArray: [],
 
@@ -58,224 +70,266 @@ var app = new Vue({
     taskFinish: [],
     current_task_id: 0,
 
-
     arrMsg: [],
     msgCanSub: [],
     msgFinish: [],
-    current_msg_item_id: '',
+    current_msg_item_id: "",
 
     canSub: true,
     finish: false,
 
-
     // dup task
-    task_id_to_dup:0,
-    task_id_to_del:0,
-    task_id_to_load:0,
+    task_id_to_dup: 0,
+    task_id_to_del: 0,
+    task_id_to_load: 0,
 
     editfileArray: [],
 
-
-
     // filter
-    fil_priority:0,
-    fil_status:0,
-    fil_due_date:'',
-    opt_due_date:[],
+    fil_priority: 0,
+    fil_status: 0,
+    fil_due_date: "",
+    opt_due_date: [],
 
-    fil_creator : '',
-    fil_keyword : '',
+    fil_creator: "",
+    fil_keyword: "",
 
-    priorities : {},
-    statuses : {},
-    creators : {},
+    // priorities: {},
+    // statuses: {},
+    creators: {},
 
     // calendar
-    attendee:[],
+    attendee: [],
 
     // project_name
-    project_id : 0,
-    project_name : '',
-    
+    project_id: 0,
+    project_name: "",
   },
 
   created() {
     let _this = this;
-    let uri = window.location.href.split('?');
+    let uri = window.location.href.split("?");
 
-    let vars = uri[1].split('&');
-    let getVars = {};
-    let tmp = '';
-    vars.forEach(async function(v) {
-      tmp = v.split('=');
-
-      _this.stage_id = tmp[1];
+    if (uri.length > 1) {
+      let vars = uri[1].split("&");
+      let getVars = {};
+      let tmp = "";
+      vars.forEach(async function(v) {
+        tmp = v.split("=");
+        if (tmp.length == 2) {
+          switch (tmp[0]) {
+            case "fp":
+              _this.fil_priority = tmp[1];
+              break;
+            case "fs":
+              _this.fil_status = tmp[1];
+              break;
+            case "fc":
+              _this.fil_creator = decodeURI(tmp[1]);
+              break;
+            case "fk":
+              _this.fil_keyword = decodeURI(tmp[1]);
+              break;
+            case "pg":
+              _this.pg = tmp[1];
+              break;
+            case "page":
+              _this.page = tmp[1];
+              break;
+            case "size":
+              _this.perPage = tmp[1];
+              break;
+            default:
+              console.log(`Too many args`);
+          }
+        }
+        _this.stage_id = tmp[1];
+        _this.getProjectOtherTask();
+        _this.getDueDate(_this.stage_id);
+        _this.getUsersDeleted(_this.stage_id);
+      });
+    } else {
       _this.getProjectOtherTask();
-      _this.getDueDate(_this.stage_id);
-      _this.getUsersDeleted(_this.stage_id);
-    });
-    
+      _this.getDueDate(0);
+      _this.getUsersDeleted(0);
+    }
 
     _this.getUsers();
-    
-
+    //_this.getPrioritys();
+    //_this.getStatuses();
+    _this.getCreators();
   },
 
   computed: {
     displayedStagePosts() {
+ 
       this.setPages();
       return this.paginate(this.project03_other_task);
     },
-
-
-
   },
 
-  mounted() {
-
-
-  },
+  mounted() {},
 
   watch: {
+    
 
- 
-    fil_status: function (value){ 
-      this.fil_status = value;
-      this.getProjectOtherTask(); 
-    },
-
-    fil_priority: function (value){ 
-      this.fil_priority = value;
-      this.getProjectOtherTask(); 
-    },
-
-    fil_due_date: function (value){ 
-
-      this.getProjectOtherTask(); 
-    },
-
-    project03_other_task() {
-      console.log('Vue watch receive_stage_records');
-      this.setPages();
-    },
 
     arrTask: {
       handler(newValue, oldValue) {
         var _this = this;
         console.log(newValue);
-        var finish = newValue[_this.current_task_id].find(function (currentValue, index) {
+        var finish = newValue[_this.current_task_id].find(function(
+          currentValue,
+          index
+        ) {
           return currentValue.progress != 1;
         });
-        if (finish === undefined && this.arrTask[_this.current_task_id].length) {
-
+        if (
+          finish === undefined &&
+          this.arrTask[_this.current_task_id].length
+        ) {
           Swal.fire({
             text: "upload finished",
             type: "success",
             duration: 1 * 1000,
             customClass: "message-box",
-            iconClass: "message-icon"
+            iconClass: "message-icon",
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish[_this.current_task_id] = true;
             _this.getProjectOtherTask();
-
           });
           this.comment_clear(_this.current_task_id);
-
         }
       },
-      deep: true
+      deep: true,
     },
 
     arrMsg: {
       handler(newValue, oldValue) {
         var _this = this;
         console.log(newValue);
-        var finish = newValue[_this.current_msg_item_id].find(function (currentValue, index) {
+        var finish = newValue[_this.current_msg_item_id].find(function(
+          currentValue,
+          index
+        ) {
           return currentValue.progress != 1;
         });
-        if (finish === undefined && this.arrMsg[_this.current_msg_item_id].length) {
-
+        if (
+          finish === undefined &&
+          this.arrMsg[_this.current_msg_item_id].length
+        ) {
           Swal.fire({
             text: "upload finished",
             type: "success",
             duration: 1 * 1000,
             customClass: "message-box",
-            iconClass: "message-icon"
+            iconClass: "message-icon",
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish[_this.current_msg_item_id] = true;
             _this.getProjectOtherTask();
-
           });
           this.msg_clear(_this.current_msg_item_id);
-
         }
       },
-      deep: true
+      deep: true,
     },
 
     fileArray: {
       handler(newValue, oldValue) {
         var _this = this;
         console.log(newValue);
-        var finish = newValue.find(function (currentValue, index) {
+        var finish = newValue.find(function(currentValue, index) {
           return currentValue.progress != 1;
         });
         if (finish === undefined && this.fileArray.length) {
-
           Swal.fire({
             text: "upload finished",
             type: "success",
             duration: 1 * 1000,
             customClass: "message-box",
-            iconClass: "message-icon"
+            iconClass: "message-icon",
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish = true;
             _this.getProjectOtherTask();
-
           });
           this.task_clear();
-
         }
       },
-      deep: true
+      deep: true,
     },
 
     editfileArray: {
       handler(newValue, oldValue) {
         var _this = this;
         console.log(newValue);
-        var finish = newValue.find(function (currentValue, index) {
+        var finish = newValue.find(function(currentValue, index) {
           return currentValue.progress != 1;
         });
         if (finish === undefined && this.editfileArray.length) {
-
           Swal.fire({
             text: "upload finished",
             type: "success",
             duration: 1 * 1000,
             customClass: "message-box",
-            iconClass: "message-icon"
+            iconClass: "message-icon",
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish = true;
             _this.getProjectOtherTask();
-
           });
           this.task_edit_clear();
-
         }
       },
-      deep: true
+      deep: true,
     },
-
   },
 
-
-
   methods: {
+    filter_remove: function() {
+      this.fil_priority = "";
+      this.fil_status = "";
+      this.fil_creator = "";
+      this.fil_keyowrd = "";
+
+      document.getElementById("btn_filter").classList.remove("focus");
+      document.getElementById("filter_dialog").classList.remove("show");
+
+      //this.receive_records = [];
+
+      //this.getRecords();
+      this.filter_apply();
+    },
+
+    getCreators() {
+      let _this = this;
+
+      let token = localStorage.getItem("accessToken");
+
+      axios
+        .get("api/admin/project_creators_a", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(
+          (res) => {
+            _this.creators = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          }
+        )
+        .finally(() => {});
+    },
+
+    getPrioritys() {
+      this.priorities = this._priority;
+    },
+
+    getStatuses() {
+      this.statuses = this._status;
+    },
 
     hide_detail: function() {
       this.proof_id = 0;
@@ -294,48 +348,33 @@ var app = new Vue({
       }
 
       this.receive_record = this.shallowCopy(
-        this.project03_other_task.find((element) => element.task_id == this.proof_id)
+        this.project03_other_task.find(
+          (element) => element.task_id == this.proof_id
+        )
       );
 
       this.$refs.mask.style.display = "block";
       this.view_detail = true;
-
     },
 
     filter_apply: function() {
       let _this = this;
 
-      if(_this.page < 1) _this.page = 1;
+      if (_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
 
       window.location.href =
         "task_management?" +
-        "fc=" +
-        _this.fil_category +
+        "fp=" +
+        _this.fil_priority +
         "&fs=" +
         _this.fil_status +
-        "&ft=" +
+        "&fc=" +
         _this.fil_creator +
-        "&fal=" +
-        _this.fil_amount_lower +
-        "&fau=" +
-        _this.fil_amount_upper +
-        "&fpl=" +
-        _this.fil_payment_lower +
-        "&fpu=" +
-        _this.fil_payment_upper +
         "&fk=" +
-        _this.fil_keyowrd +
-        "&of1=" +
-        _this.od_factor1 +
-        "&ofd1=" +
-        _this.od_factor1_order +
-        "&of2=" +
-        _this.od_factor2 +
-        "&ofd2=" +
-        _this.od_factor2_order +
+        _this.fil_keyword +
         "&pg=" +
-        _this.page +
+        _this.pg +
         "&page=" +
         _this.page +
         "&size=" +
@@ -388,84 +427,94 @@ var app = new Vue({
       }
     },
 
-
     show_detail: function(id) {
       this.proof_id = id;
 
       this.detail_a();
     },
 
-
     taskItems(task_id) {
       var arr = this.arrTask[task_id];
       return arr;
     },
-
 
     msgItems(item_id) {
       var arr = this.arrMsg[item_id];
       return arr;
     },
 
-
     deleteTaskFile(task_id, index) {
       this.current_task_id = task_id;
 
       this.arrTask[task_id].splice(index, 1);
-      var fileTarget = this.$refs['file_task_' + task_id][0];
+      var fileTarget = this.$refs["file_task_" + task_id];
       fileTarget.value = "";
-      Vue.set(this.arrTask, 0, '');
+      Vue.set(this.arrTask, 0, "");
     },
 
     deleteMsgFile(item_id, index) {
       this.current_msg_item_id = item_id;
 
       this.arrMsg[item_id].splice(index, 1);
-      var fileTarget = this.$refs['file_msg_' + item_id][0];
+      var fileTarget = this.$refs["file_msg_" + item_id][0];
       fileTarget.value = "";
-      Vue.set(this.arrMsg, 0, '');
+      Vue.set(this.arrMsg, 0, "");
     },
-
 
     openTaskMsgDlg(item_id) {
       this.current_msg_item_id = item_id;
-      document.getElementById('task_reply_btn_' + item_id).classList.add("focus");
-      document.getElementById('task_reply_dlg_' + item_id).classList.add("show");
+      document
+        .getElementById("task_reply_btn_" + item_id)
+        .classList.add("focus");
+      document
+        .getElementById("task_reply_dlg_" + item_id)
+        .classList.add("show");
     },
 
     closeTaskMsgDlg(item_id) {
-      document.getElementById('task_reply_btn_' + item_id).classList.remove("focus");
-      document.getElementById('task_reply_dlg_' + item_id).classList.remove("show");
+      document
+        .getElementById("task_reply_btn_" + item_id)
+        .classList.remove("focus");
+      document
+        .getElementById("task_reply_dlg_" + item_id)
+        .classList.remove("show");
     },
 
-    task_load () {
-      if(this.task_id_to_load != 0)
-      {
+    filter_clear() {
+      document.getElementById("btn_filter").classList.remove("focus");
+      document.getElementById("filter_dialog").classList.remove("show");
+    },
+
+    task_load() {
+      if (this.task_id_to_load != 0) {
         this.record = {};
-        this.record = this.shallowCopy(this.project03_other_task.find(element => element.task_id == this.task_id_to_load));
+        this.record = this.shallowCopy(
+          this.project03_other_task.find(
+            (element) => element.task_id == this.task_id_to_load
+          )
+        );
 
         this.getUsersDeleted(this.task_id_to_load);
       }
     },
 
-
     shallowCopy(obj) {
       console.log("shallowCopy");
-        var result = {};
-        for (var i in obj) {
-            result[i] = obj[i];
-        }
-        return result;
+      var result = {};
+      for (var i in obj) {
+        result[i] = obj[i];
+      }
+      return result;
     },
 
     changeMsgFile(item_id) {
       this.current_msg_item_id = item_id;
 
       var arr = this.arrMsg[item_id];
-      if (typeof arr === 'undefined' || arr.length == 0)
+      if (typeof arr === "undefined" || arr.length == 0)
         this.arrMsg[item_id] = [];
 
-      var fileTarget = this.$refs['file_msg_' + item_id][0];
+      var fileTarget = this.$refs["file_msg_" + item_id][0];
 
       for (i = 0; i < fileTarget.files.length; i++) {
         // remove duplicate
@@ -475,22 +524,21 @@ var app = new Vue({
         ) {
           var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
           this.arrMsg[item_id].push(fileItem);
-          Vue.set(this.arrMsg, 0, '');
+          Vue.set(this.arrMsg, 0, "");
         } else {
           fileTarget.value = "";
         }
       }
     },
 
-    
     changeTaskFile(task_id) {
       this.current_task_id = task_id;
 
       var arr = this.arrTask[task_id];
-      if (typeof arr === 'undefined' || arr.length == 0)
+      if (typeof arr === "undefined" || arr.length == 0)
         this.arrTask[task_id] = [];
 
-      var fileTarget = this.$refs['file_task_' + task_id][0];
+      var fileTarget = this.$refs["file_task_" + task_id];
 
       for (i = 0; i < fileTarget.files.length; i++) {
         // remove duplicate
@@ -500,7 +548,7 @@ var app = new Vue({
         ) {
           var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
           this.arrTask[task_id].push(fileItem);
-          Vue.set(this.arrTask, 0, '');
+          Vue.set(this.arrTask, 0, "");
         } else {
           fileTarget.value = "";
         }
@@ -508,132 +556,152 @@ var app = new Vue({
     },
 
     setPages() {
-      console.log('setPages');
+      console.log("setPages");
       this.pages = [];
-      let numberOfPages = Math.ceil(this.project03_other_task.length / this.perPage);
+      let numberOfPages = Math.ceil(
+        this.project03_other_task.length / this.perPage
+      );
 
-      if (numberOfPages == 1)
-        this.page = 1;
+      if (numberOfPages == 1) this.page = 1;
       for (let index = 1; index <= numberOfPages; index++) {
         this.pages.push(index);
       }
     },
 
-    paginate: function (posts) {
-      console.log('paginate');
-      if (this.page < 1)
-        this.page = 1;
-      if (this.page > this.pages.length)
-        this.page = this.pages.length;
+    paginate: function(posts) {
+      console.log("paginate");
+      if (this.page < 1) this.page = 1;
+      if (this.page > this.pages.length) this.page = this.pages.length;
 
       let page = this.page;
       let perPage = this.perPage;
-      let from = (page * perPage) - perPage;
-      let to = (page * perPage);
+      let from = page * perPage - perPage;
+      let to = page * perPage;
       return this.project03_other_task.slice(from, to);
+    },
+
+    reload_task(task_id) {
+      let _this = this;
+      const params = {
+        id: task_id,
+      };
+
+      let token = localStorage.getItem("accessToken");
+
+      axios
+        .get("api/project03_other_task_a", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(
+          (res) => {
+            _this.receive_record = res.data[0];
+          },
+          (err) => {
+            alert(err.response);
+          }
+        )
+        .finally(() => {});
     },
 
     getProjectOtherTask() {
       let _this = this;
 
       const params = {
-        status: this.fil_status,
-        priority: this.fil_priority,
-        duedate: this.fil_due_date,
+        fs: this.fil_status,
+        fp: this.fil_priority,
+        fc: this.fil_creator,
+        fk: this.fil_keyowrd,
       };
 
-      let token = localStorage.getItem('accessToken');
+      let token = localStorage.getItem("accessToken");
 
       axios
-        .get('api/project03_other_task_a', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .get("api/project03_other_task_a", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(
           (res) => {
             _this.project03_other_task = res.data;
           },
           (err) => {
             alert(err.response);
-          },
+          }
         )
-        .finally(() => {
-
-        });
+        .finally(() => {});
     },
 
     getUsers() {
-
       let _this = this;
 
-      let token = localStorage.getItem('accessToken');
+      let token = localStorage.getItem("accessToken");
 
       axios
-        .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
+        .get("api/project02_user", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(
           (res) => {
             _this.users = res.data;
           },
           (err) => {
             alert(err.response);
-          },
+          }
         )
-        .finally(() => {
-
-        });
+        .finally(() => {});
     },
 
     getUsersDeleted(id) {
-
       let _this = this;
 
-      let token = localStorage.getItem('accessToken');
+      let token = localStorage.getItem("accessToken");
 
       const params = {
-        pid : id,
-       
+        pid: id,
       };
 
       axios
-        .get('api/project03_user_other_deleted', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .get("api/project03_user_other_deleted", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(
           (res) => {
             _this.users_del = res.data;
           },
           (err) => {
             alert(err.response);
-          },
+          }
         )
-        .finally(() => {
-
-        });
+        .finally(() => {});
     },
 
-
     getDueDate(stage_id) {
-
       let _this = this;
 
-      if (stage_id == 0)
-        return;
+      if (stage_id == 0) return;
 
       const params = {
         stage_id: stage_id,
-
       };
 
-      let token = localStorage.getItem('accessToken');
+      let token = localStorage.getItem("accessToken");
 
       axios
-        .get('api/project03_other_task_due_date', {params, headers: { "Authorization": `Bearer ${token}` } })
+        .get("api/project03_other_task_due_date", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(
           (res) => {
             _this.opt_due_date = res.data;
           },
           (err) => {
             alert(err.response);
-          },
+          }
         )
-        .finally(() => {
-
-        });
+        .finally(() => {});
     },
 
     OpenAssignee() {
@@ -645,304 +713,321 @@ var app = new Vue({
     },
 
     task_dup() {
-      if(this.task_id_to_dup != 0)
-      {
+      if (this.task_id_to_dup != 0) {
         let _this = this;
         Swal.fire({
-            title: "Duplicate",
-            text: "Are you sure to duplicate?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-          }).then((result) => {
-            if (result.value) {
-              
-                _this.do_task_duplicate(_this.task_id_to_dup); // <--- submit form programmatically
-              
-            } else {
-              // swal("Cancelled", "Your imaginary file is safe :)", "error");
-            }
-          });
-      }
-    },
-
-    do_task_duplicate(task_id_to_dup) {
-      var token = localStorage.getItem('token');
-        var form_Data = new FormData();
-        let _this = this;
-
-        form_Data.append('jwt', token);
-        form_Data.append('task_id_to_dup', task_id_to_dup);
-
-        axios({
-            method: 'post',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            url: 'api/project03_other_task_dup_a',
-            data: form_Data
-        })
-        .then(function(response) {
-            //handle success
-            if(response.data['ret'] != 0)
-            {
-              _this.org_uid = _this.uid;
-              
-                Swal.fire({
-                  text: "Duplicated",
-                  icon: 'success',
-                  confirmButtonText: 'OK'
-                })
-
-                _this.getProjectOtherTask();
-            }
-        })
-        .catch(function(response) {
-            //handle error
-            Swal.fire({
-              text: JSON.stringify(response),
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
-
-            _this.getProjectOtherTask();
-        });
-
-        _this.task_clear();
-    },
-
-
-    task_del() {
-      if(this.task_id_to_del != 0)
-      {
-        let _this = this;
-        Swal.fire({
-            title: "Delete",
-            text: "Are you sure to delete?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-          }).then((result) => {
-            if (result.value) {
-              
-                _this.do_task_delete(_this.task_id_to_del); // <--- submit form programmatically
-              
-            } else {
-              // swal("Cancelled", "Your imaginary file is safe :)", "error");
-            }
-          });
-      }
-    },
-
-    do_task_delete(task_id_to_del) {
-      var token = localStorage.getItem('token');
-        var form_Data = new FormData();
-        let _this = this;
-
-        form_Data.append('jwt', token);
-        form_Data.append('task_id_to_del', task_id_to_del);
-
-        axios({
-            method: 'post',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            url: 'api/project03_other_task_del_a',
-            data: form_Data
-        })
-        .then(function(response) {
-            //handle success
-            if(response.data['ret'] != 0)
-            {
-              _this.org_uid = _this.uid;
-              
-                Swal.fire({
-                  text: "Deleted",
-                  icon: 'success',
-                  confirmButtonText: 'OK'
-                })
-
-                _this.getProjectOtherTask();
-            }
-        })
-        .catch(function(response) {
-            //handle error
-            Swal.fire({
-              text: JSON.stringify(response),
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
-
-            _this.getProjectOtherTask();
-        });
-
-        _this.task_clear();
-    },
-
-
-
-    task_clear() {
-
-      this.detail = "";
-
-      document.getElementById('dialog_a1').classList.remove("focus");
-      document.getElementById('add_a1').classList.remove("show");
-    },
-
-    task_edit_clear() {
-
-      document.getElementById('dialog_red_edit').classList.remove("show");
-      document.getElementById('edit_red').classList.remove("focus");
-    },
-
-
-    msg_clear(item_id) {
-
-      this.$refs['task_reply_msg_' + item_id][0].value = "";
-
-      document.getElementById('task_reply_btn_' + item_id).classList.remove("focus");
-      document.getElementById('task_reply_dlg_' + item_id).classList.remove("show");
-    },
-
-
-    msg_delete(message_id, item_id, mid, uid) {
-      if(mid !== uid)
-        return;
-
-      let _this = this;
-      Swal.fire({
-          title: "Delete",
-          text: "Are you sure to delete?",
+          title: "Duplicate",
+          text: "Are you sure to duplicate?",
           icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
         }).then((result) => {
           if (result.value) {
-            
-              _this.do_msg_delete(message_id, item_id); // <--- submit form programmatically
-            
+            _this.do_task_duplicate(_this.task_id_to_dup); // <--- submit form programmatically
           } else {
             // swal("Cancelled", "Your imaginary file is safe :)", "error");
           }
         });
+      }
     },
 
-    do_msg_delete(message_id, item_id) {
-      var token = localStorage.getItem('token');
+    do_task_duplicate(task_id_to_dup) {
+      var token = localStorage.getItem("token");
       var form_Data = new FormData();
       let _this = this;
 
-      form_Data.append('jwt', token);
-      form_Data.append('message_id', message_id);
-      form_Data.append('item_id', item_id);
+      form_Data.append("jwt", token);
+      form_Data.append("task_id_to_dup", task_id_to_dup);
 
       axios({
-          method: 'post',
-          headers: {
-              'Content-Type': 'multipart/form-data',
-          },
-          url: 'api/project03_delete_message',
-          data: form_Data
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/project03_other_task_dup_a",
+        data: form_Data,
       })
-      .then(function(response) {
+        .then(function(response) {
           //handle success
-          if(response.data['ret'] != 0)
-          {
+          if (response.data["ret"] != 0) {
             _this.org_uid = _this.uid;
-            
-              Swal.fire({
-                text: "Deleted",
-                icon: 'success',
-                confirmButtonText: 'OK'
-              })
 
-              _this.getProjectOtherTask();
+            Swal.fire({
+              text: "Duplicated",
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+
+            _this.getProjectOtherTask();
           }
-
-      })
-      .catch(function(response) {
+        })
+        .catch(function(response) {
           //handle error
           Swal.fire({
             text: JSON.stringify(response),
-            icon: 'error',
-            confirmButtonText: 'OK'
+            icon: "error",
+            confirmButtonText: "OK",
           });
 
+          _this.getProjectOtherTask();
+        });
+
+      _this.task_clear();
+    },
+
+    task_del() {
+      if (this.task_id_to_del != 0) {
+        let _this = this;
+        Swal.fire({
+          title: "Delete",
+          text: "Are you sure to delete?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+        }).then((result) => {
+          if (result.value) {
+            _this.do_task_delete(_this.task_id_to_del); // <--- submit form programmatically
+          } else {
+            // swal("Cancelled", "Your imaginary file is safe :)", "error");
+          }
+        });
+      }
+    },
+
+    do_task_delete(task_id_to_del) {
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append("jwt", token);
+      form_Data.append("task_id_to_del", task_id_to_del);
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/project03_other_task_del_a",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          if (response.data["ret"] != 0) {
+            _this.org_uid = _this.uid;
+
+            Swal.fire({
+              text: "Deleted",
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+
+            _this.getProjectOtherTask();
+          }
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+
+          _this.getProjectOtherTask();
+        });
+
+      _this.task_clear();
+    },
+
+    task_clear() {
+      this.detail = "";
+      this.record = {};
+      this.task_id_to_load = 0;
+      this.task_id_to_del = 0;
+      this.task_id_to_dup = 0;
+      document.getElementById("dialog_red_edit").classList.remove("show");
+      document.getElementById("edit_red").classList.remove("focus");
+
+      document.getElementById("dialog_a1").classList.remove("focus");
+      document.getElementById("add_a1").classList.remove("show");
+    },
+
+    task_edit_clear() {
+      this.record = {};
+      this.task_id_to_load = 0;
+      this.task_id_to_del = 0;
+      this.task_id_to_dup = 0;
+      document.getElementById("dialog_red_edit").classList.remove("show");
+      document.getElementById("edit_red").classList.remove("focus");
+
+      document.getElementById("dialog_a1").classList.remove("focus");
+      document.getElementById("add_a1").classList.remove("show");
+    },
+
+    msg_clear(item_id) {
+      let org_item = item_id.split("_")[1];
+
+      if (org_item == "0")
+        this.$refs["task_reply_msg_" + item_id][0].value = "";
+      else this.$refs["task_reply_msg_" + item_id][0].value = "";
+
+      document
+        .getElementById("task_reply_btn_" + item_id)
+        .classList.remove("focus");
+      document
+        .getElementById("task_reply_dlg_" + item_id)
+        .classList.remove("show");
+
+      this.reload_task(this.proof_id);
+    },
+
+    msg_delete(message_id, item_id, mid, uid) {
+      if (mid !== uid) return;
+
+      let _this = this;
+      Swal.fire({
+        title: "Delete",
+        text: "Are you sure to delete?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.value) {
+          _this.do_msg_delete(message_id, item_id); // <--- submit form programmatically
+        } else {
+          // swal("Cancelled", "Your imaginary file is safe :)", "error");
+        }
       });
     },
 
+    do_msg_delete(message_id, item_id) {
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append("jwt", token);
+      form_Data.append("message_id", message_id);
+      form_Data.append("item_id", item_id);
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/project03_delete_message_a",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          if (response.data["ret"] != 0) {
+            _this.org_uid = _this.uid;
+
+            Swal.fire({
+              text: "Deleted",
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+
+            _this.reload_task(_this.proof_id);
+          }
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        });
+    },
 
     comment_clear(task_id) {
       this.current_task_id = task_id;
       this.arrTask[task_id] = [];
-      Vue.set(this.arrTask, 0, '');
-      this.$refs['comment_task_' + task_id][0].value = "";
-    },
+      Vue.set(this.arrTask, 0, "");
+      this.$refs["comment_task_" + task_id].value = "";
 
+      this.reload_task(task_id);
+    },
 
     task_create() {
       let _this = this;
 
-      if (this.title.trim() == '') {
+      if (this.title.trim() == "") {
         Swal.fire({
-          text: 'Please enter title!',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        })
+          text: "Please enter title!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
 
         //$(window).scrollTop(0);
         return;
       }
 
-
-      if (this.due_date.trim() == '' && this.due_time.trim() != '') {
+      if (this.due_date.trim() == "" && this.due_time.trim() != "") {
         Swal.fire({
-          text: 'Please enter due date!',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        })
+          text: "Please enter due date!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
 
         //$(window).scrollTop(0);
         return;
       }
-
 
       _this.submit = true;
       var form_Data = new FormData();
 
-      form_Data.append('stage_id', this.stage_id);
-      form_Data.append('title', this.title.trim());
-      form_Data.append('priority', this.priority);
-      form_Data.append('assignee', Array.prototype.map.call(this.assignee, function(item) { return item.id; }).join(","));
-      form_Data.append('collaborator', Array.prototype.map.call(this.collaborator, function(item) { return item.id; }).join(",") );
-      form_Data.append('due_date', this.due_date.trim());
-      form_Data.append('due_time', this.due_time.trim());
-      form_Data.append('detail', this.detail.trim());
+      form_Data.append("stage_id", this.stage_id);
+      form_Data.append("title", this.title.trim());
+      form_Data.append("priority", this.priority);
+      form_Data.append(
+        "assignee",
+        Array.prototype.map
+          .call(this.assignee, function(item) {
+            return item.id;
+          })
+          .join(",")
+      );
+      form_Data.append(
+        "collaborator",
+        Array.prototype.map
+          .call(this.collaborator, function(item) {
+            return item.id;
+          })
+          .join(",")
+      );
+      form_Data.append("due_date", this.due_date.trim());
+      form_Data.append("due_time", this.due_time.trim());
+      form_Data.append("detail", this.detail.trim());
 
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
 
       axios({
-        method: 'post',
+        method: "post",
         headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
-        url: 'api/project03_other_task',
-        data: form_Data
+        url: "api/project03_other_task_a",
+        data: form_Data,
       })
-        .then(function (response) {
-          if (response.data['batch_id'] != 0) {
-            _this.task_upload(response.data['batch_id']);
-          }
-          else {
-            _this.task_clear();
+        .then(function(response) {
+          if (response.data["batch_id"] != 0) {
+            _this.task_upload(response.data["batch_id"]);
 
+            Swal.fire({
+              text: "Created.",
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+          } else {
+            _this.task_clear();
           }
 
           if (_this.fileArray.length == 0) {
@@ -950,14 +1035,16 @@ var app = new Vue({
             _this.task_clear();
           }
         })
-        .catch(function (response) {
+        .catch(function(response) {
           //handle error
-          console.log(response)
-        }).finally(function () { _this.task_clear() });
+          console.log(response);
+        })
+        .finally(function() {
+          _this.task_clear();
+        });
     },
 
     task_upload(batch_id) {
-
       this.canSub = false;
       var myArr = this.fileArray;
       var vm = this;
@@ -966,13 +1053,11 @@ var app = new Vue({
       myArr.forEach((element, index) => {
         var config = {
           headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: function (e) {
-
+          onUploadProgress: function(e) {
             if (e.lengthComputable) {
               var rate = e.loaded / e.total;
               console.log(index, e.loaded, e.total, rate);
               if (rate < 1) {
-
                 myArr[index].progress = rate;
                 vm.$set(vm.fileArray, index, myArr[index]);
               } else {
@@ -980,19 +1065,18 @@ var app = new Vue({
                 vm.$set(vm.fileArray, index, myArr[index]);
               }
             }
-          }
+          },
         };
         var data = myArr[index];
         var myForm = new FormData();
-        myForm.append('batch_type', 'other_task_a');
-        myForm.append('batch_id', batch_id);
+        myForm.append("batch_type", "other_task_a");
+        myForm.append("batch_id", batch_id);
         myForm.append("file", data);
 
         axios
           .post("api/uploadFile_gcp", myForm, config)
-          .then(function (res) {
+          .then(function(res) {
             if (res.data.code == 0) {
-
               myArr[index].progress = 1;
               vm.$set(vm.fileArray, index, myArr[index]);
               console.log(vm.fileArray, index);
@@ -1000,88 +1084,108 @@ var app = new Vue({
               alert(JSON.stringify(res.data));
             }
           })
-          .catch(function (err) {
+          .catch(function(err) {
             console.log(err);
           });
       });
 
       this.canSub = true;
-
     },
-
 
     task_edit_create() {
       let _this = this;
 
       if (this.task_id_to_load == 0) {
         Swal.fire({
-          text: 'Please select a task to edit',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        })
+          text: "Please select a task to edit",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
 
         //$(window).scrollTop(0);
         return;
       }
 
-      if (this.record.due_date.trim() == '' && this.record.due_time.trim() != '') {
+      if (
+        this.record.due_date.trim() == "" &&
+        this.record.due_time.trim() != ""
+      ) {
         Swal.fire({
-          text: 'Please enter due date!',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        })
+          text: "Please enter due date!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
 
         //$(window).scrollTop(0);
         return;
       }
-
 
       _this.submit = true;
       var form_Data = new FormData();
 
-      form_Data.append('task_id', this.record.task_id);
-      form_Data.append('title', this.record.title.trim());
-      form_Data.append('priority', this.record.priority_id);
-      form_Data.append('status', this.record.task_status);
-      form_Data.append('assignee', Array.prototype.map.call(this.record.assignee, function(item) { return item.id; }).join(","));
-      form_Data.append('collaborator', Array.prototype.map.call(this.record.collaborator, function(item) { return item.id; }).join(","));
-      form_Data.append('due_date', this.record.due_date.trim());
-      form_Data.append('due_time', this.record.due_time.trim());
-      form_Data.append('detail', this.record.detail.trim());
+      form_Data.append("task_id", this.record.task_id);
+      form_Data.append("title", this.record.title.trim());
+      form_Data.append("priority", this.record.priority_id);
+      form_Data.append("status", this.record.task_status);
+      form_Data.append(
+        "assignee",
+        Array.prototype.map
+          .call(this.record.assignee, function(item) {
+            return item.id;
+          })
+          .join(",")
+      );
+      form_Data.append(
+        "collaborator",
+        Array.prototype.map
+          .call(this.record.collaborator, function(item) {
+            return item.id;
+          })
+          .join(",")
+      );
+      form_Data.append("due_date", this.record.due_date.trim());
+      form_Data.append("due_time", this.record.due_time.trim());
+      form_Data.append("detail", this.record.detail.trim());
 
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
 
       axios({
-        method: 'post',
+        method: "post",
         headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
-        url: 'api/project03_other_task_edit_a',
-        data: form_Data
+        url: "api/project03_other_task_edit_a",
+        data: form_Data,
       })
-        .then(function (response) {
-          if (response.data['batch_id'] != 0) {
-            _this.task_edit_upload(response.data['batch_id']);
-          }
-          else {
+        .then(function(response) {
+          if (response.data["batch_id"] != 0) {
+            _this.task_edit_upload(response.data["batch_id"]);
+          } else {
             _this.task_edit_clear();
-
           }
+
+          Swal.fire({
+            text: "Edited",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
 
           if (_this.editfileArray.length == 0) {
             _this.getProjectOtherTask();
             _this.task_edit_clear();
           }
         })
-        .catch(function (response) {
+        .catch(function(response) {
           //handle error
-          console.log(response)
-        }).finally(function () { _this.task_edit_clear() });
+          console.log(response);
+        })
+        .finally(function() {
+          _this.task_edit_clear();
+        });
     },
 
     task_edit_upload(batch_id) {
-
       this.canSub = false;
       var myArr = this.editfileArray;
       var vm = this;
@@ -1090,13 +1194,11 @@ var app = new Vue({
       myArr.forEach((element, index) => {
         var config = {
           headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: function (e) {
-
+          onUploadProgress: function(e) {
             if (e.lengthComputable) {
               var rate = e.loaded / e.total;
               console.log(index, e.loaded, e.total, rate);
               if (rate < 1) {
-
                 myArr[index].progress = rate;
                 vm.$set(vm.editfileArray, index, myArr[index]);
               } else {
@@ -1104,19 +1206,18 @@ var app = new Vue({
                 vm.$set(vm.editfileArray, index, myArr[index]);
               }
             }
-          }
+          },
         };
         var data = myArr[index];
         var myForm = new FormData();
-        myForm.append('batch_type', 'other_task_a');
-        myForm.append('batch_id', batch_id);
+        myForm.append("batch_type", "other_task_a");
+        myForm.append("batch_id", batch_id);
         myForm.append("file", data);
 
         axios
           .post("api/uploadFile_gcp", myForm, config)
-          .then(function (res) {
+          .then(function(res) {
             if (res.data.code == 0) {
-
               myArr[index].progress = 1;
               vm.$set(vm.editfileArray, index, myArr[index]);
               console.log(vm.editfileArray, index);
@@ -1124,60 +1225,54 @@ var app = new Vue({
               alert(JSON.stringify(res.data));
             }
           })
-          .catch(function (err) {
+          .catch(function(err) {
             console.log(err);
           });
       });
 
       this.canSub = true;
-
     },
-
 
     comment_create(task_id) {
       this.current_task_id = task_id;
 
       let _this = this;
 
-      var comment = this.$refs['comment_task_' + task_id][0];
+      var comment = this.$refs["comment_task_" + task_id];
 
-      if (comment.value.trim() == '') {
+      if (comment.value.trim() == "") {
         Swal.fire({
-          text: 'Please enter comment!',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        })
+          text: "Please enter comment!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
 
         //$(window).scrollTop(0);
         return;
       }
 
-
       _this.submit = true;
       var form_Data = new FormData();
 
-      form_Data.append('task_id', task_id);
-      form_Data.append('message', comment.value.trim());
+      form_Data.append("task_id", task_id);
+      form_Data.append("message", comment.value.trim());
 
-
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
 
       axios({
-        method: 'post',
+        method: "post",
         headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
-        url: 'api/project_other_task_message_a',
-        data: form_Data
+        url: "api/project_other_task_message_a",
+        data: form_Data,
       })
-        .then(function (response) {
-          if (response.data['batch_id'] != 0) {
-            _this.comment_upload(task_id, response.data['batch_id']);
-          }
-          else {
+        .then(function(response) {
+          if (response.data["batch_id"] != 0) {
+            _this.comment_upload(task_id, response.data["batch_id"]);
+          } else {
             _this.comment_clear(task_id);
-
           }
 
           if (_this.arrTask[task_id].length == 0) {
@@ -1185,14 +1280,16 @@ var app = new Vue({
             _this.comment_clear(task_id);
           }
         })
-        .catch(function (response) {
+        .catch(function(response) {
           //handle error
-          console.log(response)
-        }).finally(function () { _this.comment_clear(task_id) });
+          console.log(response);
+        })
+        .finally(function() {
+          _this.comment_clear(task_id);
+        });
     },
 
     comment_upload(task_id, batch_id) {
-
       this.current_task_id = task_id;
 
       this.canSub = false;
@@ -1203,67 +1300,65 @@ var app = new Vue({
       myArr.forEach((element, index) => {
         var config = {
           headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: function (e) {
-
+          onUploadProgress: function(e) {
             if (e.lengthComputable) {
               var rate = e.loaded / e.total;
               console.log(index, e.loaded, e.total, rate);
               if (rate < 1) {
-
                 myArr[index].progress = rate;
                 _this.$set(_this.arrTask[task_id], index, myArr[index]);
-                Vue.set(_this.arrTask, 0, '');
+                Vue.set(_this.arrTask, 0, "");
               } else {
                 myArr[index].progress = 0.99;
                 _this.$set(_this.arrTask[task_id], index, myArr[index]);
-                Vue.set(_this.arrTask, 0, '');
+                Vue.set(_this.arrTask, 0, "");
               }
             }
-          }
+          },
         };
         var data = myArr[index];
         var myForm = new FormData();
-        myForm.append('batch_type', 'other_task_msg_a');
-        myForm.append('batch_id', batch_id);
+        myForm.append("batch_type", "other_task_msg_a");
+        myForm.append("batch_id", batch_id);
         myForm.append("file", data);
 
         axios
           .post("api/uploadFile_gcp", myForm, config)
-          .then(function (res) {
+          .then(function(res) {
             if (res.data.code == 0) {
-
               myArr[index].progress = 1;
               _this.$set(_this.arrTask[task_id], index, myArr[index]);
               console.log(_this.arrTask[task_id], index);
-              Vue.set(_this.arrTask, 0, '');
+              Vue.set(_this.arrTask, 0, "");
             } else {
               alert(JSON.stringify(res.data));
             }
           })
-          .catch(function (err) {
+          .catch(function(err) {
             console.log(err);
           });
       });
 
       this.taskCanSub[task_id] = true;
-
     },
-
-
 
     msg_create(item_id, msg_id) {
       this.current_msg_item_id = item_id;
 
+      let org_item = item_id.split("_")[1];
+
       let _this = this;
 
-      var comment = this.$refs['task_reply_msg_' + item_id][0];
+      var comment = {};
+      if (org_item == "0") comment = this.$refs["task_reply_msg_" + item_id][0];
+      else comment = this.$refs["task_reply_msg_" + item_id][0];
 
-      if (comment.value.trim() == '') {
+      if (comment.value.trim() == "") {
         Swal.fire({
-          text: 'Please enter reply!',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        })
+          text: "Please enter reply!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
 
         //$(window).scrollTop(0);
         return;
@@ -1272,28 +1367,30 @@ var app = new Vue({
       _this.submit = true;
       var form_Data = new FormData();
 
-      form_Data.append('msg_id', msg_id);
-      form_Data.append('reply', comment.value.trim());
+      if (org_item == "0") form_Data.append("msg_id", msg_id);
+      else {
+        form_Data.append("msg_id", org_item);
+        form_Data.append("reply_id", msg_id);
+      }
 
+      form_Data.append("reply", comment.value.trim());
 
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
 
       axios({
-        method: 'post',
+        method: "post",
         headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
-        url: 'api/project_other_task_reply_a',
-        data: form_Data
+        url: "api/project_other_task_reply_a",
+        data: form_Data,
       })
-        .then(function (response) {
-          if (response.data['batch_id'] != 0) {
-            _this.msg_upload(item_id, msg_id, response.data['batch_id']);
-          }
-          else {
+        .then(function(response) {
+          if (response.data["batch_id"] != 0) {
+            _this.msg_upload(item_id, msg_id, response.data["batch_id"]);
+          } else {
             _this.msg_clear(item_id);
-
           }
 
           if (_this.arrMsg[item_id] === undefined) {
@@ -1301,22 +1398,23 @@ var app = new Vue({
             _this.msg_clear(item_id);
           }
         })
-        .catch(function (response) {
+        .catch(function(response) {
           //handle error
-          console.log(response)
-        }).finally(function () { _this.msg_clear(item_id) });
+          console.log(response);
+        })
+        .finally(function() {
+          _this.msg_clear(item_id);
+        });
     },
 
     msg_upload(item_id, msg_id, batch_id) {
-
       this.current_msg_item_id = item_id;
 
       this.canSub = false;
       var myArr = this.arrMsg[item_id];
       var _this = this;
 
-      if(myArr === undefined)
-      { 
+      if (myArr === undefined) {
         _this.getProjectOtherTask();
         _this.msg_clear(item_id);
         return;
@@ -1325,61 +1423,54 @@ var app = new Vue({
       myArr.forEach((element, index) => {
         var config = {
           headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: function (e) {
-
+          onUploadProgress: function(e) {
             if (e.lengthComputable) {
               var rate = e.loaded / e.total;
               console.log(index, e.loaded, e.total, rate);
               if (rate < 1) {
-
                 myArr[index].progress = rate;
                 _this.$set(_this.arrMsg[item_id], index, myArr[index]);
-                Vue.set(_this.arrMsg, 0, '');
+                Vue.set(_this.arrMsg, 0, "");
               } else {
                 myArr[index].progress = 0.99;
                 _this.$set(_this.arrMsg[item_id], index, myArr[index]);
-                Vue.set(_this.arrMsg, 0, '');
+                Vue.set(_this.arrMsg, 0, "");
               }
             }
-          }
+          },
         };
         var data = myArr[index];
         var myForm = new FormData();
-        myForm.append('batch_type', 'other_task_msg_rep_a');
-        myForm.append('batch_id', batch_id);
+        myForm.append("batch_type", "other_task_msg_rep_a");
+        myForm.append("batch_id", batch_id);
         myForm.append("file", data);
 
         axios
           .post("api/uploadFile_gcp", myForm, config)
-          .then(function (res) {
+          .then(function(res) {
             if (res.data.code == 0) {
-
               myArr[index].progress = 1;
               _this.$set(_this.arrMsg[item_id], index, myArr[index]);
               console.log(_this.arrMsg[item_id], index);
-              Vue.set(_this.arrMsg, '', '');
+              Vue.set(_this.arrMsg, "", "");
+              _this.reload_task(_this.proof_id);
             } else {
               alert(JSON.stringify(res.data));
             }
           })
-          .catch(function (err) {
+          .catch(function(err) {
             console.log(err);
           });
       });
 
       this.msgCanSub[item_id] = true;
-
     },
-
   },
 });
 
-
-
 var app1 = new Vue({
-  el: '#meeting',
+  el: "#meeting",
   data: {
- 
     meetings: [],
     users: [],
 
@@ -1389,310 +1480,295 @@ var app1 = new Vue({
     pages: [],
 
     inventory: [
-      { name: '10', id: 10 },
-      { name: '25', id: 25 },
-      { name: '50', id: 50 },
-      { name: '100', id: 100 },
-      { name: 'All', id: 10000 }
+      { name: "10", id: 10 },
+      { name: "25", id: 25 },
+      { name: "50", id: 50 },
+      { name: "100", id: 100 },
+      { name: "All", id: 10000 },
     ],
     perPage: 5,
 
-    baseURL: 'https://storage.cloud.google.com/feliiximg/',
-
+    baseURL: "https://storage.cloud.google.com/feliiximg/",
 
     // calendar
-    attendee:[],
-    old_attendee:[],
+    attendee: [],
+    old_attendee: [],
     add_id: 0,
 
-    attachments:[],
-  
+    attachments: [],
   },
 
   created() {
- 
-
     this.getUsers();
     //this.getMeetings();
-
   },
 
-  computed: {
- 
-    },
+  computed: {},
 
+  mounted() {},
 
-  mounted() {
-
-
-  },
-
-  watch: {
-   
-
-  },
-
-
+  watch: {},
 
   methods: {
     getUsers() {
-
       let _this = this;
 
-      let token = localStorage.getItem('accessToken');
+      let token = localStorage.getItem("accessToken");
 
       axios
-        .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
+        .get("api/project02_user", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(
           (res) => {
             _this.users = res.data;
           },
           (err) => {
             alert(err.response);
-          },
+          }
         )
-        .finally(() => {
-
-        });
+        .finally(() => {});
     },
 
-    getMeetings: function(){ 
-        this.action = 1;//select all
-        var token = localStorage.getItem('token');
-        var form_Data = new FormData();
-        let _this = this;
-        form_Data.append('jwt', token);
-        form_Data.append('action', this.action);
-        axios({
-            method: 'post',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            url: 'api/work_calender_meetings',
-            data: form_Data
-        })
-            .then(function (response) {
-                //this.addDetails(response.data[0]);
-                //handle success
-                _this.meetings = response.data
-                //console.log(_this.items)
-                return response.data;
-                
-            })
-            .catch(function (response) {
-                //handle error
-                Swal.fire({
-                    text: JSON.stringify(response),
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                })
-
-                return [];
-            });
-            //this.upload();
-          // this.reload();
+    getMeetings: function() {
+      this.action = 1; //select all
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      let _this = this;
+      form_Data.append("jwt", token);
+      form_Data.append("action", this.action);
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
+        url: "api/work_calender_meetings",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //this.addDetails(response.data[0]);
+          //handle success
+          _this.meetings = response.data;
+          //console.log(_this.items)
+          return response.data;
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+
+          return [];
+        });
+      //this.upload();
+      // this.reload();
+    },
 
     warning(txt) {
-        Swal.fire({
-          text: JSON.stringify(txt),
-          icon: 'error',
-          confirmButtonText: 'OK'
-      })
+      Swal.fire({
+        text: JSON.stringify(txt),
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     },
 
-    addMeetings:function(project_name, subject, message, attendee, start_time, end_time, username){
-      this.action = 2;//add
-      var token = localStorage.getItem('token');
+    addMeetings: function(
+      project_name,
+      subject,
+      message,
+      attendee,
+      start_time,
+      end_time,
+      username
+    ) {
+      this.action = 2; //add
+      var token = localStorage.getItem("token");
       var form_Data = new FormData();
       var ret = 0;
       let _this = this;
-              form_Data.append('jwt', token);
-              form_Data.append('subject', subject);
-              form_Data.append('project_name', project_name);
-              form_Data.append('message', message);
-              form_Data.append('attendee', attendee);
-              form_Data.append('start_time', start_time);
-              form_Data.append('end_time', end_time);
-              form_Data.append('is_enabled', true);
-              form_Data.append('action', this.action);
-              form_Data.append('created_by', username);
+      form_Data.append("jwt", token);
+      form_Data.append("subject", subject);
+      form_Data.append("project_name", project_name);
+      form_Data.append("message", message);
+      form_Data.append("attendee", attendee);
+      form_Data.append("start_time", start_time);
+      form_Data.append("end_time", end_time);
+      form_Data.append("is_enabled", true);
+      form_Data.append("action", this.action);
+      form_Data.append("created_by", username);
 
-              var file_elements = document.getElementsByName("file_elements");
+      var file_elements = document.getElementsByName("file_elements");
 
-              var item = 0;
-              for(let i = 0;i < file_elements.length; i++)
-              {
-                  if(file_elements[i].checked)
-                  {
-                      for( var j = 0; j < this.attachments.length; j++ ){
-                        let file = this.attachments[j];
-                        if(file.name === file_elements[i].value)
-                        {
-                          form_Data.append('files[' + item++ + ']', file);
-                          break;
-                        }
-                      }
-                  }
-                      
-              }
-
-
-              axios({
-                  method: 'post',
-                  headers: {
-                      'Content-Type': 'multipart/form-data',
-                  },
-                  url: 'api/work_calender_meetings',
-                  data: form_Data
-              })
-                  .then(function (response) {
-                      //this.addDetails(response.data[0]);
-                      //handle success
-                      //_this.items = response.data
-                      //console.log(_this.items)
-                      ret = response.data[0];
-                      _this.notify_mail(ret, 1);
-                      return ret;
-                      
-                  })
-                  .catch(function (response) {
-                      //handle error
-                      Swal.fire({
-                          text: JSON.stringify(response),
-                          icon: 'error',
-                          confirmButtonText: 'OK'
-                      })
-
-                      return 0;
-                  });
-                  //this.upload();
-                 // this.reload();
-      },
-
-  
-
-  editMeetings:function(id, subject, message, attendee, start_time, end_time, username){
-    this.action = 3;//update
-    var token = localStorage.getItem('token');
-    var form_Data = new FormData();
-    var ret = 0;
-    let _this = this;
-            form_Data.append('jwt', token);
-            form_Data.append('id', id);
-            form_Data.append('subject', subject);
-            form_Data.append('message', message);
-            form_Data.append('attendee', attendee);
-            form_Data.append('start_time', start_time);
-            form_Data.append('end_time', end_time);
-            form_Data.append('is_enabled', true);
-            form_Data.append('action', this.action);
-            form_Data.append('updated_by', username);
-            axios({
-                method: 'post',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                url: 'api/work_calender_meetings',
-                data: form_Data
-            })
-                .then(function (response) {
-                    //this.addDetails(response.data[0]);
-                    //handle success
-                    //_this.items = response.data
-                    //console.log(_this.items)
-                    ret = response.data[0];
-
-                    return ret;
-                    
-                })
-                .catch(function (response) {
-                    //handle error
-                    Swal.fire({
-                        text: JSON.stringify(response),
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    })
-
-                    return 0;
-                });
-                //this.upload();
-               // this.reload();
-    },
-
-    notify_mail(batch_id, type){
-      var form_Data = new FormData();
-
-      form_Data.append('bid', batch_id);
-      form_Data.append('type', type);
-      
-      const token = sessionStorage.getItem('token');
+      var item = 0;
+      for (let i = 0; i < file_elements.length; i++) {
+        if (file_elements[i].checked) {
+          for (var j = 0; j < this.attachments.length; j++) {
+            let file = this.attachments[j];
+            if (file.name === file_elements[i].value) {
+              form_Data.append("files[" + item++ + "]", file);
+              break;
+            }
+          }
+        }
+      }
 
       axios({
-              method: 'post',
-              headers: {
-                  'Content-Type': 'multipart/form-data',
-                  Authorization: `Bearer ${token}`
-              },
-              url: 'api/project_meeting_mail',
-              data: form_Data
-          })
-          .then(function(response) {
-              //handle success
-
-          })
-          .catch(function(response) {
-              //handle error
-              console.log(response)
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/work_calender_meetings",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //this.addDetails(response.data[0]);
+          //handle success
+          //_this.items = response.data
+          //console.log(_this.items)
+          ret = response.data[0];
+          _this.notify_mail(ret, 1);
+          return ret;
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
           });
-      },
 
-  delMeetings:function(id){
-    this.action = 7;//add
-    var token = localStorage.getItem('token');
-    var form_Data = new FormData();
-    var ret = 0;
-    let _this = this;
-    let _id = id;
-            form_Data.append('jwt', token);
-            form_Data.append('id', id);
-         
-            form_Data.append('action', this.action);
-            form_Data.append('deleted_by', username);
-            axios({
-                method: 'post',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                url: 'api/work_calender_meetings',
-                data: form_Data
-            })
-                .then(function (response) {
-                    //this.addDetails(response.data[0]);
-                    //handle success
-                    //_this.items = response.data
-                    //console.log(_this.items)
-                    ret = response.data[0];
-
-                    _this.notify_mail(_id, 3);
-
-                    return ret;
-                    
-                })
-                .catch(function (response) {
-                    //handle error
-                    Swal.fire({
-                        text: JSON.stringify(response),
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    })
-
-                    return 0;
-                });
-                //this.upload();
-               // this.reload();
+          return 0;
+        });
+      //this.upload();
+      // this.reload();
     },
 
-  },
+    editMeetings: function(
+      id,
+      subject,
+      message,
+      attendee,
+      start_time,
+      end_time,
+      username
+    ) {
+      this.action = 3; //update
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      var ret = 0;
+      let _this = this;
+      form_Data.append("jwt", token);
+      form_Data.append("id", id);
+      form_Data.append("subject", subject);
+      form_Data.append("message", message);
+      form_Data.append("attendee", attendee);
+      form_Data.append("start_time", start_time);
+      form_Data.append("end_time", end_time);
+      form_Data.append("is_enabled", true);
+      form_Data.append("action", this.action);
+      form_Data.append("updated_by", username);
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/work_calender_meetings",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //this.addDetails(response.data[0]);
+          //handle success
+          //_this.items = response.data
+          //console.log(_this.items)
+          ret = response.data[0];
 
+          return ret;
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+
+          return 0;
+        });
+      //this.upload();
+      // this.reload();
+    },
+
+    notify_mail(batch_id, type) {
+      var form_Data = new FormData();
+
+      form_Data.append("bid", batch_id);
+      form_Data.append("type", type);
+
+      const token = sessionStorage.getItem("token");
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/project_meeting_mail",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+        })
+        .catch(function(response) {
+          //handle error
+          console.log(response);
+        });
+    },
+
+    delMeetings: function(id) {
+      this.action = 7; //add
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      var ret = 0;
+      let _this = this;
+      let _id = id;
+      form_Data.append("jwt", token);
+      form_Data.append("id", id);
+
+      form_Data.append("action", this.action);
+      form_Data.append("deleted_by", username);
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/work_calender_meetings",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //this.addDetails(response.data[0]);
+          //handle success
+          //_this.items = response.data
+          //console.log(_this.items)
+          ret = response.data[0];
+
+          _this.notify_mail(_id, 3);
+
+          return ret;
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+
+          return 0;
+        });
+      //this.upload();
+      // this.reload();
+    },
+  },
 });

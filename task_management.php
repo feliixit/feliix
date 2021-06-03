@@ -103,6 +103,7 @@ catch (Exception $e) {
             <?php
             }
             ?>
+            dialogshow($('.list_function a.filtering'), $('.list_function .dialog.d-filter'));
             dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
             dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
             // left block Reply
@@ -2273,6 +2274,15 @@ catch (Exception $e) {
             z-index: 1;
             
         }
+
+        .other .tablebox a.attch_pic {
+            margin: 3px 13px 3px 0;
+        }
+
+        .other .tablebox a.attch_pic>img {
+            width: 200px;
+            vertical-align: bottom;
+        }
     </style>
 
 </head>
@@ -2478,9 +2488,9 @@ catch (Exception $e) {
                                     <dt>Status:</dt>
                                     <dd>
                                         <select name="" id="" v-model="record.task_status">
-                                            <option value="0">Ongoing</option>
-                                            <option value="1">Pending</option>
-                                            <option value="2">Close</option>
+                                            <option value="1">Ongoing</option>
+                                            <option value="2">Pending</option>
+                                            <option value="3">Close</option>
                                         </select>
                                     </dd>
                                 </dl>
@@ -2581,7 +2591,7 @@ catch (Exception $e) {
 
                     <!-- 篩選 -->
                     <div class="popupblock">
-                        <a class="filtering"></a>
+                        <a class="filtering" id="btn_filter"></a>
                         <div id="filter_dialog" class="dialog d-filter"><h6>Filter Function:</h6>
                             <div class="formbox">
                                 <dl>
@@ -2621,9 +2631,9 @@ catch (Exception $e) {
                                     <dd><input type="text" v-model="fil_keyword"></dd>
 
                                 </dl>
-                                <div class="btnbox"><a class="btn small" @click="cancel_filters()">Cancel</a><a
-                                        class="btn small" @click="clear_filters()">Clear</a> <a class="btn small green"
-                                                                                                @click="apply_filters()">Apply</a>
+                                <div class="btnbox"><a class="btn small" @click="filter_clear()">Cancel</a><a
+                                        class="btn small" @click="filter_remove()">Clear</a> <a class="btn small green"
+                                                                                                @click="filter_apply()">Apply</a>
                                 </div>
                             </div>
                         </div>
@@ -2658,14 +2668,14 @@ catch (Exception $e) {
                         <ul v-for='(receive_record, index) in displayedStagePosts'>
                             <li><i class="pt03">{{ receive_record.priority }}</i></li>
                             <li>
-                                <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
-                                <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
-                                <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
+                                <a class="btn small yellow" v-if="receive_record.task_status == '1'">Ongoing</a>
+                                <a class="btn small yellow" v-if="receive_record.task_status == '2'">Pending</a>
+                                <a class="btn small green" v-if="receive_record.task_status == '3'">Close</a>
                             </li>
                             <li><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
                             <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
-                            <li>Thalassa Wren Benzon</li>
-                            <li>Thalassa Wren Benzon<br>2021/05/21 13:53</li>
+                            <li>{{ receive_record.creator }}</li>
+                            <li>{{ receive_record.nearest_user }}<br>{{ receive_record.nearest_time }}<br>{{ receive_record.nearest_msg }}</li>
                         </ul>
                         
 
@@ -2686,9 +2696,9 @@ catch (Exception $e) {
                 <div>
                     <div class="teskbox dialogclear">
                         <a class="btn small red">{{ receive_record.priority }}</a>
-                        <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
-                        <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
-                        <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
+                        <a class="btn small yellow" v-if="receive_record.task_status == '1'">Ongoing</a>
+                        <a class="btn small yellow" v-if="receive_record.task_status == '2'">Pending</a>
+                        <a class="btn small green" v-if="receive_record.task_status == '3'">Close</a>
                         <b>[Task] {{ receive_record.title }}</b>
                         <!-- <a class="btn small blue right" id="btn_arrange">Arrange Meeting</a> -->
                     </div>
@@ -2728,7 +2738,9 @@ catch (Exception $e) {
                                 <li><b>Attachments</b></li>
                                 <li>
                                     <i v-for="item in receive_record.items">
-                                        <a class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                        
+                                        <a v-if="item.gcp_name.split('.').pop().toLowerCase() === 'jpg' || item.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + item.gcp_name" target="_blank"><img :src="baseURL + item.gcp_name"></a>
+                                        <a v-if="item.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && item.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                     </i>
                                 </li>
 
@@ -2756,7 +2768,9 @@ catch (Exception $e) {
                                                 <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
                                                 <p>{{ item.message }}</p>
                                                 <i v-for="file in item.items">
-                                                    <a class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
+                                                    
+                                                    <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
+                                                    <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                 </i>
 
                                             </div>
@@ -2797,7 +2811,10 @@ catch (Exception $e) {
                                             <div class="msgbox dialogclear" v-for="reply in item.reply">
                                                 <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
                                                 <i v-for="file in reply.items">
-                                                    <a class="attch" :href="baseURL + reply.gcp_name" target="_blank">{{reply.filename}}</a>
+                                                    
+                                                    <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
+                                                    <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
+                                                    
                                                 </i>
 
                                             </div>

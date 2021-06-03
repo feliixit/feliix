@@ -47,22 +47,45 @@ $conf = new Conf();
 
 $uid = $user_id;
 
-$task_id_to_dup = (isset($_POST['task_id_to_dup']) ?  $_POST['task_id_to_dup'] : '');
-
+$message_id = (isset($_POST['message_id']) ?  $_POST['message_id'] : '');
+$item_id = (isset($_POST['item_id']) ?  $_POST['item_id'] : '');
 
 try{
-    $query = "INSERT INTO project_other_task_a(stage_id, title, priority, due_date, due_time, assignee, collaborator, `status`, `type`, detail, create_id, created_at)
-              SELECT stage_id, title, priority, due_date, due_time, assignee, collaborator, 0, `type`, detail, :updated_id, NOW() FROM project_other_task_a WHERE id = :id ";
 
-    // prepare the query
-    $stmt = $db->prepare($query);
+    if($item_id != 0)
+    {
+        $query = "update project_other_task_message_reply_a
+        SET
+            status = -1,
+            updated_id = :updated_id,
+            updated_at = now()
+        where id = :id ";
 
-    $stmt->bindParam(':updated_id', $uid);
-    $stmt->bindParam(':id', $task_id_to_dup);
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        $stmt->bindParam(':updated_id', $uid);
+        $stmt->bindParam(':id', $message_id);
+    }
+    else 
+    {
+        $query = "update project_other_task_message_a
+        SET
+            status = -1,
+            updated_id = :updated_id,
+            updated_at = now()
+        where id = :id ";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        $stmt->bindParam(':updated_id', $uid);
+        $stmt->bindParam(':id', $message_id);
+    }
 
     $jsonEncodedReturnArray = "";
     if ($stmt->execute()) {
-        $returnArray = array('ret' => $task_id_to_dup);
+        $returnArray = array('ret' => $stage_id_to_edit);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
     }
     else

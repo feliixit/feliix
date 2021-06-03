@@ -55,9 +55,14 @@ $db = $database->getConnection();
 switch ($method) {
     case 'GET':
 
-        $status = (isset($_GET['status']) ?  $_GET['status'] : '');
-        $priority = (isset($_GET['priority']) ?  $_GET['priority'] : '');
-        $duedate = (isset($_GET['duedate']) ?  $_GET['duedate'] : '');
+        $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
+        $fs = (isset($_GET['fs']) ?  $_GET['fs'] : 0);
+        $fp = (isset($_GET['fp']) ?  $_GET['fp'] : 0);
+        $fc = (isset($_GET['fc']) ?  $_GET['fc'] : '');
+        $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
+
+        $fc = urldecode($fc);
+        $fk = urldecode($fk);
 
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
@@ -67,18 +72,18 @@ switch ($method) {
         from project_other_task_a pm 
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task_a'
-        where 1 = 1 ";
+        where pm.`status` <> -1 " . ($id != 0 ? " and pm.id=$id" : ' ');
 
-        if ($status != 0) {
-            $sql = $sql . " and pm.`status` = " . $status . " ";
+        if ($fs != 0) {
+            $sql = $sql . " and pm.`status` = " . $fs . " ";
         }
 
-        if ($priority != 0) {
-            $sql = $sql . " and pm.priority = " . $priority . " ";
+        if ($fp != 0) {
+            $sql = $sql . " and pm.priority = " . $fp . " ";
         }
 
-        if ($duedate != '') {
-            $sql = $sql . " and DATE_FORMAT(pm.due_date, '%Y-%m-%d') = '" . $duedate . "' ";
+        if ($fc != '') {
+            $sql = $sql . " and u.username = '" . $fc . "' ";
         }
 
         if (!empty($_GET['page'])) {
@@ -102,6 +107,7 @@ switch ($method) {
         }
 
         $merged_results = array();
+        $return_result = array();
 
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -127,6 +133,7 @@ switch ($method) {
         $message = [];
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
             if ($task_id != $row['task_id'] && $task_id != 0) {
                 $merged_results[] = array(
                     "task_id" => $task_id,
@@ -147,7 +154,9 @@ switch ($method) {
                     "task_date" => $task_date,
                     "message" => $message,
                     "items" => $items,
-                    
+                    "nearest_time" => $_nearest_time,
+                    "nearest_user" => $_nearest_user,
+                    "nearest_msg" => $_nearest_msg,
                 );
 
                 $message = [];
@@ -178,7 +187,18 @@ switch ($method) {
             $detail = $row['detail'];
             $task_date = $row['task_date'];
 
-            
+            $_nearest_time = "";
+            $_nearest_user = "";
+            $_nearest_msg = "";
+            foreach ($message as &$value) {
+                $_time = $value['message_date'] . ' ' . $value['message_time'];
+                if($_time > $_nearest_time)
+                {
+                    $_nearest_time = $_time;
+                    $_nearest_user = $value['messager'];
+                    $_nearest_msg = $value['message'];
+                }
+            }
 
             if ($filename != "")
                 $items[] = array(
@@ -207,11 +227,33 @@ switch ($method) {
                 "task_date" => $task_date,
                 "message" => $message,
                 "items" => $items,
-
+                "nearest_time" => $_nearest_time,
+                "nearest_user" => $_nearest_user,
+                "nearest_msg" => $_nearest_msg,
             );
         }
 
-        echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+        
+        if($fk != "" && $id == 0)
+        {
+            $_result = array();
+
+            foreach ($merged_results as &$value) {
+                if(
+                    preg_match("/{$fk}/i", $value['title']) || 
+                    preg_match("/{$fk}/i", $value['nearest_msg']))
+                {
+                    $_result[] = $value;
+                }
+            }
+
+                $return_result = $_result;
+            
+        }
+        else
+            $return_result = $merged_results;
+
+        echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
 
         break;
 
@@ -391,13 +433,13 @@ function GetStatus($loc)
 {
     $location = "";
     switch ($loc) {
-        case "0":
+        case "1":
             $location = "Ongoing";
             break;
-        case "1":
+        case "2":
             $location = "Pending";
             break;
-        case "2":
+        case "3":
             $location = "Close";
             break;
                 
@@ -522,7 +564,7 @@ function GetMessage($task_id, $db)
 function GetReply($msg_id, $db, $id, $name, $msg)
 {
     $sql = "select pmsgrp.id replay_id, pmsgrp.message reply, pmsgrp.`status` reply_status, r.id uid, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
-            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
+            COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name, pmsgrp.reply_id ref_id
             from project_other_task_message_reply_a pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
             LEFT JOIN user p ON p.id = pmsgrp.updated_id 
@@ -548,12 +590,16 @@ function GetReply($msg_id, $db, $id, $name, $msg)
     $update_date = "";
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $ref_name = $name;
+        $ref_reply = $msg;
+
         if ($replay_id != $row['replay_id'] && $replay_id != 0) {
             $merged_results[] = array(
                 "message_id" => $replay_id,
                 "ref_id" => $id,
-                "ref_name" => $name,
-                "ref_msg" => $msg,
+                "ref_name" => $ref_name,
+                "ref_msg" => $ref_reply,
                 "message" => $reply,
                 
                 "message_status" => $reply_status,
@@ -586,7 +632,14 @@ function GetReply($msg_id, $db, $id, $name, $msg)
      
         $gcp_name = $row['gcp_name'];
         $filename = $row['filename'];
-      
+
+        $ref_id = $row['ref_id'];
+
+        if($ref_id != 0)
+        {
+            $ref_name = GetRefMsgName($ref_id, $db);
+            $ref_reply = GetRefMsgValue($ref_id, $db);
+        }
 
         if ($filename != "")
             $items[] = array(
@@ -599,8 +652,8 @@ function GetReply($msg_id, $db, $id, $name, $msg)
         $merged_results[] = array(
             "message_id" => $replay_id,
             "ref_id" => $id,
-            "ref_name" => $name,
-            "ref_msg" => $msg,
+            "ref_name" => $ref_name,
+            "ref_msg" => $ref_reply,
             "message" => $reply,
             "message_status" => $reply_status,
             "messager" => $replyer,
@@ -619,3 +672,44 @@ function GetReply($msg_id, $db, $id, $name, $msg)
 
     return $merged_results;
 }
+
+
+function GetRefMsgName($ref_id, $db)
+{
+    $sql = "select r.username replyer
+            from project_other_task_message_reply_a pmsgrp 
+            LEFT JOIN user r ON r.id = pmsgrp.create_id 
+            where pmsgrp.id = " . $ref_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $replyer = "";
+    
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $replyer = $row['replyer'];
+    }
+
+    return $replyer;
+}
+
+function GetRefMsgValue($ref_id, $db)
+{
+    $sql = "select message reply
+            from project_other_task_message_reply_a pmsgrp 
+            LEFT JOIN user r ON r.id = pmsgrp.create_id 
+            where pmsgrp.id = " . $ref_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $reply = "";
+    
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $reply = $row['reply'];
+    }
+    
+    return $reply;
+}
+
+

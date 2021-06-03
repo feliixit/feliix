@@ -56,11 +56,13 @@ switch ($method) {
         // get database connection
         $uid = $user_id;
         $msg_id = (isset($_POST['msg_id']) ?  $_POST['msg_id'] : 0);
+        $reply_id = (isset($_POST['reply_id']) ?  $_POST['reply_id'] : 0);
         $message = (isset($_POST['reply']) ?  $_POST['reply'] : '');
     
         $query = "INSERT INTO project_other_task_message_reply_a
         SET
             `message_id` = :msg_id,
+            `reply_id` = :reply_id,
             `message` = :message,
           
             `create_id` = :create_id,
@@ -71,6 +73,7 @@ switch ($method) {
 
         // bind the values
         $stmt->bindParam(':msg_id', $msg_id);
+        $stmt->bindParam(':reply_id', $reply_id);
         $stmt->bindParam(':message', $message);
        
         $stmt->bindParam(':create_id', $uid);
