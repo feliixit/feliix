@@ -67,10 +67,11 @@ switch ($method) {
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
-        $sql = "SELECT pm.id task_id, title, priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
-        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name
+        $sql = "SELECT pm.id task_id, pm.title, priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
+        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, ut.title creator_title
         from project_other_task_a pm 
         LEFT JOIN user u ON u.id = pm.create_id 
+        LEFT JOIN user_title ut ON u.title_id = ut.id
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task_a'
         where pm.`status` <> -1 " . ($id != 0 ? " and pm.id=$id" : ' ');
 
@@ -157,6 +158,7 @@ switch ($method) {
                     "nearest_time" => $_nearest_time,
                     "nearest_user" => $_nearest_user,
                     "nearest_msg" => $_nearest_msg,
+                    "creator_title" => $creator_title,
                 );
 
                 $message = [];
@@ -186,6 +188,8 @@ switch ($method) {
             $filename = $row['filename'];
             $detail = $row['detail'];
             $task_date = $row['task_date'];
+
+            $creator_title = $row['creator_title'];
 
             $_nearest_time = "";
             $_nearest_user = "";
@@ -230,6 +234,7 @@ switch ($method) {
                 "nearest_time" => $_nearest_time,
                 "nearest_user" => $_nearest_user,
                 "nearest_msg" => $_nearest_msg,
+                "creator_title" => $creator_title,
             );
         }
 
@@ -310,7 +315,7 @@ switch ($method) {
                 $last_id = $db->lastInsertId();
 
                 // send notify mail
-                SendNotifyMail($last_id, $stage_id);
+                SendNotifyMail($last_id);
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);
@@ -329,7 +334,7 @@ switch ($method) {
 }
 
 
-function SendNotifyMail($last_id, $stage_id)
+function SendNotifyMail($last_id)
 {
     $project_name = "";
     $task_name = "";
@@ -361,7 +366,7 @@ function SendNotifyMail($last_id, $stage_id)
     $due_date = str_replace("-", "/", $_record[0]["due_date"]);
     $detail = $_record[0]["detail"];
 
-    task_notify("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id);
+    task_notify_admin("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id);
 
 }
 

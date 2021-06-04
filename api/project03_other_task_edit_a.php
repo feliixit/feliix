@@ -125,11 +125,14 @@ try{
     if ($stmt->execute()) {
 
         // send notify mail
-        if($mail_type == 1)
-            SendNotifyMail01($task_id, $_record[0]["status"]);
+        //if($mail_type == 1)
+        //    SendNotifyMail01($task_id, $_record[0]["status"]);
 
-        if($mail_type == 2)
-            SendNotifyMail02($task_id, $_record[0]["status"]);
+        //if($mail_type == 2)
+        //    SendNotifyMail02($task_id, $_record[0]["status"]);
+
+        task_notify_admin("edit", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $task_id);
+
 
         $returnArray = array('batch_id' => $task_id);
        

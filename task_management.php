@@ -19,22 +19,33 @@ try {
     // decode jwt
     $decoded = JWT::decode($jwt, $key, array('HS256'));
 
-    $GLOBALS['username'] = $decoded->data->username;
-    $GLOBALS['position'] = $decoded->data->position;
-    $GLOBALS['department'] = $decoded->data->department;
-
-    $test_manager = $decoded->data->test_manager;
     $user_id = $decoded->data->id;
+    $username = $decoded->data->username;
+
+    $position = $decoded->data->position;
+    $department = $decoded->data->department;
 
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 
-    $sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
- 
-    $is_creator = IsCreator($sid, $user_id);
+    $access6 = false;
 
-    if ($test_manager[2] == "0" && $is_creator == "1")
-        $test_manager[2] = "1";
+    if(trim(strtoupper($department)) == 'ADMIN')
+    {
+        if(trim(strtoupper($position)) == 'OPERATIONS MANAGER' || trim(strtoupper($position)) == 'ASSISTANT OPERATIONS MANAGER')
+        {
+            $access6 = true;
+        }
+    }
+
+
+    if(trim($department) == '')
+    {
+        if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
+        {
+            $access6 = true;
+        }
+    }
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -96,7 +107,7 @@ catch (Exception $e) {
             $('header').load('include/header.php');
             //
             <?php
-            if ($test_manager[2]  == "1") {
+            if ($access6 == true) {
             ?>
                 dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
                 dialogshow($('.list_function a.edit.red'), $('.list_function .dialog.r-edit'));
@@ -104,8 +115,8 @@ catch (Exception $e) {
             }
             ?>
             dialogshow($('.list_function a.filtering'), $('.list_function .dialog.d-filter'));
-            dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
-            dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
+            //dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
+            //dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
             // left block Reply
             dialogshow($('.btnbox a.reply.r1'), $('.btnbox .dialog.r1'));
             dialogshow($('.btnbox a.reply.r2'), $('.btnbox .dialog.r2'));
@@ -3129,7 +3140,7 @@ catch (Exception $e) {
                     headerToolbar: {
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'individual,lighting,furniture,overall',
+                        right: 'individual,admin,design,lighting,furniture,overall',
                     },
 
                     //Individual按鈕：只顯示出Creator、Assignee或Collaborator是當前使用者的task在日曆上
@@ -3196,8 +3207,126 @@ catch (Exception $e) {
                             }
                         },
 
+                        admin: {
+                            text: 'AD',
+                            click: function() {
+
+                                //刪除當前在日曆上的所有任務資訊
+                                calendar_task.removeAllEvents();
+
+                                //從資料庫中取出符合當前條件的任務
+
+                                let temp = [];
+                                //將符合條件的任務加入到日曆中
+                                // task status = Pending，則該任務顏色為 gray
+                                // task status = Close，則該任務顏色為 green
+                                // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
+                                // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
+                                var token = localStorage.getItem('token');
+
+                                localStorage.getItem('token');
+                                var form_Data = new FormData();
+
+                                form_Data.append('category', 'ad');
+
+                                $.ajax({
+                                    url: "api/project03_other_task_calendar",
+                                    type: "POST",
+                                    contentType: 'multipart/form-data',
+                                    processData: false,
+                                    contentType: false,
+                                    data: form_Data,
+
+                                    success: function(result) {
+                                        console.log(result);
+                                        var obj = JSON.parse(result);
+                                        if (obj !== undefined) {
+                                            var arrayLength = obj.length;
+                                            for (var i = 0; i < arrayLength; i++) {
+                                                console.log(obj[i]);
+
+                                                var obj_meeting = {
+                                                    id: obj[i].stage_id,
+                                                    title: obj[i].title,
+                                                    url: 'http://127.0.0.1/feliix/task_management?sid=' + obj[i].stage_id,
+                                                    start: moment(obj[i].due_date).format('YYYY-MM-DD'),
+                                                    backgroundColor: obj[i].color,
+                                                    borderColor: obj[i].color,
+                                                };
+
+                                                temp.push(obj_meeting);
+                                            }
+                                        }
+
+
+                                        calendar_task.addEventSource(temp);
+
+                                    }
+                                });
+                            }
+                        },
+
+                        desgin: {
+                            text: 'DS',
+                            click: function() {
+
+                                //刪除當前在日曆上的所有任務資訊
+                                calendar_task.removeAllEvents();
+
+                                //從資料庫中取出符合當前條件的任務
+
+                                let temp = [];
+                                //將符合條件的任務加入到日曆中
+                                // task status = Pending，則該任務顏色為 gray
+                                // task status = Close，則該任務顏色為 green
+                                // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
+                                // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
+                                var token = localStorage.getItem('token');
+
+                                localStorage.getItem('token');
+                                var form_Data = new FormData();
+
+                                form_Data.append('category', 'ad');
+
+                                $.ajax({
+                                    url: "api/project03_other_task_calendar",
+                                    type: "POST",
+                                    contentType: 'multipart/form-data',
+                                    processData: false,
+                                    contentType: false,
+                                    data: form_Data,
+
+                                    success: function(result) {
+                                        console.log(result);
+                                        var obj = JSON.parse(result);
+                                        if (obj !== undefined) {
+                                            var arrayLength = obj.length;
+                                            for (var i = 0; i < arrayLength; i++) {
+                                                console.log(obj[i]);
+
+                                                var obj_meeting = {
+                                                    id: obj[i].stage_id,
+                                                    title: obj[i].title,
+                                                    url: 'https://feliix.myvnc.com/task_management?sid=' + obj[i].stage_id,
+                                                    start: moment(obj[i].due_date).format('YYYY-MM-DD'),
+                                                    backgroundColor: obj[i].color,
+                                                    borderColor: obj[i].color,
+                                                };
+
+                                                temp.push(obj_meeting);
+                                            }
+                                        }
+
+
+                                        calendar_task.addEventSource(temp);
+
+                                    }
+                                });
+                            }
+                        },
+
                         lighting: {
-                            text: 'Lighting',
+                            text: 'LT',
                             click: function() {
 
                                 //刪除當前在日曆上的所有任務資訊
@@ -3256,7 +3385,7 @@ catch (Exception $e) {
                         },
 
                         furniture: {
-                            text: 'Office Systems',
+                            text: 'OS',
                             click: function() {
 
                                 //刪除當前在日曆上的所有任務資訊

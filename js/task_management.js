@@ -16,7 +16,7 @@ var app = new Vue({
     submit: false,
 
     contactor: "",
-    username: "",
+  
     client_type: "",
     category: "",
     // paging
@@ -50,6 +50,13 @@ var app = new Vue({
     perPage: 5,
 
     baseURL: "https://storage.cloud.google.com/feliiximg/",
+
+     // I&AM
+     my_department:'',
+     my_title: '',
+     username:'',
+ 
+
 
     // TASKS
     title: "",
@@ -110,10 +117,14 @@ var app = new Vue({
     let _this = this;
     let uri = window.location.href.split("?");
 
+    
+
     if (uri.length > 1) {
       let vars = uri[1].split("&");
       let getVars = {};
       let tmp = "";
+      let _pid = 0;
+
       vars.forEach(async function(v) {
         tmp = v.split("=");
         if (tmp.length == 2) {
@@ -136,6 +147,9 @@ var app = new Vue({
             case "page":
               _this.page = tmp[1];
               break;
+            case "sid":
+                _pid = tmp[1];
+                break;
             case "size":
               _this.perPage = tmp[1];
               break;
@@ -144,12 +158,14 @@ var app = new Vue({
           }
         }
         _this.stage_id = tmp[1];
-        _this.getProjectOtherTask();
+        
+        _this.getProjectOtherTask(_pid);
+
         _this.getDueDate(_this.stage_id);
         _this.getUsersDeleted(_this.stage_id);
       });
     } else {
-      _this.getProjectOtherTask();
+      _this.getProjectOtherTask(0);
       _this.getDueDate(0);
       _this.getUsersDeleted(0);
     }
@@ -158,6 +174,8 @@ var app = new Vue({
     //_this.getPrioritys();
     //_this.getStatuses();
     _this.getCreators();
+    _this.getUserName();
+
   },
 
   computed: {
@@ -172,7 +190,9 @@ var app = new Vue({
 
   watch: {
     
-
+  proof_id() {
+      this.detail_a();
+    },
 
     arrTask: {
       handler(newValue, oldValue) {
@@ -197,7 +217,7 @@ var app = new Vue({
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish[_this.current_task_id] = true;
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
           });
           this.comment_clear(_this.current_task_id);
         }
@@ -228,7 +248,7 @@ var app = new Vue({
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish[_this.current_msg_item_id] = true;
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
           });
           this.msg_clear(_this.current_msg_item_id);
         }
@@ -253,7 +273,7 @@ var app = new Vue({
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish = true;
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
           });
           this.task_clear();
         }
@@ -278,7 +298,7 @@ var app = new Vue({
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             _this.finish = true;
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
           });
           this.task_edit_clear();
         }
@@ -288,6 +308,30 @@ var app = new Vue({
   },
 
   methods: {
+
+    CanAccess(creator_title) {
+      var can_save = false;
+
+      var _creator_title = creator_title.trim().toUpperCase();
+
+      if(this.my_title == 'MANAGING DIRECTOR' || this.my_title == 'CHIEF ADVISOR')
+        can_save = true;
+
+      if(this.my_title == 'OPERATIONS MANAGER')
+      { 
+        if(_creator_title != 'MANAGING DIRECTOR' && _creator_title != 'CHIEF ADVISOR')
+          can_save = true;
+      }
+
+      if(this.my_title == 'ASSISTANT OPERATIONS MANAGER')
+      { 
+        if(_creator_title != 'MANAGING DIRECTOR' && _creator_title != 'CHIEF ADVISOR' && _creator_title != 'OPERATIONS MANAGER')
+          can_save = true;
+      }
+
+      return can_save;
+    },
+
     filter_remove: function() {
       this.fil_priority = "";
       this.fil_status = "";
@@ -321,6 +365,37 @@ var app = new Vue({
           }
         )
         .finally(() => {});
+    },
+
+    getUserName: function() {
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append("jwt", token);
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/on_duty_get_myname",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          _this.username = response.data.username;
+          _this.my_department = response.data.department.trim().toUpperCase();
+          _this.my_title = response.data.title.trim().toUpperCase();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        });
     },
 
     getPrioritys() {
@@ -494,6 +569,18 @@ var app = new Vue({
           )
         );
 
+        if(!this.CanAccess(this.record.creator_title)){
+          Swal.fire({
+            text: "It is not allowed to edit/delete the task which was created by user with higher position.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+  
+          //$(window).scrollTop(0);
+          return;
+        }
+  
+
         this.getUsersDeleted(this.task_id_to_load);
       }
     },
@@ -604,7 +691,7 @@ var app = new Vue({
         .finally(() => {});
     },
 
-    getProjectOtherTask() {
+    getProjectOtherTask(id) {
       let _this = this;
 
       const params = {
@@ -624,6 +711,14 @@ var app = new Vue({
         .then(
           (res) => {
             _this.project03_other_task = res.data;
+            if(_this.project03_other_task.length > 0 && id !== 0)
+          {
+            _this.proof_id = id;
+              //_this.proof_id = _this.receive_records[0].id;
+              //_this.detail();
+          }
+          else
+          {_this.proof_id = 0;}
           },
           (err) => {
             alert(err.response);
@@ -760,7 +855,7 @@ var app = new Vue({
               confirmButtonText: "OK",
             });
 
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
           }
         })
         .catch(function(response) {
@@ -771,7 +866,7 @@ var app = new Vue({
             confirmButtonText: "OK",
           });
 
-          _this.getProjectOtherTask();
+          _this.getProjectOtherTask(0);
         });
 
       _this.task_clear();
@@ -825,7 +920,7 @@ var app = new Vue({
               confirmButtonText: "OK",
             });
 
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
           }
         })
         .catch(function(response) {
@@ -836,7 +931,7 @@ var app = new Vue({
             confirmButtonText: "OK",
           });
 
-          _this.getProjectOtherTask();
+          _this.getProjectOtherTask(0);
         });
 
       _this.task_clear();
@@ -1027,7 +1122,7 @@ var app = new Vue({
           }
 
           if (_this.fileArray.length == 0) {
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
             _this.task_clear();
           }
         })
@@ -1168,7 +1263,7 @@ var app = new Vue({
           });
 
           if (_this.editfileArray.length == 0) {
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
             _this.task_edit_clear();
           }
         })
@@ -1272,7 +1367,7 @@ var app = new Vue({
           }
 
           if (_this.arrTask[task_id].length == 0) {
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
             _this.comment_clear(task_id);
           }
         })
@@ -1390,7 +1485,7 @@ var app = new Vue({
           }
 
           if (_this.arrMsg[item_id] === undefined) {
-            _this.getProjectOtherTask();
+            _this.getProjectOtherTask(0);
             _this.msg_clear(item_id);
           }
         })
@@ -1411,7 +1506,7 @@ var app = new Vue({
       var _this = this;
 
       if (myArr === undefined) {
-        _this.getProjectOtherTask();
+        _this.getProjectOtherTask(0);
         _this.msg_clear(item_id);
         return;
       }

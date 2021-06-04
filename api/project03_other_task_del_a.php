@@ -127,7 +127,7 @@ function SendNotifyMail($last_id)
 
     $stage_id = $_record[0]["stage_id"];
 
-    task_notify("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id);
+    task_notify_admin("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id);
 
 }
 
