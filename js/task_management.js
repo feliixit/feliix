@@ -16,12 +16,12 @@ var app = new Vue({
     submit: false,
 
     contactor: "",
-  
+
     client_type: "",
     category: "",
     // paging
     page: 1,
-    pg:0,
+    pg: 0,
     //perPage: 10,
     pages: [],
 
@@ -34,29 +34,27 @@ var app = new Vue({
     ],
 
     priorities: [
-      { "priority": "No Priority", "id": 1 },
-      { "priority": "Low", "id": 2 },
-      { "priority": "Normal", "id": 3 },
-      { "priority": "High", "id": 4 },
-      { "priority": "Urgent", "id": 5 },
+      { priority: "No Priority", id: 1 },
+      { priority: "Low", id: 2 },
+      { priority: "Normal", id: 3 },
+      { priority: "High", id: 4 },
+      { priority: "Urgent", id: 5 },
     ],
 
     statuses: [
-      { "project_status": "Ongoing", "id": 0 },
-      { "project_status": "Pending", "id": 1 },
-      { "project_status": "Close", "id": 2 },
+      { project_status: "Ongoing", id: 0 },
+      { project_status: "Pending", id: 1 },
+      { project_status: "Close", id: 2 },
     ],
 
     perPage: 5,
 
     baseURL: "https://storage.cloud.google.com/feliiximg/",
 
-     // I&AM
-     my_department:'',
-     my_title: '',
-     username:'',
- 
-
+    // I&AM
+    my_department: "",
+    my_title: "",
+    username: "",
 
     // TASKS
     title: "",
@@ -94,7 +92,7 @@ var app = new Vue({
 
     // filter
     fil_priority: 0,
-    fil_status: '',
+    fil_status: "",
     fil_due_date: "",
     opt_due_date: [],
 
@@ -117,15 +115,13 @@ var app = new Vue({
     let _this = this;
     let uri = window.location.href.split("?");
 
-    
-
     if (uri.length > 1) {
       let vars = uri[1].split("&");
       let getVars = {};
       let tmp = "";
       let _pid = 0;
 
-      vars.forEach(async function(v) {
+      vars.forEach( function(v) {
         tmp = v.split("=");
         if (tmp.length == 2) {
           switch (tmp[0]) {
@@ -142,14 +138,14 @@ var app = new Vue({
               _this.fil_keyword = decodeURI(tmp[1]);
               break;
             case "pg":
-              _this.pg = tmp[1];
-              break;
+                _this.pg = tmp[1];
+                break;
             case "page":
               _this.page = tmp[1];
               break;
             case "sid":
-                _pid = tmp[1];
-                break;
+              _pid = tmp[1];
+              break;
             case "size":
               _this.perPage = tmp[1];
               break;
@@ -157,13 +153,13 @@ var app = new Vue({
               console.log(`Too many args`);
           }
         }
-        _this.stage_id = tmp[1];
         
-        _this.getProjectOtherTask(_pid);
-
-        _this.getDueDate(_this.stage_id);
-        _this.getUsersDeleted(_this.stage_id);
       });
+
+      _this.stage_id = 0;
+      _this.getProjectOtherTask(_pid);
+      _this.getDueDate(_this.stage_id);
+      _this.getUsersDeleted(_this.stage_id);
     } else {
       _this.getProjectOtherTask(0);
       _this.getDueDate(0);
@@ -175,12 +171,11 @@ var app = new Vue({
     //_this.getStatuses();
     _this.getCreators();
     _this.getUserName();
-
   },
 
   computed: {
     displayedStagePosts() {
- 
+
       this.setPages();
       return this.paginate(this.project03_other_task);
     },
@@ -189,8 +184,7 @@ var app = new Vue({
   mounted() {},
 
   watch: {
-    
-  proof_id() {
+    proof_id() {
       this.detail_a();
     },
 
@@ -308,24 +302,31 @@ var app = new Vue({
   },
 
   methods: {
-
     CanAccess(creator_title) {
       var can_save = false;
 
       var _creator_title = creator_title.trim().toUpperCase();
 
-      if(this.my_title == 'MANAGING DIRECTOR' || this.my_title == 'CHIEF ADVISOR')
+      if (
+        this.my_title == "MANAGING DIRECTOR" ||
+        this.my_title == "CHIEF ADVISOR"
+      )
         can_save = true;
 
-      if(this.my_title == 'OPERATIONS MANAGER')
-      { 
-        if(_creator_title != 'MANAGING DIRECTOR' && _creator_title != 'CHIEF ADVISOR')
+      if (this.my_title == "OPERATIONS MANAGER") {
+        if (
+          _creator_title != "MANAGING DIRECTOR" &&
+          _creator_title != "CHIEF ADVISOR"
+        )
           can_save = true;
       }
 
-      if(this.my_title == 'ASSISTANT OPERATIONS MANAGER')
-      { 
-        if(_creator_title != 'MANAGING DIRECTOR' && _creator_title != 'CHIEF ADVISOR' && _creator_title != 'OPERATIONS MANAGER')
+      if (this.my_title == "ASSISTANT OPERATIONS MANAGER") {
+        if (
+          _creator_title != "MANAGING DIRECTOR" &&
+          _creator_title != "CHIEF ADVISOR" &&
+          _creator_title != "OPERATIONS MANAGER"
+        )
           can_save = true;
       }
 
@@ -437,6 +438,7 @@ var app = new Vue({
 
       if (_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
+
 
       window.location.href =
         "task_management?" +
@@ -569,17 +571,17 @@ var app = new Vue({
           )
         );
 
-        if(!this.CanAccess(this.record.creator_title)){
+        if (!this.CanAccess(this.record.creator_title)) {
           Swal.fire({
-            text: "It is not allowed to edit/delete the task which was created by user with higher position.",
+            text:
+              "It is not allowed to edit/delete the task which was created by user with higher position.",
             icon: "warning",
             confirmButtonText: "OK",
           });
-  
+
           //$(window).scrollTop(0);
           return;
         }
-  
 
         this.getUsersDeleted(this.task_id_to_load);
       }
@@ -656,6 +658,9 @@ var app = new Vue({
     },
 
     paginate: function(posts) {
+      if(posts.length == 0)
+        return;
+
       console.log("paginate");
       if (this.page < 1) this.page = 1;
       if (this.page > this.pages.length) this.page = this.pages.length;
@@ -711,14 +716,14 @@ var app = new Vue({
         .then(
           (res) => {
             _this.project03_other_task = res.data;
-            if(_this.project03_other_task.length > 0 && id !== 0)
-          {
-            _this.proof_id = id;
+            if (_this.project03_other_task.length > 0 && id !== 0) {
+              _this.proof_id = id;
               //_this.proof_id = _this.receive_records[0].id;
               //_this.detail();
-          }
-          else
-          {_this.proof_id = 0;}
+            } else {
+              _this.proof_id = 0;
+            }
+
           },
           (err) => {
             alert(err.response);
@@ -1115,8 +1120,6 @@ var app = new Vue({
         .then(function(response) {
           if (response.data["batch_id"] != 0) {
             _this.task_upload(response.data["batch_id"]);
-
-            
           } else {
             _this.task_clear();
           }

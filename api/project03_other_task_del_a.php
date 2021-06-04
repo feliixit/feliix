@@ -71,7 +71,7 @@ try{
     if ($stmt->execute()) {
 
         // send notify mail
-        SendNotifyMail($task_id_to_del);
+        SendNotifyMail($task_id_to_del, $uid);
 
         $returnArray = array('ret' => $task_id_to_del);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
@@ -91,7 +91,7 @@ catch (Exception $e)
 
 
 
-function SendNotifyMail($last_id)
+function SendNotifyMail($last_id, $uid)
 {
     $project_name = "";
     $task_name = "";
@@ -122,12 +122,12 @@ function SendNotifyMail($last_id)
     $assignee = $_record[0]["assignee"];
     $collaborator = $_record[0]["collaborator"];
 
-    $due_date = str_replace("-", "/", $_record[0]["due_date"]);
+    $due_date = str_replace("-", "/", $_record[0]["due_date"]) . " " . $_record[0]["due_time"];
     $detail = $_record[0]["detail"];
 
     $stage_id = $_record[0]["stage_id"];
 
-    task_notify_admin("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id);
+    task_notify_admin("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, 0, $uid);
 
 }
 
@@ -139,6 +139,7 @@ function GetTaskDetail($id, $db)
                 pt.assignee,
                 pt.collaborator,
                 due_date,
+                due_time,
                 '' stage,
                 detail
             FROM project_other_task_a pt

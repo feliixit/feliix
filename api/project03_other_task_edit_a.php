@@ -131,7 +131,9 @@ try{
         //if($mail_type == 2)
         //    SendNotifyMail02($task_id, $_record[0]["status"]);
 
-        task_notify_admin("edit", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $task_id);
+        $_record = GetTaskDetail($task_id, $db);
+
+        task_notify_admin("edit", "", $title, "", $_record[0]["create_id"], $assignee, $collaborator, $due_date . " " . $due_time, $detail, $task_id, $uid, 0);
 
 
         $returnArray = array('batch_id' => $task_id);
@@ -276,6 +278,7 @@ function GetTaskDetail($id, $db)
             pt.assignee,
             pt.collaborator,
             due_date,
+            due_time,
             '' stage,
             (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
             detail

@@ -363,10 +363,10 @@ function SendNotifyMail($last_id)
     $assignee = $_record[0]["assignee"];
     $collaborator = $_record[0]["collaborator"];
 
-    $due_date = str_replace("-", "/", $_record[0]["due_date"]);
+    $due_date = str_replace("-", "/", $_record[0]["due_date"]) . " " . $_record[0]["due_time"];
     $detail = $_record[0]["detail"];
 
-    task_notify_admin("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id);
+    task_notify_admin("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, 0, 0);
 
 }
 
@@ -378,6 +378,7 @@ function GetTaskDetail($id, $db)
             pt.assignee,
             pt.collaborator,
             due_date,
+            due_time,
             '' stage,
             detail
             FROM project_other_task_a pt

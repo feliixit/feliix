@@ -1390,19 +1390,22 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
 
 }
 
-function task_notify_admin($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+function task_notify_admin($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
 {
     $tab = "";
 
     switch ($request_type) {
         case "create":
             $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was created";
             break;
         case "edit":
             $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was revised";
             break;
         case "del":
             $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was deleted";
             break;
         default:
             return;
@@ -1455,6 +1458,26 @@ function task_notify_admin($request_type, $project_name, $task_name, $stages_sta
         $creators = $creators . $list["username"] . ", ";
     }
 
+    $_revisor = "";
+    if($revise_id != 0)
+    {
+        $revisor = GetNotifiers($revise_id);
+        foreach($revisor as &$list)
+        {
+            $_revisor = $list["username"];
+        }
+    }
+
+    $_erasor = "";
+    if($erase_id != 0)
+    {
+        $erasor = GetNotifiers($erase_id);
+        foreach($erasor as &$list)
+        {
+            $_erasor = $list["username"];
+        }
+    }
+
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
@@ -1462,19 +1485,24 @@ function task_notify_admin($request_type, $project_name, $task_name, $stages_sta
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
-    
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
     $content = $content . "<p>Task:" . $task_name . "</p>";
     $content = $content . "<p>Creator:" . $creators . "</p>";
+
+    if($_revisor != "")
+        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+
+    if($_erasor != "")
+        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
-    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_manangement?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);

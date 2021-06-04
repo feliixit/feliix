@@ -2660,12 +2660,12 @@ catch (Exception $e) {
             <div class="block">
                 <div class="list_function" style="margin: 10px 0 -5px;">
                     <div class="pagenation">
-                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; apply_filters()">Previous</a>
+                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; filter_apply()">Previous</a>
 
-                        <a class="page" v-for="pg in pages" @click="page=pg; apply_filters()"
+                        <a class="page" v-for="pg in pages" @click="page=pg; filter_apply()"
                            v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
 
-                        <a class="next" :disabled="page == pages.length" @click="page++; apply_filters()">Next</a>
+                        <a class="next" :disabled="page == pages.length" @click="page++; filter_apply()">Next</a>
                     </div>
                 </div>
 
@@ -3248,7 +3248,7 @@ catch (Exception $e) {
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
                                                     title: obj[i].title,
-                                                    url: 'http://127.0.0.1/feliix/task_management?sid=' + obj[i].stage_id,
+                                                    url: 'https://feliix.myvnc.com/task_management?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
@@ -3266,7 +3266,7 @@ catch (Exception $e) {
                             }
                         },
 
-                        desgin: {
+                        design: {
                             text: 'DS',
                             click: function() {
 
@@ -3286,7 +3286,7 @@ catch (Exception $e) {
                                 localStorage.getItem('token');
                                 var form_Data = new FormData();
 
-                                form_Data.append('category', 'ad');
+                                form_Data.append('category', 'ds');
 
                                 $.ajax({
                                     url: "api/project03_other_task_calendar",
