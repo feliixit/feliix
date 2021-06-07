@@ -1583,7 +1583,10 @@ var initial = () =>  {
     if (
         app.name != "Dennis Lin" &&
         app.name != "Thalassa Wren Benzon" &&
-        app.name != "dereck"
+        app.name != "dereck" &&
+        app.name != "Glendon Wendell Co" &&
+        app.name != "Mary Jude Jeng Articulo" &&
+        app.name != "Stefanie Mika C. Santos"
     ) {
         document.getElementById("btn_lock").style.visibility = "hidden";
         document.getElementById("btn_unlock").style.visibility = "hidden";
