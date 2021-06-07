@@ -299,9 +299,44 @@ var app = new Vue({
       window.jQuery("#Modal_1").toggle();
     },
 
+    check_comment_size(max_length) {
+      var checked = 0;
+
+      if(this.comment1.length > max_length)
+        checked = this.comment1.length;
+      if(this.comment2.length > max_length)
+        checked = this.comment2.length;
+      if(this.comment3.length > max_length)
+        checked = this.comment3.length;
+      if(this.comment4.length > max_length)
+        checked = this.comment4.length;
+      if(this.comment5.length > max_length)
+        checked = this.comment5.length;
+
+        return checked;
+
+    },
+
     review_submit() {
 
       let _this = this;
+
+      var max_length = 512;
+      if(_this.record[0].user_id == _this.user_id)
+        max_length = 512;
+      if(_this.record[0].create_id == _this.user_id)
+        max_length = 2048;
+
+      
+      if(_this.check_comment_size(max_length) != 0) 
+      {
+        Swal.fire({
+          text: "Comment text should not over " + max_length + " characters.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
 
       Swal.fire({
         title: "Submit",
@@ -345,6 +380,7 @@ var app = new Vue({
             temp.push(obj);
           }
 
+
           var token = localStorage.getItem("token");
           var form_Data = new FormData();
           form_Data.append("jwt", token);
@@ -382,7 +418,7 @@ var app = new Vue({
                 confirmButtonText: "OK",
               });
 
-              _this.reset();
+              //_this.reset();
             });
 
             window.jQuery(".mask").toggle();
