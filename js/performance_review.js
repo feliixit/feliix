@@ -422,6 +422,8 @@ var app = new Vue({
                 confirmButtonText: "OK",
               });
 
+              _this.submit = false;
+
               //_this.reset();
             });
 
