@@ -409,6 +409,10 @@ var app = new Vue({
               });
 
               _this.reset();
+
+              window.jQuery(".mask").toggle();
+              window.jQuery("#Modal_2").toggle();
+
             })
             .catch(function(error) {
               //handle error
@@ -421,8 +425,7 @@ var app = new Vue({
               //_this.reset();
             });
 
-            window.jQuery(".mask").toggle();
-            window.jQuery("#Modal_2").toggle();
+            
         } else {
           return;
         }
