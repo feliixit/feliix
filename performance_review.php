@@ -858,20 +858,25 @@ try {
                                 <li><b>TOTAL:</b></li>
                                 <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 ).toFixed(1) }}</li>
 
-                                <li style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">Noteworthy accomplishment</template><template v-if="evals.create_id == user_id">Noteworthy accomplishment</template></b></li>
-                                <li><textarea rows="5" v-model="comment1"></textarea></li>
+                                <li style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">Noteworthy accomplishment</template><template v-if="evals.create_id == user_id">Noteworthy accomplishment</template></b><span> ({{comment1.length}}/{{ (evals.user_id == user_id) ? 512 : 2048 }})</span></li>
+                                <li><textarea rows="5" v-model="comment1" :maxlength="(evals.user_id == user_id) ? 512 : 2048" show-word-limit></textarea></li>
+                       
 
-                                <li><b><template v-if="evals.user_id == user_id">What is your opinion about the progress of your objective in the past two months? What ability, attitude, or method makes you deliver this progress? Anything else can be done or changed to make you execute better?</template><template v-if="evals.create_id == user_id">What is your opinion about the progress of subordinate's objective in the past two months? What ability, attitude, or method makes subordinate deliver this progress? Anything else can be done or changed to make subordinate execute better?</template></b></li>
-                                <li><textarea rows="5" v-model="comment2"></textarea></li>
+                                <li style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">What is your opinion about the progress of your objective in the past two months? What ability, attitude, or method makes you deliver this progress? Anything else can be done or changed to make you execute better?</template><template v-if="evals.create_id == user_id">What is your opinion about the progress of subordinate's objective in the past two months? What ability, attitude, or method makes subordinate deliver this progress? Anything else can be done or changed to make subordinate execute better?</template></b><span> ({{comment2.length}}/{{ (evals.user_id == user_id) ? 512 : 2048 }})</span></li>
+                                <li><textarea rows="5" v-model="comment2" :maxlength="(evals.user_id == user_id) ? 512 : 2048" show-word-limit></textarea></li>
+                   
 
-                                <li><b><template v-if="evals.user_id == user_id">What is your planning objective for the next two months? What is your role and responsibility in the objective? How do you define your success and failure in the objective?</template><template v-if="evals.create_id == user_id">What is your expectation of subordinate's objective for the next two months? What is subordinate's role and responsibility in the objective? How do you define subordinate's success and failure in the objective?</template></b></li>
-                                <li><textarea rows="5" v-model="comment3"></textarea></li>
+                                <li style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">What is your planning objective for the next two months? What is your role and responsibility in the objective? How do you define your success and failure in the objective?</template><template v-if="evals.create_id == user_id">What is your expectation of subordinate's objective for the next two months? What is subordinate's role and responsibility in the objective? How do you define subordinate's success and failure in the objective?</template></b><span> ({{comment3.length}}/{{ (evals.user_id == user_id) ? 512 : 2048 }})</span></li>
+                                <li><textarea rows="5" v-model="comment3"  :maxlength="(evals.user_id == user_id) ? 512 : 2048" show-word-limit></textarea></li>
+                  
 
-                                <li v-if="evals.user_id == user_id"><b><template v-if="evals.user_id == user_id">What are your career goals? Did the current job arrangement fit your career goals? If not, any suggestions?</template></b></li>
-                                <li v-if="evals.user_id == user_id"><textarea rows="5" v-model="comment4"></textarea></li>
+                                <li v-if="evals.user_id == user_id" style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">What are your career goals? Did the current job arrangement fit your career goals? If not, any suggestions?</template></b><span v-if="evals.user_id == user_id"> ({{comment4.length}}/{{ (evals.user_id == user_id) ? 512 : 2048 }})</span></li>
+                                <li v-if="evals.user_id == user_id"><textarea rows="5" v-model="comment4" :maxlength="(evals.user_id == user_id) ? 512 : 2048" show-word-limit></textarea></li>
+                          
 
-                                <li><b><template v-if="evals.user_id == user_id">Other comments</template><template v-if="evals.create_id == user_id">Other comments</template></b></li>
-                                <li><textarea rows="5" v-model="comment5"></textarea></li>
+                                <li style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">Other comments</template><template v-if="evals.create_id == user_id">Other comments</template></b><span> ({{comment5.length}}/{{ (evals.user_id == user_id) ? 512 : 2048 }})</span></li>
+                                <li><textarea rows="5" v-model="comment5" :maxlength="(evals.user_id == user_id) ? 512 : 2048" show-word-limit></textarea></li>
+                              
                             </ul>
 
 
