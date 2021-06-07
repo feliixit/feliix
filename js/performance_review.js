@@ -331,7 +331,7 @@ var app = new Vue({
       if(_this.check_comment_size(max_length) != 0) 
       {
         Swal.fire({
-          text: "Comment text should not over " + max_length + " characters.",
+          text: "Text length cannot exceed " + max_length + " characters.",
           icon: "warning",
           confirmButtonText: "OK",
         });
