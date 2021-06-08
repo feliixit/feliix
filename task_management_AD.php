@@ -235,12 +235,13 @@ catch (Exception $e) {
             width: 620px;
             margin: auto;
             overflow-y: auto;
-            position: absolute;
+            position: fixed;
             top: 30px;
             left: 0;
             right: 0;
             z-index: 100;
             background-color: #fff;
+            height: calc( 100vh - 60px);
         }
 
         .tablebox.lv1 li:nth-of-type(1), .tablebox.lv1 li:nth-of-type(2){
@@ -267,6 +268,10 @@ catch (Exception $e) {
         .other .tablebox a.attch_pic>img {
             width: 200px;
             vertical-align: bottom;
+        }
+
+        .list_function .block {
+            margin-bottom: 0;
         }
     </style>
 
@@ -2658,7 +2663,7 @@ catch (Exception $e) {
 
             <!-- list -->
             <div class="block">
-                <div class="list_function" style="margin: 10px 0 -5px;">
+                <div class="list_function" style="margin: 10px 0px 5px;">
                     <div class="pagenation">
                         <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; filter_apply()">Previous</a>
 
@@ -2689,7 +2694,7 @@ catch (Exception $e) {
                             <li><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
                             <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
                             <li>{{ receive_record.creator }}</li>
-                            <li>{{ receive_record.nearest_user }}<br>{{ receive_record.nearest_time }}<br>{{ receive_record.nearest_msg }}</li>
+                            <li>{{ receive_record.nearest_user }}<br>{{ receive_record.nearest_time }}</li>
                         </ul>
                         
 

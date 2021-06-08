@@ -44,28 +44,28 @@ if (!isset($jwt)) {
     }
 }
 
-header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Origin: *");
 
-include_once 'config/database.php';
+include_once "config/database.php";
 
 
 $database = new Database();
 $db = $database->getConnection();
 
 switch ($method) {
-    case 'GET':
+    case "GET":
 
-        $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
-        $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
-        $fp = (isset($_GET['fp']) ?  $_GET['fp'] : 0);
-        $fc = (isset($_GET['fc']) ?  $_GET['fc'] : '');
-        $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
+        $id = (isset($_GET["id"]) ?  $_GET["id"] : 0);
+        $fs = (isset($_GET["fs"]) ?  $_GET["fs"] : "");
+        $fp = (isset($_GET["fp"]) ?  $_GET["fp"] : 0);
+        $fc = (isset($_GET["fc"]) ?  $_GET["fc"] : "");
+        $fk = (isset($_GET["fk"]) ?  $_GET["fk"] : "");
 
         $fc = urldecode($fc);
         $fk = urldecode($fk);
 
-        $page = (isset($_GET['page']) ?  $_GET['page'] : "");
-        $size = (isset($_GET['size']) ?  $_GET['size'] : "");
+        $page = (isset($_GET["page"]) ?  $_GET["page"] : "");
+        $size = (isset($_GET["size"]) ?  $_GET["size"] : "");
 
         $sql = "SELECT pm.id task_id, pm.title, pm.priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
         pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, ut.title creator_title, pp.class_name pp_class

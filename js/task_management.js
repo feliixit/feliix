@@ -360,7 +360,7 @@ var app = new Vue({
       this.fil_priority = "";
       this.fil_status = "";
       this.fil_creator = "";
-      this.fil_keyowrd = "";
+      this.fil_keyword = "";
 
       document.getElementById("btn_filter").classList.remove("focus");
       document.getElementById("filter_dialog").classList.remove("show");
@@ -462,23 +462,23 @@ var app = new Vue({
       if (_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
 
+      var uri = "task_management_AD?" +
+      "fp=" +
+      _this.fil_priority +
+      "&fk=" +
+      _this.fil_keyword +
+      "&fs=" +
+      _this.fil_status +
+      "&fc=" +
+      _this.fil_creator +
+      "&pg=" +
+      _this.pg +
+      "&page=" +
+      _this.page +
+      "&size=" +
+      _this.perPage;
 
-      window.location.href =
-        "task_management_AD?" +
-        "fp=" +
-        _this.fil_priority +
-        "&fs=" +
-        _this.fil_status +
-        "&fc=" +
-        _this.fil_creator +
-        "&fk=" +
-        _this.fil_keyword +
-        "&pg=" +
-        _this.pg +
-        "&page=" +
-        _this.page +
-        "&size=" +
-        _this.perPage;
+      window.location.href = encodeURI(uri);
     },
 
     deleteFile(index) {
@@ -603,6 +603,7 @@ var app = new Vue({
           });
 
           //$(window).scrollTop(0);
+          this.record = {};
           return;
         }
 
@@ -723,10 +724,10 @@ var app = new Vue({
       let _this = this;
 
       const params = {
-        fs: this.fil_status,
-        fp: this.fil_priority,
-        fc: this.fil_creator,
-        fk: this.fil_keyowrd,
+        "fs": this.fil_status,
+        "fp": this.fil_priority,
+        "fc": this.fil_creator,
+        "fk": this.fil_keyword,
       };
 
       let token = localStorage.getItem("accessToken");
