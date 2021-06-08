@@ -907,6 +907,29 @@ var app = new Vue({
     },
 
     task_del() {
+
+      if (this.task_id_to_del != 0) {
+          this.record = {};
+          this.record = this.shallowCopy(
+            this.project03_other_task.find(
+              (element) => element.task_id == this.task_id_to_del
+            )
+          );
+
+        if (!this.CanAccess(this.record.creator_title)) {
+          Swal.fire({
+            text:
+              "It is not allowed to edit/delete the task which was created by user with higher position.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+
+          //$(window).scrollTop(0);
+          this.record = {};
+          return;
+        }
+      }
+
       if (this.task_id_to_del != 0) {
         let _this = this;
         Swal.fire({
