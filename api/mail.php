@@ -1503,7 +1503,7 @@ function task_notify_admin($request_type, $project_name, $task_name, $stages_sta
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_AD?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {

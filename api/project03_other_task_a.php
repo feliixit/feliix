@@ -67,12 +67,14 @@ switch ($method) {
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
-        $sql = "SELECT pm.id task_id, pm.title, priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
-        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, ut.title creator_title
+        $sql = "SELECT pm.id task_id, pm.title, pm.priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
+        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, ut.title creator_title, pp.class_name pp_class
         from project_other_task_a pm 
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN user_title ut ON u.title_id = ut.id
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task_a'
+        LEFT JOIN project_priority pp
+            ON pm.priority = pp.id
         where pm.`status` <> -1 " . ($id != 0 ? " and pm.id=$id" : ' ');
 
         if ($fs != '') {
@@ -159,6 +161,7 @@ switch ($method) {
                     "nearest_user" => $_nearest_user,
                     "nearest_msg" => $_nearest_msg,
                     "creator_title" => $creator_title,
+                    "pp_class" => $pp_class,
                 );
 
                 $message = [];
@@ -190,6 +193,8 @@ switch ($method) {
             $task_date = $row['task_date'];
 
             $creator_title = $row['creator_title'];
+
+            $pp_class = $row['pp_class'];
 
             $_nearest_time = "";
             $_nearest_user = "";
@@ -235,6 +240,7 @@ switch ($method) {
                 "nearest_user" => $_nearest_user,
                 "nearest_msg" => $_nearest_msg,
                 "creator_title" => $creator_title,
+                "pp_class" => $pp_class,
             );
         }
 

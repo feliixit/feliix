@@ -2460,7 +2460,7 @@ catch (Exception $e) {
                                     <li class="head">Target Task:</li>
                                     <li class="mix">
                                         <select v-model="task_id_to_del">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" v-if="it.task_status != '-1'">
+                                            <option v-for="(it, index) in displayedStagePosts" :value="it.task_id" v-if="it.task_status != '-1'">
                                                 {{ it.title }}
                                             </option>
                                         </select>
@@ -2473,7 +2473,7 @@ catch (Exception $e) {
                                     <li class="head">Target Sequence:</li>
                                     <li class="mix">
                                         <select v-model="task_id_to_load">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" v-if="it.task_status != '-1'">
+                                            <option v-for="(it, index) in displayedStagePosts" :value="it.task_id" v-if="it.task_status != '-1'">
                                                 {{ it.title }}
                                             </option>
                                         </select>
@@ -2680,7 +2680,7 @@ catch (Exception $e) {
                             <li>Recent Message</li>
                         </ul>
                         <ul v-for='(receive_record, index) in displayedStagePosts'>
-                            <li><i class="pt03">{{ receive_record.priority }}</i></li>
+                            <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
                             <li>
                                 <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
                                 <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
@@ -3248,7 +3248,7 @@ catch (Exception $e) {
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/task_management?sid=' + obj[i].stage_id,
+                                                    url: 'https://feliix.myvnc.com/task_management_AD?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
@@ -3307,7 +3307,7 @@ catch (Exception $e) {
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/task_management?sid=' + obj[i].stage_id,
+                                                    url: 'https://feliix.myvnc.com/task_management_DS?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,

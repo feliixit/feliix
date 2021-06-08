@@ -1284,6 +1284,8 @@ ALTER TABLE performance_review
 ADD COLUMN `mag_comment_3` varchar(512)  COLLATE utf8mb4_unicode_ci default '' AFTER `mag_comment_2`;
 
 
+
+
 CREATE TABLE IF NOT EXISTS `performance_review_detail` (
   `id` bigint(20)  NOT NULL AUTO_INCREMENT,
   `review_id` bigint(20)  DEFAULT 0 NOT NULL,
@@ -1402,3 +1404,10 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_a` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
+
+-- 2021/06/07 擴充評論
+ALTER TABLE performance_review MODIFY `mag_comment_1` varchar(2048);
+ALTER TABLE performance_review MODIFY `mag_comment_2` varchar(2048);
+ALTER TABLE performance_review MODIFY `mag_comment_3` varchar(2048);
+ALTER TABLE performance_review MODIFY `mag_comment_4` varchar(2048);
+ALTER TABLE performance_review MODIFY `mag_comment_5` varchar(2048);

@@ -47,7 +47,7 @@ var app = new Vue({
       { project_status: "Close", id: 2 },
     ],
 
-    perPage: 5,
+    perPage: 10,
 
     baseURL: "https://storage.cloud.google.com/feliiximg/",
 
@@ -302,6 +302,29 @@ var app = new Vue({
   },
 
   methods: {
+    GetPage() {
+
+      for(var _page = 1; ; _page++) {
+        let from = _page * this.perPage - this.perPage;
+        let to = _page * this.perPage;
+        var result = this.project03_other_task.slice(from, to);
+
+        if(result.length === 0)
+          return 1;
+  
+        var found = false;
+        for(var i = 0; i < result.length; i++) {
+            if (result[i].task_id == this.proof_id) {
+                found = true;
+                break;
+            }
+        }
+
+        if(found == true)
+          return _page;
+      }
+    },
+
     CanAccess(creator_title) {
       var can_save = false;
 
@@ -441,7 +464,7 @@ var app = new Vue({
 
 
       window.location.href =
-        "task_management?" +
+        "task_management_AD?" +
         "fp=" +
         _this.fil_priority +
         "&fs=" +
@@ -718,10 +741,15 @@ var app = new Vue({
             _this.project03_other_task = res.data;
             if (_this.project03_other_task.length > 0 && id !== 0) {
               _this.proof_id = id;
+              var _page = _this.GetPage();
+
+              _this.page = _page;
+         
               //_this.proof_id = _this.receive_records[0].id;
               //_this.detail();
             } else {
-              _this.proof_id = 0;
+              if(_this.view_detail != true)
+                _this.proof_id = 0;
             }
 
           },
@@ -1069,6 +1097,41 @@ var app = new Vue({
         return;
       }
 
+      if (this.priority == 0) {
+        Swal.fire({
+          text: "Please select priority!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if(this.assignee.length < 1)
+      {
+        Swal.fire({
+          text: "Please select assignee!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.due_date.trim() == "") {
+        Swal.fire({
+          text: "Please enter due date!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
       if (this.due_date.trim() == "" && this.due_time.trim() != "") {
         Swal.fire({
           text: "Please enter due date!",
@@ -1192,6 +1255,51 @@ var app = new Vue({
       if (this.task_id_to_load == 0) {
         Swal.fire({
           text: "Please select a task to edit",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.record.title.trim() == "") {
+        Swal.fire({
+          text: "Please enter title!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.record.priority == 0) {
+        Swal.fire({
+          text: "Please select priority!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if(this.record.assignee.length < 1)
+      {
+        Swal.fire({
+          text: "Please select assignee!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.record.due_date.trim() == "") {
+        Swal.fire({
+          text: "Please enter due date!",
           icon: "warning",
           confirmButtonText: "OK",
         });

@@ -3447,7 +3447,7 @@ catch (Exception $e) {
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/task_management?sid=' + obj[i].stage_id,
+                                                    url: 'https://feliix.myvnc.com/task_management_AD?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
@@ -3506,7 +3506,7 @@ catch (Exception $e) {
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/task_management?sid=' + obj[i].stage_id,
+                                                    url: 'https://feliix.myvnc.com/task_management_DS?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,

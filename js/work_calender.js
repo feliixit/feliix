@@ -1251,7 +1251,7 @@ var app = new Vue({
                 })
                 .then(function (response) {
                     //handle success
-                    _this.name = response.data.username;
+                    _this.name = response.data.username.trim();
                     _this.is_manager = response.data.is_manager;
                     _this.manager_leave = response.data.manager_leave;
                     _this.al_credit = response.data.annual_leave;
