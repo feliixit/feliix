@@ -1411,3 +1411,55 @@ ALTER TABLE performance_review MODIFY `mag_comment_2` varchar(2048);
 ALTER TABLE performance_review MODIFY `mag_comment_3` varchar(2048);
 ALTER TABLE performance_review MODIFY `mag_comment_4` varchar(2048);
 ALTER TABLE performance_review MODIFY `mag_comment_5` varchar(2048);
+
+-- 2021/06/08 擴充描述
+ALTER TABLE price_record MODIFY `details` varchar(4096);
+
+
+
+-- 20210609 task_management for design
+CREATE TABLE IF NOT EXISTS `project_other_task_d` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `stage_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `title` varchar(256) DEFAULT '',
+  `priority` int(11) DEFAULT 0,
+  `due_date` varchar(10) default '',
+  `due_time` varchar(10) default '',
+  `assignee` varchar(256) default '',
+  `collaborator` varchar(256) default '',
+  `status` int(11) DEFAULT 0,
+  `type` varchar(64) DEFAULT '',
+  `detail` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `project_other_task_message_d` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `task_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `parent_id` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `message` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_d` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `message_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `reply_id` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `message` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+

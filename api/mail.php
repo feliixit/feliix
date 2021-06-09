@@ -1390,6 +1390,133 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
 
 }
 
+
+function task_notify_admin_d($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $_revisor = "";
+    if($revise_id != 0)
+    {
+        $revisor = GetNotifiers($revise_id);
+        foreach($revisor as &$list)
+        {
+            $_revisor = $list["username"];
+        }
+    }
+
+    $_erasor = "";
+    if($erase_id != 0)
+    {
+        $erasor = GetNotifiers($erase_id);
+        foreach($erasor as &$list)
+        {
+            $_erasor = $list["username"];
+        }
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+
+    if($_revisor != "")
+        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+
+    if($_erasor != "")
+        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_DS?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo);
+        return false;
+    }
+
+}
+
 function task_notify_admin($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
 {
     $tab = "";

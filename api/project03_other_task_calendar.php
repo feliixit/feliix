@@ -145,6 +145,11 @@ switch ($method) {
             $merged_results = array_merge($merged_results, CombineWithAD($db));
         }
 
+        if($cat == '' || $cat == 'ds')
+        {
+            $merged_results = array_merge($merged_results, CombineWithDS($db));
+        }
+
         if($uid != 0)
         {
             foreach ($merged_results as &$value) {
@@ -205,6 +210,76 @@ function CombineWithAD($db)
             $stage_id = $row['stage_id'];
             $title = $row['due_time'] . ' ' . 
                     '[AD]' .
+                    
+                     $row['title'];
+            $due_date = $row['due_date'];
+            $due_time = $row['due_time'];
+            $task_status = $row['task_status'];
+            $create_id = $row['create_id'];
+            $category = $row['category'];
+            $project_name = $row['project_name'];
+            $assignee = explode(",", $row['assignee']);
+            $collaborator = explode(",", $row['collaborator']);
+            $color = GetTaskColor($task_status, $due_date, $due_time);
+
+            $merged_results[] = array(
+                "stage_id" => $stage_id,
+                "title" => $title,
+                "due_date" => $due_date,
+                "due_time" => ($due_time == '' ? '23:59:59' : $due_time . '00'),
+                "task_status" => $task_status,
+                "create_id" => $create_id,
+                "category" => $category,
+                "project_name" => $project_name,
+                "assignee" => $assignee,
+                "collaborator" => $collaborator,
+              
+                "color" => $color,
+            );
+        }
+
+        return $merged_results;
+}
+
+function CombineWithDS($db)
+{
+
+        $sql = "SELECT id stage_id, 
+                        pm.title, 
+                        pm.due_date, 
+                        pm.due_time, 
+                        pm.`status` task_status, 
+                        pm.create_id, 
+                        'AD' category, 
+                        '' project_name, 
+                        pm.collaborator, 
+                        pm.assignee
+                from project_other_task_d pm 
+                where pm.`status` <> -1 AND pm.due_date <> '' ";
+
+
+        $merged_results = array();
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $stage_id = 0;
+        $title = "";
+        $due_date = "";
+        $due_time = "";
+        $task_status = "";
+        $create_id = 0;
+        $category = "";
+        $project_name = "";
+        $assignee = [];
+        $collaborator = [];
+        $color = "";
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+           
+            $stage_id = $row['stage_id'];
+            $title = $row['due_time'] . ' ' . 
+                    '[DS]' .
                     
                      $row['title'];
             $due_date = $row['due_date'];
