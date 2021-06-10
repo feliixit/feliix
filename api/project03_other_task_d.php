@@ -252,6 +252,8 @@ switch ($method) {
             foreach ($merged_results as &$value) {
                 if(
                     preg_match("/{$fk}/i", $value['title']) || 
+                    preg_match("/{$fk}/i", $value['nearest_time']) || 
+                    preg_match("/{$fk}/i", $value['nearest_user']) || 
                     preg_match("/{$fk}/i", $value['nearest_msg']))
                 {
                     $_result[] = $value;
