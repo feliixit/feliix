@@ -31,6 +31,7 @@ else
         $decoded = JWT::decode($jwt, $key, array('HS256'));
 
         $user_id = $decoded->data->id;
+        $username = $decoded->data->username;
 
     }
         // if decode fails, it means jwt is invalid
@@ -125,16 +126,32 @@ try{
     if ($stmt->execute()) {
 
         // send notify mail
-        //if($mail_type == 1)
-        //    SendNotifyMail01($task_id, $_record[0]["status"]);
+        if($mail_type == 1)
+            SendNotifyMail01($task_id, $_record[0]["status"], $username);
 
         //if($mail_type == 2)
-        //    SendNotifyMail02($task_id, $_record[0]["status"]);
+            //SendNotifyMail02($task_id, $_record[0]["status"]);
 
-        $_record = GetTaskDetail($task_id, $db);
-
-        task_notify_admin("edit", "", $title, "", $_record[0]["create_id"], $assignee, $collaborator, $due_date . " " . $due_time, $detail, $task_id, $uid, 0);
-
+        if($mail_type == 2)
+        {
+            $task_status = "";
+            switch ($status) {
+                case "0":
+                    $task_status = "Ongoing";
+                    break;
+                case "1":
+                    $task_status = "Pending";
+                    break;
+                case "2":
+                    $task_status = "Close";
+                    break;
+                case "-1":
+                    $task_status = "DEL";
+                    break;
+            }
+            $_record = GetTaskDetail($task_id, $db);
+            task_notify_admin("edit", $task_status, $title, "", $_record[0]["create_id"], $assignee, $collaborator, $due_date . " " . $due_time, $detail, $task_id, $uid, 0);
+        }
 
         $returnArray = array('batch_id' => $task_id);
        
@@ -154,13 +171,10 @@ catch (Exception $e)
 }
 
 
-function SendNotifyMail01($last_id, $old_status_id)
+function SendNotifyMail01($last_id, $old_status_id, $username)
 {
-    $project_name = "";
     $task_name = "";
-    $stages_status = "";
     $create_id = "";
-
     $assignee = "";
     $collaborator = "";
 
@@ -207,7 +221,7 @@ function SendNotifyMail01($last_id, $old_status_id)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify01($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id);
+    task_notify01_admin($old_status, $task_status, $username, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id);
 
 }
 
