@@ -92,6 +92,8 @@ $query = "SELECT pm.id,
             pp.class_name                                pp_class,
             pm.project_name,
             pm.final_amount,
+            pm.tax_withheld,
+            pm.billing_name,
             (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1) payment,
             (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0) dp_payment,
             Coalesce(ps.project_status, '')              project_status,
@@ -371,6 +373,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $dpm = $row['dp_payment'];
 
     $final_amount = $row['final_amount'];
+    $tax_withheld = $row['tax_withheld'];
+    $billing_name = $row['billing_name'];
 
     $quote_file_string = GetQuoteFileString($row['id'], $db);
 
@@ -416,6 +420,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_at" => $updated_at,
         "stage" => $stage,
         "final_amount" => $final_amount,
+        "tax_withheld" => $tax_withheld,
+        "billing_name" => $billing_name,
         "quote" => $quote,
         "payment" => $payment,
         "pm" => $pm,

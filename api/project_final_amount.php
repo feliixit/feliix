@@ -10,6 +10,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 $pid = (isset($_POST['pid']) ?  $_POST['pid'] : '');
 $amount = (isset($_POST['amount']) ?  $_POST['amount'] : 0);
+$tax_withheld = (isset($_POST['tax_withheld']) ?  $_POST['tax_withheld'] : 0);
+$billing_name = (isset($_POST['billing_name']) ?  $_POST['billing_name'] : "");
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -50,13 +52,17 @@ if (!isset($jwt)) {
         $uid = $user_id;
 
         $query = "update project_main
-                    set final_amount = :amount
+                    set final_amount = :amount,
+                    tax_withheld = :tax_withheld,
+                    billing_name = :billing_name
                   where id = :project_id ";
 
         $stmt = $db->prepare( $query );
         // bind the values
         $stmt->bindParam(':project_id', $pid);
         $stmt->bindParam(':amount', $amount);
+        $stmt->bindParam(':tax_withheld', $tax_withheld);
+        $stmt->bindParam(':billing_name', $billing_name);
 
         try {
             // execute the query, also check if query was successful

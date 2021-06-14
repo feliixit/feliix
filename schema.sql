@@ -1463,3 +1463,9 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_d` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
+
+ALTER TABLE project_main
+ADD COLUMN `tax_withheld` decimal(11, 8) default 0.0 AFTER final_amount;
+
+ALTER TABLE project_main
+ADD COLUMN `billing_name` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER tax_withheld;
