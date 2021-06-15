@@ -864,14 +864,14 @@ $(function(){
                       <li><input type="radio" name="project_id" class="alone black"
                             @click="show_detail(receive_record.id)"></li>
                       <li>{{ receive_record.category }}</li>
-                      <li></li>
+                      <li>{{ receive_record.billing_name }}</li>
                       <li><a :href="'project02?p=' + receive_record.id" target="_blank">{{ receive_record.project_name }}</a></li>
                       <li>{{ receive_record.project_status }}</li>
                       <li>{{ receive_record.username }}</li>
                       <li>{{ receive_record.created_at }} ~ {{ receive_record.updated_at }}</li>
-                      <li>{{ isNaN(parseInt(receive_record.final_amount)) ? "" : Number(receive_record.final_amount).toLocaleString() }}</li>
-                      <li>{{ isNaN(parseInt(receive_record.tax_withheld)) ? "" : Number(receive_record.tax_withheld).toLocaleString() }}</li>
-                      <li>{{ receive_record.billing_name }}</li>
+                      <li>{{ isNaN(parseFloat(receive_record.final_amount)) ? "" : Number(receive_record.final_amount).toLocaleString() }}</li>
+                      <li>{{ isNaN(parseFloat(receive_record.tax_withheld)) ? "" : Number(receive_record.tax_withheld).toLocaleString() }}</li>
+                      <li>{{ isNaN(parseFloat(receive_record.net_amount)) ? "" : Number(receive_record.net_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.down_payment_amount)) ? "" : Number(receive_record.down_payment_amount).toLocaleString() }}</li>
                       <li></li>
                       <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>
