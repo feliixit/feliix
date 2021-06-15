@@ -1170,7 +1170,7 @@ $(function(){
                         <div class="formbox">
                             <dl>
                                 <dt class="head">Description:</dt>
-                                <dd><textarea name="" id="" v-model="quote_remark"></textarea></dd>
+                                <dd><textarea name="" id="" v-model="po_remark"></textarea></dd>
                                 <dd style="display: flex; justify-content: flex_start;">
                                     <span style="color: #000000; font-size: 16px; font-weight: 700; padding-bottom: 5px; margin-right: 10px;">Files: </span>
                                     <div class="pub-con" ref="bg">
@@ -1179,23 +1179,23 @@ $(function(){
                                             <input
                                                     class="input"
                                                     type="file"
-                                                    name="quote_file"
+                                                    name="po_file"
                                                     value
                                                     placeholder="choose file"
-                                                    ref="quote_file"
-                                                    v-show="quote_canSub"
-                                                    @change="quote_changeFile()"
+                                                    ref="po_file"
+                                                    v-show="po_canSub"
+                                                    @change="po_changeFile()"
                                                     multiple
                                             />
                                         </div>
                                 </dd>
 
                                 <div class="file-list">
-                                    <div class="file-item" v-for="(item,index) in quote_fileArray" :key="index">
+                                    <div class="file-item" v-for="(item,index) in po_fileArray" :key="index">
                                         <p>
                                             {{item.name}}
                                             <span
-                                                    @click="quote_deleteFile(index)"
+                                                    @click="po_deleteFile(index)"
                                                     v-show="item.progress==0"
                                                     class="upload-delete"
                                             ><i class="fas fa-backspace"></i>
@@ -1215,8 +1215,8 @@ $(function(){
                                 </div>
 
                                 <div class="btnbox">
-                                    <a class="btn" @click="quote_clear">Cancel</a>
-                                    <a class="btn green" @click="quote_create">Upload</a>
+                                    <a class="btn" @click="po_clear">Cancel</a>
+                                    <a class="btn green" @click="po_create">Upload</a>
                                 </div>
 
                             </dl>
@@ -1227,16 +1227,16 @@ $(function(){
                         <div class="list_function">
 
                             <div class="box-search">
-                                <input type="text" placeholder="Searching Keyword Here" v-model="quote_keyword">
-                                <button @click="quote_search()"><i class="fas fa-filter"></i></button>
+                                <input type="text" placeholder="Searching Keyword Here" v-model="po_keyword">
+                                <button @click="po_search()"><i class="fas fa-filter"></i></button>
                             </div>
 
                             <div class="pagenation">
-                                <a class="prev" :disabled="quote_page == 1" @click="quote_page < 1 ? quote_page = 1 : quote_page--">Previous</a>
+                                <a class="prev" :disabled="po_page == 1" @click="po_page < 1 ? po_page = 1 : po_page--">Previous</a>
 
-                                <a class="page" v-for="pg in quote_pages" @click="quote_page=pg" v-bind:style="[pg == quote_page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                                <a class="page" v-for="pg in po_pages" @click="po_page=pg" v-bind:style="[pg == po_page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
 
-                                <a class="next" :disabled="quote_page == quote_pages.length" @click="quote_page++">Next</a>
+                                <a class="next" :disabled="po_page == po_pages.length" @click="po_page++">Next</a>
                             </div>
                         </div>
 
@@ -1248,8 +1248,8 @@ $(function(){
                                     <li>Description</li>
                                     <li>Uploader</li>
                                 </ul>
-                                <ul v-for='(receive_record, index) in displayedQuote'>
-                                    <li><input type="checkbox" name="quotation_id" class="alone black" :value="receive_record.id"></li>
+                                <ul v-for='(receive_record, index) in displayedPo'>
+                                    <li><input type="checkbox" name="po_id" class="alone black" :value="receive_record.id"></li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display:block;">
                                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
@@ -1263,7 +1263,7 @@ $(function(){
                         </div>
 
                         <div class="btnbox">
-                            <a class="btn red" @click="delete_quotation()">Delete</a>
+                            <a class="btn red" @click="delete_user_po()">Delete</a>
                         </div>
 
                     </div>
@@ -1276,14 +1276,14 @@ $(function(){
                             <dl>
                                 <dt class="head">Type:</dt>
                                 <dd>
-                                    <select v-model="payment_type">
-                                        <option value="0">Other Files</option>
-                                        <option value="1">Remarks/Status</option>
+                                    <select v-model="other_type">
+                                        <option value="2">Other Files</option>
+                                        <option value="3">Remarks/Status</option>
                                     </select>
                                 </dd>
                                 <dt class="head">Description:</dt>
-                                <dd><textarea name="" id="" v-model="prof_remark"></textarea></dd>
-                                <dd style="display: flex; justify-content: flex_start;">
+                                <dd><textarea name="" id="" v-model="other_remark"></textarea></dd>
+                                <dd style="display: flex; justify-content: flex_start;" v-if="other_type == '2'">
                                     <span style="color: #000000; font-size: 16px; font-weight: 700; padding-bottom: 5px; margin-right: 10px;">Files: </span>
                                     <div class="pub-con" ref="bg">
                                         <div class="input-zone">
@@ -1291,23 +1291,23 @@ $(function(){
                                             <input
                                                     class="input"
                                                     type="file"
-                                                    name="prof_file"
+                                                    name="other_file"
                                                     value
                                                     placeholder="choose file"
-                                                    ref="prof_file"
-                                                    v-show="prof_canSub"
-                                                    @change="prof_changeFile()"
+                                                    ref="other_file"
+                                                    v-show="other_canSub"
+                                                    @change="other_changeFile()"
                                                     multiple
                                             />
                                         </div>
                                 </dd>
 
-                                <div class="file-list">
-                                    <div class="file-item" v-for="(item,index) in prof_fileArray" :key="index">
+                                <div class="file-list"  v-if="other_type == '2'">
+                                    <div class="file-item" v-for="(item,index) in other_fileArray" :key="index">
                                         <p>
                                             {{item.name}}
                                             <span
-                                                    @click="prof_deleteFile(index)"
+                                                    @click="other_deleteFile(index)"
                                                     v-show="item.progress==0"
                                                     class="upload-delete"
                                             ><i class="fas fa-backspace"></i>
@@ -1327,8 +1327,8 @@ $(function(){
                                 </div>
 
                                 <div class="btnbox">
-                                    <a class="btn" @click="prof_clear">Cancel</a>
-                                    <a class="btn green" @click="prof_create">Submit</a>
+                                    <a class="btn" @click="other_clear">Cancel</a>
+                                    <a class="btn green" @click="other_create">Submit</a>
                                 </div>
                             </dl>
 
@@ -1339,16 +1339,16 @@ $(function(){
                         <div class="list_function">
 
                             <div class="box-search">
-                                <input type="text" placeholder="Searching Keyword Here" v-model="quote_keyword">
-                                <button @click="quote_search()"><i class="fas fa-filter"></i></button>
+                                <input type="text" placeholder="Searching Keyword Here" v-model="other_keyword">
+                                <button @click="other_search()"><i class="fas fa-filter"></i></button>
                             </div>
 
                             <div class="pagenation">
-                                <a class="prev" :disabled="quote_page == 1" @click="quote_page < 1 ? quote_page = 1 : quote_page--">Previous</a>
+                                <a class="prev" :disabled="other_page == 1" @click="other_page < 1 ? other_page = 1 : other_page--">Previous</a>
 
-                                <a class="page" v-for="pg in quote_pages" @click="quote_page=pg" v-bind:style="[pg == quote_page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                                <a class="page" v-for="pg in other_pages" @click="other_page=pg" v-bind:style="[pg == other_page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
 
-                                <a class="next" :disabled="quote_page == quote_pages.length" @click="quote_page++">Next</a>
+                                <a class="next" :disabled="other_page == other_pages.length" @click="other_page++">Next</a>
                             </div>
                         </div>
 
@@ -1361,9 +1361,9 @@ $(function(){
                                     <li>Description</li>
                                     <li>Submitter</li>
                                 </ul>
-                                <ul v-for='(receive_record, index) in displayedQuote'>
-                                    <li><input type="checkbox" name="quotation_id" class="alone black" :value="receive_record.id"></li>
-                                    <li>{{ (receive_record.kind == 0) ? "Down Payment" : "Payment" }}</li>
+                                <ul v-for='(receive_record, index) in displayedOther'>
+                                    <li><input type="checkbox" name="other_id" class="alone black" :value="receive_record.id"></li>
+                                    <li>{{ (receive_record.kind == 2) ? "Other Files" : "Remarks/Status" }}</li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display:block;">
                                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
@@ -1377,7 +1377,7 @@ $(function(){
                         </div>
 
                         <div class="btnbox">
-                            <a class="btn red" @click="delete_quotation()">Delete</a>
+                            <a class="btn red" @click="delete_other()">Delete</a>
                         </div>
 
                     </div>

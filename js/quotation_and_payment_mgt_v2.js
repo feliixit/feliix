@@ -45,6 +45,14 @@ var app = new Vue({
 
     quote_keyword: "",
 
+    po_page: 1,
+    po_pages: [],
+    po_keyword: "",
+
+    other_page: 1,
+    other_pages: [],
+    other_keyword: "",
+
     // paging
     pay_page: 1,
     //perPage: 10,
@@ -71,6 +79,18 @@ var app = new Vue({
     quote_canSub: true,
     quote_remark: "",
     quote_fileArray: [],
+
+    other_type: "2",
+    other_remark: "",
+    other_canSub: true,
+    other_fileArray: [],
+
+    po_type: "",
+    po_remark: "",
+    po_canSub: true,
+    po_fileArray: [],
+
+    itemPage: 5,
 
     fil_category: "",
     fil_status: "",
@@ -199,6 +219,17 @@ var app = new Vue({
       this.setPayPages();
       return this.pay_paginate(this.record.payment);
     },
+
+    displayedPo() {
+      this.setPoPages();
+      return this.po_paginate(this.record.client_po);
+    },
+
+    displayedOther() {
+      this.setOtherPages();
+      return this.other_paginate(this.record.client_other);
+    },
+
   },
 
   mounted() {
@@ -245,6 +276,28 @@ var app = new Vue({
       if (numberOfPages == 1) this.pay_page = 1;
       for (let index = 1; index <= numberOfPages; index++) {
         this.pay_pages.push(index);
+      }
+    },
+
+    setPoPages() {
+      console.log("setPoPages");
+      this.po_pages = [];
+      let numberOfPages = Math.ceil(this.record.client_po.length / this.itemPage);
+
+      if (numberOfPages == 1) this.po_page = 1;
+      for (let index = 1; index <= numberOfPages; index++) {
+        this.po_pages.push(index);
+      }
+    },
+
+    setOtherPages() {
+      console.log("setOtherPages");
+      this.other_pages = [];
+      let numberOfPages = Math.ceil(this.record.client_other.length / this.itemPage);
+
+      if (numberOfPages == 1) this.other_page = 1;
+      for (let index = 1; index <= numberOfPages; index++) {
+        this.other_pages.push(index);
       }
     },
 
@@ -307,6 +360,32 @@ var app = new Vue({
       let from = page * perPage - perPage;
       let to = page * perPage;
       return this.record.quote.slice(from, to);
+    },
+
+    po_paginate: function(posts) {
+      console.log("po_paginate");
+      if (this.po_page < 1) this.po_page = 1;
+      if (this.po_page > this.po_pages.length)
+        this.po_page = this.po_pages.length;
+
+      let page = this.po_page;
+      let perPage = this.itemPage;
+      let from = page * perPage - perPage;
+      let to = page * perPage;
+      return this.record.client_po.slice(from, to);
+    },
+
+    other_paginate: function(posts) {
+      console.log("other_paginate");
+      if (this.other_page < 1) this.other_page = 1;
+      if (this.other_page > this.other_pages.length)
+        this.other_page = this.other_pages.length;
+
+      let page = this.other_page;
+      let perPage = this.itemPage;
+      let from = page * perPage - perPage;
+      let to = page * perPage;
+      return this.record.client_other.slice(from, to);
     },
 
     pay_paginate: function(posts) {
@@ -534,6 +613,13 @@ var app = new Vue({
               _this.setPages();
             }
 
+            if(_this.proof_id !== 0)
+            {
+              _this.record = _this.shallowCopy(
+                _this.receive_records.find((element) => element.id == _this.proof_id)
+              );
+            }
+
           },
           (err) => {
             alert(err.response);
@@ -728,6 +814,26 @@ var app = new Vue({
       );
     },
 
+    po_search: function() {
+      if (this.proof_id == 0) return;
+      this.record_filter = this.shallowCopy(
+        this.receive_records.find((element) => element.id == this.proof_id)
+      );
+      this.record.client_po = this.record_filter.client_po.filter((searchResult) =>
+        searchResult.searchstr.match(this.po_keyword.toLowerCase().trim()) || searchResult.create === this.po_keyword.toLowerCase().trim()
+      );
+    },
+
+    other_search: function() {
+      if (this.proof_id == 0) return;
+      this.record_filter = this.shallowCopy(
+        this.receive_records.find((element) => element.id == this.proof_id)
+      );
+      this.record.client_other = this.record_filter.client_other.filter((searchResult) =>
+        searchResult.searchstr.match(this.other_keyword.toLowerCase().trim()) || searchResult.create === this.other_keyword.toLowerCase().trim() 
+      );
+    },
+
     approve: function() {
       let _this = this;
 
@@ -887,6 +993,20 @@ var app = new Vue({
 
     final_quotation_clear() {
       var finals = document.getElementsByName("quotation_id");
+      for (var i = 0; i < finals.length; i++) {
+        finals[i].checked = false;
+      }
+    },
+
+    client_po_clear() {
+      var finals = document.getElementsByName("po_id");
+      for (var i = 0; i < finals.length; i++) {
+        finals[i].checked = false;
+      }
+    },
+
+    client_other_clear() {
+      var finals = document.getElementsByName("other_id");
       for (var i = 0; i < finals.length; i++) {
         finals[i].checked = false;
       }
@@ -1118,6 +1238,8 @@ var app = new Vue({
       { 
         if(this.title.trim().toUpperCase() == 'OPERATIONS MANAGER')
           can_save = true;
+        if(this.title.trim().toUpperCase() == 'SR. OFFICE ADMIN ASSOCIATE')
+          can_save = true;
       }
 
       if(this.department.trim().toUpperCase() == 'TW')
@@ -1141,6 +1263,81 @@ var app = new Vue({
       if(this.username.trim() == this.record.username.trim())
         can_save = true;
       
+      return can_save;
+    },
+
+
+    CanDeleteClientPo() {
+      var can_save = false;
+
+      if(this.department.trim().toUpperCase() == 'SALES')
+      { 
+        if(this.title.trim().toUpperCase() == 'ASSISTANT SALES MANAGER')
+          can_save = true;
+
+        if(this.title.trim().toUpperCase() == 'SALES MANAGER')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == 'LIGHTING')
+      { 
+        if(this.title.trim().toUpperCase() == 'ASSISTANT LIGHTING MANAGER')
+          can_save = true;
+
+        if(this.title.trim().toUpperCase() == 'LIGHTING MANAGER')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == 'OFFICE')
+      { 
+        if(this.title.trim().toUpperCase() == 'ASSISTANT OFFICE SYSTEMS MANAGER')
+          can_save = true;
+
+        if(this.title.trim().toUpperCase() == 'OFFICE SYSTEMS MANAGER')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == 'DESIGN')
+      { 
+        if(this.title.trim().toUpperCase() == 'ASSISTANT BRAND MANAGER')
+          can_save = true;
+
+        if(this.title.trim().toUpperCase() == 'BRAND MANAGER')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == 'SERVICE')
+      { 
+        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == 'ADMIN')
+      { 
+        if(this.title.trim().toUpperCase() == 'OPERATIONS MANAGER')
+          can_save = true;
+        if(this.title.trim().toUpperCase() == 'SR. OFFICE ADMIN ASSOCIATE')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == 'TW')
+      { 
+        if(this.title.trim().toUpperCase() == 'SUPPLY CHAIN MANAGER')
+          can_save = true;
+      }
+
+      if(this.department.trim().toUpperCase() == '')
+      { 
+        if(this.title.trim().toUpperCase() == 'OWNER')
+          can_save = true;
+
+        if(this.title.trim().toUpperCase() == 'MANAGING DIRECTOR')
+          can_save = true;
+
+        if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
+          can_save = true;
+      }
+    
       return can_save;
     },
 
@@ -1331,6 +1528,249 @@ var app = new Vue({
       });
     },
 
+
+    delete_user_po() {
+      let _this = this;
+
+      var candeletemyfile = "";
+      var candeletemyfilecnt = 0;
+      var selectedcnt = 0;
+
+      var candeletebool = this.CanDeleteClientPo();
+   
+      var to_delete = document.getElementsByName("po_id");
+  
+      for (var i = 0; i < to_delete.length; i++) {
+        if (to_delete[i].checked){
+
+          var record = this.shallowCopy(
+            this.record.client_po.find((element) => element.id == to_delete[i].value)
+          );
+          if(record.username == this.username)
+          {
+            candeletemyfile += to_delete[i].value + ",";
+            candeletemyfilecnt++;
+          }
+          selectedcnt++;
+          
+        }
+      }
+
+      if (candeletemyfile !== "") 
+        candeletemyfile = candeletemyfile.slice(0, -1);
+    
+      if(selectedcnt < 1)
+      { 
+        Swal.fire({
+          text: "Please select a record to delete",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if(candeletemyfilecnt < 1 && !candeletebool)
+      { 
+        Swal.fire({
+          text: "Permission denied",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+      
+      Swal.fire({
+        title: "Delete",
+        text: "Are you sure to delete?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.value) {
+
+          
+          var finals = document.getElementsByName("po_id");
+          var final_id = "";
+          if(candeletebool)
+          {
+            candeletemyfilecnt = 0;
+            for (var i = 0; i < finals.length; i++) {
+              if (finals[i].checked) {
+                final_id += finals[i].value + ",";
+                candeletemyfilecnt++;
+              }
+            }
+            if (final_id !== "") final_id = final_id.slice(0, -1);
+          }
+
+          var form_Data = new FormData();
+          var token = localStorage.getItem("token");
+
+          form_Data.append("jwt", token);
+          form_Data.append("pid", this.proof_id);
+          if(!candeletebool)
+            form_Data.append("final", candeletemyfile);
+          else
+            form_Data.append("final", final_id);
+
+          axios({
+            method: "post",
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+            url: "api/project_delete_client_po",
+            data: form_Data,
+          })
+            .then(function(response) {
+              //handle success
+              Swal.fire({
+                text: "Finished deleting " + candeletemyfilecnt + " selected record(s) " + response.data.message,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+              _this.getRecords();
+              _this.client_po_clear();
+            })
+            .catch(function(response) {
+              //handle error
+              Swal.fire({
+                text: response.data,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+            });
+        } else {
+          return;
+        }
+      });
+    },
+
+    delete_other() {
+      let _this = this;
+
+      var candeletemyfile = "";
+      var candeletemyfilecnt = 0;
+      var selectedcnt = 0;
+
+      var candeletebool = this.CanDeleteClientPo();
+   
+      var to_delete = document.getElementsByName("other_id");
+  
+      for (var i = 0; i < to_delete.length; i++) {
+        if (to_delete[i].checked){
+
+          var record = this.shallowCopy(
+            this.record.client_other.find((element) => element.id == to_delete[i].value)
+          );
+          if(record.username == this.username)
+          {
+            candeletemyfile += to_delete[i].value + ",";
+            candeletemyfilecnt++;
+          }
+          selectedcnt++;
+          
+        }
+      }
+
+      if (candeletemyfile !== "") 
+        candeletemyfile = candeletemyfile.slice(0, -1);
+    
+      if(selectedcnt < 1)
+      { 
+        Swal.fire({
+          text: "Please select a record to delete",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if(candeletemyfilecnt < 1 && !candeletebool)
+      { 
+        Swal.fire({
+          text: "Permission denied",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+      
+      Swal.fire({
+        title: "Delete",
+        text: "Are you sure to delete?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.value) {
+
+          
+          var finals = document.getElementsByName("other_id");
+          var final_id = "";
+          if(candeletebool)
+          {
+            candeletemyfilecnt = 0;
+            for (var i = 0; i < finals.length; i++) {
+              if (finals[i].checked) {
+                final_id += finals[i].value + ",";
+                candeletemyfilecnt++;
+              }
+            }
+            if (final_id !== "") final_id = final_id.slice(0, -1);
+          }
+
+          var form_Data = new FormData();
+          var token = localStorage.getItem("token");
+
+          form_Data.append("jwt", token);
+          form_Data.append("pid", this.proof_id);
+          if(!candeletebool)
+            form_Data.append("final", candeletemyfile);
+          else
+            form_Data.append("final", final_id);
+
+          axios({
+            method: "post",
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+            url: "api/project_delete_client_po",
+            data: form_Data,
+          })
+            .then(function(response) {
+              //handle success
+              Swal.fire({
+                text: "Finished deleting " + candeletemyfilecnt + " selected record(s) " + response.data.message,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+              _this.getRecords();
+              _this.client_other_clear();
+            })
+            .catch(function(response) {
+              //handle error
+              Swal.fire({
+                text: response.data,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+            });
+        } else {
+          return;
+        }
+      });
+    },
+
     quote_changeFile() {
       var fileTarget = this.$refs.quote_file;
 
@@ -1489,6 +1929,188 @@ var app = new Vue({
             confirmButtonText: "OK",
           });
           _this.prof_clear();
+          _this.getRecords();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
+    other_deleteFile(index) {
+      this.other_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.other_file;
+      fileTarget.value = "";
+    },
+
+    other_changeFile() {
+      var fileTarget = this.$refs.other_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.other_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+          this.other_fileArray.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.other_fileArray.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    other_clear() {
+      this.other_remark = "";
+      
+      this.other_fileArray = [];
+      if(this.other_type == "2") 
+        this.$refs.other_file.value = "";
+
+      this.other_type = "2";
+
+      this.other_canSub = true;
+    },
+
+    other_create() {
+      let _this = this;
+      if (this.other_remark.trim() == "") {
+        Swal.fire({
+          text: "Please enter Description!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      _this.submit = true;
+
+      var form_Data = new FormData();
+      var token = localStorage.getItem("token");
+
+      form_Data.append("jwt", token);
+      form_Data.append("pid", this.proof_id);
+      form_Data.append("remark", this.other_remark.trim());
+      form_Data.append("kind", this.other_type.trim());
+
+      for (var i = 0; i < this.other_fileArray.length; i++) {
+        let file = this.other_fileArray[i];
+        form_Data.append("files[" + i + "]", file);
+      }
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/project_client_po",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.other_clear();
+          _this.getRecords();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
+    
+    po_deleteFile(index) {
+      this.po_fileArray.splice(index, 1);
+      var fileTarget = this.$refs.po_file;
+      fileTarget.value = "";
+    },
+
+    po_changeFile() {
+      var fileTarget = this.$refs.po_file;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.po_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+          this.po_fileArray.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.po_fileArray.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    po_clear() {
+      this.po_remark = "";
+      this.po_type = "";
+      this.po_fileArray = [];
+      this.$refs.po_file.value = "";
+
+      this.po_canSub = true;
+    },
+
+    po_create() {
+      let _this = this;
+      if (this.po_remark.trim() == "") {
+        Swal.fire({
+          text: "Please enter Description!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      _this.submit = true;
+
+      var form_Data = new FormData();
+      var token = localStorage.getItem("token");
+
+      form_Data.append("jwt", token);
+      form_Data.append("pid", this.proof_id);
+      form_Data.append("remark", this.po_remark.trim());
+      form_Data.append("kind", "1");
+
+      for (var i = 0; i < this.po_fileArray.length; i++) {
+        let file = this.po_fileArray[i];
+        form_Data.append("files[" + i + "]", file);
+      }
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/project_client_po",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.po_clear();
           _this.getRecords();
         })
         .catch(function(response) {

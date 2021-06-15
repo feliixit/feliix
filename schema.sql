@@ -1464,8 +1464,25 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_d` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
 
+-- quotation and management v2
+
 ALTER TABLE project_main
 ADD COLUMN `tax_withheld` decimal(11, 8) default 0.0 AFTER final_amount;
 
 ALTER TABLE project_main
 ADD COLUMN `billing_name` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER tax_withheld;
+
+CREATE TABLE IF NOT EXISTS `project_client_po` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `batch_id` int(11) DEFAULT 0 NOT NULL,
+  `kind` int(11) DEFAULT 0 NOT NULL,
+  `remark` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
