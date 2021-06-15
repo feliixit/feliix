@@ -162,7 +162,7 @@ function batch_performance_evaluate_adm_notify_mail($s_date, $e_date, $dead_date
         logMail($admin_email, $content);
         return true;
     } else {
-        logMail($admin_email, $mail->ErrorInfo);
+        logMail($admin_email, $mail->ErrorInfo . $content);
         return false;
     }
 }
@@ -241,7 +241,7 @@ function batch_performance_evaluate_emp_notify_mail($s_date, $e_date, $dead_date
         logMail($admin_email, $content);
         return true;
     } else {
-        logMail($admin_email, $mail->ErrorInfo);
+        logMail($admin_email, $mail->ErrorInfo . $content);
         return false;
     }
 }
@@ -290,7 +290,7 @@ function batch_performance_review_notify_mail($_name, $_email, $s_date, $e_date)
         logMail($_email, $content);
         return true;
     } else {
-        logMail($_email, $mail->ErrorInfo);
+        logMail($_email, $mail->ErrorInfo . $content);
         return false;
     }
 }
@@ -366,7 +366,7 @@ function send_review_mail_adm($s_date, $e_date, $adm_id, $emp_id, $dead_date){
         logMail($admin_email, $content);
         return true;
     } else {
-        logMail($admin_email, $mail->ErrorInfo);
+        logMail($admin_email, $mail->ErrorInfo . $content);
         return false;
     }
 }
@@ -443,7 +443,7 @@ function send_review_mail($s_date, $e_date, $adm_id, $emp_id, $dead_date){
         logMail($emp_email, $content);
         return true;
     } else {
-        logMail($emp_email, $mail->ErrorInfo);
+        logMail($emp_email, $mail->ErrorInfo . $content);
         return false;
     }
 }
@@ -531,7 +531,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email1, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo . $content);
         return false;
 //        echo "Email sent successfully";
     }
@@ -611,7 +611,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email1, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo . $content);
         return false;
 //        echo "Email sent successfully";
     }
@@ -681,7 +681,7 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email1, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo . $content);
         return false;
 //        echo "Email sent successfully";
     }
@@ -746,7 +746,7 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email1, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo . $content);
         return false;
 //        echo "Email sent successfully";
     }
@@ -802,7 +802,7 @@ function sendMail($name, $email1, $appove_hash, $reject_hash, $leave_info, $leav
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email1, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo . $content);
         return false;
 //        echo "Email sent successfully";
     }
@@ -859,7 +859,7 @@ function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee,
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email1, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo . $content);
         return false;
 //        echo "Email sent successfully";
     }
@@ -918,7 +918,7 @@ function send_meeting_modified_mail($name, $email1, $subject, $creator, $attende
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email1, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo . $content);
         return false;
 //        echo "Email sent successfully";
     }
@@ -977,7 +977,7 @@ function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee,
 //        echo "Error while sending Email.";
 //        var_dump($mail);
     } else {
-        logMail($email1, $mail->ErrorInfo);
+        logMail($email1, $mail->ErrorInfo . $content);
         return false;
 //        echo "Email sent successfully";
     }
@@ -1057,7 +1057,7 @@ function void_expense_mail($request_no, $applicant, $user_name, $user_email, $de
         logMail($user_email, $content);
         return true;
     } else {
-        logMail($user_email, $mail->ErrorInfo);
+        logMail($user_email, $mail->ErrorInfo . $content);
         return false;
     }
 
@@ -1151,7 +1151,7 @@ function reject_expense_mail($request_no, $user_name, $requestor, $requestor_ema
         logMail($requestor_email, $content);
         return true;
     } else {
-        logMail($requestor_email, $mail->ErrorInfo);
+        logMail($requestor_email, $mail->ErrorInfo . $content);
         return false;
     }
 
@@ -1237,7 +1237,7 @@ function send_liquidate_mail($request_no,
         logMail($requestor_email, $content);
         return true;
     } else {
-        logMail($requestor_email, $mail->ErrorInfo);
+        logMail($requestor_email, $mail->ErrorInfo . $content);
         return false;
     }
 }
@@ -1328,7 +1328,7 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
         logMail($requestor_email, $content);
         return true;
     } else {
-        logMail($requestor_email, $mail->ErrorInfo);
+        logMail($requestor_email, $mail->ErrorInfo . $content);
         return false;
     }
 }
@@ -1384,7 +1384,327 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
         logMail($user_email, $content);
         return true;
     } else {
-        logMail($user_email, $mail->ErrorInfo);
+        logMail($user_email, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+
+function task_notify_admin_d($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $_revisor = "";
+    if($revise_id != 0)
+    {
+        $revisor = GetNotifiers($revise_id);
+        foreach($revisor as &$list)
+        {
+            $_revisor = $list["username"];
+        }
+    }
+
+    $_erasor = "";
+    if($erase_id != 0)
+    {
+        $erasor = GetNotifiers($erase_id);
+        foreach($erasor as &$list)
+        {
+            $_erasor = $list["username"];
+        }
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+
+    if($_revisor != "")
+        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+
+    if($_erasor != "")
+        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_DS?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+function stage_close_notify($project_creator_id, $project_id, $project_name, $stage_name, $modify_name, $stage_creator_name, $stage_create_at, $title, $cc_to)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $cc = "";
+    $creator = "";
+
+    $notifior = GetNotifiers($project_creator_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $creator = $creator . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($cc_to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $cc = $cc . $list["username"] . ", ";
+    }
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . '<p>Stage "' . $stage_name . '" was closed in Project "' . $project_name . '" by ' . $modify_name . '. Following are the details:</p>';
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stage_name . "</p>";
+    $content = $content . "<p>Status of Stage: Close</p>";
+    $content = $content . "<p>Stage Creator:" . $stage_creator_name . " at " . $stage_create_at . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project02?p=" . $project_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+    } else {
+        logMail($creator, $mail->ErrorInfo . $title . $cc .  $content);
+        return false;
+    }
+
+}
+
+function task_notify_admin($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $_revisor = "";
+    if($revise_id != 0)
+    {
+        $revisor = GetNotifiers($revise_id);
+        foreach($revisor as &$list)
+        {
+            $_revisor = $list["username"];
+        }
+    }
+
+    $_erasor = "";
+    if($erase_id != 0)
+    {
+        $erasor = GetNotifiers($erase_id);
+        foreach($erasor as &$list)
+        {
+            $_erasor = $list["username"];
+        }
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+
+    if($_revisor != "")
+        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+
+    if($_erasor != "")
+        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_AD?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
         return false;
     }
 
@@ -1484,12 +1804,184 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
         logMail($creators, $content);
         return true;
     } else {
-        logMail($creators, $mail->ErrorInfo);
+        logMail($creators, $mail->ErrorInfo . $content);
         return false;
     }
 
 }
 
+
+function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+{
+
+    $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Reviser:" . $revisor . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_AD?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+function task_notify01_admin_d($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+{
+
+    $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Reviser:" . $revisor . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_DS?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
 
 function task_notify01($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
@@ -1572,7 +2064,7 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
         logMail($creators, $content);
         return true;
     } else {
-        logMail($creators, $mail->ErrorInfo);
+        logMail($creators, $mail->ErrorInfo . $content);
         return false;
     }
 
@@ -1664,7 +2156,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
         logMail($creators, $content);
         return true;
     } else {
-        logMail($creators, $mail->ErrorInfo);
+        logMail($creators, $mail->ErrorInfo . $content);
         return false;
     }
 
@@ -1783,7 +2275,7 @@ function project01_notify_mail($request_type, $project_name, $username, $created
         logMail($username, $content);
         return true;
     } else {
-        logMail($username, $mail->ErrorInfo);
+        logMail($username, $mail->ErrorInfo . $content);
         return false;
     }
 
@@ -1848,7 +2340,7 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
         logMail($username, $content);
         return true;
     } else {
-        logMail($username, $mail->ErrorInfo);
+        logMail($username, $mail->ErrorInfo . $content);
         return false;
     }
 
@@ -1911,7 +2403,7 @@ function project03_stage_client_task_notify_mail($project_name, $username, $crea
         logMail($username, $content);
         return true;
     } else {
-        logMail($username, $mail->ErrorInfo);
+        logMail($username, $mail->ErrorInfo . $content);
         return false;
     }
 }
@@ -1978,7 +2470,7 @@ function project02_status_change_notify_mail($project_name, $project_category, $
         logMail($username, $content);
         return true;
     } else {
-        logMail($username, $mail->ErrorInfo);
+        logMail($username, $mail->ErrorInfo . $content);
         return false;
     }
 

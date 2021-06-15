@@ -27,6 +27,7 @@ else
         $decoded = JWT::decode($jwt, $key, array('HS256'));
 
         $user_id = $decoded->data->id;
+        $user_name = $decoded->data->username;
 
     }
         // if decode fails, it means jwt is invalid
@@ -38,6 +39,8 @@ else
         die();
     }
 }
+
+include_once 'mail.php';
 
 include_once 'config/database.php';
 $database = new Database();
@@ -94,13 +97,56 @@ $query = "INSERT INTO project_edit_stage
                 $stmt1->bindParam(':id', $stage_id);
 
                 if ($stmt1->execute()) {
-                    $returnArray = array('ret' => $stage_id_to_edit);
+                    $returnArray = array('ret' => $stage_id);
                     $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
                 }
                 else
                 {
                     $arr = $stmt1->errorInfo();
                     error_log($arr[2]);
+                }
+
+                // 在project02.php中，當右側的Delivery Stage 或是 Installation Stage，它們的Status狀態透過左上邊的Edit/Delete Stage按鈕(如圖一)，變成 Close時，需要寄發通知信。
+                if(($project_stage_id == 6 || $project_stage_id == 7) && $stages_status_id == 3)
+                {
+                    $title = "";
+
+                    $result = GetMailInfo($stage_id, $db);
+
+                    $stage_name = "";
+
+                    if($project_stage_id == 6)
+                    {
+                        $stage_name = "Delivery";
+                        $title = 'Stage "Delivery" was closed in Project ' . $result[0]["project_name"];
+                    }
+                    if($project_stage_id == 7)
+                    {
+                        $stage_name = "Installation";
+                        $title = 'Stage "Installation" was closed in Project ' . $result[0]["project_name"];
+                    }
+
+                    
+                    if($result[0]["project_category"] == "Lighting")
+                        stage_close_notify( $result[0]["project_creator"],  // $project_creator_id, 
+                                            $result[0]["project_id"],       // $project_id, 
+                                            $result[0]["project_name"],     // $project_name, 
+                                            $stage_name,                    // $stage_name, 
+                                            $user_name,                     // $modify_name, 
+                                            $result[0]["stage_creator"],         // $stage_creator_name, 
+                                            $result[0]["stage_created_at"],       // $stage_create_at, 
+                                            $title,                         // $title
+                                            $result[0]["light_id"]);        // $cc_to                       
+                    if($result[0]["project_category"] == "Office Systems")
+                        stage_close_notify($result[0]["project_creator"],  // $project_creator_id, 
+                                            $result[0]["project_id"],       // $project_id, 
+                                            $result[0]["project_name"],     // $project_name, 
+                                            $stage_name,                    // $stage_name, 
+                                            $user_name,                     // $modify_name, 
+                                            $result[0]["stage_creator"],         // $stage_creator_name, 
+                                            $result[0]["stage_created_at"],       // $stage_create_at, 
+                                            $title,                         // $title
+                                            $result[0]["office_id"]);
                 }
 
             }
@@ -115,3 +161,56 @@ $query = "INSERT INTO project_edit_stage
             error_log($e->getMessage());
         }
 
+
+        function GetMailInfo($sid, $db){
+            $query = "
+                SELECT 
+                    pm.id, 
+                    pm.project_name, 
+                    Coalesce(pc.category, '') category, 
+                    u.username, 
+                    ps.created_at,
+                    pm.create_id,
+                    (SELECT GROUP_CONCAT(id) FROM user WHERE title_id IN(9, 10, 35, 28) ) light_id,
+                    (SELECT GROUP_CONCAT(id) FROM user WHERE title_id IN(14, 15, 35, 28) ) office_id
+                FROM project_stages ps
+                LEFT JOIN project_main pm 
+                    ON ps.project_id = pm.id
+                LEFT JOIN project_category pc
+                ON pm.catagory_id = pc.id
+                LEFT JOIN user u 
+                    ON ps.create_id = u.id
+     
+                WHERE ps.id = " . $sid;
+            
+        
+            // prepare the query
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+        
+            $merged_results = [];
+        
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $project_name = $row['project_name'];
+                $category = $row['category'];
+                $pid = $row['id'];
+                $username = $row['username'];
+                $created_at = $row['created_at'];
+                $create_id = $row['create_id'];
+                $light_id = $row['light_id'];
+                $office_id = $row['office_id'];
+             
+                $merged_results[] = array(
+                    "project_id" => $pid,
+                    "project_name" => $project_name,
+                    "project_category" => $category,
+                    "stage_creator" => $username,
+                    "stage_created_at" => $created_at,
+                    "project_creator" => $create_id,
+                    "light_id" => $light_id,
+                    "office_id" => $office_id,
+                );
+            }
+        
+            return $merged_results;
+        }

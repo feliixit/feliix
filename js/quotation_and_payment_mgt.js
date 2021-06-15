@@ -1088,6 +1088,8 @@ var app = new Vue({
       { 
         if(this.title.trim().toUpperCase() == 'OPERATIONS MANAGER')
           can_save = true;
+        if(this.title.trim().toUpperCase() == 'SR. OFFICE ADMIN ASSOCIATE')
+          can_save = true;
       }
 
       if(this.department.trim().toUpperCase() == 'TW')

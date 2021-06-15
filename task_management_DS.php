@@ -19,25 +19,33 @@ try {
     // decode jwt
     $decoded = JWT::decode($jwt, $key, array('HS256'));
 
-    $GLOBALS['username'] = $decoded->data->username;
-    $GLOBALS['position'] = $decoded->data->position;
-    $GLOBALS['department'] = $decoded->data->department;
-
-    $test_manager = $decoded->data->test_manager;
     $user_id = $decoded->data->id;
+    $username = $decoded->data->username;
+
+    $position = $decoded->data->position;
+    $department = $decoded->data->department;
 
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 
-    $sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
-    if ($sid < 1 || !is_numeric($sid)) {
-        header('location:project01');
+    $access6 = false;
+
+    if(trim(strtoupper($department)) == 'DESIGN')
+    {
+        if(trim(strtoupper($position)) == 'BRAND MANAGER' || trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER')
+        {
+            $access6 = true;
+        }
     }
 
-    $is_creator = IsCreator($sid, $user_id);
 
-    if ($test_manager[2] == "0" && $is_creator == "1")
-        $test_manager[2] = "1";
+    if(trim($department) == '')
+    {
+        if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
+        {
+            $access6 = true;
+        }
+    }
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -62,7 +70,7 @@ catch (Exception $e) {
     <link rel="apple-touch-icon" href="images/iosicon.png" />
 
     <!-- SEO -->
-    <title>FELIIX template pc</title>
+    <title>Task Management</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all" />
@@ -99,15 +107,16 @@ catch (Exception $e) {
             $('header').load('include/header.php');
             //
             <?php
-            if ($test_manager[2]  == "1") {
+            if ($access6 == true) {
             ?>
                 dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
                 dialogshow($('.list_function a.edit.red'), $('.list_function .dialog.r-edit'));
             <?php
             }
             ?>
-            dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
-            dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
+            dialogshow($('.list_function a.filtering'), $('.list_function .dialog.d-filter'));
+            //dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
+            //dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
             // left block Reply
             dialogshow($('.btnbox a.reply.r1'), $('.btnbox .dialog.r1'));
             dialogshow($('.btnbox a.reply.r2'), $('.btnbox .dialog.r2'));
@@ -190,8 +199,21 @@ catch (Exception $e) {
             min-height: 150vh;
         }
 
+        .list_function.main {
+            padding: 10px;
+        }
+
         .list_function.main a.calendar.red {
             background-image: url(images/ui/btn_calendar_red.svg);
+        }
+
+        .list_function.main a.filtering {
+            width: 30px;
+            height: 30px;
+            background-color: #00811e; 
+            background-size: contain; 
+            background-repeat: no-repeat;
+            background-image: url(images/ui/btn_filter.svg);
         }
 
         #tasks {
@@ -205,6 +227,51 @@ catch (Exception $e) {
             right: 0;
             z-index: 100;
             background-color: #fff;
+        }
+
+        #task_details{
+            border: 5px solid #00811e;
+            padding: 10px;
+            width: 620px;
+            margin: auto;
+            overflow-y: auto;
+            position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background-color: #fff;
+            height: calc( 100vh - 60px);
+        }
+
+        .tablebox.lv1 li:nth-of-type(1), .tablebox.lv1 li:nth-of-type(2){
+            width: 160px;
+        }
+
+        .tablebox.lv1 li:nth-of-type(3) a{
+            color: var(--fth01);
+        }
+
+        .tablebox.lv1 li:nth-of-type(4), .tablebox.lv1 li:nth-of-type(5), .tablebox.lv1 li:nth-of-type(6){
+            width: 240px;
+            color: #000000;
+        }
+
+        .tablebox.lv1 li:nth-of-type(1) i{
+            width: 83px;
+        }
+
+        .other .tablebox a.attch_pic {
+            margin: 3px 13px 3px 0;
+        }
+
+        .other .tablebox a.attch_pic>img {
+            width: 200px;
+            vertical-align: bottom;
+        }
+
+        .list_function .block {
+            margin-bottom: 0;
         }
     </style>
 
@@ -2217,6 +2284,16 @@ catch (Exception $e) {
 
         }
 
+        .bodybox .mask {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.6);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            z-index: 1;
+            
+        }
+
         .other .tablebox a.attch_pic {
             margin: 3px 13px 3px 0;
         }
@@ -2225,7 +2302,6 @@ catch (Exception $e) {
             width: 200px;
             vertical-align: bottom;
         }
-
     </style>
 
 </head>
@@ -2233,6 +2309,7 @@ catch (Exception $e) {
 <body class="fourth other">
 
     <div class="bodybox" id='app'>
+        <div class="mask" :ref="'mask'" style="display:none"></div>
         <!-- header -->
         <header class="dialogclear">header</header>
         <!-- header end -->
@@ -2365,6 +2442,7 @@ catch (Exception $e) {
                         </div>
                         <!-- dialog end -->
                     </div>
+
                     <!-- edit red -->
                     <div class="popupblock">
                         <a id="edit_red" class="edit red"></a>
@@ -2387,7 +2465,7 @@ catch (Exception $e) {
                                     <li class="head">Target Task:</li>
                                     <li class="mix">
                                         <select v-model="task_id_to_del">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" v-if="it.task_status != '-1'">
+                                            <option v-for="(it, index) in displayedStagePosts" :value="it.task_id" v-if="it.task_status != '-1'">
                                                 {{ it.title }}
                                             </option>
                                         </select>
@@ -2400,7 +2478,7 @@ catch (Exception $e) {
                                     <li class="head">Target Sequence:</li>
                                     <li class="mix">
                                         <select v-model="task_id_to_load">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" v-if="it.task_status != '-1'">
+                                            <option v-for="(it, index) in displayedStagePosts" :value="it.task_id" v-if="it.task_status != '-1'">
                                                 {{ it.title }}
                                             </option>
                                         </select>
@@ -2518,185 +2596,8 @@ catch (Exception $e) {
                         </div>
                         <!-- dialog end -->
                     </div>
-                    <!-- add -->
-                    <div class="popupblock">
-                        <a id="dialog_a1_r" class="add blue"></a>
-                        <!-- dialog -->
-                        <div id="add_a1_r" class="dialog d-add">
-                            <h6>Add Message:</h6>
-                            <div class="formbox">
-                                <dl>
-                                    <dt>Title:</dt>
-                                    <dd><input type="text" placeholder="" v-model="title_r"></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Assignee:</dt>
-                                    <dd>
-                                        <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="assignee_r" :id="assignee_r" :options="users" attach chips label="username" multiple></v-select>
 
-                                        </div>
 
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Description:</dt>
-                                    <dd><textarea placeholder="" v-model="detail_r"></textarea></dd>
-                                </dl>
-                                <dl>
-                                    <dd style="display: flex; justify-content: flex_start;">
-                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
-                                        <div class="pub-con" ref="bg">
-                                            <div class="input-zone">
-                                                <span class="upload-des">choose file</span>
-                                                <input class="input" type="file" name="file_r" value placeholder="choose file" ref="file_r" v-show="canSub_r" @change="changeFile_r()" multiple />
-                                            </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dd>
-                                        <div class="browser_group">
-
-                                            <div class="pad">
-                                                <div class="file-list">
-                                                    <div class="file-item" v-for="(item,index) in fileArray_r" :key="index">
-                                                        <p>
-                                                            {{item.name}}
-                                                            <span @click="deleteFile_r(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
-                                                            </span>
-                                                        </p>
-                                                        <div class="progress-container" v-show="item.progress!=0">
-                                                            <div class="progress-wrapper">
-                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                                            </div>
-                                                            <div class="progress-rate">
-                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                                                <span v-else><i class="fas fa-check-circle"></i></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                    </dd>
-                                </dl>
-                                <div class="btnbox">
-                                    <a class="btn small" @click="task_clear_r">Cancel</a>
-                                    <a class="btn small green" @click="task_create_r">Create</a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- dialog end -->
-                    </div>
-                    <!-- edit -->
-                    <div class="popupblock">
-                        <a id="edit_blue" class="edit blue"></a>
-                        <!-- dialog -->
-                        <div id="dialog_blue_edit" class="dialog d-edit edit">
-                            <h6>Edit/Delete Message:</h6>
-                            <div class="tablebox s1">
-                                <ul>
-                                    <li class="head">Operation Type:</li>
-                                    <li style="padding-right: 0;">
-                                        <select name="" id="opType2">
-                                            <option value="edit">Edit Existing Message</option>
-                                            <option value="del">Delete Existing Message</option>
-                                        </select>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tablebox s2 del">
-                                <ul>
-                                    <li class="head">Target Message:</li>
-                                    <li class="mix">
-                                        <select v-model="task_id_to_del_r">
-                                            <option v-for="(it, index) in project03_other_task_r" :value="it.task_id" v-if="it.task_status != '-1'">
-                                                {{ it.title }}
-                                            </option>
-                                        </select>
-                                        <a class="btn small" @click="task_del_r">Delete</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tablebox s2 edit">
-                                <ul>
-                                    <li class="head">Target Message:</li>
-                                    <li class="mix">
-                                        <select v-model="task_id_to_load_r">
-                                            <option v-for="(it, index) in project03_other_task_r" :value="it.task_id" v-if="it.task_status != '-1'">
-                                                {{ it.title }}
-                                            </option>
-                                        </select>
-                                        <a class="btn small green" @click="task_load_r">Load</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="formbox s2 edit">
-                                <dl>
-                                    <dt>Title:</dt>
-                                    <dd><input type="text" placeholder="" v-model="record_r.title"></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Assignee:</dt>
-                                    <dd>
-                                        <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record_r.assignee" :id="record_r.assignee_id" :options="users_del_r" attach chips label="username" multiple></v-select>
-
-                                        </div>
-
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Description:</dt>
-                                    <dd><textarea placeholder="" v-model="record_r.detail"></textarea></dd>
-                                </dl>
-                                <dl>
-                                    <dd style="display: flex; justify-content: flex_start;">
-                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
-                                        <div class="pub-con" ref="bg">
-                                            <div class="input-zone">
-                                                <span class="upload-des">choose file</span>
-                                                <input class="input" type="file" :ref="'editfile_r'" placeholder="choose file" @change="changeEditFile_r()" multiple />
-                                            </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-
-                                <dl>
-
-                                    <dd>
-                                        <div class="browser_group">
-                                            <div class="pad">
-                                                <div class="file-list">
-                                                    <div class="file-item" v-for="(item,index) in editfileArray_r" :key="index">
-                                                        <p>
-                                                            {{item.name}}
-                                                            <span @click="deleteEditFile_r(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
-                                                            </span>
-                                                        </p>
-                                                        <div class="progress-container" v-show="item.progress!=0">
-                                                            <div class="progress-wrapper">
-                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                                            </div>
-                                                            <div class="progress-rate">
-                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                                                <span v-else><i class="fas fa-check-circle"></i></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                    </dd>
-                                </dl>
-
-                                <div class="btnbox">
-                                    <a class="btn small" @click="task_edit_clear_r">Cancel</a>
-                                    <a class="btn small green" @click="task_edit_create_r">Save</a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- dialog end -->
-                    </div>
                     <!-- calendar -->
                     <!-- Task calendar -->
                     <div class="popupblock">
@@ -2706,43 +2607,112 @@ catch (Exception $e) {
                     <div class="popupblock">
                         <a class="calendar" id="btn_arrange"></a>
                     </div>
-                    <!-- tag -->
-                    <b class="tag focus">PROJECT</b>
-                    <b><a style="font-size:20px; padding-left:20px;" :href="'project02?p=' + project_id">{{ project_name }}</a></b>
+
+                    <!-- 篩選 -->
+                    <div class="popupblock">
+                        <a class="filtering" id="btn_filter"></a>
+                        <div id="filter_dialog" class="dialog d-filter"><h6>Filter Function:</h6>
+                            <div class="formbox">
+                                <dl>
+                                    <dt>Priority</dt>
+                                    <dd>
+                                        <select v-model="fil_priority">
+                                            <option value=""></option>
+                                            <option v-for="item in priorities" :value="item.id" :key="item.priority">
+                                                {{ item.priority }}
+                                            </option>
+                                        </select>
+                                    </dd>
+
+                                    <dt>Status</dt>
+                                    <dd>
+                                        <select v-model="fil_status">
+                                            <option value=""></option>
+                                            <option v-for="item in statuses" :value="item.id"
+                                                    :key="item.project_status">
+                                                {{ item.project_status }}
+                                            </option>
+                                        </select>
+                                    </dd>
+
+                                    <dt>Task Creator</dt>
+                                    <dd>
+                                        <select v-model="fil_creator">
+                                            <option value=""></option>
+                                            <option v-for="item in creators" :value="item.username"
+                                                    :key="item.username">
+                                                {{ item.username }}
+                                            </option>
+                                        </select>
+                                    </dd>
+
+                                    <dt>Keyword (only for task title and recent message)</dt>
+                                    <dd><input type="text" v-model="fil_keyword"></dd>
+
+                                </dl>
+                                <div class="btnbox"><a class="btn small" @click="filter_clear()">Cancel</a><a
+                                        class="btn small" @click="filter_remove()">Clear</a> <a class="btn small green"
+                                                                                                @click="filter_apply()">Apply</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="block left">
-                <div class="list_function dialogclear">
-                    <!-- Filter -->
-                    <div class="filter">
-                        <b>Filter:</b>
 
-                        <select name="" id="" v-model="fil_priority">
-                            <option value="0" select>Priority</option>
-                            <option value="1">No Priority</option>
-                            <option value="2">Low</option>
-                            <option value="3">Normal</option>
-                            <option value="4">High</option>
-                            <option value="5">Urgent</option>
-                        </select>
-                        <select name="" id="" v-model="fil_status">
-                            <option value="0">Status</option>
-                            <option value="0">Ongoing</option>
-                            <option value="1">Pending</option>
-                            <option value="2">Close</option>
 
-                        </select>
-                        <select v-model="fil_due_date">
-                            <option value="">Due Date</option>
-                            <option v-for="(it, index) in opt_due_date" :value="it.due_date" :key="it.due_date">
-                                {{ it.due_date }}
-                            </option>
-                        </select>
+            <!-- list -->
+            <div class="block">
+                <div class="list_function" style="margin: 10px 0px 5px;">
+                    <div class="pagenation">
+                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; filter_apply()">Previous</a>
+
+                        <a class="page" v-for="pg in pages" @click="page=pg; filter_apply()"
+                           v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+
+                        <a class="next" :disabled="page == pages.length" @click="page++; filter_apply()">Next</a>
                     </div>
                 </div>
 
-                <div v-for='(receive_record, index) in project03_other_task' v-if="receive_record.task_status != '-1'">
+                <div class="tableframe">
+                    <div class="tablebox lv1">
+                        <ul class="head">
+                            <li>Priority</li>
+                            <li>Status</li>
+                            <li>Task Title</li>
+                            <li>Due Date</li>
+                            <li>Task Creator</li>
+                            <li>Recent Message</li>
+                        </ul>
+                        <ul v-for='(receive_record, index) in displayedStagePosts'>
+                            <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
+                            <li>
+                                <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
+                                <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
+                                <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
+                            </li>
+                            <li><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
+                            <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
+                            <li>{{ receive_record.creator }}</li>
+                            <li>{{ receive_record.nearest_user }}<br>{{ receive_record.nearest_time }}</li>
+                        </ul>
+                        
 
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Dialog for Task Details -->
+            <div class="block left" id="task_details" v-if="view_detail == true">
+
+                <div style="text-align: right;">
+                    <button style="border: none;" @click="hide_detail()"><i class="fa fa-times fa-lg"></i>
+                    </button>
+                </div>
+
+                <div>
                     <div class="teskbox dialogclear">
                         <a class="btn small red">{{ receive_record.priority }}</a>
                         <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
@@ -2787,6 +2757,7 @@ catch (Exception $e) {
                                 <li><b>Attachments</b></li>
                                 <li>
                                     <i v-for="item in receive_record.items">
+                                        
                                         <a v-if="item.gcp_name.split('.').pop().toLowerCase() === 'jpg' || item.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + item.gcp_name" target="_blank"><img :src="baseURL + item.gcp_name"></a>
                                         <a v-if="item.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && item.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
                                     </i>
@@ -2816,6 +2787,7 @@ catch (Exception $e) {
                                                 <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
                                                 <p>{{ item.message }}</p>
                                                 <i v-for="file in item.items">
+                                                    
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                 </i>
@@ -2858,8 +2830,10 @@ catch (Exception $e) {
                                             <div class="msgbox dialogclear" v-for="reply in item.reply">
                                                 <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
                                                 <i v-for="file in reply.items">
+                                                    
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
+                                                    
                                                 </i>
 
                                             </div>
@@ -2902,175 +2876,7 @@ catch (Exception $e) {
                     </div>
                 </div>
 
-
-
-
             </div>
-
-
-            <div class="block right ">
-                <div class="list_function dialogclear">
-                    <!-- 分頁 -->
-                    <div class="pagenation">
-                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
-
-                        <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'#707070', 'color': 'white'} : { }]">{{ pg }}</a>
-
-                        <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
-                    </div>
-                </div>
-                <div class="teskbox" v-for='(receive_record, index) in displayedStagePosts' :class="{ red : receive_record.task_status == -1, dialogclear : receive_record.task_status == -1 }">
-                    <h5>[MESSAGE] {{ receive_record.title }}</h5>
-                    <div class="tablebox2">
-                        <ul>
-                            <li class="teskblock dialogclear">
-                                <div class="tablebox m01">
-                                    <ul>
-                                        <li><b>Creator</b></li>
-                                        <li><a class="man" :style="'background-image: url(images/man/' +  receive_record.creator_pic  + ');'" :title="receive_record.creator"></a></li>
-                                    </ul>
-                                    <ul>
-                                        <li><b>Date</b></li>
-                                        <li>{{ receive_record.task_date }}</li>
-                                    </ul>
-                                    <ul>
-                                        <li><b>Assignee</b></li>
-                                        <li>
-                                            <i v-for="item in receive_record.assignee">
-                                                <a class="man" :style="'background-image: url(images/man/' + item.pic_url + ');'" :title="item.username"></a>
-                                            </i>
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li><b>Description</b></li>
-                                        <li>
-                                            {{ receive_record.detail }}
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li><b>Attachments</b></li>
-                                        <li>
-                                            <i v-for="item in receive_record.items">
-                                                <a v-if="item.gcp_name.split('.').pop().toLowerCase() === 'jpg' || item.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + item.gcp_name" target="_blank"><img :src="baseURL + item.gcp_name"></a>
-                                                <a v-if="item.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && item.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
-                                            </i>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="teskblock">
-                                <div class="tableframe">
-                                    <div class="tablebox m02">
-                                        <!-- 1 message -->
-                                        <ul v-for="item in receive_record.message" :class="{ deleted : item.message_status == -1, dialogclear : item.message_status == -1 }">
-                                            <li class="dialogclear">
-                                                <a class="man" :style="'background-image: url(images/man/' + item.messager_pic + ');'" :title="item.messager"></a>
-                                                <i class="info">
-                                                    <b>{{item.messager}}</b><br>
-                                                    {{ item.message_time }}<br>
-                                                    {{ item.message_date }}
-                                                </i>
-                                            </li>
-                                            <li v-if="item.message_status == 0">
-                                                <div class="msg">
-                                                    <div class="msgbox dialogclear">
-                                                        <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
-                                                        <p>{{ item.message }}</p>
-                                                        <i v-for="file in item.items">
-                                                            <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
-                                                            <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
-                                                        </i>
-                                                    </div>
-                                                    <div class="btnbox">
-                                                        <a class="btn small green reply r3" :id="'task_reply_btn_r_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg_r(item.message_id + '_' + item.ref_id)">Reply</a>
-                                                        <!-- dialog -->
-                                                        <div class="dialog reply r3" :id="'task_reply_dlg_r_' + item.message_id + '_' + item.ref_id">
-                                                            <div class="formbox">
-                                                                <dl>
-                                                                    <dd><textarea name="" :ref="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id" :id="'task_reply_msg_r_' + item.message_id + '_' + item.ref_id"></textarea></dd>
-
-                                                                    <dd>
-                                                                        <div class="pub-con" ref="bg">
-                                                                            <div class="input-zone">
-                                                                                <span class="upload-des">choose file</span>
-                                                                                <input class="input" type="file" :ref="'file_msg_r_' + item.message_id + '_' + item.ref_id" placeholder="choose file" @change="changeMsgFile_r(item.message_id + '_' + item.ref_id)" multiple />
-                                                                            </div>
-                                                                        </div>
-                                                                    </dd>
-                                                                    <dd>
-                                                                        <div class="filebox">
-                                                                            <a class="attch" v-for="(it,index) in msgItems_r(item.message_id + '_' + item.ref_id)" :key="index" @click="deleteMsgFile_r(item.message_id + '_' + item.ref_id, index)">{{it.name}}</a>
-                                                                        </div>
-                                                                    </dd>
-                                                                    <dd>
-                                                                        <div class="btnbox">
-                                                                            <a class="btn small orange" @click="msg_clear_r(item.message_id + '_' + item.ref_id)">Cancel</a>
-                                                                            <a class="btn small green" @click="msg_create_r(item.message_id + '_' + item.ref_id, item.message_id)">Save</a>
-                                                                        </div>
-                                                                    </dd>
-                                                                </dl>
-                                                            </div>
-                                                        </div>
-                                                        <!-- dialog end -->
-                                                        <a class="btn small yellow" @click="msg_delete_r(item.message_id, item.ref_id, item.messager_id, '<?php echo $user_id; ?>')">Delete</a>
-                                                    </div>
-
-                                                    <div class="msgbox dialogclear" v-for="reply in item.reply">
-                                                        <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
-                                                        <i v-for="file in reply.items">
-                                                            
-                                                            <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
-                                                            <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
-                                                        </i>
-
-                                                    </div>
-
-                                                </div>
-                                            </li>
-
-                                            <li v-if="item.message_status == -1">
-                                                <div class="msg">
-                                                    <div class="msgbox">
-                                                        <p>
-                                                            <del>{{ item.message }}</del>
-                                                            <br>
-                                                            Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-
-
-                                    </div>
-                                </div>
-                                <div class="tablebox lv3c m03 dialogclear">
-                                    <ul>
-                                        <li>
-                                            <textarea name="" id="" placeholder="Write your comment here" :ref="'comment_task_r_' + receive_record.task_id"></textarea>
-                                            <div class="filebox">
-                                                <a class="attch" v-for="(item,index) in taskItems_r(receive_record.task_id)" :key="index" @click="deleteTaskFile_r(receive_record.task_id, index)">{{item.name}}</a>
-
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="pub-con" ref="bg">
-                                                <div class="input-zone">
-                                                    <span class="upload-des">choose file</span>
-                                                    <input class="input" type="file" :ref="'file_task_r_' + receive_record.task_id" placeholder="choose file" @change="changeTaskFile_r(receive_record.task_id)" multiple />
-                                                </div>
-                                                <a class="btn small green" @click="comment_create_r(receive_record.task_id)">Comment</a>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-
         </div>
     </div>
 
@@ -3161,7 +2967,7 @@ catch (Exception $e) {
 
                 <div class="meetingform-item">
                     <label>Creator:</label>
-                    <input type="text" style="width: 330px" value="Joyza Jane Julao Semilla at 2020/10/18 15:09" id="oldCreator">
+                    <input type="text" style="width: 330px" value="" id="oldCreator">
                 </div>
 
                 <div class="meetingform-item">
@@ -4464,7 +4270,7 @@ catch (Exception $e) {
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script type="text/javascript" src="js/project03_other.js" defer></script>
+<script type="text/javascript" src="js/task_management_ds.js" defer></script>
 <script defer src="js/a076d05399.js"></script>
 
 
