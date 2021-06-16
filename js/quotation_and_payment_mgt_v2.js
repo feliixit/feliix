@@ -69,7 +69,7 @@ var app = new Vue({
       { name: "100", id: 100 },
       { name: "All", id: 10000 },
     ],
-    perPage: 10,
+    perPage: 5,
 
     prof_canSub: true,
     prof_remark: "",
@@ -204,10 +204,6 @@ var app = new Vue({
 
       this.setPages();
       return this.paginate(this.receive_records);
-    },
-
-    showExtra: function() {
-      return this.status == 10;
     },
 
     displayedQuote() {

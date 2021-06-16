@@ -873,22 +873,24 @@ $(function(){
                       <li>{{ isNaN(parseFloat(receive_record.tax_withheld)) ? "" : Number(receive_record.tax_withheld).toLocaleString() }}</li>
                       <li>{{ isNaN(parseFloat(receive_record.net_amount)) ? "" : Number(receive_record.net_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.down_payment_amount)) ? "" : Number(receive_record.down_payment_amount).toLocaleString() }}</li>
-                      <li></li>
+                      <li><template v-for="(item,index) in receive_record.down_pay_date">{{ item }}</template></li>
                       <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>
-                      <li></li>
+                      <li><template v-for="(item,index) in receive_record.full_pay_date">{{ item }}</template></li>
                       <li>{{ isNaN(parseInt(receive_record.ar)) ? "" : Number(receive_record.ar).toLocaleString() }}</li>
                       <li class="display_file">
-                        <span v-for="item in receive_record.final_quotation">
+                        <span v-for="(item,index) in receive_record.client_po_file">
                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
                         </span>
                       </li>
-                      <li></li>
+                      <li><span v-for="(item,index) in receive_record.invoice">{{ item }}</span></li>
                       <li class="display_file">
-                        <span v-for="item in receive_record.final_quotation">
+                        <span v-for="(item,index) in receive_record.client_other_file">
                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>
                         </span>
                       </li>
-                      <li></li>
+                      <li><span v-for="(item,index) in receive_record.client_other">
+                            <a v-if="item.kind == '3'">•{{ item.comment }} ({{ item.username }} at {{ item.created_at }})</a>
+                        </span></li>
                   </ul>
 
                 
@@ -1052,7 +1054,7 @@ $(function(){
                                 <dd>
                                     <select v-model="payment_type">
                                         <option value="0">Down Payment</option>
-                                        <option value="1">Payment</option>
+                                        <option value="1">Full Payment</option>
                                     </select>
                                 </dd>
                                 <dt class="head">Remarks:</dt>
@@ -1142,7 +1144,7 @@ $(function(){
                                 </ul>
                                 <ul v-for='(receive_record, index) in displayedPayment'>
                                     <li><input type="checkbox" name="payment_id" class="alone black" :value="receive_record.id"></li>
-                                    <li>{{ (receive_record.kind == 0) ? "Down Payment" : "Payment" }}</li>
+                                    <li>{{ (receive_record.kind == 0) ? "Down Payment" : "Full Payment" }}</li>
                                     <li>{{ receive_record.remark }}</li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display: block;">
