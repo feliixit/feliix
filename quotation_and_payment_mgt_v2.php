@@ -193,30 +193,45 @@ $(function(){
         }
 
         .tableframe .tablebox.lv1 li{
-            min-width: auto;
+            min-width: 150px;
             color:#14456c;
         }
 
-        .tableframe .tablebox.lv1 li:nth-of-type(3) {
-            min-width: 150px;
-        }
+        .tableframe .tablebox.lv1 li:nth-of-type(2) {
+                    min-width: 130px;
+                }
 
-        .tableframe .tablebox.lv1 li:nth-of-type(n+7) {
-            min-width: 110px;
-        }
+        .tableframe .tablebox.lv1 li:nth-of-type(3), .tableframe .tablebox.lv1 li:nth-of-type(4), .tableframe .tablebox.lv1 li:nth-of-type(16), .tableframe .tablebox.lv1 li:nth-of-type(18), .tableframe .tablebox.lv1 li:nth-of-type(19){
+                    min-width: 280px;
+                }
 
-        .tableframe .tablebox.lv1 li:nth-of-type(10) {
-            color:#EA0029;
-        }
+        .tableframe .tablebox.lv1 li:nth-of-type(5) {
+                    min-width: 100px;
+                }
 
-        .tableframe .tablebox.lv1 li:nth-of-type(11) {
-            min-width: 150px;
-        }
+        .tableframe .tablebox.lv1 li:nth-of-type(6) {
+                    min-width: 160px;
+                }
 
-        
-        .block.B .tablebox.lv1 li, .block.D .tablebox.lv1 li {
-            min-width: auto;
-        }
+        .tableframe .tablebox.lv1 li:nth-of-type(7) {
+                    min-width: 200px;
+                }
+
+        .tableframe .tablebox.lv1 li:nth-of-type(19) {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: left;
+                }
+
+        .tableframe .tablebox.lv1 li:nth-of-type(11) span, .tableframe .tablebox.lv1 li:nth-of-type(12) span, .tableframe .tablebox.lv1 li:nth-of-type(13) span, .tableframe .tablebox.lv1 li:nth-of-type(14) span, .tableframe .tablebox.lv1 li:nth-of-type(17) span {
+                    display: block;
+                }
+
+        .block.B .tablebox.lv1 li, .block.D .tablebox.lv1 li, .block.E .tablebox.lv1 li, .block.F .tablebox.lv1 li {
+                    min-width: auto;
+                }
+
+
 
         .bodybox .mask {
             position: absolute;
@@ -873,9 +888,9 @@ $(function(){
                       <li>{{ isNaN(parseFloat(receive_record.tax_withheld)) ? "" : Number(receive_record.tax_withheld).toLocaleString() }}</li>
                       <li>{{ isNaN(parseFloat(receive_record.net_amount)) ? "" : Number(receive_record.net_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.down_payment_amount)) ? "" : Number(receive_record.down_payment_amount).toLocaleString() }}</li>
-                      <li><template v-for="(item,index) in receive_record.down_pay_date">{{ item }}</template></li>
+                      <li><span v-for="(item,index) in receive_record.down_pay_date">{{ item }}</span></li>
                       <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>
-                      <li><template v-for="(item,index) in receive_record.full_pay_date">{{ item }}</template></li>
+                      <li><span v-for="(item,index) in receive_record.full_pay_date">{{ item }}</span></li>
                       <li>{{ isNaN(parseInt(receive_record.ar)) ? "" : Number(receive_record.ar).toLocaleString() }}</li>
                       <li class="display_file">
                         <span v-for="(item,index) in receive_record.client_po_file">

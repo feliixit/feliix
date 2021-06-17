@@ -95,6 +95,8 @@
 
                 var calendarT1 = document.getElementById('task_calendar');
 
+                let clickCnt = 0;
+
                 let event_array_task = [];
                 //將Task從資料庫中加入array
                 //需要讀出task的 (1)專案名稱 (2)task名稱 (3) task 的due date (4) task 所在的 project03_other頁面網址 (5) task 在日曆中的顏色 (6) task 的 creator
@@ -127,7 +129,7 @@
                                 var obj_meeting = {
                                     id: obj[i].stage_id,
                                     title: obj[i].title,
-                                    url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                    //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                     backgroundColor: obj[i].color,
                                     borderColor: obj[i].color,
@@ -199,7 +201,7 @@
                                                         var obj_meeting = {
                                                             id: obj[i].stage_id,
                                                             title: obj[i].title,
-                                                            url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                             backgroundColor: obj[i].color,
                                                             borderColor: obj[i].color,
@@ -258,7 +260,7 @@
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/task_management_AD?sid=' + obj[i].stage_id,
+                                                    //url: 'https://feliix.myvnc.com/task_management_AD?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
@@ -317,7 +319,7 @@
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/task_management_DS?sid=' + obj[i].stage_id,
+                                                    //url: 'https://feliix.myvnc.com/task_management_DS?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
@@ -376,7 +378,7 @@
                                                         var obj_meeting = {
                                                             id: obj[i].stage_id,
                                                             title: obj[i].title,
-                                                            url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                             backgroundColor: obj[i].color,
                                                             borderColor: obj[i].color,
@@ -435,7 +437,7 @@
                                                         var obj_meeting = {
                                                             id: obj[i].stage_id,
                                                             title: obj[i].title,
-                                                            url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                             backgroundColor: obj[i].color,
                                                             borderColor: obj[i].color,
@@ -493,7 +495,7 @@
                                                         var obj_meeting = {
                                                             id: obj[i].stage_id,
                                                             title: obj[i].title,
-                                                            url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                             backgroundColor: obj[i].color,
                                                             borderColor: obj[i].color,
@@ -516,6 +518,24 @@
                             eventClick: function(info) {
                                 eventObj = info.event;
 
+                                info.el.addEventListener('click', function() {
+                                    clickCnt++;         
+                                    if (clickCnt === 1) {
+                                        oneClickTimer = setTimeout(function() {
+                                            clickCnt = 0;
+                                            alert('SINGLE CLICK example value grab:' + info.event.title );
+                                        }, 400);
+                                    } else if (clickCnt === 2) {
+                                        clearTimeout(oneClickTimer);
+                                        clickCnt = 0;
+                                        alert('DOUBLE CLICK example value grab:' + info.event.start );
+                                    
+                                    }         
+                                    
+                                });
+
+                               
+                                /*
                                 //點擊會在新視窗中打開task所在的project03_other相關頁面
                                 if (eventObj.url) {
                                     info.jsEvent.preventDefault(); // prevents browser from following link in current tab.
@@ -524,10 +544,13 @@
                                 } else {
                                     alert('No url provided: ' + eventObj.title);
                                 }
+                                */
                             },
 
-                            editable: false,
+                            
 
+                            editable: false,
+                          
                             events: event_array_task,
                         });
 
