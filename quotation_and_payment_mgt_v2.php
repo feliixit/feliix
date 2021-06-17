@@ -197,6 +197,10 @@ $(function(){
             color:#14456c;
         }
 
+        .tableframe .tablebox.lv1 li:nth-of-type(1) {
+                    min-width: 40px;
+                }
+
         .tableframe .tablebox.lv1 li:nth-of-type(2) {
                     min-width: 130px;
                 }
