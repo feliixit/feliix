@@ -14,10 +14,11 @@
 
     <link rel="stylesheet" href="css/vue-select.css" type="text/css">
 
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/fullcalendar@5.1.0/main.min.css">
+    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css'>
+    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.0/main.min.css'>
+<script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
 
-
-    <script type="text/javascript" src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <!-- jQuery和js載入 -->
@@ -138,8 +139,24 @@
                                 event_array_task.push(obj_meeting);
                             }
                         }
-
+/*
+                        let FullCalendarActions = {
+                            currentTime: null,
+                            isDblClick: function () {
+                                let prevTime =
+                                typeof FullCalendarActions.currentTime === null
+                                    ? new Date().getTime() - 1000000
+                                    : FullCalendarActions.currentTime;
+                                FullCalendarActions.currentTime = new Date().getTime();
+                                return FullCalendarActions.currentTime - prevTime < 500;
+                            },
+                        }
+*/
                         var calendar_task = new FullCalendar.Calendar(calendarT1, {
+
+                            plugins: [ 'dayGrid' ],
+    timeZone: 'UTC',
+    defaultView: 'dayGridMonth',
 
                             contentHeight: 'auto',
 
@@ -149,7 +166,7 @@
                                 day: '2-digit'
                             },
 
-                            headerToolbar: {
+                            header: {
                                 left: 'prev,next today',
                                 center: 'title',
                                 right: 'individual,admin,design,lighting,furniture,overall',
@@ -514,12 +531,17 @@
                                 }
                             },
 
-
-                            eventClick: function(info) {
-                                eventObj = info.event;
-
+                            eventRender: function (info) {
+                                
+                                //The obvious commented out method will then not work with
+                                //single eventClick or single Click Listener
+                                //info.el.addEventListener('dblclick', function () {
+                                    //  alert('DOUBLE CLICK!'+info.event.title);
+                                //});
+                                    
+                                //wired listener to handle click counts instead of event type
                                 info.el.addEventListener('click', function() {
-                                    clickCnt++;         
+                                        clickCnt++;         
                                     if (clickCnt === 1) {
                                         oneClickTimer = setTimeout(function() {
                                             clickCnt = 0;
@@ -530,21 +552,8 @@
                                         clickCnt = 0;
                                         alert('DOUBLE CLICK example value grab:' + info.event.start );
                                     
-                                    }         
-                                    
+                                    }          
                                 });
-
-                               
-                                /*
-                                //點擊會在新視窗中打開task所在的project03_other相關頁面
-                                if (eventObj.url) {
-                                    info.jsEvent.preventDefault(); // prevents browser from following link in current tab.
-                                    window.open(eventObj.url, "_blank");
-
-                                } else {
-                                    alert('No url provided: ' + eventObj.title);
-                                }
-                                */
                             },
 
                             
