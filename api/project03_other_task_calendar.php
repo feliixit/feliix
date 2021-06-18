@@ -26,6 +26,11 @@ if (!isset($jwt)) {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $user_id = $decoded->data->id;
+
+        $department = $decoded->data->department;
+        $position = $decoded->data->position;
+        $my_department = GetDepartments($department);
+        $my_level = GetTitleLevel($position);
         //if(!$decoded->data->is_admin)
         //{
         //  http_response_code(401);
@@ -66,11 +71,14 @@ switch ($method) {
                         pc.category, 
                         p.project_name, 
                         pm.collaborator, 
-                        pm.assignee
+                        pm.assignee,
+                        ut.title user_title
                 from project_other_task pm 
                     LEFT JOIN project_stages ps ON pm.stage_id = ps.id
                     LEFT JOIN project_main p ON ps.project_id = p.id
                     LEFT JOIN project_category pc ON p.catagory_id = pc.id
+                    LEFT JOIN user u on pm.create_id = u.id
+                    LEFT JOIN user_title ut ON u.title_id = ut.id
                 where pm.`status` <> -1 AND pm.due_date <> '' ";
 
         if ($cat == 'os') {
@@ -123,6 +131,7 @@ switch ($method) {
             $assignee = explode(",", $row['assignee']);
             $collaborator = explode(",", $row['collaborator']);
             $color = GetTaskColor($task_status, $due_date, $due_time);
+            $level = GetTitleLevel($row['user_title']);
 
             $merged_results[] = array(
                 "stage_id" => $stage_id,
@@ -135,19 +144,22 @@ switch ($method) {
                 "project_name" => $project_name,
                 "assignee" => $assignee,
                 "collaborator" => $collaborator,
-              
+                "level" => $level,
                 "color" => $color,
+                "my_d" => $my_department,
+                "my_l" => $my_level,
+                "my_i" => $user_id,
             );
         }
 
         if($cat == '' || $cat == 'ad')
         {
-            $merged_results = array_merge($merged_results, CombineWithAD($db));
+            $merged_results = array_merge($merged_results, CombineWithAD($db, $my_department, $my_level, $user_id));
         }
 
         if($cat == '' || $cat == 'ds')
         {
-            $merged_results = array_merge($merged_results, CombineWithDS($db));
+            $merged_results = array_merge($merged_results, CombineWithDS($db, $my_department, $my_level, $user_id));
         }
 
         if($uid != 0)
@@ -171,10 +183,10 @@ switch ($method) {
 
 }
 
-function CombineWithAD($db)
+function CombineWithAD($db, $my_department, $my_level, $my_id)
 {
 
-        $sql = "SELECT id stage_id, 
+        $sql = "SELECT pm.id stage_id, 
                         pm.title, 
                         pm.due_date, 
                         pm.due_time, 
@@ -183,8 +195,11 @@ function CombineWithAD($db)
                         'AD' category, 
                         '' project_name, 
                         pm.collaborator, 
-                        pm.assignee
+                        pm.assignee,
+                        ut.title user_title
                 from project_other_task_a pm 
+                LEFT JOIN user u on pm.create_id = u.id
+                LEFT JOIN user_title ut ON u.title_id = ut.id
                 where pm.`status` <> -1 AND pm.due_date <> '' ";
 
 
@@ -221,6 +236,7 @@ function CombineWithAD($db)
             $assignee = explode(",", $row['assignee']);
             $collaborator = explode(",", $row['collaborator']);
             $color = GetTaskColor($task_status, $due_date, $due_time);
+            $level = GetTitleLevel($row['user_title']);
 
             $merged_results[] = array(
                 "stage_id" => $stage_id,
@@ -233,18 +249,98 @@ function CombineWithAD($db)
                 "project_name" => $project_name,
                 "assignee" => $assignee,
                 "collaborator" => $collaborator,
-              
+                "level" => $level,
                 "color" => $color,
+                "my_d" => $my_department,
+                "my_l" => $my_level,
+                "my_i" => $my_id,
             );
         }
 
         return $merged_results;
 }
 
-function CombineWithDS($db)
+function GetDepartments($department)
+{
+    $department = trim(strtoupper($department));
+    $dep = "";
+    switch ($department) {
+        case "LIGHTING":
+            $dep = "LT";
+            break;
+        case "OFFICE":
+            $dep = "OS";
+            break;
+        case "DESIGN":
+            $dep = "DS";
+            break;
+        case "ADMIN":
+            $dep = "AD";
+            break;
+    }
+
+    return $dep;
+}
+
+function GetTitleLevel($title)
+{
+    $title = trim(strtoupper($title));
+    $level = 0;
+    switch ($title) {
+        case "MANAGING DIRECTOR":
+            $level = 5;
+            break;
+        case "CHIEF ADVISOR":
+            $level = 5;
+            break;
+        case "LIGHTING MANAGER":
+            $level = 4;
+            break;
+        case "OFFICE SYSTEMS MANAGER":
+            $level = 4;
+            break;
+        case "OPERATIONS MANAGER":
+            $level = 4;
+            break;
+        case "BRAND MANAGER":
+            $level = 4;
+            break;
+        case "ASSISTANT LIGHTING MANAGER":
+            $level = 3;
+            break;
+        case "ASSISTANT OFFICE SYSTEMS MANAGER":
+            $level = 3;
+            break;
+        case "ASSISTANT OPERATIONS MANAGER":
+            $level = 3;
+            break;
+        case "ASSISTANT BRAND MANAGER":
+            $level = 3;
+            break;
+        case "SR. LIGHTING DESIGNER":
+            $level = 2;
+            break;
+        case "SR. OFFICE SYSTEMS DESIGNER":
+            $level = 2;
+            break;
+        case "JR. ACCOUNT EXECUTIVE":
+            $level = 1;
+            break;
+        case "ACCOUNT EXECUTIVE":
+            $level = 1;
+            break;
+        case "SR. ACCOUNT EXECUTIVE":
+            $level = 1;
+            break;
+    }
+
+    return $level;
+}
+
+function CombineWithDS($db, $my_department, $my_level, $my_id)
 {
 
-        $sql = "SELECT id stage_id, 
+        $sql = "SELECT pm.id stage_id, 
                         pm.title, 
                         pm.due_date, 
                         pm.due_time, 
@@ -253,8 +349,11 @@ function CombineWithDS($db)
                         'AD' category, 
                         '' project_name, 
                         pm.collaborator, 
-                        pm.assignee
+                        pm.assignee,
+                        ut.title user_title
                 from project_other_task_d pm 
+                LEFT JOIN user u on pm.create_id = u.id
+                LEFT JOIN user_title ut ON u.title_id = ut.id
                 where pm.`status` <> -1 AND pm.due_date <> '' ";
 
 
@@ -291,6 +390,7 @@ function CombineWithDS($db)
             $assignee = explode(",", $row['assignee']);
             $collaborator = explode(",", $row['collaborator']);
             $color = GetTaskColor($task_status, $due_date, $due_time);
+            $level = GetTitleLevel($row['user_title']);
 
             $merged_results[] = array(
                 "stage_id" => $stage_id,
@@ -303,8 +403,11 @@ function CombineWithDS($db)
                 "project_name" => $project_name,
                 "assignee" => $assignee,
                 "collaborator" => $collaborator,
-              
+                "level" => $level,
                 "color" => $color,
+                "my_d" => $my_department,
+                "my_l" => $my_level,
+                "my_i" => $my_id,
             );
         }
 

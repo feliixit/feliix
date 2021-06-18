@@ -97,6 +97,9 @@
                 var calendarT1 = document.getElementById('task_calendar');
 
                 let clickCnt = 0;
+                let my_id = 0;
+                let my_level = 0;
+                let my_department = "";
 
                 let event_array_task = [];
                 //將Task從資料庫中加入array
@@ -120,12 +123,12 @@
                     data: form_Data,
 
                     success: function(result) {
-                        console.log(result);
+                        // console.log(result);
                         var obj = JSON.parse(result);
                         if (obj !== undefined) {
                             var arrayLength = obj.length;
                             for (var i = 0; i < arrayLength; i++) {
-                                console.log(obj[i]);
+                                //console.log(obj[i]);
 
                                 var obj_meeting = {
                                     id: obj[i].stage_id,
@@ -134,9 +137,21 @@
                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                     backgroundColor: obj[i].color,
                                     borderColor: obj[i].color,
+                                    extendedProps: {
+                                        create_id:obj[i].create_id,
+                                        category:obj[i].category,
+                                        level:obj[i].level,
+                                    },
                                 };
 
                                 event_array_task.push(obj_meeting);
+                            }
+
+                            if(arrayLength > 0)
+                            {
+                                my_level = obj[0].my_l;
+                                my_id = obj[0].my_i;
+                                my_department = obj[0].my_d;
                             }
                         }
 /*
@@ -208,12 +223,12 @@
                                             data: form_Data,
 
                                             success: function(result) {
-                                                console.log(result);
+                                                //console.log(result);
                                                 var obj = JSON.parse(result);
                                                 if (obj !== undefined) {
                                                     var arrayLength = obj.length;
                                                     for (var i = 0; i < arrayLength; i++) {
-                                                        console.log(obj[i]);
+                                                        //console.log(obj[i]);
 
                                                         var obj_meeting = {
                                                             id: obj[i].stage_id,
@@ -222,6 +237,11 @@
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                             backgroundColor: obj[i].color,
                                                             borderColor: obj[i].color,
+                                                            extendedProps: {
+                                                                create_id:obj[i].create_id,
+                                                                category:obj[i].category,
+                                                                level:obj[i].level,
+                                                            },
                                                         };
 
                                                         temp.push(obj_meeting);
@@ -267,12 +287,12 @@
                                     data: form_Data,
 
                                     success: function(result) {
-                                        console.log(result);
+                                        //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
@@ -281,6 +301,11 @@
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                    },
                                                 };
 
                                                 temp.push(obj_meeting);
@@ -326,12 +351,12 @@
                                     data: form_Data,
 
                                     success: function(result) {
-                                        console.log(result);
+                                        //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var obj_meeting = {
                                                     id: obj[i].stage_id,
@@ -340,6 +365,11 @@
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                    },
                                                 };
 
                                                 temp.push(obj_meeting);
@@ -385,12 +415,12 @@
                                             data: form_Data,
 
                                             success: function(result) {
-                                                console.log(result);
+                                                //console.log(result);
                                                 var obj = JSON.parse(result);
                                                 if (obj !== undefined) {
                                                     var arrayLength = obj.length;
                                                     for (var i = 0; i < arrayLength; i++) {
-                                                        console.log(obj[i]);
+                                                        //console.log(obj[i]);
 
                                                         var obj_meeting = {
                                                             id: obj[i].stage_id,
@@ -399,6 +429,11 @@
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                             backgroundColor: obj[i].color,
                                                             borderColor: obj[i].color,
+                                                            extendedProps: {
+                                                                create_id:obj[i].create_id,
+                                                                category:obj[i].category,
+                                                                level:obj[i].level,
+                                                            },
                                                         };
 
                                                         temp.push(obj_meeting);
@@ -444,12 +479,12 @@
                                             data: form_Data,
 
                                             success: function(result) {
-                                                console.log(result);
+                                                //console.log(result);
                                                 var obj = JSON.parse(result);
                                                 if (obj !== undefined) {
                                                     var arrayLength = obj.length;
                                                     for (var i = 0; i < arrayLength; i++) {
-                                                        console.log(obj[i]);
+                                                        //console.log(obj[i]);
 
                                                         var obj_meeting = {
                                                             id: obj[i].stage_id,
@@ -458,6 +493,11 @@
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                             backgroundColor: obj[i].color,
                                                             borderColor: obj[i].color,
+                                                            extendedProps: {
+                                                                create_id:obj[i].create_id,
+                                                                category:obj[i].category,
+                                                                level:obj[i].level,
+                                                            },
                                                         };
 
                                                         temp.push(obj_meeting);
@@ -502,12 +542,12 @@
                                             data: form_Data,
 
                                             success: function(result) {
-                                                console.log(result);
+                                                //console.log(result);
                                                 var obj = JSON.parse(result);
                                                 if (obj !== undefined) {
                                                     var arrayLength = obj.length;
                                                     for (var i = 0; i < arrayLength; i++) {
-                                                        console.log(obj[i]);
+                                                        //console.log(obj[i]);
 
                                                         var obj_meeting = {
                                                             id: obj[i].stage_id,
@@ -516,6 +556,11 @@
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                             backgroundColor: obj[i].color,
                                                             borderColor: obj[i].color,
+                                                            extendedProps: {
+                                                                create_id:obj[i].create_id,
+                                                                category:obj[i].category,
+                                                                level:obj[i].level,
+                                                            },
                                                         };
 
                                                         temp.push(obj_meeting);
@@ -532,12 +577,9 @@
                             },
 
                             eventRender: function (info) {
+                        
                                 
-                                //The obvious commented out method will then not work with
-                                //single eventClick or single Click Listener
-                                //info.el.addEventListener('dblclick', function () {
-                                    //  alert('DOUBLE CLICK!'+info.event.title);
-                                //});
+                                eventObj = info.event;
                                     
                                 //wired listener to handle click counts instead of event type
                                 info.el.addEventListener('click', function() {
@@ -545,12 +587,26 @@
                                     if (clickCnt === 1) {
                                         oneClickTimer = setTimeout(function() {
                                             clickCnt = 0;
-                                            alert('SINGLE CLICK example value grab:' + info.event.title );
+                                            if(eventObj.extendedProps.category == 'AD')
+                                                window.open('http://127.0.0.1/feliix/task_management_AD?sid=' + eventObj.id, "_blank");
+                                            else if(eventObj.extendedProps.category == 'DS')
+                                                window.open('http://127.0.0.1/feliix/task_management_DS?sid=' + eventObj.id, "_blank");
+                                            else
+                                                window.open('http://127.0.0.1/feliix/project03_other?sid=' + eventObj.id, "_blank");
                                         }, 400);
+                                        
                                     } else if (clickCnt === 2) {
                                         clearTimeout(oneClickTimer);
                                         clickCnt = 0;
-                                        alert('DOUBLE CLICK example value grab:' + info.event.start );
+                                        
+                                        if(my_level > 4)
+                                            alert('close!');
+                                        else if(my_level > eventObj.extendedProps.level && my_department === eventObj.extendedProps.category)
+                                            alert('close!');
+                                        else if(my_id === eventObj.extendedProps.create_id)
+                                            alert('close!');
+                                        else
+                                            console.log(eventObj.extendedProps);
                                     
                                     }          
                                 });
