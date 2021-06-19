@@ -90,7 +90,103 @@
 
 
 <script>
-    var eventObj;
+
+    function CanClose(uid, creator_id, level, creator_level, department){
+        let can_close = false;
+
+        if(creator_id === uid)
+            can_close = true;
+
+        if(department === 'LT')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+                can_close = true;
+
+            if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
+            {
+                if(creator_level === "ASSISTANT LIGHTING MANAGER" || creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT LIGHTING MANAGER" )
+            {
+                if(creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. LIGHTING DESIGNER" )
+            {
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'OS')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+                can_close = true;
+
+            if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
+            {
+                if(creator_level === "ASSISTANT OFFICE SYSTEMS MANAGER" || creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT OFFICE SYSTEMS MANAGER" )
+            {
+                if(creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. OFFICE SYSTEMS DESIGNER" )
+            {
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'AD')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+                can_close = true;
+
+            if(level === "OPERATIONS MANAGER")
+            {
+                if(creator_level === "ASSISTANT OPERATIONS MANAGER")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'DS')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+                can_close = true;
+
+            if(level === "BRAND MANAGER")
+            {
+                if(creator_level === "ASSISTANT Brand Manager")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        return can_close;
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -123,7 +219,7 @@
                     data: form_Data,
 
                     success: function(result) {
-                        // console.log(result);
+                        console.log(result);
                         var obj = JSON.parse(result);
                         if (obj !== undefined) {
                             var arrayLength = obj.length;
@@ -131,7 +227,7 @@
                                 //console.log(obj[i]);
 
                                 var obj_meeting = {
-                                    id: obj[i].stage_id,
+                                    id: obj[i].id,
                                     title: obj[i].title,
                                     //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
@@ -141,6 +237,8 @@
                                         create_id:obj[i].create_id,
                                         category:obj[i].category,
                                         level:obj[i].level,
+                                        task_status:obj[i].task_status,
+                                        stage_id:obj[i].stage_id,
                                     },
                                 };
 
@@ -231,7 +329,7 @@
                                                         //console.log(obj[i]);
 
                                                         var obj_meeting = {
-                                                            id: obj[i].stage_id,
+                                                            id: obj[i].id,
                                                             title: obj[i].title,
                                                             //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
@@ -241,6 +339,8 @@
                                                                 create_id:obj[i].create_id,
                                                                 category:obj[i].category,
                                                                 level:obj[i].level,
+                                                                task_status:obj[i].task_status,
+                                                                stage_id:obj[i].stage_id,
                                                             },
                                                         };
 
@@ -248,6 +348,7 @@
                                                     }
                                                 }
 
+                                                event_array_task = temp;
 
                                                 calendar_task.addEventSource(temp);
 
@@ -295,7 +396,7 @@
                                                 //console.log(obj[i]);
 
                                                 var obj_meeting = {
-                                                    id: obj[i].stage_id,
+                                                    id: obj[i].id,
                                                     title: obj[i].title,
                                                     //url: 'https://feliix.myvnc.com/task_management_AD?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
@@ -305,6 +406,8 @@
                                                         create_id:obj[i].create_id,
                                                         category:obj[i].category,
                                                         level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
                                                     },
                                                 };
 
@@ -312,7 +415,7 @@
                                             }
                                         }
 
-
+                                        event_array_task = temp;
                                         calendar_task.addEventSource(temp);
 
                                     }
@@ -359,7 +462,7 @@
                                                 //console.log(obj[i]);
 
                                                 var obj_meeting = {
-                                                    id: obj[i].stage_id,
+                                                    id: obj[i].id,
                                                     title: obj[i].title,
                                                     //url: 'https://feliix.myvnc.com/task_management_DS?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
@@ -369,6 +472,8 @@
                                                         create_id:obj[i].create_id,
                                                         category:obj[i].category,
                                                         level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
                                                     },
                                                 };
 
@@ -376,7 +481,7 @@
                                             }
                                         }
 
-
+                                        event_array_task = temp;
                                         calendar_task.addEventSource(temp);
 
                                     }
@@ -423,7 +528,7 @@
                                                         //console.log(obj[i]);
 
                                                         var obj_meeting = {
-                                                            id: obj[i].stage_id,
+                                                            id: obj[i].id,
                                                             title: obj[i].title,
                                                             //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
@@ -433,6 +538,8 @@
                                                                 create_id:obj[i].create_id,
                                                                 category:obj[i].category,
                                                                 level:obj[i].level,
+                                                                task_status:obj[i].task_status,
+                                                                stage_id:obj[i].stage_id,
                                                             },
                                                         };
 
@@ -440,7 +547,7 @@
                                                     }
                                                 }
 
-
+                                                event_array_task = temp;
                                                 calendar_task.addEventSource(temp);
 
                                             }
@@ -487,7 +594,7 @@
                                                         //console.log(obj[i]);
 
                                                         var obj_meeting = {
-                                                            id: obj[i].stage_id,
+                                                            id: obj[i].id,
                                                             title: obj[i].title,
                                                             //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
@@ -497,6 +604,8 @@
                                                                 create_id:obj[i].create_id,
                                                                 category:obj[i].category,
                                                                 level:obj[i].level,
+                                                                task_status:obj[i].task_status,
+                                                                stage_id:obj[i].stage_id,
                                                             },
                                                         };
 
@@ -504,7 +613,7 @@
                                                     }
                                                 }
 
-
+                                                event_array_task = temp;
                                                 calendar_task.addEventSource(temp);
 
                                             }
@@ -550,7 +659,7 @@
                                                         //console.log(obj[i]);
 
                                                         var obj_meeting = {
-                                                            id: obj[i].stage_id,
+                                                            id: obj[i].id,
                                                             title: obj[i].title,
                                                             //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
@@ -560,6 +669,8 @@
                                                                 create_id:obj[i].create_id,
                                                                 category:obj[i].category,
                                                                 level:obj[i].level,
+                                                                task_status:obj[i].task_status,
+                                                                stage_id:obj[i].stage_id,
                                                             },
                                                         };
 
@@ -567,7 +678,7 @@
                                                     }
                                                 }
 
-
+                                                event_array_task = temp;
                                                 calendar_task.addEventSource(temp);
 
                                             }
@@ -576,37 +687,70 @@
                                 }
                             },
 
+                            events: event_array_task,
+
                             eventRender: function (info) {
-                        
-                                
-                                eventObj = info.event;
-                                    
+
                                 //wired listener to handle click counts instead of event type
                                 info.el.addEventListener('click', function() {
                                         clickCnt++;         
                                     if (clickCnt === 1) {
                                         oneClickTimer = setTimeout(function() {
                                             clickCnt = 0;
-                                            if(eventObj.extendedProps.category == 'AD')
-                                                window.open('http://127.0.0.1/feliix/task_management_AD?sid=' + eventObj.id, "_blank");
-                                            else if(eventObj.extendedProps.category == 'DS')
-                                                window.open('http://127.0.0.1/feliix/task_management_DS?sid=' + eventObj.id, "_blank");
+                                            if(info.event.extendedProps.category == 'AD')
+                                                window.open('https://feliixtest.myvnc.com/task_management_AD?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'DS')
+                                                window.open('https://feliixtest.myvnc.com/task_management_DS?sid=' + info.event.id, "_blank");
                                             else
-                                                window.open('http://127.0.0.1/feliix/project03_other?sid=' + eventObj.id, "_blank");
+                                                window.open('https://feliixtest.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
                                         }, 400);
                                         
                                     } else if (clickCnt === 2) {
                                         clearTimeout(oneClickTimer);
                                         clickCnt = 0;
                                         
-                                        if(my_level > 4)
-                                            alert('close!');
-                                        else if(my_level > eventObj.extendedProps.level && my_department === eventObj.extendedProps.category)
-                                            alert('close!');
-                                        else if(my_id === eventObj.extendedProps.create_id)
-                                            alert('close!');
-                                        else
-                                            console.log(eventObj.extendedProps);
+                                        if(info.event.extendedProps.task_status != 2)
+                                        {
+                                            if(CanClose(my_id, info.event.extendedProps.create_id, my_level, info.event.extendedProps.level, info.event.extendedProps.category))
+                                            {
+                                                var token = localStorage.getItem('token');
+
+                                                localStorage.getItem('token');
+                                                var form_Data = new FormData();
+                                                form_Data.append('id', info.event.id);
+                                                form_Data.append('category', info.event.extendedProps.category);
+
+                                                let _info = info;
+
+                                                $.ajax({
+                                                    url: "api/project03_other_task_calendar_close_task",
+                                                    type: "POST",
+                                                    contentType: 'multipart/form-data',
+                                                    processData: false,
+                                                    contentType: false,
+                                                    data: form_Data,
+
+                                                    success: function(result) {
+                                                        console.log(result);
+                                                    
+                                                        for (let i=0; i<event_array_task.length; i++) {
+                                                            if(event_array_task[i].id === _info.event.id && event_array_task[i].extendedProps.category === _info.event.extendedProps.category)
+                                                            {
+                                                                event_array_task[i].backgroundColor = 'green';
+                                                                event_array_task[i].borderColor = 'green';
+                                                                event_array_task[i].extendedProps.task_status = 2;
+
+                                                                calendar_task.removeAllEvents();
+                                                                calendar_task.addEventSource(event_array_task);
+                                                            }
+                                                        }
+                                                        
+                                                    }
+                                                });
+                                            }
+                                            else
+                                                console.log(info.event.extendedProps);
+                                        }
                                     
                                     }          
                                 });
@@ -616,7 +760,7 @@
 
                             editable: false,
                           
-                            events: event_array_task,
+                            
                         });
 
                         calendar_task.render();

@@ -62,7 +62,8 @@ switch ($method) {
         $uid = (isset($_POST['uid']) ?  $_POST['uid'] : 0);
         $cat = (isset($_POST['category']) ?  $_POST['category'] : '');
    
-        $sql = "SELECT pm.stage_id, 
+        $sql = "SELECT  pm.id,
+                        pm.stage_id, 
                         pm.title, 
                         pm.due_date, 
                         pm.due_time, 
@@ -103,6 +104,7 @@ switch ($method) {
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
+        $id = 0;
         $stage_id = 0;
         $title = "";
         $due_date = "";
@@ -116,7 +118,7 @@ switch ($method) {
         $color = "";
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-           
+            $id = $row['id'];
             $stage_id = $row['stage_id'];
             $title = $row['due_time'] . ' ' . 
                     '[' . ($row['category'] == 'Lighting' ? 'LT' : 'OS') . ']' .
@@ -134,6 +136,7 @@ switch ($method) {
             $level = GetTitleLevel($row['user_title']);
 
             $merged_results[] = array(
+                "id" => $id,
                 "stage_id" => $stage_id,
                 "title" => $title,
                 "due_date" => $due_date,
@@ -186,7 +189,7 @@ switch ($method) {
 function CombineWithAD($db, $my_department, $my_level, $my_id)
 {
 
-        $sql = "SELECT pm.id stage_id, 
+        $sql = "SELECT pm.id, 
                         pm.title, 
                         pm.due_date, 
                         pm.due_time, 
@@ -208,7 +211,7 @@ function CombineWithAD($db, $my_department, $my_level, $my_id)
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
-        $stage_id = 0;
+        $id = 0;
         $title = "";
         $due_date = "";
         $due_time = "";
@@ -222,7 +225,7 @@ function CombineWithAD($db, $my_department, $my_level, $my_id)
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
            
-            $stage_id = $row['stage_id'];
+            $id = $row['id'];
             $title = $row['due_time'] . ' ' . 
                     '[AD]' .
                     
@@ -239,7 +242,8 @@ function CombineWithAD($db, $my_department, $my_level, $my_id)
             $level = GetTitleLevel($row['user_title']);
 
             $merged_results[] = array(
-                "stage_id" => $stage_id,
+                "id" => $id,
+                "stage_id" => 0,
                 "title" => $title,
                 "due_date" => $due_date,
                 "due_time" => ($due_time == '' ? '23:59:59' : $due_time . '00'),
@@ -285,62 +289,65 @@ function GetDepartments($department)
 function GetTitleLevel($title)
 {
     $title = trim(strtoupper($title));
-    $level = 0;
-    switch ($title) {
-        case "MANAGING DIRECTOR":
-            $level = 5;
-            break;
-        case "CHIEF ADVISOR":
-            $level = 5;
-            break;
-        case "LIGHTING MANAGER":
-            $level = 4;
-            break;
-        case "OFFICE SYSTEMS MANAGER":
-            $level = 4;
-            break;
-        case "OPERATIONS MANAGER":
-            $level = 4;
-            break;
-        case "BRAND MANAGER":
-            $level = 4;
-            break;
-        case "ASSISTANT LIGHTING MANAGER":
-            $level = 3;
-            break;
-        case "ASSISTANT OFFICE SYSTEMS MANAGER":
-            $level = 3;
-            break;
-        case "ASSISTANT OPERATIONS MANAGER":
-            $level = 3;
-            break;
-        case "ASSISTANT BRAND MANAGER":
-            $level = 3;
-            break;
-        case "SR. LIGHTING DESIGNER":
-            $level = 2;
-            break;
-        case "SR. OFFICE SYSTEMS DESIGNER":
-            $level = 2;
-            break;
-        case "JR. ACCOUNT EXECUTIVE":
-            $level = 1;
-            break;
-        case "ACCOUNT EXECUTIVE":
-            $level = 1;
-            break;
-        case "SR. ACCOUNT EXECUTIVE":
-            $level = 1;
-            break;
-    }
 
-    return $level;
+    return $title;
+    
+    // $level = 0;
+    // switch ($title) {
+    //     case "MANAGING DIRECTOR":
+    //         $level = 5;
+    //         break;
+    //     case "CHIEF ADVISOR":
+    //         $level = 5;
+    //         break;
+    //     case "LIGHTING MANAGER":
+    //         $level = 4;
+    //         break;
+    //     case "OFFICE SYSTEMS MANAGER":
+    //         $level = 4;
+    //         break;
+    //     case "OPERATIONS MANAGER":
+    //         $level = 4;
+    //         break;
+    //     case "BRAND MANAGER":
+    //         $level = 4;
+    //         break;
+    //     case "ASSISTANT LIGHTING MANAGER":
+    //         $level = 3;
+    //         break;
+    //     case "ASSISTANT OFFICE SYSTEMS MANAGER":
+    //         $level = 3;
+    //         break;
+    //     case "ASSISTANT OPERATIONS MANAGER":
+    //         $level = 3;
+    //         break;
+    //     case "ASSISTANT BRAND MANAGER":
+    //         $level = 3;
+    //         break;
+    //     case "SR. LIGHTING DESIGNER":
+    //         $level = 2;
+    //         break;
+    //     case "SR. OFFICE SYSTEMS DESIGNER":
+    //         $level = 2;
+    //         break;
+    //     case "JR. ACCOUNT EXECUTIVE":
+    //         $level = 1;
+    //         break;
+    //     case "ACCOUNT EXECUTIVE":
+    //         $level = 1;
+    //         break;
+    //     case "SR. ACCOUNT EXECUTIVE":
+    //         $level = 1;
+    //         break;
+    // }
+
+    // return $level;
 }
 
 function CombineWithDS($db, $my_department, $my_level, $my_id)
 {
 
-        $sql = "SELECT pm.id stage_id, 
+        $sql = "SELECT pm.id, 
                         pm.title, 
                         pm.due_date, 
                         pm.due_time, 
@@ -362,7 +369,7 @@ function CombineWithDS($db, $my_department, $my_level, $my_id)
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
-        $stage_id = 0;
+        $id = 0;
         $title = "";
         $due_date = "";
         $due_time = "";
@@ -376,7 +383,7 @@ function CombineWithDS($db, $my_department, $my_level, $my_id)
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
            
-            $stage_id = $row['stage_id'];
+            $id = $row['id'];
             $title = $row['due_time'] . ' ' . 
                     '[DS]' .
                     
@@ -393,7 +400,8 @@ function CombineWithDS($db, $my_department, $my_level, $my_id)
             $level = GetTitleLevel($row['user_title']);
 
             $merged_results[] = array(
-                "stage_id" => $stage_id,
+                "id" => $id,
+                "stage_id" => 0,
                 "title" => $title,
                 "due_date" => $due_date,
                 "due_time" => ($due_time == '' ? '23:59:59' : $due_time . '00'),
