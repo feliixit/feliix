@@ -353,7 +353,7 @@ function CombineWithDS($db, $my_department, $my_level, $my_id)
                         pm.due_time, 
                         pm.`status` task_status, 
                         pm.create_id, 
-                        'AD' category, 
+                        'DS' category, 
                         '' project_name, 
                         pm.collaborator, 
                         pm.assignee,
