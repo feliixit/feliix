@@ -97,7 +97,7 @@
         if(creator_id === uid)
             can_close = true;
 
-        if(department === 'LT')
+        if(department === 'Lighting')
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
                 can_close = true;
@@ -127,7 +127,7 @@
             }
         }
 
-        if(department === 'OS')
+        if(department === 'Office Systems')
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
                 can_close = true;
