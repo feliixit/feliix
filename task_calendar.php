@@ -135,7 +135,14 @@
         if(department === 'Office Systems')
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
-                can_close = true;
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
 
             if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
             {
@@ -165,7 +172,14 @@
         if(department === 'AD')
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
-                can_close = true;
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
 
             if(level === "OPERATIONS MANAGER")
             {
@@ -179,7 +193,14 @@
         if(department === 'DS')
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
-                can_close = true;
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
 
             if(level === "BRAND MANAGER")
             {
