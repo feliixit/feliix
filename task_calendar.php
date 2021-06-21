@@ -94,13 +94,18 @@
     function CanClose(uid, creator_id, level, creator_level, department){
         let can_close = false;
 
-        if(creator_id === uid)
-            can_close = true;
-
         if(department === 'Lighting')
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
-                can_close = true;
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+                
 
             if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
             {
@@ -184,6 +189,9 @@
                 }
             }
         }
+
+        if(creator_id === uid)
+            can_close = true;
 
         return can_close;
     }
