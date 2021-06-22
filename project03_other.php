@@ -3915,11 +3915,11 @@ catch (Exception $e) {
                                         oneClickTimer = setTimeout(function() {
                                             clickCnt = 0;
                                             if(info.event.extendedProps.category == 'AD')
-                                                window.open('https://feliixtest.myvnc.com/task_management_AD?sid=' + info.event.id, "_blank");
+                                                window.open('https://feliix.myvnc.com/task_management_AD?sid=' + info.event.id, "_blank");
                                             else if(info.event.extendedProps.category == 'DS')
-                                                window.open('https://feliixtest.myvnc.com/task_management_DS?sid=' + info.event.id, "_blank");
+                                                window.open('https://feliix.myvnc.com/task_management_DS?sid=' + info.event.id, "_blank");
                                             else
-                                                window.open('https://feliixtest.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
+                                                window.open('https://feliix.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
                                         }, 400);
                                         
                                     } else if (clickCnt === 2) {
