@@ -1467,7 +1467,7 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_d` (
 -- quotation and management v2
 
 ALTER TABLE project_main
-ADD COLUMN `tax_withheld` decimal(11, 8) default 0.0 AFTER final_amount;
+ADD COLUMN `tax_withheld` decimal(11, 2) null default null AFTER final_amount;
 
 ALTER TABLE project_main
 ADD COLUMN `billing_name` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER tax_withheld;
@@ -1486,3 +1486,7 @@ CREATE TABLE IF NOT EXISTS `project_client_po` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
+ALTER TABLE project_main
+MODIFY  `tax_withheld` decimal(11, 2) null default NULL;
+
+UPDATE project_main SET tax_withheld = NULL WHERE tax_withheld = 0.0;

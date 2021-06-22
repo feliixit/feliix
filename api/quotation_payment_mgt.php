@@ -63,7 +63,7 @@ $of2 = (isset($_GET['of2']) ?  $_GET['of2'] : '');
 $ofd2 = (isset($_GET['ofd2']) ?  $_GET['ofd2'] : '');
 
 $page = (isset($_GET['page']) ?  $_GET['page'] : 1);
-$size = (isset($_GET['size']) ?  $_GET['size'] : 10);
+$size = (isset($_GET['size']) ?  $_GET['size'] : 5);
 
 $merged_results = array();
 $return_result = array();
@@ -92,6 +92,8 @@ $query = "SELECT pm.id,
             pp.class_name                                pp_class,
             pm.project_name,
             pm.final_amount,
+            pm.tax_withheld,
+            pm.billing_name,
             (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1) payment,
             (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0) dp_payment,
             Coalesce(ps.project_status, '')              project_status,
@@ -332,7 +334,7 @@ if($fk == "")
     if(!empty($_GET['size'])) {
         $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
         if(false === $size) {
-            $size = 10;
+            $size = 5;
         }
 
         $offset = ($page - 1) * $size;
@@ -371,6 +373,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $dpm = $row['dp_payment'];
 
     $final_amount = $row['final_amount'];
+    $tax_withheld = $row['tax_withheld'];
+    $billing_name = $row['billing_name'];
 
     $quote_file_string = GetQuoteFileString($row['id'], $db);
 
@@ -387,7 +391,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if($down_payment_amount != null)
             $down_pay = $down_payment_amount;
 
-        $ar = $final_amount - $pay - $down_pay;
+        $ar = $final_amount - $pay - $down_pay - $tax_withheld;
     }
 
     $created_at = $row['created_at'];
@@ -395,7 +399,23 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $stage = $row['stage'];
     $quote = GetQuote($row['id'], $db);
     $payment = GetPayment($row['id'], $db);
+
+    $client_po = GetClientPO($row['id'], $db);
+    $client_other = GetClientOther($row['id'], $db);
+
+    $client_po_files = GetClientPOFile($row['id'], $db);
+    $client_other_files = GetClientOtherFile($row['id'], $db);
+
     $final_quotation = GetFinalQuote($row['id'], $db);
+
+    $down_pay_amount = RetriveDownPaymentAmount($payment);
+    $down_pay_date = RetriveDownPaymentDate($payment);
+
+    $full_pay_amount = RetrivePaymentAmount($payment);
+    $full_pay_date = RetrivePaymentDate($payment);
+
+    $invoice = RetrieveInvoice($payment);
+
 
     $merged_results[] = array(
         "id" => $id,
@@ -416,8 +436,20 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_at" => $updated_at,
         "stage" => $stage,
         "final_amount" => $final_amount,
+        "tax_withheld" => $tax_withheld,
+        "net_amount" => ($final_amount - $tax_withheld == 0 ? "" : $final_amount - $tax_withheld),
+        "billing_name" => $billing_name,
         "quote" => $quote,
+        "client_po" => $client_po,
+        "client_other" => $client_other,
+        "client_po_file" => $client_po_files,
+        "client_other_file" => $client_other_files,
         "payment" => $payment,
+        "down_pay_amount" => $down_pay_amount,
+        "down_pay_date" => $down_pay_date,
+        "full_pay_amount" => $full_pay_amount,
+        "full_pay_date" => $full_pay_date,
+        "invoice" => $invoice,
         "pm" => $pm,
         "dpm" => $dpm,
         "quote_file_string" => $quote_file_string,
@@ -471,6 +503,62 @@ function GetFinalQuote($project_id, $db){
         WHERE  project_id = " . $project_id . "
             AND pm.status <> -1 
             AND pm.final_quotation = 1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetClientOtherFile($project_id, $db){
+    $query = "
+        SELECT 
+            COALESCE(f.filename, '') filename, 
+            COALESCE(f.bucketname, '') bucket, 
+            COALESCE(f.gcp_name, '') gcp_name
+        FROM gcp_storage_file f 
+           
+        LEFT JOIN   project_client_po pm
+            ON f.batch_id = pm.id AND f.batch_type = 'client_other' 
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+  
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetClientPOFile($project_id, $db){
+    $query = "
+        SELECT 
+            COALESCE(f.filename, '') filename, 
+            COALESCE(f.bucketname, '') bucket, 
+            COALESCE(f.gcp_name, '') gcp_name
+        FROM  gcp_storage_file f 
+           
+        LEFT JOIN  project_client_po pm 
+            ON f.batch_id = pm.id AND f.batch_type = 'client_po' 
+        WHERE  project_id = " . $project_id . "
+            AND pm.status <> -1 
+ 
     ";
 
     // prepare the query
@@ -581,6 +669,148 @@ function GetDownPaymentAmount($project_id, $db){
     return $amount;
 }
 
+
+function GetClientPO($project_id, $db){
+    $query = "
+        SELECT pm.id,
+            pm.remark,
+            u.username,
+            pm.created_at,
+            pm.kind
+        FROM   project_client_po pm
+            LEFT JOIN user u
+                ON u.id = pm.create_id
+        WHERE  project_id = " . $project_id . "
+            AND pm.`kind` = 1 AND pm.status <> -1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $remark = $row['remark'];
+        $username = $row['username'];
+        $created_at = $row['created_at'];
+        $kind = $row['kind'];
+     
+        $items = GetItem($row['id'], $db, 'client_po');
+
+        $searchstr = $remark . " "  . GetItemString($row['id'], $db, 'client_po') . " " . $username;
+        $create = substr($created_at, 0, 10);
+        $searchstr = $create . " " . $searchstr;
+        $merged_results[] = array(
+            "id" => $id,
+            "comment" => $remark,
+            "username" => $username,
+            "created_at" => $created_at,
+            "kind" => $kind,
+            "items" => $items,
+            "create" => $create,
+            "searchstr" => strtolower($searchstr),
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetClientRemarks($project_id, $db){
+    $query = "
+        SELECT pm.id,
+            pm.remark,
+            u.username,
+            pm.created_at,
+            pm.kind
+        FROM   project_client_po pm
+            LEFT JOIN user u
+                ON u.id = pm.create_id
+        WHERE  project_id = " . $project_id . "
+            AND pm.`kind` = 3 AND pm.status <> -1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $remark = $row['remark'];
+        $username = $row['username'];
+        $created_at = $row['created_at'];
+        $kind = $row['kind'];
+     
+        $items = GetItem($row['id'], $db, 'client_other');
+
+        $searchstr = ($kind ==  '2' ? 'Other Files' : 'Remarks/Status') . " " . $remark . " "  . GetItemString($row['id'], $db, 'client_po') . " " . $username;
+        $create = substr($created_at, 0, 10);
+        $searchstr = $create . " " . $searchstr;
+        $merged_results[] = array(
+            "id" => $id,
+            "comment" => $remark,
+            "username" => $username,
+            "created_at" => $created_at,
+            "kind" => $kind,
+            "items" => $items,
+            "create" => $create,
+            "searchstr" => strtolower($searchstr),
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetClientOther($project_id, $db){
+    $query = "
+        SELECT pm.id,
+            pm.remark,
+            u.username,
+            pm.created_at,
+            pm.kind
+        FROM   project_client_po pm
+            LEFT JOIN user u
+                ON u.id = pm.create_id
+        WHERE  project_id = " . $project_id . "
+            AND pm.`kind` <> 1 AND pm.status <> -1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $remark = $row['remark'];
+        $username = $row['username'];
+        $created_at = $row['created_at'];
+        $kind = $row['kind'];
+     
+        $items = GetItem($row['id'], $db, 'client_other');
+
+        $searchstr = ($kind ==  '2' ? 'Other Files' : 'Remarks/Status') . " " . $remark . " "  . GetItemString($row['id'], $db, 'client_po') . " " . $username;
+        $create = substr($created_at, 0, 10);
+        $searchstr = $create . " " . $searchstr;
+        $merged_results[] = array(
+            "id" => $id,
+            "comment" => $remark,
+            "username" => $username,
+            "created_at" => $created_at,
+            "kind" => $kind,
+            "items" => $items,
+            "create" => $create,
+            "searchstr" => strtolower($searchstr),
+        );
+    }
+
+    return $merged_results;
+}
+
 function GetPayment($project_id, $db){
     $query = "
         SELECT pm.id,
@@ -640,7 +870,7 @@ function GetPayment($project_id, $db){
                 $status = "Under Checking";
         }
 
-        $searchstr = ($kind ==  '0' ? 'Down Payment' : 'Payment') . " " . $remark . " " . $status . " " . GetItemString($row['id'], $db, 'proof') . " " . $username . " " . $amount;
+        $searchstr = ($kind ==  '0' ? 'Down Payment' : 'Full Payment') . " " . $remark . " " . $status . " " . GetItemString($row['id'], $db, 'proof') . " " . $username . " " . $amount;
         $create = substr($created_at, 0, 10);
         $merged_results[] = array(
             "id" => $id,
@@ -762,5 +992,59 @@ function GetQuoteFileString($project_id, $db){
         $merged_results .= $row['filename'] . " ";
     }
 
+    return $merged_results;
+}
+
+function RetriveDownPaymentAmount($payment) {
+    $merged_results = [];
+
+    foreach($payment as $pay)
+    {
+        if($pay["kind"] == 0)
+            array_push($merged_results,$pay["amount"]);
+    }
+    return $merged_results;
+}
+
+function RetriveDownPaymentDate($payment) {
+    $merged_results = [];
+
+    foreach($payment as $pay)
+    {
+        if($pay["kind"] == 0)
+            array_push($merged_results, $pay["received_date"] == "" ? "N/A" : $pay["received_date"]);
+    }
+    return $merged_results;
+}
+
+function RetrivePaymentAmount($payment) {
+    $merged_results = [];
+
+    foreach($payment as $pay)
+    {
+        if($pay["kind"] == 1)
+            array_push($merged_results,$pay["amount"]);
+    }
+    return $merged_results;
+}
+
+function RetrivePaymentDate($payment) {
+    $merged_results = [];
+
+    foreach($payment as $pay)
+    {
+        if($pay["kind"] == 1)
+            array_push($merged_results, $pay["received_date"] == "" ? "N/A" : $pay["received_date"]);
+    }
+    return $merged_results;
+}
+
+function RetrieveInvoice($payment) {
+    $merged_results = [];
+
+    foreach($payment as $pay)
+    {
+        array_push($merged_results, $pay["invoice"] == "" ? "N/A" : $pay["invoice"]);
+    }
     return $merged_results;
 }

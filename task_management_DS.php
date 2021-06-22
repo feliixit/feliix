@@ -92,8 +92,11 @@ catch (Exception $e) {
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css" />
     <link rel="stylesheet" href="css/vue-select.css" type="text/css">
 
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/fullcalendar@5.1.0/main.min.css">
-    <script defer type="text/javascript" src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
+    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css'>
+    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.0/main.min.css'>
+    <script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
+    <script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+
     <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <!-- jQuery和js載入 -->
@@ -3018,7 +3021,131 @@ catch (Exception $e) {
 
 
 <script>
-    var eventObj;
+    function CanClose(uid, creator_id, level, creator_level, department){
+        let can_close = false;
+
+        if(department === 'Lighting')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+                
+
+            if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
+            {
+                if(creator_level === "ASSISTANT LIGHTING MANAGER" || creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT LIGHTING MANAGER" )
+            {
+                if(creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. LIGHTING DESIGNER" )
+            {
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'Office Systems')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+
+            if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
+            {
+                if(creator_level === "ASSISTANT OFFICE SYSTEMS MANAGER" || creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT OFFICE SYSTEMS MANAGER" )
+            {
+                if(creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. OFFICE SYSTEMS DESIGNER" )
+            {
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'AD')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+
+            if(level === "OPERATIONS MANAGER")
+            {
+                if(creator_level === "ASSISTANT OPERATIONS MANAGER")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'DS')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+
+            if(level === "BRAND MANAGER")
+            {
+                if(creator_level === "ASSISTANT Brand Manager")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(creator_id === uid)
+            can_close = true;
+
+        return can_close;
+    }
 
     var calendarT1 = document.getElementById('task_calendar');
     var calendar_task;
@@ -3058,20 +3185,27 @@ catch (Exception $e) {
             data: form_Data,
 
             success: function(result) {
-                console.log(result);
+                //console.log(result);
                 var obj = JSON.parse(result);
                 if (obj !== undefined) {
                     var arrayLength = obj.length;
                     for (var i = 0; i < arrayLength; i++) {
-                        console.log(obj[i]);
+                        //console.log(obj[i]);
 
                         var obj_meeting = {
-                            id: obj[i].stage_id,
+                            id: obj[i].id,
                             title: obj[i].title,
-                            url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                             backgroundColor: obj[i].color,
                             borderColor: obj[i].color,
+                            extendedProps: {
+                                create_id:obj[i].create_id,
+                                category:obj[i].category,
+                                level:obj[i].level,
+                                task_status:obj[i].task_status,
+                                stage_id:obj[i].stage_id,
+                            },
                         };
 
                         temp.push(obj_meeting);
@@ -3090,6 +3224,11 @@ catch (Exception $e) {
 
     document.addEventListener('DOMContentLoaded', function() {
 
+        let clickCnt = 0;
+        let my_id = 0;
+        let my_level = 0;
+        let my_department = "";
+        
         let event_array_task = [];
         //將Task從資料庫中加入array
         //需要讀出task的 (1)專案名稱 (2)task名稱 (3) task 的due date (4) task 所在的 project03_other頁面網址 (5) task 在日曆中的顏色 (6) task 的 creator
@@ -3112,27 +3251,45 @@ catch (Exception $e) {
             data: form_Data,
 
             success: function(result) {
-                console.log(result);
+                //console.log(result);
                 var obj = JSON.parse(result);
                 if (obj !== undefined) {
                     var arrayLength = obj.length;
                     for (var i = 0; i < arrayLength; i++) {
-                        console.log(obj[i]);
+                        //console.log(obj[i]);
 
                         var obj_meeting = {
-                            id: obj[i].stage_id,
+                            id: obj[i].id,
                             title: obj[i].title,
-                            url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                             start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                             backgroundColor: obj[i].color,
                             borderColor: obj[i].color,
+                            extendedProps: {
+                                create_id:obj[i].create_id,
+                                category:obj[i].category,
+                                level:obj[i].level,
+                                task_status:obj[i].task_status,
+                                stage_id:obj[i].stage_id,
+                            },
                         };
 
                         event_array_task.push(obj_meeting);
                     }
+
+                    if(arrayLength > 0)
+                    {
+                        my_level = obj[0].my_l;
+                        my_id = obj[0].my_i;
+                        my_department = obj[0].my_d;
+                    }
                 }
 
                 calendar_task = new FullCalendar.Calendar(calendarT1, {
+
+                    plugins: [ 'dayGrid' ],
+                    timeZone: 'UTC',
+                    defaultView: 'dayGridMonth',
 
                     contentHeight: 'auto',
 
@@ -3142,7 +3299,7 @@ catch (Exception $e) {
                         day: '2-digit'
                     },
 
-                    headerToolbar: {
+                    header: {
                         left: 'prev,next today',
                         center: 'title',
                         right: 'individual,admin,design,lighting,furniture,overall',
@@ -3184,26 +3341,33 @@ catch (Exception $e) {
                                     data: form_Data,
 
                                     success: function(result) {
-                                        console.log(result);
+                                        //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var obj_meeting = {
-                                                    id: obj[i].stage_id,
+                                                    id: obj[i].id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                    //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
+                                                    },
                                                 };
 
                                                 temp.push(obj_meeting);
                                             }
                                         }
-
+                                        event_array_task = temp;
 
                                         calendar_task.addEventSource(temp);
 
@@ -3243,27 +3407,34 @@ catch (Exception $e) {
                                     data: form_Data,
 
                                     success: function(result) {
-                                        console.log(result);
+                                        //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var obj_meeting = {
-                                                    id: obj[i].stage_id,
+                                                    id: obj[i].id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/task_management_AD?sid=' + obj[i].stage_id,
+                                                    //url: 'https://feliix.myvnc.com/task_management_AD?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
+                                                    },
                                                 };
 
                                                 temp.push(obj_meeting);
                                             }
                                         }
 
-
+                                        event_array_task = temp;
                                         calendar_task.addEventSource(temp);
 
                                     }
@@ -3302,27 +3473,34 @@ catch (Exception $e) {
                                     data: form_Data,
 
                                     success: function(result) {
-                                        console.log(result);
+                                        //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var obj_meeting = {
-                                                    id: obj[i].stage_id,
+                                                    id: obj[i].id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/task_management_DS?sid=' + obj[i].stage_id,
+                                                    //url: 'https://feliix.myvnc.com/task_management_DS?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
+                                                    },
                                                 };
 
                                                 temp.push(obj_meeting);
                                             }
                                         }
 
-
+                                        event_array_task = temp;
                                         calendar_task.addEventSource(temp);
 
                                     }
@@ -3361,27 +3539,34 @@ catch (Exception $e) {
                                     data: form_Data,
 
                                     success: function(result) {
-                                        console.log(result);
+                                        //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var obj_meeting = {
-                                                    id: obj[i].stage_id,
+                                                    id: obj[i].id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                    //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
+                                                    },
                                                 };
 
                                                 temp.push(obj_meeting);
                                             }
                                         }
 
-
+                                        event_array_task = temp;
                                         calendar_task.addEventSource(temp);
 
                                     }
@@ -3420,27 +3605,34 @@ catch (Exception $e) {
                                     data: form_Data,
 
                                     success: function(result) {
-                                        console.log(result);
+                                        //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var obj_meeting = {
-                                                    id: obj[i].stage_id,
+                                                    id: obj[i].id,
                                                     title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                    //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
                                                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
                                                     backgroundColor: obj[i].color,
                                                     borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
+                                                    },
                                                 };
 
                                                 temp.push(obj_meeting);
                                             }
                                         }
 
-
+                                        event_array_task = temp;
                                         calendar_task.addEventSource(temp);
 
                                     }
@@ -3478,27 +3670,34 @@ catch (Exception $e) {
                                     data: form_Data,
 
                                     success: function(result) {
-                                        console.log(result);
+                                        //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var obj_meeting = {
-                                                    id: obj[i].stage_id,
-                                                    title: obj[i].title,
-                                                    url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                                    start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                    backgroundColor: obj[i].color,
-                                                    borderColor: obj[i].color,
-                                                };
+                                                            id: obj[i].id,
+                                                            title: obj[i].title,
+                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
+                                                            backgroundColor: obj[i].color,
+                                                            borderColor: obj[i].color,
+                                                            extendedProps: {
+                                                                create_id:obj[i].create_id,
+                                                                category:obj[i].category,
+                                                                level:obj[i].level,
+                                                                task_status:obj[i].task_status,
+                                                                stage_id:obj[i].stage_id,
+                                                            },
+                                                        };
 
                                                 temp.push(obj_meeting);
                                             }
                                         }
 
-
+                                        event_array_task = temp;
                                         calendar_task.addEventSource(temp);
 
                                     }
@@ -3508,22 +3707,78 @@ catch (Exception $e) {
                     },
 
 
-                    eventClick: function(info) {
-                        eventObj = info.event;
-
-                        //點擊會在新視窗中打開task所在的project03_other相關頁面
-                        if (eventObj.url) {
-                            info.jsEvent.preventDefault(); // prevents browser from following link in current tab.
-                            window.open(eventObj.url, "_blank");
-
-                        } else {
-                            alert('No url provided: ' + eventObj.title);
-                        }
-                    },
-
-                    editable: false,
-
                     events: event_array_task,
+
+                            eventRender: function (info) {
+
+                                //wired listener to handle click counts instead of event type
+                                info.el.addEventListener('click', function() {
+                                        clickCnt++;         
+                                    if (clickCnt === 1) {
+                                        oneClickTimer = setTimeout(function() {
+                                            clickCnt = 0;
+                                            if(info.event.extendedProps.category == 'AD')
+                                                window.open('https://feliix.myvnc.com/task_management_AD?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'DS')
+                                                window.open('https://feliix.myvnc.com/task_management_DS?sid=' + info.event.id, "_blank");
+                                            else
+                                                window.open('https://feliix.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
+                                        }, 400);
+                                        
+                                    } else if (clickCnt === 2) {
+                                        clearTimeout(oneClickTimer);
+                                        clickCnt = 0;
+                                        
+                                        if(info.event.extendedProps.task_status != 2)
+                                        {
+                                            if(CanClose(my_id, info.event.extendedProps.create_id, my_level, info.event.extendedProps.level, info.event.extendedProps.category))
+                                            {
+                                                var token = localStorage.getItem('token');
+
+                                                localStorage.getItem('token');
+                                                var form_Data = new FormData();
+                                                form_Data.append('id', info.event.id);
+                                                form_Data.append('category', info.event.extendedProps.category);
+
+                                                let _info = info;
+
+                                                $.ajax({
+                                                    url: "api/project03_other_task_calendar_close_task",
+                                                    type: "POST",
+                                                    contentType: 'multipart/form-data',
+                                                    processData: false,
+                                                    contentType: false,
+                                                    data: form_Data,
+
+                                                    success: function(result) {
+                                                        //console.log(result);
+                                                    
+                                                        for (let i=0; i<event_array_task.length; i++) {
+                                                            if(event_array_task[i].id === _info.event.id && event_array_task[i].extendedProps.category === _info.event.extendedProps.category)
+                                                            {
+                                                                event_array_task[i].backgroundColor = 'green';
+                                                                event_array_task[i].borderColor = 'green';
+                                                                event_array_task[i].extendedProps.task_status = 2;
+
+                                                                calendar_task.removeAllEvents();
+                                                                calendar_task.addEventSource(event_array_task);
+                                                            }
+                                                        }
+                                                        
+                                                    }
+                                                });
+                                            }
+                                            else
+                                                console.log(info.event.extendedProps);
+                                        }
+                                    
+                                    }          
+                                });
+                            },
+
+                            
+
+                            editable: false,
                 });
 
                 calendar_task.render();
@@ -3577,12 +3832,12 @@ catch (Exception $e) {
             data: form_Data,
 
             success: function(result) {
-                console.log(result);
+                //console.log(result);
                 var obj = JSON.parse(result);
                 if (obj !== undefined) {
                     var arrayLength = obj.length;
                     for (var i = 0; i < arrayLength; i++) {
-                        console.log(obj[i]);
+                        //console.log(obj[i]);
 
                         var title = "";
                         if (obj[i].project_name.trim() === '')
@@ -3625,6 +3880,10 @@ catch (Exception $e) {
                 //初始化 fullcalendar 物件
                 calendar = new FullCalendar.Calendar(calendarEl, {
 
+                    plugins: [ 'dayGrid' ],
+                    timeZone: 'UTC',
+                    defaultView: 'dayGridMonth',
+                    
                     contentHeight: 'auto',
 
                     titleFormat: { // will produce something like "Tuesday, September 18, 2018"
@@ -3633,7 +3892,7 @@ catch (Exception $e) {
                         day: '2-digit'
                     },
 
-                    headerToolbar: {
+                    header: {
                         left: 'prev,next addEventButton',
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek'

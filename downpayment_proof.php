@@ -270,7 +270,7 @@ $(function(){
                     </ul>
                     <ul>
                         <li class="head">Type</li>
-                        <li>{{ (record.kind == 0) ? "Down Payment" : "Payment" }}</li>
+                        <li>{{ (record.kind == 0) ? "Down Payment" : "Full Payment" }}</li>
                     </ul>
                     <ul>
                         <li class="head">Status</li>

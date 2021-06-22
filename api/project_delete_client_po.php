@@ -9,9 +9,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 $pid = (isset($_POST['pid']) ?  $_POST['pid'] : '');
-$amount = (isset($_POST['amount']) ?  $_POST['amount'] : 0);
-$tax_withheld = (isset($_POST['tax_withheld']) ?  $_POST['tax_withheld'] : 0);
-$billing_name = (isset($_POST['billing_name']) ?  $_POST['billing_name'] : "");
+$final = (isset($_POST['final']) ?  $_POST['final'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -51,18 +49,16 @@ if (!isset($jwt)) {
 
         $uid = $user_id;
 
-        $query = "update project_main
-                    set final_amount = :amount,
-                    tax_withheld = :tax_withheld,
-                    billing_name = :billing_name
-                  where id = :project_id ";
+        $query = "update project_client_po 
+                    set status = -1,
+                    updated_id = :updated_id,
+                    updated_at = now()
+                  where project_id = :project_id and id in (" . $final .")";
 
         $stmt = $db->prepare( $query );
         // bind the values
         $stmt->bindParam(':project_id', $pid);
-        $stmt->bindParam(':amount', $amount);
-        $stmt->bindParam(':tax_withheld', $tax_withheld);
-        $stmt->bindParam(':billing_name', $billing_name);
+        $stmt->bindParam(':updated_id', $uid);
 
         try {
             // execute the query, also check if query was successful
@@ -84,9 +80,10 @@ if (!isset($jwt)) {
         }
 
         $db->commit();
+        
 
         http_response_code(200);
-        echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        echo json_encode(array("message" => " at " . date("Y-m-d") . " " . date("h:i:sa")));
     } catch (Exception $e) {
 
         error_log($e->getMessage());
