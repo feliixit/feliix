@@ -760,7 +760,7 @@ var app = new Vue({
       let token = localStorage.getItem("accessToken");
 
       axios
-        .get("api/admin/project_creators", {
+        .get("api/admin/petty_creators", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then(
