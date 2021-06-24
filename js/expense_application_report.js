@@ -95,10 +95,10 @@ var app = new Vue({
               _this.fil_creator = decodeURI(tmp[1]);
               break;
             case "ft":
-              _this.ft = tmp[1];
+              _this.fil_type = tmp[1];
               break;
             case "fs":
-              _this.fs = tmp[1];
+              _this.fil_status = tmp[1];
               break;
             case "fat":
               _this.fil_amount_type = tmp[1];

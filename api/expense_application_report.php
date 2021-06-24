@@ -68,7 +68,9 @@ switch ($method) {
 
         $ftd = (isset($_GET['ftd']) ?  $_GET['ftd'] : '');
         $fds = (isset($_GET['fds']) ?  $_GET['fds'] : '');
+        $fds = str_replace('-', '/', $fds);
         $fde = (isset($_GET['fde']) ?  $_GET['fde'] : '');
+        $fde = str_replace('-', '/', $fde);
 
         $of1 = (isset($_GET['of1']) ?  $_GET['of1'] : '');
         $ofd1 = (isset($_GET['ofd1']) ?  $_GET['ofd1'] : '');
@@ -283,9 +285,9 @@ if($of1 != "" && $of1 != "0")
             break;
         case 5:
             if($ofd1 == 2)
-                $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
+                $sOrder = "Coalesce(pm.date_requested, '0000-00-00') desc";
             else
-                $sOrder = "Coalesce(pm.created_at, '9999-99-99')";
+                $sOrder = "Coalesce(pm.date_requested, '9999-99-99')";
             break;
         case 6:
             if($ofd1 == 2)
@@ -358,9 +360,9 @@ if($of2 != "" && $of2 != "0" && $sOrder != "")
             break;
         case 5:
             if($ofd2 == 2)
-                $sOrder .= ", Coalesce(pm.created_at, '0000-00-00') desc";
+                $sOrder .= ", Coalesce(pm.date_requested, '0000-00-00') desc";
             else
-                $sOrder .= ", Coalesce(pm.created_at, '9999-99-99')";
+                $sOrder .= ", Coalesce(pm.date_requested, '9999-99-99')";
             break;
         case 6:
             if($ofd2 == 2)
@@ -432,9 +434,9 @@ if($of2 != "" && $of2 != "0" && $sOrder == "")
             break;
         case 5:
             if($ofd2 == 2)
-                $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
+                $sOrder = "Coalesce(pm.date_requested, '0000-00-00') desc";
             else
-                $sOrder = "Coalesce(pm.created_at, '9999-99-99')";
+                $sOrder = "Coalesce(pm.date_requested, '9999-99-99')";
             break;
         case 6:
             if($ofd2 == 2)
@@ -879,7 +881,7 @@ function GetReleaseHistory($_id, $db)
 function GetApprove1History($_id, $db)
 {
     $sql = "select DATE_FORMAT(pm.created_at, '%Y/%m/%d') dt, `status` from petty_history pm 
-            where  petty_id = " . $_id . " and `action` = 'OP Approved' order by created_at desc limit 1";
+            where  `status` <> -1 and petty_id = " . $_id . " and `action` = 'OP Approved' order by created_at desc limit 1";
 
     $merged_results = "";
 
