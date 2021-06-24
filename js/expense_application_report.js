@@ -23,6 +23,8 @@ var app = new Vue({
     //perPage: 10,
     pages: [],
 
+    pages_10: [],
+
     inventory: [
       {name: '10', id: 10},
       {name: '25', id: 25},
@@ -34,6 +36,31 @@ var app = new Vue({
     perPage: 10,
 
     is_approval: false,
+
+    creators: {},
+
+    fil_request_no_upper: "",
+    fil_request_no_lower: "",
+    
+    fil_creator: "",
+    fil_type: "",
+    fil_status: "",
+    fil_amount_type : "",
+    
+    fil_amount_upper: "",
+    fil_amount_lower: "",
+
+    fil_type_date: "",
+    fil_date_start: "",
+    fil_date_end: "",
+ 
+    fil_keyowrd: "",
+
+    od_factor1: "",
+    od_factor1_order: "",
+    od_factor2: "",
+    od_factor2_order: "",
+    
   },
 
   created() {
@@ -42,23 +69,88 @@ var app = new Vue({
 
     let _this = this;
     let uri = window.location.href.split('?');
-    if (uri.length == 2)
+
+    let id = 0;
+
+    if (uri.length >= 2)
     {
       let vars = uri[1].split('&');
-      let getVars = {};
+      
       let tmp = '';
       vars.forEach(function(v){
         tmp = v.split('=');
         if(tmp.length == 2)
         {
-          _this.getLeaveCredit(tmp[1]);
+          switch (tmp[0]) {
+            case "id":
+              id = tmp[1];
+              break;
+            case "fru":
+              _this.fil_request_no_upper = tmp[1];
+              break;
+            case "frl":
+              _this.fil_request_no_lower = tmp[1];
+              break;
+            case "fc":
+              _this.fil_creator = decodeURI(tmp[1]);
+              break;
+            case "ft":
+              _this.ft = tmp[1];
+              break;
+            case "fs":
+              _this.fs = tmp[1];
+              break;
+            case "fat":
+              _this.fil_amount_type = tmp[1];
+              break;
+            case "fau":
+              _this.fil_amount_upper = tmp[1];
+              break;
+            case "fal":
+              _this.fil_amount_lower = tmp[1];
+              break;
+            case "ftd":
+              _this.fil_type_date = tmp[1];
+              break;
+            case "fds":
+              _this.fil_date_start = tmp[1];
+              break;
+            case "fde":
+              _this.fil_date_end = tmp[1];
+              break;
+        
+            case "of1":
+              _this.od_factor1 = tmp[1];
+              break;
+            case "ofd1":
+              _this.od_factor1_order = tmp[1];
+              break;
+            case "of2":
+              _this.od_factor2 = tmp[1];
+              break;
+            case "ofd2":
+              _this.od_factor2_order = tmp[1];
+              break;
+            case "pg":
+              _this.pg = tmp[1];
+              break;
+            case "page":
+              _this.page = tmp[1];
+              break;
+            case "size":
+              _this.perPage = tmp[1];
+              break;
+            default:
+              console.log(`Too many args`);
+          }
           //_this.proof_id = tmp[1];
         }
-        
       });
     }
-    else
-      this.getLeaveCredit(0);
+
+    this.getLeaveCredit(id);
+
+    this.getCreators();
   },
 
   computed: {
@@ -76,10 +168,10 @@ var app = new Vue({
 
   watch: {
 
-    receive_records () {
+    // receive_records () {
 
-      this.setPages();
-    },
+    //   this.setPages();
+    // },
 
     proof_id() {
       this.detail();
@@ -87,6 +179,38 @@ var app = new Vue({
   },
 
   methods: {
+    pre_page: function(){
+      let tenPages = Math.floor((this.page - 1) / 10) + 1;
+
+        this.page = parseInt(this.page) - 10;
+        if(this.page < 1)
+          this.page = 1;
+ 
+        this.pages_10 = [];
+
+        let from = tenPages * 10;
+        let to = (tenPages + 1) * 10;
+
+        this.pages_10 = this.pages.slice(from, to);
+      
+    },
+
+    nex_page: function(){
+      let tenPages = Math.floor((this.page - 1) / 10) + 1;
+
+      this.page = parseInt(this.page) + 10;
+      if(this.page > this.pages.length)
+        this.page = this.pages.length;
+
+      let from = tenPages * 10;
+      let to = (tenPages + 1) * 10;
+      let pages_10 = this.pages.slice(from, to);
+
+      if(pages_10.length > 0)
+        this.pages_10 = pages_10;
+
+    },
+
     setPages() {
       console.log("setPages");
       this.pages = [];
@@ -103,10 +227,21 @@ var app = new Vue({
       if (this.page < 1) this.page = 1;
       if (this.page > this.pages.length) this.page = this.pages.length;
 
+      let tenPages = Math.floor((this.page - 1) / 10);
+      if(tenPages < 0)
+        tenPages = 0;
+      this.pages_10 = [];
+      let from = tenPages * 10;
+      let to = (tenPages + 1) * 10;
+      
+      this.pages_10 = this.pages.slice(from, to);
+
+
       let page = this.page;
       let perPage = this.perPage;
-      let from = page * perPage - perPage;
-      let to = page * perPage;
+      from = page * perPage - perPage;
+      to = page * perPage;
+      
       return this.receive_records.slice(from, to);
     },
 
@@ -117,8 +252,33 @@ var app = new Vue({
     getLeaveCredit: function(id) {
       let _this = this;
 
+      const params = {
+        fru: _this.fil_request_no_upper,
+        frl: _this.fil_request_no_lower,
+        fc: _this.fil_creator,
+        ft: _this.fil_type,
+        fs: _this.fil_status,
+        fat: _this.fil_amount_type,
+        fau: _this.fil_amount_upper,
+        fal: _this.fil_amount_lower,
+        ftd: _this.fil_type_date,
+        fds: _this.fil_date_start,
+        fde: _this.fil_date_end,
+        of1: _this.od_factor1,
+        ofd1: _this.od_factor1_order,
+        of2: _this.od_factor2,
+        ofd2: _this.od_factor2_order,
+        page: _this.page,
+        size: _this.perPage,
+      };
+
+      let token = localStorage.getItem("accessToken");
+
       axios
-        .get("api/expense_application_report")
+        .get("api/expense_application_report", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;
@@ -220,8 +380,107 @@ var app = new Vue({
       
     },
 
+
+    filter_apply: function() {
+      let _this = this;
+
+      if(_this.page < 1) _this.page = 1;
+      if (_this.page > _this.pages.length) _this.page = _this.pages.length;
+      _this.page = 1;
+
+      window.location.href =
+        "expense_application_report?" +
+        "fru=" +
+        _this.fil_request_no_upper +
+        "&frl=" +
+        _this.fil_request_no_lower +
+        "&fc=" +
+        _this.fil_creator +
+        "&ft=" +
+        _this.fil_type +
+        "&fs=" +
+        _this.fil_status +
+        "&fat=" +
+        _this.fil_amount_type +
+        "&fau=" +
+        _this.fil_amount_upper +
+        "&fal=" +
+        _this.fil_amount_lower +
+        "&ftd=" +
+        _this.fil_type_date +
+        "&fds=" +
+        _this.fil_date_start +
+        "&fde=" +
+        _this.fil_date_end +
+        "&of1=" +
+        _this.od_factor1 +
+        "&ofd1=" +
+        _this.od_factor1_order +
+        "&of2=" +
+        _this.od_factor2 +
+        "&ofd2=" +
+        _this.od_factor2_order +
+        "&pg=" +
+        _this.page +
+        "&page=" +
+        _this.page +
+        "&size=" +
+        _this.perPage;
+    },
+
     show_detail:function(id){
       this.proof_id = id;
+    },
+
+    filter_remove: function() {
+      this.fil_request_no_upper = '';
+      this.fil_request_no_lower = '';
+      this.fil_creator = '';
+      this.fil_type = "";
+      this.fil_status = "";
+      this.fil_amount_type = "";
+    
+      this.fil_amount_upper = "";
+      this.fil_amount_lower = "";
+
+      this.fil_type_date = "";
+      this.fil_date_start = "";
+      this.fil_date_end = "";
+ 
+      this.fil_keyowrd = "";
+      
+      document.getElementById("btn_filter").classList.remove("focus");
+      document.getElementById("filter_dialog").classList.remove("show");
+
+      //this.receive_records = [];
+
+      //this.getRecords();
+      this.filter_apply();
+    },
+
+    order_remove: function() {
+      this.od_factor1 = '';
+      this.od_factor1_order = '';
+      this.od_factor2 = '';
+      this.od_factor2_order = '';
+   
+      
+      document.getElementById("btn_sort").classList.remove("focus");
+      document.getElementById("sort_dialog").classList.remove("show");
+
+      this.receive_records = [];
+
+      this.filter_apply();
+    },
+
+    order_clear() {
+      document.getElementById("btn_sort").classList.remove("focus");
+      document.getElementById("sort_dialog").classList.remove("show");
+    },
+
+    filter_clear() {
+      document.getElementById("btn_filter").classList.remove("focus");
+      document.getElementById("filter_dialog").classList.remove("show");
     },
 
     getUserName: function() {
@@ -495,7 +754,25 @@ var app = new Vue({
       });
     },
 
-    
+    getCreators() {
+      let _this = this;
+
+      let token = localStorage.getItem("accessToken");
+
+      axios
+        .get("api/admin/project_creators", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(
+          (res) => {
+            _this.creators = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          }
+        )
+        .finally(() => {});
+    },
 
     resetForm: function() {
       this.record = [];
@@ -514,27 +791,40 @@ var app = new Vue({
     },
 
     export_petty() {
-      let _this = this;
+      var token = localStorage.getItem("token");
       var form_Data = new FormData();
-
-      form_Data.append('id', this.proof_id)
-     
-      const filename = "leave";
-
-      const token = sessionStorage.getItem('token');
+      let _this = this;
+      form_Data.append("jwt", token);
+      form_Data.append("fru", this.fil_request_no_upper);
+      form_Data.append("frl", this.fil_request_no_lower);
+      form_Data.append("fc", this.fil_creator);
+      form_Data.append("ft", this.fil_type);
+      form_Data.append("fs", this.fil_status);
+      form_Data.append("fat", this.fil_amount_type);
+      form_Data.append("fau", this.fil_amount_upper);
+      form_Data.append("fal", this.fil_amount_lower);
+      form_Data.append("ftd", this.fil_type_date);
+      form_Data.append("fds", this.fil_date_start);
+      form_Data.append("fde", this.fil_date_end);
+      form_Data.append("of1", this.od_factor1);
+      form_Data.append("ofd1", this.od_factor1_order);
+      form_Data.append("of2", this.od_factor2);
+      form_Data.append("ofd2", this.od_factor2_order);
+      form_Data.append("page", this.page);
+      form_Data.append("size", this.perPage);
 
       axios({
-              method: 'post',
-              url: 'expense_release_application',
-              data: form_Data,
-              responseType: 'blob', // important
-          })
+        method: "post",
+        url: "api/expense_application_report_print",
+        data: form_Data,
+        responseType: "blob",
+      })
           .then(function(response) {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
                
-                  link.setAttribute('download', 'Expense Application Voucher_' + _this.record['request_no'] + '.docx');
+                  link.setAttribute('download', 'Expense Application Voucher.xlsx');
                
                 document.body.appendChild(link);
                 link.click();
