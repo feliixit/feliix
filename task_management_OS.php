@@ -30,9 +30,9 @@ try {
 
     $access6 = false;
 
-    if(trim(strtoupper($department)) == 'ADMIN')
+    if(trim(strtoupper($department)) == 'OFFICE')
     {
-        if(trim(strtoupper($position)) == 'OPERATIONS MANAGER' || trim(strtoupper($position)) == 'ASSISTANT OPERATIONS MANAGER')
+        if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER' || trim(strtoupper($position)) == 'ASSISTANT OFFICE SYSTEMS MANAGER')
         {
             $access6 = true;
         }
@@ -3307,7 +3307,7 @@ catch (Exception $e) {
         let my_id = 0;
         let my_level = 0;
         let my_department = "";
-
+        
         let event_array_task = [];
         //將Task從資料庫中加入array
         //需要讀出task的 (1)專案名稱 (2)task名稱 (3) task 的due date (4) task 所在的 project03_other頁面網址 (5) task 在日曆中的顏色 (6) task 的 creator
@@ -3335,7 +3335,7 @@ catch (Exception $e) {
                 if (obj !== undefined) {
                     var arrayLength = obj.length;
                     for (var i = 0; i < arrayLength; i++) {
-                        // console.log(obj[i]);
+                        //console.log(obj[i]);
 
                         var obj_meeting = {
                             id: obj[i].id,
@@ -3446,7 +3446,6 @@ catch (Exception $e) {
                                                 temp.push(obj_meeting);
                                             }
                                         }
-
                                         event_array_task = temp;
 
                                         calendar_task.addEventSource(temp);
@@ -3967,7 +3966,7 @@ catch (Exception $e) {
                     plugins: [ 'dayGrid' ],
                     timeZone: 'UTC',
                     defaultView: 'dayGridMonth',
-
+                    
                     contentHeight: 'auto',
 
                     titleFormat: { // will produce something like "Tuesday, September 18, 2018"
@@ -4256,7 +4255,7 @@ catch (Exception $e) {
             data: form_Data,
 
             success: function(result) {
-                //console.log(result);
+                console.log(result);
 
                 //##寄送通知信件給會議參與者,告知修改後訊息
                 _func.notify_mail(id, 2);
@@ -4344,7 +4343,7 @@ catch (Exception $e) {
                     data: form_Data,
 
                     success: function(result) {
-                        //console.log(result);
+                        console.log(result);
 
 
                         //從日曆中刪除該會議
@@ -4613,7 +4612,7 @@ catch (Exception $e) {
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script type="text/javascript" src="js/task_management.js" defer></script>
+<script type="text/javascript" src="js/task_management_os.js" defer></script>
 <script defer src="js/a076d05399.js"></script>
 
 
