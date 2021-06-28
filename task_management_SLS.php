@@ -30,9 +30,9 @@ try {
 
     $access6 = false;
 
-    if(trim(strtoupper($department)) == 'DESIGN')
+    if(trim(strtoupper($department)) == 'SALES')
     {
-        if(trim(strtoupper($position)) == 'BRAND MANAGER' || trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER')
+        if(trim(strtoupper($position)) == 'SALES MANAGER' || trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER')
         {
             $access6 = true;
         }
@@ -4790,7 +4790,7 @@ catch (Exception $e) {
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script type="text/javascript" src="js/task_management_ds.js" defer></script>
+<script type="text/javascript" src="js/task_management_sls.js" defer></script>
 <script defer src="js/a076d05399.js"></script>
 
 

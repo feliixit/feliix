@@ -53,7 +53,7 @@ $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $uid = $user_id;
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 
-if($category != 'AD' && $category != 'DS' && $category != 'LT_T' && $category != 'OS_T')
+if($category != 'AD' && $category != 'DS' && $category != 'LT_T' && $category != 'OS_T' && $category != 'SLS' && $category != 'SVC')
     $_record = GetTaskDetailOrg($id, $db);
 
 $mail_type = 1;
@@ -104,6 +104,28 @@ try{
     {
         $_record = GetTaskDetailOrg_l($id, $db);
         $query = "update project_other_task_l
+                SET
+                    `status` = :status,
+                    updated_id = :updated_id,
+                    updated_at = now()
+                where id = :id ";
+    }
+
+    if($category == 'SLS')
+    {
+        $_record = GetTaskDetailOrg_sls($id, $db);
+        $query = "update project_other_task_sl
+                SET
+                    `status` = :status,
+                    updated_id = :updated_id,
+                    updated_at = now()
+                where id = :id ";
+    }
+
+    if($category == 'SVC')
+    {
+        $_record = GetTaskDetailOrg_svc($id, $db);
+        $query = "update project_other_task_sv
                 SET
                     `status` = :status,
                     updated_id = :updated_id,
@@ -177,6 +199,12 @@ function SendNotifyMail01($last_id, $old_status_id, $username, $category)
 
     if($category == 'OS_T')
         $_record = GetTaskDetail_o($last_id, $db);
+
+    if($category == 'SLS')
+        $_record = GetTaskDetail_sls($last_id, $db);
+
+    if($category == 'SVC')
+        $_record = GetTaskDetail_svc($last_id, $db);
 
     $old_status = "";
     switch ($old_status_id) {
@@ -350,6 +378,60 @@ function GetTaskDetail_o($id, $db)
 
     return $merged_results;
 }
+function GetTaskDetail_svc($id, $db)
+{
+    $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
+            '' `stages_status`, 
+            pt.create_id,
+            pt.assignee,
+            pt.collaborator,
+            due_date,
+            due_time,
+            '' stage,
+            (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
+            detail
+            FROM project_other_task_svc pt
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+function GetTaskDetail_sls($id, $db)
+{
+    $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
+            '' `stages_status`, 
+            pt.create_id,
+            pt.assignee,
+            pt.collaborator,
+            due_date,
+            due_time,
+            '' stage,
+            (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
+            detail
+            FROM project_other_task_sl pt
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
 
 function GetTaskDetailOrg_d($id, $db)
 {
@@ -437,6 +519,46 @@ function GetTaskDetailOrg_o($id, $db)
 {
     $sql = "SELECT *
             FROM project_other_task_o pt
+
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetTaskDetailOrg_sls($id, $db)
+{
+    $sql = "SELECT *
+            FROM project_other_task_sl pt
+
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetTaskDetailOrg_svc($id, $db)
+{
+    $sql = "SELECT *
+            FROM project_other_task_sv pt
 
             WHERE pt.id = :id";
 
