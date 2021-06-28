@@ -296,6 +296,9 @@ var app = new Vue({
 
           if(_this.pg !== 0)
             { 
+              if (typeof _this.pg === 'undefined')
+                _this.pg = 1;
+                
               _this.page = _this.pg;
               _this.setPages();
             }
