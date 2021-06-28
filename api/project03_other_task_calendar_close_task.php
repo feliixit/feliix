@@ -53,7 +53,7 @@ $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $uid = $user_id;
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 
-if($category != 'AD' && $category != 'DS')
+if($category != 'AD' && $category != 'DS' && $category != 'LT_T' && $category != 'OS_T')
     $_record = GetTaskDetailOrg($id, $db);
 
 $mail_type = 1;
@@ -82,6 +82,28 @@ try{
     {
         $_record = GetTaskDetailOrg_d($id, $db);
         $query = "update project_other_task_d
+                SET
+                    `status` = :status,
+                    updated_id = :updated_id,
+                    updated_at = now()
+                where id = :id ";
+    }
+
+    if($category == 'OS_T')
+    {
+        $_record = GetTaskDetailOrg_o($id, $db);
+        $query = "update project_other_task_o
+                SET
+                    `status` = :status,
+                    updated_id = :updated_id,
+                    updated_at = now()
+                where id = :id ";
+    }
+
+    if($category == 'LT_T')
+    {
+        $_record = GetTaskDetailOrg_l($id, $db);
+        $query = "update project_other_task_l
                 SET
                     `status` = :status,
                     updated_id = :updated_id,
@@ -141,7 +163,7 @@ function SendNotifyMail01($last_id, $old_status_id, $username, $category)
     $database = new Database();
     $db = $database->getConnection();
 
-    if($category != 'AD' && $category != 'DS')
+    if($category != 'AD' && $category != 'DS' && $category != 'LT_T' && $category != 'OS_T')
         $_record = GetTaskDetail($last_id, $db);
 
     if($category == 'AD')
@@ -149,6 +171,12 @@ function SendNotifyMail01($last_id, $old_status_id, $username, $category)
 
     if($category == 'DS')
         $_record = GetTaskDetail_d($last_id, $db);
+
+    if($category == 'LT_T')
+        $_record = GetTaskDetail_l($last_id, $db);
+
+    if($category == 'OS_T')
+        $_record = GetTaskDetail_o($last_id, $db);
 
     $old_status = "";
     switch ($old_status_id) {
@@ -178,7 +206,7 @@ function SendNotifyMail01($last_id, $old_status_id, $username, $category)
 
     $task_status = $_record[0]["task_status"];
 
-    task_notify01_admin($old_status, $task_status, $username, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id);
+    task_notify01_admin($old_status, $task_status, $username, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, $category);
 
 }
 
@@ -267,6 +295,62 @@ function GetTaskDetail_d($id, $db)
     return $merged_results;
 }
 
+function GetTaskDetail_l($id, $db)
+{
+    $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
+            '' `stages_status`, 
+            pt.create_id,
+            pt.assignee,
+            pt.collaborator,
+            due_date,
+            due_time,
+            '' stage,
+            (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
+            detail
+            FROM project_other_task_l pt
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetTaskDetail_o($id, $db)
+{
+    $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
+            '' `stages_status`, 
+            pt.create_id,
+            pt.assignee,
+            pt.collaborator,
+            due_date,
+            due_time,
+            '' stage,
+            (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
+            detail
+            FROM project_other_task_o pt
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
 function GetTaskDetailOrg_d($id, $db)
 {
     $sql = "SELECT *
@@ -311,6 +395,48 @@ function GetTaskDetailOrg_a($id, $db)
 {
     $sql = "SELECT *
             FROM project_other_task_a pt
+
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+
+function GetTaskDetailOrg_l($id, $db)
+{
+    $sql = "SELECT *
+            FROM project_other_task_l pt
+
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+
+function GetTaskDetailOrg_o($id, $db)
+{
+    $sql = "SELECT *
+            FROM project_other_task_o pt
 
             WHERE pt.id = :id";
 

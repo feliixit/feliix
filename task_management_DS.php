@@ -397,6 +397,10 @@ catch (Exception $e) {
         .fc-event-title {
             display: inline !important;
         }
+
+        .fc-day-grid-event .fc-content {
+            white-space: inherit;
+        }
     </style>
 
     <style scoped>
@@ -3141,6 +3145,81 @@ catch (Exception $e) {
             }
         }
 
+        if(department === 'LT_T')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+                
+
+            if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
+            {
+                if(creator_level === "ASSISTANT LIGHTING MANAGER" || creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT LIGHTING MANAGER" )
+            {
+                if(creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. LIGHTING DESIGNER" )
+            {
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'OS_T')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+
+            if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
+            {
+                if(creator_level === "ASSISTANT OFFICE SYSTEMS MANAGER" || creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT OFFICE SYSTEMS MANAGER" )
+            {
+                if(creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. OFFICE SYSTEMS DESIGNER" )
+            {
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
         if(creator_id === uid)
             can_close = true;
 
@@ -3721,6 +3800,10 @@ catch (Exception $e) {
                                                 window.open('https://feliix.myvnc.com/task_management_AD?sid=' + info.event.id, "_blank");
                                             else if(info.event.extendedProps.category == 'DS')
                                                 window.open('https://feliix.myvnc.com/task_management_DS?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'LT_T')
+                                                window.open('https://feliix.myvnc.com/task_management_LT?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'OS_T')
+                                                window.open('https://feliix.myvnc.com/task_management_OS?sid=' + info.event.id, "_blank");
                                             else
                                                 window.open('https://feliix.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
                                         }, 400);

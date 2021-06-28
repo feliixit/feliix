@@ -48,6 +48,10 @@
     <script>
         $(function() {
             $('header').load('include/header.php');
+
+            dialogshow($('.list_function .popupblock a.filtering'),$('.list_function .dialog.d-filter'));
+            dialogshow($('.list_function .popupblock a.sorting'),$('.list_function .dialog.d-sort'));
+          
         })
     </script>
 
@@ -61,6 +65,49 @@
         body.fifth .mainContent>.block {
             border: none;
             border-top: 2px solid #EA0029;
+        }
+
+        body.fifth .list_function .popupblock {
+            position: relative;
+            float: left;
+            margin-right: 10px;
+        }
+
+        body.fifth .list_function .popupblock dl div.half:nth-of-type(odd){
+            width: 48.5%;
+        }
+
+        .list_function a.filtering, .list_function a.sorting, .list_function a.exporting {
+            width: 30px;
+            height: 30px;
+            background-color: #EA0029;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url(images/ui/btn_filter_white.svg);
+        }
+
+        .list_function a.sorting {
+            background-image: url(images/ui/btn_sort_white.svg);
+        }
+
+        .list_function a.exporting {
+            background-image: url(images/ui/btn_export_white.svg);
+        }
+
+        .list_function .dialog {
+            border-color: #EA0029;
+        }
+
+        .list_function .dialog::before {
+            border-color: transparent transparent transparent #EA0029;
+        }
+
+        .list_function .dialog h6, .list_function .dialog dt{
+            color: #000000;
+        }
+
+        body.fifth .list_function .pagenation{
+            padding-top: 5px;
         }
 
         body.fifth .list_function .pagenation a {
@@ -195,7 +242,7 @@
 
 <body class="fifth">
 
-    <div id="app" class="bodybox">
+    <div id="app" class="bodybox" style="min-height: 150vh;">
         <div class="mask" :ref="'mask'" style="display:none"></div>
         <!-- header -->
         <header>header</header>
@@ -209,13 +256,247 @@
             <div class="block A focus">
 
                 <div class="list_function" style="margin-top: 10px;">
+
+                    <!-- 篩選 -->
+                    <div class="popupblock">
+                        <a class="filtering" id="btn_filter"></a>
+                        <div id="filter_dialog" class="dialog d-filter"><h6>Filter Function:</h6>
+                            <div class="formbox">
+                                <dl>
+                                    <dt style="margin-bottom:-15px;">Request No.</dt>
+                                    <div class="half">
+                                        <dt>From</dt>
+                                        <dd><input type="number" min="1" step="1" v-model="fil_request_no_lower"></dd>
+                                    </div>
+                                    <div class="half">
+                                        <dt>To</dt>
+                                        <dd><input type="number" min="1" step="1" v-model="fil_request_no_upper"></dd>
+                                    </div>
+
+                                    <dt style="margin-top: 2px;">Requestor</dt>
+                                    <dd>
+                                        <select v-model="fil_creator">
+                                            <option value="">
+                                            <option v-for="item in creators" :value="item.username"
+                                                    :key="item.username">
+                                                {{ item.username }}
+                                            </option>
+                                        </select>
+                                    </dd>
+
+                                    <dt>Type</dt>
+                                    <dd>
+                                        <select v-model="fil_type">
+                                            <option value=""></option>
+                                            <option value="1">New</option>
+                                            <option value="2">Reimbursement</option>
+                                        </select>
+                                    </dd>
+
+                                    <dt>Status</dt>
+                                    <dd>
+                                        <select v-model="fil_status">
+                                            <option value=""></option>
+                                            <option value="1">For Check</option>
+                                            <option value="2">For Approve</option>
+                                            <option value="3">For Release</option>
+                                            <option value="4">For Liquidate</option>
+                                            <option value="5">For Verify</option>
+                                            <option value="6">Completed</option>
+                                            <option value="7">Rejected</option>
+                                            <option value="8">Withdrawn</option>
+                                        </select>
+                                    </dd>
+
+                                    <dt style="margin-top: 15px;">Type of Amount</dt>
+                                    <dd style="margin-bottom: -5px;">
+                                        <select v-model="fil_amount_type">
+                                            <option value=""></option>
+                                            <option value="1">Requested Amount</option>
+                                            <option value="2">Actual Amount</option>
+                                        </select>
+                                    </dd>
+                                    <div class="half">
+                                        <dt>Lower bound</dt>
+                                        <dd><input type="number" v-model="fil_amount_lower"></dd>
+                                    </div>
+                                    <div class="half">
+                                        <dt>Upper bound</dt>
+                                        <dd><input type="number" v-model="fil_amount_upper"></dd>
+                                    </div>
+
+                                    <dt style="margin-top: 5px;">Type of Date</dt>
+                                    <dd style="margin-bottom: -5px;">
+                                        <select v-model="fil_type_date">
+                                            <option value=""></option>
+                                            <option value="1">Date Needed</option>
+                                            <option value="2">Date Checked</option>
+                                            <option value="3">Date Approved (1st)</option>
+                                            <option value="4">Date Approved (2nd)</option>
+                                            <option value="5">Date Released</option>
+                                            <option value="6">Date Liquidated</option>
+                                            <option value="7">Date Verified</option>
+                                        </select>
+                                    </dd>
+                                    <div class="half">
+                                        <dt>Start date</dt>
+                                        <dd><input type="date" v-model="fil_date_start"></dd>
+                                    </div>
+                                    <div class="half">
+                                        <dt>End date</dt>
+                                        <dd><input type="date" v-model="fil_date_end"></dd>
+                                    </div>
+                                </dl>
+
+                                <div class="btnbox"><a class="btn small" @click="filter_clear()">Cancel</a><a
+                                        class="btn small" @click="filter_remove()">Clear</a> <a class="btn small green"
+                                                                                                @click="filter_apply()">Apply</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 排序 -->
+                    <div class="popupblock">
+                        <a class="sorting" id="btn_sort"></a>
+                        <div id="sort_dialog" class="dialog d-sort"><h6>Sort Function:</h6>
+                            <div class="formbox">
+                                <dl>
+                                    <div class="half">
+                                        <dt>1st Criterion</dt>
+                                        <dd>
+                                            <select v-model="od_factor1">
+                                                <option value="0"></option>
+                                                <option value="1">
+                                                    Request No.
+                                                </option>
+                                                <option value="2">
+                                                    Application Time
+                                                </option>
+                                                <option value="3">
+                                                    Requested Amount
+                                                </option>
+                                                <option value="4">
+                                                    Actual Amount
+                                                </option>
+                                                <option value="5">
+                                                    Date Needed
+                                                </option>
+                                                <option value="6">
+                                                    Date Checked
+                                                </option>
+                                                <option value="7">
+                                                    Date Approved (OP)
+                                                </option>
+                                                <option value="8">
+                                                    Date Approved (MD)
+                                                </option>
+                                                <option value="9">
+                                                    Date Released
+                                                </option>
+                                                <option value="10">
+                                                    Date Liquidated
+                                                </option>
+                                                <option value="11">
+                                                    Date Verified
+                                                </option>
+                                            </select>
+                                        </dd>
+                                    </div>
+
+                                    <div class="half">
+                                        <dt></dt>
+                                        <dd>
+                                            <select v-model="od_factor1_order">
+                                                <option value="1">
+                                                    Ascending
+                                                </option>
+                                                <option value="2">
+                                                    Descending
+                                                </option>
+                                            </select>
+                                        </dd>
+                                    </div>
+
+                                    <div class="half">
+                                        <dt>2nd Criterion</dt>
+                                        <dd>
+                                            <select v-model="od_factor2">
+                                                <option value="0"></option>
+                                                <option value="1">
+                                                    Request No.
+                                                </option>
+                                                <option value="2">
+                                                    Application Time
+                                                </option>
+                                                <option value="3">
+                                                    Requested Amount
+                                                </option>
+                                                <option value="4">
+                                                    Actual Amount
+                                                </option>
+                                                <option value="5">
+                                                    Date Needed
+                                                </option>
+                                                <option value="6">
+                                                    Date Checked
+                                                </option>
+                                                <option value="7">
+                                                    Date Approved (OP)
+                                                </option>
+                                                <option value="8">
+                                                    Date Approved (MD)
+                                                </option>
+                                                <option value="9">
+                                                    Date Released
+                                                </option>
+                                                <option value="10">
+                                                    Date Liquidated
+                                                </option>
+                                                <option value="11">
+                                                    Date Verified
+                                                </option>
+                                            </select>
+                                        </dd>
+                                    </div>
+
+                                    <div class="half">
+                                        <dt></dt>
+                                        <dd>
+                                            <select v-model="od_factor2_order">
+                                                <option value="1">
+                                                    Ascending
+                                                </option>
+                                                <option value="2">
+                                                    Descending
+                                                </option>
+                                            </select>
+                                        </dd>
+                                    </div>
+
+                                </dl>
+                                <div class="btnbox"><a class="btn small" @click="order_clear">Cancel</a><a
+                                        class="btn small" @click="order_remove">Clear</a><a class="btn small green"
+                                                                                            @click="filter_apply">Apply</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 匯出 -->
+                    <div class="popupblock">
+                        <a class="exporting" id="btn_export" @click="export_petty"></a>
+                    </div>
+
+
                     <!-- 分頁 -->
                     <div class="pagenation">
-                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
+                        <a class="prev" :disabled="page == 1" @click="pre_page();">Prev 10</a>
 
-                        <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'red', 'color': 'white'} : { }]">{{ pg }}</a>
+                        <a class="page" v-for="pg in pages_10" @click="page=pg" v-bind:style="[pg == page ? { 'background':'red', 'color': 'white'} : { }]">{{ pg }}</a>
 
-                        <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
+                        <a class="next" :disabled="page == pages.length" @click="nex_page();">Next 10</a>
                     </div>
                 </div>
 

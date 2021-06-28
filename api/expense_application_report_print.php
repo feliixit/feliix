@@ -1,105 +1,81 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+// required headers
+ error_reporting(0);
+ 
+ require '../vendor/autoload.php';
+// required to encode json web token
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 
+include_once 'config/conf.php';
+
 use \Firebase\JWT\JWT;
-
-$method = $_SERVER['REQUEST_METHOD'];
-
-
-if (!isset($jwt)) {
-    http_response_code(401);
-
-    echo json_encode(array("message" => "Access denied."));
-    die();
-} else {
-    try {
-        // decode jwt
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
-        $user_id = $decoded->data->id;
-        //if(!$decoded->data->is_admin)
-        //{
-        //  http_response_code(401);
-
-        //  echo json_encode(array("message" => "Access denied."));
-        //  die();
-        //}
-    }
-    // if decode fails, it means jwt is invalid
-    catch (Exception $e) {
-
-        http_response_code(401);
-
-        echo json_encode(array("message" => "Access denied."));
-        die();
-    }
-}
-
-header('Access-Control-Allow-Origin: *');
-
+ 
+// files needed to connect to database
 include_once 'config/database.php';
 
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+ 
+// get database connection
 $database = new Database();
 $db = $database->getConnection();
 
-switch ($method) {
-    case 'GET':
-  
-        $id = (isset($_GET['id']) ?  $_GET['id'] : '');
-        $fru = (isset($_GET['fru']) ?  $_GET['fru'] : '');
-        $frl = (isset($_GET['frl']) ?  $_GET['frl'] : '');
-        $fc = (isset($_GET['fc']) ?  $_GET['fc'] : '');
+ 
+// get posted data
+$data = json_decode(file_get_contents("php://input"));
+ 
+// get jwt
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 
-        $fc = urldecode($fc);
+$id = (isset($_POST['id']) ?  $_POST['id'] : '');
+$fru = (isset($_POST['fru']) ?  $_POST['fru'] : '');
+$frl = (isset($_POST['frl']) ?  $_POST['frl'] : '');
+$fc = (isset($_POST['fc']) ?  $_POST['fc'] : '');
 
-        $ft = (isset($_GET['ft']) ?  $_GET['ft'] : '');
-        $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
-        $fat = (isset($_GET['fat']) ?  $_GET['fat'] : '');
-        $fau = (isset($_GET['fau']) ?  $_GET['fau'] : '');
-        $fal = (isset($_GET['fal']) ?  $_GET['fal'] : '');
+$fc = urldecode($fc);
 
-        $ftd = (isset($_GET['ftd']) ?  $_GET['ftd'] : '');
-        $fds = (isset($_GET['fds']) ?  $_GET['fds'] : '');
-        $fds = str_replace('-', '/', $fds);
-        $fde = (isset($_GET['fde']) ?  $_GET['fde'] : '');
-        $fde = str_replace('-', '/', $fde);
+$ft = (isset($_POST['ft']) ?  $_POST['ft'] : '');
+$fs = (isset($_POST['fs']) ?  $_POST['fs'] : '');
+$fat = (isset($_POST['fat']) ?  $_POST['fat'] : '');
+$fau = (isset($_POST['fau']) ?  $_POST['fau'] : '');
+$fal = (isset($_POST['fal']) ?  $_POST['fal'] : '');
 
-        $of1 = (isset($_GET['of1']) ?  $_GET['of1'] : '');
-        $ofd1 = (isset($_GET['ofd1']) ?  $_GET['ofd1'] : '');
-        $of2 = (isset($_GET['of2']) ?  $_GET['of2'] : '');
-        $ofd2 = (isset($_GET['ofd2']) ?  $_GET['ofd2'] : '');
+$ftd = (isset($_POST['ftd']) ?  $_POST['ftd'] : '');
+$fds = (isset($_POST['fds']) ?  $_POST['fds'] : '');
+$fds = str_replace('-', '/', $fds);
+$fde = (isset($_POST['fde']) ?  $_POST['fde'] : '');
+$fde = str_replace('-', '/', $fde);
 
-        $page = (isset($_GET['page']) ?  $_GET['page'] : 1);
-        $size = (isset($_GET['size']) ?  $_GET['size'] : 10);
+$of1 = (isset($_POST['of1']) ?  $_POST['of1'] : '');
+$ofd1 = (isset($_POST['ofd1']) ?  $_POST['ofd1'] : '');
+$of2 = (isset($_POST['of2']) ?  $_POST['of2'] : '');
+$ofd2 = (isset($_POST['ofd2']) ?  $_POST['ofd2'] : '');
 
-        // check if can see petty expense list (Record only for himself)
-        /*
-        $sql = "select * from expense_flow where uid = " . $user_id . " where status <> -1";
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
+$page = (isset($_POST['page']) ?  $_POST['page'] : 1);
+$size = (isset($_POST['size']) ?  $_POST['size'] : 10);
 
-        $arry_apartment_id = [];
-        $array_flow = [];
-        
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            
-            $apartment_id = $row['apartment_id'];
-            $flow = $row['flow'];
-            
-            array_push($arry_apartment_id, $apartment_id);
-            array_push($array_flow, $flow);
-        }
-        */
+$conf = new Conf();
 
-        $sql = "SELECT  pm.id,
+// if jwt is not empty
+if($jwt){
+ 
+    // if decode succeed, show user details
+    try {
+ 
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+        // response in json format
+            http_response_code(200);
+
+            $merged_results = array();
+
+            $sql = "SELECT  pm.id,
                         request_no, 
                         DATE_FORMAT(pm.date_requested, '%Y/%m/%d') date_requested,
                         p.username requestor,
@@ -484,33 +460,10 @@ if($sOrder != "")
 else
     $sql = $sql . " order by pm.created_at desc ";
 
-/*
-        if (!empty($_GET['page'])) {
-            $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
-            if (false === $page) {
-                $page = 1;
-            }
-        }
+            $stmt = $db->prepare( $sql );
+            $stmt->execute();
 
-
-        if (!empty($_GET['size'])) {
-            $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
-            if (false === $size) {
-                $size = 10;
-            }
-
-            $offset = ($page - 1) * $size;
-
-            $sql = $sql . " LIMIT " . $offset . "," . $size;
-        }
-*/
-
-        $merged_results = array();
-
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-
-        $id = 0;
+            $id = 0;
         $request_no = "";
         $date_requested = "";
         $request_type = "";
@@ -569,18 +522,18 @@ else
             $info_remark_other = $row['info_remark_other'];
             $status = $row['status'];
             $desc = GetStatus($row['status']);
-            $items = GetAttachment($row['id'], $db);
+
             $history = GetHistory($row['id'], $db);
             $list = GetList($row['id'], $db);
             $created_at = $row['created_at'];
 
             $release_date = GetReleaseHistory($row['id'], $db);
-            $release_items = GetReleaseAttachment($row['id'], $db);
+    
             $liquidate_date = GetLiquidateHistory($row['id'], $db);
-            $liquidate_items = GetLiquidateAttachment($row['id'], $db);
+       
 
             $verified_date = GetVerifiedHistory($row['id'], $db);
-            $verified_items = GetVerifiedAttachment($row['id'], $db);
+       
 
             $amount_liquidated = $row['amount_liquidated'];
             $remark_liquidated = $row['remark_liquidated'];
@@ -638,101 +591,123 @@ else
             );
 
         }
+          
+            // response in json format
+            $styleArray = array(
+                'borders' => array(
+                    'allBorders' => array(
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => array('rgb' => '000000'),
+                    ),
+                ),
+            );
 
-        
-        
-        echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+            $spreadsheet = new Spreadsheet();
 
-        break;
+            $spreadsheet->getProperties()->setCreator('PhpOffice')
+                    ->setLastModifiedBy('PhpOffice')
+                    ->setTitle('Office 2007 XLSX Test Document')
+                    ->setSubject('Office 2007 XLSX Test Document')
+                    ->setDescription('PhpOffice')
+                    ->setKeywords('PhpOffice')
+                    ->setCategory('PhpOffice');
 
-}
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setTitle("Sheet 1");
 
-function GetAttachment($_id, $db)
-{
-    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
-            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'petty'
-            order by h.created_at ";
 
-    $merged_results = array();
+            $sheet->setCellValue('A1', 'Request No.');
+            $sheet->setCellValue('B1', 'Requestor');
+            $sheet->setCellValue('C1', 'Application Time');
+            $sheet->setCellValue('D1', 'Type');
+            $sheet->setCellValue('E1', 'Status');
+            $sheet->setCellValue('F1', 'Requested Amount');
+            $sheet->setCellValue('G1', 'Actual Amount');
+            $sheet->setCellValue('H1', 'Date Needed');
+            $sheet->setCellValue('I1', 'Date Checked');
+            $sheet->setCellValue('J1', 'Date Approved');
+            $sheet->setCellValue('K1', 'Date Released');
+            $sheet->setCellValue('L1', 'Date Liquidated');
+            $sheet->setCellValue('M1', 'Date Verified');
 
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
+            $i = 2;
+            foreach($merged_results as $row)
+            {
+                $sheet->setCellValue('A' . $i, $row['request_no']);
+                $sheet->setCellValue('B' . $i, $row['requestor']);
+                $sheet->setCellValue('C' . $i, $row['created_at']);
+                $sheet->setCellValue('D' . $i, $row['request_type']);
+                $sheet->setCellValue('E' . $i, $row['desc']);
+                $sheet->setCellValue('F' . $i, number_format($row['total']));
+                $sheet->setCellValue('G' . $i, number_format($row['amount_verified']));
+                $sheet->setCellValue('H' . $i, $row['date_requested']);
+                $sheet->setCellValue('I' . $i, $row['checked_date']);
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results[] = $row;
+                $checked_date = '';
+                if($row['approve1_date'] != '' || $row['approve2_date'] != '')
+                {
+                    $checked_date = ($row['approve1_date'] == "" ? "---" : $row['approve1_date']) . "\n" . ($row['approve2_date'] == "" ? "---" : $row['approve2_date']);
+                }
+
+                $sheet->getStyle('J' . $i)->getAlignment()->setWrapText(true);
+                $sheet->getColumnDimension('J')->setWidth(20);
+
+                $sheet->setCellValue('J' . $i, $checked_date);
+
+                $sheet->setCellValue('K' . $i, $row['release_date']);
+                $sheet->setCellValue('L' . $i, $row['liquidate_date']);
+                $sheet->setCellValue('M' . $i, $row['verified_date']);
+           
+
+                $sheet->getStyle('A'. $i. ':' . 'M' . $i)->applyFromArray($styleArray);
+
+                $i++;
+            }
+
+            $sheet->getStyle('A1:' . 'M1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'M' . --$i)->applyFromArray($styleArray);
+
+           
+
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="file.xlsx"');
+
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+            // If you're serving to IE over SSL, then the following may be needed
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header('Pragma: public'); // HTTP/1.0
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save('php://output');
+
+
+            exit;
     }
-
-    return $merged_results;
-}
-
-function GetReleaseAttachment($_id, $db)
-{
-    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
-            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Releaser Released'
-            order by h.created_at ";
-
-    $merged_results = array();
-
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results[] = $row;
+ 
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+    
+        // set response code
+        http_response_code(401);
+    
+        // show error message
+        echo json_encode(array(
+            "message" => "Access denied.",
+            "error" => $e->getMessage()
+        ));
     }
-
-    return $merged_results;
 }
-
-function GetLiquidateAttachment($_id, $db)
-{
-    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
-            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Liquidated'
-            order by h.created_at ";
-
-    $merged_results = array();
-
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results[] = $row;
-    }
-
-    return $merged_results;
-}
-
-function GetVerifiedAttachment($_id, $db)
-{
-    $sql = "select COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
-            from gcp_storage_file h where h.batch_id = " . $_id . " AND h.batch_type = 'Verifier Verified'
-            order by h.created_at ";
-
-    $merged_results = array();
-
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results[] = $row;
-    }
-
-    return $merged_results;
-}
-
-function GetUserInfo($users, $db)
-{
-    $sql = "SELECT id, username, pic_url FROM user WHERE id IN (" . $users . ")";
-
-    $merged_results = array();
-
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results[] = $row;
-    }
-
-    return $merged_results;
+// show error message if jwt is empty
+else{
+ 
+    // set response code
+    http_response_code(401);
+ 
+    // tell the user access denied
+    echo json_encode(array("message" => "Access denied."));
 }
 
 function GetPriority($loc)
@@ -965,3 +940,5 @@ function GetVerifiedHistory($_id, $db)
 
     return $merged_results;
 }
+
+?>
