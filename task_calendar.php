@@ -208,7 +208,7 @@
 
             if(level === "BRAND MANAGER")
             {
-                if(creator_level === "ASSISTANT Brand Manager")
+                if(creator_level === "ASSISTANT BRAND MANAGER")
                 {
                     can_close = true;
                 }
