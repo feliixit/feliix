@@ -276,6 +276,11 @@ catch (Exception $e) {
         .list_function .block {
             margin-bottom: 0;
         }
+
+        .fc-button-group>.fc-button {
+            font-size: 14px;
+        }
+        
     </style>
 
     <style>

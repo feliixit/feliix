@@ -330,6 +330,10 @@ catch (Exception $e) {
         .fc-event-title {
             display: inline !important;
         }
+
+        .fc-button-group>.fc-button {
+            font-size: 14px;
+        }
     </style>
 
     <style scoped>

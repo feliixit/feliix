@@ -401,6 +401,10 @@ catch (Exception $e) {
         .fc-day-grid-event .fc-content {
             white-space: inherit;
         }
+
+        .fc-button-group>.fc-button {
+            font-size: 14px;
+        }
     </style>
 
     <style scoped>

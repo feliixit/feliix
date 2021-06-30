@@ -492,11 +492,11 @@
 
                     <!-- 分頁 -->
                     <div class="pagenation">
-                        <a class="prev" :disabled="page == 1" @click="pre_page();">Prev 10</a>
+                        <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
 
-                        <a class="page" v-for="pg in pages_10" @click="page=pg" v-bind:style="[pg == page ? { 'background':'red', 'color': 'white'} : { }]">{{ pg }}</a>
+                        <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply();" v-bind:style="[pg == page ? { 'background':'red', 'color': 'white'} : { }]">{{ pg }}</a>
 
-                        <a class="next" :disabled="page == pages.length" @click="nex_page();">Next 10</a>
+                        <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply();">Next 10</a>
                     </div>
                 </div>
 

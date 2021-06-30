@@ -52,6 +52,10 @@
             white-space: inherit;
         }
 
+        .fc-button-group>.fc-button {
+            font-size: 14px;
+        }
+
         @media (min-width: 576px) {
 
             .modal-xl {

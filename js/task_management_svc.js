@@ -336,7 +336,7 @@ var app = new Vue({
       )
         can_save = true;
 
-      if (this.my_title == "SALES MANAGER") {
+      if (this.my_title == "SERVICE MANAGER") {
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR"
@@ -344,11 +344,11 @@ var app = new Vue({
           can_save = true;
       }
 
-      if (this.my_title == "ASSISTANT SALES MANAGER") {
+      if (this.my_title == "ASSISTANT SERVICE MANAGER") {
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR" &&
-          _creator_title != "SALES MANAGER"
+          _creator_title != "SERVICE MANAGER"
         )
           can_save = true;
       }

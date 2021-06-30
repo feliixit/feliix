@@ -12,6 +12,8 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
+    total: 0,
+
     baseURL: "https://storage.cloud.google.com/feliiximg/",
 
     proof_remark: "",
@@ -155,6 +157,9 @@ var app = new Vue({
 
   computed: {
     displayedRecord() {
+      if(this.pg == 0)
+        this.filter_apply_new();
+
       this.setPages();
       return this.paginate(this.receive_records);
     },
@@ -214,9 +219,10 @@ var app = new Vue({
     setPages() {
       console.log("setPages");
       this.pages = [];
-      let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+      let numberOfPages = Math.ceil(this.total / this.perPage);
 
       if (numberOfPages == 1) this.page = 1;
+      if (this.page < 1) this.page = 1;
       for (let index = 1; index <= numberOfPages; index++) {
         this.pages.push(index);
       }
@@ -236,13 +242,15 @@ var app = new Vue({
       
       this.pages_10 = this.pages.slice(from, to);
 
-
+/*
       let page = this.page;
       let perPage = this.perPage;
       from = page * perPage - perPage;
       to = page * perPage;
       
       return this.receive_records.slice(from, to);
+*/
+      return this.receive_records;
     },
 
     isNumeric: function (n) {
@@ -274,6 +282,8 @@ var app = new Vue({
 
       let token = localStorage.getItem("accessToken");
 
+      this.total = 0;
+
       axios
         .get("api/expense_application_report", {
           params,
@@ -282,6 +292,17 @@ var app = new Vue({
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;
+          _this.total = _this.receive_records[0].cnt;
+
+          if(_this.pg !== 0)
+            { 
+              if (typeof _this.pg === 'undefined')
+                _this.pg = 1;
+                
+              _this.page = _this.pg;
+              _this.setPages();
+            }
+            
           if(_this.receive_records.length > 0 && id !== 0)
           {
             _this.proof_id = id;
@@ -380,13 +401,59 @@ var app = new Vue({
       
     },
 
+    filter_apply_new: function() {
+      let _this = this;
+
+      if(_this.page < 1) _this.page = 1;
+      if (_this.page > _this.pages.length) _this.page = _this.pages.length;
+      _this.page = 1;
+
+      window.location.href =
+        "expense_application_report?" +
+        "fru=" +
+        _this.fil_request_no_upper +
+        "&frl=" +
+        _this.fil_request_no_lower +
+        "&fc=" +
+        _this.fil_creator +
+        "&ft=" +
+        _this.fil_type +
+        "&fs=" +
+        _this.fil_status +
+        "&fat=" +
+        _this.fil_amount_type +
+        "&fau=" +
+        _this.fil_amount_upper +
+        "&fal=" +
+        _this.fil_amount_lower +
+        "&ftd=" +
+        _this.fil_type_date +
+        "&fds=" +
+        _this.fil_date_start +
+        "&fde=" +
+        _this.fil_date_end +
+        "&of1=" +
+        _this.od_factor1 +
+        "&ofd1=" +
+        _this.od_factor1_order +
+        "&of2=" +
+        _this.od_factor2 +
+        "&ofd2=" +
+        _this.od_factor2_order +
+        "&pg=" +
+        _this.page +
+        "&page=" +
+        _this.page +
+        "&size=" +
+        _this.perPage;
+    },
+
 
     filter_apply: function() {
       let _this = this;
 
       if(_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
-      _this.page = 1;
 
       window.location.href =
         "expense_application_report?" +
@@ -455,7 +522,7 @@ var app = new Vue({
       //this.receive_records = [];
 
       //this.getRecords();
-      this.filter_apply();
+      this.filter_apply_new();
     },
 
     order_remove: function() {

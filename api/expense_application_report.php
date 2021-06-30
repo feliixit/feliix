@@ -99,6 +99,12 @@ switch ($method) {
         }
         */
 
+        $query_cnt = "SELECT  count(*) cnt
+                from apply_for_petty pm 
+                LEFT JOIN user u ON u.id = pm.payable_to 
+                LEFT JOIN user p ON p.id = pm.uid 
+                where 1=1 ";
+
         $sql = "SELECT  pm.id,
                         request_no, 
                         DATE_FORMAT(pm.date_requested, '%Y/%m/%d') date_requested,
@@ -127,21 +133,25 @@ switch ($method) {
 if($ft != "" && $ft != "0")
 {
     $sql = $sql . " and pm.request_type = '" . $ft . "' ";
+    $query_cnt = $query_cnt . " and pm.request_type = '" . $ft . "' ";
 }
 
 if($frl != "")
 {
     $sql = $sql . " and pm.request_no >= '" . sprintf('%05d', $frl) . "' ";
+    $query_cnt = $query_cnt . " and pm.request_no >= '" . sprintf('%05d', $frl) . "' ";
 }
 
 if($fru != "")
 {
     $sql = $sql . " and pm.request_no <= '" . sprintf('%05d', $fru) . "' ";
+    $query_cnt = $query_cnt . " and pm.request_no <= '" . sprintf('%05d', $fru) . "' ";
 }
 
 if($fc != "")
 {
     $sql = $sql . " and p.username = '" . $fc . "' ";
+    $query_cnt = $query_cnt . " and p.username = '" . $fc . "' ";
 }
 
 if($fs != "" && $fs != "0")
@@ -162,96 +172,131 @@ if($fs != "" && $fs != "0")
         $sql = $sql . " and pm.`status` in (0) ";
     if($fs == "8")
         $sql = $sql . " and pm.`status` in (-1) ";
+
+    if($fs == "1")
+        $query_cnt = $query_cnt . " and pm.`status` in (1, 2) ";
+    if($fs == "2")
+        $query_cnt = $query_cnt . " and pm.`status` in (3, 4) ";
+    if($fs == "3")
+        $query_cnt = $query_cnt . " and pm.`status` in (5) ";
+    if($fs == "4")
+        $query_cnt = $query_cnt . " and pm.`status` in (6, 7) ";
+    if($fs == "5")
+        $query_cnt = $query_cnt . " and pm.`status` in (8) ";
+    if($fs == "6")
+        $query_cnt = $query_cnt . " and pm.`status` in (9) ";
+    if($fs == "7")
+        $query_cnt = $query_cnt . " and pm.`status` in (0) ";
+    if($fs == "8")
+        $query_cnt = $sql . " and pm.`status` in (-1) ";
 }
 
 if($fat == "1" && $fau != "")
 {
     $sql = $sql . " and (select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = pm.id AND pl.`status` <> -1) <= " . $fau . " ";
+    $query_cnt = $query_cnt . " and (select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = pm.id AND pl.`status` <> -1) <= " . $fau . " ";
 }
 
 if($fat == "1" && $fal != "")
 {
     $sql = $sql . " and (select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = pm.id AND pl.`status` <> -1) >= " . $fal . " ";
+    $query_cnt = $query_cnt . " and (select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = pm.id AND pl.`status` <> -1) >= " . $fal . " ";
 }
 
 if($fat == "2" && $fau != "")
 {
     $sql = $sql . " and pm.amount_verified <= " . $fau . " ";
+    $query_cnt = $query_cnt . " and pm.amount_verified <= " . $fau . " ";
 }
 
 if($fat == "2" && $fal != "")
 {
     $sql = $sql . " and pm.amount_verified >= " . $fal . " ";
+    $query_cnt = $query_cnt . " and pm.amount_verified >= " . $fal . " ";
 }
 
 if($ftd == "1" && $fds != "")
 {
     $sql = $sql . " and DATE_FORMAT(pm.date_requested, '%Y/%m/%d') >= '" . $fds . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.date_requested, '%Y/%m/%d') >= '" . $fds . "' ";
 }
 
 if($ftd == "1" && $fde != "")
 {
     $sql = $sql . " and DATE_FORMAT(pm.date_requested, '%Y/%m/%d') <= '" . $fde . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.date_requested, '%Y/%m/%d') <= '" . $fde . "' ";
 }
 
 if($ftd == "2" && $fds != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Checker Checked' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Checker Checked' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
 }
 
 if($ftd == "2" && $fde != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Checker Checked' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Checker Checked' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
 }
 
 if($ftd == "3" && $fds != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'OP Approved' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'OP Approved' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
 }
 
 if($ftd == "3" && $fde != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'OP Approved' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'OP Approved' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
 }
 
 if($ftd == "4" && $fds != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'MD Approved' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'MD Approved' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
 }
 
 if($ftd == "4" && $fde != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'MD Approved' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'MD Approved' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
 }
 
 if($ftd == "5" && $fds != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Releaser Released' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Releaser Released' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
 }
 
 if($ftd == "5" && $fde != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Releaser Released' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Releaser Released' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
 }
 
 if($ftd == "6" && $fds != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Liquidated' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Liquidated' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
 }
 
 if($ftd == "6" && $fde != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Liquidated' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Liquidated' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
 }
 
 if($ftd == "7" && $fds != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1) >= '" . $fds . "' ";
 }
 
 if($ftd == "7" && $fde != "")
 {
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
+    $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
 }
 
 $sOrder = "";
@@ -484,26 +529,35 @@ if($sOrder != "")
 else
     $sql = $sql . " order by pm.created_at desc ";
 
-/*
-        if (!empty($_GET['page'])) {
-            $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
-            if (false === $page) {
-                $page = 1;
-            }
-        }
+
+if (!empty($_GET['page'])) {
+    $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+    if (false === $page) {
+        $page = 1;
+    }
+}
 
 
-        if (!empty($_GET['size'])) {
-            $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
-            if (false === $size) {
-                $size = 10;
-            }
+if (!empty($_GET['size'])) {
+    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
+    if (false === $size) {
+        $size = 10;
+    }
 
-            $offset = ($page - 1) * $size;
+    $offset = ($page - 1) * $size;
 
-            $sql = $sql . " LIMIT " . $offset . "," . $size;
-        }
-*/
+    $sql = $sql . " LIMIT " . $offset . "," . $size;
+}
+
+
+$cnt = 0;
+$stmt_cnt = $db->prepare( $query_cnt );
+$stmt_cnt->execute();
+
+while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+    $cnt = $row['cnt'];
+}
+
 
         $merged_results = array();
 
@@ -634,7 +688,7 @@ else
                 "checked_date" => $checked_date,
                 "approve1_date" => $approve1_date,
                 "approve2_date" => $approve2_date,
-
+                "cnt" => $cnt,
             );
 
         }
