@@ -99,6 +99,14 @@ switch ($method) {
             $sql = $sql . " and LOWER(pc.category) = 'design' ";
         }
 
+        if ($cat == 'sls') {
+            $sql = $sql . " and LOWER(pc.category) = 'sales' ";
+        }
+
+        if ($cat == 'svc') {
+            $sql = $sql . " and LOWER(pc.category) = 'service' ";
+        }
+
         $merged_results = array();
         $return_result = array();
 
@@ -179,6 +187,16 @@ switch ($method) {
         if($cat == '' || $cat == 'os')
         {
             $merged_results = array_merge($merged_results, CombineWithOS($db, $my_department, $my_level, $user_id));
+        }
+
+        if($cat == '' || $cat == 'sls')
+        {
+            $merged_results = array_merge($merged_results, CombineWithSLS($db, $my_department, $my_level, $user_id));
+        }
+
+        if($cat == '' || $cat == 'svc')
+        {
+            $merged_results = array_merge($merged_results, CombineWithSVC($db, $my_department, $my_level, $user_id));
         }
 
         if($uid != 0)
@@ -580,6 +598,174 @@ function CombineWithOS($db, $my_department, $my_level, $my_id)
             $title = $row['due_time'] . ' ' .
                     '[' . $priority . ']' . 
                     '[OS]' .
+                    
+                     $row['title'];
+            $due_date = $row['due_date'];
+            $due_time = $row['due_time'];
+            $task_status = $row['task_status'];
+            $create_id = $row['create_id'];
+            $category = $row['category'];
+            $project_name = $row['project_name'];
+            $assignee = explode(",", $row['assignee']);
+            $collaborator = explode(",", $row['collaborator']);
+            $color = GetTaskColor($task_status, $due_date, $due_time);
+            $level = GetTitleLevel($row['user_title']);
+            
+
+            $merged_results[] = array(
+                "id" => $id,
+                "stage_id" => 0,
+                "title" => $title,
+                "priority" => $priority,
+                "due_date" => $due_date,
+                "due_time" => ($due_time == '' ? '23:59:59' : $due_time . '00'),
+                "task_status" => $task_status,
+                "create_id" => $create_id,
+                "category" => $category,
+                "project_name" => $project_name,
+                "assignee" => $assignee,
+                "collaborator" => $collaborator,
+                "level" => $level,
+                "color" => $color,
+                "my_d" => $my_department,
+                "my_l" => $my_level,
+                "my_i" => $my_id,
+            );
+        }
+
+        return $merged_results;
+}
+
+function CombineWithSLS($db, $my_department, $my_level, $my_id)
+{
+
+        $sql = "SELECT pm.id, 
+                        pm.title, 
+                        pm.due_date, 
+                        pm.due_time, 
+                        pm.`status` task_status, 
+                        pm.create_id, 
+                        'SLS' category, 
+                        '' project_name, 
+                        pm.collaborator, 
+                        pm.assignee,
+                        pm.priority,
+                        ut.title user_title
+                from project_other_task_sl pm 
+                LEFT JOIN user u on pm.create_id = u.id
+                LEFT JOIN user_title ut ON u.title_id = ut.id
+                where pm.`status` <> -1 AND pm.due_date <> '' ";
+
+
+        $merged_results = array();
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $id = 0;
+        $title = "";
+        $due_date = "";
+        $due_time = "";
+        $task_status = "";
+        $create_id = 0;
+        $category = "";
+        $project_name = "";
+        $assignee = [];
+        $collaborator = [];
+        $color = "";
+        $priority = "";
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+           
+            $id = $row['id'];
+            $priority = GetPriority($row['priority']);
+            $title = $row['due_time'] . ' ' .
+                    '[' . $priority . ']' . 
+                    '[SLS]' .
+                    
+                     $row['title'];
+            $due_date = $row['due_date'];
+            $due_time = $row['due_time'];
+            $task_status = $row['task_status'];
+            $create_id = $row['create_id'];
+            $category = $row['category'];
+            $project_name = $row['project_name'];
+            $assignee = explode(",", $row['assignee']);
+            $collaborator = explode(",", $row['collaborator']);
+            $color = GetTaskColor($task_status, $due_date, $due_time);
+            $level = GetTitleLevel($row['user_title']);
+            
+
+            $merged_results[] = array(
+                "id" => $id,
+                "stage_id" => 0,
+                "title" => $title,
+                "priority" => $priority,
+                "due_date" => $due_date,
+                "due_time" => ($due_time == '' ? '23:59:59' : $due_time . '00'),
+                "task_status" => $task_status,
+                "create_id" => $create_id,
+                "category" => $category,
+                "project_name" => $project_name,
+                "assignee" => $assignee,
+                "collaborator" => $collaborator,
+                "level" => $level,
+                "color" => $color,
+                "my_d" => $my_department,
+                "my_l" => $my_level,
+                "my_i" => $my_id,
+            );
+        }
+
+        return $merged_results;
+}
+
+function CombineWithSVC($db, $my_department, $my_level, $my_id)
+{
+
+        $sql = "SELECT pm.id, 
+                        pm.title, 
+                        pm.due_date, 
+                        pm.due_time, 
+                        pm.`status` task_status, 
+                        pm.create_id, 
+                        'SVC' category, 
+                        '' project_name, 
+                        pm.collaborator, 
+                        pm.assignee,
+                        pm.priority,
+                        ut.title user_title
+                from project_other_task_sv pm 
+                LEFT JOIN user u on pm.create_id = u.id
+                LEFT JOIN user_title ut ON u.title_id = ut.id
+                where pm.`status` <> -1 AND pm.due_date <> '' ";
+
+
+        $merged_results = array();
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $id = 0;
+        $title = "";
+        $due_date = "";
+        $due_time = "";
+        $task_status = "";
+        $create_id = 0;
+        $category = "";
+        $project_name = "";
+        $assignee = [];
+        $collaborator = [];
+        $color = "";
+        $priority = "";
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+           
+            $id = $row['id'];
+            $priority = GetPriority($row['priority']);
+            $title = $row['due_time'] . ' ' .
+                    '[' . $priority . ']' . 
+                    '[SVC]' .
                     
                      $row['title'];
             $due_date = $row['due_date'];
