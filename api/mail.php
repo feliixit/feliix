@@ -1886,7 +1886,7 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_LT?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_OS?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
