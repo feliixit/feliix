@@ -223,6 +223,10 @@ function GetDetailType($loc)
         case "8":
             $location = "Other";
             break;
+        case "9":
+            $location = "Quotation Deadline";
+            break;
+        
     }
 
     return $location;
