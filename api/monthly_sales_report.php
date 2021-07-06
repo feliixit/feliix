@@ -273,7 +273,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $sub_tax_withheld = 0;
 
                 $subtotal = 0;
-
+/*
                 if($o_catagory == []){
                     array_push($o_catagory, array(
                                             "username" => "",
@@ -299,7 +299,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                                             "ar" => 0,
                                             "net_amount" => 0,));
                  }
-
+*/
                 foreach ($o_catagory as &$value) {
                     $sub_amount += $value['final_amount'];
                     $sub_ar += $value['ar'];
@@ -383,7 +383,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
             $sub_tax_withheld = 0;
 
             $subtotal = 0;
-
+/*
             if($o_catagory == []){
                 array_push($o_catagory, array(
                                         "username" => "",
@@ -409,7 +409,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                                         "ar" => 0,
                                         "net_amount" => 0,));
              }
-
+*/
             foreach ($o_catagory as &$value) {
                 $sub_amount += $value['final_amount'];
                 $sub_ar += $value['ar'];
@@ -466,7 +466,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
         if(count($merged_results) > 0)
         {
             usort($merged_results, function ($item1, $item2) {
-                return $item2['subtotal'] <=> $item1['subtotal'];
+                return $item2['sub_amount'] <=> $item1['sub_amount'];
             });
         }
 

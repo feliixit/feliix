@@ -362,47 +362,47 @@ background-color: #94BABB;
                                     <td v-if="j == 0" :rowspan="item.l_catagory.length">Lighting</td>
                                     <td>{{ it.client }}</td>
                                     <td>{{ it.project_name }}</td>
-                                    <td class="money">{{ it.final_amount == 0 ? "" : Number(it.final_amount).toLocaleString() }}</td>
-                                    <td class="money">{{ it.ar == 0 ? "" : Number(it.ar).toLocaleString() }}</td>
-                                    <td class="money">{{ it.dsum == 0 ? "" : Number(it.dsum).toLocaleString() }}</td>
-                                    <td class="money">{{ it.psum == 0 ? "" : Number(it.psum).toLocaleString() }}</td>
-                                    <td class="money">{{ it.net_amount == 0 ? "" : Number(it.net_amount).toLocaleString() }}</td>
-                                    <td class="money">{{ it.tax_withheld == 0 ? "" : Number(it.tax_withheld).toLocaleString() }}</td>
+                                    <td class="money">{{ it.final_amount == 0 ? "" : Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.ar == 0 ? "" : Number(it.ar).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.dsum == 0 ? "" : Number(it.dsum).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.psum == 0 ? "" : Number(it.psum).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.net_amount == 0 ? "" : Number(it.net_amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.tax_withheld == 0 ? "" : Number(it.tax_withheld).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
                             </tr>
 
                             <tr v-for="(it, j) in item.o_catagory">
-                                
+                                <td v-if="item.l_catagory.length == 0 && j==0" :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{ item.username }}</td>
                                     <td v-if="j == 0" :rowspan="item.o_catagory.length">Office Systems</td>
                                     <td>{{ it.client }}</td>
                                     <td>{{ it.project_name }}</td>
-                                    <td class="money">{{ it.final_amount == 0 ? "" : Number(it.final_amount).toLocaleString() }}</td>
-                                    <td class="money">{{ it.ar == 0 ? "" : Number(it.ar).toLocaleString() }}</td>
-                                    <td class="money">{{ it.dsum == 0 ? "" : Number(it.dsum).toLocaleString() }}</td>
-                                    <td class="money">{{ it.psum == 0 ? "" : Number(it.psum).toLocaleString() }}</td>
-                                    <td class="money">{{ it.net_amount == 0 ? "" : Number(it.net_amount).toLocaleString() }}</td>
-                                    <td class="money">{{ it.tax_withheld == 0 ? "" : Number(it.tax_withheld).toLocaleString() }}</td>
+                                    <td class="money">{{ it.final_amount == 0 ? "" : Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.ar == 0 ? "" : Number(it.ar).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.dsum == 0 ? "" : Number(it.dsum).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.psum == 0 ? "" : Number(it.psum).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.net_amount == 0 ? "" : Number(it.net_amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money">{{ it.tax_withheld == 0 ? "" : Number(it.tax_withheld).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
                             </tr>
 
                             <tr class="emphasize">
                                 <td colspan="3">Sub Total</td>
-                                <td class="money">{{ item.sub_amount == 0 ? "" : Number(item.sub_amount).toLocaleString() }}</td>
-                                <td class="money">{{ item.sub_ar == 0 ? "" : Number(item.sub_ar).toLocaleString() }}</td>
-                                <td class="money">{{ item.sub_d == 0 ? "" : Number(item.sub_d).toLocaleString() }}</td>
-                                <td class="money">{{ item.sub_p == 0 ? "" : Number(item.sub_p).toLocaleString() }}</td>
-                                <td class="money">{{ item.sub_net_amount == 0 ? "" : Number(item.sub_net_amount).toLocaleString() }}</td>
-                                <td class="money">{{ item.sub_tax_withheld == 0 ? "" : Number(item.sub_tax_withheld).toLocaleString() }}</td>
+                                <td class="money">{{ item.sub_amount == 0 ? "" : Number(item.sub_amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ item.sub_ar == 0 ? "" : Number(item.sub_ar).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ item.sub_d == 0 ? "" : Number(item.sub_d).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ item.sub_p == 0 ? "" : Number(item.sub_p).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ item.sub_net_amount == 0 ? "" : Number(item.sub_net_amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ item.sub_tax_withheld == 0 ? "" : Number(item.sub_tax_withheld).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
                             </tr>
                         </template>
 
                         
                         <tr class="emphasize">
                             <td colspan="4">Total</td>
-                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_amount) === 0 ? "" : Number(record.total.total_amount).toLocaleString() }}</td>
-                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_ar) === 0 ? "" : Number(record.total.total_ar).toLocaleString() }}</td>
-                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_d) === 0 ? "" : Number(record.total.total_d).toLocaleString() }}</td>
-                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_p) === 0 ? "" : Number(record.total.total_p).toLocaleString() }}</td>
-                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_net_amount) === 0 ? "" : Number(record.total.total_net_amount).toLocaleString() }}</td>
-                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_tax_withheld) === 0 ? "" : Number(record.total.total_tax_withheld).toLocaleString() }}</td>
+                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_amount) === 0 ? "" : Number(record.total.total_amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_ar) === 0 ? "" : Number(record.total.total_ar).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_d) === 0 ? "" : Number(record.total.total_d).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_p) === 0 ? "" : Number(record.total.total_p).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_net_amount) === 0 ? "" : Number(record.total.total_net_amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_tax_withheld) === 0 ? "" : Number(record.total.total_tax_withheld).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
                         </tr>
                         
 
