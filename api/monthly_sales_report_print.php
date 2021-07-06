@@ -122,11 +122,6 @@ if($jwt){
             $sheet->setTitle("Sheet 1");
             $sheet->getMergeCells();
 
-            
-
-            
-        
-
             $i = 1;
             foreach($merged_results as $row)
             {
@@ -144,6 +139,7 @@ if($jwt){
                 $sheet->setCellValue('H'. $i, 'Full Payment');
                 $sheet->setCellValue('I'. $i, 'Net Amount');
                 $sheet->setCellValue('J'. $i, 'Tax Withheld');
+                $sheet->getStyle('A' . $i . ':' . 'J' . $i)->getFont()->setBold(true);
 
                 foreach($row['report'] as $rp)
                 {
@@ -154,12 +150,12 @@ if($jwt){
                         $sheet->setCellValue('B' . $i, 'Ligthing');
                         $sheet->setCellValue('C' . $i, $low['client']);
                         $sheet->setCellValue('D' . $i, $low['project_name']);
-                        $sheet->setCellValue('E' . $i, $low['final_amount']);
-                        $sheet->setCellValue('F' . $i, $low['ar']);
-                        $sheet->setCellValue('G' . $i, $low['dsum']);
-                        $sheet->setCellValue('H' . $i, $low['psum']);
-                        $sheet->setCellValue('I' . $i, $low['net_amount']);
-                        $sheet->setCellValue('J' . $i, $low['tax_withheld']);
+                        $sheet->setCellValue('E' . $i, number_format((float)$low['final_amount'], 2, '.', ''));
+                        $sheet->setCellValue('F' . $i, number_format((float)$low['ar'], 2, '.', ''));
+                        $sheet->setCellValue('G' . $i, number_format((float)$low['dsum'], 2, '.', ''));
+                        $sheet->setCellValue('H' . $i, number_format((float)$low['psum'], 2, '.', ''));
+                        $sheet->setCellValue('I' . $i, number_format((float)$low['net_amount'], 2, '.', ''));
+                        $sheet->setCellValue('J' . $i, number_format((float)$low['tax_withheld'], 2, '.', ''));
                     }
 
                     foreach ($rp['o_catagory'] as $oow)
@@ -169,22 +165,43 @@ if($jwt){
                         $sheet->setCellValue('B' . $i, 'Office Systems');
                         $sheet->setCellValue('C' . $i, $oow['client']);
                         $sheet->setCellValue('D' . $i, $oow['project_name']);
-                        $sheet->setCellValue('E' . $i, number_format($oow['final_amount']));
-                        $sheet->setCellValue('F' . $i, $oow['ar']);
-                        $sheet->setCellValue('G' . $i, $oow['dsum']);
-                        $sheet->setCellValue('H' . $i, $oow['psum']);
-                        $sheet->setCellValue('I' . $i, $oow['net_amount']);
-                        $sheet->setCellValue('J' . $i, $oow['tax_withheld']);
+                        $sheet->setCellValue('E' . $i, number_format((float)$oow['final_amount'], 2, '.', ''));
+                        $sheet->setCellValue('F' . $i, number_format((float)$oow['ar'], 2, '.', ''));
+                        $sheet->setCellValue('G' . $i, number_format((float)$oow['dsum'], 2, '.', ''));
+                        $sheet->setCellValue('H' . $i, number_format((float)$oow['psum'], 2, '.', ''));
+                        $sheet->setCellValue('I' . $i, number_format((float)$oow['net_amount'], 2, '.', ''));
+                        $sheet->setCellValue('J' . $i, number_format((float)$oow['tax_withheld'], 2, '.', ''));
                     }
+
+                    $i = $i + 1;
+                    $sheet->setCellValue('D' . $i, "Sub Total:");
+                    $sheet->setCellValue('E' . $i, number_format((float)$rp['sub_amount'], 2, '.', ''));
+                    $sheet->setCellValue('F' . $i, number_format((float)$rp['sub_ar'], 2, '.', ''));
+                    $sheet->setCellValue('G' . $i, number_format((float)$rp['sub_d'], 2, '.', ''));
+                    $sheet->setCellValue('H' . $i, number_format((float)$rp['sub_p'], 2, '.', ''));
+                    $sheet->setCellValue('I' . $i, number_format((float)$rp['sub_net_amount'], 2, '.', ''));
+                    $sheet->setCellValue('J' . $i, number_format((float)$rp['sub_tax_withheld'], 2, '.', ''));
+
+                    $sheet->getStyle('A' . $i . ':' . 'J' . $i)->getFont()->setBold(true);
                 }
 
-                $sheet->getStyle('A'. $i. ':' . 'J' . $i)->applyFromArray($styleArray);
+                $i = $i + 1;
+                $sheet->setCellValue('D' . $i, "Total:");
+                $sheet->setCellValue('E' . $i, number_format((float)$row['total']['total_amount'], 2, '.', ''));
+                $sheet->setCellValue('F' . $i, number_format((float)$row['total']['total_ar'], 2, '.', ''));
+                $sheet->setCellValue('G' . $i, number_format((float)$row['total']['total_d'], 2, '.', ''));
+                $sheet->setCellValue('H' . $i, number_format((float)$row['total']['total_p'], 2, '.', ''));
+                $sheet->setCellValue('I' . $i, number_format((float)$row['total']['total_net_amount'], 2, '.', ''));
+                $sheet->setCellValue('J' . $i, number_format((float)$row['total']['total_tax_withheld'], 2, '.', ''));
 
-                $i++;
+                $sheet->getStyle('A' . $i . ':' . 'J' . $i)->getFont()->setBold(true);
+                //$sheet->getStyle('A'. $i. ':' . 'J' . $i)->applyFromArray($styleArray);
+
+                $i = $i + 2;
             }
 
-            $sheet->getStyle('A1:' . 'J1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'J' . --$i)->applyFromArray($styleArray);
+            
+            // $sheet->getStyle('A1:' . 'J' . --$i)->applyFromArray($styleArray);
 
            
 
