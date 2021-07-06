@@ -126,7 +126,7 @@ $(function(){
                         </li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="test_manager" id="test_manager" :true-value="1" v-model:checked="test_manager" @change="updateTestManager">
-                            <label for="test_manager">TEST Manager</label>
+                            <label for="test_manager">Project Mgt and Expense Recorder Access</label>
                         </li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="head_of_department" @change="updateHeadOfDepartment">
@@ -203,7 +203,7 @@ $(function(){
                         </li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="test_manager" id="test_manager" :true-value="1" v-model:checked="record.test_manager" @change="updateTestManager">
-                            <label for="test_manager">TEST Manager</label>
+                            <label for="test_manager">Project Mgt and Expense Recorder Access</label>
                         </li>
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="head_of_department" id="head_of_department" :true-value="1" v-model:checked="record.head_of_department" @change="updateHeadOfDepartment">

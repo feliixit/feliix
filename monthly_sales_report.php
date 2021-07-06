@@ -322,7 +322,7 @@ background-color: #94BABB;
 
                     <!-- 匯出 -->
                     <div class="popupblock">
-                        <a class="exporting" id="btn_export"></a>
+                        <a class="exporting" id="btn_export" @click="export_petty()"></a>
                     </div>
 
 

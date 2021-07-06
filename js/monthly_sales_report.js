@@ -741,27 +741,15 @@ var app = new Vue({
       var form_Data = new FormData();
       let _this = this;
       form_Data.append("jwt", token);
-      form_Data.append("fru", this.fil_request_no_upper);
-      form_Data.append("frl", this.fil_request_no_lower);
-      form_Data.append("fc", this.fil_creator);
-      form_Data.append("ft", this.fil_type);
-      form_Data.append("fs", this.fil_status);
-      form_Data.append("fat", this.fil_amount_type);
-      form_Data.append("fau", this.fil_amount_upper);
-      form_Data.append("fal", this.fil_amount_lower);
-      form_Data.append("ftd", this.fil_type_date);
-      form_Data.append("fds", this.fil_date_start);
-      form_Data.append("fde", this.fil_date_end);
-      form_Data.append("of1", this.od_factor1);
-      form_Data.append("ofd1", this.od_factor1_order);
-      form_Data.append("of2", this.od_factor2);
-      form_Data.append("ofd2", this.od_factor2_order);
-      form_Data.append("page", this.page);
-      form_Data.append("size", this.perPage);
+      form_Data.append("d", this.fil_start_date);
+      form_Data.append("e", this.fil_end_date);
+      form_Data.append("p", this.fil_creator);
+      form_Data.append("c", this.fil_category);
+    
 
       axios({
         method: "post",
-        url: "api/expense_application_report_print",
+        url: "api/monthly_sales_report_print",
         data: form_Data,
         responseType: "blob",
       })
@@ -770,7 +758,7 @@ var app = new Vue({
                 const link = document.createElement('a');
                 link.href = url;
                
-                  link.setAttribute('download', 'Expense Application Voucher.xlsx');
+                  link.setAttribute('download', 'Monthly Sales Report.xlsx');
                
                 document.body.appendChild(link);
                 link.click();

@@ -389,7 +389,7 @@ function GetTaskDetail($id, $db)
             due_time,
             '' stage,
             detail
-            FROM project_other_task_d pt
+            FROM project_other_task_sv pt
             WHERE pt.id = :id";
 
     $merged_results = array();
