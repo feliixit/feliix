@@ -161,7 +161,7 @@ if($jwt){
                     foreach ($rp['o_catagory'] as $oow)
                     {
                         $i = $i + 1;
-                        $sheet->setCellValue('A' . $i, $loowow['username']);
+                        $sheet->setCellValue('A' . $i, $oow['username']);
                         $sheet->setCellValue('B' . $i, 'Office Systems');
                         $sheet->setCellValue('C' . $i, $oow['client']);
                         $sheet->setCellValue('D' . $i, $oow['project_name']);
