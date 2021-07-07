@@ -524,12 +524,13 @@ $(function(){
                                 <dt class="head">Detail Type:</dt>
                                 <dd>
                                     <select  v-model="detail_type">
-                                        <option value="1">Requirements</option>
-                                        <option value="2">Submittals</option>
-                                        <option value="3">Discount</option>
                                         <option value="4">Client Details</option>
                                         <option value="5">Competitors</option>
+                                        <option value="3">Discount</option>
                                         <option value="6">Lead Time</option>
+                                        <option value="9">Quotation Deadline</option>
+                                        <option value="1">Requirements</option>
+                                        <option value="2">Submittals</option>
                                         <option value="7">Warranty</option>
                                         <option value="8">Other</option>
                                     </select>

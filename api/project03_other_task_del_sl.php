@@ -14,6 +14,9 @@ include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
+
+include_once 'mail.php';
+
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
     http_response_code(401);
@@ -28,6 +31,7 @@ else
         $decoded = JWT::decode($jwt, $key, array('HS256'));
 
         $user_id = $decoded->data->id;
+        $username = $decoded->data->username;
 
     }
         // if decode fails, it means jwt is invalid
@@ -66,6 +70,9 @@ try{
 
     $jsonEncodedReturnArray = "";
     if ($stmt->execute()) {
+        // send notify mail
+        SendNotifyMail($task_id_to_del, $uid);
+
         $returnArray = array('ret' => $task_id_to_del);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
     }
@@ -82,3 +89,69 @@ catch (Exception $e)
     error_log($e->getMessage());
 }
 
+function SendNotifyMail($last_id, $uid)
+{
+    $project_name = "";
+    $task_name = "";
+    $stages_status = "";
+    $create_id = "";
+
+    $assignee = "";
+    $collaborator = "";
+
+    $due_date = "";
+    $detail = "";
+
+    $stage_id = 0;
+
+    $_record = array();
+
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $_record = GetTaskDetail($last_id, $db);
+ 
+    $project_name = $_record[0]["project_name"];
+    $task_name = $_record[0]["task_name"];
+    $stages_status = $_record[0]["stages_status"];
+    $stages = $_record[0]["stage"];
+    $create_id = $_record[0]["create_id"];
+
+    $assignee = $_record[0]["assignee"];
+    $collaborator = $_record[0]["collaborator"];
+
+    $due_date = str_replace("-", "/", $_record[0]["due_date"]) . " " . $_record[0]["due_time"];
+    $detail = $_record[0]["detail"];
+
+    $stage_id = $_record[0]["stage_id"];
+
+    task_notify_admin_sl("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, 0, $uid);
+
+}
+
+function GetTaskDetail($id, $db)
+{
+    $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
+                '' `stages_status`, 
+                pt.create_id,
+                pt.assignee,
+                pt.collaborator,
+                due_date,
+                due_time,
+                '' stage,
+                detail
+            FROM project_other_task_sl pt
+            WHERE pt.id  = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}

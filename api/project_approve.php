@@ -233,7 +233,7 @@ function SendNotifyMail($bid)
     $database = new Database();
     $db = $database->getConnection();
 
-    $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, p.catagory_id, pm.kind FROM project_approve pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status >= 0 ";
+    $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, p.catagory_id, 0 kind FROM project_approve pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status >= 0 ";
 
     $stmt = $db->prepare( $sql );
     $stmt->execute();

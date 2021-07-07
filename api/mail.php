@@ -486,7 +486,9 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
-    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    if($kind == 0)
+        $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -570,7 +572,8 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
-    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -653,7 +656,11 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC($email1, $name);
-    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+
+    if($kind == 0)
+        $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -719,7 +726,8 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC($email1, $name);
-    $mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+    $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -2419,6 +2427,177 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
 
 }
 
+function task_notify01_admin_sl($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+{
+
+    $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Reviser:" . $revisor . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SLS?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
+
+function task_notify01_admin_sv($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+{
+
+    $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Reviser:" . $revisor . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SVC?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
 function task_notify01_admin_d($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
 
@@ -2946,6 +3125,15 @@ function project01_notify_mail($request_type, $project_name, $username, $created
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
+    if($estimate_close_prob == "80" || $estimate_close_prob == "90" || $estimate_close_prob == "100")
+    {
+        $notifior = GetProjectServiceNotifiers($category);
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     
@@ -3012,6 +3200,15 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    if($stage_name == 'A Meeting / Close Deal' || $stage_name == 'Order')
+    {
+        $notifior = GetProjectServiceNotifiers();
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
     }
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -3245,6 +3442,32 @@ function GetProjectNotifiersByCatagory($catagory)
                 'Lighting Manager',
                 'Managing Director') ";
     }
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetProjectServiceNotifiers()
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "
+            SELECT username, email, title 
+            FROM user u
+            LEFT JOIN user_title ut
+            ON u.title_id = ut.id 
+            WHERE title IN(
+                'Service Manager') ";
+
 
     $merged_results = array();
 
