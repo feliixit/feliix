@@ -2427,6 +2427,177 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
 
 }
 
+function task_notify01_admin_sl($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+{
+
+    $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Reviser:" . $revisor . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SLS?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
+
+function task_notify01_admin_sv($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+{
+
+    $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Reviser:" . $revisor . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SVC?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
 function task_notify01_admin_d($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
 
