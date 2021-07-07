@@ -1,3 +1,5 @@
+Vue.component('v-select', VueSelect.VueSelect)
+
 var app = new Vue({
     data: {
         name: "",
@@ -10,12 +12,36 @@ var app = new Vue({
         file_day: "",
         fileArray: [],
         filename: [],
+
+        users: [],
     },
     created() {
         this.getMonthDay();
         this.getUserName();
+        this.getUsers();
     },
     methods: {
+        getUsers() {
+  
+            let _this = this;
+      
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+              .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
+              .then(
+                (res) => {
+                  _this.users = res.data;
+                },
+                (err) => {
+                  alert(err.response);
+                },
+              )
+              .finally(() => {
+      
+              });
+          },
+
         addMain2: function (details, main, du, calendar) {
             if (!main.Allday) {
                 if (
@@ -1757,6 +1783,7 @@ function Change_Schedule_State(status, time_status) {
     document.getElementById("sc_project").disabled = status;
     document.getElementById("sc_sales").disabled = status;
     document.getElementById("sc_incharge").disabled = status;
+    document.getElementById("sc_relevant").disabled = status;
 
     if (status == false) {
         if (time_status == true) {

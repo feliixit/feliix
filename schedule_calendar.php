@@ -58,7 +58,7 @@ try {
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
           rel="stylesheet">
 
-
+          <link rel="stylesheet" href="css/vue-select.css" type="text/css">
     <link href='https://unpkg.com/fullcalendar@5.1.0/main.min.css' rel='stylesheet'/>
     
 
@@ -380,6 +380,24 @@ try {
 
 
                         <input type="text" class="form-control" style="width:90%;" id="sc_incharge">
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="form-inline row">
+                    <div class="col-2 align-self-center" style="text-align: center;">
+
+                        <label>Relevant Persons</label>
+                    </div>
+
+                    <div class="col-10">
+
+                    <v-select id="sc_relevant" class="form-control" style="width:40%;" :options="users" attach chips label="username"
+                      multiple></v-select>
+                     
 
                     </div>
 
@@ -776,6 +794,7 @@ try {
 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="js/work_calender.js?v=2020112805"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
