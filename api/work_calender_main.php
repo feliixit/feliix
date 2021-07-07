@@ -22,6 +22,7 @@ $text_color = (isset($_POST['text_color']) ?  $_POST['text_color'] : '');
 $project = (isset($_POST['project']) ?  $_POST['project'] : '');
 $sales_executive = (isset($_POST['sales_executive']) ?  $_POST['sales_executive'] : '');
 $project_in_charge = (isset($_POST['project_in_charge']) ?  $_POST['project_in_charge'] : '');
+$project_relevant = (isset($_POST['project_relevant']) ?  $_POST['project_relevant'] : '');
 $installer_needed = (isset($_POST['installer_needed']) ?  $_POST['installer_needed'] : '');
 $installer_needed_other = (isset($_POST['installer_needed_other']) ?  $_POST['installer_needed_other'] : '');
 $installer_needed_location = (isset($_POST['installer_needed_location']) ?  $_POST['installer_needed_location'] : '');
@@ -117,6 +118,7 @@ if (!isset($jwt)) {
             $workCalenderMain->project = $project;
             $workCalenderMain->sales_executive = $sales_executive;
             $workCalenderMain->project_in_charge = $project_in_charge;
+            $workCalenderMain->project_relevant = $project_relevant;
             $workCalenderMain->installer_needed = $installer_needed;
             $workCalenderMain->installer_needed_other = $installer_needed_other;
             $workCalenderMain->installer_needed_location = $installer_needed_location;
@@ -164,6 +166,7 @@ if (!isset($jwt)) {
             $workCalenderMain->project = $project;
             $workCalenderMain->sales_executive = $sales_executive;
             $workCalenderMain->project_in_charge = $project_in_charge;
+            $workCalenderMain->project_relevant = $project_relevant;
             $workCalenderMain->installer_needed = $installer_needed;
             $workCalenderMain->installer_needed_other = $installer_needed_other;
             $workCalenderMain->installer_needed_location = $installer_needed_location;
@@ -322,6 +325,7 @@ if (!isset($jwt)) {
             $workCalenderMain->project = $project;
             $workCalenderMain->sales_executive = $sales_executive;
             $workCalenderMain->project_in_charge = $project_in_charge;
+            $workCalenderMain->project_relevant = $project_relevant;
             $workCalenderMain->installer_needed = $installer_needed;
             $workCalenderMain->installer_needed_other = $installer_needed_other;
             $workCalenderMain->installer_needed_location = $installer_needed_location;
@@ -471,6 +475,7 @@ if (!isset($jwt)) {
             $workCalenderMain->project = $project;
             $workCalenderMain->sales_executive = $sales_executive;
             $workCalenderMain->project_in_charge = $project_in_charge;
+            $workCalenderMain->project_relevant = $project_relevant;
             $workCalenderMain->installer_needed = $installer_needed;
             $workCalenderMain->installer_needed_other = $installer_needed_other;
             $workCalenderMain->installer_needed_location = $installer_needed_location;

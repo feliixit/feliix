@@ -28,7 +28,18 @@ try {
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 
-    $access6 = true;
+    $access6 = false;
+
+    if(trim($department) == '')
+    {
+        if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
+        {
+            $access6 = true;
+        }
+    }
+
+    if($access6 == false)
+        header( 'location:index' );
 
     
 }

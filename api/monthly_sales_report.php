@@ -23,15 +23,27 @@ if (!isset($jwt)) {
 } else {
     try {
         // decode jwt
+        $access7 = false;
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $user_id = $decoded->data->id;
-        //if(!$decoded->data->is_admin)
-        //{
-        //  http_response_code(401);
+        $position = $decoded->data->position;
+        $department = $decoded->data->department;
 
-        //  echo json_encode(array("message" => "Access denied."));
-        //  die();
-        //}
+        if(trim(strtoupper($department)) == '')
+        {
+            if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
+            {
+                $access7 = true;
+            }
+        }
+
+        if(!$access7)
+        {
+         http_response_code(401);
+
+         echo json_encode(array("message" => "Access denied."));
+         die();
+        }
     }
     // if decode fails, it means jwt is invalid
     catch (Exception $e) {

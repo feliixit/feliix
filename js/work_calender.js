@@ -1,6 +1,9 @@
 Vue.component('v-select', VueSelect.VueSelect)
 
+
+
 var app = new Vue({
+    el: '#sc_relevant', 
     data: {
         name: "",
         today: "",
@@ -12,6 +15,8 @@ var app = new Vue({
         file_day: "",
         fileArray: [],
         filename: [],
+
+        attendee:[],
 
         users: [],
     },
@@ -31,7 +36,9 @@ var app = new Vue({
               .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
               .then(
                 (res) => {
-                  _this.users = res.data;
+                    _users = res.data;
+                    _this.users = Object.keys(_users).map(function(k){return _users[k].username})
+                  
                 },
                 (err) => {
                   alert(err.response);
@@ -99,6 +106,7 @@ var app = new Vue({
             form_Data.append("project", main.Project);
             form_Data.append("sales_executive", main.Sales_Executive);
             form_Data.append("project_in_charge", main.Project_in_charge);
+            form_Data.append("project_relevant", main.Project_relevant);
             form_Data.append("installer_needed", main.Installer_needed);
             form_Data.append("installer_needed_other", main.Installer_needed_other);
             form_Data.append(
@@ -285,6 +293,7 @@ var app = new Vue({
             form_Data.append("project", main.Project);
             form_Data.append("sales_executive", main.Sales_Executive);
             form_Data.append("project_in_charge", main.Project_in_charge);
+            form_Data.append("project_relevant", main.Project_relevant);
             form_Data.append("installer_needed", main.Installer_needed);
             form_Data.append("installer_needed_other", main.Installer_needed_other);
             form_Data.append(
@@ -542,6 +551,9 @@ var app = new Vue({
                                 Project_in_charge: UnescapeHTML(
                                     response.data[i].project_in_charge
                                 ),
+                                Project_relevant: UnescapeHTML(
+                                    response.data[i].project_relevant
+                                ),
                                 Installer_needed: UnescapeHTML(
                                     response.data[i].installer_needed
                                 ),
@@ -695,6 +707,9 @@ var app = new Vue({
                                 Sales_Executive: UnescapeHTML(response.data[i].sales_executive),
                                 Project_in_charge: UnescapeHTML(
                                     response.data[i].project_in_charge
+                                ),
+                                Project_relevant: UnescapeHTML(
+                                    response.data[i].project_relevant
                                 ),
                                 Installer_needed: UnescapeHTML(
                                     response.data[i].installer_needed
@@ -887,6 +902,7 @@ var app = new Vue({
             form_Data.append("project", sc_content.Project);
             form_Data.append("sales_executive", sc_content.Sales_Executive);
             form_Data.append("project_in_charge", sc_content.Project_in_charge);
+            form_Data.append("project_relevant", sc_content.Project_relevant);
             form_Data.append("installer_needed", sc_content.Installer_needed);
             form_Data.append("installer_needed_other", sc_content.Installer_needed_other);
             form_Data.append(
@@ -1099,6 +1115,7 @@ var app = new Vue({
             form_Data.append("project", main.Project);
             form_Data.append("sales_executive", main.Sales_Executive);
             form_Data.append("project_in_charge", main.Project_in_charge);
+            form_Data.append("project_relevant", main.Project_relevant);
             form_Data.append("installer_needed", main.Installer_needed);
             form_Data.append("installer_needed_other", main.Installer_needed_other);
             form_Data.append(
@@ -1453,6 +1470,9 @@ var initial = () =>  {
             document.getElementById("sc_sales").value = sc_content.Sales_Executive;
             document.getElementById("sc_incharge").value =
                 sc_content.Project_in_charge;
+            document.getElementById("sc_relevant").value =
+                sc_content.Project_relevant;
+            app.attendee =  sc_content.Project_relevant.split(",");;
                 
             document.getElementById("sc_Installer_needed_other").value = sc_content.Installer_needed_other;
 
@@ -1681,6 +1701,7 @@ $("button[id='btn_add']").click(function () {
         Project: document.getElementById("sc_project").value,
         Sales_Executive: document.getElementById("sc_sales").value,
         Project_in_charge: document.getElementById("sc_incharge").value,
+        Project_relevant: Object.keys(app.attendee).map(function(k){return app.attendee[k]}).join(","),
         Agenda: agenda_content,
         Installer_needed: selected.join(),
         Installer_needed_other: document.getElementById("sc_Installer_needed_other").value,
@@ -1729,6 +1750,7 @@ function resetSchedule() {
     document.getElementById("sc_project").value = "";
     document.getElementById("sc_sales").value = "";
     document.getElementById("sc_incharge").value = "";
+    document.getElementById("sc_relevant").value = "";
 
     document.getElementById("sc_tb_location").value = "";
     document.getElementById("sc_tb_agenda").value = "";
@@ -1784,6 +1806,14 @@ function Change_Schedule_State(status, time_status) {
     document.getElementById("sc_sales").disabled = status;
     document.getElementById("sc_incharge").disabled = status;
     document.getElementById("sc_relevant").disabled = status;
+
+    if (status == false) {
+        $("#sc_relevant").removeClass("select_disabled");
+    }
+
+    if(status == true) {
+        $("#sc_relevant").addClass("select_disabled");
+    }
 
     if (status == false) {
         if (time_status == true) {
@@ -1932,6 +1962,8 @@ $(document).on("click", "#btn_cancel", function () {
     document.getElementById("sc_project").value = sc_content.Project;
     document.getElementById("sc_sales").value = sc_content.Sales_Executive;
     document.getElementById("sc_incharge").value = sc_content.Project_in_charge;
+    document.getElementById("sc_relevant").value = sc_content.Project_relevant;
+    app.attendee = sc_content.Project_relevant.split(',');
 
     document.getElementById("sc_tb_location").value = "";
     document.getElementById("sc_tb_agenda").value = "";
@@ -2219,6 +2251,7 @@ $(document).on("click", "#btn_save", function () {
         Project: document.getElementById("sc_project").value,
         Sales_Executive: document.getElementById("sc_sales").value,
         Project_in_charge: document.getElementById("sc_incharge").value,
+        Project_relevant: Object.keys(app.attendee).map(function(k){return app.attendee[k]}).join(","),
         Agenda: agenda_content,
         Installer_needed: selected.join(),
         Installer_needed_other: document.getElementById("sc_Installer_needed_other").value,

@@ -175,6 +175,15 @@ try {
             }
         }
 
+        .select_disabled {
+            pointer-events:none;
+            color: #bfcbd9;
+            cursor: not-allowed;
+            background-image: none;
+            background-color: #eef1f6;
+            border-color: #d1dbe5;   
+            }
+
     </style>
 
 </head>
@@ -195,7 +204,7 @@ try {
 <div id='msg'>
 <div class="messageboard" id="messageboard">
     <h3>Message Board</h3>
-	<div v-for="(msg, i) in messages" class="message__item">
+	<div v-if="msg.message !== ''" v-for="(msg, i) in messages" class="message__item">
 	<div>
 	<input v-if="msg.id == edit" class="add__input" style="width:100%" v-model="msg.message" maxlength="100">
 	<div v-else-if="msg.id != edit && msg.updated_at == null" class="message__item__input">{{ msg.message }} (created by {{ msg.created_by }} at {{ msg.created_at }})</div>
@@ -395,7 +404,7 @@ try {
 
                     <div class="col-10">
 
-                    <v-select id="sc_relevant" class="form-control" style="width:40%;" :options="users" attach chips label="username"
+                    <v-select id="sc_relevant"  style="width:40%;" :options="users" attach chips label="username" v-model="attendee"
                       multiple></v-select>
                      
 
@@ -793,7 +802,7 @@ try {
 </script>
 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="js/work_calender.js?v=2020112805"></script>
