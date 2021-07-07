@@ -1472,7 +1472,7 @@ var initial = () =>  {
                 sc_content.Project_in_charge;
             document.getElementById("sc_relevant").value =
                 sc_content.Project_relevant;
-            app.attendee =  sc_content.Project_relevant.split(",");;
+            app.attendee = (sc_content.Project_relevant.split(",") === "" ? [] : sc_content.Project_relevant.split(","));
                 
             document.getElementById("sc_Installer_needed_other").value = sc_content.Installer_needed_other;
 
@@ -1963,7 +1963,7 @@ $(document).on("click", "#btn_cancel", function () {
     document.getElementById("sc_sales").value = sc_content.Sales_Executive;
     document.getElementById("sc_incharge").value = sc_content.Project_in_charge;
     document.getElementById("sc_relevant").value = sc_content.Project_relevant;
-    app.attendee = sc_content.Project_relevant.split(',');
+    app.attendee = (sc_content.Project_relevant.split(",") === "" ? [] : sc_content.Project_relevant.split(","));
 
     document.getElementById("sc_tb_location").value = "";
     document.getElementById("sc_tb_agenda").value = "";
