@@ -1682,3 +1682,8 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_sv` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+-- add relevant for scheduled calendar
+ALTER TABLE work_calendar_main
+ADD COLUMN `project_relevant` varchar(512)  default '' AFTER project_in_charge;

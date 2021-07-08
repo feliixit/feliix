@@ -35,7 +35,7 @@ $db = $database->getConnection();
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 
 $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
-        project_in_charge, installer_needed, installer_needed_other, things_to_bring, installer_needed_location, things_to_bring_location, 
+        project_in_charge, project_relevant, installer_needed, installer_needed_other, things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, driver_other,
 		back_up_driver, back_up_driver_other, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
 		DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files
@@ -50,6 +50,7 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $title = '';
     $sales_executive = '';
     $project_in_charge = '';
+    $project_relevant = '';
     $installer_needed = '';
     $installer_needed_other = '';
     $things_to_bring = '';
@@ -82,6 +83,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $title = $row['title'];
     $sales_executive = $row['sales_executive'];
     $project_in_charge = $row['project_in_charge'];
+    $project_relevant = $row['project_relevant'];
     $installer_needed = $row['installer_needed'];
     $installer_needed_other = $row['installer_needed_other'];
     $things_to_bring = $row['things_to_bring'];
@@ -110,7 +112,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 if($onrecord == 0)
 {
     $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
-        project_in_charge, installer_needed, installer_needed_other,things_to_bring, installer_needed_location, things_to_bring_location, 
+        project_in_charge, project_relevant, installer_needed, installer_needed_other,things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, driver_other,
 		back_up_driver, back_up_driver_other, photoshoot_request, notes, '' location, '' agenda, '' appoint_time, 
 		'' end_time, products_to_bring_files
@@ -128,6 +130,7 @@ if($onrecord == 0)
         $title = $row['title'];
         $sales_executive = $row['sales_executive'];
         $project_in_charge = $row['project_in_charge'];
+        $project_relevant = $row['project_relevant'];
         $installer_needed = $row['installer_needed'];
         $installer_needed_other = $row['installer_needed_other'];
         $things_to_bring = $row['things_to_bring'];
@@ -189,6 +192,10 @@ $table->addCell(8500, ['borderSize' => 6])->addText($sales_executive);
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("project_in_charge:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($project_in_charge);
+
+$table->addRow();
+$table->addCell(2000, ['borderSize' => 6])->addText("project_relevant:", array('bold' => true));
+$table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));

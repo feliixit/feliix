@@ -58,7 +58,7 @@ try {
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
           rel="stylesheet">
 
-
+          <link rel="stylesheet" href="css/vue-select.css" type="text/css">
     <link href='https://unpkg.com/fullcalendar@5.1.0/main.min.css' rel='stylesheet'/>
     
 
@@ -175,6 +175,15 @@ try {
             }
         }
 
+        .select_disabled {
+            pointer-events:none;
+            color: #bfcbd9;
+            cursor: not-allowed;
+            background-image: none;
+            background-color: #eef1f6;
+            border-color: #d1dbe5;   
+            }
+
     </style>
 
 </head>
@@ -195,7 +204,7 @@ try {
 <div id='msg'>
 <div class="messageboard" id="messageboard">
     <h3>Message Board</h3>
-	<div v-for="(msg, i) in messages" class="message__item">
+	<div v-if="msg.message.trim() !== ''" v-for="(msg, i) in messages" class="message__item">
 	<div>
 	<input v-if="msg.id == edit" class="add__input" style="width:100%" v-model="msg.message" maxlength="100">
 	<div v-else-if="msg.id != edit && msg.updated_at == null" class="message__item__input">{{ msg.message }} (created by {{ msg.created_by }} at {{ msg.created_at }})</div>
@@ -380,6 +389,24 @@ try {
 
 
                         <input type="text" class="form-control" style="width:90%;" id="sc_incharge">
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="form-inline row">
+                    <div class="col-2 align-self-center" style="text-align: center;">
+
+                        <label>Relevant Persons</label>
+                    </div>
+
+                    <div class="col-10">
+
+                    <v-select id="sc_relevant"  style="width:90%;" :options="users" attach chips label="username" v-model="attendee"
+                      multiple></v-select>
+                     
 
                     </div>
 
@@ -775,7 +802,8 @@ try {
 </script>
 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="js/work_calender.js?v=2020112805"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>

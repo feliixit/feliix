@@ -19,6 +19,7 @@ use \Firebase\JWT\JWT;
     $access4 = false;
     $access5 = false;
     $access6 = false;
+    $access7 = false;
 
     $pic_url = "man6.jpg";
 
@@ -135,6 +136,7 @@ try {
             if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
             {
                 $access6 = true;
+                $access7 = true;
             }
         }
 
@@ -232,12 +234,21 @@ try {
                 }
             ?>
 
-            <?php 
-                if($access5 == true)
+<?php 
+                if($access5 == true || $access7 == true)
                 {
             ?>
             <li class="red01" style="border: 3px solid var(--red01);">
-                <a class="uni" href="expense_application_report">Report<br>Section</a>
+                <a class="uni">Report<br>Section</a>
+                <a class="list" href="expense_application_report">Expense Application Tracker</a>
+                <?php 
+                    if($access7 == true)
+                    {
+                ?>
+                <a class="list" href="monthly_sales_report">Monthly Sales Report</a>
+                <?php 
+                    }
+                ?>
             </li>
             <?php 
                 }

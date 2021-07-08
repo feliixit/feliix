@@ -17,6 +17,7 @@ class WorkCalenderMain
     public $project;
     public $sales_executive;
     public $project_in_charge;
+    public $project_relevant;
     public $installer_needed;
     public $installer_needed_other;
     public $installer_needed_location;
@@ -85,7 +86,7 @@ class WorkCalenderMain
                 set title = :title, all_day = :all_day, start_time = :start_time, 
                 end_time = :end_time, color = :color, color_other = :color_other, 
                 text_color = :text_color, project = :project , sales_executive = :sales_executive, 
-                project_in_charge = :project_in_charge, installer_needed = :installer_needed, installer_needed_other = :installer_needed_other, installer_needed_location = :installer_needed_location, 
+                project_in_charge = :project_in_charge, project_relevant = :project_relevant, installer_needed = :installer_needed, installer_needed_other = :installer_needed_other, installer_needed_location = :installer_needed_location, 
                 things_to_bring = :things_to_bring, things_to_bring_location = :things_to_bring_location, 
                 products_to_bring = :products_to_bring, products_to_bring_files = :products_to_bring_files,
                 service = :service, driver = :driver, driver_other = :driver_other, back_up_driver = :back_up_driver, back_up_driver_other = :back_up_driver_other,
@@ -108,6 +109,7 @@ class WorkCalenderMain
         $this->project = htmlspecialchars(strip_tags($this->project));
         $this->sales_executive = htmlspecialchars(strip_tags($this->sales_executive));
         $this->project_in_charge = htmlspecialchars(strip_tags($this->project_in_charge));
+        $this->project_relevant = htmlspecialchars(strip_tags($this->project_relevant));
         
         $this->installer_needed = htmlspecialchars(strip_tags($this->installer_needed));
         $this->installer_needed_other = htmlspecialchars(strip_tags($this->installer_needed_other));
@@ -140,6 +142,7 @@ class WorkCalenderMain
         $stmt->bindParam(':project', $this->project);
         $stmt->bindParam(':sales_executive', $this->sales_executive);
         $stmt->bindParam(':project_in_charge', $this->project_in_charge);
+        $stmt->bindParam(':project_relevant', $this->project_relevant);
 
         $stmt->bindParam(':installer_needed', $this->installer_needed);
         $stmt->bindParam(':installer_needed_other', $this->installer_needed_other);
@@ -185,8 +188,8 @@ class WorkCalenderMain
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`title`, `all_day`,`start_time`, `end_time`, `color`, `color_other`, `text_color`, `project`, `sales_executive`, `project_in_charge`, `installer_needed`, `installer_needed_other`, `installer_needed_location`, `things_to_bring`,`things_to_bring_location`,`products_to_bring`,`products_to_bring_files`,`service`,`driver`,`driver_other`,`back_up_driver`,`back_up_driver_other`,`photoshoot_request`,`notes`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:title, :all_day,:start_time, :end_time, :color, :color_other, :text_color, :project, :sales_executive, :project_in_charge, :installer_needed, :installer_needed_other, :installer_needed_location, :things_to_bring, :things_to_bring_location, :products_to_bring, :products_to_bring_files, :service, :driver, :driver_other, :back_up_driver, :back_up_driver_other, :photoshoot_request, :notes, 1, now(),:created_by)";
+                (`title`, `all_day`,`start_time`, `end_time`, `color`, `color_other`, `text_color`, `project`, `sales_executive`, `project_in_charge`, `project_relevant`, `installer_needed`, `installer_needed_other`, `installer_needed_location`, `things_to_bring`,`things_to_bring_location`,`products_to_bring`,`products_to_bring_files`,`service`,`driver`,`driver_other`,`back_up_driver`,`back_up_driver_other`,`photoshoot_request`,`notes`,`is_enabled`,`created_at`,`created_by`) 
+                VALUES (:title, :all_day,:start_time, :end_time, :color, :color_other, :text_color, :project, :sales_executive, :project_in_charge, :project_relevant, :installer_needed, :installer_needed_other, :installer_needed_location, :things_to_bring, :things_to_bring_location, :products_to_bring, :products_to_bring_files, :service, :driver, :driver_other, :back_up_driver, :back_up_driver_other, :photoshoot_request, :notes, 1, now(),:created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -204,6 +207,7 @@ class WorkCalenderMain
             $this->project = htmlspecialchars(strip_tags($this->project));
             $this->sales_executive = htmlspecialchars(strip_tags($this->sales_executive));
             $this->project_in_charge = htmlspecialchars(strip_tags($this->project_in_charge));
+            $this->project_relevant = htmlspecialchars(strip_tags($this->project_relevant));
             
             $this->installer_needed = htmlspecialchars(strip_tags($this->installer_needed));
             $this->installer_needed_other = htmlspecialchars(strip_tags($this->installer_needed_other));
@@ -236,6 +240,7 @@ class WorkCalenderMain
             $stmt->bindParam(':project', $this->project);
             $stmt->bindParam(':sales_executive', $this->sales_executive);
             $stmt->bindParam(':project_in_charge', $this->project_in_charge);
+            $stmt->bindParam(':project_relevant', $this->project_relevant);
     
             $stmt->bindParam(':installer_needed', $this->installer_needed);
             $stmt->bindParam(':installer_needed_other', $this->installer_needed_other);
