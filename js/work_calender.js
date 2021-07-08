@@ -1636,7 +1636,7 @@ var initial = () =>  {
         app.name != "Mary Jude Jeng Articulo" &&
         app.name != "Stefanie Mika C. Santos" &&
         app.name != "Argel Argana" &&
-        app.name != " Kristel Tan"
+        app.name != "Kristel Tan"
     ) {
         document.getElementById("btn_lock").style.visibility = "hidden";
         document.getElementById("btn_unlock").style.visibility = "hidden";
