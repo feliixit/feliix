@@ -204,7 +204,7 @@ try {
 <div id='msg'>
 <div class="messageboard" id="messageboard">
     <h3>Message Board</h3>
-	<div v-if="msg.message !== ''" v-for="(msg, i) in messages" class="message__item">
+	<div v-if="msg.message.trim() !== ''" v-for="(msg, i) in messages" class="message__item">
 	<div>
 	<input v-if="msg.id == edit" class="add__input" style="width:100%" v-model="msg.message" maxlength="100">
 	<div v-else-if="msg.id != edit && msg.updated_at == null" class="message__item__input">{{ msg.message }} (created by {{ msg.created_by }} at {{ msg.created_at }})</div>
@@ -404,7 +404,7 @@ try {
 
                     <div class="col-10">
 
-                    <v-select id="sc_relevant"  style="width:40%;" :options="users" attach chips label="username" v-model="attendee"
+                    <v-select id="sc_relevant"  style="width:90%;" :options="users" attach chips label="username" v-model="attendee"
                       multiple></v-select>
                      
 
