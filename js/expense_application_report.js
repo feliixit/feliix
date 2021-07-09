@@ -261,6 +261,7 @@ var app = new Vue({
       let _this = this;
 
       const params = {
+        id: id,
         fru: _this.fil_request_no_upper,
         frl: _this.fil_request_no_lower,
         fc: _this.fil_creator,

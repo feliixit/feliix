@@ -130,6 +130,12 @@ switch ($method) {
                 LEFT JOIN user p ON p.id = pm.uid 
                 where 1=1 ";
 
+if($id != "" && $id != "0")
+{
+    $sql = $sql . " and pm.id = '" . $id . "' ";
+    $query_cnt = $query_cnt . " and pm.id = '" . $id . "' ";
+}
+
 if($ft != "" && $ft != "0")
 {
     $sql = $sql . " and pm.request_type = '" . $ft . "' ";
