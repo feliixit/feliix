@@ -32,6 +32,7 @@ var app = new Vue({
     evals:{},
     avg:10.0,
     avg1:10.0,
+    avg2:10.0,
 
     comment1:"",
     comment2:"",
@@ -51,6 +52,8 @@ var app = new Vue({
     mag_avg:10.0,
     emp_avg1:10.0,
     mag_avg1:10.0,
+    emp_avg2:10.0,
+    mag_avg2:10.0,
 
     // search
     keyword: "",
@@ -281,6 +284,36 @@ var app = new Vue({
               _this.mag_avg1 = 0;
             else
               _this.mag_avg1 = (m_score1 / m_cnt1).toFixed(1);
+
+
+            var e_score2 = 0.0;
+            var m_score2 = 0.0;
+            var e_cnt2 = 0;
+            var m_cnt2 = 0;
+            for(var i = 0; i < _this.views.agenda2.length; i++)
+            {
+              if(_this.views.agenda2[i].emp_score != -1)
+              {
+                e_score2 += parseInt((_this.views.agenda2[i].emp_score) === '' ? "0" : _this.views.agenda2[i].emp_score);
+                e_cnt2 += 1;
+              }
+              
+              if(_this.views.agenda2[i].mag_score != -1)
+              {
+                m_score2 += parseInt((_this.views.agenda2[i].mag_score) === '' ? "0" : _this.views.agenda2[i].mag_score);
+                m_cnt2 += 1;
+              }
+            }
+
+            if(e_cnt2 === 0)
+              _this.emp_avg2 = 0;
+            else
+              _this.emp_avg2 = (e_score2 / e_cnt2).toFixed(1);
+
+            if(m_cnt2 === 0)
+              _this.mag_avg2 = 0;
+            else
+              _this.mag_avg2 = (m_score2 / m_cnt2).toFixed(1);
 
           }
         })

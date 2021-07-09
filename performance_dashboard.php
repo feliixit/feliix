@@ -396,7 +396,8 @@ try {
                     <li class="content">{{ views.manager }}</li>
 
                     <li><b>Review Period (Latest):</b></li>
-                    <li class="content">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
+                    <li class="content" v-if="views.period == '0'">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
+                    <li class="content" v-if="views.period == '1'">{{ views.review_month }}</li>
                 </ul>
 
                 <table class="list_table" style="margin-top:40px;">
@@ -470,9 +471,45 @@ try {
                     </tfoot>
                 </table>
 
+                <table class="list_table" style="margin-top: 40px;" v-if="views.agenda2 === undefined ? false : views.agenda2.length > 0">
+                    <thead>
+                    <tr>
+                        <th colspan="3">PART III: BONUS</th>
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr v-for='(record, index) in views.agenda2'>
+                        <td>
+                            {{ record.category }}
+                        </td>
+                        <td>
+                            {{ record.criterion }}
+                        </td>
+                        <td>
+                            <template v-if="record.mag_score == '-1'">N/A</template>
+                            <template v-if="record.mag_score != '-1'" v-for="n in parseInt((record.mag_score > -1) ? record.mag_score : 0, 10)">★</template><template v-if="record.mag_score != '-1'" v-for="n in 10 - parseInt((record.mag_score > -1) ? record.mag_score : 0, 10)">☆</template>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                        <th colspan="2">AVERAGE</th>
+                        <th>{{ mag_avg2 == 0 ? "N/A" : (mag_avg2 / 1).toFixed(1) }}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">SUBTOTAL (10%)</th>
+                        <th>{{ mag_avg2 == 0 ? "N/A" : ( mag_avg2 * 0.1 ).toFixed(1) }}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+
                 <ul style="margin-top: 30px;">
                     <li><b>TOTAL:</b></li>
-                    <li class="content" style="font-weight: 700;">{{ (mag_avg == 0 && mag_avg1 == 0) ? "N/A" : ( mag_avg * 0.6 + mag_avg1 * 0.4 ).toFixed(1) }}</li>
+                    <li class="content" style="font-weight: 700;">{{ (mag_avg == 0 && mag_avg1 == 0) ? "N/A" : ( mag_avg * 0.6 + mag_avg1 * 0.4 + (views.agenda2 !== undefined ? parseFloat((mag_avg2 * 0.1).toFixed(1)) : 0.0 ) ).toFixed(1) }}</li>
                 </ul>
 
                 <div class="promotion" v-if="view_promotion == true">

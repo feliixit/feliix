@@ -10,8 +10,12 @@ var app = new Vue({
     templates: [],
     template: "",
 
+    month_type : 0,
+
     review_month: "",
     review_next_month: "",
+
+    review_month_1:"",
 
     editing: false,
 
@@ -33,6 +37,7 @@ var app = new Vue({
     evals:{},
     avg:10.0,
     avg1:10.0,
+    avg2:10.0,
 
     comment1:"",
     comment2:"",
@@ -52,6 +57,8 @@ var app = new Vue({
     mag_avg:10.0,
     emp_avg1:10.0,
     mag_avg1:10.0,
+    emp_avg2:10.0,
+    mag_avg2:10.0,
 
     // search
     keyword: "",
@@ -229,6 +236,29 @@ var app = new Vue({
 
     },
 
+    on_grade2_change:function(event) {
+      console.log(event.target.value);
+      var grade = this.$refs.grade2;
+
+      var score =0.0;
+      var cnt = 0;
+      for (i = 0; i < grade.length; i++) {
+        if(grade[i].value == -1)
+          score += 0;
+        else
+        {
+          score += parseInt(grade[i].value);
+          cnt += 1;
+        }
+      }
+
+      if(cnt === 0)
+        this.avg2 = 0;
+      else
+        this.avg2 = (score / cnt).toFixed(1);
+
+    },
+
     open_review: function() {
       if(this.is_add_review_privilege())
       {
@@ -240,8 +270,19 @@ var app = new Vue({
     add_review: function() {
       if (
         typeof this.employee.title_id == 'undefined' ||
-        this.review_month.trim() == "" ||
         typeof this.template.id == 'undefined'
+      ) {
+        Swal.fire({
+          text: "Please enter the required fields",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
+      if (
+        this.review_month.trim() == "" && this.review_month_1.trim() == "" 
       ) {
         Swal.fire({
           text: "Please enter the required fields",
@@ -262,7 +303,17 @@ var app = new Vue({
 
       form_Data.append("jwt", token);
       form_Data.append("user_id", this.employee.id);
-      form_Data.append("review_month", this.review_month);
+      if(this.month_type == 2)
+      {
+        form_Data.append("review_month", this.review_month);
+        form_Data.append("period", 0);
+      }
+      if(this.month_type == 1)
+      {
+        form_Data.append("review_month", this.review_month_1);
+        form_Data.append("period", 1);
+      }
+
       form_Data.append("template_id", this.template.id);
 
 
@@ -358,8 +409,12 @@ var app = new Vue({
           var qid1 = _this.$refs.qid1;
           var opt1 = _this.$refs.opt1;
 
+          var qid2 = _this.$refs.qid2;
+          var opt2 = _this.$refs.opt2;
+
           var grade = _this.$refs.grade;
           var grade1 = _this.$refs.grade1;
+          var grade2 = _this.$refs.grade2;
 
           let temp = [];
           for(var i=0; i<grade.length; i++) {
@@ -380,6 +435,14 @@ var app = new Vue({
             temp.push(obj);
           }
 
+          for(var i=0; i<grade2.length; i++) {
+            var obj = {
+                id: qid2[i].value,
+                grade: grade2[i].value,
+                opt: opt2[i].value
+            };
+            temp.push(obj);
+          }
 
           var token = localStorage.getItem("token");
           var form_Data = new FormData();
@@ -582,6 +645,36 @@ var app = new Vue({
             else
               _this.mag_avg1 = (m_score1 / m_cnt1).toFixed(1);
 
+
+            var e_score2 = 0.0;
+            var m_score2 = 0.0;
+            var e_cnt2 = 0;
+            var m_cnt2 = 0;
+            for(var i = 0; i < _this.views.agenda2.length; i++)
+            {
+              if(_this.views.agenda2[i].emp_score != -1)
+              {
+                e_score2 += parseInt((_this.views.agenda2[i].emp_score) === '' ? "0" : _this.views.agenda2[i].emp_score);
+                e_cnt2 += 1;
+              }
+              
+              if(_this.views.agenda2[i].mag_score != -1)
+              {
+                m_score2 += parseInt((_this.views.agenda2[i].mag_score) === '' ? "0" : _this.views.agenda2[i].mag_score);
+                m_cnt2 += 1;
+              }
+            }
+
+            if(e_cnt2 === 0)
+              _this.emp_avg2 = 0;
+            else
+              _this.emp_avg2 = (e_score2 / e_cnt2).toFixed(1);
+
+            if(m_cnt2 === 0)
+              _this.mag_avg2 = 0;
+            else
+              _this.mag_avg2 = (m_score2 / m_cnt2).toFixed(1);
+
             _window.jQuery(".mask").toggle();
             _window.jQuery("#Modal_3").toggle();
           }
@@ -681,6 +774,7 @@ var app = new Vue({
 
       this.e_sn = this.record.agenda.length;
       this.e_sn1 = this.record.agenda1.length;
+      this.e_sn2 = this.record.agenda2.length;
     },
 
     can_delete(manager){
@@ -906,6 +1000,16 @@ var app = new Vue({
         grade1[i].value = 10;
       }
 
+      var opt2 = this.$refs.opt2;
+      for (i = 0; i < opt2.length; i++) {
+        opt2[i].value = "";
+      }
+
+      var grade2 = this.$refs.grade2;
+      for (i = 0; i < grade2.length; i++) {
+        grade2[i].value = 10;
+      }
+
       var grade = this.$refs.grade;
       for (i = 0; i < grade.length; i++) {
         grade[i].value = 10;
@@ -913,6 +1017,7 @@ var app = new Vue({
 
       this.avg = 10.0;
       this.avg1 = 10.0;
+      this.avg2 = 10.0;
 
     },
 
@@ -930,6 +1035,8 @@ var app = new Vue({
 
       this.employee = "";
       this.review_month = "";
+      this.review_month_1 = "";
+      this.month_type = 0;
       this.review_next_month = "";
       this.template = "";
       this.templates = [];

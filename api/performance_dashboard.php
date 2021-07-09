@@ -49,6 +49,7 @@ if (!isset($jwt)) {
     $return_result = array();
 
     $query = "SELECT pr.id, 
+                pr.period, 
                 pr.review_month, 
                 pr.template_id,
                 ud.department,  
@@ -90,7 +91,7 @@ if (!isset($jwt)) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
         $review_month = $row['review_month'];
-
+        $period = $row['period'];
         $review_next_month = GetNextMonth($review_month);
 
         $department = $row['department'];
@@ -130,12 +131,14 @@ if (!isset($jwt)) {
                 // supervisor can see
                 $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2, $id);
                 $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2, $id);
+                $agenda2 = GetAgenda($row['template_id'],  3, $db, 1, 2, $id);
             }
             elseif($user_complete_at != "" && $manager_complete_at != "")
             {
                 // mananger and employee all finished
                 $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2, $id);
                 $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2, $id);
+                $agenda2 = GetAgenda($row['template_id'],  3, $db, 1, 2, $id);
             }
             elseif($user_complete_at == "" && $manager_complete_at != "")
             {
@@ -146,6 +149,7 @@ if (!isset($jwt)) {
                 {
                     $agenda = GetAgenda($row['template_id'],  1, $db, 0, 2, $id);
                     $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 2, $id);
+                    $agenda2 = GetAgenda($row['template_id'],  3, $db, 0, 2, $id);
                 }
 
                 // employee
@@ -153,6 +157,7 @@ if (!isset($jwt)) {
                 {
                     $agenda = GetAgenda($row['template_id'],  1, $db, 1, 0, $id);
                     $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 0, $id);
+                    $agenda2 = GetAgenda($row['template_id'],  3, $db, 1, 0, $id);
 
                     $mag_comment_1 = "";
                     $mag_comment_2 = "";
@@ -170,6 +175,7 @@ if (!isset($jwt)) {
                 {
                     $agenda = GetAgenda($row['template_id'],  1, $db, 0, 2, $id);
                     $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 2, $id);
+                    $agenda2 = GetAgenda($row['template_id'],  3, $db, 0, 2, $id);
 
                     $emp_comment_1 = "";
                     $emp_comment_2 = "";
@@ -183,6 +189,7 @@ if (!isset($jwt)) {
                 {
                     $agenda = GetAgenda($row['template_id'],  1, $db, 1, 0, $id);
                     $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 0, $id);
+                    $agenda2 = GetAgenda($row['template_id'],  3, $db, 1, 0, $id);
                 }
             }
              elseif($user_complete_at != "" && $manager_complete_at != "")
@@ -191,21 +198,25 @@ if (!isset($jwt)) {
 
                 $agenda = GetAgenda($row['template_id'],  1, $db, 1, 2, $id);
                 $agenda1 = GetAgenda($row['template_id'],  2, $db, 1, 2, $id);
+                $agenda2 = GetAgenda($row['template_id'],  3, $db, 1, 2, $id);
             }
             else
             {
                 $agenda = GetAgenda($row['template_id'],  1, $db, 0, 0, $id);
                 $agenda1 = GetAgenda($row['template_id'],  2, $db, 0, 0, $id);
+                $agenda2 = GetAgenda($row['template_id'],  3, $db, 0, 0, $id);
             }
         }
         else
         {
             $agenda = [];
             $agenda1 = [];
+            $agenda2 = [];
         }
     
         $merged_results[] = array(
             "id" => $id,
+            "period" => $period,
             "review_month" => $review_month,
             "review_next_month" => $review_next_month,
             "department" => $department,
@@ -219,6 +230,7 @@ if (!isset($jwt)) {
             "status" => $status,
             "agenda" => $agenda,
             "agenda1" => $agenda1,
+            "agenda2" => $agenda2,
 
             "mag_comment_1" => $mag_comment_1,
             "mag_comment_2" => $mag_comment_2,

@@ -10,6 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 $employee_id = (isset($_POST['user_id']) ?  $_POST['user_id'] : 0);
 $review_month = (isset($_POST['review_month']) ?  $_POST['review_month'] : '');
+$period = (isset($_POST['period']) ?  $_POST['period'] : 0);
 $template_id = (isset($_POST['template_id']) ?  $_POST['template_id'] : 0);
 
 
@@ -55,6 +56,7 @@ else
             `template_id` = :template_id,
             `user_id` = :employee_id,
             `review_month` = :review_month,
+            `period` = :period,
             `create_id` = :create_id,
             `created_at` =  now() ";
 
@@ -65,6 +67,7 @@ else
         $stmt->bindParam(':template_id', $template_id);
         $stmt->bindParam(':employee_id', $employee_id);
         $stmt->bindParam(':review_month', $review_month);
+        $stmt->bindParam(':period', $period);
         $stmt->bindParam(':create_id', $user_id);
 
 

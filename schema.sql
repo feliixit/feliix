@@ -1687,3 +1687,7 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_sv` (
 -- add relevant for scheduled calendar
 ALTER TABLE work_calendar_main
 ADD COLUMN `project_relevant` varchar(512)  default '' AFTER project_in_charge;
+
+-- performance_review
+ALTER TABLE performance_review
+ADD COLUMN `period` int(11)  DEFAULT 0 AFTER `review_month`;

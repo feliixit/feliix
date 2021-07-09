@@ -67,9 +67,11 @@ switch ($method) {
         // $agenda = preg_replace('/(\w+):/i', '"\1":', $agenda);
         $agenda1 = (isset($_POST['agenda1']) ?  $_POST['agenda1'] : '[]');
         // $agenda1 = preg_replace('/(\w+):/i', '"\1":', $agenda1);
+        $agenda2 = (isset($_POST['agenda2']) ?  $_POST['agenda2'] : '[]');
 
         $agenda_array = json_decode($agenda, true);
         $agenda_array1 = json_decode($agenda1, true);
+        $agenda_array2 = json_decode($agenda2, true);
 
         if ($pid == 0) {
             http_response_code(401);
@@ -212,6 +214,50 @@ switch ($method) {
                 $stmt->bindParam(':order', $i);
                 $stmt->bindParam(':category', $agenda_array1[$i]['category']);
                 $stmt->bindParam(':criterion', $agenda_array1[$i]['criterion']);
+                $stmt->bindParam(':create_id', $user_id);
+
+
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+            }
+
+            // agenda2
+            for ($i = 0; $i < count($agenda_array2); $i++) {
+                $query = "INSERT INTO performance_template_detail
+            SET
+                `template_id` = :template_id,
+                `type` = 3,
+                `order` = :order,
+                `category` = :category,
+                `criterion` = :criterion,
+               
+                `status` = 0,
+                `create_id` = :create_id,
+                `created_at` = now()";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+
+                // bind the values
+                $stmt->bindParam(':template_id', $last_id);
+                $stmt->bindParam(':order', $i);
+                $stmt->bindParam(':category', $agenda_array2[$i]['category']);
+                $stmt->bindParam(':criterion', $agenda_array2[$i]['criterion']);
                 $stmt->bindParam(':create_id', $user_id);
 
 

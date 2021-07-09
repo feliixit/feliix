@@ -605,7 +605,8 @@ try {
                         <li>{{ record.status }}</li>
                         <li>{{ record.employee }}</li>
                         <li>{{ record.title }} ({{ record.department }})</li>
-                        <li>{{ record.review_month }} ~ {{ record.review_next_month }}</li>
+                        <li v-if="record.period == 0">{{ record.review_month }} ~ {{ record.review_next_month }}</li>
+                        <li v-if="record.period == 1">{{ record.review_month }} </li>
                     </ul>
 
                 </div>
@@ -639,8 +640,18 @@ try {
                                 </li>
 
                                 <li><b>Review Period</b></li>
+
                                 <li>
-                                    <input style="width: 49%; margin-right: 1.5%;" type="month" v-model="review_month" min="2021-04" step="2"><input style="width: 49%" type="month" v-model="review_next_month" readonly="">
+                                    <select style="margin-bottom: 10px;" v-model="month_type">
+                                        <option value="0"></option>
+                                        <option value="1">1 Month</option>
+                                        <option value="2">2 Months</option>
+                                    </select>
+
+                                    <input type="month" min="2021-04" step="1" v-if="month_type == 1" v-model="review_month_1" style="width: 49%; margin-right: 1.5%;">
+                            
+                                    <input type="month" min="2021-04" step="2" v-if="month_type == 2" v-model="review_month" style="width: 49%; margin-right: 1.5%;">
+                                    <input type="month" readonly="readonly" v-if="month_type == 2" v-model="review_next_month" style="width: 49%;">
                                 </li>
 
                                 <li><b>Version of Template</b></li>
@@ -693,7 +704,8 @@ try {
                                 <li class="content">{{ evals.manager }}</li>
 
                                 <li><b>Review Period:</b></li>
-                                <li class="content">{{ evals.review_month }} ~ {{ evals.review_next_month }}</li>
+                                <li class="content" v-if="evals.period == '0'">{{ evals.review_month }} ~ {{ evals.review_next_month }}</li>
+                                <li class="content" v-if="evals.period == '1'">{{ evals.review_month }}</li>
 
                                 <li><b>Version of Template:</b></li>
                                 <li class="content">{{ evals.version }}</li>
@@ -854,9 +866,61 @@ try {
                             </table>
 
 
+                            <table class="list_table" style="margin-top: 40px;" v-if="evals.agenda2 === undefined ? false : evals.agenda2.length > 0" >
+                                <thead>
+                                <tr>
+                                    <th colspan="2">PART III: BONUS</th>
+                                    <th colspan="2">Feedback</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr v-for='(record, index) in evals.agenda2'>
+                                    <td>
+                                        {{ record.category }}
+                                    </td>
+                                    <td>
+                                        {{ record.criterion }}
+                                    </td>
+                                    <td>
+                                        <select name="grade2" @change="on_grade2_change($event)" ref="grade2">
+                                            <option value="10">10</option>
+                                            <option value="9">9</option>
+                                            <option value="8">8</option>
+                                            <option value="7">7</option>
+                                            <option value="6">6</option>
+                                            <option value="5">5</option>
+                                            <option value="4">4</option>
+                                            <option value="3">3</option>
+                                            <option value="2">2</option>
+                                            <option value="1">1</option>
+                                            <option value="-1">N/A</option>
+                                        </select>
+                                    </td>
+                                    <td><input hidden name="qid2" ref="qid2" :value="record.id" v-show="false"><input name="opt2" ref="opt2" type="text"></td>
+                                </tr>
+
+
+                                </tbody>
+
+                                <tfoot>
+                                 <tr>
+                                     <th colspan="2">AVERAGE</th>
+                                     <th>{{ avg2 == 0 ? "N/A" : (avg2 / 1).toFixed(1) }}</th>
+                                     <th></th>
+                                 </tr>
+                                 <tr>
+                                     <th colspan="2">SUBTOTAL (10%)</th>
+                                     <th>{{ avg2 == 0 ? "N/A" : ( avg2 * 0.1 ).toFixed(1) }}</th>
+                                     <th></th>
+                                 </tr>
+                                 </tfoot>
+                            </table>
+
+
                             <ul style="margin-top: 30px;">
                                 <li><b>TOTAL:</b></li>
-                                <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 ).toFixed(1) }}</li>
+                                <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 + (evals.agenda2 !== undefined ? parseFloat((avg2 * 0.1).toFixed(1)) : 0.0 ) ).toFixed(1) }}</li>
 
                                 <li style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">Noteworthy accomplishment</template><template v-if="evals.create_id == user_id">Noteworthy accomplishment</template></b><span> ({{comment1.length}}/{{ (evals.user_id == user_id) ? 512 : 2048 }})</span></li>
                                 <li><textarea rows="5" v-model="comment1" :maxlength="(evals.user_id == user_id) ? 512 : 2048" show-word-limit></textarea></li>
@@ -921,7 +985,8 @@ try {
                                 <li class="content">{{ views.manager }}</li>
 
                                 <li><b>Review Period:</b></li>
-                                <li class="content">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
+                                <li class="content" v-if="views.period == 0">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
+                                <li class="content" v-if="views.period == 1">{{ views.review_month }}</li>
 
                                 <li><b>Version of Template:</b></li>
                                 <li class="content">{{ views.version }}</li>
@@ -1040,7 +1105,6 @@ try {
                                  </tfoot>
                             </table>
 
-
                             <table class="list_table" style="margin-top: 40px;">
                                 <thead>
                                 <tr>
@@ -1099,13 +1163,70 @@ try {
                                  </tfoot>
                             </table>
 
+                            <table class="list_table" style="margin-top: 40px;" v-if="views.agenda2 === undefined ? false : views.agenda2.length > 0">
+                                <thead>
+                                <tr>
+                                    <th colspan="2">PART III: BONUS</th>
+                                    <th colspan="2">Feedback</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <template v-for='(record, index) in views.agenda2'>
+                                    <tr style="height: 45px;">
+                                        <td rowspan="2">
+                                            {{ record.category }}
+                                        </td>
+                                        <td rowspan="2">
+                                            {{ record.criterion }}
+                                        </td>
+                                        <td>
+                                            {{ record.emp_score == -1 ? "N/A" : record.emp_score }}
+                                        </td>
+                                        <td>
+                                            {{ record.emp_opt }}
+                                        </td>
+                                    </tr>
+                                    <tr class="supervisor" style="height: 45px;">
+                                        <td>
+                                            {{ record.mag_score == -1 ? "N/A" : record.mag_score }}
+                                        </td>
+                                        <td>
+                                            {{ record.mag_opt }}
+                                        </td>
+                                    </tr>
+                                </template>
+
+                                </tbody>
+
+                                <tfoot>
+                                 <tr>
+                                     <th colspan="2">AVERAGE</th>
+                                     <th>
+                                         <span>{{ emp_avg2 == 0 ? "N/A" : (emp_avg2 / 1).toFixed(1) }}</span>
+                                         <br>
+                                         <span>{{ mag_avg2 == 0 ? "N/A" : (mag_avg2 / 1).toFixed(1) }}</span>
+                                     </th>
+                                     <th></th>
+                                 </tr>
+                                 <tr>
+                                     <th colspan="2">SUBTOTAL (10%)</th>
+                                     <th>
+                                         <span>{{ emp_avg2 == 0 ? "N/A" : ( emp_avg2 * 0.1 ).toFixed(1) }}</span>
+                                         <br>
+                                         <span>{{ mag_avg2 == 0 ? "N/A" : ( mag_avg2 * 0.1 ).toFixed(1) }}</span>
+                                     </th>
+                                     <th></th>
+                                 </tr>
+                                 </tfoot>
+                            </table>
 
                             <ul class="summary">
                                 <li><b>TOTAL:</b></li>
                                 <li class="content">
-                                    <span>{{ (emp_avg == 0 && emp_avg1 == 0) ? "N/A" : ( emp_avg * 0.6 + emp_avg1 * 0.4 ).toFixed(1) }}</span>
+                                    <span>{{ (emp_avg == 0 && emp_avg1 == 0) ? "N/A" : ( emp_avg * 0.6 + emp_avg1 * 0.4 + (views.agenda2 !== undefined ? parseFloat((emp_avg2 * 0.1).toFixed(1)) : 0.0 ) ).toFixed(1) }}</span>
                                     <br>
-                                    <span>{{ (mag_avg == 0 && mag_avg1 == 0) ? "N/A" : ( mag_avg * 0.6 + mag_avg1 * 0.4 ).toFixed(1) }}</span>
+                                    <span>{{ (mag_avg == 0 && mag_avg1 == 0) ? "N/A" : ( mag_avg * 0.6 + mag_avg1 * 0.4 + (views.agenda2 !== undefined ? parseFloat((mag_avg2 * 0.1).toFixed(1)) : 0.0 ) ).toFixed(1) }}</span>
                                 </li>
 
                                 <li><b>Noteworthy accomplishment</b></li>

@@ -570,6 +570,7 @@ try {
                                     <select v-model="type">
                                         <option value="1">PART I: SELF-IMPROVEMENT SKILLS</option>
                                         <option value="2">PART II: BASIC SKILLS</option>
+                                        <option value="3">PART III: BONUS</option>
                                     </select>
                                 </li>
 
@@ -640,6 +641,35 @@ try {
                                         <i class="fas fa-arrow-alt-circle-down" @click="set_down1(index, record.id)"></i>
                                         <i class="fas fa-edit" @click="edit1(record.id)"></i>
                                         <i class="fas fa-trash-alt" @click="del1(record.id)"></i>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+                            <table class="list_table" style="margin-top: 30px; margin-bottom:20px;">
+
+                                <thead>
+                                <tr>
+                                    <th colspan="3">PART III: BONUS</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <tr v-for='(record, index) in agenda2'>
+                                    <td>
+                                        {{ record.category }}
+                                    </td>
+                                    <td>
+                                        {{ record.criterion }}
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-arrow-alt-circle-up" @click="set_up2(index, record.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down" @click="set_down2(index, record.id)"></i>
+                                        <i class="fas fa-edit" @click="edit2(record.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="del2(record.id)"></i>
                                     </td>
                                 </tr>
 
@@ -746,6 +776,29 @@ try {
 
                             </table>
 
+                            <table class="list_table" style="margin-top: 30px; margin-bottom:20px;">
+
+                                <thead>
+                                <tr>
+                                    <th colspan="2">PART III: BONUS</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <tr v-for='(item, index) in record.agenda2' :key="index">
+                                    <td>
+                                        {{ item.category }}
+                                    </td>
+                                    <td>
+                                    {{ item.criterion }}
+                                    </td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
                         </div>
 
                     </div>
@@ -797,6 +850,7 @@ try {
                                     <select v-model="e_type">
                                         <option value="1">PART I: SELF-IMPROVEMENT SKILLS</option>
                                         <option value="2">PART II: BASIC SKILLS</option>
+                                        <option value="3">PART III: BONUS</option>
                                     </select>
                                 </li>
 
@@ -867,6 +921,35 @@ try {
                                         <i class="fas fa-arrow-alt-circle-down" @click="e_set_down1(index, record.id)"></i>
                                         <i class="fas fa-edit" @click="e_edit1(record.id)"></i>
                                         <i class="fas fa-trash-alt" @click="e_del1(record.id)"></i>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+                            <table class="list_table" style="margin-top: 30px; margin-bottom:20px;">
+
+                                <thead>
+                                <tr>
+                                    <th colspan="3">PART III: BONUS</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <tr v-for='(record, index) in record.agenda2'> 
+                                    <td>
+                                        {{ record.category }}
+                                    </td>
+                                    <td>
+                                        {{ record.criterion }}
+                                    </td>
+                                    <td>
+                                    <i class="fas fa-arrow-alt-circle-up" @click="e_set_up2(index, record.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down" @click="e_set_down2(index, record.id)"></i>
+                                        <i class="fas fa-edit" @click="e_edit2(record.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="e_del2(record.id)"></i>
                                     </td>
                                 </tr>
 

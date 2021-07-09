@@ -643,10 +643,61 @@ try {
                             </tfoot>
                         </table>
 
+                        <table v-if="template.length > 0 && template[0].agenda2.length > 0"  class="list_table" style="margin-top: 40px;">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">PART III: BONUS</th>
+                                    <th colspan="2">Feedback</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr v-for='(item, index) in template[0].agenda2' :key="index">
+                                    <td>
+                                        {{ item.category }}
+                                    </td>
+                                    <td>
+                                        {{ item.criterion }}
+                                    </td>
+                                    <td>
+                                        <select name="grade2" @change="on_grade2_change($event)" ref="grade2">
+                                            <option>10</option>
+                                            <option>9</option>
+                                            <option>8</option>
+                                            <option>7</option>
+                                            <option>6</option>
+                                            <option>5</option>
+                                            <option>4</option>
+                                            <option>3</option>
+                                            <option>2</option>
+                                            <option>1</option>
+                                            <option>N/A</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text"></td>
+                                </tr>
+
+
+                            </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2">AVERAGE</th>
+                                    <th>{{ avg2 == 0 ? "N/A" : (avg2 / 1).toFixed(1) }}</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">SUBTOTAL (10%)</th>
+                                    <th>{{ avg2 == 0 ? "N/A" : ( avg2 * 0.1 ).toFixed(1) }}</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
 
                         <ul v-if="template.length > 0"  style="margin-top: 30px;">
                             <li><b>TOTAL:</b></li>
-                            <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 ).toFixed(1) }}</li>
+                            <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 + (template[0].agenda2.length > 0 ? parseFloat(( avg2 * 0.1 ).toFixed(1)) : 0 ) ).toFixed(1) }}</li>
 
                             <li style="margin-top: 40px;"><b>Noteworthy accomplishment</b></li>
                             <li><textarea rows="5"></textarea></li>
