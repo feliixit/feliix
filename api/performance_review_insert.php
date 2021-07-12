@@ -97,12 +97,25 @@ else
 
         $db->commit();
 
-        $s_date = $review_month;
-        $e_date = GetNextMonth($review_month);
-        $dead_date = GetDeadMonth($review_month);
+        if($period == 1)
+        {
+            $s_date = $review_month;
+  
+            $dead_date = GetDeadMonthSingle($review_month);
 
-        send_review_mail_adm($s_date, $e_date, $user_id, $employee_id, $dead_date);
-        send_review_mail($s_date, $e_date, $user_id, $employee_id, $dead_date);
+            send_review_mail_adm_single($s_date, $user_id, $employee_id, $dead_date);
+            send_review_mail_single($s_date, $user_id, $employee_id, $dead_date);
+        }
+        
+        if($period == 0)
+        {
+            $s_date = $review_month;
+            $e_date = GetNextMonth($review_month);
+            $dead_date = GetDeadMonth($review_month);
+
+            send_review_mail_adm($s_date, $e_date, $user_id, $employee_id, $dead_date);
+            send_review_mail($s_date, $e_date, $user_id, $employee_id, $dead_date);
+        }
 
         
         http_response_code(200);
@@ -129,5 +142,11 @@ function GetNextMonth($d)
 function GetDeadMonth($d)
 {
     $date = date('Y-m-d', strtotime('+2 month', strtotime($d . '-10')));
+    return $date;
+}
+
+function GetDeadMonthSingle($d)
+{
+    $date = date('Y-m-d', strtotime('+1 month', strtotime($d . '-10')));
     return $date;
 }

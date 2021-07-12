@@ -920,7 +920,7 @@ try {
 
                             <ul style="margin-top: 30px;">
                                 <li><b>TOTAL:</b></li>
-                                <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 + (evals.agenda2 !== undefined ? parseFloat((avg2 * 0.1).toFixed(1)) : 0.0 ) ).toFixed(1) }}</li>
+                                <li class="content" style="font-weight: 700;">{{ (avg == 0 && avg1 == 0) ? "N/A" : ( avg * 0.6 + avg1 * 0.4 + (evals.agenda2 !== undefined ? (evals.agenda2.length > 0 ? parseFloat((avg2 * 0.1).toFixed(1)) : 0.0 ) : 0.0 ) ).toFixed(1) }}</li>
 
                                 <li style="margin-top: 40px;"><b><template v-if="evals.user_id == user_id">Noteworthy accomplishment</template><template v-if="evals.create_id == user_id">Noteworthy accomplishment</template></b><span> ({{comment1.length}}/{{ (evals.user_id == user_id) ? 512 : 2048 }})</span></li>
                                 <li><textarea rows="5" v-model="comment1" :maxlength="(evals.user_id == user_id) ? 512 : 2048" show-word-limit></textarea></li>
