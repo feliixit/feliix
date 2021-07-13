@@ -55,6 +55,7 @@ var app = new Vue({
     designer:'',
     type:'',
     scope:'',
+    scope_other:'',
     office_location:'',
     background_client:'',
     background_project:'',
@@ -90,6 +91,7 @@ var app = new Vue({
     edit_designer:'',
     edit_type:'',
     edit_scope:'',
+    edit_scope_other:'',
     edit_office_location:'',
     edit_background_client:'',
     edit_background_project:'',
@@ -219,6 +221,11 @@ var app = new Vue({
   },
 
   watch: {
+
+    edit_scope() {
+      if(this.edit_scope !== "Other")
+        this.edit_scope_other = "";
+    },
 
     receive_stage_records () {
         console.log('Vue watch receive_stage_records');
@@ -939,6 +946,7 @@ var app = new Vue({
                   _this.designer = res.data[0].designer;
                   _this.type = res.data[0].type;
                   _this.scope = res.data[0].scope;
+                  _this.scope_other = res.data[0].scope_other;
                   _this.office_location = res.data[0].office_location;
                   _this.background_client = res.data[0].background_client;
                   _this.background_project = res.data[0].background_project;
@@ -947,6 +955,7 @@ var app = new Vue({
                   _this.edit_designer = res.data[0].designer;
                   _this.edit_type = res.data[0].type;
                   _this.edit_scope = res.data[0].scope;
+                  _this.edit_scope_other = res.data[0].scope_other;
                   _this.edit_office_location = res.data[0].office_location;
                   _this.edit_background_client = res.data[0].background_client;
                   _this.edit_background_project = res.data[0].background_project;
@@ -1391,6 +1400,7 @@ var app = new Vue({
             this.edit_designer = this.designer;
             this.edit_type = this.type;
             this.edit_scope = this.scope;
+            this.edit_scope_other = this.scope_other;
             this.edit_office_location = this.office_location;
             this.edit_background_client = this.background_client;
             this.edit_background_project = this.background_project;
@@ -2192,7 +2202,7 @@ var app = new Vue({
                 return;
             }
 
-            if (this.edit_priority.trim() == 0) {
+            if (this.edit_priority === 0 || this.edit_priority === undefined) {
               Swal.fire({
                 text: 'Please select Priority!',
                 icon: 'warning',
@@ -2223,6 +2233,9 @@ var app = new Vue({
             form_Data.append('edit_designer', this.edit_designer);
             form_Data.append('edit_type', this.edit_type);
             form_Data.append('edit_scope', this.edit_scope);
+            if(this.edit_scope !== "Other")
+              this.edit_scope_other = "";
+            form_Data.append('edit_scope_other', this.edit_scope_other);
             form_Data.append('edit_office_location', this.edit_office_location);
             form_Data.append('edit_background_client', this.edit_background_client);
             form_Data.append('edit_background_project', this.edit_background_project);

@@ -1691,3 +1691,7 @@ ADD COLUMN `project_relevant` varchar(512)  default '' AFTER project_in_charge;
 -- performance_review
 ALTER TABLE performance_review
 ADD COLUMN `period` int(11)  DEFAULT 0 AFTER `review_month`;
+
+-- project 02 scope extend 07/13
+ALTER TABLE project_main
+ADD COLUMN `scope_other` varchar(256) DEFAULT '' AFTER scope;
