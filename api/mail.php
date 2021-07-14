@@ -2409,6 +2409,7 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
 
 }
 
+
 function task_notify_admin($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
 {
     $tab = "";
@@ -2621,6 +2622,124 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+
+function message_notify($request_type, $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $msg, $username, $created_at, $c_id)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "create":
+            $tab = '<p>A new message in "' . $stages . '" stage of project "' . $project_name . '" was created by "' . $username . '". Following are the details:</p>';
+            $title = '[Message Notification] New message in "' . $stages . '" stage of project "' . $project_name . '"';
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            break;
+        case "del":
+            $tab = '<p>A new message in "' . $stages . '" stage of project "' . $project_name . '" was deleted by "' . $username . '". Following are the details:</p>';
+            $title = '[Message Notification] Message was deleted in "' . $stages . '" stage of project "' . $project_name . '"';
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($c_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stages . "</p>";
+    $content = $content . "<p>Task Name:" . $task_name . "</p>";
+    if($request_type == "create")
+    {
+        $content = $content . "<p>Creator:" . $username . " at " . $created_at . "</p>";
+        $content = $content . "<p>Content:" . $msg . "</p>";
+    }
+
+    if($request_type == "del")
+    {
+        $content = $content . "<p>Message Eraser:" . $username . " at " . $created_at . "</p>";
+        $content = $content . "<p>Content:" . $msg . "</p>";
+    }
+    // $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    // $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    // $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    // $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
