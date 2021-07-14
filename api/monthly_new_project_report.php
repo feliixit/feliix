@@ -176,7 +176,6 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                         pm.`client`,
                         pm.final_amount,
                         pm.tax_withheld,    
-                        SELECT user.username,
                 pm.project_name,
                 pm.`client`,
                 COALESCE(pm.final_amount, 0) final_amount,
@@ -188,10 +187,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
             LEFT JOIN user
                     ON pm.create_id = user.id
             WHERE pm.status <> -1
-                    FROM   project_main pm
-                    LEFT JOIN user
-                            ON pm.create_id = user.id
-                    WHERE pm.status <> -1
+                  
                     and pm.created_at > '" . $PeriodStart . "' AND pm.created_at < '" . $PeriodEnd . "' ";
 
         if($sale_person != "")
