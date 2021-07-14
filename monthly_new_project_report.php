@@ -265,22 +265,18 @@ catch (Exception $e) {
         $(function() {
             $('header').load('include/header.php');
             
-            <?php
-            if ($access6 == true) {
-            ?>
-                dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
-                dialogshow($('.list_function a.edit.red'), $('.list_function .dialog.r-edit'));
-            <?php
-            }
-            ?>
-            dialogshow($('.list_function a.filtering'), $('.list_function .dialog.d-filter'));
+          
+              //  dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
+              //  dialogshow($('.list_function a.edit.red'), $('.list_function .dialog.r-edit'));
+      
+        //    dialogshow($('.list_function a.filtering'), $('.list_function .dialog.d-filter'));
             //dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
             //dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
             // left block Reply
-            dialogshow($('.btnbox a.reply.r1'), $('.btnbox .dialog.r1'));
-            dialogshow($('.btnbox a.reply.r2'), $('.btnbox .dialog.r2'));
-            dialogshow($('.btnbox a.reply.r3'), $('.btnbox .dialog.r3'));
-            dialogshow($('.btnbox a.reply.r4'), $('.btnbox .dialog.r4'));
+           // dialogshow($('.btnbox a.reply.r1'), $('.btnbox .dialog.r1'));
+          //  dialogshow($('.btnbox a.reply.r2'), $('.btnbox .dialog.r2'));
+          //  dialogshow($('.btnbox a.reply.r3'), $('.btnbox .dialog.r3'));
+          //  dialogshow($('.btnbox a.reply.r4'), $('.btnbox .dialog.r4'));
             // 套上 .dialogclear 關閉所有的跳出框
             $('.dialogclear').click(function() {
                 dialogclear()
