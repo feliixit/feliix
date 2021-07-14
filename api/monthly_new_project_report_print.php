@@ -151,7 +151,7 @@ if($jwt){
                         $sheet->setCellValue('B' . $i, 'Office Systems');
                         $sheet->setCellValue('C' . $i, $oow['client']);
                         $sheet->setCellValue('D' . $i, $oow['project_name']);
-                        $sheet->setCellValue('E' . $i, $low['estimate_close_prob']);
+                        $sheet->setCellValue('E' . $i, $oow['estimate_close_prob']);
                         $sheet->setCellValue('F' . $i, number_format((float)$oow['final_amount'], 2, '.', ''));
                       
                     }
