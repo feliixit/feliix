@@ -176,7 +176,18 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                         pm.`client`,
                         pm.final_amount,
                         pm.tax_withheld,    
-                        pm.estimate_close_prob
+                        SELECT user.username,
+                pm.project_name,
+                pm.`client`,
+                COALESCE(pm.final_amount, 0) final_amount,
+                COALESCE((SELECT project_est_prob.prob 
+                            FROM project_est_prob 
+                            WHERE project_est_prob.project_id = pm.id 
+                            order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob
+            FROM  project_main pm
+            LEFT JOIN user
+                    ON pm.create_id = user.id
+            WHERE pm.status <> -1
                     FROM   project_main pm
                     LEFT JOIN user
                             ON pm.create_id = user.id
@@ -353,7 +364,10 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
                 pm.project_name,
                 pm.`client`,
                 COALESCE(pm.final_amount, 0) final_amount,
-                COALESCE(pm.estimate_close_prob, 0) estimate_close_prob
+                COALESCE((SELECT project_est_prob.prob 
+                            FROM project_est_prob 
+                            WHERE project_est_prob.project_id = pm.id 
+                            order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob
             FROM  project_main pm
             LEFT JOIN user
                     ON pm.create_id = user.id

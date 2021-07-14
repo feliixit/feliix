@@ -491,7 +491,6 @@ catch (Exception $e) {
                                             </div>
                                         </dd>
 
-                                        <div class="half">
                                             <dt>Type:</dt>
                                             <dd><select v-model="edit_type">
                                                     <option value="Major">Major</option>
@@ -507,7 +506,7 @@ catch (Exception $e) {
                                                     </select></dd>
                                             </div>
                                             <dd><input type="text" v-model="edit_scope_other" v-if="edit_scope === 'Other'"></dd>
-                                        </div>
+                                      
 
                                         <dt>Reason for Editing Project Info:</dt>
                                         <dd><textarea name="" id="" cols="30" rows="10" v-model="edit_edit_reason"></textarea></dd>
