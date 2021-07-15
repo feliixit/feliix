@@ -282,7 +282,7 @@ background-color: #94BABB;
             <!-- tags js在 main.js -->
             <div class="tags">
                 <a class="tag A focus">Monthly Sales Report</a>
-                <a class="tag B">Monthly Cash Flow Report</a>
+                <a class="tag B" href="monthly_cash_flow_report">Monthly Cash Flow Report</a>
                 <a class="tag C" href="monthly_new_project_report">Monthly New Project Report</a>
             </div>
             <!-- Blocks -->

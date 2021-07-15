@@ -255,57 +255,24 @@ catch (Exception $e) {
             background-color: #DFEAEA;
         }
 
+        table.spantable tr th:nth-of-type(1), table.spantable tr th:nth-of-type(3) {
+            min-width: 150px;
+        }
+
+        table.spantable tr th:nth-of-type(2) {
+            min-width: 100px;
+        }
+
+        table.spantable tr th:nth-of-type(4) {
+            min-width: 365px;
+        }
+
         table.spantable td.money {
             text-align: right;
-            min-width: 125px;
+            min-width: 160px;
         }
     </style>
 
-<script>
-        $(function() {
-            $('header').load('include/header.php');
-            
-          
-              //  dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
-              //  dialogshow($('.list_function a.edit.red'), $('.list_function .dialog.r-edit'));
-      
-        //    dialogshow($('.list_function a.filtering'), $('.list_function .dialog.d-filter'));
-            //dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
-            //dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
-            // left block Reply
-           // dialogshow($('.btnbox a.reply.r1'), $('.btnbox .dialog.r1'));
-          //  dialogshow($('.btnbox a.reply.r2'), $('.btnbox .dialog.r2'));
-          //  dialogshow($('.btnbox a.reply.r3'), $('.btnbox .dialog.r3'));
-          //  dialogshow($('.btnbox a.reply.r4'), $('.btnbox .dialog.r4'));
-            // 套上 .dialogclear 關閉所有的跳出框
-            $('.dialogclear').click(function() {
-                dialogclear()
-            });
-            // 根據 select 分類
-            $('#opType').change(function() {
-                //console.log('Operation Type:'+$("#opType").val());
-                var f = $("#opType").val();
-                $('.dialog.r-edit').removeClass('edit').removeClass('del').addClass(f);
-            })
-            $('#opType2').change(function() {
-                //console.log('Operation Type:'+$("#opType").val());
-                var f = $("#opType2").val();
-                $('.dialog.d-edit').removeClass('edit').removeClass('del').addClass(f);
-            })
-            $('#opType3').change(function() {
-                //console.log('Operation Type:'+$("#opType").val());
-                var f = $("#opType3").val();
-                $('.dialog.r-add').removeClass('add').removeClass('dup').addClass(f);
-            })
-
-            $('.selectbox').on('click', function() {
-                $.fancybox.open({
-                    src: '#pop-multiSelect',
-                    type: 'inline'
-                });
-            });
-        })
-    </script>
 
 </head>
 
@@ -319,11 +286,11 @@ catch (Exception $e) {
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A" href="monthly_sales_report">Monthly Sales Report</a>
-            <a class="tag B" href="monthly_cash_flow_report">Monthly Cash Flow Report</a>
-            <a class="tag C focus">Monthly New Project Report</a>
+            <a class="tag B focus">Monthly Cash Flow Report</a>
+            <a class="tag C" href="monthly_new_project_report">Monthly New Project Report</a>
         </div>
         <!-- Blocks -->
-        <div class="block C focus">
+        <div class="block B focus">
 
             <div class="list_function" style="margin-top: 10px;">
 
@@ -382,14 +349,14 @@ catch (Exception $e) {
             </div>
 
             <div style="width: 100%; overflow-x: auto;">
-
+                
                 <template v-for="(record, x) in receive_records">
                     <!-- 按照每個業務員Amount總和進行排序，第一名放最上面 -->
                     <table class="spantable">
 
                         <thead>
                         <tr>
-                            <th colspan="6">
+                            <th colspan="12">
                                 {{ record.date }}
                             </th>
                         </tr>
@@ -399,69 +366,188 @@ catch (Exception $e) {
                             <th>Category</th>
                             <th>Customer Name</th>
                             <th>Project Name</th>
-                            <th>Est. Closing Prob.</th>
                             <th>Amount</th>
+                            <th>A/R</th>
+                            <th>Down Payment</th>
+                            <th>Full Payment</th>
+                            <th>Total Down Payment</th>
+                            <th>Total Full Payment</th>
+                            <th>Net Amount</th>
+                            <th>Tax Withheld</th>
                         </tr>
                         </thead>
 
                         <tbody>
                         <template v-for="(item, i) in record.report">
                             <tr v-for="(it, j) in item.l_catagory">
-                                <td v-if="j == 0" :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{
-                                    item.username }}
+                                <td v-if="j == 0"
+                                    :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{ item.username }}
                                 </td>
                                 <td v-if="j == 0" :rowspan="item.l_catagory.length">Lighting</td>
                                 <td>{{ it.client }}</td>
                                 <td>{{ it.project_name }}</td>
-                                <td>{{ it.estimate_close_prob }}</td>
                                 <td class="money">{{ it.final_amount == 0 ? "" :
                                     Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.ar == 0 ? "0.00" :
+                                    Number(it.ar).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.dsum == 0 ? "" :
+                                    Number(it.dsum).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.psum == 0 ? "" :
+                                    Number(it.psum).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.total_dsum == 0 ? "" :
+                                    Number(it.total_dsum).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ it.total_psum == 0 ? "" :
+                                    Number(it.total_psum).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ it.net_amount == 0 ? "" :
+                                    Number(it.net_amount).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.tax_withheld == 0 ? "" :
+                                    Number(it.tax_withheld).toLocaleString(undefined, {minimumFractionDigits:
                                     2,maximumFractionDigits: 2}) }}
                                 </td>
                             </tr>
 
                             <tr v-for="(it, j) in item.o_catagory">
                                 <td v-if="item.l_catagory.length == 0 && j==0"
-                                    :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{ item.username }}
+                                    :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{
+                                    item.username }}
                                 </td>
                                 <td v-if="j == 0" :rowspan="item.o_catagory.length">Office Systems</td>
                                 <td>{{ it.client }}</td>
                                 <td>{{ it.project_name }}</td>
-                                <td>{{ it.estimate_close_prob }}</td>
                                 <td class="money">{{ it.final_amount == 0 ? "" :
                                     Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.ar == 0 ? "0.00" :
+                                    Number(it.ar).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.dsum == 0 ? "" :
+                                    Number(it.dsum).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.psum == 0 ? "" :
+                                    Number(it.psum).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.total_dsum == 0 ? "" :
+                                    Number(it.total_dsum).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ it.total_psum == 0 ? "" :
+                                    Number(it.total_psum).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}</td>
+                                <td class="money">{{ it.net_amount == 0 ? "" :
+                                    Number(it.net_amount).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ it.tax_withheld == 0 ? "" :
+                                    Number(it.tax_withheld).toLocaleString(undefined, {minimumFractionDigits:
                                     2,maximumFractionDigits: 2}) }}
                                 </td>
                             </tr>
 
                             <tr class="emphasize">
-                                <td colspan="4">Sub Total</td>
+                                <td colspan="3">Sub Total</td>
                                 <td class="money">{{ item.sub_amount == 0 ? "" :
                                     Number(item.sub_amount).toLocaleString(undefined, {minimumFractionDigits:
                                     2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ item.sub_ar == 0 ? "0.00" :
+                                    Number(item.sub_ar).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ item.sub_d == 0 ? "" :
+                                    Number(item.sub_d).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ item.sub_p == 0 ? "" :
+                                    Number(item.sub_p).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+
+                                <td class="money">{{ item.total_d == 0 ? "" :
+                                    Number(item.total_d).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ item.total_p == 0 ? "" :
+                                    Number(item.total_p).toLocaleString(undefined, {minimumFractionDigits:
+                                    2,maximumFractionDigits: 2}) }}
+                                </td>
+
+                                <td class="money">{{ item.sub_net_amount == 0 ? "" :
+                                    Number(item.sub_net_amount).toLocaleString(undefined,
+                                    {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
+                                </td>
+                                <td class="money">{{ item.sub_tax_withheld == 0 ? "" :
+                                    Number(item.sub_tax_withheld).toLocaleString(undefined,
+                                    {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
                                 </td>
                             </tr>
                         </template>
 
 
                         <tr class="emphasize">
-                            <td colspan="5">Total</td>
-                            <td v-if="record.total !== undefined" class="money">{{ parseFloat(record.total.total_amount)
-                                === 0 ? "" : Number(record.total.total_amount).toLocaleString(undefined,
+                            <td colspan="4">Total</td>
+                            <td v-if="record.total !== undefined" class="money">{{
+                                parseFloat(record.total.total_amount) === 0 ? "" :
+                                Number(record.total.total_amount).toLocaleString(undefined,
+                                {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
+                            </td>
+                            <td v-if="record.total !== undefined" class="money">{{
+                                parseFloat(record.total.total_ar) === 0 ? "0.00" :
+                                Number(record.total.total_ar).toLocaleString(undefined, {minimumFractionDigits:
+                                2,maximumFractionDigits: 2}) }}
+                            </td>
+                            <td v-if="record.total !== undefined" class="money">{{
+                                parseFloat(record.total.total_d) === 0 ? "" :
+                                Number(record.total.total_d).toLocaleString(undefined, {minimumFractionDigits:
+                                2,maximumFractionDigits: 2}) }}
+                            </td>
+                            <td v-if="record.total !== undefined" class="money">{{
+                                parseFloat(record.total.total_p) === 0 ? "" :
+                                Number(record.total.total_p).toLocaleString(undefined, {minimumFractionDigits:
+                                2,maximumFractionDigits: 2}) }}
+                            </td>
+                            <td v-if="record.total !== undefined" class="money">{{
+                                parseFloat(record.total.total_dsum) === 0 ? "" :
+                                Number(record.total.total_dsum).toLocaleString(undefined, {minimumFractionDigits:
+                                2,maximumFractionDigits: 2}) }}
+                            </td>
+                            <td v-if="record.total !== undefined" class="money">{{
+                                parseFloat(record.total.total_psum) === 0 ? "" :
+                                Number(record.total.total_psum).toLocaleString(undefined, {minimumFractionDigits:
+                                2,maximumFractionDigits: 2}) }}
+                            </td>
+                            <td v-if="record.total !== undefined" class="money">{{
+                                parseFloat(record.total.total_net_amount) === 0 ? "" :
+                                Number(record.total.total_net_amount).toLocaleString(undefined,
+                                {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
+                            </td>
+                            <td v-if="record.total !== undefined" class="money">{{
+                                parseFloat(record.total.total_tax_withheld) === 0 ? "" :
+                                Number(record.total.total_tax_withheld).toLocaleString(undefined,
                                 {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
                             </td>
                         </tr>
-
 
                         </tbody>
 
                     </table>
                 </template>
 
-
             </div>
-
-
         </div>
     </div>
 </div>
@@ -481,6 +567,6 @@ catch (Exception $e) {
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/monthly_new_project_report.js"></script>
+<script src="js/monthly_cash_flow_report.js"></script>
 
 </html>
