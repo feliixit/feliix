@@ -460,7 +460,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     $sub_net_amount += $value['net_amount'];
                     $sub_tax_withheld += $value['tax_withheld'];
 
-                    $subtotal += $value['dsum'] + $value['psum'];
+                    $subtotal += $value['final_amount'];
 
                     $GLOBALS['total_amount'] += $value['final_amount'];
                     $GLOBALS['total_ar'] += $value['ar'];
@@ -482,7 +482,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     $sub_net_amount += $value['net_amount'];
                     $sub_tax_withheld += $value['tax_withheld'];
 
-                    $subtotal += $value['dsum'] + $value['psum'];
+                    $subtotal += $value['final_amount'];
 
                     $GLOBALS['total_amount'] += $value['final_amount'];
                     $GLOBALS['total_ar'] += $value['ar'];
@@ -584,7 +584,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $sub_net_amount += $value['net_amount'];
                 $sub_tax_withheld += $value['tax_withheld'];
 
-                $subtotal += $value['dsum'] + $value['psum'];
+                $subtotal += $value['final_amount'];
 
                 $GLOBALS['total_amount'] += $value['final_amount'];
                 $GLOBALS['total_ar'] += $value['ar'];
@@ -606,7 +606,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $sub_net_amount += $value['net_amount'];
                 $sub_tax_withheld += $value['tax_withheld'];
 
-                $subtotal += $value['dsum'] + $value['psum'];
+                $subtotal += $value['final_amount'];
 
                 $GLOBALS['total_amount'] += $value['final_amount'];
                 $GLOBALS['total_ar'] += $value['ar'];
