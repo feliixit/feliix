@@ -77,6 +77,7 @@ function GetTemplate($title_id, $db){
         $tid = $row['tid'];
         $agenda = GetAgenda($row['id'], 1, $db);
         $agenda1 = GetAgenda($row['id'], 2, $db);
+        $agenda2 = GetAgenda($row['id'], 3, $db);
         $department = $row['department'];
         $title = $row['title'];
         $created_name = $row['created_name'];
@@ -92,6 +93,7 @@ function GetTemplate($title_id, $db){
             "version" => $version,
             "agenda" => $agenda,
             "agenda1" => $agenda1,
+            "agenda2" => $agenda2,
             "department" => $department,
             "title" => $title,
             "created_name" => $created_name,

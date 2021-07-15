@@ -69,6 +69,7 @@ if (!isset($jwt)) {
 
     $query = "SELECT pr.id, 
                 pr.review_month, 
+                pr.period, 
                 pr.template_id,
                 ud.department,  
                 ut.title, 
@@ -118,7 +119,7 @@ if (!isset($jwt)) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
         $review_month = $row['review_month'];
-
+        $period = $row['period'];
         $review_next_month = GetNextMonth($review_month);
 
         $department = $row['department'];
@@ -145,15 +146,18 @@ if (!isset($jwt)) {
         {
             $agenda = GetAgenda($row['template_id'], 1, $db);
             $agenda1 = GetAgenda($row['template_id'], 2, $db);
+            $agenda2 = GetAgenda($row['template_id'], 3, $db);
         }
         else
         {
             $agenda = [];
             $agenda1 = [];
+            $agenda2 = [];
         }
     
         $merged_results[] = array(
             "id" => $id,
+            "period" => $period,
             "review_month" => $review_month,
             "review_next_month" => $review_next_month,
             "department" => $department,
@@ -169,6 +173,7 @@ if (!isset($jwt)) {
             "status" => $status,
             "agenda" => $agenda,
             "agenda1" => $agenda1,
+            "agenda2" => $agenda2,
         );
     }
 

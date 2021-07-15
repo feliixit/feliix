@@ -61,6 +61,7 @@ $edit_edit_reason = (isset($_POST['edit_edit_reason']) ?  $_POST['edit_edit_reas
 $edit_designer = (isset($_POST['edit_designer']) ?  $_POST['edit_designer'] : '');
 $edit_type = (isset($_POST['edit_type']) ?  $_POST['edit_type'] : '');
 $edit_scope = (isset($_POST['edit_scope']) ?  $_POST['edit_scope'] : '');
+$edit_scope_other = (isset($_POST['edit_scope_other']) ?  $_POST['edit_scope_other'] : '');
 $edit_office_location = (isset($_POST['edit_office_location']) ?  $_POST['edit_office_location'] : '');
 $edit_background_client = (isset($_POST['edit_background_client']) ?  $_POST['edit_background_client'] : '');
 $edit_background_project = (isset($_POST['edit_background_project']) ?  $_POST['edit_background_project'] : '');
@@ -145,6 +146,7 @@ $query = "INSERT INTO project_edit_info
                     designer = :edit_designer,
                     type = :edit_type,
                     scope = :edit_scope,
+                    scope_other = :edit_scope_other,
                     office_location = :edit_office_location,
                     background_client = :edit_background_client,
                     background_project = :edit_background_project,
@@ -170,6 +172,7 @@ $query = "INSERT INTO project_edit_info
                 $stmt1->bindParam(':edit_designer', $edit_designer);
                 $stmt1->bindParam(':edit_type', $edit_type);
                 $stmt1->bindParam(':edit_scope', $edit_scope);
+                $stmt1->bindParam(':edit_scope_other', $edit_scope_other);
                 $stmt1->bindParam(':edit_office_location', $edit_office_location);
                 $stmt1->bindParam(':edit_background_client', $edit_background_client);
                 $stmt1->bindParam(':edit_background_project', $edit_background_project);

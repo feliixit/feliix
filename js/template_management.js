@@ -4,8 +4,10 @@ var app = new Vue({
     submit: false,
     sn: 0,
     sn1: 0,
+    sn2: 0,
     agenda: [],
     agenda1: [],
+    agenda2: [],
 
     position: [],
     title: [],
@@ -43,6 +45,7 @@ var app = new Vue({
 
     e_sn: 0,
     e_sn1: 0,
+    e_sn2: 0,
 
     e_org_category: "",
     e_org_criterion: "",
@@ -269,6 +272,7 @@ var app = new Vue({
 
       this.e_sn = this.record.agenda.length;
       this.e_sn1 = this.record.agenda1.length;
+      this.e_sn2 = this.record.agenda2.length;
     },
 
     create_template() {
@@ -296,6 +300,7 @@ var app = new Vue({
 
       form_Data.append("agenda", JSON.stringify(this.agenda));
       form_Data.append("agenda1", JSON.stringify(this.agenda1));
+      form_Data.append("agenda2", JSON.stringify(this.agenda2));
 
       axios({
         method: "post",
@@ -355,6 +360,7 @@ var app = new Vue({
 
       form_Data.append("agenda", JSON.stringify(this.record.agenda));
       form_Data.append("agenda1", JSON.stringify(this.record.agenda1));
+      form_Data.append("agenda2", JSON.stringify(this.record.agenda2));
 
       axios({
         method: "post",
@@ -489,6 +495,7 @@ var app = new Vue({
 
       form_Data.append("agenda", JSON.stringify(this.record.agenda));
       form_Data.append("agenda1", JSON.stringify(this.record.agenda1));
+      form_Data.append("agenda2", JSON.stringify(this.record.agenda2));
 
       axios({
         method: "post",
@@ -557,6 +564,15 @@ var app = new Vue({
         this.agenda1.push(ad);
       }
 
+      if (this.type == 3) {
+        var ad = {
+          id: ++this.sn2,
+          category: this.category,
+          criterion: this.criterion,
+        };
+        this.agenda2.push(ad);
+      }
+
       this.criterion = "";
     },
 
@@ -599,6 +615,12 @@ var app = new Vue({
         element.criterion = this.criterion;
       }
 
+      if (this.org_type == 3) {
+        var element = this.agenda2.find(({ id }) => id === this.org_id);
+        element.category = this.category;
+        element.criterion = this.criterion;
+      }
+
       this.criterion = "";
 
       this.clear_edit();
@@ -626,8 +648,8 @@ var app = new Vue({
 
     set_agenda: function() {
       this.agenda = [];
-
       this.agenda1 = [];
+      this.agenda2 = [];
     },
 
     set_up: function(fromIndex, eid) {
@@ -718,6 +740,50 @@ var app = new Vue({
       }
     },
 
+    set_up2: function(fromIndex, eid) {
+      var toIndex = fromIndex - 1;
+
+      if (toIndex < 0) toIndex = 0;
+
+      var element = this.agenda2.find(({ id }) => id === eid);
+      this.agenda2.splice(fromIndex, 1);
+      this.agenda2.splice(toIndex, 0, element);
+    },
+
+    set_down2: function(fromIndex, eid) {
+      var toIndex = fromIndex + 1;
+
+      if (toIndex > this.agenda2.length - 1) toIndex = this.agenda2.length - 1;
+
+      var element = this.agenda2.find(({ id }) => id === eid);
+      this.agenda2.splice(fromIndex, 1);
+      this.agenda2.splice(toIndex, 0, element);
+    },
+
+    edit2: function(eid) {
+      this.scrollMeTo('addto');
+      this.type = 3;
+      var element = this.agenda2.find(({ id }) => id === eid);
+
+      this.org_id = eid;
+      this.org_category = element.category;
+      this.org_criterion = element.criterion;
+
+      this.category = element.category;
+      this.criterion = element.criterion;
+
+      this.org_type = 3;
+      
+      this.editing = true;
+    },
+
+    del2: function(eid) {
+      var index = this.agenda2.findIndex(({ id }) => id === eid);
+      if (index > -1) {
+        this.agenda2.splice(index, 1);
+      }
+    },
+
     scrollMeTo(refName) {
       var element = this.$refs[refName];
       element.scrollIntoView({ behavior: 'smooth' });
@@ -729,9 +795,11 @@ var app = new Vue({
 
       this.agenda = [];
       this.agenda1 = [];
+      this.agenda2 = [];
 
       this.sn = 0;
       this.sn1 = 0;
+      this.sn2 = 0;
 
       this.type = 0;
       this.version = "";
@@ -797,6 +865,15 @@ var app = new Vue({
         this.record.agenda1.push(ad);
       }
 
+      if (this.e_type == 3) {
+        var ad = {
+          id: ++this.e_sn2,
+          category: this.e_category,
+          criterion: this.e_criterion,
+        };
+        this.record.agenda2.push(ad);
+      }
+
       this.e_criterion = "";
     },
 
@@ -827,6 +904,14 @@ var app = new Vue({
 
       if (this.e_org_type == 2) {
         var element = this.record.agenda1.find(
+          ({ id }) => id === this.e_org_id
+        );
+        element.category = this.e_category;
+        element.criterion = this.e_criterion;
+      }
+
+      if (this.e_org_type == 3) {
+        var element = this.record.agenda2.find(
           ({ id }) => id === this.e_org_id
         );
         element.category = this.e_category;
@@ -938,6 +1023,52 @@ var app = new Vue({
       var index = this.record.agenda1.findIndex(({ id }) => id === eid);
       if (index > -1) {
         this.record.agenda1.splice(index, 1);
+      }
+    },
+
+
+    e_set_up2: function(fromIndex, eid) {
+      var toIndex = fromIndex - 1;
+
+      if (toIndex < 0) toIndex = 0;
+
+      var element = this.record.agenda2.find(({ id }) => id === eid);
+      this.record.agenda2.splice(fromIndex, 1);
+      this.record.agenda2.splice(toIndex, 0, element);
+    },
+
+    e_set_down2: function(fromIndex, eid) {
+      var toIndex = fromIndex + 1;
+
+      if (toIndex > this.record.agenda2.length - 1)
+        toIndex = this.record.agenda2.length - 1;
+
+      var element = this.record.agenda2.find(({ id }) => id === eid);
+      this.record.agenda2.splice(fromIndex, 1);
+      this.record.agenda2.splice(toIndex, 0, element);
+    },
+
+    e_edit2: function(eid) {
+      this.scrollMeTo('porto');
+      var element = this.record.agenda2.find(({ id }) => id === eid);
+
+      this.e_org_id = eid;
+      this.e_org_category = element.category;
+      this.e_org_criterion = element.criterion;
+
+      this.e_category = element.category;
+      this.e_criterion = element.criterion;
+
+      this.e_org_type = 3;
+      this.e_type = 3;
+
+      this.e_editing = true;
+    },
+
+    e_del2: function(eid) {
+      var index = this.record.agenda2.findIndex(({ id }) => id === eid);
+      if (index > -1) {
+        this.record.agenda2.splice(index, 1);
       }
     },
   },

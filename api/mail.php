@@ -167,6 +167,85 @@ function batch_performance_evaluate_adm_notify_mail($s_date, $e_date, $dead_date
     }
 }
 
+function batch_performance_evaluate_adm_notify_mail_single($s_date, $dead_date, $adm_id, $emp_id){
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    
+    $admin = GetNotifiers($adm_id);
+    $admin_name = '';
+    $admin_email = '';
+    $admin_title = '';
+    $admin_department = '';
+    foreach($admin as &$list)
+    {
+        $admin_name = $list["username"];
+        $admin_email = $list["email"];
+        $admin_title = $list["title"];
+        $admin_department = $list["department"];
+    }
+
+    $emp = GetNotifiers($emp_id);
+    $emp_name = '';
+    $emp_email = '';
+    $emp_title = '';
+    $emp_department = '';
+    foreach($emp as &$list)
+    {
+        $emp_name = $list["username"];
+        $emp_email = $list["email"];
+        $emp_title = $list["title"];
+        $emp_department = $list["department"];
+    }
+
+    $mail->AddAddress($admin_email, $admin_name);
+
+    $title = "[Notification] Please Fill out Your Performance Review Form ASAP";
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $admin_name . ",</p>";
+    $content = $content . "<p>Deadline of the below performance review item was " . $dead_date . ". Please fill out your performance review form as soon as possible. Following are the details:</p>";
+    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
+    $content = $content . "<p>Review Period:" . $s_date . "</p>";
+    
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Performance Evaluation >> Tab Performance Review to fill out the performance review form.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($admin_email, $content);
+        return true;
+    } else {
+        logMail($admin_email, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
+
 function batch_performance_evaluate_emp_notify_mail($s_date, $e_date, $dead_date, $adm_id, $emp_id){
     $conf = new Conf();
 
@@ -229,6 +308,85 @@ function batch_performance_evaluate_emp_notify_mail($s_date, $e_date, $dead_date
     $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
     $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
     $content = $content . "<p>Review Period:" . $s_date . " ~ " . $e_date . "</p>";
+    
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Performance Evaluation >> Tab Performance Review to fill out the performance review form.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($admin_email, $content);
+        return true;
+    } else {
+        logMail($admin_email, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
+
+function batch_performance_evaluate_emp_notify_mail_single($s_date, $dead_date, $adm_id, $emp_id){
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    
+    $admin = GetNotifiers($adm_id);
+    $admin_name = '';
+    $admin_email = '';
+    $admin_title = '';
+    $admin_department = '';
+    foreach($admin as &$list)
+    {
+        $admin_name = $list["username"];
+        $admin_email = $list["email"];
+        $admin_title = $list["title"];
+        $admin_department = $list["department"];
+    }
+
+    $emp = GetNotifiers($emp_id);
+    $emp_name = '';
+    $emp_email = '';
+    $emp_title = '';
+    $emp_department = '';
+    foreach($emp as &$list)
+    {
+        $emp_name = $list["username"];
+        $emp_email = $list["email"];
+        $emp_title = $list["title"];
+        $emp_department = $list["department"];
+    }
+
+    $mail->AddAddress($emp_email, $emp_name);
+
+    $title = "[Notification] Please Fill out Your Performance Review Form ASAP";
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $emp_name . ",</p>";
+    $content = $content . "<p>Deadline of the below performance review item was " . $dead_date . ". Please fill out your performance review form as soon as possible. Following are the details:</p>";
+    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
+    $content = $content . "<p>Review Period:" . $s_date  . "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -371,6 +529,82 @@ function send_review_mail_adm($s_date, $e_date, $adm_id, $emp_id, $dead_date){
     }
 }
 
+
+function send_review_mail_adm_single($s_date, $adm_id, $emp_id, $dead_date){
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    
+    $admin = GetNotifiers($adm_id);
+    $admin_name = '';
+    $admin_email = '';
+    foreach($admin as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $admin_name = $list["username"];
+        $admin_email = $list["email"];
+    }
+
+    $emp = GetNotifiers($emp_id);
+    $emp_name = '';
+    $emp_title = '';
+    $emp_department = '';
+    foreach($emp as &$list)
+    {
+        $emp_name = $list["username"];
+        $emp_title = $list["title"];
+        $emp_department = $list["department"];
+    }
+
+    $title = "[Notification] " . $emp_name . "'s Performance Review Form over " . $s_date . " is Open";
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $admin_name . ",</p>";
+    $content = $content . "<p>" . $emp_name . "'s Performance Review Form over " . $s_date .  " is open now and the deadline is " . $dead_date . ". As evaluation on your subordinate, you can record your scores and comments against each performance criterion. We encourage you to give your inputs on a regular basis as this will help in clear discussion between you and your subordinate.</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Following are the details:</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
+    $content = $content . "<p>Review Period:" . $s_date .  "</p>";
+    
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Performance Evaluation >> Tab Performance Review to start the evaluation.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($admin_email, $content);
+        return true;
+    } else {
+        logMail($admin_email, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
+
 function send_review_mail($s_date, $e_date, $adm_id, $emp_id, $dead_date){
     $conf = new Conf();
 
@@ -448,6 +682,82 @@ function send_review_mail($s_date, $e_date, $adm_id, $emp_id, $dead_date){
     }
 }
 
+function send_review_mail_single($s_date, $adm_id, $emp_id, $dead_date){
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    
+    $admin = GetNotifiers($adm_id);
+    $admin_name = '';
+    $admin_email = '';
+    foreach($admin as &$list)
+    {
+        $admin_name = $list["username"];
+        $admin_email = $list["email"];
+    }
+
+    $emp = GetNotifiers($emp_id);
+    $emp_name = '';
+    $emp_email = '';
+    $emp_title = '';
+    $emp_department = '';
+    foreach($emp as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $emp_name = $list["username"];
+        $emp_title = $list["title"];
+        $emp_department = $list["department"];
+        $emp_email = $list["email"];
+    }
+
+    $title = "[Notification] Your Performance Review Form over " . $s_date  . " is Open";
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $emp_name . ",</p>";
+    $content = $content . "<p>Your Performance Review Form over " . $s_date  . " is open now and the deadline is " . $dead_date . ". As self-evaluation, you can record your scores and comments against each performance criterion. We encourage you to give your inputs on a regular basis as this will help in clear discussion between you and your supervisor.</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Following are the details:</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
+    $content = $content . "<p>Review Period:" . $s_date  . "</p>";
+    
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Please log on to Feliix >> Performance Evaluation >> Tab Performance Review to start the evaluation.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($emp_email, $content);
+        return true;
+    } else {
+        logMail($emp_email, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
 
 function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date)
 {
@@ -2099,6 +2409,7 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
 
 }
 
+
 function task_notify_admin($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
 {
     $tab = "";
@@ -2311,6 +2622,124 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+
+function message_notify($request_type, $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $msg, $username, $created_at, $c_id)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "create":
+            $tab = '<p>A new message in "' . $stages . '" stage of project "' . $project_name . '" was created by "' . $username . '". Following are the details:</p>';
+            $title = '[Message Notification] New message in "' . $stages . '" stage of project "' . $project_name . '"';
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            break;
+        case "del":
+            $tab = '<p>A new message in "' . $stages . '" stage of project "' . $project_name . '" was deleted by "' . $username . '". Following are the details:</p>';
+            $title = '[Message Notification] Message was deleted in "' . $stages . '" stage of project "' . $project_name . '"';
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($c_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stages . "</p>";
+    $content = $content . "<p>Task Name:" . $task_name . "</p>";
+    if($request_type == "create")
+    {
+        $content = $content . "<p>Creator:" . $username . " at " . $created_at . "</p>";
+        $content = $content . "<p>Content:" . $msg . "</p>";
+    }
+
+    if($request_type == "del")
+    {
+        $content = $content . "<p>Message Eraser:" . $username . " at " . $created_at . "</p>";
+        $content = $content . "<p>Content:" . $msg . "</p>";
+    }
+    // $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    // $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    // $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    // $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";

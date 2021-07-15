@@ -38,6 +38,11 @@ try {
         }
     }
 
+    if($username == "Glendon Wendell Co")
+    {
+        $access6 = true;
+    }
+
     if($access6 == false)
         header( 'location:index' );
 
@@ -278,7 +283,7 @@ background-color: #94BABB;
             <div class="tags">
                 <a class="tag A focus">Monthly Sales Report</a>
                 <a class="tag B">Monthly Cash Flow Report</a>
-                <a class="tag C">Monthly New Project Report</a>
+                <a class="tag C" href="monthly_new_project_report">Monthly New Project Report</a>
             </div>
             <!-- Blocks -->
             <div class="block A focus">

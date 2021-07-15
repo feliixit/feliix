@@ -34,7 +34,7 @@ var app = new Vue({
        evals:{},
        avg:10.0,
        avg1:10.0,
-
+       avg2:0.0,
    
 
   },
@@ -173,6 +173,7 @@ var app = new Vue({
 
       this.e_sn = this.record.agenda.length;
       this.e_sn1 = this.record.agenda1.length;
+      this.e_sn2 = this.record.agenda2.length;
     },
 
 
@@ -248,6 +249,29 @@ var app = new Vue({
   
       },
 
+      on_grade2_change:function(event) {
+        console.log(event.target.value);
+        var grade = this.$refs.grade2;
+  
+        var score =0.0;
+        var cnt = 0;
+        for (i = 0; i < grade.length; i++) {
+          if(grade[i].value === 'N/A')
+            score += 0;
+          else
+          {
+            score += parseInt(grade[i].value);
+            cnt += 1;
+          }
+        }
+  
+        if(cnt === 0)
+          this.avg2 = 0;
+        else
+          this.avg2 = (score / cnt).toFixed(1);
+  
+      },
+
     reset: function() {
  
       this.receive_records = [];
@@ -258,6 +282,7 @@ var app = new Vue({
       this.evals = {};
       this.avg = 10.0;
       this.avg1 = 10.0;
+      this.avg2 = 10.0;
 
       this.view_detail = false;
     },

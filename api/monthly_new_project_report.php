@@ -176,26 +176,19 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                         pm.`client`,
                         pm.final_amount,
                         pm.tax_withheld,    
-                        pp.received_date,
-                        CASE pp.kind
-                                WHEN 0 THEN 'Down Payment'
-                                WHEN 1 THEN 'Payment'
-                                ELSE ''  
-                            END   pay_type,
-                        pp.kind,
-                        pp.amount
-                    FROM   project_proof pp
-                    LEFT JOIN project_main pm
-                            ON pp.project_id = pm.id
-                    LEFT JOIN user
-                            ON pm.create_id = user.id
-                    WHERE pp.status = 1
-                    AND pp.kind = 0
-                    and pp.received_date > '" . $PeriodStart . "' AND pp.received_date < '" . $PeriodEnd . "'
-                    AND pp.id IN (SELECT * 
-                                FROM (SELECT MIN(n.id)
-                                        FROM project_proof n where STATUS = 1
-                                    GROUP BY n.project_id , n.kind HAVING n.kind = 0) x) ";
+                pm.project_name,
+                pm.`client`,
+                COALESCE(pm.final_amount, 0) final_amount,
+                COALESCE((SELECT project_est_prob.prob 
+                            FROM project_est_prob 
+                            WHERE project_est_prob.project_id = pm.id 
+                            order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob
+            FROM  project_main pm
+            LEFT JOIN user
+                    ON pm.create_id = user.id
+            WHERE pm.status <> -1
+                  
+                    and pm.created_at > '" . $PeriodStart . "' AND pm.created_at < '" . $PeriodEnd . "' ";
 
         if($sale_person != "")
         {
@@ -206,59 +199,11 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
         {
             $sql = $sql . " and pm.catagory_id = " . $category . " ";
         }
-                
-        
-        $sql = $sql . " UNION 
-
-                SELECT pm.id pid, user.username,
-                        pm.project_name,
-                        pm.catagory_id,
-                        CASE pm.catagory_id  
-                                WHEN 1 THEN 'Office System'
-                                WHEN 2 THEN 'Lighting'
-                                ELSE ''  
-                            END   catagory,
-                        pm.`client`,
-                        pm.final_amount,
-                        pm.tax_withheld,    
-                        pp.received_date,
-                        CASE pp.kind
-                                WHEN 0 THEN 'Down Payment'
-                                WHEN 1 THEN 'Payment'
-                                ELSE ''  
-                            END   pay_type,
-                        pp.kind,
-                        pp.amount
-                    FROM   project_proof pp
-                    LEFT JOIN project_main pm
-                            ON pp.project_id = pm.id
-                    LEFT JOIN user
-                            ON pm.create_id = user.id
-                    WHERE pp.status = 1
-                    AND pp.kind = 1
-                    and pp.received_date > '" . $PeriodStart . "' AND pp.received_date < '" . $PeriodEnd . "'
-                    AND pp.id IN (SELECT id 
-                                FROM (SELECT MIN(n.id) id, SUM(amount) amt, kind, (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = n.project_id AND p.kind = 0) down_sum
-                                        FROM project_proof n where STATUS = 1
-                                    GROUP BY n.project_id , n.kind
-                    HAVING down_sum = 0) x) ";
-
-            if($sale_person != "")
-            {
-                $sql = $sql . " and user.username = '" . $sale_person . "' ";
-            }
     
-            if($category != "")
-            {
-                $sql = $sql . " and pm.catagory_id = " . $category . " ";
-            }
-                    
-            
-            $sql = $sql . " 
-                    ORDER BY username, catagory
-                    ";
-
         
+        $sql = $sql . " 
+                ORDER BY username, catagory
+                ";
 
         $merged_results = array();
 
@@ -266,13 +211,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
         $stmt->execute();
 
         $username = "";
-        
         $sub_amount = 0;
-        $sub_ar = 0;
-        $sub_d = 0;
-        $sub_p = 0;
-        $sub_net_amount = 0;
-        $sub_tax_withheld = 0;
 
         $l_catagory = [];
         $o_catagory = [];
@@ -284,12 +223,6 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
             if ($username != $row['username'] && $username != "") {
                 
                 $sub_amount = 0;
-                $sub_ar = 0;
-                $sub_d = 0;
-                $sub_p = 0;
-                $sub_net_amount = 0;
-                $sub_tax_withheld = 0;
-
                 $subtotal = 0;
 /*
                 if($o_catagory == []){
@@ -320,38 +253,15 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 */
                 foreach ($o_catagory as &$value) {
                     $sub_amount += $value['final_amount'];
-                    $sub_ar += $value['ar'];
-                    $sub_d += $value['dsum'];
-                    $sub_p += $value['psum'];
-                    $sub_net_amount += $value['net_amount'];
-                    $sub_tax_withheld += $value['tax_withheld'];
-
-                    $subtotal += $value['dsum'] + $value['psum'];
-
+                    $subtotal += $value['final_amount'];
                     $GLOBALS['total_amount'] += $value['final_amount'];
-                    $GLOBALS['total_ar'] += $value['ar'];
-                    $GLOBALS['total_d'] += $value['dsum'];
-                    $GLOBALS['total_p'] += $value['psum'];
-                    $GLOBALS['total_net_amount'] += $value['net_amount'];
-                    $GLOBALS['total_tax_withheld'] += $value['tax_withheld'];
                 }
     
                 foreach ($l_catagory as &$value) {
                     $sub_amount += $value['final_amount'];
-                    $sub_ar += $value['ar'];
-                    $sub_d += $value['dsum'];
-                    $sub_p += $value['psum'];
-                    $sub_net_amount += $value['net_amount'];
-                    $sub_tax_withheld += $value['tax_withheld'];
-
-                    $subtotal += $value['dsum'] + $value['psum'];
+                    $subtotal += $value['final_amount'];
 
                     $GLOBALS['total_amount'] += $value['final_amount'];
-                    $GLOBALS['total_ar'] += $value['ar'];
-                    $GLOBALS['total_d'] += $value['dsum'];
-                    $GLOBALS['total_p'] += $value['psum'];
-                    $GLOBALS['total_net_amount'] += $value['net_amount'];
-                    $GLOBALS['total_tax_withheld'] += $value['tax_withheld'];
                 }
 
                 $merged_results[] = array(
@@ -360,12 +270,6 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     "o_catagory" => $o_catagory,
              
                     "sub_amount" => $sub_amount,
-                    "sub_ar" => $sub_ar,
-                    "sub_d" => $sub_d,
-                    "sub_p" => $sub_p,
-                    "sub_net_amount" => $sub_net_amount,
-                    "sub_tax_withheld" => $sub_tax_withheld,
-
                     "subtotal" => $subtotal,
                 
                 );
@@ -374,12 +278,6 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $o_catagory = [];
 
                 $sub_amount = 0;
-                $sub_ar = 0;
-                $sub_d = 0;
-                $sub_p = 0;
-                $sub_net_amount = 0;
-                $sub_tax_withheld = 0;
-
                 $subtotal = 0;
             }
 
@@ -394,12 +292,6 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 
         if ($username != "") {
             $sub_amount = 0;
-            $sub_ar = 0;
-            $sub_d = 0;
-            $sub_p = 0;
-            $sub_net_amount = 0;
-            $sub_tax_withheld = 0;
-
             $subtotal = 0;
 /*
             if($o_catagory == []){
@@ -430,52 +322,23 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 */
             foreach ($o_catagory as &$value) {
                 $sub_amount += $value['final_amount'];
-                $sub_ar += $value['ar'];
-                $sub_d += $value['dsum'];
-                $sub_p += $value['psum'];
-                $sub_net_amount += $value['net_amount'];
-                $sub_tax_withheld += $value['tax_withheld'];
-
-                $subtotal += $value['dsum'] + $value['psum'];
+                $subtotal += $value['final_amount'];
 
                 $GLOBALS['total_amount'] += $value['final_amount'];
-                $GLOBALS['total_ar'] += $value['ar'];
-                $GLOBALS['total_d'] += $value['dsum'];
-                $GLOBALS['total_p'] += $value['psum'];
-                $GLOBALS['total_net_amount'] += $value['net_amount'];
-                $GLOBALS['total_tax_withheld'] += $value['tax_withheld'];
             }
 
             foreach ($l_catagory as &$value) {
                 $sub_amount += $value['final_amount'];
-                $sub_ar += $value['ar'];
-                $sub_d += $value['dsum'];
-                $sub_p += $value['psum'];
-                $sub_net_amount += $value['net_amount'];
-                $sub_tax_withheld += $value['tax_withheld'];
-
-                $subtotal += $value['dsum'] + $value['psum'];
+                $subtotal += $value['final_amount'];
 
                 $GLOBALS['total_amount'] += $value['final_amount'];
-                $GLOBALS['total_ar'] += $value['ar'];
-                $GLOBALS['total_d'] += $value['dsum'];
-                $GLOBALS['total_p'] += $value['psum'];
-                $GLOBALS['total_net_amount'] += $value['net_amount'];
-                $GLOBALS['total_tax_withheld'] += $value['tax_withheld'];
             }
 
             $merged_results[] = array(
                 "username" => $username,
                 "l_catagory" => $l_catagory,
                 "o_catagory" => $o_catagory,
-  
                 "sub_amount" => $sub_amount,
-                "sub_ar" => $sub_ar,
-                "sub_d" => $sub_d,
-                "sub_p" => $sub_p,
-                "sub_net_amount" => $sub_net_amount,
-                "sub_tax_withheld" => $sub_tax_withheld,
-
                 "subtotal" => $subtotal,
             );
 
@@ -496,17 +359,16 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
     $sql = "SELECT user.username,
                 pm.project_name,
                 pm.`client`,
-                sum(CASE WHEN pp.kind = 1  THEN amount ELSE 0 END) psum,
-                sum(CASE WHEN pp.kind = 0  THEN amount ELSE 0 END) dsum,
                 COALESCE(pm.final_amount, 0) final_amount,
-                COALESCE(pm.tax_withheld, 0) tax_withheld
-            FROM   project_proof pp
-            LEFT JOIN project_main pm
-                    ON pp.project_id = pm.id
+                COALESCE((SELECT project_est_prob.prob 
+                            FROM project_est_prob 
+                            WHERE project_est_prob.project_id = pm.id 
+                            order by created_at desc limit 1), pm.estimate_close_prob) estimate_close_prob
+            FROM  project_main pm
             LEFT JOIN user
                     ON pm.create_id = user.id
-            WHERE pp.status = 1
-            and pp.received_date > '" . $sdate . "' AND pp.received_date < '" . $edate . "'
+            WHERE pm.status <> -1
+            and pm.created_at > '" . $sdate . "' AND pm.created_at < '" . $edate . "'
             ";
 
             if($sale_person != "")
@@ -533,12 +395,8 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
             "username" => $row["username"],
             "project_name" => $row["project_name"],
             "client" => $row["client"],
-            "dsum" => $row["dsum"],
-            "psum" => $row["psum"],
             "final_amount" => $row["final_amount"],
-            "tax_withheld" => $row["tax_withheld"],
-            "ar" => $row["final_amount"] - $row["dsum"] - $row["psum"] - $row["tax_withheld"],
-            "net_amount" => $row["final_amount"] - $row["tax_withheld"],
+            "estimate_close_prob" => $row["estimate_close_prob"],
         );
     }
 

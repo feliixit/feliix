@@ -10,6 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 $employee_id = (isset($_POST['user_id']) ?  $_POST['user_id'] : 0);
 $review_month = (isset($_POST['review_month']) ?  $_POST['review_month'] : '');
+$period = (isset($_POST['period']) ?  $_POST['period'] : 0);
 $template_id = (isset($_POST['template_id']) ?  $_POST['template_id'] : 0);
 
 
@@ -55,6 +56,7 @@ else
             `template_id` = :template_id,
             `user_id` = :employee_id,
             `review_month` = :review_month,
+            `period` = :period,
             `create_id` = :create_id,
             `created_at` =  now() ";
 
@@ -65,6 +67,7 @@ else
         $stmt->bindParam(':template_id', $template_id);
         $stmt->bindParam(':employee_id', $employee_id);
         $stmt->bindParam(':review_month', $review_month);
+        $stmt->bindParam(':period', $period);
         $stmt->bindParam(':create_id', $user_id);
 
 
@@ -94,12 +97,25 @@ else
 
         $db->commit();
 
-        $s_date = $review_month;
-        $e_date = GetNextMonth($review_month);
-        $dead_date = GetDeadMonth($review_month);
+        if($period == 1)
+        {
+            $s_date = $review_month;
+  
+            $dead_date = GetDeadMonthSingle($review_month);
 
-        send_review_mail_adm($s_date, $e_date, $user_id, $employee_id, $dead_date);
-        send_review_mail($s_date, $e_date, $user_id, $employee_id, $dead_date);
+            send_review_mail_adm_single($s_date, $user_id, $employee_id, $dead_date);
+            send_review_mail_single($s_date, $user_id, $employee_id, $dead_date);
+        }
+        
+        if($period == 0)
+        {
+            $s_date = $review_month;
+            $e_date = GetNextMonth($review_month);
+            $dead_date = GetDeadMonth($review_month);
+
+            send_review_mail_adm($s_date, $e_date, $user_id, $employee_id, $dead_date);
+            send_review_mail($s_date, $e_date, $user_id, $employee_id, $dead_date);
+        }
 
         
         http_response_code(200);
@@ -126,5 +142,11 @@ function GetNextMonth($d)
 function GetDeadMonth($d)
 {
     $date = date('Y-m-d', strtotime('+2 month', strtotime($d . '-10')));
+    return $date;
+}
+
+function GetDeadMonthSingle($d)
+{
+    $date = date('Y-m-d', strtotime('+1 month', strtotime($d . '-10')));
     return $date;
 }
