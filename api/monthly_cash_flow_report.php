@@ -524,7 +524,7 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
     $sql = "SELECT user.username,
                 pm.project_name,
                 pm.`client`,
-
+                DATE(pm.created_at) created_at,
                 (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' and p.received_date > '" . $sdate . "' AND p.received_date < '" . $edate . "') dsum,
                 (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' and p.received_date > '" . $sdate . "' AND p.received_date < '" . $edate . "') psum,
 
@@ -573,6 +573,7 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
             "final_amount" => $row["final_amount"],
             "tax_withheld" => $row["tax_withheld"],
             "ar" => $row["ar"],
+            "created_at" => $row["created_at"],
             "net_amount" => $row["final_amount"] - $row["tax_withheld"],
         );
     }
