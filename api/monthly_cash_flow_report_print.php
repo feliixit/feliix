@@ -661,7 +661,7 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
 
                 COALESCE(pm.final_amount, 0) final_amount,
                 COALESCE(pm.tax_withheld, 0) tax_withheld,
-                ifnull(pm.final_amount, 0) - IFNULL(pm.tax_withheld, 0) -(SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '')  - (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '') ar,
+                ifnull(pm.final_amount, 0) - IFNULL(pm.tax_withheld, 0) -(SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.received_date <> '' AND p.received_date < '" . $edate . "') ar,
                 ifnull(pm.final_amount, 0) - IFNULL(pm.tax_withheld, 0) net_amount
                 FROM  project_main pm
            
