@@ -69,7 +69,7 @@ try {
 
             if(trim(strtoupper($department)) == 'SERVICE')
             {
-                if(trim(strtoupper($position)) == "ENGINERING MANAGER")
+                if(trim(strtoupper($position)) == "SERVICE MANAGER")
                 {
                     $access6 = true;
                 }
