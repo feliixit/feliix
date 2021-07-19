@@ -30,23 +30,18 @@ try {
 
     $access6 = false;
 
-    if(trim($department) == '')
-    {
-        if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
-        {
+    if (trim($department) == '') {
+        if (trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR') {
             $access6 = true;
         }
     }
 
-    if($username == "Glendon Wendell Co")
-    {
+    if ($username == "Glendon Wendell Co") {
         $access6 = true;
     }
 
-    if($access6 == false)
-        header( 'location:index' );
-
-    
+    if ($access6 == false)
+        header('location:index');
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -60,37 +55,36 @@ catch (Exception $e) {
 
 <head>
     <!-- 共用資料 -->
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover" />
 
     <!-- favicon.ico iOS icon 152x152px -->
-    <link rel="shortcut icon" href="images/favicon.ico"/>
-    <link rel="Bookmark" href="images/favicon.ico"/>
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
-    <link rel="apple-touch-icon" href="images/iosicon.png"/>
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="Bookmark" href="images/favicon.ico" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="images/iosicon.png" />
 
     <!-- SEO -->
     <title>FELIIX template</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
-    <meta name="robots" content="all"/>
-    <meta name="author" content="FELIIX"/>
+    <meta name="robots" content="all" />
+    <meta name="author" content="FELIIX" />
 
     <!-- Open Graph protocol -->
-    <meta property="og:site_name" content="FELIIX"/>
+    <meta property="og:site_name" content="FELIIX" />
     <!--<meta property="og:url" content="分享網址" />-->
-    <meta property="og:type" content="website"/>
-    <meta property="og:description" content="FELIIX"/>
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="FELIIX" />
     <!--<meta property="og:image" content="分享圖片(1200×628)" />-->
     <!-- Google Analytics -->
 
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="css/default.css"/>
-    <link rel="stylesheet" type="text/css" href="css/ui.css"/>
-    <link rel="stylesheet" type="text/css" href="css/case.css"/>
-    <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="css/default.css" />
+    <link rel="stylesheet" type="text/css" href="css/ui.css" />
+    <link rel="stylesheet" type="text/css" href="css/case.css" />
+    <link rel="stylesheet" type="text/css" href="css/mediaqueries.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" />
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
@@ -103,7 +97,7 @@ catch (Exception $e) {
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
     <script>
-        $(function () {
+        $(function() {
             $('header').load('include/header.php');
 
             dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
@@ -117,27 +111,27 @@ catch (Exception $e) {
             dialogshow($('.btnbox a.reply.r3'), $('.btnbox .dialog.r3'));
             dialogshow($('.btnbox a.reply.r4'), $('.btnbox .dialog.r4'));
             // 套上 .dialogclear 關閉所有的跳出框
-            $('.dialogclear').click(function () {
+            $('.dialogclear').click(function() {
                 dialogclear()
             });
             // 根據 select 分類
-            $('#opType').change(function () {
+            $('#opType').change(function() {
                 //console.log('Operation Type:'+$("#opType").val());
                 var f = $("#opType").val();
                 $('.dialog.r-edit').removeClass('edit').removeClass('del').addClass(f);
             })
-            $('#opType2').change(function () {
+            $('#opType2').change(function() {
                 //console.log('Operation Type:'+$("#opType").val());
                 var f = $("#opType2").val();
                 $('.dialog.d-edit').removeClass('edit').removeClass('del').addClass(f);
             })
-            $('#opType3').change(function () {
+            $('#opType3').change(function() {
                 //console.log('Operation Type:'+$("#opType").val());
                 var f = $("#opType3").val();
                 $('.dialog.r-add').removeClass('add').removeClass('dup').addClass(f);
             })
 
-            $('.selectbox').on('click', function () {
+            $('.selectbox').on('click', function() {
                 $.fancybox.open({
                     src: '#pop-multiSelect',
                     type: 'inline'
@@ -156,18 +150,18 @@ catch (Exception $e) {
 
     <!-- CSS for current webpage -->
     <style type="text/css">
-
-        body.fifth .mainContent > .tags a {
+        body.fifth .mainContent>.tags a {
             background-color: #DFEAEA;
             border: 2px solid #94BABB;
             border-bottom: none;
         }
 
-        body.fifth .mainContent > .tags a.focus {
+        body.fifth .mainContent>.tags a.focus {
             background-color: #94BABB;
         }
 
-        body.fifth .mainContent > .block, body.fifth .mainContent > .block.focus {
+        body.fifth .mainContent>.block,
+        body.fifth .mainContent>.block.focus {
             border: none;
             border-top: 2px solid #94BABB;
             margin-bottom: 0;
@@ -183,7 +177,8 @@ catch (Exception $e) {
             width: 48.5%;
         }
 
-        .list_function a.filtering, .list_function a.exporting {
+        .list_function a.filtering,
+        .list_function a.exporting {
             width: 30px;
             height: 30px;
             background-color: #94BABB;
@@ -205,7 +200,8 @@ catch (Exception $e) {
             border-color: transparent transparent transparent #94BABB;
         }
 
-        .list_function .dialog h6, .list_function .dialog dt {
+        .list_function .dialog h6,
+        .list_function .dialog dt {
             color: #000000;
         }
 
@@ -227,7 +223,8 @@ catch (Exception $e) {
             font-weight: 500;
         }
 
-        table.spantable th, table.spantable td {
+        table.spantable th,
+        table.spantable td {
             border-right: 1px solid #94BABB;
             border-bottom: 1px solid #94BABB;
             padding: 5px;
@@ -255,7 +252,8 @@ catch (Exception $e) {
             background-color: #DFEAEA;
         }
 
-        table.spantable tr th:nth-of-type(1), table.spantable tr th:nth-of-type(3) {
+        table.spantable tr th:nth-of-type(1),
+        table.spantable tr th:nth-of-type(3) {
             min-width: 150px;
         }
 
@@ -265,6 +263,10 @@ catch (Exception $e) {
 
         table.spantable tr th:nth-of-type(4) {
             min-width: 365px;
+        }
+
+        table.spantable tr th:nth-of-type(5) {
+            min-width: 130px;
         }
 
         table.spantable td.money {
@@ -278,287 +280,280 @@ catch (Exception $e) {
 
 <body class="fifth">
 
-<div id="app" class="bodybox" style="min-height: 150vh;">
-    <!-- header -->
-    <header>header</header>
-    <!-- header end -->
-    <div class="mainContent">
-        <!-- tags js在 main.js -->
-        <div class="tags">
-            <a class="tag A" href="monthly_sales_report">Monthly Sales Report</a>
-            <a class="tag B focus">Monthly Cash Flow Report</a>
-            <a class="tag C" href="monthly_new_project_report">Monthly New Project Report</a>
-        </div>
-        <!-- Blocks -->
-        <div class="block B focus">
+    <div id="app" class="bodybox" style="min-height: 150vh;">
+        <!-- header -->
+        <header>header</header>
+        <!-- header end -->
+        <div class="mainContent">
+            <!-- tags js在 main.js -->
+            <div class="tags">
+                <a class="tag A" href="monthly_sales_report">Monthly Sales Report</a>
+                <a class="tag B focus">Monthly Cash Flow Report</a>
+                <a class="tag C" href="monthly_new_project_report">Monthly New Project Report</a>
+            </div>
+            <!-- Blocks -->
+            <div class="block B focus">
 
-            <div class="list_function" style="margin-top: 10px;">
+                <div class="list_function" style="margin-top: 10px;">
 
-                <!-- 篩選 -->
-                <div class="popupblock">
-                    <a class="filtering" id="btn_filter"></a>
-                    <div id="filter_dialog" class="dialog d-filter"><h6>Filter Function:</h6>
-                        <div class="formbox">
-                            <dl>
-                                <dt>Sales Person</dt>
-                                <dd>
-                                    <select v-model="fil_creator">
-                                        <option value="">All</option>
-                                        <option v-for="item in creators" :value="item.username"
-                                                :key="item.username">
-                                            {{ item.username }}
-                                        </option>
-                                    </select>
-                                </dd>
+                    <!-- 篩選 -->
+                    <div class="popupblock">
+                        <a class="filtering" id="btn_filter"></a>
+                        <div id="filter_dialog" class="dialog d-filter">
+                            <h6>Filter Function:</h6>
+                            <div class="formbox">
+                                <dl>
+                                    <dt>Sales Person</dt>
+                                    <dd>
+                                        <select v-model="fil_creator">
+                                            <option value="">All</option>
+                                            <option v-for="item in creators" :value="item.username" :key="item.username">
+                                                {{ item.username }}
+                                            </option>
+                                        </select>
+                                    </dd>
 
-                                <dt>Category</dt>
-                                <dd>
-                                    <select v-model="fil_category">
-                                        <option value="">All</option>
-                                        <option value="2">Lighting</option>
-                                        <option value="1">Office Systems</option>
-                                    </select>
-                                </dd>
+                                    <dt>Category</dt>
+                                    <dd>
+                                        <select v-model="fil_category">
+                                            <option value="">All</option>
+                                            <option value="2">Lighting</option>
+                                            <option value="1">Office Systems</option>
+                                        </select>
+                                    </dd>
 
-                                <dt style="margin-bottom: -15px;">Period of Time</dt>
-                                <div class="half">
-                                    <dt>From</dt>
-                                    <dd><input type="month" id="start" name="start"></dd>
+                                    <dt style="margin-bottom: -15px;">Period of Time</dt>
+                                    <div class="half">
+                                        <dt>From</dt>
+                                        <dd><input type="month" id="start" name="start"></dd>
+                                    </div>
+                                    <div class="half">
+                                        <dt>To</dt>
+                                        <dd><input type="month" id="end" name="end"></dd>
+                                    </div>
+
+                                </dl>
+
+                                <div class="btnbox"><a class="btn small" @click="filter_clear()">Cancel</a><a class="btn small" @click="filter_remove()">Clear</a> <a class="btn small green" @click="filter_apply()">Apply</a>
                                 </div>
-                                <div class="half">
-                                    <dt>To</dt>
-                                    <dd><input type="month" id="end" name="end"></dd>
-                                </div>
-
-                            </dl>
-
-                            <div class="btnbox"><a class="btn small" @click="filter_clear()">Cancel</a><a
-                                    class="btn small" @click="filter_remove()">Clear</a> <a class="btn small green"
-                                                                                            @click="filter_apply()">Apply</a>
                             </div>
                         </div>
                     </div>
+
+                    <!-- 匯出 -->
+                    <div class="popupblock">
+                        <a class="exporting" id="btn_export" @click="export_petty()"></a>
+                    </div>
+
+
                 </div>
 
-                <!-- 匯出 -->
-                <div class="popupblock">
-                    <a class="exporting" id="btn_export" @click="export_petty()"></a>
-                </div>
-
-
-            </div>
-
-            <div style="width: 100%; overflow-x: auto;">
                 
-                <template v-for="(record, x) in receive_records">
-                    <!-- 按照每個業務員Amount總和進行排序，第一名放最上面 -->
-                    <table class="spantable">
-<div style="width:100%; overflow-x:auto; margin-bottom:50px;">
-    <thead>
-    <tr>
-        <th colspan="13">
-            {{ record.date }}
-        </th>
-    </tr>
 
-    <tr>
-        <th>Sales Person</th>
-        <th>Category</th>
-        <th>Customer Name</th>
-        <th>Project Name</th>
-        <th>Created Time</th>
-        <th>Amount</th>
-        <th>A/R</th>
-        <th>Down Payment</th>
-        <th>Full Payment</th>
-        <th>Total Down Payment</th>
-        <th>Total Full Payment</th>
-        <th>Net Amount</th>
-        <th>Tax Withheld</th>
-    </tr>
-    </thead>
+                    <template v-for="(record, x) in receive_records">>
+                        <div style="width:100%; overflow-x:auto; margin-bottom:50px;">
+                        <!-- 按照每個業務員Amount總和進行排序，第一名放最上面 -->
+                        <table class="spantable">
+                                <thead>
+                                    <tr>
+                                        <th colspan="13">
+                                            {{ record.date }}
+                                        </th>
+                                    </tr>
 
-    <tbody>
-    <template v-for="(item, i) in record.report">
-        <tr v-for="(it, j) in item.l_catagory">
-            <td v-if="j == 0"
-                :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{ item.username }}
-            </td>
-            <td v-if="j == 0" :rowspan="item.l_catagory.length">Lighting</td>
-            <td>{{ it.client }}</td>
-            <td>{{ it.project_name }}</td>
-            <td>{{ it.created_at }}</td>
-            <td class="money">{{ it.final_amount == 0 ? "" :
+                                    <tr>
+                                        <th>Sales Person</th>
+                                        <th>Category</th>
+                                        <th>Customer Name</th>
+                                        <th>Project Name</th>
+                                        <th>Created Time</th>
+                                        <th>Amount</th>
+                                        <th>A/R</th>
+                                        <th>Down Payment</th>
+                                        <th>Full Payment</th>
+                                        <th>Total Down Payment</th>
+                                        <th>Total Full Payment</th>
+                                        <th>Net Amount</th>
+                                        <th>Tax Withheld</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <template v-for="(item, i) in record.report">
+                                        <tr v-for="(it, j) in item.l_catagory">
+                                            <td v-if="j == 0" :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{ item.username }}
+                                            </td>
+                                            <td v-if="j == 0" :rowspan="item.l_catagory.length">Lighting</td>
+                                            <td>{{ it.client }}</td>
+                                            <td>{{ it.project_name }}</td>
+                                            <td>{{ it.created_at }}</td>
+                                            <td class="money">{{ it.final_amount == 0 ? "" :
                 Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.ar == 0 ? "0.00" :
+                                            </td>
+                                            <td class="money">{{ it.ar == 0 ? "0.00" :
                 Number(it.ar).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.dsum == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.dsum == 0 ? "" :
                 Number(it.dsum).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.psum == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.psum == 0 ? "" :
                 Number(it.psum).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.total_dsum == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.total_dsum == 0 ? "" :
                 Number(it.total_dsum).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.total_psum == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.total_psum == 0 ? "" :
                 Number(it.total_psum).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.net_amount == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.net_amount == 0 ? "" :
                 Number(it.net_amount).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.tax_withheld == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.tax_withheld == 0 ? "" :
                 Number(it.tax_withheld).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-        </tr>
+                                            </td>
+                                        </tr>
 
-        <tr v-for="(it, j) in item.o_catagory">
-            <td v-if="item.l_catagory.length == 0 && j==0"
-                :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{
+                                        <tr v-for="(it, j) in item.o_catagory">
+                                            <td v-if="item.l_catagory.length == 0 && j==0" :rowspan="item.l_catagory.length + item.o_catagory.length + 1">{{
                 item.username }}
-            </td>
-            <td v-if="j == 0" :rowspan="item.o_catagory.length">Office Systems</td>
-            <td>{{ it.client }}</td>
-            <td>{{ it.project_name }}</td>
-            <td>{{ it.created_at }}</td>
-            <td class="money">{{ it.final_amount == 0 ? "" :
+                                            </td>
+                                            <td v-if="j == 0" :rowspan="item.o_catagory.length">Office Systems</td>
+                                            <td>{{ it.client }}</td>
+                                            <td>{{ it.project_name }}</td>
+                                            <td>{{ it.created_at }}</td>
+                                            <td class="money">{{ it.final_amount == 0 ? "" :
                 Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.ar == 0 ? "0.00" :
+                                            </td>
+                                            <td class="money">{{ it.ar == 0 ? "0.00" :
                 Number(it.ar).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.dsum == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.dsum == 0 ? "" :
                 Number(it.dsum).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.psum == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.psum == 0 ? "" :
                 Number(it.psum).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.total_dsum == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.total_dsum == 0 ? "" :
                 Number(it.total_dsum).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.total_psum == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.total_psum == 0 ? "" :
                 Number(it.total_psum).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.net_amount == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.net_amount == 0 ? "" :
                 Number(it.net_amount).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ it.tax_withheld == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ it.tax_withheld == 0 ? "" :
                 Number(it.tax_withheld).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-        </tr>
+                                            </td>
+                                        </tr>
 
-        <tr class="emphasize">
-            <td colspan="4">Sub Total</td>
-            <td class="money">{{ item.sub_amount == 0 ? "" :
+                                        <tr class="emphasize">
+                                            <td colspan="4">Sub Total</td>
+                                            <td class="money">{{ item.sub_amount == 0 ? "" :
                 Number(item.sub_amount).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ item.sub_ar == 0 ? "0.00" :
+                                            </td>
+                                            <td class="money">{{ item.sub_ar == 0 ? "0.00" :
                 Number(item.sub_ar).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ item.sub_d == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ item.sub_d == 0 ? "" :
                 Number(item.sub_d).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ item.sub_p == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ item.sub_p == 0 ? "" :
                 Number(item.sub_p).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
+                                            </td>
 
-            <td class="money">{{ item.total_d == 0 ? "" :
+                                            <td class="money">{{ item.total_d == 0 ? "" :
                 Number(item.total_d).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ item.total_p == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ item.total_p == 0 ? "" :
                 Number(item.total_p).toLocaleString(undefined, {minimumFractionDigits:
                 2,maximumFractionDigits: 2}) }}
-            </td>
+                                            </td>
 
-            <td class="money">{{ item.sub_net_amount == 0 ? "" :
+                                            <td class="money">{{ item.sub_net_amount == 0 ? "" :
                 Number(item.sub_net_amount).toLocaleString(undefined,
                 {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
-            </td>
-            <td class="money">{{ item.sub_tax_withheld == 0 ? "" :
+                                            </td>
+                                            <td class="money">{{ item.sub_tax_withheld == 0 ? "" :
                 Number(item.sub_tax_withheld).toLocaleString(undefined,
                 {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
-            </td>
-        </tr>
-    </template>
+                                            </td>
+                                        </tr>
+                                    </template>
 
 
-    <tr class="emphasize">
-        <td colspan="5">Total</td>
-        <td v-if="record.total !== undefined" class="money">{{
+                                    <tr class="emphasize">
+                                        <td colspan="5">Total</td>
+                                        <td v-if="record.total !== undefined" class="money">{{
             parseFloat(record.total.total_amount) === 0 ? "" :
             Number(record.total.total_amount).toLocaleString(undefined,
             {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
-        </td>
-        <td v-if="record.total !== undefined" class="money">{{
+                                        </td>
+                                        <td v-if="record.total !== undefined" class="money">{{
             parseFloat(record.total.total_ar) === 0 ? "0.00" :
             Number(record.total.total_ar).toLocaleString(undefined, {minimumFractionDigits:
             2,maximumFractionDigits: 2}) }}
-        </td>
-        <td v-if="record.total !== undefined" class="money">{{
+                                        </td>
+                                        <td v-if="record.total !== undefined" class="money">{{
             parseFloat(record.total.total_d) === 0 ? "" :
             Number(record.total.total_d).toLocaleString(undefined, {minimumFractionDigits:
             2,maximumFractionDigits: 2}) }}
-        </td>
-        <td v-if="record.total !== undefined" class="money">{{
+                                        </td>
+                                        <td v-if="record.total !== undefined" class="money">{{
             parseFloat(record.total.total_p) === 0 ? "" :
             Number(record.total.total_p).toLocaleString(undefined, {minimumFractionDigits:
             2,maximumFractionDigits: 2}) }}
-        </td>
-        <td v-if="record.total !== undefined" class="money">{{
+                                        </td>
+                                        <td v-if="record.total !== undefined" class="money">{{
             parseFloat(record.total.total_dsum) === 0 ? "" :
             Number(record.total.total_dsum).toLocaleString(undefined, {minimumFractionDigits:
             2,maximumFractionDigits: 2}) }}
-        </td>
-        <td v-if="record.total !== undefined" class="money">{{
+                                        </td>
+                                        <td v-if="record.total !== undefined" class="money">{{
             parseFloat(record.total.total_psum) === 0 ? "" :
             Number(record.total.total_psum).toLocaleString(undefined, {minimumFractionDigits:
             2,maximumFractionDigits: 2}) }}
-        </td>
-        <td v-if="record.total !== undefined" class="money">{{
+                                        </td>
+                                        <td v-if="record.total !== undefined" class="money">{{
             parseFloat(record.total.total_net_amount) === 0 ? "" :
             Number(record.total.total_net_amount).toLocaleString(undefined,
             {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
-        </td>
-        <td v-if="record.total !== undefined" class="money">{{
+                                        </td>
+                                        <td v-if="record.total !== undefined" class="money">{{
             parseFloat(record.total.total_tax_withheld) === 0 ? "" :
             Number(record.total.total_tax_withheld).toLocaleString(undefined,
             {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}
-        </td>
-    </tr>
-
-    </tbody>
-
-</table>
-        </div>
-                </template>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                        </table>
+                </div>
+            </template>
 
             </div>
         </div>
     </div>
-</div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="js/axios.min.js"></script>
