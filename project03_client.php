@@ -2652,6 +2652,7 @@ $(function(){
                             attendee: obj[i].attendee.trim(),
                             items:obj[i].items,
                             attach:attach,
+                            location: obj[i].location.trim(),
                             start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
                             end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
                             content: obj[i].message.trim(),	
@@ -2684,11 +2685,174 @@ $(function(){
                     headerToolbar: {
                         left: 'prev,next addEventButton',
                         center: 'title',
-                        right: 'dayGridMonth,timeGridWeek'
+                        right: 'individual,overall,dayGridMonth,timeGridWeek'
                     },
 
                     //Add Meeting被點擊的方法
                     customButtons: {
+                        individual: {
+                            text: 'Individual',
+                            click: function () {
+                                calendar.removeAllEvents();
+                                hideWindow('#editmeeting-form');
+
+                                //從資料庫中取出符合當前條件的任務
+
+                                let temp = [];
+                               
+                                var token = localStorage.getItem('token');
+
+                                localStorage.getItem('token');
+                                var form_Data = new FormData();
+
+                                form_Data.append('jwt', token);
+                                form_Data.append('action', 11);
+               
+
+                                $.ajax({
+                                    url: "api/work_calender_meetings",
+                                    type: "POST",
+                                    contentType: 'multipart/form-data',
+                                    processData: false,
+                                    contentType: false,
+                                    data: form_Data,
+
+                                    success: function(result) {
+                                        //console.log(result);
+                                        var obj = JSON.parse(result);
+                                        if (obj !== undefined) {
+                                            var arrayLength = obj.length;
+                                            for (var i = 0; i < arrayLength; i++) {
+                                                console.log(obj[i]);
+
+                                                var title = "";
+                                                if (obj[i].project_name.trim() === '')
+                                                    title = obj[i].subject.trim();
+                                                else
+                                                    title = '[ ' + obj[i].project_name.trim() + ' ] ' + obj[i].subject.trim();
+
+                                                var attach = "";
+                                                for (var j = 0; j < obj[i].attach.length; j++) {
+                                                    attach += obj[i].attach[j].filename + ",";
+                                                }
+
+                                                if (attach !== "")
+                                                    attach = attach.slice(0, -1);
+
+                                                var obj_description = {
+                                                    title: obj[i].subject.trim(),
+                                                    project_name: obj[i].project_name.trim(),
+                                                    attendee: obj[i].attendee.trim(),
+                                                    items: obj[i].items,
+                                                    attach: attach,
+                                                    location: obj[i].location.trim(),
+                                                    start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                                                    end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                                                    content: obj[i].message.trim(),
+                                                    creator: obj[i].created_by.trim(),
+                                                };
+
+                                                var obj_meeting = {
+                                                    id: obj[i].id,
+                                                    title: title,
+                                                    start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                                                    end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                                                    description: obj_description,
+                                                };
+
+                                                temp.push(obj_meeting);
+                                            }
+                                        }
+
+                                        event_array = temp;
+                                        calendar.addEventSource(temp);
+
+                                    }
+                                });
+                            }
+                        },
+                        
+                        overall: {
+                            text: 'All',
+                            click: function () {
+                                calendar.removeAllEvents();
+                                hideWindow('#editmeeting-form');
+
+                                //從資料庫中取出符合當前條件的任務
+
+                                let temp = [];
+                               
+                                var token = localStorage.getItem('token');
+
+                                localStorage.getItem('token');
+                                var form_Data = new FormData();
+
+                                form_Data.append('jwt', token);
+                                form_Data.append('action', 1);
+
+                                $.ajax({
+                                    url: "api/work_calender_meetings",
+                                    type: "POST",
+                                    contentType: 'multipart/form-data',
+                                    processData: false,
+                                    contentType: false,
+                                    data: form_Data,
+
+                                    success: function(result) {
+                                        //console.log(result);
+                                        var obj = JSON.parse(result);
+                                        if (obj !== undefined) {
+                                            var arrayLength = obj.length;
+                                            for (var i = 0; i < arrayLength; i++) {
+                                                console.log(obj[i]);
+
+                                                var title = "";
+                                                if (obj[i].project_name.trim() === '')
+                                                    title = obj[i].subject.trim();
+                                                else
+                                                    title = '[ ' + obj[i].project_name.trim() + ' ] ' + obj[i].subject.trim();
+
+                                                var attach = "";
+                                                for (var j = 0; j < obj[i].attach.length; j++) {
+                                                    attach += obj[i].attach[j].filename + ",";
+                                                }
+
+                                                if (attach !== "")
+                                                    attach = attach.slice(0, -1);
+
+                                                var obj_description = {
+                                                    title: obj[i].subject.trim(),
+                                                    project_name: obj[i].project_name.trim(),
+                                                    attendee: obj[i].attendee.trim(),
+                                                    items: obj[i].items,
+                                                    attach: attach,
+                                                    location: obj[i].location.trim(),
+                                                    start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                                                    end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                                                    content: obj[i].message.trim(),
+                                                    creator: obj[i].created_by.trim(),
+                                                };
+
+                                                var obj_meeting = {
+                                                    id: obj[i].id,
+                                                    title: title,
+                                                    start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                                                    end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                                                    description: obj_description,
+                                                };
+
+                                                temp.push(obj_meeting);
+                                            }
+                                        }
+
+                                        event_array = temp;
+                                        calendar.addEventSource(temp);
+
+                                    }
+                                });
+                            }
+                        },
+
                         addEventButton: {
                             text: 'Add Meeting',
                             click: function() {
@@ -2730,6 +2894,7 @@ $(function(){
                         $('#oldProject').attr("placeholder", obj_meeting.project_name);
                         $("#oldCreator").val(info.event.extendedProps.description.creator);
                         $("#oldAttendee").val(info.event.extendedProps.description.items);
+                        $("#oldLocation").val(info.event.extendedProps.description.location);
                         _app1.old_attendee = info.event.extendedProps.description.items;
                         $("#oldDate").val(obj_meeting.start.split("T")[0]);
                         $("#oldStartTime").val(obj_meeting.start.split("T")[1]);
@@ -2835,6 +3000,7 @@ $(function(){
         $("#oldCreator").val(obj_meeting.creator);
         $("#oldProject").val(_app.project_name);
         $("#oldAttendee").val(obj_meeting.attendee);
+        $("#oldLocation").val(obj_meeting.location);
         $("#oldDate").val(obj_meeting.start.split("T")[0]);
         $("#oldStartTime").val(obj_meeting.start.split("T")[1]);
         $("#oldEndTime").val(obj_meeting.end.split("T")[1]);
@@ -2925,6 +3091,7 @@ $(function(){
         form_Data.append('project_name', app.project_name);
         form_Data.append('message', $("#oldContent").val());
         form_Data.append('attendee', names.toString());
+        form_Data.append('location', $("#oldLocation").val());
         form_Data.append('start_time', $("#oldDate").val() + "T" + $("#oldStartTime").val());
         form_Data.append('end_time', $("#oldDate").val() + "T" + $("#oldEndTime").val());
         form_Data.append('is_enabled', true);
@@ -2985,7 +3152,8 @@ $(function(){
                     content: $("#oldContent").val(),
                     attach:attach,
                     //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
-                    creator: "<?php echo $GLOBALS['username'] ?>"
+                    creator: "<?php echo $GLOBALS['username'] ?>",
+                    location: $("#oldLocation").val(),
                 };
                 $("#oldCreator").val(obj_meeting.creator);
 
@@ -3162,6 +3330,7 @@ $(function(){
         form_Data.append('project_name', app.project_name);
         form_Data.append('message', $("#newContent").val());
         form_Data.append('attendee', names.toString());
+        form_Data.append('location', $("#newLocation").val().trim());
         form_Data.append('start_time', $("#newDate").val() + "T" + $("#newStartTime").val());
         form_Data.append('end_time', $("#newDate").val() + "T" + $("#newEndTime").val());
         form_Data.append('is_enabled', true);
@@ -3216,6 +3385,7 @@ $(function(){
                         items: _app1.attendee,
                         start: $("#newDate").val() + "T" + $("#newStartTime").val(),
                         end: $("#newDate").val() + "T" + $("#newEndTime").val(),
+                        location: $("#newLocation").val(),
                         content: $("#newContent").val(),
                         attach:attach,
                         //creator: "創建人的系統名字" + " " + "按下Add按鈕的日期時間(小時:分即可)"

@@ -34,6 +34,11 @@
                 </div>
 
                 <div class="meetingform-item">
+                    <label>Location:</label>
+                    <input type="text" id="newLocation">
+                </div>
+
+                <div class="meetingform-item">
                     <label>Content:</label>
                     <textarea style="flex-grow: 1; resize: none;" rows="2" id="newContent"></textarea>
 
@@ -89,6 +94,11 @@
                     <input type="date" id="oldDate">
                     <input type="time" id="oldStartTime">
                     <input type="time" id="oldEndTime">
+                </div>
+
+                <div class="meetingform-item">
+                    <label>Location:</label>
+                    <input type="text" id="oldLocation">
                 </div>
 
                 <div class="meetingform-item">
