@@ -201,6 +201,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     LEFT JOIN user
                             ON pm.create_id = user.id
                     WHERE pp.status = 1
+                    and pm.created_at < '" . $PeriodEnd . "' 
                     and pp.received_date > '" . $PeriodStart . "' AND pp.received_date < '" . $PeriodEnd . "' ";
 
         if($sale_person != "")
@@ -240,7 +241,8 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 LEFT JOIN user
                         ON pm.create_id = user.id
                 WHERE 
-                ifnull(pm.final_amount, 0) - IFNULL(pm.tax_withheld, 0) -(SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "')  - (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "') > 0";
+                ifnull(pm.final_amount, 0) - IFNULL(pm.tax_withheld, 0) -(SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "')  - (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "') > 0
+                and pm.created_at < '" . $PeriodEnd . "' ";
 
             if($sale_person != "")
             {

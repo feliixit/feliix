@@ -350,7 +350,7 @@ catch (Exception $e) {
 
                 
 
-                    <template v-for="(record, x) in receive_records">>
+                    <template v-for="(record, x) in receive_records">
                         <div style="width:100%; overflow-x:auto; margin-bottom:50px;">
                         <!-- 按照每個業務員Amount總和進行排序，第一名放最上面 -->
                         <table class="spantable">
