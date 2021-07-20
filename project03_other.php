@@ -4107,7 +4107,7 @@ catch (Exception $e) {
                     header: {
                         left: 'prev,next addEventButton',
                         center: 'title',
-                        right: 'individual overall dayGridMonth timeGridWeek'
+                        right: 'individual,overall dayGridMonth,timeGridWeek'
                     },
 
                     //Add Meeting被點擊的方法
