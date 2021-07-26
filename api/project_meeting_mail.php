@@ -68,6 +68,7 @@ else
             $subject = "";
             $message = "";
             $attendee = "";
+            $location = "";
             $start_time = "";
             $end_time = "";
             $created_by = "";
@@ -80,6 +81,7 @@ else
                 $subject = $row['subject'];
                 $message = $row['message'];
                 $attendee = $row['attendee'];
+                $location = $row['location'];
                 $start_time = $row['start_time'];
                 $start_time = substr($start_time, 0, -3);
                 $end_time = $row['end_time'];
@@ -94,13 +96,13 @@ else
             {
                 switch ($type){
                 case "1":
-                    send_meeting_notify_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message);
+                    send_meeting_notify_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message, $location);
                 break;
                 case "2":
-                    send_meeting_modified_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message);
+                    send_meeting_modified_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message, $location);
                 break;
                 case "3":
-                    send_meeting_delete_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message);
+                    send_meeting_delete_mail($item['username'], $item['email'], $subject, $created_by, $attendee, $start_time, $end_time, $message, $location);
                 break;
                 }
             }

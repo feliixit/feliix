@@ -1126,7 +1126,7 @@ function sendMail($name, $email1, $appove_hash, $reject_hash, $leave_info, $leav
     }
 }
 
-function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee, $start_time, $end_time, $detail)
+function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee, $start_time, $end_time, $detail, $location)
 {
     $conf = new Conf();
 
@@ -1158,6 +1158,7 @@ function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee,
     $content = $content . "<p>Creator:" . $creator . "</p>";
     $content = $content . "<p>Attendee:" . $attendee . "</p>";
     $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Location:" . $location . "</p>";
     $content = $content . "<p>Content:" . $detail . "</p>";
     /*
     $content = $content . "<p>Project Name:" . $projectname . "</p>";
@@ -1185,7 +1186,7 @@ function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee,
 }
 
 
-function send_meeting_modified_mail($name, $email1, $subject, $creator, $attendee, $start_time, $end_time, $detail)
+function send_meeting_modified_mail($name, $email1, $subject, $creator, $attendee, $start_time, $end_time, $detail, $location)
 {
     $conf = new Conf();
 
@@ -1217,6 +1218,7 @@ function send_meeting_modified_mail($name, $email1, $subject, $creator, $attende
     $content = $content . "<p>Creator:" . $creator . "</p>";
     $content = $content . "<p>Attendee:" . $attendee . "</p>";
     $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Location:" . $location . "</p>";
     $content = $content . "<p>Content:" . $detail . "</p>";
     /*
     $content = $content . "<p>Project Name:" . $projectname . "</p>";
@@ -1244,7 +1246,7 @@ function send_meeting_modified_mail($name, $email1, $subject, $creator, $attende
 }
 
 
-function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee, $start_time, $end_time, $detail)
+function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee, $start_time, $end_time, $detail, $location)
 {
     $conf = new Conf();
 
@@ -1276,6 +1278,7 @@ function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee,
     $content = $content . "<p>Creator:" . $creator . "</p>";
     $content = $content . "<p>Attendee:" . $attendee . "</p>";
     $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Location:" . $location . "</p>";
     $content = $content . "<p>Content:" . $detail . "</p>";
     /*
     $content = $content . "<p>Project Name:" . $projectname . "</p>";

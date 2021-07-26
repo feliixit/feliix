@@ -15,6 +15,7 @@ $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
 $remove = (isset($_POST['remove']) ?  $_POST['remove'] : '');
 $message = (isset($_POST['message']) ?  $_POST['message'] : '');
 $attendee = (isset($_POST['attendee']) ?  $_POST['attendee'] : '');
+$location = (isset($_POST['location']) ?  $_POST['location'] : '');
 $start_time = (isset($_POST['start_time']) ?  $_POST['start_time'] : '');
 $end_time = (isset($_POST['end_time']) ?  $_POST['end_time'] : '');
 $is_enabled = (isset($_POST['is_enabled']) && $_POST['is_enabled'] === "true"? 1 : 0);
@@ -40,17 +41,22 @@ $conf = new Conf();
 use Google\Cloud\Storage\StorageClient;
 
 $workCalenderMeetings = new WorkCalenderMeetings($db);
+$user_name = "";
 //$le = new Leave($db);
 
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
     http_response_code(401);
+    
 
     echo json_encode(array("message" => "Access denied1."));
     die();
 }
 else
 {
+    $decoded = JWT::decode($jwt, $key, array('HS256'));
+    $user_name = $decoded->data->username;
+    
     if($action == 1){
         //select all
         try{
@@ -66,6 +72,7 @@ else
             $project_name = "";
             $message = "";
             $attendee = "";
+            $location = "";
             $start_time = "";
             $end_time = "";
             $is_enabled = 0;
@@ -86,6 +93,7 @@ else
                         "project_name" => $project_name,
                         "message" => $message,
                         "attendee" => $attendee,
+                        "location" => $location,
                         "start_time" => $start_time,
                         "end_time" => $end_time,
                         "is_enabled" => $is_enabled,
@@ -108,6 +116,7 @@ else
                 $project_name = $row['project_name'];
                 $message = $row['message'];
                 $attendee = $row['attendee'];
+                $location = $row['location'];
                 $start_time = $row['start_time'];
                 $end_time = $row['end_time'];
                 $is_enabled = $row['is_enabled'];
@@ -133,6 +142,115 @@ else
                     "project_name" => $project_name,
                     "message" => $message,
                     "attendee" => $attendee,
+                    "location" => $location,
+                    "start_time" => $start_time,
+                    "end_time" => $end_time,
+                    "is_enabled" => $is_enabled,
+                    "created_at" => $created_at,
+                    "updated_at" => $updated_at,
+                    "deleted_at" => $deleted_at,
+                    "created_by" => $created_by,
+                    "updated_by" => $updated_by,
+                    "deleted_by" => $deleted_by,
+                    "items" => $items,
+                    "attach" => $attach,
+                );
+            }
+
+            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+        }
+        catch(Exception $e){
+            http_response_code(401);
+
+            echo json_encode(array("message" => ".$e."));
+        }
+    }
+    else if($action == 11){
+        //select my meeting
+        try{
+            $query = "SELECT * from work_calendar_meetings where is_enabled = true and (created_by = '" . $user_name . "' or attendee like '%" . $user_name ."%') ";
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+            $items = [];
+
+            $id = 0;
+            $subject = "";
+            $project_name = "";
+            $message = "";
+            $attendee = "";
+            $location = "";
+            $start_time = "";
+            $end_time = "";
+            $is_enabled = 0;
+            $created_at = '';
+            $updated_at = '';
+            $deleted_at = "";
+            $created_by = "";
+            $updated_by = "";
+            $deleted_by = "";
+
+            $attach = [];
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if ($id != $row['id'] && $id != 0) {
+                    $merged_results[] = array(
+                        "id" => $id,
+                        "subject" => $subject,
+                        "project_name" => $project_name,
+                        "message" => $message,
+                        "attendee" => $attendee,
+                        "location" => $location,
+                        "start_time" => $start_time,
+                        "end_time" => $end_time,
+                        "is_enabled" => $is_enabled,
+                        "created_at" => $created_at,
+                        "updated_at" => $updated_at,
+                        "deleted_at" => $deleted_at,
+                        "created_by" => $created_by,
+                        "updated_by" => $updated_by,
+                        "deleted_by" => $deleted_by,
+                        "items" => $items,
+                        "attach" => $attach,
+                        
+                    );
+    
+                    $items = [];
+                }
+    
+                $id = $row['id'];
+                $subject = $row['subject'];
+                $project_name = $row['project_name'];
+                $message = $row['message'];
+                $attendee = $row['attendee'];
+                $location = $row['location'];
+                $start_time = $row['start_time'];
+                $end_time = $row['end_time'];
+                $is_enabled = $row['is_enabled'];
+
+                $created_at = $row['created_at'];
+                $updated_at = $row['updated_at'];
+                $deleted_at = $row['deleted_at'];
+
+                $created_by = $row['created_by'];
+                $updated_by = $row['updated_by'];
+                $deleted_by = $row['deleted_by'];
+
+                $attach = GetItem($row['id'], $db, 'meeting');
+
+                if(!empty($attendee ))
+                    $items = GetUserInfo($row['attendee'], $db);
+            }
+
+            if ($id != 0) {
+                $merged_results[] = array(
+                    "id" => $id,
+                    "subject" => $subject,
+                    "project_name" => $project_name,
+                    "message" => $message,
+                    "attendee" => $attendee,
+                    "location" => $location,
                     "start_time" => $start_time,
                     "end_time" => $end_time,
                     "is_enabled" => $is_enabled,
@@ -166,6 +284,7 @@ else
             $workCalenderMeetings->project_name = $project_name;
             $workCalenderMeetings->message = $message;
             $workCalenderMeetings->attendee = $attendee;
+            $workCalenderMeetings->location = $location;
             $workCalenderMeetings->start_time = $start_time;
             $workCalenderMeetings->end_time = $end_time;
             $workCalenderMeetings->is_enabled = $is_enabled;
@@ -304,6 +423,7 @@ else
             $workCalenderMeetings->project_name = $project_name;
             $workCalenderMeetings->message = $message;
             $workCalenderMeetings->attendee = $attendee;
+            $workCalenderMeetings->location = $location;
             $workCalenderMeetings->start_time = $start_time;
             $workCalenderMeetings->end_time = $end_time;
             $workCalenderMeetings->is_enabled = $is_enabled;

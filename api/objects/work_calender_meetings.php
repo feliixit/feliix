@@ -12,6 +12,7 @@ class WorkCalenderMeetings
     public $project_name;
     public $message;
     public $attendee;
+    public $location;
     public $start_time;
     public $end_time;
     public $is_enabled;
@@ -35,6 +36,7 @@ class WorkCalenderMeetings
                 project_name = :project_name, 
                 message = :message, 
                 attendee = :attendee,
+                location = :location,
                 start_time = :start_time, 
                 end_time = :end_time, 
                 updated_at = now(), updated_by = :updated_by where id = :id";
@@ -48,6 +50,7 @@ class WorkCalenderMeetings
         $this->project_name = htmlspecialchars(strip_tags($this->project_name)); 
         $this->message = htmlspecialchars(strip_tags($this->message)); 
         $this->attendee = htmlspecialchars(strip_tags($this->attendee)); 
+        $this->location = htmlspecialchars(strip_tags($this->location)); 
         $this->start_time = htmlspecialchars(strip_tags($this->start_time)); 
         $this->end_time = htmlspecialchars(strip_tags($this->end_time)); 
         $this->updated_by = htmlspecialchars(strip_tags($this->updated_by));
@@ -59,6 +62,7 @@ class WorkCalenderMeetings
         $stmt->bindParam(':project_name', $this->project_name);
         $stmt->bindParam(':message', $this->message);
         $stmt->bindParam(':attendee', $this->attendee);
+        $stmt->bindParam(':location', $this->location);
         $stmt->bindParam(':start_time', $this->start_time);
         $stmt->bindParam(':end_time', $this->end_time);
         $stmt->bindParam(':updated_by', $this->updated_by);
@@ -89,8 +93,8 @@ class WorkCalenderMeetings
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`subject`,`project_name`,`message`,`attendee`,`start_time`,`end_time`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:subject, :project_name, :message, :attendee, :start_time, :end_time, 1, now(), :created_by)";
+                (`subject`,`project_name`,`message`,`attendee`,`location`,`start_time`,`end_time`,`is_enabled`,`created_at`,`created_by`) 
+                VALUES (:subject, :project_name, :message, :attendee, :location, :start_time, :end_time, 1, now(), :created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -101,6 +105,7 @@ class WorkCalenderMeetings
             $stmt->bindParam(':project_name', $this->project_name);
             $stmt->bindParam(':message', $this->message);
             $stmt->bindParam(':attendee', $this->attendee);
+            $stmt->bindParam(':location', $this->location);
             $stmt->bindParam(':start_time', $this->start_time);
             $stmt->bindParam(':end_time', $this->end_time);
             $this->created_by = htmlspecialchars(strip_tags($this->created_by));
@@ -111,6 +116,7 @@ class WorkCalenderMeetings
             $stmt->bindParam(':project_name', $this->project_name);
             $stmt->bindParam(':message', $this->message);
             $stmt->bindParam(':attendee', $this->attendee);
+            $stmt->bindParam(':location', $this->location);
             $stmt->bindParam(':start_time', $this->start_time);
             $stmt->bindParam(':end_time', $this->end_time);
             $stmt->bindParam(':created_by', $this->created_by);

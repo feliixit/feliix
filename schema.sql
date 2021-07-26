@@ -1695,3 +1695,7 @@ ADD COLUMN `period` int(11)  DEFAULT 0 AFTER `review_month`;
 -- project 02 scope extend 07/13
 ALTER TABLE project_main
 ADD COLUMN `scope_other` varchar(256) DEFAULT '' AFTER scope;
+
+-- Meeting Calendar 2021/4/19
+ALTER TABLE work_calendar_meetings
+ADD COLUMN `location` varchar(256) COLLATE utf8mb4_unicode_ci default '' AFTER end_time;
