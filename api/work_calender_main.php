@@ -65,6 +65,8 @@ include_once 'config/database.php';
 include_once 'objects/work_calender.php';
 include_once 'config/conf.php';
 
+include_once 'mail.php';
+
 use Google\Cloud\Storage\StorageClient;
 
 $database = new Database();
@@ -271,6 +273,8 @@ if (!isset($jwt)) {
             $workCalenderMain->deleted_by = $deleted_by;
             $arr = $workCalenderMain->delete();
 
+            SendDelMail($id, $deleted_by);
+
             http_response_code(200);
             echo json_encode(array($arr));
             echo json_encode(array("message" => " Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -436,6 +440,11 @@ if (!isset($jwt)) {
             }
 
             $db->commit();
+
+            // send notify mail
+            SendCreateMail($arr, $project, $created_by, substr($start_time,0,10), $all_day, $start_time, $end_time, $sales_executive, $project_in_charge, $project_relevant);
+
+
             http_response_code(200);
             echo json_encode(array($arr));
             die();
@@ -599,6 +608,9 @@ if (!isset($jwt)) {
             }
 
             $db->commit();
+
+            SendEditMail($id, $project, $created_by, substr($start_time, 0, 10), $all_day, $start_time, $end_time, $sales_executive, $project_in_charge, $project_relevant, $updated_by);
+
             http_response_code(200);
             echo json_encode(array("message" => "Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
             die();
@@ -613,4 +625,68 @@ if (!isset($jwt)) {
             die();
         }
     }
+}
+
+
+function SendCreateMail($last_id, $project, $creator, $_date, $all_day, $_stime, $_etime, $sales_executive, $project_in_charge, $relevants)
+{    
+    if($all_day == 1)
+        $_time = "all day";
+    else
+        $_time = substr($_stime, 11, 5) . " to " . substr($_etime, 11, 5);
+
+    send_schedule_notify_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants);
+}
+
+function SendEditMail($last_id, $project, $creator, $_date, $all_day, $_stime, $_etime, $sales_executive, $project_in_charge, $relevants, $updated_by)
+{
+    $_record = array();
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $_record = GetTaskDetail($last_id, $db);
+
+    if($all_day == 1)
+        $_time = "all day";
+    else
+        $_time = substr($_stime, 11, 5) . " to " . substr($_etime, 11, 5);
+
+    send_schedule_edit_mail($last_id, $project, $_record[0]["created_by"], $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by);
+}
+
+function SendDelMail($last_id, $updated_by)
+{
+    $_record = array();
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $_record = GetTaskDetail($last_id, $db);
+
+    $_date = substr($_record[0]["start_time"], 0, 10);
+    
+    if($_record[0]["all_day"] == 1)
+        $_time = "all day";
+    else
+        $_time = substr($_record[0]["start_time"], 11, 5) . " to " . substr($_record[0]["end_time"], 11, 5);
+
+    send_schedule_del_mail($last_id, $_record[0]["project"], $_record[0]["created_by"], $_date, $_time, $_record[0]["sales_executive"], $_record[0]["project_in_charge"], $_record[0]["project_relevant"], $updated_by);
+}
+
+function GetTaskDetail($id, $db)
+{
+    $sql = "SELECT *
+            FROM work_calendar_main pt
+            WHERE pt.id  = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }

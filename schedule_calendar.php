@@ -2,7 +2,8 @@
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
 if ( !isset( $jwt ) ) {
-  header( 'location:index' );
+    setcookie("userurl", $_SERVER['REQUEST_URI']);
+    header( 'location:index' );
 }
 
 include_once 'api/config/core.php';
