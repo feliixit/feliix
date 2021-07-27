@@ -64,7 +64,7 @@ switch ($method) {
 
         $sql = "SELECT id, sn, cat_id, option, status
                 from product_category_attribute_detail pm 
-                where pm.cat_id = " . $cat_id . " 
+                where pm.cat_id = '" . $cat_id . "'
                 AND pm.status <> -1 ";
 
 
