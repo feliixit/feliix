@@ -1696,6 +1696,201 @@ ADD COLUMN `period` int(11)  DEFAULT 0 AFTER `review_month`;
 ALTER TABLE project_main
 ADD COLUMN `scope_other` varchar(256) DEFAULT '' AFTER scope;
 
--- Meeting Calendar 2021/4/19
+-- Meeting Calendar 2021/7/19
 ALTER TABLE work_calendar_meetings
 ADD COLUMN `location` varchar(256) COLLATE utf8mb4_unicode_ci default '' AFTER end_time;
+
+-- Product Attributes 2021/07/20200704
+CREATE TABLE IF NOT EXISTS `product_category_attribute` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `cat_id` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `level` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `category` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `product_category_attribute_detail` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `cat_id` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sn` int(11) DEFAULT 0,
+  `option` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+insert into product_category_attribute(cat_id, level, category, create_id) values('10000000', 1, 'Lighting', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20000000', 1, 'Systems Furniture', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010000', 2, 'Indoor', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020000', 2, 'Outdoor', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030000', 2, 'Accessory', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010000', 2, 'Cabinet', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020000', 2, 'Chair', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030000', 2, 'Table', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040000', 2, 'Workstation', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050000', 2, 'Partition', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010001', 3, 'Beam Angle', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010002', 3, 'Lumens', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010003', 3, 'CRI / RA', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010004', 3, 'CCT', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010005', 3, 'Wattage', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010006', 3, 'IP Rating', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010007', 3, 'Life Hours', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010008', 3, 'Color Finish', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010009', 3, 'Body Color', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010010', 3, 'Trim Color', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010011', 3, 'Installation', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010012', 3, 'Dimension', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010013', 3, 'Materials', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010014', 3, 'Light Source', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010015', 3, 'Power Input', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010016', 3, 'Switch', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10010017', 3, 'Net Weight', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020001', 3, 'Beam Angle', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020002', 3, 'Lumens', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020003', 3, 'CRI / RA', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020004', 3, 'CCT', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020005', 3, 'Wattage', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020006', 3, 'IP Rating', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020007', 3, 'Life Hours', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020008', 3, 'Color Finish', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020009', 3, 'Body Color', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020010', 3, 'Trim Color', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020011', 3, 'Installation', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020012', 3, 'Dimension', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020013', 3, 'Materials', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020014', 3, 'Light Source', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020015', 3, 'Power Input', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020016', 3, 'Switch', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10020017', 3, 'Net Weight', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030001', 3, 'Beam Angle', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030002', 3, 'Lumens', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030003', 3, 'CRI / RA', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030004', 3, 'CCT', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030005', 3, 'Wattage', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030006', 3, 'IP Rating', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030007', 3, 'Life Hours', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030008', 3, 'Color Finish', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030009', 3, 'Body Color', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030010', 3, 'Trim Color', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030011', 3, 'Installation', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030012', 3, 'Dimension', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030013', 3, 'Materials', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030014', 3, 'Light Source', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030015', 3, 'Power Input', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030016', 3, 'Switch', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('10030017', 3, 'Net Weight', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010001', 3, 'Type', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010002', 3, 'Dimension', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010003', 3, 'Finish', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010004', 3, 'Available Color', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010005', 3, 'Handle Type', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010006', 3, 'Lockset', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010007', 3, 'Capacity', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010008', 3, 'No. of Shelves', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010009', 3, 'No. of Drawers', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010010', 3, 'No. of Doors', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010011', 3, 'Material of Body', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010012', 3, 'Material of Shelf', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010013', 3, 'Material of Door', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010014', 3, 'Material of Drawer', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010015', 3, 'Adjustable Shelves', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010016', 3, 'Center Divider', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20010017', 3, 'Wheel Caster', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020001', 3, 'Type', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020002', 3, 'Function', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020003', 3, 'Dimension of Overall', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020004', 3, 'Dimension of Seat Height', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020005', 3, 'Dimension of Backrest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020006', 3, 'Dimension of Seat', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020007', 3, 'Available Color of Head Rest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020008', 3, 'Available Color of Back Rest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020009', 3, 'Available Color of Frame', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020010', 3, 'Available Color of Arm Rest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020011', 3, 'Available Color of Foot Rest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020012', 3, 'Available Color of Seat', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020013', 3, 'Available Color of Base', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020014', 3, 'Materials of Head Rest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020015', 3, 'Materials of Back Rest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020016', 3, 'Materials of Arm Rest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020017', 3, 'Materials of Foot Rest', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020018', 3, 'Materials of Seat', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020019', 3, 'Materials of Base', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020020', 3, 'With Headrest   ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020021', 3, 'Adjustable Headrest     ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020022', 3, 'Seat Height Adjustment  ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020023', 3, 'Adjustable Armrest      ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020024', 3, 'No Armrest Variant      ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020025', 3, 'Back Height Adjustment  ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020026', 3, 'Back Angle Adjustment with Tilt Lock    ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020027', 3, 'Back Upright Position Tilt Lock ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020028', 3, 'Lumbar Support Adjustment       ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020029', 3, 'Sliding Seat Depth Adjustment   ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020030', 3, '2-to-1 Synchro Tilt     ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20020031', 3, 'Wheel Caster    ', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030001', 3, 'Type', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030002', 3, 'Function', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030003', 3, 'Dimension of Width', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030004', 3, 'Dimension of Depth', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030005', 3, 'Dimension of Height', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030006', 3, 'Materials of Table Top', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030007', 3, 'Materials of Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030008', 3, 'Materials of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030009', 3, 'Materials of Modesty', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030010', 3, 'Finishes of Table Top Only', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030011', 3, 'Finishes of Table Top and Bottom', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030012', 3, 'Finishes of Flat PVC Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030013', 3, 'Finishes of Bullnose Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030014', 3, 'Finishes of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030015', 3, 'Finishes of Modesty', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030016', 3, 'Available Color/Pattern of Table Top Only', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030017', 3, 'Available Color/Pattern of Table Top and Bottom', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030018', 3, 'Available Color/Pattern of Flat PVC Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030019', 3, 'Available Color/Pattern of Bullnose Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030020', 3, 'Available Color/Pattern of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030021', 3, 'Available Color/Pattern of Modesty', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040001', 3, 'Type', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040002', 3, 'Configuration', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040003', 3, 'Partition', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040004', 3, 'Dimensions of Table: Width', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040005', 3, 'Dimensions of Table: Depth', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040006', 3, 'Dimensions of Table: Height', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040007', 3, 'Dimensions of Partition: Width', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040008', 3, 'Dimensions of Partition: Thickness', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040009', 3, 'Dimensions of Partition: Height', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040010', 3, 'Materials of Table Top Only', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040011', 3, 'Materials of Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040012', 3, 'Materials of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040013', 3, 'Materials of Partition Frame and Capping', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040014', 3, 'Materials of Partition Panel', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040015', 3, 'Finishes of Table Top Only', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040016', 3, 'Finishes of Table Top and Bottom', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040017', 3, 'Finishes of Flat PVC Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040018', 3, 'Finishes of Bullnose Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040019', 3, 'Finishes of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040020', 3, 'Finishes of Partition Panel', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040021', 3, 'Available Color/Pattern of Table Top Only', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040022', 3, 'Available Color/Pattern of Table Top and Bottom', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040023', 3, 'Available Color/Pattern of Flat PVC Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040024', 3, 'Available Color/Pattern of Bullnose Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040025', 3, 'Available Color/Pattern of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040026', 3, 'Available Color/Pattern of Partition Frame and Capping', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20040027', 3, 'Available Color/Pattern of Partition Panel', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050001', 3, 'Type', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050002', 3, 'Dimensions of Width', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050003', 3, 'Dimensions of Thickness', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050004', 3, 'Dimensions of Height', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050005', 3, 'Materials of Frame and Capping', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050006', 3, 'Materials of Partition Panel', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050007', 3, 'Finishes of Frame and Capping', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050008', 3, 'Finishes of Partition Panel', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050009', 3, 'Available Color/Pattern of Frame and Capping', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20050010', 3, 'Available Color/Pattern of Partition Panel', 1);
