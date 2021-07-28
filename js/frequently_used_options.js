@@ -34,6 +34,8 @@ var app = new Vue({
     record: {},
     proof_id: 0,
 
+    attribute_name:'',
+
     e_editing: false,
 
 
@@ -105,6 +107,13 @@ var app = new Vue({
     lv2() {
       this.getLevel3(this.lv2);
     },
+
+    lv3() {
+      info = [];
+      info = this.shallowCopy(this.level3.find(element => element.cat_id == this.lv3));
+
+      if(info.category !== undefined) { this.attribute_name = info.category; }
+    },
     
     department() {
       this.title = this.shallowCopy(
@@ -136,6 +145,7 @@ var app = new Vue({
             _this.level1 = res.data;
             _this.lv2 = 0;
             _this.lv3 = 0;
+            _this.attribute_name = '';
           },
           (err) => {
             alert(err.response);
@@ -164,6 +174,7 @@ var app = new Vue({
             _this.level2 = res.data;
             _this.lv2 = 0;
             _this.lv3 = 0;
+            _this.attribute_name = '';
           },
           (err) => {
             alert(err.response);
@@ -191,6 +202,7 @@ var app = new Vue({
           (res) => {
             _this.level3 = res.data;
             _this.lv3 = 0;
+            _this.attribute_name = '';
           },
           (err) => {
             alert(err.response);
@@ -423,6 +435,7 @@ var app = new Vue({
       this.lv1 = 0;
       this.lv2 = 0;
       this.lv3 = 0;
+      this.attribute_name = '';
 
       this.option = "";
 
@@ -635,6 +648,8 @@ var app = new Vue({
       element.scrollIntoView({ behavior: 'smooth' });
   
     },
+
+    
 
   },
 });

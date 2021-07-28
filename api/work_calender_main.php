@@ -468,6 +468,9 @@ if (!isset($jwt)) {
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
             $database = new Database();
             $db = $database->getConnection();
+
+            $_record = GetTaskDetail($id, $db);
+
             $db->beginTransaction();
 
             $workCalenderMain = new WorkCalenderMain($db);
@@ -609,7 +612,15 @@ if (!isset($jwt)) {
 
             $db->commit();
 
+            $myArray1 = explode(',', $_record[0]['project_relevant']);
+            $myArray2 = explode(',', $project_relevant);
+
+            $result = array_diff($myArray1, $myArray2);
+            $goodby = implode ( ",", $result );
+
             SendEditMail($id, $project, $created_by, substr($start_time, 0, 10), $all_day, $start_time, $end_time, $sales_executive, $project_in_charge, $project_relevant, $updated_by);
+            if(count($result) > 0)
+                SendEditGoodbyMail($id, $project, $created_by, substr($start_time, 0, 10), $all_day, $start_time, $end_time, $sales_executive, $project_in_charge, $goodby, $updated_by);
 
             http_response_code(200);
             echo json_encode(array("message" => "Update success at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -652,6 +663,22 @@ function SendEditMail($last_id, $project, $creator, $_date, $all_day, $_stime, $
         $_time = substr($_stime, 11, 5) . " to " . substr($_etime, 11, 5);
 
     send_schedule_edit_mail($last_id, $project, $_record[0]["created_by"], $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by);
+}
+
+function SendEditGoodbyMail($last_id, $project, $creator, $_date, $all_day, $_stime, $_etime, $sales_executive, $project_in_charge, $relevants, $updated_by)
+{
+    $_record = array();
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $_record = GetTaskDetail($last_id, $db);
+
+    if($all_day == 1)
+        $_time = "all day";
+    else
+        $_time = substr($_stime, 11, 5) . " to " . substr($_etime, 11, 5);
+
+    send_schedule_edit_goodby_mail($last_id, $project, $_record[0]["created_by"], $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by);
 }
 
 function SendDelMail($last_id, $updated_by)

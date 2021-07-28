@@ -1265,6 +1265,67 @@ function send_schedule_edit_mail($last_id, $project, $creator, $_date, $_time, $
 
 }
 
+function send_schedule_edit_goodby_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($relevants);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $mail->Subject = "[Schedule Notification] " . $project . " was revised";
+    $content =  "<p>Dear all,</p>";
+    $content = $content . "<p>You were removed from relevant persons of Schedule " . $project . ". Below is the details of Schedule " . $project . ":</p>";
+    $content = $content . "<p>Project:" . $project . "</p>";
+    $content = $content . "<p>Creator:" . $creator . "</p>";
+    $content = $content . "<p>Reviser:" . $updated_by . "</p>";
+    $content = $content . "<p>Date:" . $_date . "</p>";
+    $content = $content . "<p>Time:" . $_time .  "</p>";
+    $content = $content . "<p>Sales Executive:" . $sales_executive . "</p>";
+    $content = $content . "<p>Project-in-charge:" . $project_in_charge . "</p>";
+    $content = $content . "<p>Relevant Persons:" . $relevants . "</p>";
+
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/schedule_calendar?id=" . $last_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 function send_schedule_del_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by)
 {
     $conf = new Conf();

@@ -1671,6 +1671,19 @@ var initial = () =>  {
         info = [];
         info = shallowCopy(app.items.find(element => element.id == app.sid));
 
+        eventObj = {
+            id: app.sid,
+            title: info.title,
+            Date: info.Date,
+            start: info.start,
+            end: info.end,
+            color: info.color,
+            allDay: info.allDay,
+            extendedProps: {
+                description : info.description,
+            },
+        }
+
         
         document.getElementById("myLargeModalLabel").innerText =
                 "Schedule Details";
