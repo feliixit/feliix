@@ -1666,6 +1666,8 @@ var initial = () =>  {
         document.getElementById("btn_unlock").style.visibility = "hidden";
     }
 
+    /*
+
     if(app.sid != 0)
     {
         info = [];
@@ -1872,6 +1874,8 @@ var initial = () =>  {
 
             $("#exampleModalScrollable").modal("toggle");
     }
+
+    */
 }
 
 function onChangeFileUpload(e) {

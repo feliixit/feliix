@@ -1126,7 +1126,7 @@ function sendMail($name, $email1, $appove_hash, $reject_hash, $leave_info, $leav
     }
 }
 
-function send_schedule_notify_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants)
+function send_schedule_notify_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $att)
 {
     $conf = new Conf();
 
@@ -1163,6 +1163,8 @@ function send_schedule_notify_mail($last_id, $project, $creator, $_date, $_time,
         $mail->AddCC($list["email"], $list["username"]);
     }
 
+    $mail->addAttachment($att);
+
     $mail->Subject = "[Schedule Notification] " . $project . " was created";
     $content =  "<p>Dear all,</p>";
     $content = $content . "<p>A new schedule was created and needs you to follow. Below is the details:</p>";
@@ -1176,7 +1178,7 @@ function send_schedule_notify_mail($last_id, $project, $creator, $_date, $_time,
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/schedule_calendar?id=" . $last_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/schedule_calendar</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -1192,7 +1194,7 @@ function send_schedule_notify_mail($last_id, $project, $creator, $_date, $_time,
 
 }
 
-function send_schedule_edit_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by)
+function send_schedule_edit_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by, $att)
 {
     $conf = new Conf();
 
@@ -1234,6 +1236,8 @@ function send_schedule_edit_mail($last_id, $project, $creator, $_date, $_time, $
     {
         $mail->AddCC($list["email"], $list["username"]);
     }
+
+    $mail->addAttachment($att);
 
     $mail->Subject = "[Schedule Notification] " . $project . " was revised";
     $content =  "<p>Dear all,</p>";
@@ -1249,7 +1253,7 @@ function send_schedule_edit_mail($last_id, $project, $creator, $_date, $_time, $
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/schedule_calendar?id=" . $last_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/schedule_calendar</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -1265,7 +1269,7 @@ function send_schedule_edit_mail($last_id, $project, $creator, $_date, $_time, $
 
 }
 
-function send_schedule_edit_goodby_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by)
+function send_schedule_edit_goodby_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by, $att)
 {
     $conf = new Conf();
 
@@ -1296,6 +1300,8 @@ function send_schedule_edit_goodby_mail($last_id, $project, $creator, $_date, $_
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
+    $mail->addAttachment($att);
+
     $mail->Subject = "[Schedule Notification] " . $project . " was revised";
     $content =  "<p>Dear all,</p>";
     $content = $content . "<p>You were removed from relevant persons of Schedule " . $project . ". Below is the details of Schedule " . $project . ":</p>";
@@ -1310,7 +1316,7 @@ function send_schedule_edit_goodby_mail($last_id, $project, $creator, $_date, $_
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/schedule_calendar?id=" . $last_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/schedule_calendar</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -1326,7 +1332,7 @@ function send_schedule_edit_goodby_mail($last_id, $project, $creator, $_date, $_
 
 }
 
-function send_schedule_del_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by)
+function send_schedule_del_mail($last_id, $project, $creator, $_date, $_time, $sales_executive, $project_in_charge, $relevants, $updated_by, $att)
 {
     $conf = new Conf();
 
@@ -1369,6 +1375,8 @@ function send_schedule_del_mail($last_id, $project, $creator, $_date, $_time, $s
         $mail->AddCC($list["email"], $list["username"]);
     }
 
+    $mail->addAttachment($att);
+
     $mail->Subject = "[Schedule Notification] " . $project . " was deleted";
     $content =  "<p>Dear all,</p>";
     $content = $content . "<p>A existing task was deleted. Below is the details:</p>";
@@ -1381,7 +1389,7 @@ function send_schedule_del_mail($last_id, $project, $creator, $_date, $_time, $s
     $content = $content . "<p>Project-in-charge:" . $project_in_charge . "</p>";
     $content = $content . "<p>Relevant Persons:" . $relevants . "</p>";
 
-    $content = $content . "<p> </p>";
+    $content = $content . "<p></p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
