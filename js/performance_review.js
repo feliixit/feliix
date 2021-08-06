@@ -435,13 +435,15 @@ var app = new Vue({
             temp.push(obj);
           }
 
-          for(var i=0; i<grade2.length; i++) {
-            var obj = {
-                id: qid2[i].value,
-                grade: grade2[i].value,
-                opt: opt2[i].value
-            };
-            temp.push(obj);
+          if(grade2 !== undefined) {
+            for(var i=0; i<grade2.length; i++) {
+              var obj = {
+                  id: qid2[i].value,
+                  grade: grade2[i].value,
+                  opt: opt2[i].value
+              };
+              temp.push(obj);
+            }
           }
 
           var token = localStorage.getItem("token");
