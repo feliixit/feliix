@@ -11,6 +11,7 @@ var app = new Vue({
         agenda: [],
         messages: [],
         id: 0,
+        sid:0,
         download_type: "docx",
         file_day: "",
         fileArray: [],
@@ -21,6 +22,29 @@ var app = new Vue({
         users: [],
     },
     created() {
+
+        let _this = this;
+        let uri = window.location.href.split("?");
+        if (uri.length >= 2) {
+        let vars = uri[1].split("&");
+
+        let tmp = "";
+        vars.forEach(async function(v) {
+            tmp = v.split("=");
+            if (tmp.length == 2) {
+            switch (tmp[0]) {
+                case "id":
+                _this.sid = tmp[1];
+                break;
+               
+                default:
+                console.log(`Too many args`);
+            }
+            }
+        });
+        }
+
+        
         this.getMonthDay();
         this.getUserName();
         this.getUsers();
@@ -1205,7 +1229,7 @@ var app = new Vue({
             let _this = this;
 
             Swal.fire({
-                title: "Duplicate",
+                title: "Delete",
                 text: "Are you sure to delete?",
                 icon: "warning",
                 showCancelButton: true,
@@ -1641,6 +1665,217 @@ var initial = () =>  {
         document.getElementById("btn_lock").style.visibility = "hidden";
         document.getElementById("btn_unlock").style.visibility = "hidden";
     }
+
+    /*
+
+    if(app.sid != 0)
+    {
+        info = [];
+        info = shallowCopy(app.items.find(element => element.id == app.sid));
+
+        eventObj = {
+            id: app.sid,
+            title: info.title,
+            Date: info.Date,
+            start: info.start,
+            end: info.end,
+            color: info.color,
+            allDay: info.allDay,
+            extendedProps: {
+                description : info.description,
+            },
+        }
+
+        
+        document.getElementById("myLargeModalLabel").innerText =
+                "Schedule Details";
+          
+            resetSchedule();
+            app.id = app.sid;
+            var sc_content = info.description;
+
+            document.getElementById("sc_title").value = sc_content.Title;
+            document.getElementById("sc_color").value = sc_content.Color;
+
+            if(sc_content.Color_Other != "")
+            {
+                document.getElementById("sc_color").value = sc_content.Color_Other;
+                document.getElementById("sc_color_other").checked = true;
+            }
+            else
+            {
+                document.getElementById("sc_color").value = "#000000";
+                document.getElementById("sc_color_other").checked = false;
+            }
+
+            if(sc_content.Color != "")
+            {
+                var checked = 0;
+                var colors = document.getElementsByName("sc_color");
+
+                for(var i = 0; i < colors.length; i++)
+                {
+                    if(colors[i].value == sc_content.Color)
+                    {
+                        checked = 1;
+                        colors[i].checked = true;
+                    }
+                }
+
+                if(checked == 0 && sc_content.Color_Other == "")
+                {
+                    document.getElementById("sc_color").value = sc_content.Color;
+                    document.getElementById("sc_color_other").checked = true;
+                }
+            }
+
+            
+
+            //設定最後編輯者資訊
+            document.getElementById("sc_editor").value = sc_content.Lasteditor;
+            document.getElementById("last_editor").style.display = "inline";
+
+            document.getElementById("sc_date").value = sc_content.Date;
+            document.getElementById("sc_time").checked = sc_content.Allday;
+            document.getElementById("sc_stime").value = sc_content.Starttime;
+            document.getElementById("sc_etime").value = sc_content.Endtime;
+            document.getElementById("sc_project").value = sc_content.Project;
+            document.getElementById("sc_sales").value = sc_content.Sales_Executive;
+            document.getElementById("sc_incharge").value =
+                sc_content.Project_in_charge;
+            document.getElementById("sc_relevant").value =
+                sc_content.Project_relevant;
+            app.attendee = (sc_content.Project_relevant.split(",") === "" ? app.attendee = [] : sc_content.Project_relevant.split(","));
+            if(sc_content.Project_relevant === "")
+                app.attendee = [];
+                
+            document.getElementById("sc_Installer_needed_other").value = sc_content.Installer_needed_other;
+
+            
+            
+            var installer = sc_content.Installer_needed.split(",");
+
+            for (i = 0; i < 5; i++) {
+                document.getElementsByName("sc_Installer_needed")[i].checked = false;
+            }
+
+            for (i = 0; i < installer.length; i++) {
+                if (installer[i] == "AS")
+                    document.getElementsByName("sc_Installer_needed")[0].checked = true;
+
+                if (installer[i] == "RM")
+                    document.getElementsByName("sc_Installer_needed")[1].checked = true;
+
+                if (installer[i] == "RS")
+                    document.getElementsByName("sc_Installer_needed")[2].checked = true;
+
+                if (installer[i] == "CJ")
+                    document.getElementsByName("sc_Installer_needed")[3].checked = true;
+
+                if (installer[i] == "JO")
+                    document.getElementsByName("sc_Installer_needed")[4].checked = true;
+
+                if (installer[i] == "EO")
+                    document.getElementsByName("sc_Installer_needed")[5].checked = true;
+
+                if (installer[i] == "JM")
+                    document.getElementsByName("sc_Installer_needed")[6].checked = true;
+            }
+
+            //加入Agenda內容(先刪除未儲存的)
+            var agenda_object = document
+                .getElementById("agenda_table")
+                .getElementsByTagName("tr");
+
+            for (i = agenda_object.length - 1; i > 1; i--) {
+                agenda_object[i].remove();
+            }
+
+            for (i = 0; i < sc_content.Agenda.length; i++) {
+                addAgendaitem(
+                    sc_content.Agenda[i].location,
+                    sc_content.Agenda[i].agenda,
+                    sc_content.Agenda[i].appointtime,
+                    sc_content.Agenda[i].endtime
+                );
+            }
+
+            document.getElementById("sc_location1").value =
+                sc_content.Location_Things_to_Bring;
+            document.getElementById("sc_things").value = sc_content.Things_to_Bring;
+            document.getElementById("sc_location2").value =
+                sc_content.Location_Products_to_Bring;
+            document.getElementById("sc_products").value =
+                sc_content.Products_to_Bring;
+            document.getElementById("upload_input").style = "display:none;";
+            document.getElementById("sc_product_files").innerHTML =
+                sc_content.Products_to_bring_files;
+            if (
+                sc_content.Products_to_bring_files !=
+                "<div class='custom-control custom-checkbox' style='padding-top: 1%;'></div>"
+            )
+                app.download_type = "zip";
+            else app.download_type = "docx";
+
+            document.getElementById("sc_product_files_hide").value =
+                sc_content.File_name;
+            document.getElementById("sc_service").value = sc_content.Service;
+            document.getElementById("sc_driver1").value = sc_content.Driver;
+
+            document.getElementById("sc_driver_other").value = sc_content.Driver_Other;
+
+            document.getElementById("sc_driver2").value = sc_content.Back_up_Driver;
+
+            document.getElementById("sc_backup_driver_other").value = sc_content.Back_up_Driver_Other;
+
+            if(sc_content.Driver != 6)
+                document.getElementById("sc_driver_other").style.display = "none";
+            else
+                document.getElementById("sc_driver_other").style.display = "";
+
+            if(sc_content.Back_up_Driver != 6)
+                document.getElementById("sc_backup_driver_other").style.display = "none";
+            else
+                document.getElementById("sc_backup_driver_other").style.display = "";
+
+            if (sc_content.Photoshoot_Request == "Yes") {
+                document.getElementsByName("sc_Photoshoot_request")[0].checked = true;
+            }
+            if (sc_content.Photoshoot_Request == "No") {
+                document.getElementsByName("sc_Photoshoot_request")[1].checked = true;
+            }
+
+            document.getElementById("sc_notes").value = sc_content.Notes;
+
+            Change_Schedule_State(true, sc_content.Allday);
+            icon_function_enable = false;
+
+            document.getElementById("btn_reset").style.display = "none";
+            document.getElementById("btn_add").style.display = "none";
+            document.getElementById("btn_duplicate").style.display = "inline";
+            document.getElementById("btn_export").style.display = "inline";
+            document.getElementById("btn_edit").style.display = "inline";
+            document.getElementById("btn_delete").style.display = "inline";
+            document.getElementById("btn_cancel").style.display = "none";
+            document.getElementById("btn_save").style.display = "none";
+
+            // add schedual lock
+            document.getElementById("lock").value = sc_content.Lock;
+            if (sc_content.Lock != "") {
+                document.getElementById("btn_lock").style.display = "none";
+                document.getElementById("btn_unlock").style.display = "inline";
+
+                document.getElementById("btn_edit").style.display = "none";
+                document.getElementById("btn_delete").style.display = "none";
+            } else {
+                document.getElementById("btn_lock").style.display = "inline";
+                document.getElementById("btn_unlock").style.display = "none";
+            }
+
+            $("#exampleModalScrollable").modal("toggle");
+    }
+
+    */
 }
 
 function onChangeFileUpload(e) {
@@ -2564,6 +2799,15 @@ function UnescapeHTML(a) {
         .replace(/&amp;/g, "&")
         .replace(/&quot;/g, '"')
         .replace(/&apos;/g, "'");
+}
+
+
+function shallowCopy(obj) {
+      var result = {};
+      for (var i in obj) {
+          result[i] = obj[i];
+      }
+      return result;
 }
 
 $(document).ready(function () {
