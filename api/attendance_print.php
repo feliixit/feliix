@@ -268,8 +268,8 @@ if($jwt){
                              , ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date ORDER BY t3.id DESC) AS rank2
                      FROM
                         (SELECT t1.id, t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url, t1.pos_lat, t1.pos_lng, ud.department, ut.title 
-                         FROM feliix.on_duty AS t1 LEFT JOIN feliix.user AS t2 ON t1.uid = t2.id LEFT JOIN user_department ud ON user.apartment_id = ud.id 
-                        LEFT JOIN user_title ut ON user.title_id = ut.id  WHERE 1=1 ";
+                         FROM feliix.on_duty AS t1 LEFT JOIN feliix.user AS t2 ON t1.uid = t2.id LEFT JOIN user_department ud ON t2.apartment_id = ud.id 
+                        LEFT JOIN user_title ut ON t2.title_id = ut.id  WHERE 1=1 ";
 
             if(!empty($apply_start)) {
                 $sql = $sql . " and t1.duty_date >= '$apply_start' ";
