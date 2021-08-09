@@ -35,6 +35,8 @@ $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $leave_start = (isset($_POST['leave_start']) ?  $_POST['leave_start'] : '');
 $leave_end = (isset($_POST['leave_end']) ?  $_POST['leave_end'] : '');
 
+$department = (isset($_POST['department']) ?  $_POST['department'] : '');
+
 $leave_start = str_replace('-', '', $leave_start);
 $leave_end = str_replace('-', '', $leave_end);
 
@@ -69,9 +71,12 @@ if($jwt){
                           reject_id, b.username reject_name, reject_at,
                     re_approval_id, c.username re_approval_name, re_approval_at, 
                           re_reject_id, d.username re_reject_name, re_reject_at, 
-                          ap.pic_url, ap.created_at
+                          ap.pic_url, ap.created_at, ud.department, ut.title
 
                     FROM apply_for_leave ap LEFT JOIN user u ON u.id = ap.uid 
+
+                    LEFT JOIN user_department ud ON u.apartment_id = ud.id 
+                    LEFT JOIN user_title ut ON u.title_id = ut.id 
                     
                     left JOIN user a ON a.id = ap.approval_id
                     left JOIN user b ON b.id = ap.reject_id
@@ -88,6 +93,10 @@ if($jwt){
 
             if(!empty($leave_end)) {
                 $sql = $sql . " and apply_date <= '$leave_end' ";
+            }
+
+            if(!empty($department)) {
+                $sql = $sql . " and ud.id = $department ";
             }
 
             $sql = $sql . " ) ORDER BY u.username, ap.start_date  ";
