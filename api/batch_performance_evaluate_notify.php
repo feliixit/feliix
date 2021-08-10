@@ -20,14 +20,14 @@ $sql = "SELECT
             `period`,
             DATE(NOW()),
             DATE_FORMAT(DATE_ADD(CONCAT(review_month, '-01'), INTERVAL 1 MONTH), '%Y-%m') end_month,
-            DATE_ADD(CONCAT(review_month, '-10'), INTERVAL 2 month) dead_date,
-            DATE_ADD(CONCAT(review_month, '-10'), INTERVAL 1 month) dead_date_single,
+            DATE_ADD(CONCAT(review_month, '-16'), INTERVAL 2 month) dead_date,
+            DATE_ADD(CONCAT(review_month, '-16'), INTERVAL 1 month) dead_date_single,
             COALESCE(user_complete_at, '') user_complete_at, 
             COALESCE(manager_complete_at, '') manager_complete_at 
         FROM  performance_review  
             WHERE (user_complete_at IS null OR manager_complete_at IS NULL)
             AND `status` <> -1
-            AND DATE_ADD(CONCAT(review_month, '-10'), INTERVAL 2 MONTH) < DATE(NOW())";
+            AND DATE_ADD(CONCAT(review_month, '-16'), INTERVAL 2 MONTH) < DATE(NOW())";
 
 
 
