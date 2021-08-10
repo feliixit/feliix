@@ -34,6 +34,7 @@ $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 
 $apply_start = (isset($_POST['apply_start']) ?  $_POST['apply_start'] : '');
 $apply_end = (isset($_POST['apply_end']) ?  $_POST['apply_end'] : '');
+$department = (isset($_POST['department']) ?  $_POST['department'] : '');
 
 $apply_start = str_replace('-', '/', $apply_start);
 $apply_end = str_replace('-', '/', $apply_end);
@@ -54,7 +55,11 @@ if($jwt){
 
             $merged_results = array();
 
-            $sql = "SELECT username, duty_date, duty_type, location, duty_time, `explain`, on_duty.pic_url, remark, pos_lat, pos_lng  FROM on_duty LEFT JOIN user ON on_duty.uid = user.id WHERE 1=1 ";
+            $sql = "SELECT username, duty_date, duty_type, location, duty_time, `explain`, on_duty.pic_url, remark, pos_lat, pos_lng, ud.department, ut.title FROM on_duty 
+            LEFT JOIN user ON on_duty.uid = user.id 
+            LEFT JOIN user_department ud ON user.apartment_id = ud.id 
+            LEFT JOIN user_title ut ON user.title_id = ut.id 
+            WHERE 1=1 ";
 
             if(!empty($apply_start)) {
                 $sql = $sql . " and duty_date >= '$apply_start' ";
@@ -62,6 +67,10 @@ if($jwt){
 
             if(!empty($apply_end)) {
                 $sql = $sql . " and duty_date <= '$apply_end' ";
+            }
+
+            if(!empty($department)) {
+                $sql = $sql . " and ud.id = $department ";
             }
 
             $sql = $sql . " ORDER BY duty_date, uid, duty_type  ";
@@ -98,67 +107,91 @@ if($jwt){
 
             $sheet->setCellValue('A1', 'Date');
             $sheet->setCellValue('B1', 'Employee');
-            $sheet->setCellValue('C1', 'Duty Type');
-            $sheet->setCellValue('D1', 'Duty Time');
-            $sheet->setCellValue('E1', 'Location');
-            $sheet->setCellValue('F1', 'explain');
-            $sheet->setCellValue('G1', 'Photo');
-            $sheet->setCellValue('H1', 'GPS');
-            $sheet->setCellValue('I1', 'Remark');
+            $sheet->setCellValue('C1', 'Department');
+            $sheet->setCellValue('D1', 'Position');
+            $sheet->setCellValue('E1', 'Duty Type');
+            $sheet->setCellValue('F1', 'Duty Time');
+            $sheet->setCellValue('G1', 'Location');
+            $sheet->setCellValue('H1', 'explain');
+            $sheet->setCellValue('I1', 'Photo');
+            $sheet->setCellValue('J1', 'GPS');
+            $sheet->setCellValue('K1', 'Remark');
 
             $i = 2;
             foreach($merged_results as $row)
             {
                 $sheet->setCellValue('A' . $i, $row['duty_date']);
                 $sheet->setCellValue('B' . $i, $row['username']);
-                $sheet->setCellValue('C' . $i, GetDutyType($row['duty_type']));
-                $sheet->setCellValue('D' . $i, $row['duty_time']);
-                $sheet->setCellValue('E' . $i, GetLocation($row['location']));
-                $sheet->setCellValue('F' . $i, $row['explain']);
+                $sheet->setCellValue('C' . $i, $row['department']);
+                $sheet->setCellValue('D' . $i, $row['title']);
+                $sheet->setCellValue('E' . $i, GetDutyType($row['duty_type']));
+                $sheet->setCellValue('F' . $i, $row['duty_time']);
+                $sheet->setCellValue('G' . $i, GetLocation($row['location']));
+                $sheet->setCellValue('H' . $i, $row['explain']);
 
                 if($row['pic_url'] != '')
                 {
                     $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
-                    $sheet->setCellValue('G' . $i, 'Photo');
+                    $sheet->setCellValue('I' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(7,$i)->getHyperlink()->setUrl($link);
                 }
                 else
-                    $sheet->setCellValue('G' . $i, '');
+                    $sheet->setCellValue('I' . $i, '');
 
                  
                 $link = "http://www.google.com/maps/place/" . $row['pos_lat'] . ',' . $row['pos_lng'];
-                $sheet->setCellValue('H' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
+                $sheet->setCellValue('J' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
                 $sheet->getCellByColumnAndRow(8,$i)->getHyperlink()->setUrl($link);
                     
 
                 //$sheet->setCellValue('H' . $i, $row['pos_lat'] . " - " . $row['pos_lng']);
                 
-                $sheet->setCellValue('I' . $i, $row['remark']);
+                $sheet->setCellValue('K' . $i, $row['remark']);
 
-                $sheet->getStyle('A'. $i. ':' . 'I' . $i)->applyFromArray($styleArray);
+                $sheet->getStyle('A'. $i. ':' . 'K' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'I1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'I' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'K1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'K' . --$i)->applyFromArray($styleArray);
 
 
             // page 2
             $merged_results = array();
 
-            $sql = "SELECT t4.username, t4.duty_date, t4.duty_type, t4.duty_time, t4.location, t4.explain, t4.remark, t4.pic_url, t4.pos_lat, t4.pos_lng
+            $sql = "SELECT t4.username, t4.duty_date, t4.duty_type, t4.duty_time, t4.location, t4.explain, t4.remark, t4.pic_url, t4.pos_lat, t4.pos_lng, t4.department, t4.title
                     FROM 
                     (SELECT *, ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date, t3.duty_type  ORDER BY t3.id) AS rank1
                     , ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date, t3.duty_type  ORDER BY t3.id DESC) AS rank2
                         FROM
-                    (SELECT t1.id, t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url, t1.pos_lat, t1.pos_lng 
+                    (SELECT t1.id, t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url, t1.pos_lat, t1.pos_lng, ud.department, ut.title 
 
-             FROM feliix.on_duty AS t1 LEFT JOIN feliix.user AS t2 ON t1.uid = t2.id WHERE t1.duty_date >= '$apply_start'
-                       AND t1.duty_date <= '$apply_end') AS t3
+             FROM feliix.on_duty AS t1 LEFT JOIN feliix.user AS t2 ON t1.uid = t2.id LEFT JOIN user_department ud ON t2.apartment_id = ud.id 
+            LEFT JOIN user_title ut ON t2.title_id = ut.id  WHERE 1=1 "; 
+
+            if(!empty($apply_start)) {
+                $sql = $sql . " and t1.duty_date >= '$apply_start' ";
+            }
+
+            if(!empty($apply_end)) {
+                $sql = $sql . " and t1.duty_date <= '$apply_end' ";
+            }
+             
+             if(!empty($department)) {
+                $sql = $sql . " AND t2.apartment_id = $department ) AS t3
+                    ) AS t4
+                    WHERE (t4.duty_type='A' and t4.rank1=1) OR (t4.duty_type='B' and t4.rank2=1) 
+                    ORDER BY t4.username, t4.duty_date, t4.duty_type";
+             }
+             else
+             {
+                $sql = $sql . "
+                       ) AS t3
                         ) AS t4
                         WHERE (t4.duty_type='A' and t4.rank1=1) OR (t4.duty_type='B' and t4.rank2=1) 
                         ORDER BY t4.username, t4.duty_date, t4.duty_type";
+             }
 
 
             $stmt = $db->prepare( $sql );
@@ -176,13 +209,15 @@ if($jwt){
 
             $sheet->setCellValue('A1', 'Date');
             $sheet->setCellValue('B1', 'Employee');
-            $sheet->setCellValue('C1', 'Duty Type');
-            $sheet->setCellValue('D1', 'Duty Time');
-            $sheet->setCellValue('E1', 'Location');
-            $sheet->setCellValue('F1', 'explain');
-            $sheet->setCellValue('G1', 'Photo');
-            $sheet->setCellValue('H1', 'GPS');
-            $sheet->setCellValue('I1', 'Remark');
+            $sheet->setCellValue('C1', 'Department');
+            $sheet->setCellValue('D1', 'Position');
+            $sheet->setCellValue('E1', 'Duty Type');
+            $sheet->setCellValue('F1', 'Duty Time');
+            $sheet->setCellValue('G1', 'Location');
+            $sheet->setCellValue('H1', 'explain');
+            $sheet->setCellValue('I1', 'Photo');
+            $sheet->setCellValue('J1', 'GPS');
+            $sheet->setCellValue('K1', 'Remark');
 
 
 
@@ -192,51 +227,72 @@ if($jwt){
             {
                 $sheet->setCellValue('A' . $i, $row['duty_date']);
                 $sheet->setCellValue('B' . $i, $row['username']);
-                $sheet->setCellValue('C' . $i, GetDutyType($row['duty_type']));
-                $sheet->setCellValue('D' . $i, $row['duty_time']);
-                $sheet->setCellValue('E' . $i, GetLocation($row['location']));
-                $sheet->setCellValue('F' . $i, $row['explain']);
+                $sheet->setCellValue('C' . $i, $row['department']);
+                $sheet->setCellValue('D' . $i, $row['title']);
+                $sheet->setCellValue('E' . $i, GetDutyType($row['duty_type']));
+                $sheet->setCellValue('F' . $i, $row['duty_time']);
+                $sheet->setCellValue('G' . $i, GetLocation($row['location']));
+                $sheet->setCellValue('H' . $i, $row['explain']);
 
                 if($row['pic_url'] != '')
                 {
                     $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
-                    $sheet->setCellValue('G' . $i, 'Photo');
+                    $sheet->setCellValue('I' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(7,$i)->getHyperlink()->setUrl($link);
                 }
                 else
-                    $sheet->setCellValue('G' . $i, '');
+                    $sheet->setCellValue('I' . $i, '');
 
                     $link = "http://www.google.com/maps/place/" . $row['pos_lat'] . ',' . $row['pos_lng'];
-                    $sheet->setCellValue('H' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
+                    $sheet->setCellValue('J' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
                     $sheet->getCellByColumnAndRow(8,$i)->getHyperlink()->setUrl($link);
                     
-                $sheet->setCellValue('I' . $i, $row['remark']);
+                $sheet->setCellValue('K' . $i, $row['remark']);
 
 
-                $sheet->getStyle('A'. $i. ':' . 'I' . $i)->applyFromArray($styleArray);
+                $sheet->getStyle('A'. $i. ':' . 'K' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'I1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'I' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'K1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'K' . --$i)->applyFromArray($styleArray);
 
 
             // page 3
             $merged_results = array();
 
-            $sql = "SELECT t4.username, t4.duty_date, t4.duty_type, t4.duty_time, t4.location, t4.explain, t4.remark, t4.pic_url, t4.pos_lat, t4.pos_lng 
+            $sql = "SELECT t4.username, t4.duty_date, t4.duty_type, t4.duty_time, t4.location, t4.explain, t4.remark, t4.pic_url, t4.pos_lat, t4.pos_lng, t4.department, t4.title 
                 FROM 
                     (SELECT *, ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date ORDER BY t3.id) AS rank1
                              , ROW_NUMBER() OVER (PARTITION BY username, t3.duty_date ORDER BY t3.id DESC) AS rank2
                      FROM
-                        (SELECT t1.id, t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url, t1.pos_lat, t1.pos_lng 
-                         FROM feliix.on_duty AS t1 LEFT JOIN feliix.user AS t2 ON t1.uid = t2.id WHERE t1.duty_date >= '$apply_start'
-                                       AND t1.duty_date <= '$apply_end') AS t3
+                        (SELECT t1.id, t2.username, t1.duty_date, t1.duty_type, t1.duty_time, t1.location, t1.explain, t1.remark, t1.pic_url, t1.pos_lat, t1.pos_lng, ud.department, ut.title 
+                         FROM feliix.on_duty AS t1 LEFT JOIN feliix.user AS t2 ON t1.uid = t2.id LEFT JOIN user_department ud ON t2.apartment_id = ud.id 
+                        LEFT JOIN user_title ut ON t2.title_id = ut.id  WHERE 1=1 ";
+
+            if(!empty($apply_start)) {
+                $sql = $sql . " and t1.duty_date >= '$apply_start' ";
+            }
+
+            if(!empty($apply_end)) {
+                $sql = $sql . " and t1.duty_date <= '$apply_end' ";
+            }
+                                       
+            if(!empty($department)) {
+            $sql = $sql . " AND t2.apartment_id = $department ) AS t3
                     ) AS t4
                 WHERE (t4.rank1=1) OR (t4.rank2=1) 
                 ORDER BY t4.username, t4.duty_date, t4.id";
-
+            }
+            else
+            {
+            $sql = $sql . "
+                    ) AS t3
+                    ) AS t4
+                WHERE (t4.rank1=1) OR (t4.rank2=1) 
+                ORDER BY t4.username, t4.duty_date, t4.id";
+            }
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();
@@ -253,13 +309,15 @@ if($jwt){
 
             $sheet->setCellValue('A1', 'Date');
             $sheet->setCellValue('B1', 'Employee');
-            $sheet->setCellValue('C1', 'Duty Type');
-            $sheet->setCellValue('D1', 'Duty Time');
-            $sheet->setCellValue('E1', 'Location');
-            $sheet->setCellValue('F1', 'explain');
-            $sheet->setCellValue('G1', 'Photo');
-            $sheet->setCellValue('H1', 'GPS');
-            $sheet->setCellValue('I1', 'Remark');
+            $sheet->setCellValue('C1', 'Department');
+            $sheet->setCellValue('D1', 'Position');
+            $sheet->setCellValue('E1', 'Duty Type');
+            $sheet->setCellValue('F1', 'Duty Time');
+            $sheet->setCellValue('G1', 'Location');
+            $sheet->setCellValue('H1', 'explain');
+            $sheet->setCellValue('I1', 'Photo');
+            $sheet->setCellValue('J1', 'GPS');
+            $sheet->setCellValue('K1', 'Remark');
 
 
             $i = 2;
@@ -267,34 +325,36 @@ if($jwt){
             {
                 $sheet->setCellValue('A' . $i, $row['duty_date']);
                 $sheet->setCellValue('B' . $i, $row['username']);
-                $sheet->setCellValue('C' . $i, GetDutyType($row['duty_type']));
-                $sheet->setCellValue('D' . $i, $row['duty_time']);
-                $sheet->setCellValue('E' . $i, GetLocation($row['location']));
-                $sheet->setCellValue('F' . $i, $row['explain']);
+                $sheet->setCellValue('C' . $i, $row['department']);
+                $sheet->setCellValue('D' . $i, $row['title']);
+                $sheet->setCellValue('E' . $i, GetDutyType($row['duty_type']));
+                $sheet->setCellValue('F' . $i, $row['duty_time']);
+                $sheet->setCellValue('G' . $i, GetLocation($row['location']));
+                $sheet->setCellValue('H' . $i, $row['explain']);
 
                 if($row['pic_url'] != '')
                 {
                     $link = $conf::$mail_ip . 'img/' . $row['pic_url'];
-                    $sheet->setCellValue('G' . $i, 'Photo');
+                    $sheet->setCellValue('I' . $i, 'Photo');
                     $sheet->getCellByColumnAndRow(7,$i)->getHyperlink()->setUrl($link);
                 }
                 else
-                    $sheet->setCellValue('G' . $i, '');
+                    $sheet->setCellValue('I' . $i, '');
                 
                     $link = "http://www.google.com/maps/place/" . $row['pos_lat'] . ',' . $row['pos_lng'];
-                    $sheet->setCellValue('H' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
+                    $sheet->setCellValue('J' . $i, '(' . $row['pos_lat'] . ',' . $row['pos_lng'] . ')');
                     $sheet->getCellByColumnAndRow(8,$i)->getHyperlink()->setUrl($link);
 
-                $sheet->setCellValue('I' . $i, $row['remark']);
+                $sheet->setCellValue('K' . $i, $row['remark']);
 
 
-                $sheet->getStyle('A'. $i. ':' . 'I' . $i)->applyFromArray($styleArray);
+                $sheet->getStyle('A'. $i. ':' . 'K' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'I1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'I' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'K1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'K' . --$i)->applyFromArray($styleArray);
 
 
            

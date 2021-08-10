@@ -124,22 +124,10 @@ $(function(){
 
 
             <div class="box-content">
-                <div class="title">
-                    <b>Select Period</b>
-                    <div class="function">
-                        <input type="date" v-model="apply_start" />
-                       <input type="date" v-model="apply_end" />
-<!--
-                        <b class="light green"></b>All
-                        <b class="light blue"></b>Waiting for Approval
--->
-                    </div>
-                </div>
-      
-                <div class="btnbox">
-                    <a class="btn" @click="apply" :disabled="submit">Export</a>
-                
-                </div>
+                <div class="title"><b>Select:</b></div>
+                <div class="title"><b>Period</b> <div class="function"><input type="date" style="width: 200px; height: 40px;" v-model="apply_start"> <b>~</b> <input type="date" style="width: 200px; height: 40px;" v-model="apply_end"></div></div>
+            <div class="title"><b>Department</b> <div class="function"><select style="width: 200px; height: 40px;" v-model="department"><option value="" selected="">All</option><option v-for="(item, index) in position" :value="item.did" :key="item.department">{{ item.department }}</option></select></div></div> 
+            <div class="btnbox"><a @click="apply" :disabled="submit" class="btn">Export</a></div>
             </div>
         </div>
         <div class="block B">
