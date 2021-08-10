@@ -496,9 +496,9 @@ function getLeaveType($type){
     $leave_type = '';
 
     if($type =="A")
-        $leave_type = "Vacation Leave";
+        $leave_type = "Service Incentive Leave";
     if($type =="B")
-        $leave_type = "Emerency/Sick Leave";
+        $leave_type = "Sick Leave";
     if($type =="C")
         $leave_type = "Unpaid Leave";
     if($type =="D")

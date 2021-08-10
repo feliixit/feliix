@@ -94,13 +94,13 @@ $(function(){
                     <th>Waiting for Approval</th>
                   </tr>
                   <tr>
-                    <td>Vacation Leave</td>
+                    <td>Service Incentive Leave</td>
                     <td rowspan="2">{{ manager_leave }} Days</td>
                     <td>{{ al_taken }} Days</td>
                     <td>{{ al_approval }} Days</td>
                   </tr>
                   <tr>
-                    <td>Emerency/Sick Leave</td>
+                    <td>Sick Leave</td>
                
                     <td>{{ sl_taken }} Days</td>
                     <td>{{ sl_approval }} Days</td>
@@ -129,14 +129,14 @@ $(function(){
       
                     </ul>
                     <ul>
-                        <li>Vacation Leave</li>
+                        <li>Service Incentive Leave</li>
                         <li>{{ al_credit }} Days</li>
                         <li>{{ al_taken }} Days</li>
                         <li>{{ al_approval }} Days</li>
                   
                     </ul>
                     <ul>
-                        <li>Emerency/Sick Leave</li>
+                        <li>Sick Leave</li>
                         <li>{{ sl_credit }} Days</li>
                         <li>{{ sl_taken }} Days</li>
                         <li>{{ sl_approval }} Days</li>
@@ -171,8 +171,8 @@ $(function(){
                         <li class="head" style="border-top-left-radius: 7px; border-bottom-left-radius: 7px; line-height: 44px;">Leave Type</li>
                         <li style="flex-grow:1; flex-shrink:1;">
                             <select name="" id="" v-model="leave_type" style="width: 100%; border: 2px solid var(--pri01a);">
-                                <option value="A">Vacation Leave</option>
-                                <option value="B">Emerency/Sick Leave</option>
+                                <option value="A">Service Incentive Leave</option>
+                                <option value="B">Sick Leave</option>
                                 <option value="C">Unpaid Leave</option>
                               
                             </select>

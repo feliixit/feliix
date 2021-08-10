@@ -130,7 +130,7 @@ display:inline;
                     <ul v-for='(record, index) in leave_records'>
                         <li>{{ record.username }}</li>
                         <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
-                        <li>{{ (record.leave_type == 'A') ? "Vacation Leave" : ((record.leave_type == 'B') ? "Emerency/Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Service Incentive Leave" : ((record.leave_type == 'B') ? "Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
                         <li>{{ (record.approval == 'P') ? "Waiting for Approval" : (record.approval == 'R') ? "Rejected" : (record.approval == 'D') ? "Archived" : (record.approval == 'W') ? "Withdrawn" : "Approved" }}</li>
                    
                     </ul>
