@@ -862,6 +862,11 @@ var app = new Vue({
         if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
+
+      if(this.username.trim().toUpperCase() == 'ARGEL ARGANA')
+      {
+        can_save = true;
+      }
       
       return can_save;
     },
