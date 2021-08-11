@@ -21,11 +21,41 @@ try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
+            $username = $decoded->data->username;
             
             // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
+            // 改從 access control
             $access = false;
-            if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41)
-                $access = true;
+            $access_leave = false;
+            $access_attendance = false;
+
+            $focus = 0;
+
+            $database = new Database();
+            $db = $database->getConnection();
+
+            //if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
+            //    $access2 = true;
+            $query = "SELECT * FROM access_control WHERE payess2 LIKE '%" . $username . "%' ";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $access_attendance = true;
+            }
+
+            $query = "SELECT * FROM access_control WHERE  payess3 LIKE '%" . $username . "%' ";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $access_leave = true;
+            }
+
+            $access = $access_leave || $access_attendance;
+
+            if($access_attendance != true )
+                $focus = 2;
+            else
+                $focus = 1;
 
         }
         catch (Exception $e){
@@ -103,11 +133,15 @@ $(function(){
     <div id="app" class="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A focus">Attendance</a>
-            <a class="tag B">Leaves</a>
+            <?php if($access_attendance) { ?>
+                <a class="tag A <?php if($focus == 1) echo "focus"; ?>">Attendance</a>
+            <?php } ?>
+            <?php if($access_leave) { ?>
+                <a class="tag B <?php if($focus == 2) echo "focus"; ?>">Leaves</a>
+            <?php } ?>
         </div>
         <!-- Blocks -->
-        <div class="block A focus">
+        <div class="block A <?php if($focus == 1) echo "focus"; ?>" <?php if($access_attendance != true) echo 'style="display:none;"'; ?>>
             <h6>Attendance 
                 
                 <div class="function">
@@ -130,7 +164,7 @@ $(function(){
             <div class="btnbox"><a @click="apply" :disabled="submit" class="btn">Export</a></div>
             </div>
         </div>
-        <div class="block B">
+        <div class="block B <?php if($focus == 2) echo "focus"; ?>" <?php if($access_leave != true) echo 'style="display:none;"'; ?>>
             <h6>Leave Application
                 
                 <div class="function">

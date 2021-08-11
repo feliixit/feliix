@@ -61,6 +61,14 @@ $(function(){
             font-size: 16px;
             width: 100%;
         }
+
+        .vs__dropdown-toggle{
+            border: 2px solid #18BAC7;
+        }
+
+        .vs__open-indicator {
+            fill: #18BAC7;
+        }
     </style>
 
 </head>
@@ -80,10 +88,10 @@ $(function(){
         <div class="block A focus">
             <h6>Admin Section</h6>
 
-            <div class="box-content">
+            <div class="box-content" style="display:none;">
                 <ul>
                     <li><b>Section Link</b></li>
-                    <br><br><br>
+                    <br>
                     <li>
                         <div>
                         <v-select v-model="payess1"
@@ -105,7 +113,7 @@ $(function(){
             <div class="box-content">
                 <ul>
                     <li><b>Attendance (Query and Export)</b></li>
-                    <br><br><br>
+                    <br>
                     <li>
                         <div>
                             
@@ -128,7 +136,7 @@ $(function(){
             <div class="box-content">
                 <ul>
                     <li><b>Leaves (Query and Export)</b></li>
-                    <br><br><br>
+                    <br>
                     <li>
                         <div>
                         <v-select v-model="payess3"
