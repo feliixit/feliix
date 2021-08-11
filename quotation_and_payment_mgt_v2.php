@@ -235,7 +235,9 @@ $(function(){
                     min-width: auto;
                 }
 
-
+        .tableframe .tablebox.lv1 ul.head li:nth-of-type(19) {
+            text-align: center;
+        }
 
         .bodybox .mask {
             position: absolute;

@@ -69,7 +69,7 @@ var app = new Vue({
       { name: "100", id: 100 },
       { name: "All", id: 10000 },
     ],
-    perPage: 5,
+    perPage: 10,
 
     prof_canSub: true,
     prof_remark: "",
