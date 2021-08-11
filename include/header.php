@@ -198,6 +198,7 @@ try {
             {
             ?>
                 <a class="list" href="quotation_and_payment_mgt?fc=&fs=&ft=&fal=&fau=&fpl=&fpu=&fk=&of1=&ofd1=&of2=&ofd2=&pg=1">Quotation and Payment Mgt.</a>
+                <a class="list" href="quotation_and_payment_mgt_v2?fc=&fs=&ft=&fal=&fau=&fpl=&fpu=&fk=&of1=&ofd1=&of2=&ofd2=&pg=1">Quotation and Payment Mgt. Ver.2</a>
             <?php 
             }
             ?>
