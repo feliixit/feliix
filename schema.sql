@@ -1894,3 +1894,14 @@ insert into product_category_attribute(cat_id, level, category, create_id) value
 insert into product_category_attribute(cat_id, level, category, create_id) values('20050008', 3, 'Finishes of Partition Panel', 1);
 insert into product_category_attribute(cat_id, level, category, create_id) values('20050009', 3, 'Available Color/Pattern of Frame and Capping', 1);
 insert into product_category_attribute(cat_id, level, category, create_id) values('20050010', 3, 'Available Color/Pattern of Partition Panel', 1);
+
+-- 2021/08/10 access control
+CREATE TABLE IF NOT EXISTS `access_control` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `payess1` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `payess2` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `payess3` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+insert into access_control(`payess1`, `payess2`, `payess3`) values('', '', '');
