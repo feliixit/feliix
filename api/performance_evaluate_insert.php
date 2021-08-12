@@ -10,7 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
 $answers = (isset($_POST['answers']) ?  $_POST['answers'] : '[]');
-$answers = preg_replace('/(\w+):/i', '"\1":', $answers);
+// $answers = preg_replace('/(\w+):/i', '"\1":', $answers);
 $answers_array = json_decode($answers, true);
 
 $comment1 = (isset($_POST['commet1']) ?  $_POST['commet1'] : '');
