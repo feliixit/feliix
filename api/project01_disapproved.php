@@ -97,7 +97,7 @@ $query = "SELECT pm.id,
                 LEFT JOIN project_priority pp ON pm.priority_id = pp.id 
                 LEFT JOIN project_status ps ON pm.project_status_id = ps.id 
                 LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
-                LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id <> 6 ";
+                LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id = 6 ";
 
 if($fpc != "")
 {
@@ -112,11 +112,6 @@ if($fct != "")
 if($fp != "")
 {
     $query = $query . " and pm.priority_id = '" . $fp . "' ";
-}
-
-if($fs != "")
-{
-    $query = $query . " and pm.project_status_id = '" . $fs . "' ";
 }
 
 if($fpt != "")
@@ -273,7 +268,7 @@ if($fcs != "")
                      ON        pm.stage_id = pst.id
                      LEFT JOIN user
                      ON        pm.create_id = user.id
-                     WHERE     pm.project_status_id <> 6 ";
+                     WHERE     pm.project_status_id = 6 ";
 
     if($fpc != "")
     {
@@ -290,10 +285,6 @@ if($fcs != "")
         $query = $query . " and pm.priority_id = '" . $fp . "' ";
     }
 
-    if($fs != "")
-    {
-        $query = $query . " and pm.project_status_id = '" . $fs . "' ";
-    }
 
     if($fpt != "")
     {

@@ -47,7 +47,10 @@ $(function(){
 </script>
 
     <style>
-
+        body.cyan .mainContent {
+            min-height: 130vh;
+        }
+        
         body.cyan .block div.box-content{
             border-bottom: 2px solid var(--cyan01);
         }
