@@ -445,6 +445,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_at = $row['updated_at'];
     $stage = $row['stage'];
     $recent = GetRecentPost($row['id'], $db, $key);
+    $reason = GetReason($row['id'], $db, $key);
 
     $merged_results[] = array(
         "id" => $id,
@@ -461,6 +462,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_at" => $updated_at,
         "stage" => $stage,
         "recent" => $recent,
+        "reason" => $reason,
     );
 }
 
@@ -559,4 +561,33 @@ function GetRecentPost($project_id, $db, $key){
     }
 
     return $sorted_result;
+}
+
+function GetReason($project_id, $db, $key){
+    $query = "SELECT reason FROM project_statuses pm  WHERE pm.project_id = " . $project_id . " order by pm.created_at desc limit 1";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $reason = "";
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $reason = $row['reason'];
+    }
+
+    // if($key != "")
+    // {
+    //     foreach ($merged_results as &$value) {
+    //         if(
+    //             preg_match("/{$key}/i", $value['username']) || 
+    //             ($key == substr($value['created_at'], 0, 10)))
+    //         {
+    //             $filter_result[] = $value;
+    //         }
+    //     }
+    // }
+    // else
+  
+    return $reason;
 }

@@ -515,7 +515,7 @@ $(function(){
                      <li>{{ receive_record.category }}</li>
                      <li><i v-bind:class="receive_record.pct_class">{{ receive_record.client_type }}</i></li>
                      <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
-                     <li><a v-bind:href="'project02?p='+ receive_record.id">{{ receive_record.project_name }}</a></li>
+                     <li><a v-bind:href="'project02?p='+ receive_record.id">{{ receive_record.project_name }}<br><span style="color: red">(Reason: {{ receive_record.reason }})</span></a></li>
                      <li>{{ receive_record.project_status }}</li>
                      <li>{{ receive_record.estimate_close_prob }}</li>
                      <li>{{ receive_record.username }}</li>
