@@ -401,7 +401,8 @@ catch (Exception $e) {
 
                     <!-- tag -->
                     <b class="tag focus">PROJECT</b>
-                    <a href="project01"><b class="tag">{{ project_name }}</b></a>
+                    <a v-if="project_status == 'Disapproved' " href="project01_disapproved"><b class="tag">{{ project_name }}</b></a>
+                    <a v-if="project_status != 'Disapproved' " href="project01"><b class="tag">{{ project_name }}</b></a>
                     <b class="tag" v-if="verified_downpayment">(Verified Downpayment)</b>
                 </div>
                 <div class="block fn">

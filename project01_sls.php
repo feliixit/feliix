@@ -155,6 +155,8 @@ $(function(){
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="block">
             <div class="list_function">
+
+            <!-- 
                 <div class="new_project">
                     <a class="add"></a>
                     
@@ -240,7 +242,7 @@ $(function(){
 ?>
                     
                 </div>
-
+-->
 
                 
                 <!-- 篩選 -->
@@ -283,7 +285,7 @@ $(function(){
                                 <dd>
                                     <select v-model="fil_status">
                                     <option value=""></option>
-                                    <option v-for="item in statuses" v-if="item.id != 6" :value="item.id" :key="item.project_status">
+                                    <option v-for="item in statuses" :value="item.id" :key="item.project_status">
                                         {{ item.project_status }}
                                     </option>
                                     </select>
@@ -507,7 +509,7 @@ $(function(){
                      <li>Project Creator</li>
                      <li>Execution Period</li>
                      <li>Current Stage</li>
-                     <li>Recent Message</li>
+                     <li>Client Stage's<br>Recent Message</li>
                  </ul>
                  <ul v-for='(receive_record, index) in displayedPosts'>
                      <li>{{ receive_record.category }}</li>
@@ -519,7 +521,7 @@ $(function(){
                      <li>{{ receive_record.username }}</li>
                      <li>{{ receive_record.created_at }} ~ {{ receive_record.updated_at }}</li>
                      <li>{{ receive_record.stage }}</li>
-                     <li v-if="receive_record.recent != ''"><a v-bind:href="receive_record.recent[0].url" target="_blank">{{ receive_record.recent[0].created_at}} {{ receive_record.recent[0].username }}</a></li>
+                     <li v-if="receive_record.recent[0].last_client_stage_id != 0"><a v-bind:href="'project03_client?sid=' + receive_record.recent[0].last_client_stage_id" target="_blank">{{ receive_record.recent[0].last_client_created_at}} {{ receive_record.recent[0].username }}</a></li>
                    <li v-else></li>
                  </ul>
                 
@@ -541,5 +543,5 @@ $(function(){
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/project01.js"></script>
+<script defer src="js/project01_sls.js"></script>
 </html>

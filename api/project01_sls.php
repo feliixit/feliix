@@ -97,7 +97,7 @@ $query = "SELECT pm.id,
                 LEFT JOIN project_priority pp ON pm.priority_id = pp.id 
                 LEFT JOIN project_status ps ON pm.project_status_id = ps.id 
                 LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
-                LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id <> 6 ";
+                LEFT JOIN user ON pm.create_id = user.id where 1=1 ";
 
 if($fpc != "")
 {
@@ -273,7 +273,7 @@ if($fcs != "")
                      ON        pm.stage_id = pst.id
                      LEFT JOIN user
                      ON        pm.create_id = user.id
-                     WHERE     pm.project_status_id <> 6 ";
+                     WHERE     1=1 ";
 
     if($fpc != "")
     {
@@ -455,22 +455,25 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $stage = $row['stage'];
     $recent = GetRecentPost($row['id'], $db, $key);
 
-    $merged_results[] = array(
-        "id" => $id,
-        "category" => $category,
-        "client_type" => $client_type,
-        "pct_class" => $pct_class,
-        "priority" => $priority,
-        "pp_class" => $pp_class,
-        "project_name" => $project_name,
-        "project_status" => $project_status,
-        "estimate_close_prob" => $estimate_close_prob,
-        "username" => $username,
-        "created_at" => $created_at,
-        "updated_at" => $updated_at,
-        "stage" => $stage,
-        "recent" => $recent,
-    );
+    if(count($recent) > 0)
+    {
+        $merged_results[] = array(
+            "id" => $id,
+            "category" => $category,
+            "client_type" => $client_type,
+            "pct_class" => $pct_class,
+            "priority" => $priority,
+            "pp_class" => $pp_class,
+            "project_name" => $project_name,
+            "project_status" => $project_status,
+            "estimate_close_prob" => $estimate_close_prob,
+            "username" => $username,
+            "created_at" => $created_at,
+            "updated_at" => $updated_at,
+            "stage" => $stage,
+            "recent" => $recent,
+        );
+    }
 }
 
 $filter_result = [];
@@ -494,39 +497,23 @@ echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
 
 
 function GetRecentPost($project_id, $db, $key){
-    $query = "SELECT u.username, pm.created_at, '' `url` FROM project_stage_client pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id WHERE p.project_id = " . $project_id . " and pm.status <> -1  
-    UNION all
-    SELECT  u.username, pc.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task pc left join user u on u.id = pc.create_id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
-    UNION ALL
-    SELECT  u.username, pt.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
-    UNION ALL
-    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pm.stage_id) `url` FROM project_other_task pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION ALL
-    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION all
-    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message_reply pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message ps ON pm.message_id = ps.id  LEFT JOIN project_other_task pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION ALL
-    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pm.stage_id) `url` FROM project_other_task_r pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION ALL
-    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message_r pm left join user u on u.id = pm.create_id LEFT JOIN project_other_task_r pc ON pm.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION all
-    SELECT  u.username, pm.created_at, CONCAT('project03_other?sid=', pc.stage_id) `url` FROM project_other_task_message_reply_r pm left join user u on u.id = pm.create_id  LEFT JOIN project_other_task_message_r ps ON pm.message_id = ps.id  LEFT JOIN project_other_task_r pc ON ps.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pm.status <> -1 
-    UNION all
-    SELECT  u.username, pm.created_at, CONCAT('project02?p=', ps.id) `url` FROM project_action_comment pm left join user u on u.id = pm.create_id  LEFT JOIN project_main ps ON pm.project_id = ps.id  where pm.project_id = " . $project_id . " and pm.status <> -1 
-    UNION all
-    SELECT  u.username, pm.created_at, CONCAT('project02?p=', ps.id) `url` FROM project_est_prob pm left join user u on u.id = pm.create_id  LEFT JOIN project_main ps ON pm.project_id = ps.id  where pm.project_id = " . $project_id . " and pm.status <> -1 
-    UNION all
-    SELECT  u.username, pm.created_at, CONCAT('project02?p=', ps.id) `url` FROM project_action_detail pm left join user u on u.id = pm.create_id  LEFT JOIN project_main ps ON pm.project_id = ps.id  where pm.project_id = " . $project_id . " and pm.status <> -1 
-    UNION all
-    SELECT  u.username, pm.created_at, CONCAT('project02?p=', ps.id) `url` FROM project_approve pm left join user u on u.id = pm.create_id  LEFT JOIN project_main ps ON pm.project_id = ps.id  where pm.project_id = " . $project_id . " and pm.status <> -1 
-    ";
+
+    // $query = "
+    // SELECT  u.username, pc.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task pc left join user u on u.id = pc.create_id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
+    // UNION ALL
+    // SELECT  u.username, pt.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
+    
+    // ";
+
+    $query = "SELECT last_client_stage_id, username, last_client_created_at from project_main 
+                left join user on user.id = project_main.last_client_created_id where project_main.id = " . $project_id;
 
     // prepare the query
     $stmt = $db->prepare($query);
     $stmt->execute();
 
     $merged_results = [];
-    $filter_result = [];
+    //$filter_result = [];
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $merged_results[] = $row;
@@ -544,28 +531,28 @@ function GetRecentPost($project_id, $db, $key){
     //     }
     // }
     // else
-        $filter_result = $merged_results;
+        //$filter_result = $merged_results;
 
-    $sorted_result = [];
+    // $sorted_result = [];
 
-    if(count($filter_result) > 0)
-    {
-        usort($filter_result, function ($item1, $item2) {
-            return $item2['created_at'] <=> $item1['created_at'];
-        });
+    // if(count($filter_result) > 0)
+    // {
+    //     usort($filter_result, function ($item1, $item2) {
+    //         return $item2['created_at'] <=> $item1['created_at'];
+    //     });
     
-        foreach ($filter_result as $arr)
-        {
-            $sorted_result[] = array(
-                "created_at" => $arr['created_at'],
-                "username" => $arr['username'],
-                "url" => $arr['url'],
+    //     foreach ($filter_result as $arr)
+    //     {
+    //         $sorted_result[] = array(
+    //             "created_at" => $arr['created_at'],
+    //             "username" => $arr['username'],
+    //             "url" => $arr['url'],
              
-            );
+    //         );
          
-            break;
-        }
-    }
+    //         break;
+    //     }
+    // }
 
-    return $sorted_result;
+    return $merged_results;
 }

@@ -155,11 +155,13 @@ $(function(){
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="block">
             <div class="list_function">
+
+            <!--
                 <div class="new_project">
                     <a class="add"></a>
                     
 <?php 
-  if ($test_manager[0]  == "1")
+  if ("2" == "1")
   {
 ?>
                     <div id="insert_dialog" class="dialog d-add">
@@ -240,7 +242,7 @@ $(function(){
 ?>
                     
                 </div>
-
+-->
 
                 
                 <!-- 篩選 -->
@@ -278,17 +280,17 @@ $(function(){
                                     </option>
                                     </select>
                                 </dd>
-
+<!--
                                 <dt>Project Status</dt>
                                 <dd>
                                     <select v-model="fil_status">
                                     <option value=""></option>
-                                    <option v-for="item in statuses" v-if="item.id != 6" :value="item.id" :key="item.project_status">
+                                    <option v-for="item in statuses" :value="item.id" :key="item.project_status">
                                         {{ item.project_status }}
                                     </option>
                                     </select>
                                 </dd>
-
+-->
                                 <dt>Project Creator</dt>
                                 <dd>
                                     <select v-model="fil_creator">
@@ -513,7 +515,7 @@ $(function(){
                      <li>{{ receive_record.category }}</li>
                      <li><i v-bind:class="receive_record.pct_class">{{ receive_record.client_type }}</i></li>
                      <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
-                     <li><a v-bind:href="'project02?p='+ receive_record.id">{{ receive_record.project_name }}</a></li>
+                     <li><a v-bind:href="'project02?p='+ receive_record.id">{{ receive_record.project_name }}<br><span style="color: red">(Reason: {{ receive_record.reason }})</span></a></li>
                      <li>{{ receive_record.project_status }}</li>
                      <li>{{ receive_record.estimate_close_prob }}</li>
                      <li>{{ receive_record.username }}</li>
@@ -541,5 +543,5 @@ $(function(){
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/project01.js"></script>
+<script defer src="js/project01_disapproved.js"></script>
 </html>

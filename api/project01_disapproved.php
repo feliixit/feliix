@@ -97,7 +97,7 @@ $query = "SELECT pm.id,
                 LEFT JOIN project_priority pp ON pm.priority_id = pp.id 
                 LEFT JOIN project_status ps ON pm.project_status_id = ps.id 
                 LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
-                LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id <> 6 ";
+                LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id = 6 ";
 
 if($fpc != "")
 {
@@ -112,11 +112,6 @@ if($fct != "")
 if($fp != "")
 {
     $query = $query . " and pm.priority_id = '" . $fp . "' ";
-}
-
-if($fs != "")
-{
-    $query = $query . " and pm.project_status_id = '" . $fs . "' ";
 }
 
 if($fpt != "")
@@ -273,7 +268,7 @@ if($fcs != "")
                      ON        pm.stage_id = pst.id
                      LEFT JOIN user
                      ON        pm.create_id = user.id
-                     WHERE     pm.project_status_id <> 6 ";
+                     WHERE     pm.project_status_id = 6 ";
 
     if($fpc != "")
     {
@@ -290,10 +285,6 @@ if($fcs != "")
         $query = $query . " and pm.priority_id = '" . $fp . "' ";
     }
 
-    if($fs != "")
-    {
-        $query = $query . " and pm.project_status_id = '" . $fs . "' ";
-    }
 
     if($fpt != "")
     {
@@ -454,6 +445,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_at = $row['updated_at'];
     $stage = $row['stage'];
     $recent = GetRecentPost($row['id'], $db, $key);
+    $reason = GetReason($row['id'], $db, $key);
 
     $merged_results[] = array(
         "id" => $id,
@@ -470,6 +462,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_at" => $updated_at,
         "stage" => $stage,
         "recent" => $recent,
+        "reason" => $reason,
     );
 }
 
@@ -568,4 +561,33 @@ function GetRecentPost($project_id, $db, $key){
     }
 
     return $sorted_result;
+}
+
+function GetReason($project_id, $db, $key){
+    $query = "SELECT reason FROM project_statuses pm  WHERE pm.project_id = " . $project_id . " order by pm.created_at desc limit 1";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $reason = "";
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $reason = $row['reason'];
+    }
+
+    // if($key != "")
+    // {
+    //     foreach ($merged_results as &$value) {
+    //         if(
+    //             preg_match("/{$key}/i", $value['username']) || 
+    //             ($key == substr($value['created_at'], 0, 10)))
+    //         {
+    //             $filter_result[] = $value;
+    //         }
+    //     }
+    // }
+    // else
+  
+    return $reason;
 }

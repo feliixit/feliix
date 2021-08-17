@@ -1169,6 +1169,7 @@ var app = new Vue({
                   var form_Data = new FormData();
 
                   form_Data.append('stage_id', this.stage_id);
+                  form_Data.append('project_id', this.project_id);
                   form_Data.append('message', this.stage_task.trim());
                   form_Data.append('type', 'task');
 
@@ -1228,6 +1229,8 @@ var app = new Vue({
                   var form_Data = new FormData();
 
                   form_Data.append('task_id', task_id);
+                  form_Data.append('project_id', this.project_id);
+                  form_Data.append('stage_id', this.stage_id);
                   form_Data.append('message', comment.trim());
                   form_Data.append('type', 'comment');
 

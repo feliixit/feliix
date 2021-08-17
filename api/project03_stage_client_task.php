@@ -150,9 +150,53 @@ else
               // get database connection
             $uid = $user_id;
             $stage_id = (isset($_POST['stage_id']) ?  $_POST['stage_id'] : 0);
+            $project_id = (isset($_POST['project_id']) ?  $_POST['project_id'] : 0);
             $type = (isset($_POST['type']) ?  $_POST['type'] : '');
             $message = (isset($_POST['message']) ?  $_POST['message'] : '');
          
+            $query = "SELECT stage
+                        FROM   project_stages
+                                LEFT JOIN project_stage
+                                        ON project_stage.id = project_stages.stage_id
+                        WHERE  project_stages.project_id = " . $project_id . "
+                        AND project_stages.stages_status_id = 1
+                        ORDER  BY `sequence` DESC limit 1
+                    ";
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+            $stage = "";
+          
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $stage = $row['stage'];
+             }
+        
+             if($stage == 'Client')
+             {
+                 $query = "update project_main set last_client_stage_id = " . $stage_id . 
+                                                " , last_client_created_id = '" . $user_id . "' ". 
+                                                " , last_client_created_at = now() where id = " . $project_id;
+
+                $stmt = $db->prepare($query);
+
+                try {
+                    // execute the query, also check if query was successful
+                    if ($stmt->execute()) {
+             
+                    }
+                    else
+                    {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                    }
+                }
+                catch (Exception $e)
+                {
+                    error_log($e->getMessage());
+                }
+             }
 
              
             $query = "INSERT INTO project_stage_client_task
