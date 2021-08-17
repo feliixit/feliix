@@ -497,19 +497,23 @@ echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
 
 
 function GetRecentPost($project_id, $db, $key){
-    $query = "
-    SELECT  u.username, pc.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task pc left join user u on u.id = pc.create_id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
-    UNION ALL
-    SELECT  u.username, pt.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
+
+    // $query = "
+    // SELECT  u.username, pc.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task pc left join user u on u.id = pc.create_id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
+    // UNION ALL
+    // SELECT  u.username, pt.created_at, CONCAT('project03_client?sid=', pc.stage_id) `url` FROM project_stage_client_task_comment pt left join user u on u.id = pt.create_id LEFT JOIN project_stage_client_task pc ON pt.task_id = pc.id LEFT JOIN project_stages p ON pc.stage_id = p.id where p.project_id = " . $project_id . " and pc.status <> -1 
     
-    ";
+    // ";
+
+    $query = "SELECT last_client_stage_id, username, last_client_created_at from project_main 
+                left join user on user.id = project_main.last_client_created_id where project_main.id = " . $project_id;
 
     // prepare the query
     $stmt = $db->prepare($query);
     $stmt->execute();
 
     $merged_results = [];
-    $filter_result = [];
+    //$filter_result = [];
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $merged_results[] = $row;
@@ -527,28 +531,28 @@ function GetRecentPost($project_id, $db, $key){
     //     }
     // }
     // else
-        $filter_result = $merged_results;
+        //$filter_result = $merged_results;
 
-    $sorted_result = [];
+    // $sorted_result = [];
 
-    if(count($filter_result) > 0)
-    {
-        usort($filter_result, function ($item1, $item2) {
-            return $item2['created_at'] <=> $item1['created_at'];
-        });
+    // if(count($filter_result) > 0)
+    // {
+    //     usort($filter_result, function ($item1, $item2) {
+    //         return $item2['created_at'] <=> $item1['created_at'];
+    //     });
     
-        foreach ($filter_result as $arr)
-        {
-            $sorted_result[] = array(
-                "created_at" => $arr['created_at'],
-                "username" => $arr['username'],
-                "url" => $arr['url'],
+    //     foreach ($filter_result as $arr)
+    //     {
+    //         $sorted_result[] = array(
+    //             "created_at" => $arr['created_at'],
+    //             "username" => $arr['username'],
+    //             "url" => $arr['url'],
              
-            );
+    //         );
          
-            break;
-        }
-    }
+    //         break;
+    //     }
+    // }
 
-    return $sorted_result;
+    return $merged_results;
 }

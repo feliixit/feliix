@@ -1905,3 +1905,13 @@ CREATE TABLE IF NOT EXISTS `access_control` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
 insert into access_control(`payess1`, `payess2`, `payess3`) values('', '', '');
+
+-- project 01 sls  extend 08/17
+ALTER TABLE project_main
+ADD COLUMN `last_client_stage_id` bigint(20)  DEFAULT 0 AFTER billing_name;
+
+ALTER TABLE project_main
+ADD COLUMN `last_client_created_id` bigint(20)  DEFAULT 0 AFTER last_client_stage_id;
+
+ALTER TABLE project_main
+ADD COLUMN `last_client_created_at` timestamp DEFAULT CURRENT_TIMESTAMP AFTER last_client_created_id;
