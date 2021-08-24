@@ -385,6 +385,7 @@ $(function(){
                                             <option value="3">
                                                 Estimated Closing Prob.
                                             </option>
+                                            <option value="4">Client Stage's Recent Message</option>
                                         </select>
                                     </dd>
                                 </div>
@@ -417,6 +418,7 @@ $(function(){
                                             <option value="3">
                                                 Estimated Closing Prob.
                                             </option>
+                                            <option value="4">Client Stage's Recent Message</option>
                                         </select>
                                     </dd>
                                 </div>
@@ -521,7 +523,7 @@ $(function(){
                      <li>{{ receive_record.username }}</li>
                      <li>{{ receive_record.created_at }} ~ {{ receive_record.updated_at }}</li>
                      <li>{{ receive_record.stage }}</li>
-                     <li v-if="receive_record.recent[0].last_client_stage_id != 0"><a v-bind:href="'project03_client?sid=' + receive_record.recent[0].last_client_stage_id" target="_blank">{{ receive_record.recent[0].last_client_created_at}} {{ receive_record.recent[0].username }}</a></li>
+                     <li style="text-align: left;" v-if="receive_record.recent[0].last_client_stage_id != 0"><a v-bind:href="'project03_client?sid=' + receive_record.recent[0].last_client_stage_id" target="_blank">{{ receive_record.recent[0].last_client_message}} <br> ({{ receive_record.recent[0].username }} at {{ receive_record.recent[0].last_client_created_at}})</a></li>
                    <li v-else></li>
                  </ul>
                 

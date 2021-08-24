@@ -11,6 +11,7 @@ let mainState = {
     is_checked: false,
     id: 0,
     stage: '',
+    order: '',
    
         // paging
     page: 1,
@@ -300,6 +301,7 @@ var app = new Vue({
             } 
 
             formData.append('stage', this.record.stage)
+            formData.append('order', this.record.order)
            
             formData.append('crud', "update");
             formData.append('id', this.record.id);
@@ -356,6 +358,7 @@ var app = new Vue({
 
 
             formData.append('stage', this.stage)
+            formData.append('order', this.order)
            
             formData.append('crud', 'insert')
 
@@ -393,6 +396,7 @@ var app = new Vue({
             this.resetError();
 
             this.stage = '';
+            this.order = '';
             
             if(!$('.block.record').hasClass('show')) 
               $('.block.record').addClass('show');

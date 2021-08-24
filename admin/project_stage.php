@@ -83,6 +83,12 @@ $(function(){
                         
                     </ul>
 
+                    <ul>
+                        <li><b>Stage Order</b></li>
+                        <li style="padding-bottom:10px;"><input type="number" v-model="order" required onfocus="this.placeholder = ''"   onblur="this.placeholder = ''" style="width:100%" ></li>
+                        
+                    </ul>
+
                     <div>
                         <div>
                             <button type="button" @click="cancelReceiveRecord($event)"><p>CLEAR</p></button>
@@ -100,6 +106,14 @@ $(function(){
                         
                     </ul>
 
+                    <ul>
+                        <li>
+                            <b>Stage Order</b>
+                        </li>
+                        <li style="padding-bottom:10px;"><input type="number" v-model="record.order" required onfocus="this.placeholder = ''"  onblur="this.placeholder = ''" style="width: 100%"></li>
+                        
+                    </ul>
+
                     <div>
                         <div>
                             <button type="button" @click="cancelReceiveRecord($event)"><p>CANCEL</p></button>
@@ -114,12 +128,13 @@ $(function(){
                     <ul class="head">
                     <li><i class="micons">view_list</i></li>
                         <li style="font-size:10px;">Project Priority</li>
+                        <li style="font-size:10px;">Stage Order</li>
    
                     </ul>
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1" v-model:checked="record.is_checked"></li>
                         <li style="font-size:10px;">{{record.stage}}</li>
-                       
+                        <li style="font-size:10px;">{{record.order}}</li>
                     </ul>
                     
                 </div>

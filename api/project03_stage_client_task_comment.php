@@ -186,6 +186,7 @@ else
              {
                  $query = "update project_main set last_client_stage_id = " . $stage_id . 
                                                 " , last_client_created_id = '" . $user_id . "' ". 
+                                                " , last_client_message = '" . substr($message, 0, 512) . "' ". 
                                                 " , last_client_created_at = now() where id = " . $project_id;
 
                 $stmt = $db->prepare($query);

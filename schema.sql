@@ -2049,3 +2049,29 @@ insert into accessory_category_attribute(cat_id, level, category, create_id) val
 insert into accessory_category_attribute(cat_id, level, category, create_id) values('20050002', 3, 'Brackets', 1);
 insert into accessory_category_attribute(cat_id, level, category, create_id) values('20050003', 3, 'Partition Clamp', 1);
 insert into accessory_category_attribute(cat_id, level, category, create_id) values('20050004', 3, 'Raceway', 1);
+
+
+-- recent message text
+ALTER TABLE project_main
+ADD COLUMN `last_client_message` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER last_client_created_id;
+
+-- add project stage
+ALTER TABLE project_stage
+ADD COLUMN `order` int DEFAULT 0;
+
+INSERT into project_stage(stage) VALUES('Proposal - Mock up');
+INSERT into project_stage(stage) VALUES('Proposal - Presentation');
+INSERT into project_stage(stage) VALUES('Proposal - Inquiry');
+
+update project_stage set `order`= 1 where stage = 'Client';
+update project_stage set `order`= 2 where stage = 'Proposal';
+update project_stage set `order`= 3 where stage = 'Proposal - Mock up';
+update project_stage set `order`= 4 where stage = 'Proposal - Presentation';
+update project_stage set `order`= 5 where stage = 'Proposal - Inquiry';
+update project_stage set `order`= 6 where stage = 'A Meeting / Close Deal';
+update project_stage set `order`= 7 where stage = 'Order';
+update project_stage set `order`= 8 where stage = 'Execution Plan';
+update project_stage set `order`= 9 where stage = 'Delivery';
+update project_stage set `order`= 10 where stage = 'Installation';
+update project_stage set `order`= 11 where stage = 'Client Feedback / After-Sales Service';
+
