@@ -66,6 +66,36 @@
             background-image: url(images/ui/icon_form_select_arrow_gray.svg);
         }
 
+        a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.gray header nav a, body.gray header nav a:link{
+            color: #000;
+        }
+
+        body.gray header nav a:hover{
+            color: #333;
+        }
+
+        body.gray header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
+        body.gray li>input, body.gray td>input {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+        }
+
+        body.gray header nav ul.info{
+            margin-bottom: 0;
+        }
+
+        body.gray header nav ul.info b{
+            font-weight: bold;
+        }
+
         .region {
             margin: 50px 10px 10px;
             padding: 20px 15px 15px;
@@ -84,7 +114,7 @@
             font-weight: 500;
         }
 
-        ul {
+        .mainContent ul {
             margin: 0;
             border-bottom: 1px solid #E2E2E2;
             background-color: #F7F7F7;
@@ -92,32 +122,32 @@
             align-items: center;
         }
 
-        ul.variation_list {
+        .mainContent ul.variation_list {
             align-items: flex-start;
             border-bottom: none;
             background-color: #F0F0F0;
             margin-bottom: 20px;
         }
 
-        ul.variation_list h6 {
+        .mainContent ul.variation_list h6 {
             text-align: center;
         }
 
-        ul.variation_list li:first-of-type {
+        .mainContent ul.variation_list li:first-of-type {
             min-width: 170px;
         }
 
-        ul.variation_list select {
+        .mainContent ul.variation_list select {
             margin-bottom: 10px;
         }
 
-        ul li {
+        .mainContent ul li {
             display: table-cell;
             text-decoration: none;
             padding: 10px;
         }
 
-        ul li:first-of-type {
+        .mainContent ul li:first-of-type {
             width: 20vw;
             min-width: 150px;
             text-align: center;
@@ -125,12 +155,12 @@
             flex-shrink: 0;
         }
 
-        ul li:nth-of-type(2) {
+        .mainContent ul li:nth-of-type(2) {
             flex-grow: 1;
             flex-shrink: 1;
         }
 
-        ul li > input[type='text'] + i{
+        .mainContent ul li > input[type='text'] + i{
             margin-left: 5px;
         }
 

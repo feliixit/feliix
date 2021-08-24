@@ -89,6 +89,14 @@
             border: 1px solid #ced4da;
         }
 
+        body.gray header nav ul.info{
+            margin-bottom: 0;
+        }
+
+        body.gray header nav ul.info b{
+            font-weight: bold;
+        }
+
         .region {
             margin: 50px 10px 10px;
             padding: 20px 15px 15px;
