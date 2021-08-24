@@ -60,9 +60,9 @@ else
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
             if($keyword == 1)
-                $sql = "SELECT 0 as is_checked, id, stage FROM project_stage  where status <> -1 and status <> 2 ".($id ? " and id=$id" : '');
+                $sql = "SELECT 0 as is_checked, id, stage, `order` FROM project_stage  where status <> -1 and status <> 2 ".($id ? " and id=$id" : '');
             else
-            $sql = "SELECT 0 as is_checked, id, stage FROM project_stage  where status <> -1 ".($id ? " and id=$id" : '');
+            $sql = "SELECT 0 as is_checked, id, stage, `order` FROM project_stage  where status <> -1 ".($id ? " and id=$id" : '');
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -71,7 +71,7 @@ else
                 }
             }
 
-            $sql = $sql . " ORDER BY id ";
+            $sql = $sql . " ORDER BY `order` ";
 
             if(!empty($_GET['size'])) {
                 $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
@@ -107,7 +107,7 @@ else
             $user = new ProjectStage($db);
 
             $stage = stripslashes($_POST["stage"]);
-            
+            $order = stripslashes($_POST["order"]);
 
             $crud = isset($_POST["crud"]) ? $_POST["crud"] : "";
             $id = isset($_POST["id"]) ? $_POST["id"] : 0;
@@ -117,6 +117,7 @@ else
               case 'insert':
             /* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
                 $user->stage = $stage;
+                $user->order = $order;
                
                 $user->create();
 
@@ -124,6 +125,7 @@ else
 
             case "update":
                 $user->stage = $stage;
+                $user->order = $order;
               
                     $user->id = $id;
 

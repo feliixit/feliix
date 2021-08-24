@@ -163,6 +163,12 @@ if($op1 != "" && $op1 != "0")
             else
                 $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) ";
             break;  
+        case 4:
+                if($od1 == 2)
+                    $sOrder = " case when last_client_created_id = 0 THEN '0000-00-00' ELSE pm.last_client_created_at end desc ";
+                else
+                    $sOrder = " case when last_client_created_id = 0 THEN '9999-99-99' ELSE pm.last_client_created_at end   ";
+                break;  
         
         default:
     }
@@ -190,6 +196,12 @@ if($op2 != "" && $op2 != "0" && $sOrder != "")
             else
                 $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) ";
             break;  
+        case 4:
+                if($od2 == 2)
+                    $sOrder = " case when last_client_created_id = 0 THEN '0000-00-00' ELSE pm.last_client_created_at end desc ";
+                else
+                    $sOrder = " case when last_client_created_id = 0 THEN '9999-99-99' ELSE pm.last_client_created_at end ";
+                break;  
         
         default:
     }
@@ -505,7 +517,7 @@ function GetRecentPost($project_id, $db, $key){
     
     // ";
 
-    $query = "SELECT last_client_stage_id, username, last_client_created_at from project_main 
+    $query = "SELECT last_client_stage_id, username, last_client_created_at, last_client_message from project_main 
                 left join user on user.id = project_main.last_client_created_id where project_main.id = " . $project_id;
 
     // prepare the query

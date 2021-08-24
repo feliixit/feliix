@@ -9,6 +9,7 @@ class ProjectStage{
     // object properties
     public $id;
     public $stage;
+    public $order;
     public $status;
  
  
@@ -23,7 +24,8 @@ class ProjectStage{
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
                 SET
-                    stage = :stage
+                    stage = :stage,
+                    `order` = :order
                   ";
     
         // prepare the query
@@ -34,7 +36,7 @@ class ProjectStage{
      
         // bind the values
         $stmt->bindParam(':stage', $this->stage);
-     
+        $stmt->bindParam(':order', $this->order);
 
     
         // execute the query, also check if query was successful
@@ -81,7 +83,8 @@ class ProjectStage{
 
         $query = "UPDATE " . $this->table_name . "
                 SET
-                    stage = :stage
+                    stage = :stage,
+                    `order` = :order
                 WHERE id = :id";
     
         // prepare the query
@@ -93,6 +96,7 @@ class ProjectStage{
     
         // bind the values from the form
         $stmt->bindParam(':stage', $this->stage);
+        $stmt->bindParam(':order', $this->order);
        
 
         // unique ID of record to be edited

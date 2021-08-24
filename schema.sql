@@ -1915,3 +1915,163 @@ ADD COLUMN `last_client_created_id` bigint(20)  DEFAULT 0 AFTER last_client_stag
 
 ALTER TABLE project_main
 ADD COLUMN `last_client_created_at` timestamp DEFAULT CURRENT_TIMESTAMP AFTER last_client_created_id;
+
+-- 2021/08/18 product
+CREATE TABLE IF NOT EXISTS `product_category` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `category` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sub_category` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brand` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `code` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `price_ntd` decimal(10, 2),
+  `price` decimal(10, 2),
+  `description` TEXT COLLATE utf8mb4_unicode_ci,
+  `photo1` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo2` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo3` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `accessory_mode` int DEFAULT 0,
+  `attributes` TEXT COLLATE utf8mb4_unicode_ci,
+  `variation_mode` int DEFAULT 0,
+  `variation` TEXT COLLATE utf8mb4_unicode_ci,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `deleted_id` int(11) DEFAULT 0,
+  `deleted_time` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `product` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `category_id` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `product_id` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `1st_variation` TEXT COLLATE utf8mb4_unicode_ci,
+  `2rd_variation` TEXT COLLATE utf8mb4_unicode_ci,
+  `3th_variation` TEXT COLLATE utf8mb4_unicode_ci,
+  `code` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `price_ntd` decimal(10, 2),
+  `price` decimal(10, 2),
+  `enabled` int DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `deleted_id` int(11) DEFAULT 0,
+  `deleted_time` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `accessory` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `category_id` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `product_id` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `accessory_type` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `code` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `accessory_name` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `price_ntd` decimal(10, 2),
+  `price` decimal(10, 2),
+  `enabled` int DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `deleted_id` int(11) DEFAULT 0,
+  `deleted_time` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+CREATE TABLE IF NOT EXISTS `accessory_category_attribute` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `cat_id` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `level` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `category` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10000000', 1, 'Lighting', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20000000', 1, 'Systems Furniture', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10010000', 2, 'Indoor', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10020000', 2, 'Outdoor', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10030000', 2, 'Accessory', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20010000', 2, 'Cabinet', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20020000', 2, 'Chair', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030000', 2, 'Table', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040000', 2, 'Workstation', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20050000', 2, 'Partition', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10010001', 3, 'Lens Finish', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10010002', 3, 'Diffuser Finish', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10010003', 3, 'Reflector Color', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10010003', 3, 'Led Driver', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10020001', 3, 'Lens Finish', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10020002', 3, 'Diffuser Finish', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10020003', 3, 'Reflector Color', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10020003', 3, 'Led Driver', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10030001', 3, 'Lens Finish', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10030002', 3, 'Diffuser Finish', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10030003', 3, 'Reflector Color', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('10030003', 3, 'Led Driver', 1);
+
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030001', 3, 'Socket Integration Box', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030002', 3, 'Rectangular Grommet with Brush', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030003', 3, 'Circular Grommet', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030004', 3, 'Vertical Cable Management', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030005', 3, 'Metal Wiretray', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030006', 3, 'CPU Holder', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030007', 3, 'Pencil Tray', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20030008', 3, 'Keyboard Tray', 1);
+
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040001', 3, 'Socket Integration Box', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040002', 3, 'Rectangular Grommet with Brush', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040003', 3, 'Circular Grommet', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040004', 3, 'Vertical Cable Management', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040005', 3, 'Metal Wiretray', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040006', 3, 'CPU Holder', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040007', 3, 'Pencil Tray', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040008', 3, 'Keyboard Tray', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040009', 3, 'Partition Clamp', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040010', 3, 'Brackets', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20040011', 3, 'Connector', 1);
+
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20050001', 3, 'Connector', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20050002', 3, 'Brackets', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20050003', 3, 'Partition Clamp', 1);
+insert into accessory_category_attribute(cat_id, level, category, create_id) values('20050004', 3, 'Raceway', 1);
+
+
+-- recent message text
+ALTER TABLE project_main
+ADD COLUMN `last_client_message` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER last_client_created_id;
+
+-- add project stage
+ALTER TABLE project_stage
+ADD COLUMN `order` int DEFAULT 0;
+
+INSERT into project_stage(stage) VALUES('Proposal - Mock up');
+INSERT into project_stage(stage) VALUES('Proposal - Presentation');
+INSERT into project_stage(stage) VALUES('Proposal - Inquiry');
+
+update project_stage set `order`= 1 where stage = 'Client';
+update project_stage set `order`= 2 where stage = 'Proposal';
+update project_stage set `order`= 3 where stage = 'Proposal - Mock up';
+update project_stage set `order`= 4 where stage = 'Proposal - Presentation';
+update project_stage set `order`= 5 where stage = 'Proposal - Inquiry';
+update project_stage set `order`= 6 where stage = 'A Meeting / Close Deal';
+update project_stage set `order`= 7 where stage = 'Order';
+update project_stage set `order`= 8 where stage = 'Execution Plan';
+update project_stage set `order`= 9 where stage = 'Delivery';
+update project_stage set `order`= 10 where stage = 'Installation';
+update project_stage set `order`= 11 where stage = 'Client Feedback / After-Sales Service';
+
