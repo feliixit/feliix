@@ -538,6 +538,12 @@
 
         }
 
+        input[type="checkbox"] {
+            display:block !important;
+            width: 13px !important;
+            height: 13px !important;
+          
+        }
 
     </style>
 
@@ -949,7 +955,7 @@
                         <tbody>
                         <tr v-for="(item, index) in special_infomation_detail">
                             <td>{{ item.option }}</td>
-                            <td><input type="checkbox" name="apply_special_infomation_1" :value="item.option"></td>
+                            <td><input type="checkbox"  name="apply_special_infomation_1" :value="item.option"></td>
                         </tr>
                         
                         </tbody>
