@@ -194,7 +194,7 @@ function GetLevel3($cat_id, $db){
 
 
 function GetDetail($cat_id, $db){
-    $sql = "SELECT cat_id, sn, option FROM product_category_attribute_detail WHERE cat_id = '". $cat_id . "' and STATUS <> -1";
+    $sql = "SELECT cat_id, sn, `option` FROM product_category_attribute_detail WHERE cat_id = '". $cat_id . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY sn ";
 
