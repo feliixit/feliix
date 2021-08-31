@@ -8,12 +8,15 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
+$id = (isset($_POST['id']) ? $_POST['id'] : 0);
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 $brand = (isset($_POST['brand']) ?  $_POST['brand'] : '');
 $code = (isset($_POST['code']) ?  $_POST['code'] : '');
 $price_ntd = (isset($_POST['price_ntd']) ?  $_POST['price_ntd'] : '');
+$price_org = (isset($_POST['price_org']) ?  $_POST['price_org'] : '');
 $price_ntd_change = (isset($_POST['price_ntd_change']) ?  $_POST['price_ntd_change'] : '');
+$price_ntd_org = (isset($_POST['price_ntd_org']) ?  $_POST['price_ntd_org'] : '');
 $price = (isset($_POST['price']) ?  $_POST['price'] : '');
 $price_change = (isset($_POST['price_change']) ?  $_POST['price_change'] : '');
 $description = (isset($_POST['description']) ?  $_POST['description'] : '');
@@ -71,40 +74,36 @@ else
         // now you can apply
         $uid = $user_id;
     
-        $query = "INSERT INTO product_category
+        $query = "update product_category
         SET
-            `category` = :category,
-            `sub_category` = :sub_category,
             `brand` = :brand,
             `code` = :code,
             `price_ntd` = :price_ntd,
             `price` = :price, ";
+            if($price_ntd != $price_ntd_org)
+            {
+                $query .= "`price_ntd_change` = now(), ";
+            }
+            
+            if($price != $price_org)
+            {
+                $query .= "`price_change` = now(), ";
+            }
 
-if($price_ntd != '')
-{
-    $query .= "`price_ntd_change` = now(), ";
-}
-
-if($price != '')
-{
-    $query .= "`price_change` = now(), ";
-}
-        $query .= "
-            `description` = :description,
+            $query .= "`description` = :description,
             `notes` = :notes,
             `accessory_mode` = :accessory_mode,
             `variation_mode` = :variation_mode,
             `attributes` = :attributes,
             `status` = 1,
-            `create_id` = :create_id,
-            `created_at` = now()";
+            `updated_id` = :updated_id,
+            `updated_at` = now() 
+            where id = :id";
 
         // prepare the query
         $stmt = $db->prepare($query);
 
         // bind the values
-        $stmt->bindParam(':category', $category);
-        $stmt->bindParam(':sub_category', $sub_category);
         $stmt->bindParam(':brand', $brand);
         $stmt->bindParam(':code', $code);
         $stmt->bindParam(':price_ntd', $price_ntd);
@@ -114,14 +113,15 @@ if($price != '')
         $stmt->bindParam(':accessory_mode', $accessory_mode);
         $stmt->bindParam(':variation_mode', $variation_mode);
         $stmt->bindParam(':attributes', $attributes);
-        $stmt->bindParam(':create_id', $user_id);
+        $stmt->bindParam(':updated_id', $user_id);
+        $stmt->bindParam(':id', $id);
 
-        $last_id = 0;
+        $last_id = $id;
         // execute the query, also check if query was successful
         try {
             // execute the query, also check if query was successful
             if ($stmt->execute()) {
-                $last_id = $db->lastInsertId();
+
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);
@@ -161,6 +161,35 @@ if($price != '')
         }
 
         $product_id = $last_id;
+
+        // delete accessory
+        $query = "DELETE FROM accessory
+        WHERE
+        `product_id` = :product_id";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':product_id', $product_id);
+
+        try {
+            // execute the query, also check if query was successful
+            if (!$stmt->execute()) {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                die();
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
+        }
 
         // accessory
         for ($i = 0; $i < count($accessory_array); $i++) {
@@ -231,9 +260,43 @@ if($price != '')
                     if($update_name != "")
                         UpdateImageNameAccessory($update_name, $batch_id, $db);
                 }
+                elseif($detail[$j]['photo'] != "")
+                {
+                    UpdateImageNameAccessory($detail[$j]['photo'], $batch_id, $db);
+                }
             }
             
         }
+
+        // delete accessory
+        $query = "DELETE FROM product
+        WHERE
+        `product_id` = :product_id";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':product_id', $product_id);
+
+        try {
+            // execute the query, also check if query was successful
+            if (!$stmt->execute()) {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                die();
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
+        }
+
 
         // variation
         for ($i = 0; $i < count($variation_array); $i++) {
@@ -247,6 +310,9 @@ if($price != '')
             $v3 = $variation_array[$i]['v3'];
             $price = $variation_array[$i]['price'];
             $price_ntd = $variation_array[$i]['price_ntd'];
+            $price_org = $variation_array[$i]['price_org'];
+            $price_ntd_org = $variation_array[$i]['price_ntd_org'];
+            $photo = $variation_array[$i]['photo'];
             $enabled = $variation_array[$i]['status'];
             $category_id = '';
 
@@ -264,17 +330,18 @@ if($price != '')
                 `code` = :code,
                 `price_ntd` = :price_ntd,
                 `price` = :price, ";
-if($price_ntd != '')
-{
-    $query .= "`price_ntd_change` = now(), ";
-}
+                if($price_ntd != $price_ntd_org)
+                {
+                    $query .= "`price_ntd_change` = now(), ";
+                }
+                
+                if($price != $price_org)
+                {
+                    $query .= "`price_change` = now(), ";
+                }
 
-if($price != '')
-{
-    $query .= "`price_change` = now(), ";
-}
-            $query .= "
-                `enabled` = :enabled,    
+                $query .= "`enabled` = :enabled,
+                
                 `status` = 0,
                 `create_id` = :create_id,
                 `created_at` = now()";
@@ -325,6 +392,10 @@ if($price != '')
                 $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
                 if($update_name != "")
                     UpdateImageNameVariation($update_name, $batch_id, $db);
+            }
+            elseif($photo != "")
+            {
+                UpdateImageNameVariation($photo, $batch_id, $db);
             }
         }
             

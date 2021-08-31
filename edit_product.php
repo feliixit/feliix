@@ -563,7 +563,7 @@
 
         <ul>
                 <li>
-                    <h4>Add New Product</h4>
+                    <h4>Edit Product</h4>
                 </li>
 
                 <li v-if="edit_mode == true">
@@ -723,7 +723,7 @@
                     {{ item.category }}
                 </li>
                 <li>
-                    <input type="text" class="form-control one_half" :ref="item.cat_id">
+                    <input type="text" class="form-control one_half" :ref="item.cat_id" :value="item.value">
                     <i class="fas fa-hand-pointer" @click="get_special_infomation_detail(item.cat_id)"></i>
                 </li>
             </ul>
@@ -1402,7 +1402,7 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 
-<script src="js/add_product.js"></script>
+<script src="js/edit_product.js"></script>
 
 <script>
 

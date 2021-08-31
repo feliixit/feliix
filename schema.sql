@@ -2075,3 +2075,26 @@ update project_stage set `order`= 9 where stage = 'Delivery';
 update project_stage set `order`= 10 where stage = 'Installation';
 update project_stage set `order`= 11 where stage = 'Client Feedback / After-Sales Service';
 
+-- 08/27
+ALTER TABLE product_category
+ADD COLUMN `notes` TEXT COLLATE utf8mb4_unicode_ci AFTER description;
+
+ALTER TABLE product_category
+ADD COLUMN `price_ntd_change` timestamp NULL AFTER price_ntd;
+
+ALTER TABLE product_category
+ADD COLUMN `price_change` timestamp NULL AFTER price;
+
+ALTER TABLE product
+ADD COLUMN `price_ntd_change` timestamp NULL AFTER price_ntd;
+
+ALTER TABLE product
+ADD COLUMN `price_change` timestamp NULL AFTER price;
+
+ALTER TABLE product MODIFY COLUMN price_ntd decimal(10, 2) NULL;
+
+ALTER TABLE product MODIFY COLUMN price decimal(10, 2) NULL;
+
+ALTER TABLE accessory MODIFY COLUMN price_ntd decimal(10, 2) NULL;
+
+ALTER TABLE accessory MODIFY COLUMN price decimal(10, 2) NULL;
