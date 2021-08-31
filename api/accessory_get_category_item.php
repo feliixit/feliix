@@ -101,7 +101,7 @@ else
       }
 
 function GetLevel2($cat_id, $db){
-    $sql = "SELECT * FROM accessory_category_attribute WHERE LEVEL = 2 AND left(cat_id, 1) = ". substr($cat_id, 0, 1) . " and STATUS <> -1";
+    $sql = "SELECT * FROM accessory_category_attribute WHERE LEVEL = 2 AND left(cat_id, 1) = '". substr($cat_id, 0, 1) . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY cat_id ";
 
@@ -147,7 +147,7 @@ function GetLevel2($cat_id, $db){
 }
 
 function GetLevel3($cat_id, $db){
-    $sql = "SELECT * FROM accessory_category_attribute WHERE LEVEL = 3 AND left(cat_id, 4) = ". substr($cat_id, 0, 4) . " and STATUS <> -1";
+    $sql = "SELECT * FROM accessory_category_attribute WHERE LEVEL = 3 AND left(cat_id, 4) = '". substr($cat_id, 0, 4) . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY cat_id ";
 
@@ -195,7 +195,7 @@ function GetLevel3($cat_id, $db){
 
 function GetDetail($cat_id, $db){
 
-    $sql = "SELECT id, category_id, product_id, accessory_type, code, accessory_name, price_ntd, price FROM accessory WHERE 1 = 0 and category_id = ". $cat_id . " and STATUS <> -1";
+    $sql = "SELECT id, category_id, product_id, accessory_type, code, accessory_name, price_ntd, price FROM accessory WHERE 1 = 0 and category_id = '". $cat_id . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY id ";
 

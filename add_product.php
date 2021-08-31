@@ -84,9 +84,18 @@
             font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
         }
 
-        body.gray li>input, body.gray td>input {
+        body.gray li > input:not([type='checkbox']), body.gray td > input:not([type='checkbox']) {
             background-color: #fff;
             border: 1px solid #ced4da;
+        }
+
+        body.gray input.alone[type=checkbox]::before{
+            color: rgb(118,118,118);
+            font-size: 20px;
+        }
+
+        body.gray input.alone[type=checkbox]:checked::before {
+            color: rgb(0,117,255);
         }
 
         body.gray header nav ul.info{
@@ -537,8 +546,6 @@
         .NTD_price{
 
         }
-
-
     </style>
 
 </head>
@@ -845,7 +852,7 @@
                 <table id="tb_product_variants" class="table_template">
                     <thead>
                     <tr>
-                        <th><input type="checkbox" value="1" @click="toggle_product()" id="select_all_product"></th>
+                        <th><input class="alone" type="checkbox" value="1" @click="toggle_product()" id="select_all_product"></th>
                         <th>{{ variation1_text }}</th>
                         <th>{{ variation2_text }}</th>
                         <th>{{ variation3_text }}</th>
@@ -859,7 +866,7 @@
 
                     <tbody>
                     <tr v-for="(item, index) in variation_product" >
-                        <td><input type="checkbox" value="1" v-model="item.checked"></td>
+                        <td><input class="alone" type="checkbox" value="1" v-model="item.checked"></td>
                         <td>{{ item.v1 }}</td>
                         <td>{{ item.v2 }}</td>
                         <td>{{ item.v3 }}</td>
@@ -949,7 +956,7 @@
                         <tbody>
                         <tr v-for="(item, index) in special_infomation_detail">
                             <td>{{ item.option }}</td>
-                            <td><input type="checkbox" name="apply_special_infomation_1" :value="item.option"></td>
+                            <td><input class="alone" type="checkbox"  name="apply_special_infomation_1" :value="item.option"></td>
                         </tr>
                         
                         </tbody>
@@ -985,7 +992,7 @@
                         <tbody>
                         <tr v-for="(item, index) in special_infomation_detail">
                             <td>{{ item.option }}</td>
-                            <td><input type="checkbox" name="apply_special_infomation_2" :value="item.option"></td>
+                            <td><input class="alone" type="checkbox" name="apply_special_infomation_2" :value="item.option"></td>
                         </tr>
                         
                         </tbody>
@@ -1021,7 +1028,7 @@
                         <tbody>
                         <tr v-for="(item, index) in special_infomation_detail">
                             <td>{{ item.option }}</td>
-                            <td><input type="checkbox" name="apply_special_infomation_3" :value="item.option"></td>
+                            <td><input class="alone" type="checkbox" name="apply_special_infomation_3" :value="item.option"></td>
                         </tr>
                         
                         </tbody>
@@ -1053,7 +1060,7 @@
                     <table id="tb_bulk_apply" class="table_template">
                         <thead>
                         <tr>
-                            <th><input type="checkbox" @click="bulk_toggle_product()" id="bulk_select_all_product"></th>
+                            <th><input class="alone" type="checkbox" @click="bulk_toggle_product()" id="bulk_select_all_product"></th>
                             <th>Column</th>
                             <th>Parameter</th>
                             <th>Operator</th>
@@ -1062,7 +1069,7 @@
 
                         <tbody>
                         <tr>
-                            <td><input type="checkbox" value="1" v-model="code_checked"></td>
+                            <td><input class="alone" type="checkbox" value="1" v-model="code_checked"></td>
                             <td>Code</td>
                             <td><input type="text" class="form-control" v-model='bulk_code'></td>
                             <td>
@@ -1071,7 +1078,7 @@
                         </tr>
 
                         <tr class="NTD_price">
-                            <td><input type="checkbox" value="1" v-model="price_ntd_checked"></td>
+                            <td><input class="alone" type="checkbox" value="1" v-model="price_ntd_checked"></td>
                             <td>Price (NTD)</td>
                             <td><input type="text" class="form-control" v-model='bulk_price_ntd'></td>
                             <td>
@@ -1084,7 +1091,7 @@
                         </tr>
 
                         <tr>
-                            <td><input type="checkbox" value="1" v-model="price_checked"></td>
+                            <td><input class="alone" type="checkbox" value="1" v-model="price_checked"></td>
                             <td>Price</td>
                             <td><input type="text" class="form-control" v-model='bulk_price'></td>
                             <td>
@@ -1097,7 +1104,7 @@
                         </tr>
 
                         <tr>
-                            <td><input type="checkbox" value="1" v-model="image_checked"></td>
+                            <td><input class="alone" type="checkbox" value="1" v-model="image_checked"></td>
                             <td>Image</td>
                             <td>
                                 <div :class="['itembox', (bulk_url !== '' ? 'chosen' : '')]" >
@@ -1117,7 +1124,7 @@
                         </tr>
 
                         <tr>
-                            <td><input type="checkbox" value="1" v-model="status_checked"></td>
+                            <td><input class="alone" type="checkbox" value="1" v-model="status_checked"></td>
                             <td>Status</td>
                             <td>
                                 <select class="form-control" v-model="bulk_status">
