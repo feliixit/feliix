@@ -270,6 +270,7 @@
             box-sizing: border-box;
             width: 200px;
             margin-top: 5px;
+            border: 1px dashed #3FA4F4;
         }
 
         .itembox > div > i.fa-trash-alt {
