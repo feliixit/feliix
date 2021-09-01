@@ -79,12 +79,12 @@ else
             `brand` = :brand,
             `code` = :code, ";
 
-            if($price_ntd != '')
+            if($price_ntd != '' && !is_null($price_ntd))
             {
                 $query .= "`price_ntd` = :price_ntd, ";
             }
 
-            if($price != '')
+            if($price != '' && !is_null($price))
             {
                 $query .= "`price` = :price, ";
             }
@@ -116,12 +116,12 @@ else
         $stmt->bindParam(':brand', $brand);
         $stmt->bindParam(':code', $code);
 
-        if($price_ntd != '')
+        if($price_ntd != '' && !is_null($price_ntd))
         {
             $stmt->bindParam(':price_ntd', $price_ntd);
         }
 
-        if($price != '')
+        if($price != '' && !is_null($price))
         {
             $stmt->bindParam(':price', $price);
         }
@@ -224,11 +224,11 @@ else
                     `accessory_type` = :accessory_type,
                     `code` = :code,
                     `accessory_name` = :accessory_name, ";
-                if($detail[$j]['price_ntd'] != '')
+                if($detail[$j]['price_ntd'] != '' && !is_null($detail[$j]['price_ntd']))
                 {
                     $query .= "`price_ntd` = :price_ntd, ";
                 }
-                if($detail[$j]['price'] != '')
+                if($detail[$j]['price'] != '' && !is_null($detail[$j]['price']))
                 {
                     $query .= "`price` = :price, ";
                 }
@@ -248,11 +248,11 @@ else
                 $stmt->bindParam(':accessory_type', $category);
                 $stmt->bindParam(':code', $detail[$j]['code']);
                 $stmt->bindParam(':accessory_name', $detail[$j]['name']);
-                if($detail[$j]['price_ntd'] != '')
+                if($detail[$j]['price_ntd'] != '' && !is_null($detail[$j]['price_ntd']))
                 {
                     $stmt->bindParam(':price_ntd', $detail[$j]['price_ntd']);
                 }
-                if($detail[$j]['price'] != '')
+                if($detail[$j]['price'] != '' && !is_null($detail[$j]['price']))
                 {
                     $stmt->bindParam(':price', $detail[$j]['price']);
                 }
@@ -359,12 +359,12 @@ else
                 `2rd_variation` = :2rd_variation,
                 `3th_variation` = :3th_variation,
                 `code` = :code, ";
-                if($price_ntd != '')
+                if($price_ntd != '' && !is_null($price_ntd))
                 {
                     $query .= "`price_ntd` = :price_ntd, ";
                 }
 
-                if($price_ntd != '')
+                if($price != '' && !is_null($price))
                 {
                     $query .= "`price` = :price, ";
                 }
@@ -395,11 +395,11 @@ else
             $stmt->bindParam(':2rd_variation', $rd_variation);
             $stmt->bindParam(':3th_variation', $th_variation);
             $stmt->bindParam(':code', $code);
-            if($price_ntd != '')
+            if($price_ntd != '' && !is_null($price_ntd))
             {
                 $stmt->bindParam(':price_ntd', $price_ntd);
             }
-            if($price != '')
+            if($price != '' && !is_null($price))
             {
                 $stmt->bindParam(':price', $price);
             }
