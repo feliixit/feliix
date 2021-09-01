@@ -330,6 +330,7 @@ var app = new Vue({
         name: "",
         price_ntd: "",
         price: "",
+        photo:"",
       };
 
       items.push(item);
