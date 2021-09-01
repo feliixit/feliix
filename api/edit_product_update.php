@@ -232,7 +232,7 @@ else
                 {
                     $query .= "`price` = :price, ";
                 }
-                $quer .= "
+                $query .= "
                     `enabled` = :enabled,
                    
                     `status` = 0,
