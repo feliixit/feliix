@@ -76,9 +76,16 @@ else
             `category` = :category,
             `sub_category` = :sub_category,
             `brand` = :brand,
-            `code` = :code,
-            `price_ntd` = :price_ntd,
-            `price` = :price, ";
+            `code` = :code, ";
+            if($price_ntd != '')
+            {
+                $query .= "`price_ntd` = :price_ntd, ";
+            }
+
+            if($price != '')
+            {
+                $query .= "`price` = :price, ";
+            }
 
 if($price_ntd != '')
 {
@@ -107,8 +114,15 @@ if($price != '')
         $stmt->bindParam(':sub_category', $sub_category);
         $stmt->bindParam(':brand', $brand);
         $stmt->bindParam(':code', $code);
-        $stmt->bindParam(':price_ntd', $price_ntd);
-        $stmt->bindParam(':price', $price);
+        if($price_ntd != '')
+        {
+            $stmt->bindParam(':price_ntd', $price_ntd);
+        }
+
+        if($price != '')
+        {
+            $stmt->bindParam(':price', $price);
+        }
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':notes', $notes);
         $stmt->bindParam(':accessory_mode', $accessory_mode);
@@ -176,9 +190,17 @@ if($price != '')
                     `product_id` = :product_id,
                     `accessory_type` = :accessory_type,
                     `code` = :code,
-                    `accessory_name` = :accessory_name,
-                    `price_ntd` = :price_ntd,
-                    `price` = :price,
+                    `accessory_name` = :accessory_name, ";
+
+                    if($detail[$j]['price_ntd'] != '')
+                    {
+                        $query .= "`price_ntd` = :price_ntd, ";
+                    }
+                    if($detail[$j]['price'] != '')
+                    {
+                        $query .= "`price` = :price, ";
+                    }
+                    $quer .= "
                     `enabled` = :enabled,
                    
                     `status` = 0,
@@ -194,8 +216,14 @@ if($price != '')
                 $stmt->bindParam(':accessory_type', $category);
                 $stmt->bindParam(':code', $detail[$j]['code']);
                 $stmt->bindParam(':accessory_name', $detail[$j]['name']);
-                $stmt->bindParam(':price_ntd', $detail[$j]['price_ntd']);
-                $stmt->bindParam(':price', $detail[$j]['price']);
+                if($detail[$j]['price_ntd'] != '')
+                {
+                    $stmt->bindParam(':price_ntd', $detail[$j]['price_ntd']);
+                }
+                if($detail[$j]['price'] != '')
+                {
+                    $stmt->bindParam(':price', $detail[$j]['price']);
+                }
                 $stmt->bindParam(':enabled', $detail[$j]['enabled']);
                 $stmt->bindParam(':create_id', $uid);
     
@@ -261,9 +289,16 @@ if($price != '')
                 `1st_variation` = :1st_variation,
                 `2rd_variation` = :2rd_variation,
                 `3th_variation` = :3th_variation,
-                `code` = :code,
-                `price_ntd` = :price_ntd,
-                `price` = :price, ";
+                `code` = :code, ";
+                if($price_ntd != '')
+                {
+                    $query .= "`price_ntd` = :price_ntd, ";
+                }
+
+                if($price_ntd != '')
+                {
+                    $query .= "`price` = :price, ";
+                }
 if($price_ntd != '')
 {
     $query .= "`price_ntd_change` = now(), ";
@@ -289,8 +324,14 @@ if($price != '')
             $stmt->bindParam(':2rd_variation', $rd_variation);
             $stmt->bindParam(':3th_variation', $th_variation);
             $stmt->bindParam(':code', $code);
-            $stmt->bindParam(':price_ntd', $price_ntd);
-            $stmt->bindParam(':price', $price);
+            if($price_ntd != '')
+            {
+                $stmt->bindParam(':price_ntd', $price_ntd);
+            }
+            if($price != '')
+            {
+                $stmt->bindParam(':price', $price);
+            }
             $stmt->bindParam(':enabled', $enabled);
             $stmt->bindParam(':create_id', $uid);
 

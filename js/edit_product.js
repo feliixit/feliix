@@ -886,6 +886,8 @@ var app = new Vue({
     },
 
     reset: function() {
+      return;
+
       this.category = "";
       this.sub_category = "";
       this.sub_cateory_item = [];
