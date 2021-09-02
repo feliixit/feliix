@@ -303,7 +303,7 @@ function GetProduct($id, $db){
         $v1 = GetValue($row['1st_variation']);
         $v2 = GetValue($row['2rd_variation']);
         $v3 = GetValue($row['3th_variation']);
-        $checked = 'checked';
+        $checked = '';
         $code = $row['code'];
         $price = $row['price'];
         $price_ntd = $row['price_ntd'];
