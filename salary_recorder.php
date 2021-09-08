@@ -23,6 +23,7 @@ try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
+            $username = $decoded->data->username;
 
             $database = new Database();
             $db = $database->getConnection();
