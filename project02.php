@@ -444,6 +444,15 @@ catch (Exception $e) {
                                         <dd>
                                             <input type="text" v-model="edit_project_name">
                                         </dd>
+                                        <dt class="head">Project Group:</dt>
+                                        <dd>
+                                            <select v-model="edit_group">
+                                                <option value="0"></option>
+                                                <option v-for="(item, index) in project_groups" :value="item.id" :key="item.project_group">
+                                                    {{ item.project_group }}
+                                                </option>
+                                            </select>
+                                        </dd>
                                         <dt class="head">Project Category:</dt>
                                         <dd>
                                             <select v-model="edit_category">
@@ -1010,6 +1019,19 @@ catch (Exception $e) {
                                 receive_record.comment }} <br>
 
                                     ({{ receive_record.username }} at {{ receive_record.created_at }})
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="tablebox lv2a" v-if="title != 'technician'">
+                        <ul class="head">
+                            <li style="text-align: center !important;">Related Projects</li>
+                        </ul>
+                        <ul>
+                            <li class="morespace">
+                                <div v-for='(receive_record, index) in project_relative'>
+                                <a :href="'project02?p=' + receive_record.id" target="_blank" class="attch">• {{ receive_record.project_name }} </a>
                                 </div>
                             </li>
                         </ul>

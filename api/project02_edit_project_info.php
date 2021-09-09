@@ -47,6 +47,7 @@ $uid = $user_id;
 
 $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
 $edit_project_name = (isset($_POST['edit_project_name']) ?  $_POST['edit_project_name'] : '');
+$edit_group = (isset($_POST['edit_group']) ?  $_POST['edit_group'] : 0);
 $edit_category = (isset($_POST['edit_category']) ?  $_POST['edit_category'] : 0);
 $edit_client_type = (isset($_POST['edit_client_type']) ?  $_POST['edit_client_type'] : 0);
 $edit_priority = (isset($_POST['edit_priority']) ?  $_POST['edit_priority'] : 0);
@@ -133,6 +134,7 @@ $query = "INSERT INTO project_edit_info
                 $query = "update project_main
                 SET
                     project_name = :edit_project_name,
+                    group_id = :edit_group,
                     catagory_id = :edit_category,
                     client_type_id = :edit_client_type,
                     priority_id = :edit_priority,
@@ -159,6 +161,7 @@ $query = "INSERT INTO project_edit_info
 
                 $stmt1->bindParam(':project_id', $pid);
                 $stmt1->bindParam(':edit_project_name', $edit_project_name);
+                $stmt1->bindParam(':edit_group', $edit_group);
                 $stmt1->bindParam(':edit_category', $edit_category);
                 $stmt1->bindParam(':edit_client_type', $edit_client_type);
                 $stmt1->bindParam(':edit_priority', $edit_priority);

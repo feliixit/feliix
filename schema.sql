@@ -2135,3 +2135,18 @@ CREATE TABLE IF NOT EXISTS `price_record_salary` (
 
 ALTER TABLE access_control
 ADD COLUMN `salary` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 2021/09/09 project grouping
+ALTER TABLE project_main
+ADD COLUMN `group_id` bigint(20)  DEFAULT 0 AFTER last_client_created_id;
+
+CREATE TABLE IF NOT EXISTS `project_group` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_group` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
