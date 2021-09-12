@@ -188,7 +188,7 @@ catch (Exception $e) {
             <!-- tags js在 main.js -->
             <div class="tags">
                 <a class="tag A" href="monthly_sales_report">Monthly Sales Report</a>
-                <a class="tag B">Monthly Cash Flow Report</a>
+                <a class="tag B" href="monthly_cash_flow_report">Monthly Cash Flow Report</a>
                 <a class="tag C" href="monthly_new_project_report">Monthly New Project Report</a>
                 <a class="tag D focus">Chart</a>
             </div>
