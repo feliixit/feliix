@@ -209,74 +209,73 @@ var app = new Vue({
     
       // chart3 title
       for(var i = 0; i < this.receive_records_c3.length; i++) {
-
-        for(var j = 0; j < this.receive_records_c3[i].report.length; j++) {
-          username = this.receive_records_c3[i].report[j].username;
-          amount = this.receive_records_c3[i].report[j].sub_amount;
-          cnt = this.receive_records_c3[i].report[j].l_catagory.length + this.receive_records_c3[i].report[j].o_catagory.length;
-          const index = this.chart3_title.indexOf(username);
-          if (index === -1) {
-            this.chart3_title.push(username);
-            this.chart3_data1_amount.push(amount);
-            this.chart3_data1_count.push(cnt);
-
-            this.chart3_data2_amount.push(0);
-            this.chart3_data2_count.push(0);
-
-            this.chart3_data3_amount.push(0);
-            this.chart3_data3_count.push(0);
-          }
-          else {
-            this.chart3_data1_amount[index] += amount;
-            this.chart3_data1_count[index] += cnt;
-          }
-        }
-
-        for(var j = 0; j < this.receive_records_c3[i].process.length; j++) {
-          username = this.receive_records_c3[i].process[j].username;
-          amount = this.receive_records_c3[i].process[j].sub_amount;
-          cnt = this.receive_records_c3[i].process[j].l_catagory.length + this.receive_records_c3[i].process[j].o_catagory.length;
+        cnt = this.receive_records_c3[i].cnt;
+        amount = this.receive_records_c3[i].final_amount;
+        pro_status = this.receive_records_c3[i].pro_status;
+        username = this.receive_records_c3[i].username;
+      
           const index = this.chart3_title.indexOf(username);
           if (index === -1) {
             this.chart3_title.push(username);
 
-            this.chart3_data1_amount.push(0);
-            this.chart3_data1_count.push(0);
+            if(pro_status == 'c')
+            {
+              this.chart3_data1_amount.push(amount);
+              this.chart3_data1_count.push(cnt);
 
-            this.chart3_data2_amount.push(amount);
-            this.chart3_data2_count.push(cnt);
+              this.chart3_data2_amount.push(0);
+              this.chart3_data2_count.push(0);
 
-            this.chart3_data3_amount.push(0);
-            this.chart3_data3_count.push(0);
+              this.chart3_data3_amount.push(0);
+              this.chart3_data3_count.push(0);
+            }
+
+            if(pro_status == 'o')
+            {
+              this.chart3_data1_amount.push(0);
+              this.chart3_data1_count.push(0);
+
+              this.chart3_data2_amount.push(amount);
+              this.chart3_data2_count.push(cnt);
+
+              this.chart3_data3_amount.push(0);
+              this.chart3_data3_count.push(0);
+            }
+
+            if(pro_status == 'd')
+            {
+              this.chart3_data1_amount.push(0);
+              this.chart3_data1_count.push(0);
+
+              this.chart3_data2_amount.push(0);
+              this.chart3_data2_count.push(0);
+
+              this.chart3_data3_amount.push(amount);
+              this.chart3_data3_count.push(cnt);
+            }
           }
           else {
-            this.chart3_data2_amount[index] += amount;
-            this.chart3_data2_count[index] += cnt;
+
+            if(pro_status == 'c')
+            {
+              this.chart3_data1_amount[index] += amount;
+              this.chart3_data1_count[index] += cnt;
+            }
+
+            if(pro_status == 'o')
+            {
+              this.chart3_data2_amount[index] += amount;
+              this.chart3_data2_count[index] += cnt;
+            }
+
+            if(pro_status == 'd')
+            {
+              this.chart3_data3_amount[index] += amount;
+              this.chart3_data3_count[index] += cnt;
+            }
           }
         }
 
-        for(var j = 0; j < this.receive_records_c3[i].fail.length; j++) {
-          username = this.receive_records_c3[i].fail[j].username;
-          amount = this.receive_records_c3[i].fail[j].sub_amount;
-          cnt = this.receive_records_c3[i].fail[j].l_catagory.length + this.receive_records_c3[i].fail[j].o_catagory.length;
-          const index = this.chart3_title.indexOf(username);
-          if (index === -1) {
-            this.chart3_title.push(username);
-
-            this.chart3_data1_amount.push(0);
-            this.chart3_data1_count.push(0);
-
-            this.chart3_data2_amount.push(0);
-            this.chart3_data2_count.push(0);
-
-            this.chart3_data3_amount.push(amount);
-            this.chart3_data3_count.push(cnt);
-          }
-          else {
-            this.chart3_data3_amount[index] += amount;
-            this.chart3_data3_count[index] += cnt;
-          }
-        }
 
         for(var i=0; i<this.chart3_title.length; i++) {
     
@@ -296,8 +295,6 @@ var app = new Vue({
             this.chart3_data3_avg.push(0);
 
         }
-
-      };
 
     },
 
@@ -341,7 +338,7 @@ var app = new Vue({
       let token = localStorage.getItem("accessToken");
 
       try {
-        let res = await axios.get("api/monthly_cash_flow_report", {
+        let res = await axios.get("api/monthly_sales_report", {
           params,
           headers: { Authorization: `Bearer ${token}` },
         });
