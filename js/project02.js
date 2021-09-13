@@ -80,7 +80,7 @@ var app = new Vue({
     project_status_reason:'',
 
     // Edit Project Info
-    edit_group:'',
+    edit_group:'0',
     edit_category:'',
     edit_client_type:'',
     edit_priority: '',

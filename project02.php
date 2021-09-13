@@ -447,7 +447,7 @@ catch (Exception $e) {
                                         <dt class="head">Project Group:</dt>
                                         <dd>
                                             <select v-model="edit_group">
-                                                <option value="0"></option>
+                                                <option value="0">Not Belong to Any Group</option>
                                                 <option v-for="(item, index) in project_groups" :value="item.id" :key="item.project_group">
                                                     {{ item.project_group }}
                                                 </option>

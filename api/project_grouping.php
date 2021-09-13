@@ -163,6 +163,33 @@ if (!isset($jwt)) {
                     error_log($e->getMessage());
                 }
 
+                $query = "update project_main
+                SET
+                    group_id = :status
+                    where group_id = :id";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+
+                $status = 0;
+
+                // bind the values
+                $stmt->bindParam(':status', $status);
+                $stmt->bindParam(':id', $id);
+
+                $last_id = 0;
+                // execute the query, also check if query was successful
+                try {
+                    // execute the query, also check if query was successful
+                    if ($stmt->execute()) {
+                    } else {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                }
+
                 $returnArray = array("message" => " Delete success at " . date("Y-m-d") . " " . date("h:i:sa"));
                 $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
 

@@ -51,7 +51,7 @@ $merged_results = array();
 
 $query = "SELECT pm.id,
             Coalesce(pg.project_group, '')              project_group,
-            pg.id                                  group_id,
+            Coalesce(pg.id, 0)                                  group_id,
             Coalesce(pc.category, '')              category,
             pc.id                                  category_id,
             pct.client_type,

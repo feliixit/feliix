@@ -279,6 +279,17 @@ $(function(){
                                     </select>
                                 </dd>
 
+                                <dt>Project Group</dt>
+                                <dd>
+                                    <select v-model="fil_group">
+                                    <option value=""></option>
+                                    <option value="0">Not Belong to Any Group</option>
+                                    <option v-for="item in groups"  :value="item.id" :key="item.project_group">
+                                        {{ item.project_group }}
+                                    </option>
+                                    </select>
+                                </dd>
+
                                 <dt>Project Status</dt>
                                 <dd>
                                     <select v-model="fil_status">
