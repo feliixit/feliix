@@ -221,6 +221,7 @@ function GetReceiveDate($project_id, $db){
                 ON u.id = pm.create_id
         WHERE  project_id = " . $project_id . "
             AND pm.status = 1
+            and pm.received_date <> ''
         order by received_date limit 1
     ";
 
