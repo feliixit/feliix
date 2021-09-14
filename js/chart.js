@@ -258,20 +258,29 @@ var app = new Vue({
 
             if(pro_status == 'c')
             {
-              this.chart3_data1_amount[index] += amount;
-              this.chart3_data1_count[index] += cnt;
+              _amount = this.chart3_data1_amount[index];
+              _cnt = this.chart3_data1_count[index];
+
+              this.chart3_data1_amount[index] = amount + _amount;
+              this.chart3_data1_count[index] = parseInt(_cnt) + parseInt(cnt);
             }
 
             if(pro_status == 'o')
             {
-              this.chart3_data2_amount[index] += amount;
-              this.chart3_data2_count[index] += cnt;
+              _amount = this.chart3_data2_amount[index];
+              _cnt = this.chart3_data2_count[index];
+
+              this.chart3_data2_amount[index]  = amount + _amount;
+              this.chart3_data2_count[index] = parseInt(_cnt) + parseInt(cnt);
             }
 
             if(pro_status == 'd')
             {
-              this.chart3_data3_amount[index] += amount;
-              this.chart3_data3_count[index] += cnt;
+              _amount = this.chart3_data3_amount[index];
+              _cnt = this.chart3_data3_count[index];
+
+              this.chart3_data3_amount[index] = amount + _amount;
+              this.chart3_data3_count[index] = parseInt(_cnt) + parseInt(cnt);
             }
           }
         }

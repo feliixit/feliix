@@ -131,11 +131,12 @@ function GetOneMonth($strDate, $db)
 
 
 function GetMonthSaleReport($PeriodStart, $PeriodEnd, $db){
-    $sql = "SELECT COUNT(*) cnt,
-                sum(Coalesce(pm.final_amount, 0)) final_amount,
+
+    // 失敗專案的定義：專案當前的Status為Disapproved，且專案Status變更為Disapproved的時間點是在2021/01/01 ~ 2021/03/31之內，則該專案被視為失敗
+    $sql = "SELECT pm.id, 1 cnt,
+                Coalesce(pm.final_amount, 0) final_amount,
                 case 
-                    when Coalesce(ps.project_status, '')  = 'Completed'  then 'c'
-                    when Coalesce(ps.project_status, '')  = 'Disapproved'  then 'd'
+                    when Coalesce(ps.project_status, '')  = 'Disapproved' and pm.updated_at > '" . $PeriodStart . "' AND pm.created_at < '" . $PeriodEnd . "' then 'd'
                     ELSE 'o'
                 end
                     `pro_status`,
@@ -155,7 +156,6 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $db){
                     ON pm.create_id = user.id
                 WHERE  pm.created_at > '" . $PeriodStart . "' AND pm.created_at < '" . $PeriodEnd . "' 
                 
-                GROUP BY pro_status, username
                 ";
 
             
@@ -172,9 +172,69 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $db){
 
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results[] = $row;
+        $id = $row['id'];
+        $cnt = $row['cnt'];
+        $pro_status = $row['pro_status'];
+        $username = $row['username'];
+        $final_amount = $row['final_amount'];
+
+        $received_date = GetReceiveDate($row['id'], $db);
+
+        if($received_date == "")
+            $received_date = '9999-99-99';
+
+        // 成功專案的定義：專案收到的第一筆金額時間在2021/01/01 ~ 2021/03/31之內，則該專案被視為成功
+        if($received_date > $PeriodStart && $received_date < $PeriodEnd)
+            $pro_status = 'c';
+
+        if($received_date <= $PeriodStart)  
+            continue;
+
+        $merged_results[] = array(
+            "id" => $id,
+            "cnt" => $cnt,
+            "username" => $username,
+            "pro_status" => $pro_status,
+            "final_amount" => $final_amount,
+        );
     }
 
     return $merged_results;
 }
 
+function GetReceiveDate($project_id, $db){
+    $query = "
+        SELECT pm.id,
+            pm.remark,
+            u.username,
+            pm.created_at,
+            pm.received_date,
+            pm.kind,
+            pm.amount,
+            pm.invoice,
+            pm.detail,
+            pm.status checked,
+            pm.checked_id,
+            pm.checked_at
+        FROM   project_proof pm
+            LEFT JOIN user u
+                ON u.id = pm.create_id
+        WHERE  project_id = " . $project_id . "
+            AND pm.status = 1
+        order by received_date limit 1
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $received_date = "";
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $received_date = $row['received_date'];
+  
+    }
+
+    return $received_date;
+}
