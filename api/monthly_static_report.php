@@ -154,7 +154,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $db){
                     ON pm.stage_id = pst.id
                 LEFT JOIN user
                     ON pm.create_id = user.id
-                WHERE  pm.created_at > '" . $PeriodStart . "' AND pm.created_at < '" . $PeriodEnd . "' 
+                WHERE  pm.created_at < '" . $PeriodEnd . "' 
                 
                 ";
 
