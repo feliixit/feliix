@@ -136,7 +136,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $db){
     $sql = "SELECT pm.id, 1 cnt, pm.project_name,
                 Coalesce(pm.final_amount, 0) final_amount,
                 case 
-                    when Coalesce(ps.project_status, '')  = 'Disapproved' and pm.updated_at > '" . $PeriodStart . "' AND pm.created_at < '" . $PeriodEnd . "' then 'd'
+                    when Coalesce(ps.project_status, '')  = 'Disapproved'  AND pm.updated_at < '" . $PeriodEnd . "' then 'd'
                     ELSE 'o'
                 end
                     `pro_status`,
