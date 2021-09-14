@@ -140,6 +140,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $db){
                     ELSE 'o'
                 end
                     `pro_status`,
+                Coalesce(ps.project_status, '')  project_status,
                 user.username
                 FROM   project_main pm
                 LEFT JOIN project_category pc
@@ -178,6 +179,10 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $db){
         $username = $row['username'];
         $final_amount = $row['final_amount'];
         $project_name = $row['project_name'];
+        $project_status = $row['project_status'];
+
+        if($project_status == 'Disapproved' && $pro_status == 'o')
+            continue;
 
         $received_date = GetReceiveDate($row['id'], $db);
 
