@@ -45,7 +45,9 @@ else
       header('Access-Control-Allow-Origin: *');  
 
       include_once 'config/database.php';
-      $id = (isset($_GET['id']) ?  $_GET['id'] : -1);
+
+      $page = (isset($_GET['page']) ?  $_GET['page'] : "");
+      $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
 
       $database = new Database();
@@ -55,8 +57,38 @@ else
           case 'GET':
             $merged_results = array();
 
+            $query_cnt = "SELECT count(*) cnt FROM product_category p  WHERE  p.STATUS <> -1 ";
+
             // product main
-            $sql = "SELECT p.*, pa.category sub_category_name FROM product_category p left join product_category_attribute pa on p.sub_category = pa.cat_id WHERE p.id = " . $id . " AND p.STATUS <> -1";
+            $sql = "SELECT p.* FROM product_category p  WHERE  p.STATUS <> -1";
+
+            if (!empty($_GET['page'])) {
+                $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+                if (false === $page) {
+                    $page = 1;
+                }
+            }
+    
+            $sql = $sql . " ORDER BY p.created_at desc ";
+    
+            if (!empty($_GET['size'])) {
+                $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
+                if (false === $size) {
+                    $size = 10;
+                }
+    
+                $offset = ($page - 1) * $size;
+    
+                $sql = $sql . " LIMIT " . $offset . "," . $size;
+            }
+
+
+            $cnt = 0;
+            $stmt_cnt = $db->prepare( $query_cnt );
+            $stmt_cnt->execute();
+            while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+                $cnt = $row['cnt'];
+            }
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();
@@ -64,7 +96,7 @@ else
             $id = '';
             $category = '';
             $sub_category = '';
-            $sub_category_name = '';
+       
             $brand = '';
             $code = '';
             $price_ntd = '';
@@ -100,9 +132,10 @@ else
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                 $id = $row['id'];
-                $category = $row['category'];
+                $category = GetCategory($row['category'], $db);
                 $sub_category = $row['sub_category'];
-                $sub_category_name = $row['sub_category_name'];
+                $sub_category_name = GetCategory($row['sub_category'], $db);
+        
                 $brand = $row['brand'];
                 $code = $row['code'];
                 $price_ntd = $row['price_ntd'];
@@ -121,8 +154,80 @@ else
                 $status = $row['status'];
                 $create_id = $row['create_id'];
                 $created_at = $row['created_at'];
+                $updated_id = $row['updated_id'];
+                $updated_at = $row['updated_at'];
 
                 $product = GetProduct($id, $db);
+
+                // for price
+                $pro_price_ntd = [];
+                $pro_price = [];
+                if(count($product) > 0)
+                {
+                    for($i = 0; $i < count($product); $i++)
+                    {
+                        if (!in_array($product[$i]['price'],$pro_price))
+                        {
+                            array_push($pro_price,$product[$i]['price']);
+                        }
+
+                        if (!in_array($product[$i]['price_ntd'],$pro_price_ntd))
+                        {
+                            array_push($pro_price_ntd,$product[$i]['price_ntd']);
+                        }
+                    }
+                }
+
+                sort($pro_price);
+                sort($pro_price_ntd);
+
+                $s_price = "";
+                if(count($pro_price) == 1)
+                {
+                    $s_price = "PHP " . number_format($pro_price[0]);
+                }
+                if(count($pro_price) > 1)
+                {
+                    $b = "";
+                    $e = "";
+                    for($i=0; $i<count($pro_price); $i++)
+                    {
+                        if($b == "")
+                            $b = $pro_price[$i];
+
+                        $e = $pro_price[$i];
+                    }
+                    $s_price = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
+                }
+
+                $s_price_ntd = "";
+                if(count($pro_price_ntd) == 1)
+                {
+                    $s_price_ntd = "NTD " . number_format($pro_price_ntd[0]);
+                }
+                if(count($pro_price_ntd) > 1)
+                {
+                    $b = "";
+                    $e = "";
+                    for($i=0; $i<count($pro_price_ntd); $i++)
+                    {
+                        if($b == "")
+                            $b = $pro_price_ntd[$i];
+
+                        $e = $pro_price_ntd[$i];
+                    }
+                    $s_price_ntd = "NTD " . number_format($b) . " ~ " . "NTD " . number_format($e);
+                }
+
+                if($s_price == "")
+                    $price = "PHP " .  number_format($price);
+                else
+                    $price = $s_price;
+
+                if($s_price_ntd == "")
+                    $price_ntd = "NTD " .  number_format($price_ntd);
+                else
+                    $price_ntd = $s_price_ntd; 
 
                 $variation1_value = [];
                 $variation2_value = [];
@@ -153,7 +258,6 @@ else
                             array_push($variation3_value,$product[$i]['v3']);
                         }
                     }
-
                 }
 
                 $accessory = GetAccessory($id, $db);
@@ -218,9 +322,67 @@ else
                     $variation3_custom = "";
                 }
 
+                $attribute_list = [];
+                if($special_info_json != null)
+                {
+                    for($i=0; $i<count($special_info_json); $i++)
+                    {
+                        $value = [];
+                        $category = $special_info_json[$i]->category;
+
+                        if($special_info_json[$i]->value != "")
+                        {
+                            array_push($value, $special_info_json[$i]->value);
+                           
+                        }
+                        
+                        if($variation1_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation1_value;
+                        }
+                        if($variation2_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation2_value;
+                        }
+                        if($variation3_text == $special_info_json[$i]->category)
+                        {
+                            $value = $variation3_value;
+                        }
+
+                        if(count($value) > 0)
+                        {
+                            $attribute_list[] = array("category" => $special_info_json[$i]->category,
+                                           "value" => $value,
+                                        );
+                        }
+                    }
+                }
+
+                if($variation1 == "custom" && $variation1_custom != "1st Variation")
+                {
+                    $attribute_list[] = array("category" => $variation1_text,
+                                           "value" => $variation1_value,
+                                        );
+                }
+
+                if($variation2 == "custom" && $variation2_custom != "2nd Variation")
+                {
+                    $attribute_list[] = array("category" => $variation2_text,
+                                           "value" => $variation2_value,
+                                        );
+                }
+
+                if($variation3 == "custom" && $variation3_custom != "3rd Variation")
+                {
+                    $attribute_list[] = array("category" => $variation3_text,
+                                           "value" => $variation3_value,
+                                        );
+                }
+
                 $merged_results[] = array( "id" => $id,
                                     "category" => $category,
                                     "sub_category" => $sub_category,
+                                    "sub_category_name" => $sub_category_name,
                                     "brand" => $brand,
                                     "code" => $code,
                                     "price_ntd" => $price_ntd,
@@ -232,12 +394,13 @@ else
                                     "photo2" => $photo2,
                                     "photo3" => $photo3,
                                     "accessory_mode" => $accessory_mode,
-                                    "attributes" => $attributes,
                                     "variation_mode" => $variation_mode,
                                     "variation" => $variation,
                                     "status" => $status,
                                     "created_at" => $created_at,
                                     "create_id" => $create_id,
+                                    "updated_at" => $updated_at,
+                                    "updated_id" => $updated_id,
                                     "product" => $product,
                                     "variation1_text" => $variation1_text,
                                     "variation2_text" => $variation2_text,
@@ -251,12 +414,11 @@ else
                                     "variation1_custom" => $variation1_custom,
                                     "variation2_custom" => $variation2_custom,
                                     "variation3_custom" => $variation3_custom,
-                                    "accessory" => $accessory,
-                                    "special_information" => $special_information,
-                                    "accessory_information" => $accessory_information,
+                                    "attribute_list" => $attribute_list,
                                     "sub_category_item" => $sub_category_item,
+                                    "cnt" => $cnt,
 
-            );
+                );
             }
 
 
@@ -342,6 +504,23 @@ function GetProduct($id, $db){
             );
     }
     
+    return $merged_results;
+}
+
+function GetCategory($cat_id, $db){
+    $sql = "SELECT category FROM product_category_attribute WHERE cat_id = '". $cat_id . "' and STATUS <> -1";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $merged_results = $row['category'];
+      
+    }
+
     return $merged_results;
 }
 
