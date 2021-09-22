@@ -50,6 +50,8 @@ $pid = (isset($_GET['pid']) ?  $_GET['pid'] : 0);
 $merged_results = array();
 
 $query = "SELECT pm.id,
+            Coalesce(pg.project_group, '')              project_group,
+            Coalesce(pg.id, 0)                                  group_id,
             Coalesce(pc.category, '')              category,
             pc.id                                  category_id,
             pct.client_type,
@@ -87,6 +89,8 @@ $query = "SELECT pm.id,
             pm.client,
             pm.edit_reason
             FROM   project_main pm
+            LEFT JOIN project_group pg
+                ON pm.group_id = pg.id
             LEFT JOIN project_category pc
                 ON pm.catagory_id = pc.id
             LEFT JOIN project_client_type pct

@@ -15,6 +15,7 @@ var app = new Vue({
     fil_priority: '',
     fil_status : '',
     fil_stage : '',
+    fil_group : '',
     fil_creator : '',
     fil_keyword : '',
     fil_lower : '',
@@ -34,6 +35,7 @@ var app = new Vue({
     categorys : {},
     client_types : {},
     priorities : {},
+    groups : {},
     statuses : {},
     stages : {},
     creators : {},
@@ -75,6 +77,9 @@ var app = new Vue({
               break;
             case "fp":
               _this.fil_priority = decodeURI(tmp[1]);
+              break;
+            case "gp":
+                _this.fil_group = decodeURI(tmp[1]);
               break;
             case "fs":
               _this.fil_status = decodeURI(tmp[1]);
@@ -123,6 +128,7 @@ var app = new Vue({
     this.getProjectCategorys();
     this.getClientTypes();
     this.getPrioritys();
+    this.getProjectGroups();
     this.getStatuses();
     this.getStages();
     this.getCreators();
@@ -212,6 +218,7 @@ var app = new Vue({
                 fpc: _this.fil_project_category,
                 fct: _this.fil_client_type,
                 fp: _this.fil_priority,
+                gp: _this.fil_group,
                 fs: _this.fil_status,
                 fcs: _this.fil_stage,
                 fpt: _this.fil_creator,
@@ -312,6 +319,27 @@ var app = new Vue({
                   
               });
       },
+
+      getProjectGroups () {
+
+        let _this = this;
+  
+        let token = localStorage.getItem('accessToken');
+  
+        axios
+            .get('api/project_grouping', { headers: {"Authorization" : `Bearer ${token}`} })
+            .then(
+            (res) => {
+                _this.groups = res.data;
+            },
+            (err) => {
+                alert(err.response);
+            },
+            )
+            .finally(() => {
+                
+            });
+    },
     
       getStatuses () {
 
@@ -552,6 +580,8 @@ var app = new Vue({
           _this.fil_client_type +
           "&fp=" +
           _this.fil_priority +
+          "&gp=" +
+          _this.fil_group +
           "&fs=" +
           _this.fil_status +
           "&fcs=" +
@@ -580,6 +610,7 @@ var app = new Vue({
         this.fil_project_category = '';
         this.fil_client_type = '';
         this.fil_priority = '';
+        this.fil_group = '';
         this.fil_status = '';
         this.fil_stage = '';
         this.fil_creator = '';
@@ -597,6 +628,8 @@ var app = new Vue({
           _this.fil_client_type +
           "&fp=" +
           _this.fil_priority +
+          "&gp=" +
+          _this.fil_group +
           "&fs=" +
           _this.fil_status +
           "&fcs=" +
@@ -632,6 +665,8 @@ var app = new Vue({
           _this.fil_client_type +
           "&fp=" +
           _this.fil_priority +
+          "&gp=" +
+          _this.fil_group +
           "&fs=" +
           _this.fil_status +
           "&fcs=" +
@@ -667,6 +702,8 @@ var app = new Vue({
           _this.fil_client_type +
           "&fp=" +
           _this.fil_priority +
+          "&gp=" +
+          _this.fil_group +
           "&fs=" +
           _this.fil_status +
           "&fcs=" +

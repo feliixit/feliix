@@ -115,6 +115,10 @@ $(function(){
             margin-top: 20px;
         }
 
+        body.fourth .bodybox{
+            min-height: 120vh;
+        }
+
         .list_function .new_project a.filter {
             font-size: 0;
             background-color: #00811e;
@@ -275,6 +279,17 @@ $(function(){
                                     <option value=""></option>
                                     <option v-for="item in priorities" :value="item.id" :key="item.priority">
                                         {{ item.priority }}
+                                    </option>
+                                    </select>
+                                </dd>
+
+                                <dt>Project Group</dt>
+                                <dd>
+                                    <select v-model="fil_group">
+                                    <option value=""></option>
+                                    <option value="0">Not Belong to Any Group</option>
+                                    <option v-for="item in groups"  :value="item.id" :key="item.project_group">
+                                        {{ item.project_group }}
                                     </option>
                                     </select>
                                 </dd>

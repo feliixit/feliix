@@ -10,10 +10,12 @@ var app = new Vue({
 
     project_comments: {},
     project_probs: {},
+    project_relative: {},
     project_approves: {},
     project_quotes: {},
     project_action_detials: {},
 
+    project_groups: {},
     categorys : {},
     client_types : {},
     priorities : {},
@@ -35,6 +37,8 @@ var app = new Vue({
   
 
     project_name: '',
+    project_group: '',
+    group_id:0,
     category: '',
     category_id:0,
     client_type : '',
@@ -76,6 +80,7 @@ var app = new Vue({
     project_status_reason:'',
 
     // Edit Project Info
+    edit_group:'0',
     edit_category:'',
     edit_client_type:'',
     edit_priority: '',
@@ -196,6 +201,7 @@ var app = new Vue({
       });
     }
 
+    this.getProjectGroups();
     this.getProjectCategorys();
     this.getClientTypes();
     this.getPrioritys();
@@ -730,6 +736,34 @@ var app = new Vue({
               });
       },
 
+      getProjectRelative: function(pid, group_id) {
+        let _this = this;
+  
+        if(pid == 0 || group_id == 0)
+          return;
+  
+        const params = {
+                pid : pid,
+                group_id: group_id,
+              };
+  
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+                .get('api/project_relative', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.project_relative = res.data;
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
+
       getProjectQuotation: function(keyword) {
         let _this = this;
   
@@ -914,6 +948,7 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.project_name = res.data[0].project_name;
+                  _this.project_group = res.data[0].project_group;
                   _this.category = res.data[0].category;
                   _this.client_type = res.data[0].client_type;
                   _this.priority = res.data[0].priority;
@@ -923,6 +958,7 @@ var app = new Vue({
                   _this.stage = res.data[0].stage;
                   _this.project_status = res.data[0].project_status;
 
+                  _this.group_id = res.data[0].group_id;
                   _this.category_id = res.data[0].category_id;
                   _this.client_type_id = res.data[0].client_type_id;
                   _this.priority_id = res.data[0].priority_id;
@@ -933,6 +969,7 @@ var app = new Vue({
                   _this.edit_reason = res.data[0].edit_reason;
 
                   _this.edit_project_name = res.data[0].project_name;
+                  _this.edit_group = res.data[0].group_id;
                   _this.edit_category = res.data[0].category_id;
                   _this.edit_client_type = res.data[0].client_type_id;
                   _this.edit_priority = res.data[0].priority_id;
@@ -964,6 +1001,8 @@ var app = new Vue({
                   _this.created_at = res.data[0].created_at;
                   _this.end_at = res.data[0].updated_at;
 
+                  _this.getProjectRelative(keyword, _this.group_id);
+
               },
               (err) => {
                   alert(err.response);
@@ -994,6 +1033,27 @@ var app = new Vue({
                   
               });
       },
+
+      getProjectGroups () {
+
+        let _this = this;
+  
+        let token = localStorage.getItem('accessToken');
+  
+        axios
+            .get('api/project_grouping', { headers: {"Authorization" : `Bearer ${token}`} })
+            .then(
+            (res) => {
+                _this.project_groups = res.data;
+            },
+            (err) => {
+                alert(err.response);
+            },
+            )
+            .finally(() => {
+                
+            });
+    },
 
       stage_load () {
         if(this.stage_id_to_edit != 0)
@@ -1388,6 +1448,7 @@ var app = new Vue({
         project_clear() {
 
             this.uid = this.org_uid;
+            this.edit_group = this.group_id;
             this.edit_category = this.category_id;
             this.edit_client_type = this.client_type_id;
             this.edit_priority = this.priority_id;
@@ -2218,6 +2279,7 @@ var app = new Vue({
             var form_Data = new FormData();
 
             form_Data.append('pid', this.project_id);
+            form_Data.append('edit_group', this.edit_group);
             form_Data.append('edit_category', this.edit_category);
             form_Data.append('edit_client_type', this.edit_client_type);
             form_Data.append('edit_priority', this.edit_priority);

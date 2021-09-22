@@ -20,6 +20,7 @@ use \Firebase\JWT\JWT;
     $access5 = false;
     $access6 = false;
     $access7 = false;
+    $access8 = false;
 
     $pic_url = "man6.jpg";
 
@@ -66,6 +67,16 @@ try {
         $stmt->execute();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $access2 = true;
+        }
+
+        $access8 = false;
+        //if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
+        //    $access2 = true;
+        $query = "SELECT * FROM access_control WHERE salary LIKE '%" . $username . "%' ";
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $access8 = true;
         }
 
         // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(41), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
@@ -206,6 +217,7 @@ try {
             if($access6 == true)
             {
             ?>
+                <a class="list" href="project_grouping">Project Grouping</a>
                 <a class="list" href="quotation_and_payment_mgt?fc=&fs=&ft=&fal=&fau=&fpl=&fpu=&fk=&of1=&ofd1=&of2=&ofd2=&pg=1">Quotation and Payment Mgt.</a>
                 <a class="list" href="quotation_and_payment_mgt_v2?fc=&fs=&ft=&fal=&fau=&fpl=&fpu=&fk=&of1=&ofd1=&of2=&ofd2=&pg=1">Quotation and Payment Mgt. Ver.2</a>
             <?php 
@@ -235,7 +247,7 @@ try {
                 <a class="list" href="performance_dashboard">Performance Evaluation</a>
             </li>
             <?php 
-                if($access1 == true || $access2 == true || $access3 == true || $access4 == true)
+                if($access1 == true || $access2 == true || $access3 == true || $access4 == true || $access8 == true)
                 {
             ?>
             <li class="gray05">
@@ -244,6 +256,7 @@ try {
                 <?=($access2 == true) ? '<a class="list" href="query_export">Query and Export</a>' : '' ?>
                 <?=($access4 == true) ? '<a class="list" href="expense_checking">Expense Review</a>' : '' ?>
                 <?=($access3 == true) ? '<a class="list" href="expense_recorder">Expense Recorder</a>' : '' ?>
+                <?=($access8 == true) ? '<a class="list" href="salary_recorder">Salary Recorder</a>' : '' ?>
             </li>
             <?php 
                 }

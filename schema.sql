@@ -1906,6 +1906,7 @@ CREATE TABLE IF NOT EXISTS `access_control` (
 
 insert into access_control(`payess1`, `payess2`, `payess3`) values('', '', '');
 
+
 -- project 01 sls  extend 08/17
 ALTER TABLE project_main
 ADD COLUMN `last_client_stage_id` bigint(20)  DEFAULT 0 AFTER billing_name;
@@ -2075,3 +2076,77 @@ update project_stage set `order`= 9 where stage = 'Delivery';
 update project_stage set `order`= 10 where stage = 'Installation';
 update project_stage set `order`= 11 where stage = 'Client Feedback / After-Sales Service';
 
+-- 08/27
+ALTER TABLE product_category
+ADD COLUMN `notes` TEXT COLLATE utf8mb4_unicode_ci AFTER description;
+
+ALTER TABLE product_category
+ADD COLUMN `price_ntd_change` timestamp NULL AFTER price_ntd;
+
+ALTER TABLE product_category
+ADD COLUMN `price_change` timestamp NULL AFTER price;
+
+ALTER TABLE product
+ADD COLUMN `price_ntd_change` timestamp NULL AFTER price_ntd;
+
+ALTER TABLE product
+ADD COLUMN `price_change` timestamp NULL AFTER price;
+
+ALTER TABLE product MODIFY COLUMN price_ntd decimal(10, 2) NULL;
+
+ALTER TABLE product MODIFY COLUMN price decimal(10, 2) NULL;
+
+ALTER TABLE accessory MODIFY COLUMN price_ntd decimal(10, 2) NULL;
+
+ALTER TABLE accessory MODIFY COLUMN price decimal(10, 2) NULL;
+
+
+-- salary record 09/08
+CREATE TABLE IF NOT EXISTS `price_record_salary` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `account` int default 0,
+  `category` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `sub_category` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `project_name` varchar(1024)  COLLATE utf8mb4_unicode_ci  default '',
+  `related_account` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `details` varchar(4096) COLLATE utf8mb4_unicode_ci  default '',
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `gcp_url` varchar(1024)  COLLATE utf8mb4_unicode_ci  default '',
+  `payee` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `payee_other` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `staff_name` varchar(256) COLLATE utf8mb4_unicode_ci  default '',
+  `paid_date` Date NULL DEFAULT NULL,
+  `cash_in` decimal(10, 2) default 0.0,
+  `cash_out` decimal(10, 2) default 0.0,
+  `remarks` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `company_name` varchar(256) COLLATE utf8mb4_unicode_ci  default '',
+  `is_locked` bool default false,
+  `is_enabled` bool default false,
+  `is_marked` bool default false,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `updated_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `deleted_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+ALTER TABLE access_control
+ADD COLUMN `salary` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 2021/09/09 project grouping
+ALTER TABLE project_main
+ADD COLUMN `group_id` bigint(20)  DEFAULT 0 AFTER last_client_created_id;
+
+CREATE TABLE IF NOT EXISTS `project_group` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_group` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';

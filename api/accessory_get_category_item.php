@@ -195,7 +195,7 @@ function GetLevel3($cat_id, $db){
 
 function GetDetail($cat_id, $db){
 
-    $sql = "SELECT id, category_id, product_id, accessory_type, code, accessory_name, price_ntd, price FROM accessory WHERE 1 = 0 and category_id = '". $cat_id . "' and STATUS <> -1";
+    $sql = "SELECT id, category_id, product_id, accessory_type, code, accessory_name, price_ntd, price, price_ntd_change, price_change FROM accessory WHERE 1 = 0 and category_id = '". $cat_id . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY id ";
 
