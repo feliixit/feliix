@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
 
     <!-- jQuery和js載入 -->
@@ -48,6 +49,7 @@
     <script type="text/javascript"
             src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
+    <script type="text/javascript" src="js/bootstrap-select.js"></script>
 
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -59,7 +61,7 @@
 
     <style>
 
-        body.gray   header > .headerbox{
+        body.gray header > .headerbox {
             background-color: #707071;
         }
 
@@ -72,11 +74,11 @@
             cursor: pointer;
         }
 
-        body.gray header nav a, body.gray header nav a:link{
+        body.gray header nav a, body.gray header nav a:link {
             color: #000;
         }
 
-        body.gray header nav a:hover{
+        body.gray header nav a:hover {
             color: #333;
         }
 
@@ -89,20 +91,24 @@
             border: 1px solid #ced4da;
         }
 
-        body.gray input.alone[type=checkbox]::before{
-            color: rgb(118,118,118);
+        body.gray li > input.form-control:disabled, body.gray li > input.form-control[readonly]{
+            background-color: #e9ecef;
+        }
+
+        body.gray input.alone[type=checkbox]::before {
+            color: rgb(118, 118, 118);
             font-size: 20px;
         }
 
         body.gray input.alone[type=checkbox]:checked::before {
-            color: rgb(0,117,255);
+            color: rgb(0, 117, 255);
         }
 
-        body.gray header nav ul.info{
+        body.gray header nav ul.info {
             margin-bottom: 0;
         }
 
-        body.gray header nav ul.info b{
+        body.gray header nav ul.info b {
             font-weight: bold;
         }
 
@@ -124,7 +130,7 @@
             font-weight: 500;
         }
 
-        .mainContent ul {
+        .region > ul, .heading-and-btn > ul {
             margin: 0;
             border-bottom: 1px solid #E2E2E2;
             background-color: #F7F7F7;
@@ -132,32 +138,32 @@
             align-items: center;
         }
 
-        .mainContent ul.variation_list {
+        .region > ul.variation_list {
             align-items: flex-start;
             border-bottom: none;
             background-color: #F0F0F0;
             margin-bottom: 20px;
         }
 
-        .mainContent ul.variation_list h6 {
+        .region > ul.variation_list h6 {
             text-align: center;
         }
 
-        .mainContent ul.variation_list li:first-of-type {
+        .region > ul.variation_list li:first-of-type {
             min-width: 170px;
         }
 
-        .mainContent ul.variation_list select {
+        .region > ul.variation_list select {
             margin-bottom: 10px;
         }
 
-        .mainContent ul li {
+        .region > ul > li, .heading-and-btn > ul > li  {
             display: table-cell;
             text-decoration: none;
             padding: 10px;
         }
 
-        .mainContent ul li:first-of-type {
+        .region > ul > li:first-of-type, .heading-and-btn ul li:nth-of-type(1) {
             width: 20vw;
             min-width: 150px;
             text-align: center;
@@ -165,13 +171,32 @@
             flex-shrink: 0;
         }
 
-        .mainContent ul li:nth-of-type(2) {
+        .region > ul > li:nth-of-type(2), .heading-and-btn ul li:nth-of-type(2) {
             flex-grow: 1;
             flex-shrink: 1;
         }
 
-        .mainContent ul li > input[type='text'] + i {
+        .region > ul > li > input[type='text'] + i {
             margin-left: 5px;
+        }
+
+        .region > ul > li button.btn-light, .region > ul > li button.btn-light:not(:disabled).active, .region > ul > li .show>.btn-light.dropdown-toggle {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+        }
+
+        .region > ul > li > input[type='text']:first-of-type ~ input{
+            margin-left: 10px;
+        }
+
+        .region .bootstrap-select .dropdown-toggle:focus, .region .bootstrap-select > select.mobile-device:focus + .dropdown-toggle {
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+            background-color: #fff;
+        }
+
+        .region .bootstrap-select .btn:focus {
+            outline: none !important;
         }
 
         .one_half {
@@ -187,6 +212,10 @@
         .one_whole {
             width: 96%;
             display: inline-block;
+        }
+
+        input.updated_date{
+            margin-top: 10px;
         }
 
         .itembox {
@@ -584,8 +613,12 @@
                         <option value="20000000">Systems Furniture</option>
                     </select>
 
-                    <select class="form-control" v-model="sub_category">
+                    <select v-if="category == '20000000'" class="form-control" v-model="sub_category">
                         <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
+                    </select>
+
+                    <select v-if="category == '10000000'" class="form-control">
+                       
                     </select>
                 </li>
 
@@ -613,8 +646,75 @@
                         <option value="20000000">Systems Furniture</option>
                     </select>
 
-                    <select class="form-control one_third" v-model="sub_category" :disabled="edit_mode == true">
+                    <select v-if="category == '20000000'" class="form-control one_third" v-model="sub_category" :disabled="edit_mode == true">
                         <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
+                    </select>
+
+                    <select v-if="category == '10000000'" class="form-control one_third" :disabled="edit_mode == true">
+                    
+                    </select>
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    Tag
+                </li>
+                <li>
+                    <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected">
+                        <optgroup label="BY INSTALL LOCATION">
+                            <option>CEILING LIGHT</option>
+                            <option>FLOOR LIGHT</option>
+                            <option>INDOOR LIGHTING</option>
+                            <option>INGROUND LIGHT</option>
+                            <option>OUTDOOR LIGHTING</option>
+                            <option>POOL LIGHT</option>
+                            <option>STREET LIGHT</option>
+                            <option>TABLE LIGHT</option>
+                            <option>WALL LIGHT</option>
+                            <option>BLDG. FAÇADE LIGHTING</option>
+                            <option>CABINET LIGHT</option>
+                            <option>OTHER FURNITURES LIGHTING</option>
+                            <option>UNDERWATER LIGHTING</option>
+                        </optgroup>
+
+                        <optgroup label="INSTALL METHOD">
+                            <option>POLE-MOUNTED</option>
+                            <option>RECESSED</option>
+                            <option>SURFACE-MOUNTED</option>
+                            <option>SUSPENDED</option>
+                            <option>STAND-ALONE</option>
+                        </optgroup>
+
+                        <optgroup label="BY TYPE / FUNCTION">
+                            <option>ASSEMBLED</option>
+                            <option>BOLLARD</option>
+                            <option>BULB</option>
+                            <option>CUSTOMIZED</option>
+                            <option>DIMMER</option>
+                            <option>DIRECTIONAL</option>
+                            <option>DISPLAY SPOTLIGHT</option>
+                            <option>DOWNLIGHT</option>
+                            <option>LED DRIVER</option>
+                            <option>FLOOD LIGHT</option>
+                            <option>HIGHBAY LIGHT</option>
+                            <option>LED STRIP</option>
+                            <option>LINEAR LIGHT</option>
+                            <option>PANEL LIGHT</option>
+                            <option>PROJECTOR</option>
+                            <option>TRACK LIGHT</option>
+                            <option>TROFFER LIGHT</option>
+                            <option>TUBE LIGHT</option>
+                            <option>UPLIGHT</option>
+                            <option>WALL WASHER</option>
+                        </optgroup>
+
+                        <optgroup label="ACCESSORY">
+                            <option>FUNCTIONAL ACCESSORY</option>
+                            <option>INSTALL ACCESSORY</option>
+                            <option>REPLACEMENT PART</option>
+                        </optgroup>
+
                     </select>
                 </li>
             </ul>
@@ -639,19 +739,40 @@
 
             <ul class="NTD_price">
                 <li>
-                    Price (NTD)
+                    Cost Price (NTD)
                 </li>
                 <li>
-                    <input type="text" class="form-control one_half" v-model="price_ntd"><input type="text" hidden v-model="price_ntd_change">
+                    <input type="text" class="form-control one_half" v-model.lazy="price_ntd">
+                    <input type="text" class="form-control one_third" v-model="price_ntd_change">
                 </li>
             </ul>
 
             <ul>
                 <li>
-                    Price
+                    Suggested Retail Price
                 </li>
                 <li>
-                    <input type="text" class="form-control one_half" v-model="price"><input type="text" hidden v-model="price_change">
+                    <input type="text" class="form-control one_half" v-model.lazy="price">
+                    <input type="text" class="form-control one_third" v-model="price_change">
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    Quoted Price
+                </li>
+                <li>
+                    <input type="text" class="form-control one_half" v-model.lazy="quoted_price">
+                    <input type="text" class="form-control one_third" v-model="quoted_price_change">
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    MOQ
+                </li>
+                <li>
+                    <input type="text" class="form-control one_half" v-model="moq">
                 </li>
             </ul>
 
@@ -863,8 +984,9 @@
                         <th>{{ variation2_text }}</th>
                         <th>{{ variation3_text }}</th>
                         <th>Code</th>
-                        <th class="NTD_price">Price (NTD)</th>
-                        <th>Price</th>
+                        <th class="NTD_price">Cost Price (NTD)</th>
+                        <th>Suggested Retail Price</th>
+                        <th>Quoted Price</th>
                         <th>Image</th>
                         <th>Status</th>
                     </tr>
@@ -877,8 +999,9 @@
                         <td>{{ item.v2 }}</td>
                         <td>{{ item.v3 }}</td>
                         <td><input type="text" class="form-control" v-model="item.code"></td>
-                        <td class="NTD_price"><input type="number" class="form-control" v-model="item.price_ntd"><input type="text" hidden v-model="item.price_ntd_change"></td>
-                        <td><input type="number" class="form-control" v-model="item.price"><input type="text" hidden v-model="item.price_change"></td>
+                        <td class="NTD_price"><input type="number" class="form-control" v-model="item.price_ntd" @change="product_price_ntd_changed(item.id)"><input type="text" class="form-control updated_date" v-model="item.price_ntd_change"></td>
+                        <td><input type="number" class="form-control" v-model="item.price" @change="product_price_changed(item.id)"><input type="text" class="form-control updated_date" v-model="item.price_change"></td>
+                        <td><input type="number" class="form-control" v-model="item.quoted_price" @change="product_quoted_price_changed(item.id)"><input type="text" class="form-control updated_date" v-model="item.quoted_price_change"></td>
                         <td>
                             <div :class="['itembox', (item.url !== '' ? 'chosen' : '')]">
                                 <div class="photo">
@@ -1085,7 +1208,7 @@
 
                         <tr class="NTD_price">
                             <td><input class="alone" type="checkbox" value="1" v-model="price_ntd_checked"></td>
-                            <td>Price (NTD)</td>
+                            <td>Cost Price (NTD)</td>
                             <td><input type="text" class="form-control" v-model='bulk_price_ntd'></td>
                             <td>
                                 <select class="form-control" v-model="price_ntd_action">
@@ -1098,10 +1221,23 @@
 
                         <tr>
                             <td><input class="alone" type="checkbox" value="1" v-model="price_checked"></td>
-                            <td>Price</td>
+                            <td>Suggested Retail Price</td>
                             <td><input type="text" class="form-control" v-model='bulk_price'></td>
                             <td>
                                 <select class="form-control" v-model="price_action">
+                                    <option value="assign">Assign To</option>
+                                    <option value="add">Add To</option>
+                                    <option value="multiply">Multiply To</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input class="alone" type="checkbox" value="1" v-model="quoted_price_checked"></td>
+                            <td>Quoted Price</td>
+                            <td><input type="text" class="form-control" v-model='bulk_quoted_price'></td>
+                            <td>
+                                <select class="form-control" v-model="quoted_price_action">
                                     <option value="assign">Assign To</option>
                                     <option value="add">Add To</option>
                                     <option value="multiply">Multiply To</option>

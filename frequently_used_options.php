@@ -523,17 +523,21 @@
                 <li>
                     Choose Attribute:
 
-                    <select class="form-control" v-model='lv1'>
+                    <select class="form-control" v-model='lv1' @change="set_lv1()">
                         <option value="0">Select Product Category</option>
                         <option v-for="(item, index) in level1" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
                     </select>
 
-                    <select class="form-control" v-model='lv2'>
+                    <select v-if="lv1 == '20000000'" class="form-control" v-model='lv2'>
                         <option value="0">Select Product Sub Category</option>
                         <option v-for="(item, index) in level2" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
                     </select>
 
-                    <select class="form-control" v-model='lv3'>
+                    <select v-if="lv1 == '10000000'" class="form-control">
+                       
+                    </select>
+
+                    <select v-if="lv2 != '' " class="form-control" v-model='lv3'>
                         <option value="0">Select Attribute</option>
                         <option v-for="(item, index) in level3" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
                     </select>

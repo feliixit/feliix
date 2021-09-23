@@ -16,6 +16,9 @@ $price_ntd = (isset($_POST['price_ntd']) ?  $_POST['price_ntd'] : '');
 $price_ntd_change = (isset($_POST['price_ntd_change']) ?  $_POST['price_ntd_change'] : '');
 $price = (isset($_POST['price']) ?  $_POST['price'] : '');
 $price_change = (isset($_POST['price_change']) ?  $_POST['price_change'] : '');
+$quoted_price = (isset($_POST['quoted_price']) ?  $_POST['quoted_price'] : '');
+$quoted_price_change = (isset($_POST['quoted_price_change']) ?  $_POST['quoted_price_change'] : '');
+$moq = (isset($_POST['moq']) ?  $_POST['moq'] : '');
 $description = (isset($_POST['description']) ?  $_POST['description'] : '');
 $notes = (isset($_POST['notes']) ? $_POST['notes'] : '');
 
@@ -87,16 +90,20 @@ else
                 $query .= "`price` = :price, ";
             }
 
-if($price_ntd != '' && !is_null($price_ntd))
-{
-    $query .= "`price_ntd_change` = now(), ";
-}
+            if($quoted_price != ''  && !is_null($quoted_price))
+            {
+                $query .= "`quoted_price` = :quoted_price, ";
+            }
 
-if($price != '' && !is_null($price))
-{
-    $query .= "`price_change` = now(), ";
-}
+
+    $query .= "`price_ntd_change` = :price_ntd_change, ";
+
+    $query .= "`price_change` = :price_change, ";
+
+    $query .= "`quoted_price_change` = :quoted_price_change, ";
+
         $query .= "
+            `moq` = :moq,
             `description` = :description,
             `notes` = :notes,
             `accessory_mode` = :accessory_mode,
@@ -123,6 +130,21 @@ if($price != '' && !is_null($price))
         {
             $stmt->bindParam(':price', $price);
         }
+
+        if($quoted_price != '' && !is_null($quoted_price))
+        {
+            $stmt->bindParam(':quoted_price', $quoted_price);
+        }
+
+        $price_ntd_change = formate_date($price_ntd_change);
+        $price_change = formate_date($price_change);
+        $quoted_price_change = formate_date($quoted_price_change);
+
+        $stmt->bindParam(':price_ntd_change', $price_ntd_change);
+        $stmt->bindParam(':price_change', $price_change);
+        $stmt->bindParam(':quoted_price_change', $quoted_price_change);
+
+        $stmt->bindParam(':moq', $moq);
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':notes', $notes);
         $stmt->bindParam(':accessory_mode', $accessory_mode);
@@ -200,6 +222,7 @@ if($price != '' && !is_null($price))
                     {
                         $query .= "`price` = :price, ";
                     }
+                 
                     $query .= "
                     `enabled` = :enabled,
                    
@@ -224,6 +247,7 @@ if($price != '' && !is_null($price))
                 {
                     $stmt->bindParam(':price', $detail[$j]['price']);
                 }
+         
                 $stmt->bindParam(':enabled', $detail[$j]['enabled']);
                 $stmt->bindParam(':create_id', $uid);
     
@@ -274,7 +298,11 @@ if($price != '' && !is_null($price))
             $v2 = $variation_array[$i]['v2'];
             $v3 = $variation_array[$i]['v3'];
             $price = $variation_array[$i]['price'];
+            $price_change = $variation_array[$i]['price_change'];
+            $quoted_price = $variation_array[$i]['quoted_price'];
+            $quoted_price_change = $variation_array[$i]['quoted_price_change'];
             $price_ntd = $variation_array[$i]['price_ntd'];
+            $price_ntd_change = $variation_array[$i]['price_ntd_change'];
             $enabled = $variation_array[$i]['status'];
             $category_id = '';
 
@@ -299,15 +327,16 @@ if($price != '' && !is_null($price))
                 {
                     $query .= "`price` = :price, ";
                 }
-if($price_ntd != '' && !is_null($price_ntd))
-{
-    $query .= "`price_ntd_change` = now(), ";
-}
 
-if($price != '' && !is_null($price))
-{
-    $query .= "`price_change` = now(), ";
-}
+                if($quoted_price != '' && !is_null($quoted_price))
+                {
+                    $query .= "`quoted_price` = :quoted_price, ";
+                }
+
+            $query .= "`price_ntd_change` = :price_ntd_change, ";
+            $query .= "`price_change` = :price_change, ";
+            $query .= "`quoted_price_change` = :quoted_price_change, ";
+
             $query .= "
                 `enabled` = :enabled,    
                 `status` = 0,
@@ -332,6 +361,19 @@ if($price != '' && !is_null($price))
             {
                 $stmt->bindParam(':price', $price);
             }
+            if($quoted_price != '' && !is_null($quoted_price))
+            {
+                $stmt->bindParam(':quoted_price', $quoted_price);
+            }
+
+            $price_ntd_change = formate_date($price_ntd_change);
+            $price_change = formate_date($price_change);
+            $quoted_price_change = formate_date($quoted_price_change);
+
+            $stmt->bindParam(':price_ntd_change', $price_ntd_change);
+            $stmt->bindParam(':price_change', $price_change);
+            $stmt->bindParam(':quoted_price_change', $quoted_price_change);
+
             $stmt->bindParam(':enabled', $enabled);
             $stmt->bindParam(':create_id', $uid);
 
@@ -600,3 +642,16 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
     }
 }
 
+function formate_date($date)
+{
+    $v_date = trim($date);
+    
+    if(valid_date($v_date) == 1)
+        return $v_date;
+    else
+        return '';
+}
+
+function valid_date($date) {
+    return (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date));
+}

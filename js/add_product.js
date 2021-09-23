@@ -36,10 +36,14 @@ var app = new Vue({
     price: "",
     price_ntd_change: "",
     price_change: "",
+    moq: "",
     description: "",
     notes: "",
     accessory_mode: false,
     variation_mode: false,
+
+    quoted_price:"",
+    quoted_price_change:"",
 
     // accessory
 
@@ -65,8 +69,11 @@ var app = new Vue({
     bulk_price_ntd:'',
     price_ntd_action :'',
     price_checked:'',
+    quoted_price_checked:'',
+    bulk_quoted_price:'',
     bulk_price:'',
     price_action:'',
+    quoted_price_action:'',
     image_checked:'',
     bulk_url:'',
     status_checked:'',
@@ -95,6 +102,9 @@ var app = new Vue({
       this.sub_accessory_item = this.shallowCopy(
         this.accessory_item.find((element) => element.cat_id == this.category)
       ).lv2[0];
+
+      if(this.category == "10000000")
+        this.sub_category = "10010000";
     },
 
     sub_category() {
@@ -112,6 +122,19 @@ var app = new Vue({
         )
       ).lv3[0];
     },
+
+    price_ntd() {
+      this.price_ntd_change = new Date().toISOString().slice(0, 10);
+    },
+
+    price () {
+      this.price_change = new Date().toISOString().slice(0, 10);
+    },
+
+    quoted_price () {
+      this.quoted_price_change = new Date().toISOString().slice(0, 10);
+    },
+
   },
 
   methods: {
@@ -187,12 +210,37 @@ var app = new Vue({
               code: "",
               price_ntd: "",
               price: "",
-              status: "",
+              quoted_price: "",
+              price_ntd_change: "",
+              price_change: "",
+              quoted_price_change:"",
+              status: "1",
             };
 
             this.variation_product.push(variation_item);
           }
         }
+      }
+    },
+
+    product_price_ntd_changed: function(item_id) {
+      for (var i = 0; i < this.variation_product.length; i++) {
+        if (this.variation_product[i].id == item_id) 
+          this.variation_product[i].price_ntd_change = new Date().toISOString().slice(0, 10);
+      }
+    },
+
+    product_price_changed: function(item_id) {
+      for (var i = 0; i < this.variation_product.length; i++) {
+        if (this.variation_product[i].id == item_id) 
+          this.variation_product[i].price_change = new Date().toISOString().slice(0, 10);
+      }
+    },
+
+    product_quoted_price_changed: function(item_id) {
+      for (var i = 0; i < this.variation_product.length; i++) {
+        if (this.variation_product[i].id == item_id) 
+          this.variation_product[i].quoted_price_change = new Date().toISOString().slice(0, 10);
       }
     },
 
@@ -490,6 +538,8 @@ var app = new Vue({
             this.variation_product[i].price_ntd = this.variation_product[i].price_ntd + this.bulk_price_ntd;
           if(this.price_ntd_action == "multiply")
             this.variation_product[i].price_ntd = (this.variation_product[i].price_ntd * this.bulk_price_ntd);
+
+            this.variation_product[i].price_ntd_change = new Date().toISOString().slice(0, 10);
         }
       }
 
@@ -501,6 +551,21 @@ var app = new Vue({
             this.variation_product[i].price = this.variation_product[i].price + this.bulk_price;
           if(this.price_action == "multiply")
             this.variation_product[i].price = (this.variation_product[i].price * this.bulk_price);
+
+            this.variation_product[i].price_change = new Date().toISOString().slice(0, 10);
+        }
+      }
+
+      if(this.quoted_price_checked == true) {
+        for (let i=0; i<this.variation_product.length; i++) {
+          if(this.quoted_price_action == "assign")
+            this.variation_product[i].quoted_price = this.bulk_quoted_price;
+          if(this.quoted_price_action == "add")
+            this.variation_product[i].quoted_price = this.variation_product[i].quoted_price + this.bulk_quoted_price;
+          if(this.quoted_price_action == "multiply")
+            this.variation_product[i].quoted_price = (this.variation_product[i].quoted_price * this.bulk_quoted_price);
+
+          this.variation_product[i].quoted_price_change = new Date().toISOString().slice(0, 10);
         }
       }
 
@@ -679,8 +744,11 @@ var app = new Vue({
             let v2 = this.variation_product[i].v2;
             let v3 = this.variation_product[i].v3;
             let price = this.variation_product[i].price;
+            let quoted_price = this.variation_product[i].quoted_price;
             let price_ntd = this.variation_product[i].price_ntd;
+       
             let price_change = this.variation_product[i].price_change;
+            let quoted_price_change = this.variation_product[i].quoted_price_change;
             let price_ntd_change = this.variation_product[i].price_ntd_change;
             let status = this.variation_product[i].status;
 
@@ -708,8 +776,10 @@ var app = new Vue({
               v2: v2,
               v3: v3,
               price: price,
+              quoted_price: quoted_price,
               price_ntd: price_ntd,
               price_change: price_change,
+              quoted_price_change: quoted_price_change,
               price_ntd_change: price_ntd_change,
               status: status,
             };
@@ -725,8 +795,11 @@ var app = new Vue({
           form_Data.append("code", _this.code);
           form_Data.append("price_ntd", _this.price_ntd);
           form_Data.append("price", _this.price);
+          form_Data.append("quoted_price", _this.quoted_price);
           form_Data.append("price_ntd_change", _this.price_ntd_change);
           form_Data.append("price_change", _this.price_change);
+          form_Data.append("quoted_price_change", _this.quoted_price_change);
+          form_Data.append("moq", _this.moq);
           form_Data.append("description", _this.description);
           form_Data.append("notes", _this.notes);
 
@@ -802,9 +875,12 @@ var app = new Vue({
       this.code = "";
       this.brand = "";
       this.price = "";
+      this.quoted_price = "";
       this.price_ntd = "";
       this.price_change = "";
+      this.quoted_price_change = "";
       this.price_ntd_change = "";
+      this.moq = "";
       this.description = "";
       this.notes = "";
       this.url1 = null;
@@ -840,6 +916,7 @@ var app = new Vue({
       this.code_checked = '';
       this.bulk_code = '';
       this.price_ntd_checked = '';
+      this.quoted_price_checked = '';
       this.bulk_price_ntd = '';
       this.price_ntd_action = '';
       this.price_checked = '';
@@ -867,6 +944,7 @@ var app = new Vue({
       this.code_checked = toogle;
       this.price_ntd_checked = toogle;
       this.price_checked = toogle;
+      this.quoted_price_checked = toogle;
       this.image_checked = toogle;
       this.status_checked = toogle;
       

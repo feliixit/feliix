@@ -100,9 +100,7 @@ var app = new Vue({
   mounted() {},
 
   watch: {
-    lv1() {
-      this.getLevel2(this.lv1);
-    },
+    
 
     lv2() {
       this.getLevel3(this.lv2);
@@ -124,6 +122,15 @@ var app = new Vue({
   },
 
   methods: {
+
+    async set_lv1() {
+
+      await this.getLevel2(this.lv1);
+
+      if(this.lv1 == "10000000")
+        this.lv2 = "10010000";
+ 
+    },
 
     getLevel1: function() {
       let _this = this;
@@ -154,7 +161,10 @@ var app = new Vue({
         .finally(() => {});
     },
 
-    getLevel2: function(cat_id) {
+    async getLevel2 (cat_id) {
+      if(cat_id == 0) 
+        return;
+
       let _this = this;
 
       let token = localStorage.getItem("accessToken");
@@ -164,6 +174,22 @@ var app = new Vue({
         parent: cat_id,
       };
 
+      try {
+        let res = await axios.get("api/product_category_level_get", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        _this.level2 = res.data;
+        _this.lv2 = 0;
+        _this.lv3 = 0;
+        _this.attribute_name = '';
+      } catch (err) {
+        console.log(err)
+        alert('error')
+      }
+
+      /*
       axios
         .get("api/product_category_level_get", {
           params,
@@ -181,9 +207,13 @@ var app = new Vue({
           }
         )
         .finally(() => {});
+        */
     },
     
     getLevel3: function(cat_id) {
+      if(cat_id == 0)
+        return;
+
       let _this = this;
 
       let token = localStorage.getItem("accessToken");

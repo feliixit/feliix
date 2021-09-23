@@ -740,7 +740,11 @@ var app = new Vue({
         let _this = this;
   
         if(pid == 0 || group_id == 0)
+        {
+          this.project_relative = [];
           return;
+        }
+
   
         const params = {
                 pid : pid,
@@ -2322,6 +2326,7 @@ var app = new Vue({
                     //handle success
                     //this.$forceUpdate();
                     _this.project_clear();
+                    _this.group_id = _this.edit_group;
                     _this.getProject(_this.project_id);
                 })
                 .catch(function(response) {

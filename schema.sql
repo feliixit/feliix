@@ -2150,3 +2150,19 @@ CREATE TABLE IF NOT EXISTS `project_group` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 2021/09/22 add quoted price
+ALTER TABLE product_category
+ADD COLUMN `quoted_price` decimal(10, 2) AFTER price;
+
+ALTER TABLE product_category
+ADD COLUMN `quoted_price_change` timestamp NULL AFTER price_change;
+
+ALTER TABLE product_category
+ADD COLUMN `moq` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER price_change;
+
+ALTER TABLE product
+ADD COLUMN `quoted_price` decimal(10, 2) AFTER price;
+
+ALTER TABLE product
+ADD COLUMN `quoted_price_change` timestamp NULL AFTER price_change;
