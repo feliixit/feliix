@@ -49,7 +49,7 @@
     <script type="text/javascript"
             src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
-    <script type="text/javascript" src="js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -632,7 +632,7 @@
         </div>
 
 
-        <div class="region" v-if="edit_mode == true">
+        <div class="region" v-show="edit_mode == true">
             <span class="heading">Basic Information</span>
 
             <ul>
@@ -660,61 +660,67 @@
                 <li>
                     Tag
                 </li>
-                <li>
-                    <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected">
+                <li v-show="category == '10000000'">
+                    <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected" id="tag01">
+                   
                         <optgroup label="BY INSTALL LOCATION">
-                            <option>CEILING LIGHT</option>
-                            <option>FLOOR LIGHT</option>
-                            <option>INDOOR LIGHTING</option>
-                            <option>INGROUND LIGHT</option>
-                            <option>OUTDOOR LIGHTING</option>
-                            <option>POOL LIGHT</option>
-                            <option>STREET LIGHT</option>
-                            <option>TABLE LIGHT</option>
-                            <option>WALL LIGHT</option>
-                            <option>BLDG. FAÇADE LIGHTING</option>
-                            <option>CABINET LIGHT</option>
-                            <option>OTHER FURNITURES LIGHTING</option>
-                            <option>UNDERWATER LIGHTING</option>
+                            <option value="CEILING LIGHT">CEILING LIGHT</option>
+                            <option value="FLOOR LIGHT">FLOOR LIGHT</option>
+                            <option value="INDOOR LIGHTING">INDOOR LIGHTING</option>
+                            <option value="INGROUND LIGHT">INGROUND LIGHT</option>
+                            <option value="OUTDOOR LIGHTING">OUTDOOR LIGHTING</option>
+                            <option value="POOL LIGHT">POOL LIGHT</option>
+                            <option value="STREET LIGHT">STREET LIGHT</option>
+                            <option value="TABLE LIGHT">TABLE LIGHT</option>
+                            <option value="WALL LIGHT">WALL LIGHT</option>
+                            <option value="BLDG. FAÇADE LIGHTING">BLDG. FAÇADE LIGHTING</option>
+                            <option value="CABINET LIGHT">CABINET LIGHT</option>
+                            <option value="OTHER FURNITURES LIGHTING">OTHER FURNITURES LIGHTING</option>
+                            <option value="UNDERWATER LIGHTING">UNDERWATER LIGHTING</option>
                         </optgroup>
 
                         <optgroup label="INSTALL METHOD">
-                            <option>POLE-MOUNTED</option>
-                            <option>RECESSED</option>
-                            <option>SURFACE-MOUNTED</option>
-                            <option>SUSPENDED</option>
-                            <option>STAND-ALONE</option>
+                            <option value="POLE-MOUNTED">POLE-MOUNTED</option>
+                            <option value="RECESSED">RECESSED</option>
+                            <option value="SURFACE-MOUNTED">SURFACE-MOUNTED</option>
+                            <option value="SUSPENDED">SUSPENDED</option>
+                            <option value="STAND-ALONE">STAND-ALONE</option>
                         </optgroup>
 
                         <optgroup label="BY TYPE / FUNCTION">
-                            <option>ASSEMBLED</option>
-                            <option>BOLLARD</option>
-                            <option>BULB</option>
-                            <option>CUSTOMIZED</option>
-                            <option>DIMMER</option>
-                            <option>DIRECTIONAL</option>
-                            <option>DISPLAY SPOTLIGHT</option>
-                            <option>DOWNLIGHT</option>
-                            <option>LED DRIVER</option>
-                            <option>FLOOD LIGHT</option>
-                            <option>HIGHBAY LIGHT</option>
-                            <option>LED STRIP</option>
-                            <option>LINEAR LIGHT</option>
-                            <option>PANEL LIGHT</option>
-                            <option>PROJECTOR</option>
-                            <option>TRACK LIGHT</option>
-                            <option>TROFFER LIGHT</option>
-                            <option>TUBE LIGHT</option>
-                            <option>UPLIGHT</option>
-                            <option>WALL WASHER</option>
+                            <option value="ASSEMBLED">ASSEMBLED</option>
+                            <option value="BOLLARD">BOLLARD</option>
+                            <option value="BULB">BULB</option>
+                            <option value="CUSTOMIZED">CUSTOMIZED</option>
+                            <option value="DIMMER">DIMMER</option>
+                            <option value="DIRECTIONAL">DIRECTIONAL</option>
+                            <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
+                            <option value="DOWNLIGHT">DOWNLIGHT</option>
+                            <option value="LED DRIVER">LED DRIVER</option>
+                            <option value="FLOOD LIGHT">FLOOD LIGHT</option>
+                            <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
+                            <option value="LED STRIP">LED STRIP</option>
+                            <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+                            <option value="PANEL LIGHT">PANEL LIGHT</option>
+                            <option value="PROJECTOR">PROJECTOR</option>
+                            <option value="TRACK LIGHT">TRACK LIGHT</option>
+                            <option value="TROFFER LIGHT">TROFFER LIGHT</option>
+                            <option value="TUBE LIGHT">TUBE LIGHT</option>
+                            <option value="UPLIGHT">UPLIGHT</option>
+                            <option value="WALL WASHER">WALL WASHER</option>
                         </optgroup>
 
                         <optgroup label="ACCESSORY">
-                            <option>FUNCTIONAL ACCESSORY</option>
-                            <option>INSTALL ACCESSORY</option>
-                            <option>REPLACEMENT PART</option>
+                            <option value="FUNCTIONAL ACCESSORY">FUNCTIONAL ACCESSORY</option>
+                            <option value="INSTALL ACCESSORY">INSTALL ACCESSORY</option>
+                            <option value="REPLACEMENT PART">REPLACEMENT PART</option>
                         </optgroup>
 
+                    </select>
+                </li>
+                <li v-show="category == '20000000'">
+                    <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected">
+                        
                     </select>
                 </li>
             </ul>

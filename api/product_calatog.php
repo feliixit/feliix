@@ -95,6 +95,7 @@ else
 
             $id = '';
             $category = '';
+            $tags = '';
             $sub_category = '';
        
             $brand = '';
@@ -134,6 +135,7 @@ else
                 $id = $row['id'];
                 $category = GetCategory($row['category'], $db);
                 $sub_category = $row['sub_category'];
+                $tags = $row['tags'];
                 $sub_category_name = GetCategory($row['sub_category'], $db);
         
                 $brand = $row['brand'];
@@ -328,7 +330,7 @@ else
                     for($i=0; $i<count($special_info_json); $i++)
                     {
                         $value = [];
-                        $category = $special_info_json[$i]->category;
+                        $_category = $special_info_json[$i]->category;
 
                         if($special_info_json[$i]->value != "")
                         {
@@ -383,6 +385,7 @@ else
                                     "category" => $category,
                                     "sub_category" => $sub_category,
                                     "sub_category_name" => $sub_category_name,
+                                    "tags" => explode(',', $tags),
                                     "brand" => $brand,
                                     "code" => $code,
                                     "price_ntd" => $price_ntd,

@@ -38,6 +38,7 @@ var app = new Vue({
 
     e_editing: false,
 
+    info:[],
 
     // evaluate
     evals:{},
@@ -107,10 +108,7 @@ var app = new Vue({
     },
 
     lv3() {
-      info = [];
-      info = this.shallowCopy(this.level3.find(element => element.cat_id == this.lv3));
-
-      if(info.category !== undefined) { this.attribute_name = info.category; }
+      
     },
     
     department() {
@@ -152,6 +150,7 @@ var app = new Vue({
             _this.level1 = res.data;
             _this.lv2 = 0;
             _this.lv3 = 0;
+            _this.info = [];
             _this.attribute_name = '';
           },
           (err) => {
@@ -183,6 +182,7 @@ var app = new Vue({
         _this.level2 = res.data;
         _this.lv2 = 0;
         _this.lv3 = 0;
+        _this.info = [];
         _this.attribute_name = '';
       } catch (err) {
         console.log(err)
@@ -232,6 +232,7 @@ var app = new Vue({
           (res) => {
             _this.level3 = res.data;
             _this.lv3 = 0;
+            _this.info = [];
             _this.attribute_name = '';
           },
           (err) => {
@@ -252,7 +253,7 @@ var app = new Vue({
       let _this = this;
 
       form_Data.append("jwt", token);
-      form_Data.append("cat_id", this.lv3);
+      form_Data.append("cat_id", this.info.cat_id);
     
       form_Data.append("petty_list", JSON.stringify(this.petty_list));
 
@@ -397,9 +398,14 @@ var app = new Vue({
             confirmButtonText: "OK",
           });
         return;
-      }else
+      }
+      else
       {
-        
+        this.info = [];
+        this.info = this.shallowCopy(this.level3.find(element => element.cat_id == this.lv3));
+
+        if(this.info.category !== undefined) { this.attribute_name = this.info.category; }
+
         this.getLeaveCredit();
         this.editing = true;
 
@@ -413,7 +419,7 @@ var app = new Vue({
       let _window = window;
 
       const params = {
-        id: this.lv3,
+        id: this.info.cat_id,
       };
 
       let token = localStorage.getItem("accessToken");
@@ -465,6 +471,7 @@ var app = new Vue({
       this.lv1 = 0;
       this.lv2 = 0;
       this.lv3 = 0;
+      this.info = [];
       this.attribute_name = '';
 
       this.option = "";
@@ -498,7 +505,7 @@ var app = new Vue({
         var ad = {
           id: ++this.list_sn,
           sn: ++this.list_sn,
-          cat_id: this.lv3,
+          cat_id: this.info.cat_id,
           option: this.option,
           status : 1,
         };
@@ -548,7 +555,7 @@ var app = new Vue({
         var ad = {
           id: ++this.list_sn,
           sn: ++this.list_sn,
-          cat_id: this.lv3,
+          cat_id: this.info.cat_id,
           option: this.option,
           status : 1,
         };

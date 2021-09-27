@@ -10,6 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
+$tags = (isset($_POST['tags']) ?  $_POST['tags'] : '');
 $brand = (isset($_POST['brand']) ?  $_POST['brand'] : '');
 $code = (isset($_POST['code']) ?  $_POST['code'] : '');
 $price_ntd = (isset($_POST['price_ntd']) ?  $_POST['price_ntd'] : '');
@@ -78,6 +79,7 @@ else
         SET
             `category` = :category,
             `sub_category` = :sub_category,
+            `tags` = :tags,
             `brand` = :brand,
             `code` = :code, ";
             if($price_ntd != ''  && !is_null($price_ntd))
@@ -119,6 +121,7 @@ else
         // bind the values
         $stmt->bindParam(':category', $category);
         $stmt->bindParam(':sub_category', $sub_category);
+        $stmt->bindParam(':tags', $tags);
         $stmt->bindParam(':brand', $brand);
         $stmt->bindParam(':code', $code);
         if($price_ntd != '' && !is_null($price_ntd))

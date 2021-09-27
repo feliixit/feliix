@@ -77,28 +77,32 @@
             cursor: pointer;
         }
 
-        body.fourth header nav a, body.fourth header nav a:link{
+        body.gray header nav a, body.gray header nav a:link {
             color: #000;
         }
 
-        body.fourth header nav a:hover{
+        body.gray header nav a:hover {
             color: #333;
         }
 
-        body.fourth header nav {
+        body.gray header nav {
             font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
         }
 
-        body.fourth header nav ul.info{
+        body.gray header nav ul.info {
             margin-bottom: 0;
         }
 
-        body.fourth header nav ul.info b{
+        body.gray header nav ul.info b {
             font-weight: bold;
         }
 
         body.gray select {
             background-image: url(../images/ui/icon_form_select_arrow_gray.svg);
+        }
+
+        body.gray .mainContent{
+            padding-top: 100px;
         }
 
         body.gray .mainContent > .block {
@@ -196,11 +200,11 @@
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) {
-            width: 350px;
+            width: 380px;
         }
 
         #tb_product_list tbody tr td:nth-of-type(4) {
-            width: 460px;
+            width: 430px;
         }
 
         #tb_product_list tbody tr td:nth-of-type(5) {
@@ -226,7 +230,7 @@
             padding-bottom: 3px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(7) button {
+        #tb_product_list tbody tr td:nth-of-type(6) button {
             border: 2px solid black;
             width: 34px;
             box-sizing: border-box;
@@ -258,6 +262,10 @@
             font-weight: 600;
             border-radius: 5px;
             padding: 0 7px;
+        }
+
+        #tb_product_list ul li:nth-of-type(2) span + span{
+            margin-left: 5px;
         }
 
         .NTD_price {
@@ -540,7 +548,7 @@
 
                     <th >Price</th>
 
-                    <th >Stock</th>
+                   <!-- <th >Stock</th> -->
 
                     <th>Action</th>
 
@@ -571,12 +579,23 @@
                             <li>
                                 Category:
                             </li>
-                            <li>
+                            <li v-if="item.category == 'Lighting'">
+                                {{ item.category}}
+                            </li>
+                            <li v-if="item.category != 'Lighting'">
                                 {{ item.category}} >> {{ item.sub_category_name}}
                             </li>
 
                         </ul>
+                        <ul>
+                            <li>
+                                Tags:
+                            </li>
+                            <li>
+                                <span v-for="(it, index) in item.tags">{{ it }}</span>
+                            </li>
 
+                        </ul>
                         <ul>
                             <li>
                                 Brand:
@@ -628,7 +647,7 @@
                         {{ item.price }}<br>
                         {{ item.price_ntd }}
                     </td>
-                    <td></td>
+                    <!-- <td></td> -->
                     <td>
                         <button id="edit01" @click="btnEditClick(item.id)"><i class="fas fa-edit"></i>
                         </button>

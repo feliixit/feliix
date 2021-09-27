@@ -2166,3 +2166,7 @@ ADD COLUMN `quoted_price` decimal(10, 2) AFTER price;
 
 ALTER TABLE product
 ADD COLUMN `quoted_price_change` timestamp NULL AFTER price_change;
+
+-- 2021/09/27 add tags
+ALTER TABLE product_category
+ADD COLUMN `tags` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER brand;

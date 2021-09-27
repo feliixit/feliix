@@ -44,7 +44,6 @@ var app = new Vue({
 
     quoted_price:"",
     quoted_price_change:"",
-
     // accessory
 
     // variation
@@ -80,6 +79,7 @@ var app = new Vue({
     bulk_status:'',
 
     submit: false,
+
   },
 
   created() {
@@ -792,6 +792,14 @@ var app = new Vue({
           form_Data.append("category", _this.category);
           form_Data.append("sub_category", _this.sub_category);
           form_Data.append("brand", _this.brand);
+
+          let tag01 = $('#tag01').val();
+          let tag02 = $('#tag02').val();
+          if( _this.category === '10000000')
+            form_Data.append("tags", tag01.join());
+          else
+            form_Data.append("tags", tag02.join());
+
           form_Data.append("code", _this.code);
           form_Data.append("price_ntd", _this.price_ntd);
           form_Data.append("price", _this.price);
@@ -874,6 +882,13 @@ var app = new Vue({
       // data for
       this.code = "";
       this.brand = "";
+
+      $('#tag01').val('default');
+      $('#tag01').selectpicker('refresh');
+
+      $('#tag02').val('default');
+      $('#tag02').selectpicker('refresh');
+      
       this.price = "";
       this.quoted_price = "";
       this.price_ntd = "";
