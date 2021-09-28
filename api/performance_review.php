@@ -9,6 +9,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : '');
 $kw = (isset($_GET['kw']) ?  $_GET['kw'] : '');
+$sdate = (isset($_GET['sdate']) ?  $_GET['sdate'] : '');
+$edate = (isset($_GET['edate']) ?  $_GET['edate'] : '');
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $kw = urldecode($kw);
 
@@ -87,6 +89,19 @@ if (!isset($jwt)) {
                 LEFT JOIN user_title ut ON ut.id = u1.title_id
                 LEFT JOIN user_department ud ON ud.id = u1.apartment_id
               WHERE pr.status <> -1  " . ($id != 0 ? " and pr.id=$id" : ' ');
+
+    if($sdate != '')
+    {
+        $query .= " and pr.review_month >= '" . $sdate . "' ";
+    }
+
+    if($edate != '')
+    {
+        $query .= " and case 
+                            when period = 0 then DATE_FORMAT(STR_TO_DATE(CONCAT(review_month, '-01'), '%Y-%m-%d') + INTERVAL 1 MONTH,'%Y-%m')
+                            when period = 1 then review_month
+                        end  <= '" . $edate . "' ";
+    }
 
     if($access6 != true)
     {

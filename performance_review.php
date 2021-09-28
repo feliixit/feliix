@@ -279,6 +279,7 @@ try {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 5px;
         }
 
         .list_function::after {
@@ -303,12 +304,25 @@ try {
             text-align: center;
             cursor: pointer;
             margin-right: 25px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-top: 5px;
         }
 
         .list_function .searching input {
             font-size: 15px;
             padding: 4px 7px;
+            height: 34px;
+            width: 201px;
+            margin-top: 5px;
         }
+
+        .list_function .searching input[type=month] {
+            border: 2px solid #2F9A57;
+            background-color: transparent;
+            vertical-align: middle;
+        }
+
 
         .list_function .searching i {
             color: #2F9A57;
@@ -576,6 +590,8 @@ try {
                             <a class="create"  @click="open_review"></a>
 
                             <div class="searching">
+                                <input type="month" v-model="sdate">
+                                <input type="month" v-model="edate">
                                 <input type="text" placeholder="Searching Keyword Here" v-model="keyword">
                                 <button style="border: none;" @click="search()"><i class="fas fa-search-plus"></i></button>
                             </div>

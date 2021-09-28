@@ -17,6 +17,9 @@ var app = new Vue({
 
     review_month_1:"",
 
+    sdate: "2021-04",
+    edate: "",
+
     editing: false,
 
     // paging
@@ -66,7 +69,8 @@ var app = new Vue({
 
   created() {
     let _this = this;
-    let uri = window.location.href.split("?");
+    let uri = window.location.href.split("?");;
+
     if (uri.length >= 2) {
       let vars = uri[1].split("&");
 
@@ -77,6 +81,12 @@ var app = new Vue({
           switch (tmp[0]) {
             case "kw":
               _this.keyword = decodeURI(tmp[1]);
+              break;
+            case "sdate":
+              _this.sdate = decodeURI(tmp[1]);
+              break;
+            case "edate":
+              _this.edate = decodeURI(tmp[1]);
               break;
             case "pg":
               _this.pg = tmp[1];
@@ -186,8 +196,17 @@ var app = new Vue({
     filter_apply: function() {
       let _this = this;
 
+      if(this.edate == '')
+      {
+        var today = new Date();
+        var mm = ("0" + (today.getMonth() + 1)).slice(-2);
+        var yyyy = today.getFullYear();
+        d = yyyy + '-' + mm;
+        this.edate = d;
+      }
+
       window.location.href =
-        "performance_review?" + "kw=" + _this.keyword + "&pg=" + _this.page;
+        "performance_review?" + "sdate=" + _this.sdate + "&edate=" + _this.edate + "&kw=" + _this.keyword + "&pg=" + _this.page;
     },
 
     on_grade_change:function(event) {
@@ -530,6 +549,8 @@ var app = new Vue({
 
       const params = {
         kw: _this.keyword,
+        sdate: _this.sdate,
+        edate: _this.edate,
       };
 
       let token = localStorage.getItem("accessToken");
