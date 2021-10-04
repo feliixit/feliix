@@ -209,6 +209,24 @@ catch (Exception $e) {
             z-index: 100;
             background-color: #fff;
         }
+
+        .list_function.main {
+            padding-top: 7px;
+        }
+
+        div.popupblock, div.namebox {
+            margin-top: 3px;
+        }
+
+        div.namebox > span{
+            display: inline-block;
+            font-size: 18px;
+            padding: 3px 20px;
+            vertical-align: middle;
+            border-radius: 20px;
+            font-weight: 600;
+            background-color: #E2E2E2;
+        }
     </style>
 
     <style>
@@ -2246,478 +2264,535 @@ catch (Exception $e) {
         <div class="mainContent">
             <!-- mainContent為動態內容包覆的內容區塊 -->
             <div class="list_function main">
-                <div class="block">
-                    <!-- add red -->
-                    <div class="popupblock">
-                        <a id="dialog_a1" class="add red"></a>
-                        <!-- dialog -->
-                        <div id="add_a1" class="dialog r-add add">
-                            <h6>Add/Duplicate Task</h6>
-                            <div class="tablebox s1">
-                                <ul>
-                                    <li class="head">Operation Type:</li>
-                                    <li style="padding-right: 0;">
-                                        <select name="" id="opType3">
-                                            <option value="add">Add New Task</option>
-                                            <option value="dup">Duplicate Existing Task</option>
-                                        </select>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="formbox s2 add">
-                                <dl>
-                                    <dt>Title:</dt>
-                                    <dd><input type="text" v-model="title"></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Priority:</dt>
-                                    <dd>
-                                        <select v-model="priority">
-                                            <option value="1">No Priority</option>
-                                            <option value="2">Low</option>
-                                            <option value="3">Normal</option>
-                                            <option value="4">High</option>
-                                            <option value="5">Urgent</option>
-                                        </select>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Assignee:</dt>
-                                    <dd>
-                                        <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="assignee" :id="assignee" :options="users" attach chips label="username" multiple></v-select>
+                <div class="block" style="display: flex; justify-content: space-between;">
+                    <div>
+                        <!-- add red -->
+                        <div class="popupblock">
+                            <a id="dialog_a1" class="add red"></a>
+                            <!-- dialog -->
+                            <div id="add_a1" class="dialog r-add add">
+                                <h6>Add/Duplicate Task</h6>
+                                <div class="tablebox s1">
+                                    <ul>
+                                        <li class="head">Operation Type:</li>
+                                        <li style="padding-right: 0;">
+                                            <select name="" id="opType3">
+                                                <option value="add">Add New Task</option>
+                                                <option value="dup">Duplicate Existing Task</option>
+                                            </select>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="formbox s2 add">
+                                    <dl>
+                                        <dt>Title:</dt>
+                                        <dd><input type="text" v-model="title"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Priority:</dt>
+                                        <dd>
+                                            <select v-model="priority">
+                                                <option value="1">No Priority</option>
+                                                <option value="2">Low</option>
+                                                <option value="3">Normal</option>
+                                                <option value="4">High</option>
+                                                <option value="5">Urgent</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Assignee:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="assignee" :id="assignee" :options="users" attach
+                                                          chips label="username" multiple></v-select>
 
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Collaborator:</dt>
-                                    <dd>
-                                        <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="collaborator" :id="collaborator" :options="users" attach chips label="username" multiple></v-select>
-
-                                        </div>
-
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Due Date:</dt>
-                                    <dd>
-                                        <div class="browser_group">
-                                            <input type="date" style="width: 47.5% !important;" v-model="due_date">
-                                            <input type="time" style="margin-left: 5%!important; width: 47.5% !important" v-model="due_time">
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Task Detail:</dt>
-                                    <dd><textarea placeholder="" v-model="detail"></textarea></dd>
-                                </dl>
-                                <dl>
-                                    <dd style="display: flex; justify-content: flex_start;">
-                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
-                                        <div class="pub-con" ref="bg">
-                                            <div class="input-zone">
-                                                <span class="upload-des">choose file</span>
-                                                <input class="input" type="file" name="file" value placeholder="choose file" ref="file" v-show="canSub" @change="changeFile()" multiple />
                                             </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Collaborator:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="collaborator" :id="collaborator" :options="users"
+                                                          attach chips label="username" multiple></v-select>
 
-                                    <dd>
-                                        <div class="browser_group">
-                                            <div class="pad">
-                                                <div class="file-list">
-                                                    <div class="file-item" v-for="(item,index) in fileArray" :key="index">
-                                                        <p>
-                                                            {{item.name}}
-                                                            <span @click="deleteFile(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
+                                            </div>
+
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Due Date:</dt>
+                                        <dd>
+                                            <div class="browser_group">
+                                                <input type="date" style="width: 47.5% !important;" v-model="due_date">
+                                                <input type="time"
+                                                       style="margin-left: 5%!important; width: 47.5% !important"
+                                                       v-model="due_time">
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Task Detail:</dt>
+                                        <dd><textarea placeholder="" v-model="detail"></textarea></dd>
+                                    </dl>
+                                    <dl>
+                                        <dd style="display: flex; justify-content: flex_start;">
+                                            <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                            <div class="pub-con" ref="bg">
+                                                <div class="input-zone">
+                                                    <span class="upload-des">choose file</span>
+                                                    <input class="input" type="file" name="file" value
+                                                           placeholder="choose file" ref="file" v-show="canSub"
+                                                           @change="changeFile()" multiple/>
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+
+                                        <dd>
+                                            <div class="browser_group">
+                                                <div class="pad">
+                                                    <div class="file-list">
+                                                        <div class="file-item" v-for="(item,index) in fileArray"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.name}}
+                                                                <span @click="deleteFile(index)"
+                                                                      v-show="item.progress==0" class="upload-delete"><i
+                                                                        class="fas fa-backspace"></i>
                                                             </span>
-                                                        </p>
-                                                        <div class="progress-container" v-show="item.progress!=0">
-                                                            <div class="progress-wrapper">
-                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                                            </div>
-                                                            <div class="progress-rate">
-                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                                                <span v-else><i class="fas fa-check-circle"></i></span>
+                                                            </p>
+                                                            <div class="progress-container" v-show="item.progress!=0">
+                                                                <div class="progress-wrapper">
+                                                                    <div class="progress-progress"
+                                                                         :style="'width:'+item.progress*100+'%'"></div>
+                                                                </div>
+                                                                <div class="progress-rate">
+                                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                    <span v-else><i
+                                                                            class="fas fa-check-circle"></i></span>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                </div>
-                                    </dd>
-                                </dl>
-                                <div class="btnbox">
-                                    <a class="btn small" @click="task_clear">Cancel</a>
-                                    <a class="btn small green" id="btn_arrange">Calendar</a>
-                                    <a class="btn small green" @click="task_create">Create</a>
+                                                    </div>
+                                        </dd>
+                                    </dl>
+                                    <div class="btnbox">
+                                        <a class="btn small" @click="task_clear">Cancel</a>
+                                        <a class="btn small green" id="btn_arrange">Calendar</a>
+                                        <a class="btn small green" @click="task_create">Create</a>
+                                    </div>
+                                </div>
+                                <div class="tablebox s2 dup">
+                                    <ul>
+                                        <li class="head">Target Task:</li>
+                                        <li class="mix">
+                                            <select v-model="task_id_to_dup">
+                                                <option v-for="(it, index) in project03_other_task" :value="it.task_id">
+                                                    {{ it.title }}
+                                                </option>
+                                            </select>
+                                            <a class="btn small green" @click="task_dup">Duplicate</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="tablebox s2 dup">
-                                <ul>
-                                    <li class="head">Target Task:</li>
-                                    <li class="mix">
-                                        <select v-model="task_id_to_dup">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id">
-                                                {{ it.title }}
-                                            </option>
-                                        </select>
-                                        <a class="btn small green" @click="task_dup">Duplicate</a>
-                                    </li>
-                                </ul>
-                            </div>
+                            <!-- dialog end -->
                         </div>
-                        <!-- dialog end -->
-                    </div>
-                    <!-- edit red -->
-                    <div class="popupblock">
-                        <a id="edit_red" class="edit red"></a>
-                        <!-- dialog -->
-                        <div id="dialog_red_edit" class="dialog r-edit edit">
-                            <h6>Edit/Delete Task:</h6>
-                            <div class="tablebox s1">
-                                <ul>
-                                    <li class="head">Operation Type:</li>
-                                    <li style="padding-right: 0;">
-                                        <select name="" id="opType">
-                                            <option value="edit">Edit Existing Task</option>
-                                            <option value="del">Delete Existing Task</option>
-                                        </select>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tablebox s2 del">
-                                <ul>
-                                    <li class="head">Target Task:</li>
-                                    <li class="mix">
-                                        <select v-model="task_id_to_del">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" v-if="it.task_status != '-1'">
-                                                {{ it.title }}
-                                            </option>
-                                        </select>
-                                        <a class="btn small" @click="task_del">Delete</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tablebox s2 edit">
-                                <ul>
-                                    <li class="head">Target Sequence:</li>
-                                    <li class="mix">
-                                        <select v-model="task_id_to_load">
-                                            <option v-for="(it, index) in project03_other_task" :value="it.task_id" v-if="it.task_status != '-1'">
-                                                {{ it.title }}
-                                            </option>
-                                        </select>
-                                        <a class="btn small green" @click="task_load">Load</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="formbox s2 edit">
-                                <dl>
-                                    <dt>Title:</dt>
-                                    <dd><input type="text" v-model="record.title"></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Priority:</dt>
-                                    <dd>
-                                        <select name="" id="" v-model="record.priority_id">
-                                            <option value="1">No Priority</option>
-                                            <option value="2">Low</option>
-                                            <option value="3">Normal</option>
-                                            <option value="4">High</option>
-                                            <option value="5">Urgent</option>
-                                        </select>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Status:</dt>
-                                    <dd>
-                                        <select name="" id="" v-model="record.task_status">
-                                            <option value="0">Ongoing</option>
-                                            <option value="1">Pending</option>
-                                            <option value="2">Close</option>
-                                        </select>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Assignee:</dt>
-                                    <dd>
-                                        <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record.assignee" :id="record.assignee_id" :options="users_del" attach chips label="username" multiple></v-select>
+                        <!-- edit red -->
+                        <div class="popupblock">
+                            <a id="edit_red" class="edit red"></a>
+                            <!-- dialog -->
+                            <div id="dialog_red_edit" class="dialog r-edit edit">
+                                <h6>Edit/Delete Task:</h6>
+                                <div class="tablebox s1">
+                                    <ul>
+                                        <li class="head">Operation Type:</li>
+                                        <li style="padding-right: 0;">
+                                            <select name="" id="opType">
+                                                <option value="edit">Edit Existing Task</option>
+                                                <option value="del">Delete Existing Task</option>
+                                            </select>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tablebox s2 del">
+                                    <ul>
+                                        <li class="head">Target Task:</li>
+                                        <li class="mix">
+                                            <select v-model="task_id_to_del">
+                                                <option v-for="(it, index) in project03_other_task" :value="it.task_id"
+                                                        v-if="it.task_status != '-1'">
+                                                    {{ it.title }}
+                                                </option>
+                                            </select>
+                                            <a class="btn small" @click="task_del">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tablebox s2 edit">
+                                    <ul>
+                                        <li class="head">Target Sequence:</li>
+                                        <li class="mix">
+                                            <select v-model="task_id_to_load">
+                                                <option v-for="(it, index) in project03_other_task" :value="it.task_id"
+                                                        v-if="it.task_status != '-1'">
+                                                    {{ it.title }}
+                                                </option>
+                                            </select>
+                                            <a class="btn small green" @click="task_load">Load</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="formbox s2 edit">
+                                    <dl>
+                                        <dt>Title:</dt>
+                                        <dd><input type="text" v-model="record.title"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Priority:</dt>
+                                        <dd>
+                                            <select name="" id="" v-model="record.priority_id">
+                                                <option value="1">No Priority</option>
+                                                <option value="2">Low</option>
+                                                <option value="3">Normal</option>
+                                                <option value="4">High</option>
+                                                <option value="5">Urgent</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Status:</dt>
+                                        <dd>
+                                            <select name="" id="" v-model="record.task_status">
+                                                <option value="0">Ongoing</option>
+                                                <option value="1">Pending</option>
+                                                <option value="2">Close</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Assignee:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="record.assignee" :id="record.assignee_id"
+                                                          :options="users_del" attach chips label="username"
+                                                          multiple></v-select>
 
-                                        </div>
-
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Collaborator:</dt>
-                                    <dd>
-
-                                        <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record.collaborator" :id="record.collaborator_id" :options="users_del" attach chips label="username" multiple></v-select>
-
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Due Date:</dt>
-                                    <dd>
-                                        <div class="browser_group">
-                                            <input type="date" style="width: 47.5%!important;" v-model="record.due_date">
-                                            <input type="time" style="margin-left: 5%!important; width: 47.5%!important;" v-model="record.due_time">
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Description:</dt>
-                                    <dd><textarea placeholder="" v-model="record.detail"></textarea></dd>
-                                </dl>
-
-                                <dl>
-                                    <dd style="display: flex; justify-content: flex_start;">
-                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
-
-                                        <div class="pub-con" ref="bg">
-                                            <div class="input-zone">
-                                                <span class="upload-des">choose file</span>
-                                                <input class="input" type="file" :ref="'editfile'" placeholder="choose file" @change="changeEditFile()" multiple />
                                             </div>
-                                        </div>
-                                    </dd>
-                                </dl>
 
-                                <dl>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Collaborator:</dt>
+                                        <dd>
 
-                                    <dd>
-                                        <div class="browser_group">
-                                            <div class="pad">
-                                                <div class="file-list">
-                                                    <div class="file-item" v-for="(item,index) in editfileArray" :key="index">
-                                                        <p>
-                                                            {{item.name}}
-                                                            <span @click="deleteEditFile(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="record.collaborator" :id="record.collaborator_id"
+                                                          :options="users_del" attach chips label="username"
+                                                          multiple></v-select>
+
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Due Date:</dt>
+                                        <dd>
+                                            <div class="browser_group">
+                                                <input type="date" style="width: 47.5%!important;"
+                                                       v-model="record.due_date">
+                                                <input type="time"
+                                                       style="margin-left: 5%!important; width: 47.5%!important;"
+                                                       v-model="record.due_time">
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Description:</dt>
+                                        <dd><textarea placeholder="" v-model="record.detail"></textarea></dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dd style="display: flex; justify-content: flex_start;">
+                                            <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+
+                                            <div class="pub-con" ref="bg">
+                                                <div class="input-zone">
+                                                    <span class="upload-des">choose file</span>
+                                                    <input class="input" type="file" :ref="'editfile'"
+                                                           placeholder="choose file" @change="changeEditFile()"
+                                                           multiple/>
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
+
+                                    <dl>
+
+                                        <dd>
+                                            <div class="browser_group">
+                                                <div class="pad">
+                                                    <div class="file-list">
+                                                        <div class="file-item" v-for="(item,index) in editfileArray"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.name}}
+                                                                <span @click="deleteEditFile(index)"
+                                                                      v-show="item.progress==0" class="upload-delete"><i
+                                                                        class="fas fa-backspace"></i>
                                                             </span>
-                                                        </p>
-                                                        <div class="progress-container" v-show="item.progress!=0">
-                                                            <div class="progress-wrapper">
-                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                                            </div>
-                                                            <div class="progress-rate">
-                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                                                <span v-else><i class="fas fa-check-circle"></i></span>
+                                                            </p>
+                                                            <div class="progress-container" v-show="item.progress!=0">
+                                                                <div class="progress-wrapper">
+                                                                    <div class="progress-progress"
+                                                                         :style="'width:'+item.progress*100+'%'"></div>
+                                                                </div>
+                                                                <div class="progress-rate">
+                                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                    <span v-else><i
+                                                                            class="fas fa-check-circle"></i></span>
+                                                                </div>
                                                             </div>
                                                         </div>
+
                                                     </div>
+                                        </dd>
+                                    </dl>
 
-                                                </div>
-                                    </dd>
-                                </dl>
-
-                                <div class="btnbox">
-                                    <a class="btn small" @click="task_edit_clear">Cancel</a>
-                                    <a class="btn small green" id="btn_arrange">Calendar</a>
-                                    <a class="btn small green" @click="task_edit_create">Save</a>
+                                    <div class="btnbox">
+                                        <a class="btn small" @click="task_edit_clear">Cancel</a>
+                                        <a class="btn small green" id="btn_arrange">Calendar</a>
+                                        <a class="btn small green" @click="task_edit_create">Save</a>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- dialog end -->
                         </div>
-                        <!-- dialog end -->
-                    </div>
-                    <!-- add -->
-                    <div class="popupblock">
-                        <a id="dialog_a1_r" class="add blue"></a>
-                        <!-- dialog -->
-                        <div id="add_a1_r" class="dialog d-add">
-                            <h6>Add Message:</h6>
-                            <div class="formbox">
-                                <dl>
-                                    <dt>Title:</dt>
-                                    <dd><input type="text" placeholder="" v-model="title_r"></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Assignee:</dt>
-                                    <dd>
-                                        <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="assignee_r" :id="assignee_r" :options="users" attach chips label="username" multiple></v-select>
+                        <!-- add -->
+                        <div class="popupblock">
+                            <a id="dialog_a1_r" class="add blue"></a>
+                            <!-- dialog -->
+                            <div id="add_a1_r" class="dialog d-add">
+                                <h6>Add Message:</h6>
+                                <div class="formbox">
+                                    <dl>
+                                        <dt>Title:</dt>
+                                        <dd><input type="text" placeholder="" v-model="title_r"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Assignee:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="assignee_r" :id="assignee_r" :options="users" attach
+                                                          chips label="username" multiple></v-select>
 
-                                        </div>
-
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Description:</dt>
-                                    <dd><textarea placeholder="" v-model="detail_r"></textarea></dd>
-                                </dl>
-                                <dl>
-                                    <dd style="display: flex; justify-content: flex_start;">
-                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
-                                        <div class="pub-con" ref="bg">
-                                            <div class="input-zone">
-                                                <span class="upload-des">choose file</span>
-                                                <input class="input" type="file" name="file_r" value placeholder="choose file" ref="file_r" v-show="canSub_r" @change="changeFile_r()" multiple />
                                             </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dd>
-                                        <div class="browser_group">
 
-                                            <div class="pad">
-                                                <div class="file-list">
-                                                    <div class="file-item" v-for="(item,index) in fileArray_r" :key="index">
-                                                        <p>
-                                                            {{item.name}}
-                                                            <span @click="deleteFile_r(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Description:</dt>
+                                        <dd><textarea placeholder="" v-model="detail_r"></textarea></dd>
+                                    </dl>
+                                    <dl>
+                                        <dd style="display: flex; justify-content: flex_start;">
+                                            <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                            <div class="pub-con" ref="bg">
+                                                <div class="input-zone">
+                                                    <span class="upload-des">choose file</span>
+                                                    <input class="input" type="file" name="file_r" value
+                                                           placeholder="choose file" ref="file_r" v-show="canSub_r"
+                                                           @change="changeFile_r()" multiple/>
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dd>
+                                            <div class="browser_group">
+
+                                                <div class="pad">
+                                                    <div class="file-list">
+                                                        <div class="file-item" v-for="(item,index) in fileArray_r"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.name}}
+                                                                <span @click="deleteFile_r(index)"
+                                                                      v-show="item.progress==0" class="upload-delete"><i
+                                                                        class="fas fa-backspace"></i>
                                                             </span>
-                                                        </p>
-                                                        <div class="progress-container" v-show="item.progress!=0">
-                                                            <div class="progress-wrapper">
-                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                                            </div>
-                                                            <div class="progress-rate">
-                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                                                <span v-else><i class="fas fa-check-circle"></i></span>
+                                                            </p>
+                                                            <div class="progress-container" v-show="item.progress!=0">
+                                                                <div class="progress-wrapper">
+                                                                    <div class="progress-progress"
+                                                                         :style="'width:'+item.progress*100+'%'"></div>
+                                                                </div>
+                                                                <div class="progress-rate">
+                                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                    <span v-else><i
+                                                                            class="fas fa-check-circle"></i></span>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                </div>
-                                    </dd>
-                                </dl>
-                                <div class="btnbox">
-                                    <a class="btn small" @click="task_clear_r">Cancel</a>
-                                    <a class="btn small green" @click="task_create_r">Create</a>
+                                                    </div>
+                                        </dd>
+                                    </dl>
+                                    <div class="btnbox">
+                                        <a class="btn small" @click="task_clear_r">Cancel</a>
+                                        <a class="btn small green" @click="task_create_r">Create</a>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- dialog end -->
                         </div>
-                        <!-- dialog end -->
-                    </div>
-                    <!-- edit -->
-                    <div class="popupblock">
-                        <a id="edit_blue" class="edit blue"></a>
-                        <!-- dialog -->
-                        <div id="dialog_blue_edit" class="dialog d-edit edit">
-                            <h6>Edit/Delete Message:</h6>
-                            <div class="tablebox s1">
-                                <ul>
-                                    <li class="head">Operation Type:</li>
-                                    <li style="padding-right: 0;">
-                                        <select name="" id="opType2">
-                                            <option value="edit">Edit Existing Message</option>
-                                            <option value="del">Delete Existing Message</option>
-                                        </select>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tablebox s2 del">
-                                <ul>
-                                    <li class="head">Target Message:</li>
-                                    <li class="mix">
-                                        <select v-model="task_id_to_del_r">
-                                            <option v-for="(it, index) in project03_other_task_r" :value="it.task_id" v-if="it.task_status != '-1'">
-                                                {{ it.title }}
-                                            </option>
-                                        </select>
-                                        <a class="btn small" @click="task_del_r">Delete</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tablebox s2 edit">
-                                <ul>
-                                    <li class="head">Target Message:</li>
-                                    <li class="mix">
-                                        <select v-model="task_id_to_load_r">
-                                            <option v-for="(it, index) in project03_other_task_r" :value="it.task_id" v-if="it.task_status != '-1'">
-                                                {{ it.title }}
-                                            </option>
-                                        </select>
-                                        <a class="btn small green" @click="task_load_r">Load</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="formbox s2 edit">
-                                <dl>
-                                    <dt>Title:</dt>
-                                    <dd><input type="text" placeholder="" v-model="record_r.title"></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Assignee:</dt>
-                                    <dd>
-                                        <div style="text-align: left;font-size: 12px;">
-                                            <v-select v-model="record_r.assignee" :id="record_r.assignee_id" :options="users_del_r" attach chips label="username" multiple></v-select>
+                        <!-- edit -->
+                        <div class="popupblock">
+                            <a id="edit_blue" class="edit blue"></a>
+                            <!-- dialog -->
+                            <div id="dialog_blue_edit" class="dialog d-edit edit">
+                                <h6>Edit/Delete Message:</h6>
+                                <div class="tablebox s1">
+                                    <ul>
+                                        <li class="head">Operation Type:</li>
+                                        <li style="padding-right: 0;">
+                                            <select name="" id="opType2">
+                                                <option value="edit">Edit Existing Message</option>
+                                                <option value="del">Delete Existing Message</option>
+                                            </select>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tablebox s2 del">
+                                    <ul>
+                                        <li class="head">Target Message:</li>
+                                        <li class="mix">
+                                            <select v-model="task_id_to_del_r">
+                                                <option v-for="(it, index) in project03_other_task_r"
+                                                        :value="it.task_id" v-if="it.task_status != '-1'">
+                                                    {{ it.title }}
+                                                </option>
+                                            </select>
+                                            <a class="btn small" @click="task_del_r">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tablebox s2 edit">
+                                    <ul>
+                                        <li class="head">Target Message:</li>
+                                        <li class="mix">
+                                            <select v-model="task_id_to_load_r">
+                                                <option v-for="(it, index) in project03_other_task_r"
+                                                        :value="it.task_id" v-if="it.task_status != '-1'">
+                                                    {{ it.title }}
+                                                </option>
+                                            </select>
+                                            <a class="btn small green" @click="task_load_r">Load</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="formbox s2 edit">
+                                    <dl>
+                                        <dt>Title:</dt>
+                                        <dd><input type="text" placeholder="" v-model="record_r.title"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Assignee:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="record_r.assignee" :id="record_r.assignee_id"
+                                                          :options="users_del_r" attach chips label="username"
+                                                          multiple></v-select>
 
-                                        </div>
-
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>Description:</dt>
-                                    <dd><textarea placeholder="" v-model="record_r.detail"></textarea></dd>
-                                </dl>
-                                <dl>
-                                    <dd style="display: flex; justify-content: flex_start;">
-                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
-                                        <div class="pub-con" ref="bg">
-                                            <div class="input-zone">
-                                                <span class="upload-des">choose file</span>
-                                                <input class="input" type="file" :ref="'editfile_r'" placeholder="choose file" @change="changeEditFile_r()" multiple />
                                             </div>
-                                        </div>
-                                    </dd>
-                                </dl>
 
-                                <dl>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Description:</dt>
+                                        <dd><textarea placeholder="" v-model="record_r.detail"></textarea></dd>
+                                    </dl>
+                                    <dl>
+                                        <dd style="display: flex; justify-content: flex_start;">
+                                            <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                            <div class="pub-con" ref="bg">
+                                                <div class="input-zone">
+                                                    <span class="upload-des">choose file</span>
+                                                    <input class="input" type="file" :ref="'editfile_r'"
+                                                           placeholder="choose file" @change="changeEditFile_r()"
+                                                           multiple/>
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
 
-                                    <dd>
-                                        <div class="browser_group">
-                                            <div class="pad">
-                                                <div class="file-list">
-                                                    <div class="file-item" v-for="(item,index) in editfileArray_r" :key="index">
-                                                        <p>
-                                                            {{item.name}}
-                                                            <span @click="deleteEditFile_r(index)" v-show="item.progress==0" class="upload-delete"><i class="fas fa-backspace"></i>
+                                    <dl>
+
+                                        <dd>
+                                            <div class="browser_group">
+                                                <div class="pad">
+                                                    <div class="file-list">
+                                                        <div class="file-item" v-for="(item,index) in editfileArray_r"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.name}}
+                                                                <span @click="deleteEditFile_r(index)"
+                                                                      v-show="item.progress==0" class="upload-delete"><i
+                                                                        class="fas fa-backspace"></i>
                                                             </span>
-                                                        </p>
-                                                        <div class="progress-container" v-show="item.progress!=0">
-                                                            <div class="progress-wrapper">
-                                                                <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                                            </div>
-                                                            <div class="progress-rate">
-                                                                <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                                                <span v-else><i class="fas fa-check-circle"></i></span>
+                                                            </p>
+                                                            <div class="progress-container" v-show="item.progress!=0">
+                                                                <div class="progress-wrapper">
+                                                                    <div class="progress-progress"
+                                                                         :style="'width:'+item.progress*100+'%'"></div>
+                                                                </div>
+                                                                <div class="progress-rate">
+                                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                    <span v-else><i
+                                                                            class="fas fa-check-circle"></i></span>
+                                                                </div>
                                                             </div>
                                                         </div>
+
                                                     </div>
+                                        </dd>
+                                    </dl>
 
-                                                </div>
-                                    </dd>
-                                </dl>
-
-                                <div class="btnbox">
-                                    <a class="btn small" @click="task_edit_clear_r">Cancel</a>
-                                    <a class="btn small green" @click="task_edit_create_r">Save</a>
+                                    <div class="btnbox">
+                                        <a class="btn small" @click="task_edit_clear_r">Cancel</a>
+                                        <a class="btn small green" @click="task_edit_create_r">Save</a>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- dialog end -->
                         </div>
-                        <!-- dialog end -->
+                        <!-- calendar -->
+                        <!-- Task calendar -->
+                        <div class="popupblock">
+                            <a class="calendar red" id="btn_view"></a>
+                        </div>
+                        <!-- Meeting calendar -->
+                        <div class="popupblock">
+                            <a class="calendar" id="btn_arrange"></a>
+                        </div>
                     </div>
-                    <!-- calendar -->
-                    <!-- Task calendar -->
-                    <div class="popupblock">
-                        <a class="calendar red" id="btn_view"></a>
+
+                    <div class="namebox">
+                        <!-- Project Name -->
+                        <b class="tag focus">PROJECT</b>
+                        <b><a style="font-size:20px; padding-left:20px;" :href="'project02?p=' + project_id">{{project_name }}</a></b>
                     </div>
-                    <!-- Meeting calendar -->
-                    <div class="popupblock">
-                        <a class="calendar" id="btn_arrange"></a>
+
+                    <div class="namebox">
+                        <!-- Stage Name -->
+                        <span class="stage_name">{{ stage }}</span>
                     </div>
-                    <!-- tag -->
-                    <b class="tag focus">PROJECT</b>
-                    <b><a style="font-size:20px; padding-left:20px;" :href="'project02?p=' + project_id">{{ project_name }}</a></b>
                 </div>
             </div>
+
             <div class="block left">
                 <div class="list_function dialogclear">
                     <!-- Filter -->

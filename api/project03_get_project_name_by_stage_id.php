@@ -55,7 +55,7 @@ else
           case 'GET':
             $stage_id = (isset($_GET['stage_id']) ?  $_GET['stage_id'] : 0);
          
-            $sql = "SELECT project_id, project_name FROM project_stages ps JOIN project_main pm ON ps.project_id = pm.id where ps.id = " . $stage_id . " and pm.status <> -1 ";
+            $sql = "SELECT project_id, project_name, pp.stage FROM project_stages ps JOIN project_main pm ON ps.project_id = pm.id LEFT JOIN project_stage pp ON ps.stage_id = pp.id  where ps.id = " . $stage_id . " and pm.status <> -1 ";
 
             $merged_results = array();
 

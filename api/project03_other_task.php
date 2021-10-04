@@ -63,11 +63,13 @@ switch ($method) {
         $page = (isset($_GET['page']) ?  $_GET['page'] : "");
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
-        $sql = "SELECT pm.id task_id, title, priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
+        $sql = "SELECT  pm.stage_id, pg.stage, pm.id task_id, title, priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
         pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name
         from project_other_task pm 
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task'
+        LEFT JOIN project_stages ps ON pm.stage_id = ps.id
+        LEFT JOIN project_stage pg ON ps.stage_id = pg.id
         where pm.stage_id = " . $stage_id . " ";
 
         if ($status != 0) {
@@ -108,6 +110,7 @@ switch ($method) {
         $stmt->execute();
 
         $task_id = 0;
+        $stage = "";
         $title = "";
         $priority = "";
         $due_date = "";
@@ -131,6 +134,7 @@ switch ($method) {
             if ($task_id != $row['task_id'] && $task_id != 0) {
                 $merged_results[] = array(
                     "task_id" => $task_id,
+                    "stage" => $stage,
                     "title" => $title,
                     "priority" => $priority,
                     "priority_id" => $priority_id,
@@ -159,6 +163,7 @@ switch ($method) {
 
             $task_id = $row['task_id'];
             $title = $row['title'];
+            $stage = $row['stage'];
             $priority = GetPriority($row['priority']);
             $priority_id = $row['priority'];
             $due_date = $row['due_date'];
@@ -191,6 +196,7 @@ switch ($method) {
         if ($task_id != 0) {
             $merged_results[] = array(
                 "task_id" => $task_id,
+                "stage" => $stage,
                 "title" => $title,
                 "priority" => $priority,
                 "priority_id" => $priority_id,
