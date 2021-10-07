@@ -71,6 +71,10 @@ $query = "SELECT pm.id pid,
             pp.amount,
             pp.invoice,
             pp.detail,
+            pp.payment_method,
+            pp.bank_name,
+            pp.check_number,
+            pp.bank_account,
             pp.checked,
             pp.checked_id,
             pp.checked_at,
@@ -132,6 +136,10 @@ $kind = "";
 $amount = "";
 $invoice = "";
 $detail = "";
+$payment_method = "";
+$bank_name = "";
+$check_number = "";
+$bank_account = "";
 $checked = "";
 $checked_at = "";
 $final_amount = "";
@@ -164,6 +172,10 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 "amount" => $amount,
                                 "invoice" => $invoice,
                                 "detail" => $detail,
+                                "payment_method" => $payment_method,
+                                "bank_name" => $bank_name,
+                                "check_number" => $check_number,
+                                "bank_account" => $bank_account,
                                 "checked" => $checked,
                                 "checked_id" => $checked_id,
                                 "created_at" => $created_at,
@@ -194,6 +206,10 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $amount = $row['amount'];
     $invoice = $row['invoice'];
     $detail = $row['detail'];
+    $payment_method = $row['payment_method'];
+    $bank_name = $row['bank_name'];
+    $check_number = $row['check_number'];
+    $bank_account = $row['bank_account'];
     $checked = $row['checked'];
     $checked_id = $row['checked_id'];
     $checked_at = $row['checked_at'];
@@ -229,6 +245,10 @@ if($id != 0)
                                 "amount" => $amount,
                                 "invoice" => $invoice,
                                 "detail" => $detail,
+                                "payment_method" => $payment_method,
+                                "payment_method" => $payment_method,
+                                "bank_name" => $bank_name,
+                                "check_number" => $check_number,
                                 "checked" => $checked,
                                 "checked_id" => $checked_id,
                                 "created_at" => $created_at,

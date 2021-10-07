@@ -759,7 +759,7 @@ function send_review_mail_single($s_date, $adm_id, $emp_id, $dead_date){
     }
 }
 
-function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date)
+function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date, $send_mail)
 {
     $conf = new Conf();
 
@@ -785,7 +785,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
         $payment = "DownPayment";
     
     if($kind == 1)
-        $payment = "Payment";
+        $payment = "Full Payment";
 
     if($category == '1')
         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
@@ -799,6 +799,10 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     if($kind == 0)
         $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+
+    if($kind == 1 && $send_mail == 'true')
+        $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+        
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");

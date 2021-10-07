@@ -2170,3 +2170,20 @@ ADD COLUMN `quoted_price_change` timestamp NULL AFTER price_change;
 -- 2021/09/27 add tags
 ALTER TABLE product_category
 ADD COLUMN `tags` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER brand;
+
+-- 2021/10/07 send email
+ALTER TABLE project_main
+ADD COLUMN `send_mail` varchar(10)  COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 2021/10/07 project proof 2037
+ALTER TABLE project_proof
+ADD COLUMN `payment_method` varchar(16) DEFAULT '' AFTER status;
+
+ALTER TABLE project_proof
+ADD COLUMN `bank_name` varchar(256) DEFAULT '' AFTER status;
+
+ALTER TABLE project_proof
+ADD COLUMN `check_number` varchar(256) DEFAULT '' AFTER status;
+
+ALTER TABLE project_proof
+ADD COLUMN `bank_account` varchar(16) DEFAULT '' AFTER status;

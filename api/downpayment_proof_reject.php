@@ -97,7 +97,8 @@ else
                         p.catagory_id, 
                         pm.kind, 
                         pm.amount, 
-                        pm.received_date   
+                        pm.received_date,
+                        p.send_mail   
                 FROM project_proof pm 
                 left join user u on u.id = pm.create_id 
                 LEFT JOIN project_main p ON p.id = pm.project_id  
@@ -117,6 +118,7 @@ else
     $kind = 0;
     $amount = 0.0;
     $receive_date = "";
+    $send_mail = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
@@ -130,10 +132,11 @@ else
         $kind = $row['kind'];
         $amount = $row['amount'];
         $receive_date = $row['receive_date'];
+        $send_mail = $row['send_mail'];
     }
 
 
-    send_check_notify_mail_new($leaver, $email1, $project_name, $remark, $subtime, $proof_remark, "False", $category, $kind, $amount, $receive_date);
+    send_check_notify_mail_new($leaver, $email1, $project_name, $remark, $subtime, $proof_remark, "False", $category, $kind, $amount, $receive_date, $send_mail);
 }
 
 http_response_code(200);

@@ -67,6 +67,7 @@ $edit_office_location = (isset($_POST['edit_office_location']) ?  $_POST['edit_o
 $edit_background_client = (isset($_POST['edit_background_client']) ?  $_POST['edit_background_client'] : '');
 $edit_background_project = (isset($_POST['edit_background_project']) ?  $_POST['edit_background_project'] : '');
 $edit_contractor = (isset($_POST['edit_contractor']) ?  $_POST['edit_contractor'] : '');
+$edit_send_mail = (isset($_POST['edit_send_mail']) ?  $_POST['edit_send_mail'] : '');
 
 $edit_key_person = (isset($_POST['edit_key_person']) ?  $_POST['edit_key_person'] : '');
 $de_key_person = json_decode($edit_key_person);
@@ -152,7 +153,8 @@ $query = "INSERT INTO project_edit_info
                     office_location = :edit_office_location,
                     background_client = :edit_background_client,
                     background_project = :edit_background_project,
-                    contractor = :edit_contractor
+                    contractor = :edit_contractor,
+                    send_mail = :edit_send_mail
                 
                 where id = :project_id ";
     
@@ -180,6 +182,7 @@ $query = "INSERT INTO project_edit_info
                 $stmt1->bindParam(':edit_background_client', $edit_background_client);
                 $stmt1->bindParam(':edit_background_project', $edit_background_project);
                 $stmt1->bindParam(':edit_contractor', $edit_contractor);
+                $stmt1->bindParam(':edit_send_mail', $edit_send_mail);
 
 
                 $stmt1->execute();

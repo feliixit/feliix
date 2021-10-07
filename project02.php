@@ -232,6 +232,11 @@ catch (Exception $e) {
             border: none !important;
             font-weight: 700 !important;
         }
+
+        #project_dialog input[type=checkbox]+Label::before{
+            color: var(--fth04);
+            font-size: 22px;
+        }
     </style>
 
 </head>
@@ -501,22 +506,27 @@ catch (Exception $e) {
                                             </div>
                                         </dd>
 
-                                            <dt>Type:</dt>
-                                            <dd><select v-model="edit_type">
-                                                    <option value="Major">Major</option>
-                                                    <option value="Minor">Minor</option>
-                                                </select></dd>
+                                        <dt>Type:</dt>
+                                        <dd><select v-model="edit_type">
+                                            <option value="Major">Major</option>
+                                            <option value="Minor">Minor</option>
+                                        </select></dd>
 
-                                            <div class="half">
-                                                <dt style="margin-top: 3px;">Scope of Works:</dt>
-                                                <dd><select v-model="edit_scope">
-                                                        <option value="Installation">Installation</option>
-                                                        <option value="Delivery">Delivery</option>
-                                                        <option value="Other">Other</option>
-                                                    </select></dd>
-                                            </div>
-                                            <dd><input type="text" v-model="edit_scope_other" v-if="edit_scope === 'Other'"></dd>
-                                      
+                                        <div class="half">
+                                            <dt style="margin-top: 3px;">Scope of Works:</dt>
+                                            <dd><select v-model="edit_scope">
+                                                <option value="Installation">Installation</option>
+                                                <option value="Delivery">Delivery</option>
+                                                <option value="Other">Other</option>
+                                            </select></dd>
+                                        </div>
+                                        <dd><input type="text" v-model="edit_scope_other" v-if="edit_scope === 'Other'">
+                                        </dd>
+
+                                        <dt>
+                                            <input type="checkbox" id="send_emai"  v-model="edit_send_mail">
+                                            <label for="send_emai" style="font-size: 14px; margin-left: -3px;">Send E-mail to service manager when full payment is verified</label>
+                                        </dt>
 
                                         <dt>Reason for Editing Project Info:</dt>
                                         <dd><textarea name="" id="" cols="30" rows="10" v-model="edit_edit_reason"></textarea></dd>
