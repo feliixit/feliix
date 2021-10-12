@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
 
     <!-- jQuery和js載入 -->
@@ -48,6 +49,7 @@
     <script type="text/javascript"
             src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
+    <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -59,7 +61,7 @@
 
     <style>
 
-        body.gray   header > .headerbox{
+        body.gray header > .headerbox {
             background-color: #707071;
         }
 
@@ -72,11 +74,11 @@
             cursor: pointer;
         }
 
-        body.gray header nav a, body.gray header nav a:link{
+        body.gray header nav a, body.gray header nav a:link {
             color: #000;
         }
 
-        body.gray header nav a:hover{
+        body.gray header nav a:hover {
             color: #333;
         }
 
@@ -89,20 +91,24 @@
             border: 1px solid #ced4da;
         }
 
-        body.gray input.alone[type=checkbox]::before{
-            color: rgb(118,118,118);
+        body.gray li > input.form-control:disabled, body.gray li > input.form-control[readonly]{
+            background-color: #e9ecef;
+        }
+
+        body.gray input.alone[type=checkbox]::before {
+            color: rgb(118, 118, 118);
             font-size: 20px;
         }
 
         body.gray input.alone[type=checkbox]:checked::before {
-            color: rgb(0,117,255);
+            color: rgb(0, 117, 255);
         }
 
-        body.gray header nav ul.info{
+        body.gray header nav ul.info {
             margin-bottom: 0;
         }
 
-        body.gray header nav ul.info b{
+        body.gray header nav ul.info b {
             font-weight: bold;
         }
 
@@ -124,7 +130,7 @@
             font-weight: 500;
         }
 
-        .mainContent ul {
+        .region > ul, .heading-and-btn > ul {
             margin: 0;
             border-bottom: 1px solid #E2E2E2;
             background-color: #F7F7F7;
@@ -132,32 +138,32 @@
             align-items: center;
         }
 
-        .mainContent ul.variation_list {
+        .region > ul.variation_list {
             align-items: flex-start;
             border-bottom: none;
             background-color: #F0F0F0;
             margin-bottom: 20px;
         }
 
-        .mainContent ul.variation_list h6 {
+        .region > ul.variation_list h6 {
             text-align: center;
         }
 
-        .mainContent ul.variation_list li:first-of-type {
+        .region > ul.variation_list li:first-of-type {
             min-width: 170px;
         }
 
-        .mainContent ul.variation_list select {
+        .region > ul.variation_list select {
             margin-bottom: 10px;
         }
 
-        .mainContent ul li {
+        .region > ul > li, .heading-and-btn > ul > li  {
             display: table-cell;
             text-decoration: none;
             padding: 10px;
         }
 
-        .mainContent ul li:first-of-type {
+        .region > ul > li:first-of-type, .heading-and-btn ul li:nth-of-type(1) {
             width: 20vw;
             min-width: 150px;
             text-align: center;
@@ -165,13 +171,32 @@
             flex-shrink: 0;
         }
 
-        .mainContent ul li:nth-of-type(2) {
+        .region > ul > li:nth-of-type(2), .heading-and-btn ul li:nth-of-type(2) {
             flex-grow: 1;
             flex-shrink: 1;
         }
 
-        .mainContent ul li > input[type='text'] + i {
+        .region > ul > li > input[type='text'] + i {
             margin-left: 5px;
+        }
+
+        .region > ul > li button.btn-light, .region > ul > li button.btn-light:not(:disabled).active, .region > ul > li .show>.btn-light.dropdown-toggle {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+        }
+
+        .region > ul > li > input[type='text']:first-of-type ~ input{
+            margin-left: 10px;
+        }
+
+        .region .bootstrap-select .dropdown-toggle:focus, .region .bootstrap-select > select.mobile-device:focus + .dropdown-toggle {
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+            background-color: #fff;
+        }
+
+        .region .bootstrap-select .btn:focus {
+            outline: none !important;
         }
 
         .one_half {
@@ -187,6 +212,10 @@
         .one_whole {
             width: 96%;
             display: inline-block;
+        }
+
+        input.updated_date{
+            margin-top: 10px;
         }
 
         .itembox {
@@ -562,7 +591,7 @@
 
         <div class="heading-and-btn">
 
-        <ul>
+            <ul>
                 <li>
                     <h4>Edit Product</h4>
                 </li>
@@ -574,8 +603,8 @@
             </ul>
 
             <ul>
-            
-                <li  v-if="edit_mode == false">
+
+                <li v-if="edit_mode == false">
                     Choose Category
 
                     <select class="form-control" v-model="category">
@@ -584,16 +613,24 @@
                         <option value="20000000">Systems Furniture</option>
                     </select>
 
-                    <select class="form-control" v-model="sub_category">
-                        <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
+                    <select v-if="category == '20000000'" class="form-control" v-model="sub_category">
+                        <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">{{
+                            item.category }}
+                        </option>
+                    </select>
+
+                    <select v-if="category == '10000000'" class="form-control">
+                       
                     </select>
                 </li>
 
                 <li v-if="edit_mode == false">
-                    <button class="btn btn-primary"  :disabled="sub_category == '' || category == ''" @click="edit_category()">Start</button>
+                    <button class="btn btn-primary" :disabled="sub_category == '' || category == ''"
+                            @click="edit_category()">Start
+                    </button>
                 </li>
 
-                
+
             </ul>
 
         </div>
@@ -613,8 +650,80 @@
                         <option value="20000000">Systems Furniture</option>
                     </select>
 
-                    <select class="form-control one_third" v-model="sub_category" :disabled="edit_mode == true">
+                    <select v-if="category == '20000000'" class="form-control one_third" v-model="sub_category" :disabled="edit_mode == true">
                         <option v-for="(item, index) in sub_cateory_item" :value="item.cat_id" :key="item.category">{{ item.category }}</option>
+                    </select>
+
+                    <select v-if="category == '10000000'" class="form-control one_third" :disabled="edit_mode == true">
+                    </select>
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    Tag
+                </li>
+                <li v-show="category == '10000000'">
+                    <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected" id="tag01">
+
+                        <optgroup label="BY INSTALL LOCATION">
+                            <option value="CEILING LIGHT">CEILING LIGHT</option>
+                            <option value="FLOOR LIGHT">FLOOR LIGHT</option>
+                            <option value="INDOOR LIGHTING">INDOOR LIGHTING</option>
+                            <option value="INGROUND LIGHT">INGROUND LIGHT</option>
+                            <option value="OUTDOOR LIGHTING">OUTDOOR LIGHTING</option>
+                            <option value="POOL LIGHT">POOL LIGHT</option>
+                            <option value="STREET LIGHT">STREET LIGHT</option>
+                            <option value="TABLE LIGHT">TABLE LIGHT</option>
+                            <option value="WALL LIGHT">WALL LIGHT</option>
+                            <option value="BLDG. FAÇADE LIGHTING">BLDG. FAÇADE LIGHTING</option>
+                            <option value="CABINET LIGHT">CABINET LIGHT</option>
+                            <option value="OTHER FURNITURES LIGHTING">OTHER FURNITURES LIGHTING</option>
+                            <option value="UNDERWATER LIGHTING">UNDERWATER LIGHTING</option>
+                        </optgroup>
+
+                        <optgroup label="INSTALL METHOD">
+                            <option value="POLE-MOUNTED">POLE-MOUNTED</option>
+                            <option value="RECESSED">RECESSED</option>
+                            <option value="SURFACE-MOUNTED">SURFACE-MOUNTED</option>
+                            <option value="SUSPENDED">SUSPENDED</option>
+                            <option value="STAND-ALONE">STAND-ALONE</option>
+                        </optgroup>
+
+                        <optgroup label="BY TYPE / FUNCTION">
+                            <option value="ASSEMBLED">ASSEMBLED</option>
+                            <option value="BOLLARD">BOLLARD</option>
+                            <option value="BULB">BULB</option>
+                            <option value="CUSTOMIZED">CUSTOMIZED</option>
+                            <option value="DIMMER">DIMMER</option>
+                            <option value="DIRECTIONAL">DIRECTIONAL</option>
+                            <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
+                            <option value="DOWNLIGHT">DOWNLIGHT</option>
+                            <option value="LED DRIVER">LED DRIVER</option>
+                            <option value="FLOOD LIGHT">FLOOD LIGHT</option>
+                            <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
+                            <option value="LED STRIP">LED STRIP</option>
+                            <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+                            <option value="PANEL LIGHT">PANEL LIGHT</option>
+                            <option value="PROJECTOR">PROJECTOR</option>
+                            <option value="TRACK LIGHT">TRACK LIGHT</option>
+                            <option value="TROFFER LIGHT">TROFFER LIGHT</option>
+                            <option value="TUBE LIGHT">TUBE LIGHT</option>
+                            <option value="UPLIGHT">UPLIGHT</option>
+                            <option value="WALL WASHER">WALL WASHER</option>
+                        </optgroup>
+
+                        <optgroup label="ACCESSORY">
+                            <option value="FUNCTIONAL ACCESSORY">FUNCTIONAL ACCESSORY</option>
+                            <option value="INSTALL ACCESSORY">INSTALL ACCESSORY</option>
+                            <option value="REPLACEMENT PART">REPLACEMENT PART</option>
+                        </optgroup>
+
+                    </select>
+                </li>
+                <li v-show="category == '20000000'">
+                    <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected">
+
                     </select>
                 </li>
             </ul>
@@ -639,19 +748,40 @@
 
             <ul class="NTD_price">
                 <li>
-                    Price (NTD)
+                    Cost Price (NTD)
                 </li>
                 <li>
-                    <input type="text" class="form-control one_half" v-model="price_ntd"><input type="text" hidden v-model="price_ntd_change">
+                    <input type="text" class="form-control one_half" v-model.lazy="price_ntd">
+                    <input type="text" class="form-control one_third" v-model="price_ntd_change">
                 </li>
             </ul>
 
             <ul>
                 <li>
-                    Price
+                    Suggested Retail Price
                 </li>
                 <li>
-                    <input type="text" class="form-control one_half" v-model="price"><input type="text" hidden v-model="price_change">
+                    <input type="text" class="form-control one_half" v-model.lazy="price">
+                    <input type="text" class="form-control one_third" v-model="price_change">
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    Quoted Price
+                </li>
+                <li>
+                    <input type="text" class="form-control one_half" v-model.lazy="quoted_price">
+                    <input type="text" class="form-control one_third" v-model="quoted_price_change">
+                </li>
+            </ul>
+
+            <ul>
+                <li>
+                    MOQ
+                </li>
+                <li>
+                    <input type="text" class="form-control one_half" v-model="moq">
                 </li>
             </ul>
 
@@ -677,11 +807,11 @@
                 </li>
                 <li style="display: flex; flex-wrap: wrap;">
 
-                <div :class="['itembox', (url1 !== null ? 'chosen' : '')]">
-                    <div class="photo">
-                        <input type="file" id="photo1" name="photo1"  @change="onFileChange($event, 1)">
-                        <img v-if="url1" :src="url1" />
-                    </div>
+                    <div :class="['itembox', (url1 !== null ? 'chosen' : '')]">
+                        <div class="photo">
+                            <input type="file" id="photo1" name="photo1" @change="onFileChange($event, 1)">
+                            <img v-if="url1" :src="url1"/>
+                        </div>
                         Cover Image
                         <div>
                             <span @click="clear_photo(1)">x</span>
@@ -691,7 +821,7 @@
                     <div :class="['itembox', (url2 !== null ? 'chosen' : '')]">
                         <div class="photo">
                             <input type="file" id="photo2" name="photo2" @change="onFileChange($event, 2)">
-                            <img v-if="url2" :src="url2" />
+                            <img v-if="url2" :src="url2"/>
                         </div>
                         Image 1
                         <div>
@@ -702,7 +832,7 @@
                     <div :class="['itembox', (url3 !== null ? 'chosen' : '')]">
                         <div class="photo">
                             <input type="file" id="photo3" name="photo3" @change="onFileChange($event, 3)">
-                            <img v-if="url3" :src="url3" />
+                            <img v-if="url3" :src="url3"/>
                         </div>
                         Image 2
                         <div>
@@ -735,7 +865,7 @@
 
         <div class="toggle-switch" v-show="edit_mode == true && accessory_infomation.length > 0">
             <label for="accessory_mode" class="description">Has Accessory?</label>
-            <input type="checkbox" data-toggle="toggle" data-width="100px" data-onstyle="primary" 
+            <input type="checkbox" data-toggle="toggle" data-width="100px" data-onstyle="primary"
                    data-offstyle="secondary" data-on="Yes" data-off="No" id="accessory_mode">
         </div>
 
@@ -749,15 +879,18 @@
                 </li>
                 <li style="display: flex; flex-wrap: wrap;">
 
-                    <div :class="['itembox', (detail.url !== '' ? 'chosen' : '')]" v-for="(detail, index) in item.detail[0]">
+                    <div :class="['itembox', (detail.url !== '' ? 'chosen' : '')]"
+                         v-for="(detail, index) in item.detail[0]">
                         <div class="photo">
-                            <input type="file" @change="onFileChangeAccessory($event, detail.cat_id, detail.id)" :id="'accessory_' + detail.cat_id + '_' + detail.id">
+                            <input type="file" @change="onFileChangeAccessory($event, detail.cat_id, detail.id)"
+                                   :id="'accessory_' + detail.cat_id + '_' + detail.id">
                             <img v-if="detail.url" :src="detail.url">
                         </div>
                         <input type="text" class="form-control" placeholder="Code" v-model="detail.code">
                         <input type="text" class="form-control" placeholder="Name" v-model="detail.name">
-                        <input class="NTD_price form-control" type="text" class="form-control" placeholder="Additional Price (NTD)"  v-model="detail.price_ntd">
-                        <input type="text" class="form-control" placeholder="Additional Price"  v-model="detail.price">
+                        <input class="NTD_price form-control" type="text" class="form-control"
+                               placeholder="Additional Price (NTD)" v-model="detail.price_ntd">
+                        <input type="text" class="form-control" placeholder="Additional Price" v-model="detail.price">
                         <div>
                             <span @click="clear_accessory_item(detail.cat_id, detail.id)">x</span>
                             <i class="fas fa-trash-alt" @click="remove_accessory_item(detail.cat_id, detail.id)"></i>
@@ -775,8 +908,9 @@
 
         <div class="toggle-switch" v-show="edit_mode == true">
             <label for="variation_mode" class="description">Variation Mode</label>
-            <input type="checkbox" data-toggle="toggle" data-width="100px" data-onstyle="primary" 
-                   data-offstyle="secondary" data-on="Yes" data-off="No" id="variation_mode" v-model="variation_mode" v-on:click="console.log('1');">
+            <input type="checkbox" data-toggle="toggle" data-width="100px" data-onstyle="primary"
+                   data-offstyle="secondary" data-on="Yes" data-off="No" id="variation_mode" v-model="variation_mode"
+                   v-on:click="console.log('1');">
         </div>
 
 
@@ -788,12 +922,15 @@
                     <h6>1st Variation</h6>
                     <select class="form-control" v-model="variation1">
                         <option value="">Select a value</option>
-                        <option v-for="(item, index) in special_infomation" :value="item.category" :key="item.category">{{ item.category }}</option>
-                       
+                        <option v-for="(item, index) in special_infomation" :value="item.category" :key="item.category">
+                            {{ item.category }}
+                        </option>
+
                         <option value="custom">Custom</option>
                     </select>
 
-                    <input type="text" class="form-control" :disabled="variation1 !== 'custom'" v-model="variation1_custom">
+                    <input type="text" class="form-control" :disabled="variation1 !== 'custom'"
+                           v-model="variation1_custom">
                 </li>
 
                 <li>
@@ -803,22 +940,26 @@
                 </li>
             </ul>
 
-            <ul  class="variation_list">
+            <ul class="variation_list">
                 <li>
                     <h6>2nd Variation</h6>
                     <select class="form-control" v-model="variation2" :disabled="variation1 == ''">
                         <option value="">Select a value</option>
-                        <option v-for="(item, index) in special_infomation" :value="item.category" :key="item.category">{{ item.category }}</option>
-                       
+                        <option v-for="(item, index) in special_infomation" :value="item.category" :key="item.category">
+                            {{ item.category }}
+                        </option>
+
                         <option value="custom">Custom</option>
                     </select>
 
-                    <input type="text" class="form-control" :disabled="variation2 !== 'custom'" v-model="variation2_custom">
+                    <input type="text" class="form-control" :disabled="variation2 !== 'custom'"
+                           v-model="variation2_custom">
                 </li>
 
                 <li>
                     <h6 style="text-align: center;">Options</h6>
-                    <input type="text" value="" data-role="tagsinput" id="variation2_value" :disabled="variation1 == ''">
+                    <input type="text" value="" data-role="tagsinput" id="variation2_value"
+                           :disabled="variation1 == ''">
                     <i class="fas fa-hand-pointer" @click="get_special_infomation_detail_variantion2()"></i>
 
                 </li>
@@ -829,17 +970,21 @@
                     <h6>3rd Variation</h6>
                     <select class="form-control" v-model="variation3" :disabled="variation1 == '' || variation2 == ''">
                         <option value="">Select a value</option>
-                        <option v-for="(item, index) in special_infomation" :value="item.category" :key="item.category">{{ item.category }}</option>
-                       
+                        <option v-for="(item, index) in special_infomation" :value="item.category" :key="item.category">
+                            {{ item.category }}
+                        </option>
+
                         <option value="custom">Custom</option>
                     </select>
 
-                    <input type="text" class="form-control" :disabled="variation3 !== 'custom'" v-model="variation3_custom">
+                    <input type="text" class="form-control" :disabled="variation3 !== 'custom'"
+                           v-model="variation3_custom">
                 </li>
 
                 <li>
                     <h6 style="text-align: center;">Options</h6>
-                    <input type="text" data-role="tagsinput" id="variation3_value" :disabled="variation1 == '' || variation2 == ''">
+                    <input type="text" data-role="tagsinput" id="variation3_value"
+                           :disabled="variation1 == '' || variation2 == ''">
                     <i class="fas fa-hand-pointer" @click="get_special_infomation_detail_variantion3()"></i>
                 </li>
             </ul>
@@ -851,38 +996,57 @@
         <div class="region" v-show="edit_mode == true && variation_mode == true">
             <span class="heading">Product Variants</span>
 
-            <button class="btn btn-info" onclick=" (function(){ $('.mask').toggle(); $('#modal_bulk_apply').toggle(); return false;})();return false;">Bulk Apply</button>
-            <button style="display: none;" class="btn btn-info" onclick=" (function(){ $('.mask').toggle(); $('#modal_edit_name').toggle(); return false;})();return false;">Edit Variation/Option Name</button>
+            <button class="btn btn-info"
+                    onclick=" (function(){ $('.mask').toggle(); $('#modal_bulk_apply').toggle(); return false;})();return false;">
+                Bulk Apply
+            </button>
+            <button style="display: none;" class="btn btn-info"
+                    onclick=" (function(){ $('.mask').toggle(); $('#modal_edit_name').toggle(); return false;})();return false;">
+                Edit Variation/Option Name
+            </button>
 
             <div style="width: 100%; overflow-x: auto; margin-top: 10px;">
                 <table id="tb_product_variants" class="table_template">
                     <thead>
                     <tr>
-                        <th><input class="alone" type="checkbox" value="1" @click="toggle_product()" id="select_all_product"></th>
+                        <th><input class="alone" type="checkbox" value="1" @click="toggle_product()"
+                                   id="select_all_product"></th>
                         <th>{{ variation1_text }}</th>
                         <th>{{ variation2_text }}</th>
                         <th>{{ variation3_text }}</th>
                         <th>Code</th>
-                        <th class="NTD_price">Price (NTD)</th>
-                        <th>Price</th>
+                        <th class="NTD_price">Cost Price (NTD)</th>
+                        <th>Suggested Retail Price</th>
+                        <th>Quoted Price</th>
                         <th>Image</th>
                         <th>Status</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <tr v-for="(item, index) in variation_product" >
+                    <tr v-for="(item, index) in variation_product">
                         <td><input class="alone" type="checkbox" value="1" v-model="item.checked"></td>
                         <td>{{ item.v1 }}</td>
                         <td>{{ item.v2 }}</td>
                         <td>{{ item.v3 }}</td>
                         <td><input type="text" class="form-control" v-model="item.code"></td>
-                        <td class="NTD_price"><input type="number" class="form-control" v-model="item.price_ntd"><input type="text" hidden v-model="item.price_ntd_change"></td>
-                        <td><input type="number" class="form-control" v-model="item.price"><input type="text" hidden v-model="item.price_change"></td>
+                        <td class="NTD_price">
+                            <input type="number" class="form-control" v-model="item.price_ntd">
+                            <input type="text" class="form-control updated_date" v-model="item.price_ntd_change">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" v-model="item.price">
+                            <input type="text" class="form-control updated_date" v-model="item.price_change">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" v-model="item.quoted_price">
+                            <input type="text" class="form-control updated_date" v-model="item.quoted_price_change">
+                        </td>
                         <td>
                             <div :class="['itembox', (item.url !== '' ? 'chosen' : '')]">
                                 <div class="photo">
-                                    <input type="file" @change="onFileChangeVariation($event, item.id)" :id="'variation_' + item.id">
+                                    <input type="file" @change="onFileChangeVariation($event, item.id)"
+                                           :id="'variation_' + item.id">
                                     <img v-if="item.url" :src="item.url">
                                 </div>
                                 <div>
@@ -912,7 +1076,8 @@
 
                 <div class="custom-modal-header">
                     <h5>Quickly Assign Attribute's Value</h5>
-                    <i class="fa fa-times fa-lg" aria-hidden="true" onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign').toggle(); return false;})();return false;"></i>
+                    <i class="fa fa-times fa-lg" aria-hidden="true"
+                       onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign').toggle(); return false;})();return false;"></i>
                 </div>
 
                 <div>
@@ -927,14 +1092,21 @@
                         <tbody>
                         <tr v-for="(item, index) in special_infomation_detail">
                             <td>{{ item.option }}</td>
-                            <td><button class="btn btn-primary" @click="apply_special_infomation_detail(item.cat_id, item.option)">Apply</button></td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        @click="apply_special_infomation_detail(item.cat_id, item.option)">Apply
+                                </button>
+                            </td>
                         </tr>
-                     
+
                         </tbody>
                     </table>
 
                     <div class="btnbox">
-                        <button class="btn btn-secondary" onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign').toggle(); return false;})();return false;">Cancel</button>
+                        <button class="btn btn-secondary"
+                                onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign').toggle(); return false;})();return false;">
+                            Cancel
+                        </button>
                     </div>
 
                 </div>
@@ -947,9 +1119,10 @@
 
                 <div class="custom-modal-header">
                     <h5>Quickly Assign Attribute's Value</h5>
-                    <i class="fa fa-times fa-lg" aria-hidden="true" onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_1').toggle(); return false;})();return false;"></i>
+                    <i class="fa fa-times fa-lg" aria-hidden="true"
+                       onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_1').toggle(); return false;})();return false;"></i>
                 </div>
-
+                
                 <div>
                     <table id="tb_quick_assign2" class="table_template">
                         <thead>
@@ -962,15 +1135,20 @@
                         <tbody>
                         <tr v-for="(item, index) in special_infomation_detail">
                             <td>{{ item.option }}</td>
-                            <td><input class="alone" type="checkbox"  name="apply_special_infomation_1" :value="item.option"></td>
+                            <td><input class="alone" type="checkbox" name="apply_special_infomation_1"
+                                       :value="item.option"></td>
                         </tr>
-                        
+
                         </tbody>
                     </table>
 
                     <div class="btnbox">
-                        <button class="btn btn-secondary" onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_1').toggle(); return false;})();return false;">Cancel</button>
-                        <button class="btn btn-primary" @click="apply_special_infomation_detail_variantion1">Apply</button>
+                        <button class="btn btn-secondary"
+                                onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_1').toggle(); return false;})();return false;">
+                            Cancel
+                        </button>
+                        <button class="btn btn-primary" @click="apply_special_infomation_detail_variantion1">Apply
+                        </button>
                     </div>
 
                 </div>
@@ -983,7 +1161,8 @@
 
                 <div class="custom-modal-header">
                     <h5>Quickly Assign Attribute's Value</h5>
-                    <i class="fa fa-times fa-lg" aria-hidden="true" onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_2').toggle(); return false;})();return false;"></i>
+                    <i class="fa fa-times fa-lg" aria-hidden="true"
+                       onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_2').toggle(); return false;})();return false;"></i>
                 </div>
 
                 <div>
@@ -998,15 +1177,20 @@
                         <tbody>
                         <tr v-for="(item, index) in special_infomation_detail">
                             <td>{{ item.option }}</td>
-                            <td><input class="alone" type="checkbox" name="apply_special_infomation_2" :value="item.option"></td>
+                            <td><input class="alone" type="checkbox" name="apply_special_infomation_2"
+                                       :value="item.option"></td>
                         </tr>
-                        
+
                         </tbody>
                     </table>
 
                     <div class="btnbox">
-                        <button class="btn btn-secondary" onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_2').toggle(); return false;})();return false;">Cancel</button>
-                        <button class="btn btn-primary" @click="apply_special_infomation_detail_variantion2">Apply</button>
+                        <button class="btn btn-secondary"
+                                onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_2').toggle(); return false;})();return false;">
+                            Cancel
+                        </button>
+                        <button class="btn btn-primary" @click="apply_special_infomation_detail_variantion2">Apply
+                        </button>
                     </div>
 
                 </div>
@@ -1019,7 +1203,8 @@
 
                 <div class="custom-modal-header">
                     <h5>Quickly Assign Attribute's Value</h5>
-                    <i class="fa fa-times fa-lg" aria-hidden="true" onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_3').toggle(); return false;})();return false;"></i>
+                    <i class="fa fa-times fa-lg" aria-hidden="true"
+                       onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_3').toggle(); return false;})();return false;"></i>
                 </div>
 
                 <div>
@@ -1034,23 +1219,25 @@
                         <tbody>
                         <tr v-for="(item, index) in special_infomation_detail">
                             <td>{{ item.option }}</td>
-                            <td><input class="alone" type="checkbox" name="apply_special_infomation_3" :value="item.option"></td>
+                            <td><input class="alone" type="checkbox" name="apply_special_infomation_3"
+                                       :value="item.option"></td>
                         </tr>
-                        
+
                         </tbody>
                     </table>
 
                     <div class="btnbox">
-                        <button class="btn btn-secondary" onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_3').toggle(); return false;})();return false;">Cancel</button>
-                        <button class="btn btn-primary" @click="apply_special_infomation_detail_variantion3">Apply</button>
+                        <button class="btn btn-secondary"
+                                onclick=" (function(){ $('.mask').toggle(); $('#modal_quick_assign2_3').toggle(); return false;})();return false;">
+                            Cancel
+                        </button>
+                        <button class="btn btn-primary" @click="apply_special_infomation_detail_variantion3">Apply
+                        </button>
                     </div>
 
                 </div>
             </div>
         </div>
-
-
-
 
 
         <div id="modal_bulk_apply" class="modal" style="display: none;">
@@ -1059,14 +1246,16 @@
 
                 <div class="custom-modal-header">
                     <h5>Bulk Apply</h5>
-                    <i class="fa fa-times fa-lg" aria-hidden="true" onclick="(function(){ $('.mask').toggle(); $('#modal_bulk_apply').toggle(); return false;})();return false;"></i>
+                    <i class="fa fa-times fa-lg" aria-hidden="true"
+                       onclick="(function(){ $('.mask').toggle(); $('#modal_bulk_apply').toggle(); return false;})();return false;"></i>
                 </div>
 
                 <div>
                     <table id="tb_bulk_apply" class="table_template">
                         <thead>
                         <tr>
-                            <th><input class="alone" type="checkbox" @click="bulk_toggle_product()" id="bulk_select_all_product"></th>
+                            <th><input class="alone" type="checkbox" @click="bulk_toggle_product()"
+                                       id="bulk_select_all_product"></th>
                             <th>Column</th>
                             <th>Parameter</th>
                             <th>Operator</th>
@@ -1113,9 +1302,10 @@
                             <td><input class="alone" type="checkbox" value="1" v-model="image_checked"></td>
                             <td>Image</td>
                             <td>
-                                <div :class="['itembox', (bulk_url !== '' ? 'chosen' : '')]" >
+                                <div :class="['itembox', (bulk_url !== '' ? 'chosen' : '')]">
                                     <div class="photo">
-                                        <input type="file" id="bulk_image" name="bulk_image"  @change="onFileChangeBulkImage($event)">
+                                        <input type="file" id="bulk_image" name="bulk_image"
+                                               @change="onFileChangeBulkImage($event)">
                                         <img v-if="bulk_url" :src="bulk_url">
                                     </div>
 
@@ -1147,7 +1337,10 @@
                     </table>
 
                     <div class="btnbox">
-                        <button class="btn btn-secondary" onclick="(function(){ $('.mask').toggle(); $('#modal_bulk_apply').toggle(); return false;})();return false;">Cancel</button>
+                        <button class="btn btn-secondary"
+                                onclick="(function(){ $('.mask').toggle(); $('#modal_bulk_apply').toggle(); return false;})();return false;">
+                            Cancel
+                        </button>
                         <button class="btn btn-primary" @click="bulk_apply()">Apply</button>
                     </div>
 
@@ -1162,7 +1355,8 @@
 
                 <div class="custom-modal-header">
                     <h5>Edit Variation/Option Name</h5>
-                    <i class="fa fa-times fa-lg" aria-hidden="true" onclick="(function(){ $('.mask').toggle(); $('#modal_edit_name').toggle(); return false;})();return false;"></i>
+                    <i class="fa fa-times fa-lg" aria-hidden="true"
+                       onclick="(function(){ $('.mask').toggle(); $('#modal_edit_name').toggle(); return false;})();return false;"></i>
                 </div>
 
                 <div>
@@ -1372,7 +1566,10 @@
                     </table>
 
                     <div class="btnbox">
-                        <button class="btn btn-secondary" onclick="(function(){ $('.mask').toggle(); $('#modal_edit_name').toggle(); return false;})();return false;">Cancel</button>
+                        <button class="btn btn-secondary"
+                                onclick="(function(){ $('.mask').toggle(); $('#modal_edit_name').toggle(); return false;})();return false;">
+                            Cancel
+                        </button>
                         <button class="btn btn-primary">Apply</button>
                     </div>
 
@@ -1407,16 +1604,16 @@
 
 <script>
 
-    $(function() {
-        $('#accessory_mode').change(function() {
+    $(function () {
+        $('#accessory_mode').change(function () {
             app.accessory_mode = $(this).prop('checked');
         })
 
     })
 
-    $(function() {
+    $(function () {
 
-        $('#variation_mode').change(function() {
+        $('#variation_mode').change(function () {
             app.variation_mode = $(this).prop('checked');
         })
     })

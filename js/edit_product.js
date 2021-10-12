@@ -50,6 +50,11 @@ var app = new Vue({
     accessory_mode: false,
     variation_mode: false,
 
+    quoted_price:"",
+    quoted_price_org:"",
+    quoted_price_change:"",
+    moq:"",
+
     // accessory
 
     // variation
@@ -209,6 +214,19 @@ var app = new Vue({
             _this.notes = _this.record[0]['notes'];
             _this.accessory_mode = _this.record[0]['accessory_mode'];
             _this.variation_mode = _this.record[0]['variation_mode'];
+
+            _this.quoted_price = _this.record[0]['quoted_price'];
+            _this.quoted_price_org = _this.record[0]['quoted_price_org'];
+            _this.quoted_price_change = _this.record[0]['quoted_price_change'];
+            _this.moq = _this.record[0]['moq'];
+
+            var select_items = _this.record[0]['tags'].split(',');
+
+            if(_this.category === '10000000')
+              $('#tag01').selectpicker('val', select_items);
+            if(_this.category === '20000000')
+              $('#tag02').selectpicker('val', select_items);
+            
             
             if(_this.variation_mode == 1)
                 $("#variation_mode").bootstrapToggle("on");
@@ -296,7 +314,10 @@ var app = new Vue({
               price_org : "",
               price_ntd_org : "",
               photo: "",
-              status: "",
+              status: "1",
+              quoted_price: "",
+              quoted_price_org: "",
+              quoted_price_change: "",
             };
 
             this.variation_product.push(variation_item);
@@ -774,6 +795,9 @@ var app = new Vue({
             let price_ntd_change = this.variation_product[i].price_ntd_change;
             let price_org = this.variation_product[i].price_org;
             let price_ntd_org = this.variation_product[i].price_ntd_org;
+            let quoted_price = this.variation_product[i].quoted_price;
+            let quoted_price_org = this.variation_product[i].quoted_price_org;
+            let quoted_price_change = this.variation_product[i].quoted_price_change;
             let photo = this.variation_product[i].photo;
 
             let status = this.variation_product[i].status;
@@ -807,6 +831,9 @@ var app = new Vue({
               price_ntd_change: price_ntd_change,
               price_org : price_org,
               price_ntd_org : price_ntd_org,
+              quoted_price:quoted_price,
+              quoted_price_org:quoted_price_org,
+              quoted_price_change: quoted_price_change,
               photo: photo,
               status: status,
             };
@@ -830,6 +857,17 @@ var app = new Vue({
           form_Data.append("price_org", _this.price_org);
           form_Data.append("description", _this.description);
           form_Data.append("notes", _this.notes);
+          form_Data.append("quoted_price", _this.quoted_price);
+          form_Data.append("quoted_price_org", _this.quoted_price_org);
+          form_Data.append("quoted_price_change", _this.quoted_price_change);
+          form_Data.append("moq", _this.moq);
+
+          let tag01 = $('#tag01').val();
+          let tag02 = $('#tag02').val();
+          if( _this.category === '10000000')
+            form_Data.append("tags", tag01.join());
+          else
+            form_Data.append("tags", tag02.join());
 
           form_Data.append("accessory_mode", _this.accessory_mode ? 1 : 0);
           form_Data.append("variation_mode", _this.variation_mode ? 1 : 0);
@@ -910,6 +948,9 @@ var app = new Vue({
       this.price_ntd_change = "";
       this.description = "";
       this.notes = "";
+      this.quoted_price = "";
+      this.quoted_price_change = "";
+      this.moq = "";
       this.url1 = null;
       this.url2 = null;
       this.url3 = null;
