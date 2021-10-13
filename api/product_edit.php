@@ -177,12 +177,14 @@ else
                 $special_information = GetSpecialInfomation($sub_category, $db, $special_info_json);
                 $accessory_information = GetAccessoryInfomation($sub_category, $db, $id);
 
+        
                 $variation1 = 'custom';
                 $variation1_custom = $variation1_text;
                 $variation2 = 'custom';
                 $variation2_custom = $variation2_text;
                 $variation3 = 'custom';
                 $variation3_custom = $variation3_text;
+                
 
                 for($i = 0; $i < count($special_information); $i++)
                 {
@@ -213,19 +215,19 @@ else
                    
                 }
 
-                if($variation1_text == "")
+                if($variation1_text == "1st Variation")
                 {
                     $variation1 = "";
                     $variation1_custom = "";
                 }
 
-                if($variation2_text == "")
+                if($variation2_text == "2nd Variation")
                 {
                     $variation2 = "";
                     $variation2_custom = "";
                 }
 
-                if($variation3_text == "")
+                if($variation3_text == "3rd Variation")
                 {
                     $variation3 = "";
                     $variation3_custom = "";

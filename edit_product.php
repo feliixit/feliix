@@ -1031,15 +1031,15 @@
                         <td>{{ item.v3 }}</td>
                         <td><input type="text" class="form-control" v-model="item.code"></td>
                         <td class="NTD_price">
-                            <input type="number" class="form-control" v-model="item.price_ntd">
+                            <input type="number" class="form-control" v-model="item.price_ntd"  @change="product_price_ntd_changed(item.id)">
                             <input type="text" class="form-control updated_date" v-model="item.price_ntd_change">
                         </td>
                         <td>
-                            <input type="number" class="form-control" v-model="item.price">
+                            <input type="number" class="form-control" v-model="item.price" @change="product_price_changed(item.id)">
                             <input type="text" class="form-control updated_date" v-model="item.price_change">
                         </td>
                         <td>
-                            <input type="number" class="form-control" v-model="item.quoted_price">
+                            <input type="number" class="form-control" v-model="item.quoted_price" @change="product_quoted_price_changed(item.id)">
                             <input type="text" class="form-control updated_date" v-model="item.quoted_price_change">
                         </td>
                         <td>

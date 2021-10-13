@@ -133,7 +133,20 @@ var app = new Vue({
   },
 
   watch: {
-    
+    price_ntd() {
+      if(this.price_ntd != this.price_ntd_org)
+        this.price_ntd_change = new Date().toISOString().slice(0, 10);
+    },
+
+    price () {
+      if(this.price != this.price_org)
+        this.price_change = new Date().toISOString().slice(0, 10);
+    },
+
+    quoted_price () {
+      if(this.quoted_price != this.quoted_price_org)
+        this.quoted_price_change = new Date().toISOString().slice(0, 10);
+    },
   },
 
   methods: {
@@ -643,6 +656,31 @@ var app = new Vue({
       }
       if (!chk.checked) {
         this.variation_mode = false;
+      }
+    },
+
+    product_price_ntd_changed: function(item_id) {
+      for (var i = 0; i < this.variation_product.length; i++) {
+        if (this.variation_product[i].id == item_id) 
+          if(this.variation_product[i].price_ntd != this.variation_product[i].price_ntd_org)
+            this.variation_product[i].price_ntd_change = new Date().toISOString().slice(0, 10);
+      }
+    },
+
+    product_price_changed: function(item_id) {
+      for (var i = 0; i < this.variation_product.length; i++) {
+        if (this.variation_product[i].id == item_id) 
+          if(this.variation_product[i].price != this.variation_product[i].price_org)
+            this.variation_product[i].price_change = new Date().toISOString().slice(0, 10);
+      }
+    },
+
+    product_quoted_price_changed: function(item_id) {
+      for (var i = 0; i < this.variation_product.length; i++) {
+        if (this.variation_product[i].id == item_id) 
+          if(this.variation_product[i].quoted_price != this.variation_product[i].quoted_price_org)
+            this.variation_product[i].quoted_price_change = new Date().toISOString().slice(0, 10);
+
       }
     },
 

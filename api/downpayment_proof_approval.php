@@ -137,7 +137,7 @@ else
     $category = "";
     $kind = 0;
     $amount = 0.0;
-    $receive_date = "";
+    $received_date = "";
     $send_mail = "";
 
     $payment_method = "";
@@ -157,7 +157,7 @@ else
         $category = $row['catagory_id'];
         $kind = $row['kind'];
         $amount = $row['amount'];
-        $receive_date = $row['receive_date'];
+        $received_date = $row['received_date'];
         $send_mail = $row['send_mail'];
 
         $payment_method = $row['payment_method'];
@@ -178,7 +178,7 @@ else
                                 $category, 
                                 $kind, 
                                 $amount, 
-                                $receive_date, 
+                                $received_date, 
                                 $send_mail,
                                 $payment_method,
                                 $bank_name,
