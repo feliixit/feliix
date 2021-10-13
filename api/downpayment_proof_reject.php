@@ -98,7 +98,12 @@ else
                         pm.kind, 
                         pm.amount, 
                         pm.received_date,
-                        p.send_mail   
+                        p.send_mail,
+                        pm.payment_method,
+                        pm.bank_name,
+                        pm.check_number,
+                        pm.bank_account,
+                        pm.invoice     
                 FROM project_proof pm 
                 left join user u on u.id = pm.create_id 
                 LEFT JOIN project_main p ON p.id = pm.project_id  
@@ -120,6 +125,12 @@ else
     $receive_date = "";
     $send_mail = "";
 
+    $payment_method = "";
+    $bank_name = "";
+    $check_number = "";
+    $bank_account = "";
+    $invoice = "";
+
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
         $remark = $row['remark'];
@@ -133,10 +144,33 @@ else
         $amount = $row['amount'];
         $receive_date = $row['receive_date'];
         $send_mail = $row['send_mail'];
+
+        $payment_method = $row['payment_method'];
+        $bank_name = $row['bank_name'];
+        $check_number = $row['check_number'];
+        $bank_account = $row['bank_account'];
+
+        $invoice = $row['invoice'];
     }
 
 
-    send_check_notify_mail_new($leaver, $email1, $project_name, $remark, $subtime, $proof_remark, "False", $category, $kind, $amount, $receive_date, $send_mail);
+    send_check_notify_mail_new($leaver, 
+                                $email1, 
+                                $project_name, 
+                                $remark, 
+                                $subtime, 
+                                $proof_remark, 
+                                "False", 
+                                $category, 
+                                $kind, 
+                                $amount, 
+                                $receive_date, 
+                                $send_mail,
+                                $payment_method,
+                                $bank_name,
+                                $check_number,
+                                $bank_account,
+                                $invoice);
 }
 
 http_response_code(200);
