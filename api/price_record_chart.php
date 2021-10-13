@@ -57,20 +57,20 @@ $merged_results = array();
 
 
 
-$query = "SELECT sum(cash_out) sum, SUBSTRING(created_at, 1, 7) `date` from price_record  where is_enabled = 1 ";
+$query = "SELECT sum(cash_out) sum, SUBSTRING(paid_date, 1, 7) `date` from price_record  where is_enabled = 1 ";
 $sql = "";
 
  
             if(!empty($start_date)) {
-                $sql = $sql . " and created_at >= '$start_date' ";
+                $sql = $sql . " and paid_date >= '$start_date' ";
             }
 
             if(!empty($end_date)) {
-                $sql = $sql . " and created_at < date_add('$end_date', interval 1 day) ";
+                $sql = $sql . " and paid_date < date_add('$end_date', interval 1 day) ";
             }
  
             
-            $query = $query.$sql." GROUP BY SUBSTRING(created_at, 1, 7) order by SUBSTRING(created_at, 1, 7) asc";
+            $query = $query.$sql." GROUP BY SUBSTRING(paid_date, 1, 7) order by SUBSTRING(paid_date, 1, 7) asc";
 
 
 
