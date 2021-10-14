@@ -30,6 +30,12 @@ var app = new Vue({
     fil_keyowrd: "",
 
     is_approval: false,
+
+    payment_method:'',
+    bank_name: '',
+    check_number:'',
+    bank_account:'',
+
   },
 
   created() {
@@ -248,7 +254,7 @@ var app = new Vue({
       var receive_date = document.getElementById("receive_date").value;
       var amount = document.getElementById("amount").value;
       var invoice = document.getElementById("invoice").value;
-      var detail = document.getElementById("detail").value;
+      var detail = ""; //document.getElementById("detail").value;
       var remark = document.getElementById("remark").value;
 
       var form_Data = new FormData();
@@ -259,6 +265,10 @@ var app = new Vue({
       form_Data.append("amount", amount);
       form_Data.append("invoice", invoice);
       form_Data.append("detail", detail);
+      form_Data.append("payment_method", this.payment_method);
+      form_Data.append("bank_name", this.bank_name);
+      form_Data.append("check_number", this.check_number);
+      form_Data.append("bank_account", this.bank_account);
       form_Data.append("remark", remark);
 
       const token = sessionStorage.getItem("token");
@@ -298,7 +308,7 @@ var app = new Vue({
       var receive_date = document.getElementById("receive_date").value;
       var amount = document.getElementById("amount").value;
       var invoice = document.getElementById("invoice").value;
-      var detail = document.getElementById("detail").value;
+      var detail = ""; //document.getElementById("detail").value;
       var remark = document.getElementById("remark").value;
 
       var form_Data = new FormData();
@@ -367,6 +377,11 @@ var app = new Vue({
         this.receive_records.find((element) => element.id == this.proof_id)
       );
 
+      this.payment_method = '';
+      this.bank_name = '';
+      this.check_number = '';
+      this.bank_account = '';
+
       this.view_detail = true;
     },
 
@@ -399,6 +414,42 @@ var app = new Vue({
             });
 
             return;
+          }
+
+          if(this.receive_records[i].kind !== "2")
+          {
+            if (this.payment_method === "") {
+              Swal.fire({
+                text:
+                  "Payment Method required.",
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+
+              return;
+            }
+
+            if (this.payment_method === "check" && ((this.bank_name === "") || (this.check_number === ""))) {
+              Swal.fire({
+                text:
+                  "Bank Name and Check Number required.",
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+
+              return;
+            }
+
+            if (this.payment_method === "deposit" && this.bank_account === "") {
+              Swal.fire({
+                text:
+                  "Bank Account required.",
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+
+              return;
+            }
           }
 
           favorite.push(this.receive_records[i].id);
@@ -516,6 +567,11 @@ var app = new Vue({
 
       this.receive_records = [];
       this.record = {};
+
+      this.payment_method="";
+      this.bank_name = "";
+      this.check_number = "";
+      this.bank_account = "";
 
       this.proof_id = 0;
       this.proof_remark = "";

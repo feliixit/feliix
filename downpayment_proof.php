@@ -270,7 +270,7 @@ $(function(){
                     </ul>
                     <ul>
                         <li class="head">Type</li>
-                        <li>{{ (record.kind == 0) ? "Down Payment" : "Full Payment" }}</li>
+                        <li>{{ (record.kind == 0) ? "Down Payment" : ((record.kind == 1) ? "Full Payment" : "2307") }}</li>
                     </ul>
                     <ul>
                         <li class="head">Status</li>
@@ -298,8 +298,33 @@ $(function(){
                         <li><input type="number" id="amount"></li>
                         <li><b>Invoice Number</b></li>
                         <li><input type="text" id="invoice"></li>
-                        <li><b>Detail/WarrantyCard Number</b></li>
-                        <li><input type="text" id="detail"></li>
+                        <!-- <li><b>Detail/WarrantyCard Number</b></li>
+                        <li><input type="text" id="detail"></li> -->
+                        <template v-if="record.kind != 2">
+                            <li><b>Payment Method</b></li>
+                            <li>
+                                <select style="width: 100%;" v-model="payment_method">
+                                    <option value=""></option>
+                                    <option value="check">Check</option>
+                                    <option value="deposit" >Deposit</option>
+                                    <option value="cash">Cash</option>
+                                </select>
+                            </li>
+                            <!-- Check -->
+                            <li v-if="payment_method == 'check'"><b>Bank Name</b></li>
+                            <li v-if="payment_method == 'check'"><input type="text" v-model="bank_name"></li>
+                            <li v-if="payment_method == 'check'"><b>Check Number</b></li>
+                            <li v-if="payment_method == 'check'"><input type="text" v-model="check_number"></li>
+                            <!-- Deposit -->
+                            <li v-if="payment_method == 'deposit'"><b>Bank Account</b></li>
+                            <li v-if="payment_method == 'deposit'">
+                                <select style="width: 100%;" v-model="bank_account">
+                                    <option value="bdo">[BDO] 006910116614</option>
+                                    <option value="security_bank">[Security Bank] 0000018155245</option>
+                                </select>
+                            </li>
+                        </template>
+
                         <li><b>Remarks (Required if Checked: False)</b></li>
                         <li><textarea id="remark"></textarea></li>
                     </ul>
@@ -326,10 +351,29 @@ $(function(){
                             <li class="head">Invoice Number</li>
                             <li>{{ record.invoice }}</li>
                         </ul>
-                        <ul>
+                        <!-- <ul>
                             <li class="head">Detail/WarrantyCard Number</li>
                             <li>{{ record.detail }}</li>
-                        </ul>
+                        </ul> -->
+                        <template v-if="record.kind != 2">
+                            <ul>
+                                <li class="head">Payment Method</li>
+                                <li>{{ record.payment_method == "check" ? "Check" : ( record.payment_method == "deposit" ? "Deposit" : (record.payment_method == "cash" ? "Cash" : "")) }}</li>
+                            </ul>
+                            <ul v-if="record.payment_method == 'check'">
+                                <li class="head">Bank Name</li>
+                                <li>{{ record.bank_name }}</li>
+                            </ul>
+                            <ul v-if="record.payment_method == 'check'">
+                                <li class="head">Check Number</li>
+                                <li>{{ record.check_number }}</li>
+                            </ul>
+
+                            <ul v-if="record.payment_method == 'deposit'">
+                                <li class="head">Deposit</li>
+                                <li>{{ record.bank_account == "bdo" ? "[BDO] 006910116614" : ( record.bank_account == "security_bank" ? "[Security Bank] 0000018155245" : "") }}</li>
+                            </ul>
+                        </template>
                         <ul>
                             <li class="head">Remarks</li>
                             <li>{{ record.proof_remark }}

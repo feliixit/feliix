@@ -1322,6 +1322,10 @@ var app = new Vue({
       this.$refs.quote_file.value = "";
 
       this.quote_canSub = true;
+
+      this.view_detail = false;
+      this.$refs.mask.style.display = "none";
+      this.view_a = false;
     },
 
     quote_create() {
@@ -1410,6 +1414,10 @@ var app = new Vue({
       this.$refs.prof_file.value = "";
 
       this.prof_canSub = true;
+
+      this.view_detail = false;
+      this.$refs.mask.style.display = "none";
+      this.view_c = false;
     },
 
     prof_create() {

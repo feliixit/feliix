@@ -51,6 +51,10 @@ $receive_date = (isset($_POST['receive_date']) ?  $_POST['receive_date'] : '');
 $amount = (isset($_POST['amount']) ?  $_POST['amount'] : 0);
 $invoice = (isset($_POST['invoice']) ?  $_POST['invoice'] : '');
 $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
+$payment_method = (isset($_POST['payment_method']) ?  $_POST['payment_method'] : '');
+$bank_name = (isset($_POST['bank_name']) ?  $_POST['bank_name'] : '');
+$check_number = (isset($_POST['check_number']) ?  $_POST['check_number'] : '');
+$bank_account = (isset($_POST['bank_account']) ?  $_POST['bank_account'] : '');
 $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
 $query = "
@@ -63,6 +67,10 @@ $query = "
     a.amount = :amount, 
     a.invoice = :invoice, 
     a.detail = :detail, 
+    a.payment_method = :payment_method, 
+    a.bank_name = :bank_name, 
+    a.check_number = :check_number, 
+    a.bank_account = :bank_account, 
     a.proof_remark = :proof_remark
     WHERE a.STATUS = 0
     AND a.id = :id";
@@ -75,6 +83,10 @@ $stmt->bindParam(':receive_date', $receive_date);
 $stmt->bindParam(':amount', $amount);
 $stmt->bindParam(':invoice', $invoice);
 $stmt->bindParam(':detail', $detail);
+$stmt->bindParam(':payment_method', $payment_method);
+$stmt->bindParam(':bank_name', $bank_name);
+$stmt->bindParam(':check_number', $check_number);
+$stmt->bindParam(':bank_account', $bank_account);
 $stmt->bindParam(':proof_remark', $remark);
 $stmt->bindParam(':id', $id);
 
@@ -100,7 +112,13 @@ else
                         p.catagory_id, 
                         pm.kind, 
                         pm.amount, 
-                        pm.received_date 
+                        pm.received_date,
+                        p.send_mail,
+                        pm.payment_method,
+                        pm.bank_name,
+                        pm.check_number,
+                        pm.bank_account,
+                        pm.invoice 
                     FROM project_proof pm 
                     left join user u on u.id = pm.create_id 
                     LEFT JOIN project_main p ON p.id = pm.project_id  
@@ -119,7 +137,14 @@ else
     $category = "";
     $kind = 0;
     $amount = 0.0;
-    $receive_date = "";
+    $received_date = "";
+    $send_mail = "";
+
+    $payment_method = "";
+    $bank_name = "";
+    $check_number = "";
+    $bank_account = "";
+    $invoice = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
@@ -132,10 +157,34 @@ else
         $category = $row['catagory_id'];
         $kind = $row['kind'];
         $amount = $row['amount'];
-        $receive_date = $row['receive_date'];
+        $received_date = $row['received_date'];
+        $send_mail = $row['send_mail'];
+
+        $payment_method = $row['payment_method'];
+        $bank_name = $row['bank_name'];
+        $check_number = $row['check_number'];
+        $bank_account = $row['bank_account'];
+
+        $invoice = $row['invoice'];
     }
 
-    send_check_notify_mail_new($leaver, $email1, $project_name, $remark, $subtime, $proof_remark, "True", $category, $kind, $amount, $receive_date);
+    send_check_notify_mail_new($leaver, 
+                                $email1, 
+                                $project_name, 
+                                $remark, 
+                                $subtime, 
+                                $proof_remark, 
+                                "True", 
+                                $category, 
+                                $kind, 
+                                $amount, 
+                                $received_date, 
+                                $send_mail,
+                                $payment_method,
+                                $bank_name,
+                                $check_number,
+                                $bank_account,
+                                $invoice);
 
     
 }

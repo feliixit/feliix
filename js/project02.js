@@ -102,6 +102,8 @@ var app = new Vue({
     edit_background_project:'',
     edit_contractor:'',
 
+    edit_send_mail:'',
+
     edit_party_contactor : [],
     edit_key_person : [],
 
@@ -1001,6 +1003,7 @@ var app = new Vue({
                   _this.edit_background_client = res.data[0].background_client;
                   _this.edit_background_project = res.data[0].background_project;
                   _this.edit_contractor = res.data[0].contractor;
+                  _this.edit_send_mail = res.data[0].send_mail;
 
                   _this.created_at = res.data[0].created_at;
                   _this.end_at = res.data[0].updated_at;
@@ -1470,6 +1473,7 @@ var app = new Vue({
             this.edit_background_client = this.background_client;
             this.edit_background_project = this.background_project;
             this.edit_contractor = this.contractor;
+            this.edit_send_mail = this.send_mail;
 
             this.edit_key_person = this.key_person;
             this.edit_party_contactor = this.party_contactor;
@@ -2306,6 +2310,7 @@ var app = new Vue({
             form_Data.append('edit_background_client', this.edit_background_client);
             form_Data.append('edit_background_project', this.edit_background_project);
             form_Data.append('edit_contractor', this.edit_contractor);
+            form_Data.append('edit_send_mail', this.edit_send_mail);
 
             form_Data.append('edit_key_person', JSON.stringify(this.edit_key_person));
             form_Data.append('edit_party_contactor', JSON.stringify(this.edit_party_contactor));

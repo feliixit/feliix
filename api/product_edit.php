@@ -88,6 +88,11 @@ else
             $product = [];
             $accessory = [];
 
+            $tags = '';
+            $moq = '';
+            $quoted_price = '';
+            $quoted_price_change = '';
+
             $variation1_text = "1st Variation";
             $variation2_text = "2nd Variation";
             $variation3_text = "3rd Variation";
@@ -121,6 +126,14 @@ else
                 $status = $row['status'];
                 $create_id = $row['create_id'];
                 $created_at = $row['created_at'];
+
+                $tags = $row['tags'];
+                $moq = $row['moq'];
+                $quoted_price = $row['quoted_price'];
+                $quoted_price_org = $row['quoted_price'];
+                $quoted_price_change = $row['quoted_price_change'];
+                $price_change = $row['price_change'];
+                $price_ntd_change = $row['price_ntd_change'];
 
                 $product = GetProduct($id, $db);
 
@@ -164,12 +177,14 @@ else
                 $special_information = GetSpecialInfomation($sub_category, $db, $special_info_json);
                 $accessory_information = GetAccessoryInfomation($sub_category, $db, $id);
 
+        
                 $variation1 = 'custom';
                 $variation1_custom = $variation1_text;
                 $variation2 = 'custom';
                 $variation2_custom = $variation2_text;
                 $variation3 = 'custom';
                 $variation3_custom = $variation3_text;
+                
 
                 for($i = 0; $i < count($special_information); $i++)
                 {
@@ -200,19 +215,19 @@ else
                    
                 }
 
-                if($variation1_text == "")
+                if($variation1_text == "1st Variation")
                 {
                     $variation1 = "";
                     $variation1_custom = "";
                 }
 
-                if($variation2_text == "")
+                if($variation2_text == "2nd Variation")
                 {
                     $variation2 = "";
                     $variation2_custom = "";
                 }
 
-                if($variation3_text == "")
+                if($variation3_text == "3rd Variation")
                 {
                     $variation3 = "";
                     $variation3_custom = "";
@@ -255,6 +270,14 @@ else
                                     "special_information" => $special_information,
                                     "accessory_information" => $accessory_information,
                                     "sub_category_item" => $sub_category_item,
+                                    "notes" => $notes,
+                                    "moq" => $moq,
+                                    "tags" => $tags,
+                                    "quoted_price" => $quoted_price,
+                                    "quoted_price_org" => $quoted_price_org,
+                                    "quoted_price_change" => substr($quoted_price_change, 0, 10),
+                                    "price_change" => substr($price_change, 0, 10),
+                                    "price_ntd_change" => substr($price_ntd_change, 0, 10),
 
             );
             }
@@ -311,6 +334,10 @@ function GetProduct($id, $db){
         $price_ntd_org = $row['price_ntd'];
         $price_change = $row['price_change'];
         $price_ntd_change = $row['price_ntd_change'];
+
+        $quoted_price = $row['quoted_price'];
+        $quoted_price_change = $row['quoted_price_change'];
+
         $status = $row['enabled'];
         $photo = trim($row['photo']);
         if($photo != '')
@@ -331,8 +358,11 @@ function GetProduct($id, $db){
                                     "price_ntd" => $price_ntd, 
                                     "price_org" => $price_org, 
                                     "price_ntd_org" => $price_ntd_org, 
-                                    "price_change" => $price_change, 
-                                    "price_ntd_change" => $price_ntd_change, 
+                                    "price_change" => substr($price_change, 0, 10), 
+                                    "price_ntd_change" => substr($price_ntd_change, 0, 10), 
+                                    "quoted_price" => $quoted_price, 
+                                    "quoted_price_org" => $quoted_price, 
+                                    "quoted_price_change" => substr($quoted_price_change, 0, 10), 
                                     "status" => $status, 
                                     "url" => $url, 
                                     "photo" => $photo, 

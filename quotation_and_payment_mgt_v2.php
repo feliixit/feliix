@@ -1076,6 +1076,7 @@ $(function(){
                                     <select v-model="payment_type">
                                         <option value="0">Down Payment</option>
                                         <option value="1">Full Payment</option>
+                                        <option value="2">2307</option>
                                     </select>
                                 </dd>
                                 <dt class="head">Remarks:</dt>
@@ -1165,7 +1166,7 @@ $(function(){
                                 </ul>
                                 <ul v-for='(receive_record, index) in displayedPayment'>
                                     <li><input type="checkbox" name="payment_id" class="alone black" :value="receive_record.id"></li>
-                                    <li>{{ (receive_record.kind == 0) ? "Down Payment" : "Full Payment" }}</li>
+                                    <li>{{ (receive_record.kind == 0) ? "Down Payment" : ((receive_record.kind == 1) ? "Full Payment" : "2307") }}</li>
                                     <li>{{ receive_record.remark }}</li>
                                     <li class="display_file">
                                         <span v-for="item in receive_record.items" style="display: block;">

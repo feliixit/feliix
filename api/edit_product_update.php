@@ -13,6 +13,8 @@ $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 $brand = (isset($_POST['brand']) ?  $_POST['brand'] : '');
 $code = (isset($_POST['code']) ?  $_POST['code'] : '');
+$tags = (isset($_POST['tags']) ?  $_POST['tags'] : '');
+$moq = (isset($_POST['moq']) ?  $_POST['moq'] : '');
 $price_ntd = (isset($_POST['price_ntd']) ?  $_POST['price_ntd'] : '');
 $price_org = (isset($_POST['price_org']) ?  $_POST['price_org'] : '');
 $price_ntd_change = (isset($_POST['price_ntd_change']) ?  $_POST['price_ntd_change'] : '');
@@ -21,6 +23,10 @@ $price = (isset($_POST['price']) ?  $_POST['price'] : '');
 $price_change = (isset($_POST['price_change']) ?  $_POST['price_change'] : '');
 $description = (isset($_POST['description']) ?  $_POST['description'] : '');
 $notes = (isset($_POST['notes']) ? $_POST['notes'] : '');
+
+$quoted_price = (isset($_POST['quoted_price']) ?  $_POST['quoted_price'] : '');
+$quoted_price_change = (isset($_POST['quoted_price_change']) ?  $_POST['quoted_price_change'] : '');
+$quoted_price_org = (isset($_POST['quoted_price_org']) ?  $_POST['quoted_price_org'] : '');
 
 $accessory_mode = (isset($_POST['accessory_mode']) ? $_POST['accessory_mode'] : 0);
 $variation_mode = (isset($_POST['variation_mode']) ? $_POST['variation_mode'] : 0);
@@ -89,18 +95,45 @@ else
                 $query .= "`price` = :price, ";
             }
 
+            if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
+            {
+                $query .= "`quoted_price` = :quoted_price, ";
+            }
+
             if($price_ntd != $price_ntd_org)
             {
-                $query .= "`price_ntd_change` = now(), ";
+                if($price_ntd_change != '')
+                {
+                    $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
+                }
+                else
+                    $query .= "`price_ntd_change` = now(), ";
             }
             
             if($price != $price_org)
             {
-                $query .= "`price_change` = now(), ";
+                if($price_change != '')
+                {
+                    $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
+                }
+                else
+                    $query .= "`price_change` = now(), ";
+            }
+
+            if($quoted_price != $quoted_price_org)
+            {
+                if($quoted_price_change != '')
+                {
+                    $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
+                }
+                else
+                    $query .= "`quoted_price_change` = now(), ";
             }
 
             $query .= "`description` = :description,
             `notes` = :notes,
+            `tags` = :tags,
+            `moq` = :moq,
             `accessory_mode` = :accessory_mode,
             `variation_mode` = :variation_mode,
             `attributes` = :attributes,
@@ -125,9 +158,16 @@ else
         {
             $stmt->bindParam(':price', $price);
         }
+
+        if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
+        {
+            $stmt->bindParam(':quoted_price', $quoted_price);
+        }
         
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':notes', $notes);
+        $stmt->bindParam(':tags', $tags);
+        $stmt->bindParam(':moq', $moq);
         $stmt->bindParam(':accessory_mode', $accessory_mode);
         $stmt->bindParam(':variation_mode', $variation_mode);
         $stmt->bindParam(':attributes', $attributes);
@@ -340,7 +380,12 @@ else
             $v2 = $variation_array[$i]['v2'];
             $v3 = $variation_array[$i]['v3'];
             $price = $variation_array[$i]['price'];
+            $price_change = $variation_array[$i]['price_change'];
+            $quoted_price = $variation_array[$i]['quoted_price'];
+            $quoted_price_change = $variation_array[$i]['quoted_price_change'];
+            $quoted_price_org = $variation_array[$i]['quoted_price_org'];
             $price_ntd = $variation_array[$i]['price_ntd'];
+            $price_ntd_change = $variation_array[$i]['price_ntd_change'];
             $price_org = $variation_array[$i]['price_org'];
             $price_ntd_org = $variation_array[$i]['price_ntd_org'];
             $photo = $variation_array[$i]['photo'];
@@ -369,14 +414,39 @@ else
                     $query .= "`price` = :price, ";
                 }
                 
-                if($price_ntd != $price_ntd_org)
+                if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
                 {
-                    $query .= "`price_ntd_change` = now(), ";
+                    $query .= "`quoted_price` = :quoted_price, ";
                 }
                 
-                if($price != $price_org)
+                if(($price_ntd != $price_ntd_org) || $price_ntd_change != '')
                 {
-                    $query .= "`price_change` = now(), ";
+                    if($price_ntd_change != '')
+                    {
+                        $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
+                    }
+                    else
+                        $query .= "`price_ntd_change` = now(), ";
+                }
+
+                if(($price != $price_org) || $price_change != '')
+                {
+                    if($price_change != '')
+                    {
+                        $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
+                    }
+                    else
+                        $query .= "`price_change` = now(), ";
+                }
+                
+                if(($quoted_price != $quoted_price_org) || $quoted_price_change != '')
+                {
+                    if($quoted_price_change != '')
+                    {
+                        $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
+                    }
+                    else
+                        $query .= "`quoted_price_change` = now(), ";
                 }
 
                 $query .= "`enabled` = :enabled,
@@ -395,6 +465,7 @@ else
             $stmt->bindParam(':2rd_variation', $rd_variation);
             $stmt->bindParam(':3th_variation', $th_variation);
             $stmt->bindParam(':code', $code);
+       
             if($price_ntd != '' && !is_null($price_ntd) && $price_ntd != 'null')
             {
                 $stmt->bindParam(':price_ntd', $price_ntd);
@@ -402,6 +473,10 @@ else
             if($price != '' && !is_null($price) && $price != 'null')
             {
                 $stmt->bindParam(':price', $price);
+            }
+            if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
+            {
+                $stmt->bindParam(':quoted_price', $quoted_price);
             }
             $stmt->bindParam(':enabled', $enabled);
             $stmt->bindParam(':create_id', $uid);
