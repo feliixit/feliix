@@ -191,7 +191,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                             ON pm.create_id = user.id
                     WHERE pp.status = 1
                     AND pp.kind = 0
-                    and pp.received_date > '" . $PeriodStart . "' AND pp.received_date < '" . $PeriodEnd . "'
+                    and pp.received_date > '" . $PeriodStart . " 23:59:59' AND pp.received_date < '" . $PeriodEnd . "'
                     AND pp.id IN (SELECT * 
                                 FROM (SELECT MIN(n.id)
                                         FROM project_proof n where STATUS = 1
@@ -236,7 +236,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                             ON pm.create_id = user.id
                     WHERE pp.status = 1
                     AND pp.kind = 1
-                    and pp.received_date > '" . $PeriodStart . "' AND pp.received_date < '" . $PeriodEnd . "'
+                    and pp.received_date > '" . $PeriodStart . " 23:59:59' AND pp.received_date < '" . $PeriodEnd . "'
                     AND pp.id IN (SELECT id 
                                 FROM (SELECT MIN(n.id) id, SUM(amount) amt, kind, (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = n.project_id AND p.kind = 0) down_sum
                                         FROM project_proof n where STATUS = 1
@@ -506,7 +506,7 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
             LEFT JOIN user
                     ON pm.create_id = user.id
             WHERE pp.status = 1
-            and pp.received_date > '" . $sdate . "' AND pp.received_date < '" . $edate . "'
+            and pp.received_date > '" . $sdate . " 23:59:59' AND pp.received_date < '" . $edate . "'
             ";
 
             if($sale_person != "")
