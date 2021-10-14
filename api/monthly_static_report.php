@@ -137,6 +137,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $db){
                 Coalesce(pm.final_amount, 0) final_amount,
                 case 
                     when Coalesce(ps.project_status, '')  = 'Disapproved' AND pm.updated_at > '" . $PeriodStart . "' AND pm.updated_at < '" . $PeriodEnd . "' then 'd'
+                else 'o'
                 end
                     `pro_status`,
                 Coalesce(ps.project_status, '')  project_status,

@@ -66,7 +66,7 @@ $sql = "";
             }
 
             if(!empty($end_date)) {
-                $sql = $sql . " and paid_date < date_add('$end_date', interval 1 day) ";
+                $sql = $sql . " and paid_date < date_add('$end_date', interval 1 month) ";
             }
  
             
