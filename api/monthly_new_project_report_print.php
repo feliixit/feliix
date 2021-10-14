@@ -268,7 +268,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
         LEFT JOIN user
                 ON pm.create_id = user.id
         WHERE pm.status <> -1
-        and pm.created_at > '" . $PeriodStart . "' AND pm.created_at < '" . $PeriodEnd . "' ";
+        and pm.created_at > '" . $PeriodStart . " 23:59:59' AND pm.created_at < '" . $PeriodEnd . "' ";
 
         if($sale_person != "")
         {
@@ -468,7 +468,7 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
             LEFT JOIN user
                     ON pm.create_id = user.id
             WHERE pm.status <> -1
-            and pm.created_at > '" . $sdate . "' AND pm.created_at < '" . $edate . "'
+            and pm.created_at > '" . $sdate . " 23:59:59' AND pm.created_at < '" . $edate . "'
             ";
 
             if($sale_person != "")

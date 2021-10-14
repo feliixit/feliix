@@ -189,8 +189,8 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                         pm.tax_withheld,    
                         ifnull(pm.final_amount, 0) - IFNULL(pm.tax_withheld, 0) net_amount,
                         
-                        (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . "' and p.received_date < '" . $PeriodEnd . "') dsum,
-                        (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . "' and p.received_date < '" . $PeriodEnd . "') psum,
+                        (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . " 23:59:59' and p.received_date < '" . $PeriodEnd . "') dsum,
+                        (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . " 23:59:59' and p.received_date < '" . $PeriodEnd . "') psum,
                         
                         (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "') total_dsum,
                         (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "') total_psum
@@ -202,7 +202,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                             ON pm.create_id = user.id
                     WHERE pp.status = 1
                     and pm.created_at < '" . $PeriodEnd . "' 
-                    and pp.received_date > '" . $PeriodStart . "' AND pp.received_date < '" . $PeriodEnd . "' ";
+                    and pp.received_date > '" . $PeriodStart . " 23:59:59' AND pp.received_date < '" . $PeriodEnd . "' ";
 
         if($sale_person != "")
         {
@@ -231,8 +231,8 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     pm.tax_withheld,    
                     ifnull(pm.final_amount, 0) - IFNULL(pm.tax_withheld, 0) net_amount,
                     
-                    (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . "' and p.received_date < '" . $PeriodEnd . "') dsum,
-                    (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . "' and p.received_date < '" . $PeriodEnd . "') psum,
+                    (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . " 23:59:59' and p.received_date < '" . $PeriodEnd . "') dsum,
+                    (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . " 23:59:59' and p.received_date < '" . $PeriodEnd . "') psum,
                     
                     (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "') total_dsum,
                     (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "') total_psum
@@ -527,8 +527,8 @@ function GetDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
                 pm.project_name,
                 pm.`client`,
                 DATE(pm.created_at) created_at,
-                (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' and p.received_date > '" . $sdate . "' AND p.received_date < '" . $edate . "') dsum,
-                (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' and p.received_date > '" . $sdate . "' AND p.received_date < '" . $edate . "') psum,
+                (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' and p.received_date > '" . $sdate . " 23:59:59' AND p.received_date < '" . $edate . "') dsum,
+                (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' and p.received_date > '" . $sdate . " 23:59:59' AND p.received_date < '" . $edate . "') psum,
 
                 (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date < '" . $edate . "') total_dsum,
                 (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date < '" . $edate . "') total_psum,
