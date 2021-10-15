@@ -418,6 +418,45 @@ var app = new Vue({
 
           if(this.receive_records[i].kind !== "2")
           {
+            var receive_date = document.getElementById("receive_date").value;
+            var amount = document.getElementById("amount").value;
+            var invoice = document.getElementById("invoice").value;
+            var detail = ""; //document.getElementById("detail").value;
+            var remark = document.getElementById("remark").value;
+
+            if (receive_date === "") {
+              Swal.fire({
+                text:
+                  "Date of Receiving required.",
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+
+              return;
+            }
+            
+            if (amount === "") {
+              Swal.fire({
+                text:
+                  "Amount of Receiving required.",
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+
+              return;
+            }
+
+            if (invoice === "") {
+              Swal.fire({
+                text:
+                  "Invoice Number required.",
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+
+              return;
+            }
+
             if (this.payment_method === "") {
               Swal.fire({
                 text:
@@ -429,10 +468,21 @@ var app = new Vue({
               return;
             }
 
-            if (this.payment_method === "check" && ((this.bank_name === "") || (this.check_number === ""))) {
+            if (this.payment_method === "check" && this.bank_name === "") {
               Swal.fire({
                 text:
-                  "Bank Name and Check Number required.",
+                  "Bank Name required.",
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+
+              return;
+            }
+
+            if (this.payment_method === "check" && this.check_number === "") {
+              Swal.fire({
+                text:
+                  "Check Number required.",
                 icon: "warning",
                 confirmButtonText: "OK",
               });
