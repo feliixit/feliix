@@ -2187,3 +2187,14 @@ ADD COLUMN `check_number` varchar(256) DEFAULT '' AFTER status;
 
 ALTER TABLE project_proof
 ADD COLUMN `bank_account` varchar(16) DEFAULT '' AFTER status;
+
+-- 2021/10/19 salary mgt
+CREATE TABLE IF NOT EXISTS `salary_mgt` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) unsigned NOT NULL,
+  `salary` decimal(10, 2) default 0.0,
+  `status` int(11) DEFAULT 0,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
