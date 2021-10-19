@@ -49,6 +49,8 @@ $merged_results = [];
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $receive_date = (isset($_POST['receive_date']) ?  $_POST['receive_date'] : '');
 $amount = (isset($_POST['amount']) ?  $_POST['amount'] : 0);
+if($amount == '')
+    $amount = 0;
 $invoice = (isset($_POST['invoice']) ?  $_POST['invoice'] : '');
 $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 $payment_method = (isset($_POST['payment_method']) ?  $_POST['payment_method'] : '');
