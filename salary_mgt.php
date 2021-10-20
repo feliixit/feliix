@@ -321,7 +321,7 @@
                         <li>{{ record.username }}</li>
                          <li>{{record.title}} ({{record.department}})</li>
                         <li>
-                            <span v-show="record.is_checked == 0">{{record.salary}}</span>
+                            <span v-show="record.is_checked == 0">{{record.salary != null ? record.salary.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ""}}</span>
                             <input type="number" min="0" v-model="salary" v-show="record.is_checked == 1">
                         </li>
                         <li>{{ record.updated_at }}<br>{{ record.updated_name }}</li>
