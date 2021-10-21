@@ -523,7 +523,7 @@ catch (Exception $e) {
                                         <dd><input type="text" v-model="edit_scope_other" v-if="edit_scope === 'Other'">
                                         </dd>
 
-                                        <dt>
+                                        <dt style="display: none;">
                                             <input type="checkbox" id="send_emai"  v-model="edit_send_mail">
                                             <label for="send_emai" style="font-size: 14px; margin-left: -3px;">Send E-mail to service manager when full payment is verified</label>
                                         </dt>

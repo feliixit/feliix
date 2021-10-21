@@ -803,7 +803,8 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     if($kind == 0)
         $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
 
-    if($kind == 1 && $send_mail == 'true')
+    //if($kind == 1 && $send_mail == 'true')
+    if($kind == 1)
         $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
         
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
