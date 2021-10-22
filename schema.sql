@@ -2198,3 +2198,54 @@ CREATE TABLE IF NOT EXISTS `salary_mgt` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 2021/10/20 salary slip mgt
+CREATE TABLE IF NOT EXISTS `salary_slip_mgt` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) unsigned NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `start_date`  varchar(20) DEFAULT '',
+  `end_date`  varchar(20) DEFAULT '',
+  `remark` varchar(1024) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `user_complete_at` timestamp NULL,
+  `manager_complete_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `salary_slip_mgt_detail` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `salary_slip_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `type` int(11) DEFAULT 0 NOT NULL,
+  `cust` int(11) DEFAULT 0 NOT NULL,
+  `order` int(11) DEFAULT 0 NOT NULL,
+  `category`  varchar(256) DEFAULT '',
+  `remark`  varchar(1024) DEFAULT '',
+  `amount` decimal(10, 2) default 0.0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `salary_slip_mgt_other` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `salary_slip_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `type` int(11) DEFAULT 0 NOT NULL,
+  `order` int(11) DEFAULT 0 NOT NULL,
+  `category`  varchar(256) DEFAULT '',
+  `remark`  varchar(1024) DEFAULT '',
+  `previous` decimal(10, 2) default 0.0,
+  `payment` decimal(10, 2) default 0.0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
