@@ -487,9 +487,9 @@
         <!-- tags js在 main.js -->
         <div class="mask" :ref="'mask'" style="display:none"></div>
         <div class="tags">
-            <a class="tag A" href="performance_dashboard">Salary Management</a>
-            <a class="tag B" href="performance_review">Salary Slip Management</a>
-            <a class="tag C" href="template_library">Salary Slip</a>
+            <a class="tag A" href="salary_mgt">Salary Management</a>
+            <a class="tag B" href="salary_slip_mgt">Salary Slip Management</a>
+            <a class="tag C" href="salary_slip">Salary Slip</a>
         </div>
         <!-- Blocks -->
         <div class="block B focus">
