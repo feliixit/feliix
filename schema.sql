@@ -2249,3 +2249,18 @@ CREATE TABLE IF NOT EXISTS `salary_slip_mgt_other` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+ALTER TABLE salary_slip_mgt
+ADD COLUMN `title` varchar(255) DEFAULT '' AFTER `remark`;
+
+ALTER TABLE salary_slip_mgt
+ADD COLUMN `department` varchar(255) DEFAULT '' AFTER `remark`;
+
+ALTER TABLE salary_slip_mgt
+ADD COLUMN `salary` decimal(10, 2) default 0.0 AFTER `remark`;
+
+ALTER TABLE access_control
+ADD COLUMN `salary_mgt` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `salary_slip_mgt` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '';

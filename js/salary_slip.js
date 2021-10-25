@@ -16,6 +16,8 @@ var app = new Vue({
 
     remarks:"",
 
+    confirmed: false,
+
     // data
     type: 0,
     version: "",
@@ -328,6 +330,11 @@ var app = new Vue({
     
 
     employee() {
+
+      if(this.confirmed == true) {
+        return;
+      }
+      
       this.salary_per_month = "";
       this.salary_per_day = "";
       this.salary_per_minute = "";
@@ -394,6 +401,8 @@ var app = new Vue({
       {
         this.$refs.Modal_1.style.display = 'none';
         this.$refs.mask.style.display = 'none';
+
+        this.proof_id = 0;
       }
     },
 
@@ -672,7 +681,8 @@ var app = new Vue({
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
-
+      
+/*
       if(this.record.status == 1) {
         Swal.fire({
           text: "Slip Confirmed.",
@@ -682,10 +692,37 @@ var app = new Vue({
 
         return;
       }
+*/
+      
 
-      this.employee = this.shallowCopy(
-        this.salary_records.find((element) => element.uid == this.record.uid)
-      ).uid;
+      if(this.record.status == 1) {
+
+        let salary = this.record['salary_then'];
+
+        if(salary != null && salary != '')
+        {
+          this.salary_per_month = salary.toLocaleString('en-US', {maximumFractionDigits:2});
+          this.salary_per_day = (salary * 12 / 313).toLocaleString('en-US', {maximumFractionDigits:2});
+          this.salary_per_minute = (salary * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
+        }
+
+        this.record.title = this.record.title_then;
+        this.record.department = this.record.department_then;
+
+        this.confirmed = true;
+
+        this.employee = this.shallowCopy(
+          this.salary_records.find((element) => element.uid == this.record.uid)
+        ).uid;
+
+      }
+      else
+      {
+        this.confirmed = false;
+        this.employee = this.shallowCopy(
+          this.salary_records.find((element) => element.uid == this.record.uid)
+        ).uid;
+      }
 
       this.date_start = this.record.start_date;
       this.date_end = this.record.end_date;
@@ -934,11 +971,18 @@ var app = new Vue({
 
           _this.submit = true;
 
+          var salary_mgt = _this.shallowCopy(
+            _this.salary_records.find((element) => element.uid == _this.employee)
+          );
+
           var token = localStorage.getItem("token");
           var form_Data = new FormData();
           form_Data.append("jwt", token);
           form_Data.append("pid", _this.proof_id);
           form_Data.append("remark", _this.remarks);
+          form_Data.append("salary", salary_mgt['salary']);
+          form_Data.append("title", salary_mgt['title']);
+          form_Data.append("department", salary_mgt['department']);
           form_Data.append("type", status);
 
           axios({

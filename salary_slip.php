@@ -1,3 +1,71 @@
+<?php
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ( !isset( $jwt ) ) {
+  header( 'location:index' );
+}
+
+include_once 'api/config/core.php';
+include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
+include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once 'api/libs/php-jwt-master/src/JWT.php';
+include_once 'api/config/database.php';
+
+
+use \Firebase\JWT\JWT;
+
+$test_manager = "0";
+
+try {
+        // decode jwt
+        try {
+            // decode jwt
+            $decoded = JWT::decode($jwt, $key, array('HS256'));
+            $user_id = $decoded->data->id;
+            $username = $decoded->data->username;
+
+            $database = new Database();
+            $db = $database->getConnection();
+
+            $access_attendance = false;
+
+            $show_salary_mgt = false;
+            $show_salary_slip_mgt = false;
+
+            //if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
+            //    $access2 = true;
+            $query = "SELECT * FROM access_control WHERE salary_slip_mgt LIKE '%" . $username . "%' ";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $show_salary_slip_mgt = true;
+            }
+
+            $query = "SELECT * FROM access_control WHERE salary_mgt LIKE '%" . $username . "%' ";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $show_salary_mgt = true;
+            }
+
+        }
+        catch (Exception $e){
+
+            header( 'location:index' );
+        }
+
+
+        //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
+        //    header( 'location:index.php' );
+    }
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+
+        header( 'location:index' );
+    }
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -416,9 +484,9 @@
         <div class="mask" :ref="'mask'" style="display:none"></div>
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A" href="salary_mgt">Salary Management</a>
-            <a class="tag B" href="salary_slip_mgt">Salary Slip Management</a>
-            <a class="tag C" href="salary_slip">Salary Slip</a>
+            <?php if($show_salary_mgt == true){ ?> <a class="tag A" href="salary_mgt">Salary Management</a> <?php } ?>
+            <?php if($show_salary_slip_mgt == true){ ?> <a class="tag B" href="salary_slip_mgt">Salary Slip Management</a> <?php } ?>
+            <a class="tag C focus">Salary Slip</a>
         </div>
         <!-- Blocks -->
         <div class="block C focus">

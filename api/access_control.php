@@ -14,6 +14,8 @@ $payess1 = (isset($_POST['payess1']) ?  $_POST['payess1'] : '');
 $payess2 = (isset($_POST['payess2']) ?  $_POST['payess2'] : '');
 $payess3 = (isset($_POST['payess3']) ?  $_POST['payess3'] : '');
 $payess4 = (isset($_POST['payess4']) ?  $_POST['payess4'] : '');
+$payess5 = (isset($_POST['payess5']) ?  $_POST['payess5'] : '');
+$payess6 = (isset($_POST['payess6']) ?  $_POST['payess6'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -39,7 +41,7 @@ if (!isset($jwt)) {
     if ($action == 1) {
         //select all
         try {
-            $query = "SELECT payess1, payess2, payess3, salary payess4 from access_control where id = 1";
+            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6 from access_control where id = 1";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
@@ -60,7 +62,9 @@ if (!isset($jwt)) {
                         set payess1 = :payess1, 
                             payess2 = :payess2, 
                             payess3 = :payess3,
-                            salary = :salary
+                            salary = :salary,
+                            salary_mgt = :salary_mgt,
+                            salary_slip_mgt = :salary_slip_mgt
                         where id = :id";
 
             // prepare the query
@@ -73,6 +77,8 @@ if (!isset($jwt)) {
             $payess2 = htmlspecialchars(strip_tags($payess2));
             $payess3 = htmlspecialchars(strip_tags($payess3));
             $payess4 = htmlspecialchars(strip_tags($payess4));
+            $payess5 = htmlspecialchars(strip_tags($payess5));
+            $payess6 = htmlspecialchars(strip_tags($payess6));
 
 
             // bind the values
@@ -81,6 +87,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':payess2', $payess2);
             $stmt->bindParam(':payess3', $payess3);
             $stmt->bindParam(':salary', $payess4);
+            $stmt->bindParam(':salary_mgt', $payess5);
+            $stmt->bindParam(':salary_slip_mgt', $payess6);
 
 
             try {

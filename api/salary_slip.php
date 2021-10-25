@@ -55,7 +55,7 @@ if (!isset($jwt)) {
     $merged_results = array();
     $return_result = array();
 
-    $query = "SELECT pt.id, pt.uid, su.username, pt.start_date, pt.end_date, pt.remark, department, pt.status `status`, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at, user_complete_at, manager_complete_at
+    $query = "SELECT pt.id, pt.uid, su.username, pt.start_date, pt.end_date, pt.remark, ud.department, pt.status `status`, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at, user_complete_at, manager_complete_at, pt.salary salary_then, pt.title title_then, pt.department department_then
                     FROM salary_slip_mgt pt
                     LEFT JOIN user su ON su.id = pt.uid
                     LEFT JOIN user_title ut ON ut.id = su.title_id
@@ -115,6 +115,11 @@ if (!isset($jwt)) {
         $user_complete_at = $row['user_complete_at'];
         $manager_complete_at = $row['manager_complete_at'];
 
+        $salary_then = $row['salary_then'];
+        $title_then = $row['title_then'];
+        $department_then = $row['department_then'];
+
+
         $status_remark = GetStatus($status);
        
         $merged_results[] = array(
@@ -131,6 +136,9 @@ if (!isset($jwt)) {
             "status_remark" => $status_remark,
             "department" => $department,
             "title" => $title,
+            "salary_then" => $salary_then,
+            "title_then" => $title_then,
+            "department_then" => $department_then,
             "created_name" => $created_name,
             "created_at" => $created_at,
             "updated_name" => $updated_name,

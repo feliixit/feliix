@@ -180,6 +180,50 @@ $(function(){
                 </div>
             </div>
 
+            <div class="box-content">
+                <ul>
+                    <li><b>Salary Management</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="payess5"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(5)">Cancel</a>
+                    <a class="btn" @click="save(5)">Save</a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Salary Slip Management</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="payess6"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(6)">Cancel</a>
+                    <a class="btn" @click="save(6)">Save</a>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

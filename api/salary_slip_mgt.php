@@ -42,7 +42,7 @@ if (!isset($jwt)) {
     $merged_results = array();
     $return_result = array();
 
-    $query = "SELECT pt.id, pt.uid, su.username, pt.start_date, pt.end_date, pt.remark, department, pt.status `status`, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at, user_complete_at, manager_complete_at
+    $query = "SELECT pt.id, pt.uid, su.username, pt.start_date, pt.end_date, pt.remark, ud.department, pt.status `status`, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at, user_complete_at, manager_complete_at
                     FROM salary_slip_mgt pt
                     LEFT JOIN user su ON su.id = pt.uid
                     LEFT JOIN user_title ut ON ut.id = su.title_id

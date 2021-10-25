@@ -435,6 +435,8 @@ var app = new Vue({
         this.$refs.Modal_3.style.display = 'none';
         this.$refs.Modal_4.style.display = 'none';
         this.$refs.mask.style.display = 'none';
+
+        this.proof_id = 0;
       }
     },
 
@@ -618,8 +620,8 @@ var app = new Vue({
     
         for(var i = 0; i < this.other.length; i++) {
           var num = "";
-          if((!isNaN(this.other[i]['previous']) && this.other[i]['previous'] != "") && (!isNaN(this.other[i]['payment']) && this.other[i]['payment'] != ""))
-            num = parseFloat(this.other[i]['previous']) - parseFloat(this.other[i]['payment']);
+          if((!isNaN(this.other[i]['previous'])) && (!isNaN(this.other[i]['payment'])))
+            num = parseFloat(this.other[i]['previous'] == "" ? 0 : this.other[i]['previous']) - parseFloat(this.other[i]['payment'] == "" ? 0 : parseFloat(this.other[i]['payment']));
             
           this.other[i]['remark'] = num.toLocaleString('en-US', {maximumFractionDigits:2});
           
