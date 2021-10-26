@@ -10,6 +10,7 @@ include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 require_once '../vendor/autoload.php';
 
+include_once 'mail.php';
 
 use \Firebase\JWT\JWT;
 use Google\Cloud\Storage\StorageClient;
@@ -122,7 +123,12 @@ switch ($method) {
 
             $db->commit();
 
+            $detail = GetDetail($pid, $db);
+            if($type == 1)
+                send_salary_slip_confirm($detail[0]['start_date'], $detail[0]['end_date'], $user_id, $detail[0]['create_id'], $remark);
 
+            if($type == 2)
+                send_salary_slip_reject($detail[0]['start_date'], $detail[0]['end_date'], $user_id, $detail[0]['create_id'], $remark);
 
             http_response_code(200);
             echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -135,4 +141,22 @@ switch ($method) {
             die();
         }
         break;
+}
+
+
+function GetDetail($_id, $db)
+{
+    $sql = "select * from salary_slip_mgt pm 
+            where id = " . $_id . "  ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }

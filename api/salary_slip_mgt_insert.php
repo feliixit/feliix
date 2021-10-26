@@ -36,6 +36,8 @@ include_once 'config/database.php';
 include_once 'config/conf.php';
 require_once '../vendor/autoload.php';
 
+include_once 'mail.php';
+
 $database = new Database();
 $db = $database->getConnection();
 $db->beginTransaction();
@@ -266,6 +268,8 @@ else
 
 
         $db->commit();
+
+        send_salary_slip($start_date, $end_date, $uid, $user_id);
 
         
         http_response_code(200);

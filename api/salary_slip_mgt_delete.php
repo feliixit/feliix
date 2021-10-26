@@ -10,6 +10,7 @@ include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 require_once '../vendor/autoload.php';
 
+include_once 'mail.php';
 
 use \Firebase\JWT\JWT;
 use Google\Cloud\Storage\StorageClient;
@@ -62,6 +63,9 @@ switch ($method) {
         $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
         $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
         $type = (isset($_POST['type']) ?  $_POST['type'] : 0);
+
+        $start_date = (isset($_POST['start_date']) ?  $_POST['start_date'] : '');
+        $end_date = (isset($_POST['end_date']) ?  $_POST['end_date'] : '');
       
         if ($pid == 0) {
             http_response_code(401);
@@ -110,7 +114,12 @@ switch ($method) {
 
             $db->commit();
 
+            $detail = GetDetail($pid, $db);
+            if($type == -1)
+                send_salary_slip_delete($start_date, $end_date, $detail[0]['uid'], $user_id);
 
+            if($type == 3)
+                send_salary_slip_withdraw($start_date, $end_date, $detail[0]['uid'], $user_id);
 
             http_response_code(200);
             echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
@@ -123,4 +132,22 @@ switch ($method) {
             die();
         }
         break;
+}
+
+
+function GetDetail($_id, $db)
+{
+    $sql = "select * from salary_slip_mgt pm 
+            where id = " . $_id . "  ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }

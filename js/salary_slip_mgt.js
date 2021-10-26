@@ -974,7 +974,7 @@ var app = new Vue({
       let _this = this;
       
       Swal.fire({
-        title: "Delete",
+        title: wording,
         text: "Are you sure to " + wording + "?",
         icon: "warning",
         showCancelButton: true,
@@ -991,6 +991,8 @@ var app = new Vue({
           var form_Data = new FormData();
           form_Data.append("jwt", token);
           form_Data.append("pid", _this.proof_id);
+          form_Data.append("start_date", _this.record.start_date);
+          form_Data.append("end_date", _this.record.end_date);
           form_Data.append("type", status);
 
           axios({
