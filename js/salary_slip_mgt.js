@@ -450,7 +450,8 @@ var app = new Vue({
     },
 
     reload_detail: function() {
-      this.ToggleModal(2, 'o');
+
+      this.detail();
     },
 
     filter_apply: function() {
@@ -857,15 +858,6 @@ var app = new Vue({
     },
 
     edit_slip() {
-      if(this.salary_mgt['uid'] == undefined) {
-        Swal.fire({
-          text: "Please select Employee Name",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-
-        return;
-      }
 
       if(this.date_start == '') {
         Swal.fire({
@@ -897,7 +889,7 @@ var app = new Vue({
 
       form_Data.append("jwt", token);
       form_Data.append("pid", this.proof_id);
-      form_Data.append("uid", this.salary_mgt['uid']);
+      form_Data.append("uid", this.record.uid);
       form_Data.append("start_date", this.date_start);
       form_Data.append("end_date", this.date_end);
 
