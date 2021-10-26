@@ -62,9 +62,7 @@ switch ($method) {
         $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
         $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
         $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
-        $salary = (isset($_POST['salary']) ?  $_POST['salary'] : '');
-        $title = (isset($_POST['title']) ?  $_POST['title'] : '');
-        $department = (isset($_POST['department']) ?  $_POST['department'] : '');
+   
         $type = (isset($_POST['type']) ?  $_POST['type'] : 0);
       
         if ($pid == 0) {
@@ -79,9 +77,7 @@ switch ($method) {
                 SET
                     `status` = :type,
                     `remark` = :remark,
-                    `salary` = :salary,
-                    `title` = :title,
-                    `department` = :department,
+            
                     `updated_id` = :updated_id,
                     `updated_at` = now() ";
 
@@ -98,9 +94,7 @@ switch ($method) {
             // bind the values
             $stmt->bindParam(':type', $type);
             $stmt->bindParam(':remark', $remark);
-            $stmt->bindParam(':salary', $salary);
-            $stmt->bindParam(':title', $title);
-            $stmt->bindParam(':department', $department);
+  
             $stmt->bindParam(':updated_id', $user_id);
   
             $stmt->bindParam(':id', $pid);

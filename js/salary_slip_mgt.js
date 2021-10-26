@@ -14,6 +14,8 @@ var app = new Vue({
     department: "",
     title_id: 0,
 
+    confirmed: false,
+
     // data
     type: 0,
     version: "",
@@ -326,6 +328,11 @@ var app = new Vue({
     
 
     employee() {
+
+      if(this.confirmed == true) {
+        return;
+      }
+
       this.salary_per_month = "";
       this.salary_per_day = "";
       this.salary_per_minute = "";
@@ -341,6 +348,7 @@ var app = new Vue({
         this.salary_per_minute = (this.salary_mgt['salary'] * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
       }
     }
+  
   },
 
   methods: {
@@ -372,6 +380,7 @@ var app = new Vue({
     },
 
     duplicate: function() {
+      this.confirmed = false;
       this.ToggleModal(4, 'o');
     },
 
@@ -436,10 +445,13 @@ var app = new Vue({
         this.$refs.Modal_4.style.display = 'none';
         this.$refs.mask.style.display = 'none';
 
-        this.proof_id = 0;
+        this.reset_all();
       }
     },
 
+    reload_detail: function() {
+      this.ToggleModal(2, 'o');
+    },
 
     filter_apply: function() {
         let _this = this;
@@ -458,17 +470,14 @@ var app = new Vue({
 
       cancel: function() {
         this.ToggleModal(0, 'c');
-        this.reset_all();
       },
 
       cancel_3: function() {
         this.ToggleModal(0, 'c');
-        this.reset_all();
       },
 
       cancel_4: function() {
         this.ToggleModal(0, 'c');
-        this.reset_all();
       },
 
       reload: function() {
@@ -613,6 +622,7 @@ var app = new Vue({
 
     this.editing = false;
       this.submit = false;
+      this.confirmed = false;
 
       },
 
@@ -620,11 +630,16 @@ var app = new Vue({
     
         for(var i = 0; i < this.other.length; i++) {
           var num = "";
-          if((!isNaN(this.other[i]['previous'])) && (!isNaN(this.other[i]['payment'])))
+          //if((!isNaN(this.other[i]['previous'])) && (!isNaN(this.other[i]['payment'])) && (this.other[i]['previous'] != "" && this.other[i]['payment'] != ""))
+          if(this.other[i]['previous'] == "" && this.other[i]['payment'] == "")
+          {
+            this.other[i]['remark'] = "";
+          }
+          else
+          {
             num = parseFloat(this.other[i]['previous'] == "" ? 0 : this.other[i]['previous']) - parseFloat(this.other[i]['payment'] == "" ? 0 : parseFloat(this.other[i]['payment']));
-            
-          this.other[i]['remark'] = num.toLocaleString('en-US', {maximumFractionDigits:2});
-          
+            this.other[i]['remark'] = num.toLocaleString('en-US', {maximumFractionDigits:2});  
+          }
         }
   
         return "";
@@ -719,6 +734,12 @@ var app = new Vue({
         return;
       }
 
+      this.confirmed = true;
+
+      this.salary_per_month = "";
+      this.salary_per_day = "";
+      this.salary_per_minute = "";
+
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
@@ -726,6 +747,15 @@ var app = new Vue({
       this.employee = this.shallowCopy(
         this.salary_records.find((element) => element.uid == this.record.uid)
       ).uid;
+
+      let salary = this.record['salary_then'];
+
+      if(salary != null && salary != '')
+      {
+        this.salary_per_month = salary.toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_day = (salary * 12 / 313).toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_minute = (salary * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
+      }
 
       this.date_start = this.record.start_date;
       this.date_end = this.record.end_date;
@@ -786,6 +816,10 @@ var app = new Vue({
       form_Data.append("uid", this.salary_mgt['uid']);
       form_Data.append("start_date", this.date_start);
       form_Data.append("end_date", this.date_end);
+
+      form_Data.append("salary", this.salary_mgt['salary']);
+      form_Data.append("title", this.salary_mgt['title']);
+      form_Data.append("department", this.salary_mgt['department']);
 
       form_Data.append("detail_plus", JSON.stringify(this.detail_plus));
       form_Data.append("detail_minus", JSON.stringify(this.detail_minus));

@@ -609,12 +609,12 @@ try {
 
                     <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
-                            <input type="radio" name="record_id" class="alone green" :value="record.id"
+                            <input type="radio" name="record_id" class="alone green" :value="record.id" @click="reload_detail()"
                                    v-model="proof_id">
                         </li>
                         <li>{{ record.status == 0 ? "For Confirm" : ( record.status == 1 ? "Confirmed" : (record.status == 2 ? "Rejected" : (record.status == 3 ? "Withdrawn" : ""))) }}</li>
                         <li>{{ record.username }}</li>
-                        <li>{{ record.title }} ({{ record.department }})</li>
+                        <li>{{ record.title_then }} ({{ record.department_then }})</li>
                         <li>{{ record.start_date }} ~ {{ record.end_date }}</li>
                     </ul>
 
@@ -803,7 +803,7 @@ try {
                                 <li class="content">{{ record.username }}</li>
 
                                 <li><b>Position</b></li>
-                                <li class="content">{{ record.title }} ({{ record.department }})</li>
+                                <li class="content">{{ record.title_then }} ({{ record.department_then }})</li>
 
                                 <li><b>Salary for</b></li>
                                 <li class="content">{{ record.start_date }} ~ {{ record.end_date }}</li>

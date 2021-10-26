@@ -327,7 +327,7 @@ var app = new Vue({
       this.detail();
     },
 
-    
+    /*
 
     employee() {
 
@@ -350,6 +350,7 @@ var app = new Vue({
         this.salary_per_minute = (this.salary_mgt['salary'] * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
       }
     }
+    */
   },
 
   methods: {
@@ -402,7 +403,6 @@ var app = new Vue({
         this.$refs.Modal_1.style.display = 'none';
         this.$refs.mask.style.display = 'none';
 
-        this.proof_id = 0;
       }
     },
 
@@ -695,34 +695,19 @@ var app = new Vue({
 */
       
 
-      if(this.record.status == 1) {
+      let salary = this.record['salary_then'];
 
-        let salary = this.record['salary_then'];
-
-        if(salary != null && salary != '')
-        {
-          this.salary_per_month = salary.toLocaleString('en-US', {maximumFractionDigits:2});
-          this.salary_per_day = (salary * 12 / 313).toLocaleString('en-US', {maximumFractionDigits:2});
-          this.salary_per_minute = (salary * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
-        }
-
-        this.record.title = this.record.title_then;
-        this.record.department = this.record.department_then;
-
-        this.confirmed = true;
-
-        this.employee = this.shallowCopy(
-          this.salary_records.find((element) => element.uid == this.record.uid)
-        ).uid;
-
-      }
-      else
+      if(salary != null && salary != '')
       {
-        this.confirmed = false;
-        this.employee = this.shallowCopy(
-          this.salary_records.find((element) => element.uid == this.record.uid)
-        ).uid;
+        this.salary_per_month = salary.toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_day = (salary * 12 / 313).toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_minute = (salary * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
       }
+
+      this.employee = this.shallowCopy(
+        this.salary_records.find((element) => element.uid == this.record.uid)
+      ).uid;
+
 
       this.date_start = this.record.start_date;
       this.date_end = this.record.end_date;
@@ -1256,6 +1241,10 @@ var app = new Vue({
           }
         )
         .finally(() => {});
+    },
+
+    reload_detail: function() {
+      this.ToggleModal(1, 'o');
     },
 
     set_agenda: function() {

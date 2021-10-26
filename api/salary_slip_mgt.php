@@ -42,7 +42,7 @@ if (!isset($jwt)) {
     $merged_results = array();
     $return_result = array();
 
-    $query = "SELECT pt.id, pt.uid, su.username, pt.start_date, pt.end_date, pt.remark, ud.department, pt.status `status`, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at, user_complete_at, manager_complete_at
+    $query = "SELECT pt.id, pt.uid, su.username, pt.start_date, pt.end_date, pt.remark, ud.department, pt.status `status`, ut.title, u.username created_name, COALESCE(pt.created_at, '') created_at, u1.username updated_name, COALESCE(pt.updated_at, '') updated_at, user_complete_at, manager_complete_at, pt.salary salary_then, pt.title title_then, pt.department department_then
                     FROM salary_slip_mgt pt
                     LEFT JOIN user su ON su.id = pt.uid
                     LEFT JOIN user_title ut ON ut.id = su.title_id
@@ -102,6 +102,10 @@ if (!isset($jwt)) {
         $user_complete_at = $row['user_complete_at'];
         $manager_complete_at = $row['manager_complete_at'];
 
+        $salary_then = $row['salary_then'];
+        $title_then = $row['title_then'];
+        $department_then = $row['department_then'];
+
         $status_remark = GetStatus($status);
        
         $merged_results[] = array(
@@ -124,6 +128,9 @@ if (!isset($jwt)) {
             "updated_at" => $updated_at,
             "user_complete_at" => $user_complete_at,
             "manager_complete_at" => $manager_complete_at,
+            "salary_then" => $salary_then,
+            "title_then" => $title_then,
+            "department_then" => $department_then,
         );
     }
 
@@ -132,8 +139,8 @@ if (!isset($jwt)) {
             if (
                 preg_match("/{$kw}/i", $value['status_remark']) ||
                 preg_match("/{$kw}/i", $value['username']) ||
-                preg_match("/{$kw}/i", $value['title']) ||
-                preg_match("/{$kw}/i", $value['department']) ||
+                preg_match("/{$kw}/i", $value['title_then']) ||
+                preg_match("/{$kw}/i", $value['department_then']) ||
                 preg_match("/{$kw}/i", $value['start_date']) ||
                 preg_match("/{$kw}/i", $value['end_date']) ||
                 $kw == ($value['start_date'] != "" ? substr($value['start_date'], 0, 10) : "") ||
@@ -254,7 +261,7 @@ function GetOther($tid, $type, $db){
         $payment = $row['payment'];
         $previous = $row['previous'];
 
-        $remark = ($payment != 0 && $previous != 0) ? number_format($previous - $payment, 2) : "";
+        $remark = number_format($previous - $payment, 2);
 
         $status = $row['status'];
 

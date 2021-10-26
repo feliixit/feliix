@@ -21,6 +21,10 @@ $detail_minus_array = json_decode($detail_minus,true);
 $other = (isset($_POST['other']) ?  $_POST['other'] : '[]');
 $other_array = json_decode($other,true);
 
+$salary = (isset($_POST['salary']) ?  $_POST['salary'] : '');
+$title = (isset($_POST['title']) ?  $_POST['title'] : '');
+$department = (isset($_POST['department']) ?  $_POST['department'] : '');
+
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -61,6 +65,9 @@ else
             `uid` = :uid,
             `start_date` = :start_date,
             `end_date` = :end_date,
+            `salary` = :salary,
+            `title` = :title,
+            `department` = :department,
             `status` = 0,
             `create_id` = :create_id,
             `created_at` =  now() ";
@@ -71,6 +78,9 @@ else
         // bind the values
         $stmt->bindParam(':uid', $uid);
         $stmt->bindParam(':start_date', $start_date);
+        $stmt->bindParam(':salary', $salary);
+        $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':department', $department);
         $stmt->bindParam(':end_date', $end_date);
         $stmt->bindParam(':create_id', $user_id);
 

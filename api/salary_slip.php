@@ -153,8 +153,8 @@ if (!isset($jwt)) {
             if (
                 preg_match("/{$kw}/i", $value['status_remark']) ||
                 preg_match("/{$kw}/i", $value['username']) ||
-                preg_match("/{$kw}/i", $value['title']) ||
-                preg_match("/{$kw}/i", $value['department']) ||
+                preg_match("/{$kw}/i", $value['title_then']) ||
+                preg_match("/{$kw}/i", $value['department_then']) ||
                 preg_match("/{$kw}/i", $value['start_date']) ||
                 preg_match("/{$kw}/i", $value['end_date']) ||
                 $kw == ($value['start_date'] != "" ? substr($value['start_date'], 0, 10) : "") ||
@@ -275,7 +275,7 @@ function GetOther($tid, $type, $db){
         $payment = $row['payment'];
         $previous = $row['previous'];
 
-        $remark = ($payment != 0 && $previous != 0) ? number_format($previous - $payment, 2) : "";
+        $remark = number_format($previous - $payment, 2);
 
         $status = $row['status'];
 
