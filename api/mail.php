@@ -4415,6 +4415,336 @@ function project02_status_change_notify_mail($project_name, $project_category, $
 
 }
 
+
+function send_salary_slip(  $start_date, 
+                            $end_date, 
+                            $employee_id, 
+                            $user_id
+                            )
+{
+    $title = "[Notification] Salary Slip for " . $start_date . " to " . $end_date . " Needs Confirmation";
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $employee = GetNotifiers($employee_id);
+    $emp_name = "";
+    $sumitor = "";
+    foreach($employee as &$list)
+    {
+        $emp_name = $list["username"];
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetNotifiers($user_id);
+    foreach($notifior as &$list)
+    {
+        $sumitor = $list["username"];
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $emp_name . ",</p>";
+    $content = $content . "<p> Your salary slip for " . $start_date . " to " . $end_date . " was submitted by " . $sumitor . " and needs you to confirm.</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Payment Request/Claim and Salary Slip >> Salary Slip to review your salary slip details and confirm.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($emp_name, $content);
+        return true;
+    } else {
+        logMail($emp_name, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
+
+function send_salary_slip_withdraw(  
+                            $start_date, 
+                            $end_date, 
+                            $employee_id, 
+                            $user_id
+                            )
+{
+ 
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $employee = GetNotifiers($employee_id);
+    $emp_name = "";
+    $sumitor = "";
+    foreach($employee as &$list)
+    {
+        $emp_name = $list["username"];
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetNotifiers($user_id);
+    foreach($notifior as &$list)
+    {
+        $sumitor = $list["username"];
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $title = "[Notification] Salary Slip for " . $start_date . " to " . $end_date . " was Withdrawn by " . $sumitor;
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear " . $emp_name . ",</p>";
+    $content = $content . "<p> Your salary slip for " . $start_date . " to " . $end_date . " was withdrawn by " . $sumitor . ". As a result, this salary slip will disappear from the table of salary slip, which is normal.</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($emp_name, $content);
+        return true;
+    } else {
+        logMail($emp_name, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
+
+function send_salary_slip_confirm(  
+                            $start_date, 
+                            $end_date, 
+                            $employee_id, 
+                            $user_id,
+                            $remark
+                            )
+{
+ 
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $employee = GetNotifiers($employee_id);
+    $emp_name = "";
+    $sumitor = "";
+    foreach($employee as &$list)
+    {
+        $emp_name = $list["username"];
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $notifior = GetNotifiers($user_id);
+    foreach($notifior as &$list)
+    {
+        $sumitor = $list["username"];
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $title = "[Notification] " . $emp_name . "'s Salary Slip for " . $start_date . " to " . $end_date . " was Confirmed";
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    
+    $mail->Subject = $title;
+
+    $content =  "<p>Dear " . $sumitor . ",</p>";
+    $content = $content . "<p>" . $emp_name . "'s salary slip for " . $start_date . " to " . $end_date . " was confirmed.</p>";
+    $content = $content . "<p> </p>";
+  
+        $content = $content . "<p>Remarks from Employee:" . $remark . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please log on to Feliix >> Payment Request/Claim and Salary Slip >> Salary Slip Management to view the salary slip.</p>";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($emp_name, $content);
+        return true;
+    } else {
+        logMail($emp_name, $mail->ErrorInfo . $content);
+        return false;
+    }
+}
+
+function send_salary_slip_reject(  
+    $start_date, 
+    $end_date, 
+    $employee_id, 
+    $user_id,
+    $remark
+    )
+{
+
+$conf = new Conf();
+
+$mail = new PHPMailer();
+$mail->IsSMTP();
+$mail->Mailer = "smtp";
+$mail->CharSet = 'UTF-8';
+$mail->Encoding = 'base64';
+
+$mail->SMTPDebug  = 0;
+$mail->SMTPAuth   = true;
+$mail->SMTPSecure = "ssl";
+$mail->Port       = 465;
+$mail->SMTPKeepAlive = true;
+$mail->Host       = $conf::$mail_host;
+$mail->Username   = $conf::$mail_username;
+$mail->Password   = $conf::$mail_password;
+
+$mail->IsHTML(true);
+
+$employee = GetNotifiers($employee_id);
+$emp_name = "";
+$sumitor = "";
+foreach($employee as &$list)
+{
+$emp_name = $list["username"];
+$mail->AddCC($list["email"], $list["username"]);
+}
+
+$notifior = GetNotifiers($user_id);
+foreach($notifior as &$list)
+{
+$sumitor = $list["username"];
+$mail->AddAddress($list["email"], $list["username"]);
+}
+
+$title = "[Notification] " . $emp_name . "'s Salary Slip for " . $start_date . " to " . $end_date . " was Rejected";
+
+$mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+$mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+$mail->Subject = $title;
+
+$content =  "<p>Dear " . $sumitor . ",</p>";
+$content = $content . "<p>" . $emp_name . "'s salary slip for " . $start_date . " to " . $end_date . " was rejected.</p>";
+$content = $content . "<p> </p>";
+
+    $content = $content . "<p>Remarks from Employee:" . $remark . "</p>";
+$content = $content . "<p> </p>";
+$content = $content . "<p>Please log on to Feliix >> Payment Request/Claim and Salary Slip >> Salary Slip Management to view the salary slip.</p>";
+$content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+$mail->MsgHTML($content);
+if($mail->Send()) {
+logMail($emp_name, $content);
+return true;
+} else {
+logMail($emp_name, $mail->ErrorInfo . $content);
+return false;
+}
+}
+
+function send_salary_slip_delete(  
+    $start_date, 
+    $end_date, 
+    $employee_id, 
+    $user_id
+    )
+{
+
+$conf = new Conf();
+
+$mail = new PHPMailer();
+$mail->IsSMTP();
+$mail->Mailer = "smtp";
+$mail->CharSet = 'UTF-8';
+$mail->Encoding = 'base64';
+
+$mail->SMTPDebug  = 0;
+$mail->SMTPAuth   = true;
+$mail->SMTPSecure = "ssl";
+$mail->Port       = 465;
+$mail->SMTPKeepAlive = true;
+$mail->Host       = $conf::$mail_host;
+$mail->Username   = $conf::$mail_username;
+$mail->Password   = $conf::$mail_password;
+
+$mail->IsHTML(true);
+
+$employee = GetNotifiers($employee_id);
+$emp_name = "";
+$sumitor = "";
+foreach($employee as &$list)
+{
+$emp_name = $list["username"];
+$mail->AddAddress($list["email"], $list["username"]);
+}
+
+$notifior = GetNotifiers($user_id);
+foreach($notifior as &$list)
+{
+$sumitor = $list["username"];
+$mail->AddCC($list["email"], $list["username"]);
+}
+
+$title = "[Notification] Salary Slip for " . $start_date . " to " . $end_date . " was Deleted by " . $sumitor;
+
+$mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+$mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+$mail->Subject = $title;
+$content =  "<p>Dear " . $emp_name . ",</p>";
+$content = $content . "<p> Your salary slip for " . $start_date . " to " . $end_date . " was deleted by " . $sumitor . ". As a result, this salary slip will disappear from the table of salary slip, which is normal.</p>";
+$mail->MsgHTML($content);
+if($mail->Send()) {
+logMail($emp_name, $content);
+return true;
+} else {
+logMail($emp_name, $mail->ErrorInfo . $content);
+return false;
+}
+}
+
+
 function GetProject01NotifiersByCatagory($catagory)
 {
     $database = new Database();

@@ -10,6 +10,8 @@ var app = new Vue({
     payess2: [],
     payess3: [],
     payess4: [],
+    payess5: [],
+    payess6: [],
 
     payees: [],
   },
@@ -53,6 +55,14 @@ var app = new Vue({
               });
             if (kind === 4 || kind === undefined)
               _this.payess4 = res.data[0]["payess4"].split(",").filter(function (el) {
+                return el != "";
+              });
+            if (kind === 5 || kind === undefined)
+              _this.payess5 = res.data[0]["payess5"].split(",").filter(function (el) {
+                return el != "";
+              });
+            if (kind === 6 || kind === undefined)
+              _this.payess6 = res.data[0]["payess6"].split(",").filter(function (el) {
                 return el != "";
               });
           },
@@ -103,6 +113,8 @@ var app = new Vue({
       form_Data.append("payess2", this.payess2.toString());
       form_Data.append("payess3", this.payess3.toString());
       form_Data.append("payess4", this.payess4.toString());
+      form_Data.append("payess5", this.payess5.toString());
+      form_Data.append("payess6", this.payess6.toString());
 
       axios({
         method: "post",
