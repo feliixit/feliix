@@ -850,6 +850,16 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     $content = $content . '</td>
                         </tr>
                         <tr>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                                <eng style="font-size: 16px;">
+                                    Project Category
+                                </eng>
+                            </td>
+                        <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    $content = $content . " " . $category == '1' ? "Office Systems" : "Lighting" . " ";
+    $content = $content . '</td>
+                        </tr>
+                        <tr>
                             <td style="background-color: #FDB72F44; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
                                 <eng style="font-size: 16px;">
                                     Submission Time
@@ -1243,6 +1253,16 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
                             </td>
                             <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
     $content = $content . " " . $projectname . " ";
+    $content = $content . '</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                                <eng style="font-size: 16px;">
+                                    Project Category
+                                </eng>
+                            </td>
+                        <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    $content = $content . " " . $category == '1' ? "Office Systems" : "Lighting" . " ";
     $content = $content . '</td>
                         </tr>
                         <tr>
