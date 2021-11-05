@@ -56,13 +56,30 @@ function SendNotifyMail($id, $db)
     $date_request = $_record[0]["date_requested"];
     $total_amount = $_record[0]["total"];
 
-
+    $checker = GetReleaseChecker($id, $db);
     $date_release = GetReleaseHistory($id, $db);
 
-    batch_liquidate_notify_mail($request_no, $requestor, $requestor_email, $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $date_release);
+    batch_liquidate_notify_mail($request_no, $requestor, $requestor_email, $department, $application_Time, $project_name1, $project_name, $date_request, $total_amount, $reject_reason, $date_release, $checker);
       
 }
 
+
+function GetReleaseChecker($_id, $db)
+{
+    $sql = "select user.id from petty_history pm LEFT JOIN user ON pm.actor = user.username
+            where pm.`status` <> -1 and petty_id = " . $_id . " and `action` = 'Checker Checked' order by pm.created_at desc limit 1";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = $row['id'];
+    }
+
+    return $merged_results;
+}
 
 function GetReleaseHistory($_id, $db)
 {
