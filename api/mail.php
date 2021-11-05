@@ -800,11 +800,11 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
-    if($kind == 0)
-        $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+    //if($kind == 0)
+    //    $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
 
     //if($kind == 1 && $send_mail == 'true')
-    if($kind == 1)
+    if($kind == 0 || $kind == 1)
         $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
         
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
@@ -1212,7 +1212,7 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     $mail->AddCC($email1, $name);
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
 
-    if($kind == 0)
+    if($kind == 0 || $kind == 1)
         $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
@@ -2267,7 +2267,7 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
 }
 
 
-function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $department, $ap_time, $project_name1, $project_name, $date_request, $total_amount, $reason, $date_release)
+function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $department, $ap_time, $project_name1, $project_name, $date_request, $total_amount, $reason, $date_release, $checker)
 {
 
     $title = "Expense Application with Request No." . $request_no . " Needs Liquidation";
@@ -2292,6 +2292,12 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
     $mail->IsHTML(true);
 
     $mail->AddAddress($user_email, $user_name);
+
+    $notifior = GetNotifiers($checker);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
