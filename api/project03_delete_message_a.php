@@ -14,6 +14,7 @@ include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
+include_once 'mail.php';
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
     http_response_code(401);
@@ -87,6 +88,8 @@ try{
     if ($stmt->execute()) {
         $returnArray = array('ret' => $stage_id_to_edit);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+        SendNotifyMail($message_id, $uid);
     }
     else
     {
@@ -101,3 +104,77 @@ catch (Exception $e)
     error_log($e->getMessage());
 }
 
+
+function SendNotifyMail($last_id, $uid)
+{
+    $project_name = "";
+    $task_name = "";
+    $stages_status = "";
+    $create_id = "";
+
+    $assignee = "";
+    $collaborator = "";
+
+    $due_date = "";
+    $detail = "";
+
+    $stage_id = 0;
+
+    $_record = array();
+
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $_record = GetTaskDetail($last_id, $db);
+ 
+    $task_name = $_record[0]["task_name"];
+    $created_at = $_record[0]["created_at"];
+    $stages = "";
+    $create_id = $_record[0]["create_id"];
+
+    $assignee = $_record[0]["assignee"];
+    $collaborator = $_record[0]["collaborator"];
+
+    $stage_id = $_record[0]["id"];
+
+    $msg = $_record[0]["message"];
+
+    //$due_date = str_replace("-", "/", $_record[0]["due_date"]) . " " . $_record[0]["due_time"];
+    $detail = $_record[0]["detail"];
+
+    $username = $_record[0]["username"];
+    $_id = $_record[0]["_id"];
+
+    message_notify_dept("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, "", $detail, $stage_id, $msg, $username, $created_at, $_id, 'AD');
+
+}
+
+function GetTaskDetail($id, $db)
+{
+    $sql = "SELECT pt.id, title task_name, 
+            pt.create_id,
+            pt.assignee,
+            pt.collaborator,
+            due_date,
+            detail,
+            message,
+            u.username,
+            pmsg.created_at,
+            pmsg.create_id _id
+            FROM project_other_task_message_a pmsg
+            LEFT JOIN project_other_task_a pt ON pmsg.task_id = pt.id
+            LEFT JOIN user u ON u.id = pmsg.create_id
+            WHERE pmsg.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
