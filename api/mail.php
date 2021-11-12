@@ -2444,7 +2444,7 @@ function task_notify_admin_d($request_type, $task_status, $task_name, $stages_st
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_DS?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_DS?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -2571,7 +2571,7 @@ function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_s
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SLS?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_SLS?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -2698,7 +2698,7 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SVC?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_SVC?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -2825,7 +2825,7 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_OS?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_OS?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -2952,7 +2952,7 @@ function task_notify_admin_l($request_type, $task_status, $task_name, $stages_st
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_LT?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_LT?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -3145,7 +3145,7 @@ function task_notify_admin($request_type, $task_status, $task_name, $stages_stat
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_AD?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_AD?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -3600,17 +3600,17 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
 
     if($category == 'AD')
-        $content = $content . "<p>https://feliix.myvnc.com/task_manangement_AD?sid=" . $stage_id . "</p>";
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_AD?sid=" . $stage_id . "</p>";
     else if($category == 'DS')
-        $content = $content . "<p>https://feliix.myvnc.com/task_manangement_DS?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_DS?sid=" . $stage_id . "</p>";  
     else if($category == 'LT_T')
-        $content = $content . "<p>https://feliix.myvnc.com/task_manangement_LT?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_LT?sid=" . $stage_id . "</p>";  
     else if($category == 'OS_T')
-        $content = $content . "<p>https://feliix.myvnc.com/task_manangement_OS?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_OS?sid=" . $stage_id . "</p>";  
     else if($category == 'SL')
-        $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SLS?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_SLS?sid=" . $stage_id . "</p>";  
     else if($category == 'SV')
-        $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SVC?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_SVC?sid=" . $stage_id . "</p>";  
     else
         $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";  
 
@@ -3698,7 +3698,7 @@ function task_notify01_admin_sl($old_status, $task_status, $revisor, $task_name,
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SLS?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_SLS?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -3783,7 +3783,7 @@ function task_notify01_admin_sv($old_status, $task_status, $revisor, $task_name,
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_SVC?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_SVC?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -3869,7 +3869,7 @@ function task_notify01_admin_d($old_status, $task_status, $revisor, $task_name, 
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_DS?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_DS?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -3955,7 +3955,7 @@ function task_notify01_admin_o($old_status, $task_status, $revisor, $task_name, 
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_OS?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_OS?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -4041,7 +4041,7 @@ function task_notify01_admin_l($old_status, $task_status, $revisor, $task_name, 
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
-    $content = $content . "<p>https://feliix.myvnc.com/task_manangement_LT?sid=" . $stage_id . "</p>";
+    $content = $content . "<p>https://feliix.myvnc.com/task_management_LT?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
