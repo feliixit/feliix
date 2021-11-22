@@ -167,7 +167,7 @@ else
             if($row['leave_type'] == 'B')
                 $sl_credit -= 0.5;
 
-            if($is_manager == "1")
+            if($is_manager == "1" && ($row['leave_type'] == 'A' || $row['leave_type'] == 'B'))
                 $manager_leave -= 0.5;
 
             array_push($applied, $apply_date . " " . $apply_period);
@@ -201,7 +201,7 @@ else
             $al_credit -= count($result) * 0.5;
         if($leave_type == 'B')
             $sl_credit -= count($result) * 0.5;
-        if($is_manager == "1")
+        if($is_manager == "1" && ($leave_type == 'A' || $leave_type == 'B'))
                 $manager_leave -= count($result) * 0.5;
 
         if($is_manager == "1" && $manager_leave < 0 && $leave_type != 'C' && $leave_type != 'D')
