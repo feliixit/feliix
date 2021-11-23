@@ -13,6 +13,7 @@ var app = new Vue({
     payable_to: 1,
     payable_other: "",
     remark: "",
+    pid:0,
 
     petty_list: [],
 
@@ -25,7 +26,8 @@ var app = new Vue({
     list_price: 0,
     list_qty: 0,
 
-    pid: 0,
+    prj_id:0,
+    prj_name:"",
 
     list_sn:0,
     e_sn: 0,
@@ -50,9 +52,20 @@ var app = new Vue({
       vars.forEach(function(v) {
         tmp = v.split("=");
         if (tmp.length == 2) {
-          _this.pid = tmp[1];
-          _this.getProjectInfo(_this.pid);
-        } else _this.getRequestNo();
+          switch (tmp[0]) {
+            case "pid":
+              _this.pid = tmp[1];
+              _this.getProjectInfo(_this.pid);
+              break;
+            case "prj_id":
+              _this.prj_id = tmp[1];
+              _this.getProjectName(_this.prj_id);
+              break;
+          }
+
+        } 
+        else 
+          _this.getRequestNo();
       });
     } else _this.getRequestNo();
   },
@@ -193,6 +206,27 @@ var app = new Vue({
           _this.remark = response.data[0].remark;
 
           _this.petty_list = response.data[0].list;
+        })
+        .catch(function(error) {
+          //handle error
+        });
+    },
+
+    getProjectName: function(prj_id) {
+      let _this = this;
+      let token = localStorage.getItem("accessToken");
+
+      const params = {
+        pid: prj_id,
+      };
+
+      axios
+      .get("api/project02_get_project_name_by_project_id", {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(function(response) {
+          _this.project_name1 = response.data;
         })
         .catch(function(error) {
           //handle error
