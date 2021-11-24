@@ -57,7 +57,7 @@ else
             $sql = "SELECT ap.id, ap.request_no, ap.date_requested, ap.request_type, ap.amount_verified, ap.uid, u.username, ap.created_at,
                         (select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = ap.id AND pl.`status` <> -1) amount_applied
                     FROM apply_for_petty ap left join user u on u.id = ap.uid
-                    where project_name = (SELECT project_name FROM project_main WHERE id = " . $pid . ") 
+                    where project_name1 = (SELECT project_name FROM project_main WHERE id = " . $pid . ") 
                     and ap.status = 9";
 
             $sql = $sql . " ORDER BY ap.id ";
