@@ -623,7 +623,7 @@ var app = new Vue({
   
         axios({
                 method: 'post',
-                url: 'expense_release_application',
+                url: 'expense_type2_application',
                 data: form_Data,
                 responseType: 'blob', // important
             })
