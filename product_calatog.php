@@ -570,7 +570,7 @@
                                 Code:
                             </li>
                             <li>
-                               {{ item.code }}
+                               <a target="_blank" :href="'product_display?id='+item.id">{{ item.code }}</a>
                             </li>
 
                         </ul>
