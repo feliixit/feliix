@@ -652,7 +652,7 @@ function formate_date($date)
     if(valid_date($v_date) == 1)
         return $v_date;
     else
-        return '';
+        return null;
 }
 
 function valid_date($date) {
