@@ -19,6 +19,10 @@ use \Firebase\JWT\JWT;
 
 
 try {
+
+    $access5 = false;
+    $access6 = false;
+
     // decode jwt
     try {
         // decode jwt
@@ -28,8 +32,77 @@ try {
         $GLOBALS['position'] = $decoded->data->position;
         $GLOBALS['department'] = $decoded->data->department;
 
+        $position = $decoded->data->position;
+        $department = $decoded->data->department;
+
         // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
         $test_manager = $decoded->data->test_manager;
+
+        // 5. 針對 Reporting Section的內容，只有 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到 幫Mary Jude Jeng Articulo(9) 和 Glendon Wendell Co(41)
+        if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 9 || $user_id == 41 || $user_id == 99)
+            $access5 = true;
+
+        // QOUTE AND PAYMENT Management
+        if(trim(strtoupper($department)) == 'SALES')
+        {
+            if(trim(strtoupper($position)) == 'SALES MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'LIGHTING')
+        {
+            if(trim(strtoupper($position)) == 'LIGHTING MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'OFFICE')
+        {
+            if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'DESIGN')
+        {
+            if(trim(strtoupper($position)) == 'BRAND MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'SERVICE')
+        {
+            if(trim(strtoupper($position)) == "SERVICE MANAGER")
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'ADMIN')
+        {
+            if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if(trim(strtoupper($department)) == 'TW')
+        {
+            if(trim(strtoupper($position)) == 'SUPPLY CHAIN MANAGER')
+            {
+                $access6 = true;
+            }
+        }
+
+        if($access5 == true)
+            $access6 = false;
+
+
     } catch (Exception $e) {
 
         header('location:index');
@@ -952,6 +1025,10 @@ catch (Exception $e) {
                         </div>
                     </div>
 
+                    <div class="popupblock">
+                        <a id="status_fn9" class="fn9" @click="apply_for_expense()">Apply Expense</a>
+                    </div>
+
                 </div>
             </div>
             <div class="block left">
@@ -1046,7 +1123,43 @@ catch (Exception $e) {
                             </li>
                         </ul>
                     </div>
+<?php
+if ($access5 == true) {
+    ?>
+                    <div class="tablebox lv2a">
+                        <ul class="head">
+                            <li style="text-align: center !important;">Expense Records</li>
+                        </ul>
+                        <ul>
+                            <li class="morespace">
+                                <div v-for='(exp, index) in expense_record'>
+                                    • Request No.:<a :href="'expense_application_report?id=' + exp.id" target="_blank" class="attch">{{ exp.request_no }}</a>and Amount: {{ exp.request_type == 1 ? Number(exp.amount_verified).toLocaleString() : Number(exp.amount_applied).toLocaleString() }}<br/>({{exp.username}} at {{ exp.created_at }})
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+<?php
+}
+?>
 
+<?php
+if ($access6 == true) {
+    ?>
+                    <div class="tablebox lv2a">
+                        <ul class="head">
+                            <li style="text-align: center !important;">Expense Records</li>
+                        </ul>
+                        <ul>
+                            <li class="morespace">
+                                <div v-for='(exp, index) in expense_record'>
+                                    • Request No.:<a @click="export_petty(exp.id)" class="attch">{{ exp.request_no }}</a>and Amount: {{ exp.request_type == 1 ? Number(exp.amount_verified).toLocaleString() : Number(exp.amount_applied).toLocaleString() }}<br/>({{exp.username}} at {{ exp.created_at }})
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+<?php
+}
+?>
                     <div class="tablebox lv2a" v-if="title != 'technician'">
                         <ul class="head">
                             <li style="text-align: center !important;">Quotation Files</li>

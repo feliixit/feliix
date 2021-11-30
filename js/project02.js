@@ -151,6 +151,9 @@ var app = new Vue({
     quote_canSub: true,
     quote_finish: false,
 
+    // expense record
+    expense_record: [],
+
     verified_quotation: false,
 
     submit : false,
@@ -200,6 +203,7 @@ var app = new Vue({
         _this.getProjectInfo(_this.project_id);
         _this.getKeyPerson(_this.project_id);
         _this.getPartyContactor(_this.project_id);
+        _this.getExpenseRecord(_this.project_id);
       });
     }
 
@@ -604,6 +608,71 @@ var app = new Vue({
               .finally(() => {
                   
               });
+      },
+
+      export_petty: function(id) {
+   
+        let _this = this;
+        var form_Data = new FormData();
+  
+        form_Data.append('id', id)
+       
+        const filename = "leave";
+  
+        const token = sessionStorage.getItem('token');
+  
+        axios({
+                method: 'post',
+                url: 'expense_type2_application',
+                data: form_Data,
+                responseType: 'blob', // important
+            })
+            .then(function(response) {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                 
+                    link.setAttribute('download', 'Expense Application Voucher_' + _this.record['request_no'] + '.docx');
+                 
+                  document.body.appendChild(link);
+                  link.click();
+  
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+    },
+
+      getExpenseRecord: function(keyword) {
+        let _this = this;
+  
+        if(keyword == 0)
+          return;
+  
+        const params = {
+                pid : keyword,
+              };
+  
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+                .get('api/project_expense', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.expense_record = res.data;
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
+
+      apply_for_expense : function() {
+        location.href = "apply_for_expense?prj_id=" + this.project_id;
       },
 
       change_project_creator: function() {

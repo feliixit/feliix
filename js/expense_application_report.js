@@ -858,6 +858,42 @@ var app = new Vue({
       return result;
     },
 
+    
+    export_petty: function() {
+   
+      let _this = this;
+      var form_Data = new FormData();
+
+      form_Data.append('id', this.record["id"])
+     
+      const filename = "leave";
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+              method: 'post',
+              url: 'expense_release_application',
+              data: form_Data,
+              responseType: 'blob', // important
+          })
+          .then(function(response) {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+               
+                  link.setAttribute('download', 'Expense Application Voucher_' + _this.record['request_no'] + '.docx');
+               
+                document.body.appendChild(link);
+                link.click();
+
+          })
+          .catch(function(response) {
+              //handle error
+              console.log(response)
+          });
+  },
+
+  /*
     export_petty() {
       var token = localStorage.getItem("token");
       var form_Data = new FormData();
@@ -903,5 +939,8 @@ var app = new Vue({
               console.log(response)
           });
     },
+*/
+
+
   },
 });
