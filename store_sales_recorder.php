@@ -603,9 +603,9 @@ try {
 
                 <tr>
                     <th colspan="7">Total</th>
-                    <th style="text-align: right;">83,000</th>
-                    <th style="text-align: right;">8,300</th>
-                    <th style="text-align: right;">74,700</th>
+                    <th style="text-align: right;">{{ Number(allCashIn).toLocaleString() }}</th>
+                    <th style="text-align: right;">{{ Number(allCashOut).toLocaleString() }}</th>
+                    <th style="text-align: right;">{{ Number(allBalance).toLocaleString() }}</th>
                     <th style="text-align: center;" colspan="4"></th>
                 </tr>
 
