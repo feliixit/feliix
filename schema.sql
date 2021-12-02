@@ -2264,3 +2264,48 @@ ADD COLUMN `salary_mgt` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
 ALTER TABLE access_control
 ADD COLUMN `salary_slip_mgt` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 2021/11/30 - store sales record
+create table store_sales
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`sales_date` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sales_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `customer_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `discount` decimal(10,2) DEFAULT 0.0,
+	`invoice` varchar(64) DEFAULT '',
+	`remark` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`payment_method` varchar(64) DEFAULT '',
+	`teminal` varchar(10) DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+	`crt_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`crt_user` varchar(128) DEFAULT '',
+	`mdf_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`mdf_user` varchar(128) DEFAULT '',
+	`del_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`del_user` varchar(128) DEFAULT '',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+create table store_sales_record
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `sales_id` bigint(20) unsigned NOT NULL,
+  `product_name` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`qty` int(11) DEFAULT 0,
+	`price` decimal(10,2) DEFAULT 0.0,
+	`free` varchar(1) DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+	`crt_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`crt_user` varchar(128) DEFAULT '',
+	`mdf_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`mdf_user` varchar(128) DEFAULT '',
+	`del_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`del_user` varchar(128) DEFAULT '',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- store sales report
+ALTER TABLE access_control
+ADD COLUMN `payess7` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';

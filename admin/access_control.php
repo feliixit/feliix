@@ -223,7 +223,28 @@ $(function(){
                     <a class="btn" @click="save(6)">Save</a>
                 </div>
             </div>
+            
+            <div class="box-content">
+                <ul>
+                    <li><b>Store Sales Recorder</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="payess7"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
 
+                <div class="btnbox">
+                <a class="btn" @click="cancel(7)">Cancel</a>
+                    <a class="btn" @click="save(7)">Save</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

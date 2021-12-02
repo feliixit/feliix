@@ -12,6 +12,7 @@ var app = new Vue({
     payess4: [],
     payess5: [],
     payess6: [],
+    payess7: [],
 
     payees: [],
   },
@@ -65,6 +66,10 @@ var app = new Vue({
               _this.payess6 = res.data[0]["payess6"].split(",").filter(function (el) {
                 return el != "";
               });
+            if (kind === 7 || kind === undefined)
+              _this.payess7 = res.data[0]["payess7"].split(",").filter(function (el) {
+                return el != "";
+              });
           },
           (err) => {
             alert(err.response);
@@ -115,6 +120,7 @@ var app = new Vue({
       form_Data.append("payess4", this.payess4.toString());
       form_Data.append("payess5", this.payess5.toString());
       form_Data.append("payess6", this.payess6.toString());
+      form_Data.append("payess7", this.payess7.toString());
 
       axios({
         method: "post",
