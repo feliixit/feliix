@@ -2305,3 +2305,7 @@ create table store_sales_record
 	`del_user` varchar(128) DEFAULT '',
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- store sales report
+ALTER TABLE access_control
+ADD COLUMN `payess7` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';

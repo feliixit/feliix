@@ -23,17 +23,32 @@ try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
+            $username = $decoded->data->username;
+
+            $database = new Database();
+            $db = $database->getConnection();
+
+            $access_attendance = false;
+
+            $show_salary_slip_mgt = false;
+
+            //if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
+            //    $access2 = true;
+            $query = "SELECT * FROM access_control WHERE payess7 LIKE '%" . $username . "%' ";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $show_salary_slip_mgt = true;
+            }
 
             // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
             // 為了測試先加上testmanager(87) by BB
-            if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87 || $user_id == 99)
-            {
-                $access3 = true;
-            }
-            else
+            if($show_salary_slip_mgt != true) 
             {
                 header( 'location:index' );
             }
+
+      
 
         }
         catch (Exception $e){
@@ -232,6 +247,18 @@ try {
 
         }
 
+        .header{
+             background-color: rgb(21,244,167);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header button:focus{
+            outline: none!important;
+        }
+
     </style>
 
     <script src="js/jquery-3.4.1.min.js"></script>
@@ -247,18 +274,23 @@ try {
 
 
 <div id="app">
-    <div style="background: rgb(2,106,167); padding: 0.5vh; height:7.5vh;">
-        <a href="default" style="margin-left:1vw; position: relative; top:-10%;"><span
-                style="color: white;">&#9776;</span></a>
 
-        <a href="default"><span
-                style="margin-left:1vw; font-weight:700; font-size:xx-large; color: white;">FELIIX</span></a>
+    <div class="header">
+        <div style="display: flex; align-items: center;">
+            <a href="default" style="margin-left: 42px; transform: scaleX(1.4);">
+                <span style="color: white; font-size: 22px; font-weight: 600;">&#9776;</span>
+            </a>
+
+            <a href="default" style="margin-left: 25px;">
+                <img src="images/ui/logo_light.svg" style="height: 32px;">
+            </a>
+        </div>
 
         <button :class="[is_viewer == '1'? 'hide' : '']"
-                style="border: none; margin-left:0.5vw; font-weight:700; font-size:x-large; background-color:rgb(2,106,167); color: white; padding: 0.5rem 0.5rem 0.5rem 0.5rem; float:right; margin-right:1rem;"
+                style="border: none; margin-left:0.5vw; font-weight:700; font-size:x-large; background-color: rgb(21,244,167); color: white; padding: 0.5rem 0.5rem 0.5rem 0.5rem; float:right; margin-right:1rem; "
                 data-toggle="collapse" data-parent="#accordion" href="#collapseOne" @click="reset()"
-                aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-plus-square fa-lg"></i></button>
-
+                aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-plus-square fa-lg"></i>
+        </button>
     </div>
 
 
