@@ -486,7 +486,7 @@
 
                     <!-- 匯出 -->
                     <div class="popupblock">
-                        <a class="exporting" id="btn_export" @click="export_petty"></a>
+                        <a class="exporting" id="btn_export" @click="export_petty_list()"></a>
                     </div>
 
 

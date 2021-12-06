@@ -893,8 +893,8 @@ var app = new Vue({
           });
   },
 
-  /*
-    export_petty() {
+  
+    export_petty_list() {
       var token = localStorage.getItem("token");
       var form_Data = new FormData();
       let _this = this;
@@ -939,7 +939,7 @@ var app = new Vue({
               console.log(response)
           });
     },
-*/
+
 
 
   },
