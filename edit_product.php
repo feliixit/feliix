@@ -640,6 +640,11 @@
             <span class="heading">Basic Information</span>
 
             <ul>
+                <li>ID</li>
+                <li><input type="text" v-model="id" class="form-control one_half" disabled></li>
+            </ul>
+
+            <ul>
                 <li>
                     Category
                 </li>
@@ -747,7 +752,7 @@
                 </li>
             </ul>
 
-            <ul class="NTD_price">
+            <ul class="NTD_price" v-show="show_ntd === true">
                 <li>
                     Cost Price (NTD)
                 </li>
@@ -800,6 +805,11 @@
             <ul>
                 <li>Notes</li>
                 <li><input type="text" class="form-control one_half" v-model="notes"></li>
+            </ul>
+
+            <ul>
+                <li>Related Products</li>
+                <li><input type="text" class="selectpicker" data-role="tagsinput" id="related_product" ></li>
             </ul>
 
             <ul>
@@ -890,7 +900,7 @@
                         <input type="text" class="form-control" placeholder="Code" v-model="detail.code">
                         <input type="text" class="form-control" placeholder="Name" v-model="detail.name">
                         <input class="NTD_price form-control" type="text" class="form-control"
-                               placeholder="Additional Price (NTD)" v-model="detail.price_ntd">
+                               placeholder="Additional Price (NTD)" v-model="detail.price_ntd" v-show="show_ntd === true">
                         <input type="text" class="form-control" placeholder="Additional Price" v-model="detail.price">
                         <div>
                             <span @click="clear_accessory_item(detail.cat_id, detail.id)">x</span>
@@ -1016,7 +1026,7 @@
                         <th>{{ variation2_text }}</th>
                         <th>{{ variation3_text }}</th>
                         <th>Code</th>
-                        <th class="NTD_price">Cost Price (NTD)</th>
+                        <th class="NTD_price" v-show="show_ntd === true">Cost Price (NTD)</th>
                         <th>Suggested Retail Price</th>
                         <th>Quoted Price</th>
                         <th>Image</th>
@@ -1031,7 +1041,7 @@
                         <td>{{ item.v2 }}</td>
                         <td>{{ item.v3 }}</td>
                         <td><input type="text" class="form-control" v-model="item.code"></td>
-                        <td class="NTD_price">
+                        <td class="NTD_price" v-show="show_ntd === true">
                             <input type="number" class="form-control" v-model="item.price_ntd"  @change="product_price_ntd_changed(item.id)">
                             <input type="text" class="form-control updated_date" v-model="item.price_ntd_change">
                         </td>
@@ -1273,7 +1283,7 @@
                             </td>
                         </tr>
 
-                        <tr class="NTD_price">
+                        <tr class="NTD_price" v-show="show_ntd === true">
                             <td><input class="alone" type="checkbox" value="1" v-model="price_ntd_checked"></td>
                             <td>Price (NTD)</td>
                             <td><input type="text" class="form-control" v-model='bulk_price_ntd'></td>
@@ -1286,9 +1296,18 @@
                             </td>
                         </tr>
 
+                        <tr class="NTD_price" v-show="show_ntd === true">
+                            <td><input class="alone" type="checkbox" value="1" v-model="price_ntd_last_change_checked"></td>
+                            <td>Last Updated</td>
+                            <td><input type="date" class="form-control" v-model='bulk_price_ntd_last_change'></td>
+                            <td>
+                                Assign To
+                            </td>
+                        </tr>
+
                         <tr>
                             <td><input class="alone" type="checkbox" value="1" v-model="price_checked"></td>
-                            <td>Price</td>
+                            <td>Suggested Retail Price</td>
                             <td><input type="text" class="form-control" v-model='bulk_price'></td>
                             <td>
                                 <select class="form-control" v-model="price_action">
@@ -1296,6 +1315,37 @@
                                     <option value="add">Add To</option>
                                     <option value="multiply">Multiply To</option>
                                 </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input class="alone" type="checkbox" value="1" v-model="price_last_change_checked"></td>
+                            <td>Last Updated</td>
+                            <td><input type="date" class="form-control" v-model='bulk_price_last_change'></td>
+                            <td>
+                                Assign To
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input class="alone" type="checkbox" value="1" v-model="quoted_price_checked"></td>
+                            <td>Quoted Price</td>
+                            <td><input type="text" class="form-control" v-model='bulk_quoted_price'></td>
+                            <td>
+                                <select class="form-control" v-model="quoted_price_action">
+                                    <option value="assign">Assign To</option>
+                                    <option value="add">Add To</option>
+                                    <option value="multiply">Multiply To</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input class="alone" type="checkbox" value="1" v-model="quoted_price_last_change_checked"></td>
+                            <td>Last Updated</td>
+                            <td><input type="date" class="form-control" v-model='bulk_quoted_price_last_change'></td>
+                            <td>
+                                Assign To
                             </td>
                         </tr>
 

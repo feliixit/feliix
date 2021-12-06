@@ -2309,3 +2309,7 @@ create table store_sales_record
 -- store sales report
 ALTER TABLE access_control
 ADD COLUMN `payess7` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- related_product 12/06
+ALTER TABLE product_category
+ADD COLUMN `related_product` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER notes;

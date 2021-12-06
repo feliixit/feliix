@@ -22,6 +22,7 @@ $price_ntd_org = (isset($_POST['price_ntd_org']) ?  $_POST['price_ntd_org'] : ''
 $price = (isset($_POST['price']) ?  $_POST['price'] : '');
 $price_change = (isset($_POST['price_change']) ?  $_POST['price_change'] : '');
 $description = (isset($_POST['description']) ?  $_POST['description'] : '');
+$related_product = (isset($_POST['related_product']) ? $_POST['related_product'] : '');
 $notes = (isset($_POST['notes']) ? $_POST['notes'] : '');
 
 $quoted_price = (isset($_POST['quoted_price']) ?  $_POST['quoted_price'] : '');
@@ -76,7 +77,9 @@ else
         $user_name = $decoded->data->username;
         $user_department = $decoded->data->department;
 
-        
+        // 去除非商品資料
+        $related_product = valid_id($related_product, $db);
+
         // now you can apply
         $uid = $user_id;
     
@@ -131,6 +134,7 @@ else
             }
 
             $query .= "`description` = :description,
+            `related_product` = :related_product,
             `notes` = :notes,
             `tags` = :tags,
             `moq` = :moq,
@@ -165,6 +169,7 @@ else
         }
         
         $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':related_product', $related_product);
         $stmt->bindParam(':notes', $notes);
         $stmt->bindParam(':tags', $tags);
         $stmt->bindParam(':moq', $moq);
@@ -750,3 +755,34 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
     }
 }
 
+function valid_id($ids, $db) {
+    $id_array = explode(',', $ids);
+    $new_ids = "";
+
+    for($i = 0; $i < count($id_array); $i++)
+    {
+        if (is_numeric($id_array[$i])) {
+            $new_ids .= $id_array[$i] . ",";
+        }
+    }
+
+    if($new_ids != "")
+        $new_ids = substr($new_ids, 0, -1);
+    else
+        return "";
+
+    $query = "SELECT id FROM product_category WHERE id IN ($new_ids)";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $new_ids = "";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $new_ids .= $row['id'] . ",";
+    }
+
+    if($new_ids != "")
+        $new_ids = substr($new_ids, 0, -1);
+    
+    return $new_ids;
+
+}

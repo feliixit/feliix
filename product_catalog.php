@@ -567,6 +567,15 @@
                     <td>
                         <ul>
                             <li>
+                                Id:
+                            </li>
+                            <li>
+                               {{ item.id }}
+                            </li>
+
+                        </ul>
+                        <ul>
+                            <li>
                                 Code:
                             </li>
                             <li>

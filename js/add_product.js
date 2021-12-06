@@ -60,6 +60,10 @@ var app = new Vue({
 
     variation_product: [],
 
+    // info
+    name :"",
+    title: "",
+    is_manager: "",
     
     // bulk insert
     code_checked:'',
@@ -78,6 +82,15 @@ var app = new Vue({
     status_checked:'',
     bulk_status:'',
 
+    price_ntd_last_change_checked:'',
+    bulk_price_ntd_last_change: '',
+
+    price_last_change_checked:'',
+    bulk_price_last_change:'',
+
+    quoted_price_last_change_checked:'',
+    bulk_quoted_price_last_change:'',
+
     submit: false,
 
   },
@@ -85,9 +98,17 @@ var app = new Vue({
   created() {
     this.product_get_category_item();
     this.accessory_get_category_item();
+    this.getUserName();
   },
 
-  computed: {},
+  computed: {
+    show_ntd : function() {
+      if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+       return true;
+      else
+      return false;
+    }
+  },
 
   mounted() {},
 
@@ -138,6 +159,38 @@ var app = new Vue({
   },
 
   methods: {
+    getUserName: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'post',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/on_duty_get_myname',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.name = response.data.username;
+          _this.is_manager = response.data.is_manager;
+          _this.title = response.data.title.toLowerCase();
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
+
     search() {
       this.filter_apply();
     },
@@ -569,6 +622,24 @@ var app = new Vue({
         }
       }
 
+      if(this.price_ntd_last_change_checked == true) {
+        for (let i=0; i<this.variation_product.length; i++) {
+          this.variation_product[i].price_ntd_change = this.bulk_price_ntd_last_change;
+        }
+      }
+
+      if(this.price_last_change_checked == true) {
+        for (let i=0; i<this.variation_product.length; i++) {
+          this.variation_product[i].price_change = this.bulk_price_last_change;
+        }
+      }
+
+      if(this.quoted_price_last_change_checked == true) {
+        for (let i=0; i<this.variation_product.length; i++) {
+          this.variation_product[i].quoted_price_change = this.bulk_quoted_price_last_change;
+        }
+      }
+
       if(this.image_checked == true) {
         let file = document.getElementById('bulk_image').files[0];
         if(typeof file !== 'undefined') 
@@ -809,6 +880,10 @@ var app = new Vue({
           form_Data.append("quoted_price_change", _this.quoted_price_change);
           form_Data.append("moq", _this.moq);
           form_Data.append("description", _this.description);
+
+          let related_product = $('#related_product').val();
+          form_Data.append("related_product", related_product);
+
           form_Data.append("notes", _this.notes);
 
           form_Data.append("accessory_mode", _this.accessory_mode ? 1 : 0);
@@ -942,6 +1017,15 @@ var app = new Vue({
       this.bulk_status = '';
       this.status_checked = '';
 
+      this.price_ntd_last_change_checked = '';
+      this.bulk_price_ntd_last_change = '';
+  
+      this.price_last_change_checked = '';
+      this.bulk_price_last_change = '';
+  
+      this.quoted_price_last_change_checked = '';
+      this.bulk_quoted_price_last_change = '';
+
       document.getElementById('select_all_product').checked = false;
       document.getElementById('bulk_select_all_product').checked = false;
 
@@ -962,6 +1046,9 @@ var app = new Vue({
       this.quoted_price_checked = toogle;
       this.image_checked = toogle;
       this.status_checked = toogle;
+      this.price_ntd_last_change_checked = toogle;
+      this.price_last_change_checked = toogle;
+      this.quoted_price_last_change_checked = toogle;
       
     },
 

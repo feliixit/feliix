@@ -75,6 +75,10 @@ var app = new Vue({
 
     variation_product: [],
 
+    // info
+    name :"",
+    title: "",
+    is_manager: "",
     
     // bulk insert
     code_checked:'',
@@ -83,12 +87,27 @@ var app = new Vue({
     bulk_price_ntd:'',
     price_ntd_action :'',
     price_checked:'',
+    quoted_price_checked:'',
+    bulk_quoted_price:'',
     bulk_price:'',
     price_action:'',
+    quoted_price_action:'',
     image_checked:'',
     bulk_url:'',
     status_checked:'',
     bulk_status:'',
+
+    price_ntd_last_change_checked:'',
+    bulk_price_ntd_last_change: '',
+
+    price_last_change_checked:'',
+    bulk_price_last_change:'',
+
+    quoted_price_last_change_checked:'',
+    bulk_quoted_price_last_change:'',
+
+    // show ntd price
+  
 
     submit: false,
   },
@@ -122,11 +141,18 @@ var app = new Vue({
     }
 
     this.get_records(this.id);
-    
+    this.getUserName();
 
   },
 
-  computed: {},
+  computed: {
+    show_ntd : function() {
+      if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+       return true;
+      else
+      return false;
+    }
+  },
 
   mounted() {
   
@@ -150,6 +176,38 @@ var app = new Vue({
   },
 
   methods: {
+    getUserName: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'post',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/on_duty_get_myname',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.name = response.data.username;
+          _this.is_manager = response.data.is_manager;
+          _this.title = response.data.title.toLowerCase();
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
+
     search() {
       this.filter_apply();
     },
@@ -207,6 +265,8 @@ var app = new Vue({
             console.log(response.data);
             _this.record = response.data;
 
+            _this.id = _this.record[0].id;
+
             _this.category = _this.record[0]['category'];
             _this.sub_category = _this.record[0]['sub_category'];
 
@@ -239,8 +299,13 @@ var app = new Vue({
               $('#tag01').selectpicker('val', select_items);
             if(_this.category === '20000000')
               $('#tag02').selectpicker('val', select_items);
-            
-            
+
+            var related_product = _this.record[0]['related_product'].split(',');
+            for(var i=0; i<related_product.length; i++)
+            {
+              $('#related_product').tagsinput('add', related_product[i]);
+            }
+         
             if(_this.variation_mode == 1)
                 $("#variation_mode").bootstrapToggle("on");
             if(_this.accessory_mode == 1)
@@ -626,6 +691,24 @@ var app = new Vue({
         }
       }
 
+      if(this.price_ntd_last_change_checked == true) {
+        for (let i=0; i<this.variation_product.length; i++) {
+          this.variation_product[i].price_ntd_change = this.bulk_price_ntd_last_change;
+        }
+      }
+
+      if(this.price_last_change_checked == true) {
+        for (let i=0; i<this.variation_product.length; i++) {
+          this.variation_product[i].price_change = this.bulk_price_last_change;
+        }
+      }
+
+      if(this.quoted_price_last_change_checked == true) {
+        for (let i=0; i<this.variation_product.length; i++) {
+          this.variation_product[i].quoted_price_change = this.bulk_quoted_price_last_change;
+        }
+      }
+
       if(this.image_checked == true) {
         let file = document.getElementById('bulk_image').files[0];
         if(typeof file !== 'undefined') 
@@ -907,6 +990,9 @@ var app = new Vue({
           else
             form_Data.append("tags", tag02.join());
 
+          let related_product = $('#related_product').val();
+          form_Data.append("related_product", related_product);
+
           form_Data.append("accessory_mode", _this.accessory_mode ? 1 : 0);
           form_Data.append("variation_mode", _this.variation_mode ? 1 : 0);
 
@@ -1049,9 +1135,12 @@ var app = new Vue({
       this.code_checked = toogle;
       this.price_ntd_checked = toogle;
       this.price_checked = toogle;
+      this.quoted_price_checked = toogle;
       this.image_checked = toogle;
       this.status_checked = toogle;
-      
+      this.price_ntd_last_change_checked = toogle;
+      this.price_last_change_checked = toogle;
+      this.quoted_price_last_change_checked = toogle;
     },
 
     clear_accessory() {

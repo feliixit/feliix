@@ -217,7 +217,7 @@ var app = new Vue({
       _this.page = 1;
 
       window.location.href =
-        "product_calatog?" +
+        "product_catalog?" +
         "d=" +
         _this.fil_amount_lower +
         "&e=" +
