@@ -113,7 +113,11 @@
 
         .imagebox .selected_image {
             padding: 20px;
-            text-align: center;
+            width: 340px;
+            height: 340px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .imagebox .selected_image img {
@@ -162,6 +166,10 @@
             font-weight: 600;
             border-radius: 5px;
             padding: 0 7px;
+        }
+
+        .infobox .basic_info div.tags span + span {
+            margin-left: 5px;
         }
 
         .infobox .price_stock {
