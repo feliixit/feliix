@@ -885,7 +885,7 @@ var app = new Vue({
           form_Data.append("description", _this.description);
 
           let related_product = $('#related_product').val();
-          form_Data.append("related_product", related_product.join());
+          form_Data.append("related_product", related_product);
 
           form_Data.append("notes", _this.notes);
 

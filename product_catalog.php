@@ -653,8 +653,8 @@
 
                     </td>
                     <td>
-                        <template>CP: {{ item.price }}<br></template>
-                        <template v-show="show_ntd === true">SRP: {{ item.price_ntd }}<br></template>
+                        <template v-show="show_ntd === true">CP: {{ item.price_ntd }}<br></template>
+                        <template>SRP: {{ item.price }}<br></template>
                         <template>QP: {{ item.quoted_price }}<br></template>
                     </td>
                     <!-- <td></td> -->

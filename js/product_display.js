@@ -229,7 +229,10 @@ var app = new Vue({
 
       if(item_product.id != undefined)
       {
-        this.url = this.baseURL + item_product.photo;
+        if(item_product.photo != "")
+          this.url = this.baseURL + item_product.photo;
+        else
+          this.url = "";
         this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
         this.price = "NTD " + Number(item_product.price).toLocaleString();
         this.quoted_price = "NTD " + Number(item_product.quoted_price).toLocaleString();
