@@ -90,6 +90,13 @@ var app = new Vue({
       return this.paginate(this.receive_records);
     },
 
+    show_ntd : function() {
+      if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+       return true;
+      else
+      return false;
+    }
+
   },
 
   mounted() {
@@ -100,14 +107,6 @@ var app = new Vue({
     
   },
 
-  computed: {
-    show_ntd : function() {
-      if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
-       return true;
-      else
-      return false;
-    }
-  },
 
   methods: {
     getUserName: function() {
@@ -141,7 +140,7 @@ var app = new Vue({
           })
       });
     },
-    
+
     pre_page: function(){
         let tenPages = Math.floor((this.page - 1) / 10) + 1;
   
