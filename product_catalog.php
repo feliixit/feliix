@@ -562,7 +562,7 @@
                         <input type="checkbox" class="alone">
                     </td>
                     <td>
-                        <img :src="baseURL + item.photo1" v-if="item.photo1">
+                        <a target="_blank" :href="'product_display?id='+item.id"><img :src="baseURL + item.photo1" v-if="item.photo1"></a>
                     </td>
                     <td>
                         <ul>
@@ -653,8 +653,9 @@
 
                     </td>
                     <td>
-                        {{ item.price }}<br>
-                        {{ item.price_ntd }}
+                        <template>CP: {{ item.price }}<br></template>
+                        <template v-show="show_ntd === true">SRP: {{ item.price_ntd }}<br></template>
+                        <template>QP: {{ item.quoted_price }}<br></template>
                     </td>
                     <!-- <td></td> -->
                     <td>

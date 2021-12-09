@@ -103,6 +103,7 @@ else
             $price_ntd = '';
             $price_ntd_org = '';
             $price_ntd_change = '';
+            $price_quoted = '';
             $price = '';
             $price_org = '';
             $price_change = '';
@@ -120,6 +121,10 @@ else
             $created_at = '';
             $product = [];
             $accessory = [];
+
+
+            $quoted_price = '';
+            $quoted_price_change = '';
 
             $variation1_text = "1st Variation";
             $variation2_text = "2nd Variation";
@@ -161,8 +166,15 @@ else
 
                 $product = GetProduct($id, $db);
 
+                $quoted_price = $row['quoted_price'];
+                $quoted_price_org = $row['quoted_price'];
+                $quoted_price_change = $row['quoted_price_change'];
+                $price_change = $row['price_change'];
+                $price_ntd_change = $row['price_ntd_change'];
+
                 // for price
                 $pro_price_ntd = [];
+                $pro_price_quoted = [];
                 $pro_price = [];
                 if(count($product) > 0)
                 {
@@ -177,11 +189,18 @@ else
                         {
                             array_push($pro_price_ntd,$product[$i]['price_ntd']);
                         }
+
+                        // price_quoted
+                        if (!in_array($product[$i]['quoted_price'],$pro_price_quoted))
+                        {
+                            array_push($pro_price_quoted,$product[$i]['quoted_price']);
+                        }
                     }
                 }
 
                 sort($pro_price);
                 sort($pro_price_ntd);
+                sort($pro_price_quoted);
 
                 $s_price = "";
                 if(count($pro_price) == 1)
@@ -221,6 +240,25 @@ else
                     $s_price_ntd = "NTD " . number_format($b) . " ~ " . "NTD " . number_format($e);
                 }
 
+                $s_price_quoted = "";
+                if(count($pro_price_quoted) == 1)
+                {
+                    $s_price_quoted = "PHP " . number_format($pro_price_quoted[0]);
+                }
+                if(count($pro_price_quoted) > 1)
+                {
+                    $b = "";
+                    $e = "";
+                    for($i=0; $i<count($pro_price_quoted); $i++)
+                    {
+                        if($b == "")
+                            $b = $pro_price_quoted[$i];
+
+                        $e = $pro_price_quoted[$i];
+                    }
+                    $s_price_quoted = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
+                }
+
                 if($s_price == "")
                     $price = "PHP " .  number_format($price);
                 else
@@ -230,6 +268,11 @@ else
                     $price_ntd = "NTD " .  number_format($price_ntd);
                 else
                     $price_ntd = $s_price_ntd; 
+
+                if($s_price_quoted == "")
+                    $price_quoted = "PHP " .  number_format($quoted_price);
+                else
+                    $price_quoted = $s_price_quoted; 
 
                 $variation1_value = [];
                 $variation2_value = [];
@@ -390,8 +433,10 @@ else
                                     "code" => $code,
                                     "price_ntd" => $price_ntd,
                                     "price" => $price,
+                                    "quoted_price" => $price_quoted,
                                     "price_ntd_org" => $price_ntd_org,
                                     "price_org" => $price_org,
+                                    "quoted_price_org" => $quoted_price_org,
                                     "description" => $description,
                                     "photo1" => $photo1,
                                     "photo2" => $photo2,
@@ -483,6 +528,9 @@ function GetProduct($id, $db){
         else
             $url = '';
 
+        $quoted_price = $row['quoted_price'];
+        $quoted_price_change = $row['quoted_price_change'];
+
         $merged_results[] = array(  "id" => $id, 
                                     "k1" => $k1, 
                                     "k2" => $k2, 
@@ -501,6 +549,10 @@ function GetProduct($id, $db){
                                     "status" => $status, 
                                     "url" => $url, 
                                     "photo" => $photo, 
+
+                                    "quoted_price" => $quoted_price, 
+                                    "quoted_price_org" => $quoted_price, 
+                                    "quoted_price_change" => substr($quoted_price_change, 0, 10), 
                                    
                                     "file" => array( "value" => ''),
                                    

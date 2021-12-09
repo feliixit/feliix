@@ -375,7 +375,7 @@ else
                                     "notes" => $notes,
                                     "moq" => $moq,
                                     "tags" => explode(',', $tags),
-                                    "quoted_price" => $quoted_price,
+                                    "quoted_price" => $price_quoted,
                                     "quoted_price_org" => $quoted_price_org,
                                     "quoted_price_change" => substr($quoted_price_change, 0, 10),
                                     "price_change" => substr($price_change, 0, 10),

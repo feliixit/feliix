@@ -361,6 +361,7 @@ var app = new Vue({
       for (i = 0; i < this.variation_product.length; i++) {
         if (this.variation_product[i].id == id) {
           this.variation_product[i].url = "";
+          document.getElementById('variation_'+id).value = "";
         }
       }
     },
@@ -445,6 +446,8 @@ var app = new Vue({
       if (num === 3) {
         this.url3 = null;
       }
+
+      document.getElementById('photo'+num).value = "";
     },
 
     clear_bulk_image() {
@@ -882,12 +885,12 @@ var app = new Vue({
           form_Data.append("description", _this.description);
 
           let related_product = $('#related_product').val();
-          form_Data.append("related_product", related_product);
+          form_Data.append("related_product", related_product.join());
 
           form_Data.append("notes", _this.notes);
 
-          form_Data.append("accessory_mode", _this.accessory_mode ? 1 : 0);
-          form_Data.append("variation_mode", _this.variation_mode ? 1 : 0);
+          form_Data.append("accessory_mode", _this.accessory_mode === true || _this.accessory_mode === "1" ? 1 : 0);
+          form_Data.append("variation_mode", _this.variation_mode === true || _this.variation_mode === "1" ? 1 : 0);
 
           form_Data.append("attributes", JSON.stringify(attributes));
           form_Data.append("accessory", JSON.stringify(accessory));

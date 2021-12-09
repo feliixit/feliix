@@ -339,7 +339,7 @@
 
                 <ul class="price_stock">
 
-                    <li class="NTD_price">
+                    <li class="NTD_price" v-show="show_ntd === true">
                         Cost Price: <span>{{ price_ntd }}</span><span></span>
                     </li>
 
