@@ -38,6 +38,10 @@ $accessory_array = json_decode($accessory, true);
 $variation = (isset($_POST['variation']) ?  $_POST['variation'] : '[]');
 $variation_array = json_decode($variation, true);
 
+$url1 = (isset($_POST['url1']) ? $_POST['url1'] : '');
+$url2 = (isset($_POST['url2']) ? $_POST['url2'] : '');
+$url3 = (isset($_POST['url3']) ? $_POST['url3'] : '');
+
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -77,9 +81,7 @@ else
         $user_name = $decoded->data->username;
         $user_department = $decoded->data->department;
 
-        // 去除非商品資料
-        $related_product = valid_id($related_product, $db);
-
+        
         // now you can apply
         $uid = $user_id;
     
@@ -132,6 +134,13 @@ else
                 else
                     $query .= "`quoted_price_change` = now(), ";
             }
+
+            if($url1 == '')
+                $query .= "`photo1` = '', ";
+            if($url2 == '')
+                $query .= "`photo2` = '', ";
+            if($url3 == '')
+                $query .= "`photo3` = '', ";
 
             $query .= "`description` = :description,
             `related_product` = :related_product,
@@ -755,34 +764,3 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
     }
 }
 
-function valid_id($ids, $db) {
-    $id_array = explode(',', $ids);
-    $new_ids = "";
-
-    for($i = 0; $i < count($id_array); $i++)
-    {
-        if (is_numeric($id_array[$i])) {
-            $new_ids .= $id_array[$i] . ",";
-        }
-    }
-
-    if($new_ids != "")
-        $new_ids = substr($new_ids, 0, -1);
-    else
-        return "";
-
-    $query = "SELECT id FROM product_category WHERE id IN ($new_ids)";
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-
-    $new_ids = "";
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $new_ids .= $row['id'] . ",";
-    }
-
-    if($new_ids != "")
-        $new_ids = substr($new_ids, 0, -1);
-    
-    return $new_ids;
-
-}

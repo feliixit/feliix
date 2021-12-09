@@ -1009,6 +1009,10 @@ var app = new Vue({
               form_Data.append('photo' + i, file);
           }
 
+          form_Data.append("url1", _this.url1);
+          form_Data.append("url2", _this.url2);
+          form_Data.append("url3", _this.url3);
+
           //for (var i = 0; i < this.$refs.file.files.length; i++) {
           //  let file = this.$refs.file.files[i];
           //   form_Data.append("files[" + i + "]", file);
