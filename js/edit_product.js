@@ -470,6 +470,7 @@ var app = new Vue({
         if (this.variation_product[i].id == id) {
           this.variation_product[i].url = "";
           document.getElementById('variation_'+id).value = "";
+          this.variation_product[i].photo = "";
         }
       }
     },
