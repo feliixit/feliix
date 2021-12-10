@@ -102,6 +102,11 @@ var app = new Vue({
     submit: false,
 
     specification: [],
+
+    // info
+    name :"",
+    title: "",
+    is_manager: "",
   },
 
   created() {
@@ -133,11 +138,18 @@ var app = new Vue({
     }
 
     this.get_records(this.id);
-    
+    this.getUserName();
 
   },
 
-  computed: {},
+  computed: {
+    show_ntd : function() {
+      if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+       return true;
+      else
+      return false;
+    }
+  },
 
   mounted() {
    
@@ -168,6 +180,38 @@ var app = new Vue({
   },
 
   methods: {
+    getUserName: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'post',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/on_duty_get_myname',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.name = response.data.username;
+          _this.is_manager = response.data.is_manager;
+          _this.title = response.data.title.toLowerCase();
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
+
     search() {
       this.filter_apply();
     },
@@ -185,7 +229,10 @@ var app = new Vue({
 
       if(item_product.id != undefined)
       {
-        this.url = item_product.photo;
+        if(item_product.photo != "")
+          this.url = this.baseURL + item_product.photo;
+        else
+          this.url = "";
         this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
         this.price = "NTD " + Number(item_product.price).toLocaleString();
         this.quoted_price = "NTD " + Number(item_product.quoted_price).toLocaleString();
@@ -230,11 +277,11 @@ var app = new Vue({
         }
       }
 
-      if(k1 == "")
+      if(k1 == "" && this.record[0]['moq'] !== "")
       {
         k1 = 'MOQ';
         v1 = this.record[0]['moq'];
-      }else if(k1 !== "" && k2 == "")
+      }else if(k1 !== "" && k2 == "" && this.record[0]['moq'] !== "")
       {
         k2 = 'MOQ';
         v2 = this.record[0]['moq'];
@@ -247,11 +294,11 @@ var app = new Vue({
         v2  = '';
       }
 
-      if(k1 == "")
+      if(k1 == "" && this.record[0]['notes'] !== "")
       {
         k1 = 'Notes';
         v1 = this.record[0]['notes'];
-      }else if(k1 !== "" && k2 == "")
+      }else if(k1 !== "" && k2 == "" && this.record[0]['notes'] !== "")
       {
         k2 = 'Notes';
         v2 = this.record[0]['notes'];

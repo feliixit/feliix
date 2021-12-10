@@ -256,7 +256,7 @@ try {
                 <a class="list" href="../performance_dashboard">Performance Evaluation</a>
             </li>
             <?php 
-                if($access1 == true || $access2 == true || $access3 == true || $access4 == true || $access8 == true)
+                if($access1 == true || $access2 == true || $access3 == true || $access4 == true || $access8 == true || $access9 == true)
                 {
             ?>
             <li class="gray05" style="border: 3px solid var(--black01);">

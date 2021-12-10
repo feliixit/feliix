@@ -113,7 +113,11 @@
 
         .imagebox .selected_image {
             padding: 20px;
-            text-align: center;
+            width: 340px;
+            height: 340px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .imagebox .selected_image img {
@@ -162,6 +166,10 @@
             font-weight: 600;
             border-radius: 5px;
             padding: 0 7px;
+        }
+
+        .infobox .basic_info div.tags span + span {
+            margin-left: 5px;
         }
 
         .infobox .price_stock {
@@ -331,7 +339,7 @@
 
                 <ul class="price_stock">
 
-                    <li class="NTD_price">
+                    <li class="NTD_price" v-show="show_ntd === true">
                         Cost Price: <span>{{ price_ntd }}</span><span></span>
                     </li>
 

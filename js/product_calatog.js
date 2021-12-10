@@ -37,6 +37,10 @@ var app = new Vue({
     od_factor2: "",
     od_factor2_order: "",
 
+    // info
+    name :"",
+    title: "",
+    is_manager: "",
   },
 
   created() {
@@ -72,7 +76,7 @@ var app = new Vue({
     }
 
     this.get_records();
-    
+    this.getUserName();
 
   },
 
@@ -86,6 +90,13 @@ var app = new Vue({
       return this.paginate(this.receive_records);
     },
 
+    show_ntd : function() {
+      if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+       return true;
+      else
+      return false;
+    }
+
   },
 
   mounted() {
@@ -96,7 +107,39 @@ var app = new Vue({
     
   },
 
+
   methods: {
+    getUserName: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'post',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/on_duty_get_myname',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.name = response.data.username;
+          _this.is_manager = response.data.is_manager;
+          _this.title = response.data.title.toLowerCase();
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
 
     pre_page: function(){
         let tenPages = Math.floor((this.page - 1) / 10) + 1;
@@ -217,7 +260,7 @@ var app = new Vue({
       _this.page = 1;
 
       window.location.href =
-        "product_calatog?" +
+        "product_catalog?" +
         "d=" +
         _this.fil_amount_lower +
         "&e=" +

@@ -22,6 +22,7 @@ $quoted_price_change = (isset($_POST['quoted_price_change']) ?  $_POST['quoted_p
 $moq = (isset($_POST['moq']) ?  $_POST['moq'] : '');
 $description = (isset($_POST['description']) ?  $_POST['description'] : '');
 $notes = (isset($_POST['notes']) ? $_POST['notes'] : '');
+$related_product = (isset($_POST['related_product']) ? $_POST['related_product'] : '');
 
 $accessory_mode = (isset($_POST['accessory_mode']) ? $_POST['accessory_mode'] : 0);
 $variation_mode = (isset($_POST['variation_mode']) ? $_POST['variation_mode'] : 0);
@@ -71,6 +72,9 @@ else
         $user_name = $decoded->data->username;
         $user_department = $decoded->data->department;
 
+        // 去除非商品資料
+        $related_product = valid_id($related_product, $db);
+
         
         // now you can apply
         $uid = $user_id;
@@ -107,6 +111,7 @@ else
         $query .= "
             `moq` = :moq,
             `description` = :description,
+            `related_product` = :related_product,
             `notes` = :notes,
             `accessory_mode` = :accessory_mode,
             `variation_mode` = :variation_mode,
@@ -149,6 +154,7 @@ else
 
         $stmt->bindParam(':moq', $moq);
         $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':related_product', $related_product);
         $stmt->bindParam(':notes', $notes);
         $stmt->bindParam(':accessory_mode', $accessory_mode);
         $stmt->bindParam(':variation_mode', $variation_mode);
@@ -657,4 +663,36 @@ function formate_date($date)
 
 function valid_date($date) {
     return (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date));
+}
+
+function valid_id($ids, $db) {
+    $id_array = explode(',', $ids);
+    $new_ids = "";
+
+    for($i = 0; $i < count($id_array); $i++)
+    {
+        if (is_numeric($id_array[$i])) {
+            $new_ids .= $id_array[$i] . ",";
+        }
+    }
+
+    if($new_ids != "")
+        $new_ids = substr($new_ids, 0, -1);
+    else
+        return "";
+
+    $query = "SELECT id FROM product_category WHERE id IN ($new_ids)";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $new_ids = "";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $new_ids .= $row['id'] . ",";
+    }
+
+    if($new_ids != "")
+        $new_ids = substr($new_ids, 0, -1);
+    
+    return $new_ids;
+
 }

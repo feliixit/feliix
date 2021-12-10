@@ -22,6 +22,7 @@ $price_ntd_org = (isset($_POST['price_ntd_org']) ?  $_POST['price_ntd_org'] : ''
 $price = (isset($_POST['price']) ?  $_POST['price'] : '');
 $price_change = (isset($_POST['price_change']) ?  $_POST['price_change'] : '');
 $description = (isset($_POST['description']) ?  $_POST['description'] : '');
+$related_product = (isset($_POST['related_product']) ? $_POST['related_product'] : '');
 $notes = (isset($_POST['notes']) ? $_POST['notes'] : '');
 
 $quoted_price = (isset($_POST['quoted_price']) ?  $_POST['quoted_price'] : '');
@@ -36,6 +37,10 @@ $accessory = (isset($_POST['accessory']) ?  $_POST['accessory'] : '[]');
 $accessory_array = json_decode($accessory, true);
 $variation = (isset($_POST['variation']) ?  $_POST['variation'] : '[]');
 $variation_array = json_decode($variation, true);
+
+$url1 = (isset($_POST['url1']) ? $_POST['url1'] : '');
+$url2 = (isset($_POST['url2']) ? $_POST['url2'] : '');
+$url3 = (isset($_POST['url3']) ? $_POST['url3'] : '');
 
 
 include_once 'config/core.php';
@@ -130,7 +135,15 @@ else
                     $query .= "`quoted_price_change` = now(), ";
             }
 
+            if($url1 == '')
+                $query .= "`photo1` = '', ";
+            if($url2 == '')
+                $query .= "`photo2` = '', ";
+            if($url3 == '')
+                $query .= "`photo3` = '', ";
+
             $query .= "`description` = :description,
+            `related_product` = :related_product,
             `notes` = :notes,
             `tags` = :tags,
             `moq` = :moq,
@@ -165,6 +178,7 @@ else
         }
         
         $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':related_product', $related_product);
         $stmt->bindParam(':notes', $notes);
         $stmt->bindParam(':tags', $tags);
         $stmt->bindParam(':moq', $moq);

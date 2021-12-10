@@ -268,6 +268,10 @@
             margin-left: 5px;
         }
 
+        #tb_product_list tbody td ul li:nth-of-type(2) a {
+            color: #007bff;
+        }
+
         .NTD_price {
 
         }
@@ -524,7 +528,7 @@
                 <div class="pagenation">
                     <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
 
-                    <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply();" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply();" v-bind:style="[pg == page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg }}</a>
 
                     <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply();">Next 10</a>
                 </div>
@@ -562,9 +566,18 @@
                         <input type="checkbox" class="alone">
                     </td>
                     <td>
-                        <img :src="baseURL + item.photo1" v-if="item.photo1">
+                        <a target="_blank" :href="'product_display?id='+item.id"><img :src="baseURL + item.photo1" v-if="item.photo1"></a>
                     </td>
                     <td>
+                        <ul>
+                            <li>
+                                Id:
+                            </li>
+                            <li>
+                               {{ item.id }}
+                            </li>
+
+                        </ul>
                         <ul>
                             <li>
                                 Code:
@@ -644,8 +657,9 @@
 
                     </td>
                     <td>
-                        {{ item.price }}<br>
-                        {{ item.price_ntd }}
+                        <span v-show="show_ntd === true">CP: {{ item.price_ntd }}<br></span>
+                        <span>SRP: {{ item.price }}<br></span>
+                        <span>QP: {{ item.quoted_price }}<br></span>
                     </td>
                     <!-- <td></td> -->
                     <td>
