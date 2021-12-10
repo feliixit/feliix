@@ -234,8 +234,8 @@ var app = new Vue({
         else
           this.url = "";
         this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
-        this.price = "NTD " + Number(item_product.price).toLocaleString();
-        this.quoted_price = "NTD " + Number(item_product.quoted_price).toLocaleString();
+        this.price = "PHP " + Number(item_product.price).toLocaleString();
+        this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
       }
       else
       {
