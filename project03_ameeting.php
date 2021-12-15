@@ -2416,7 +2416,7 @@ catch (Exception $e) {
                     </div>
                     <!-- Export -->
                     <div class="popupblock">
-                        <a><i aria-hidden="true" class="fas fa-file-export" style="font-size: 26px;"></i></a>
+                        <a @click="export_word()"><i aria-hidden="true" class="fas fa-file-export" style="font-size: 26px;"></i></a>
                     </div>
                 </div>
 

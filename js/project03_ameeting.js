@@ -1227,6 +1227,37 @@ var app = new Vue({
         });
     },
 
+    export_word: function () {
+      var form_Data = new FormData();
+
+      const filename = "attendance";
+      let _this = this;
+
+      const token = sessionStorage.getItem("token");
+
+      axios({
+              method: "get",
+              url: "project03_ameeting_word?stage_id=" + _this.stage_id,
+              data: form_Data,
+              responseType: "blob", // important
+          })
+          .then(function (response) {
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement("a");
+              link.href = url;
+
+              link.setAttribute("download", "project03_a_meeting.docx");
+
+              document.body.appendChild(link);
+              link.click();
+          })
+          .catch(function (response) {
+              //handle error
+              console.log(response);
+          });
+  },
+
+
     reset: function() {
       this.submit = false;
     },
