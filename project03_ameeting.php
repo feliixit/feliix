@@ -2930,12 +2930,12 @@ catch (Exception $e) {
             </div>
 
             <div class="btnbox">
-                <button type="button" class="btn btn-secondary btn-lg" style="width: 100px; font-weight: 600;" @click="cancel()" v-if="is_Editing === true">Cancel
+                <button type="button" class="btn btn-secondary btn-lg" style="width: 100px; font-weight: 600;" @click="cancel()" v-if="is_Editing">Cancel
                 </button>
-                <button type="button" class="btn btn-success btn-lg" style="width: 100px; font-weight: 600;" @click="a_meeting_edit_create()" v-if="is_Editing === true">Save
+                <button type="button" class="btn btn-success btn-lg" style="width: 100px; font-weight: 600;" @click="a_meeting_edit_create()" v-if="is_Editing">Save
                 </button>
                 <button type="button" class="btn btn-success btn-lg"
-                        style="width: 100px; font-weight: 600;" @click="edit()" v-if="is_Editing === false">Edit
+                        style="width: 100px; font-weight: 600;" @click="edit()" v-if="!is_Editing">Edit
                 </button>
             </div>
 

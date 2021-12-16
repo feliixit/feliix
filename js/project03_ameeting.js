@@ -1260,6 +1260,7 @@ var app = new Vue({
 
     reset: function() {
       this.submit = false;
+      this.is_Editing = false;
     },
 
     task_edit_create() {
