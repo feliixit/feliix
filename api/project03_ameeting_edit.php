@@ -123,6 +123,31 @@ $scope_attached_layout_file_array = json_decode($scope_attached_layout_file, tru
 $other_attached_layout_file = (isset($_POST['other_attached_layout_file']) ?  $_POST['other_attached_layout_file'] : '[]');
 $other_attached_layout_file_array = json_decode($other_attached_layout_file, true);
 
+$delivery_address_within = formatCheckBox($delivery_address_within);
+$delivery_address_outside = formatCheckBox($delivery_address_outside);
+$attached_layout = formatCheckBox($attached_layout);
+$delivery_permit = formatCheckBox($delivery_permit);
+$work_permit = formatCheckBox($work_permit);
+$delivery_1st = formatCheckBox($delivery_1st);
+$delivery_2nd = formatCheckBox($delivery_2nd);
+$os_delivery_only = formatCheckBox($os_delivery_only);
+$os_delivery_install = formatCheckBox($os_delivery_install);
+$lt_delivery_only = formatCheckBox($lt_delivery_only);
+$lt_delivery_install = formatCheckBox($lt_delivery_install);
+$delivery_install = formatCheckBox($delivery_install);
+$scope_attached_layout = formatCheckBox($scope_attached_layout);
+$timeline_check = formatCheckBox($timeline_check);
+$data_check = formatCheckBox($data_check);
+$electrical_check = formatCheckBox($electrical_check);
+$flooring_check = formatCheckBox($flooring_check);
+$painting_check = formatCheckBox($painting_check);
+$ceiling_electrical_check = formatCheckBox($ceiling_electrical_check);
+$manpower_check = formatCheckBox($manpower_check);
+$materials_check = formatCheckBox($materials_check);
+$trucking_services = formatCheckBox($trucking_services);
+$purchasing_of_special_products_check = formatCheckBox($purchasing_of_special_products_check);
+$tools_check = formatCheckBox($tools_check);
+
 try{
     $query = "update project_a_meeting
     SET
@@ -640,4 +665,15 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
         echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " Error uploading, Please use laptop to upload again."));
         die();
     }
+}
+
+function formatCheckBox($check)
+{
+    $ret = "0";
+    if($check == true || $check == "true" || $check == "1")
+    {
+        $ret = "1";
+    }
+
+    return $ret;
 }
