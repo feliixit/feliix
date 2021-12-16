@@ -252,7 +252,7 @@ switch ($method) {
                
         $attached_layout_files = [];
         $scope_attached_layout_files = [];
-        $other_attached_layout_flies = [];
+        $other_attached_layout_files = [];
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
@@ -328,7 +328,7 @@ switch ($method) {
                 $updated_at = $created_at;
             }
 
-            $other_attached_layout_flies = GetAttachment($id, "other_attached_layout", $db);
+            $other_attached_layout_files = GetAttachment($id, "other_attached_layout", $db);
             
 
         }
@@ -398,7 +398,7 @@ switch ($method) {
             "created_at" => $created_at,
             "updator" => $updator,
             "updated_at" => $updated_at,
-            "other_attached_layout_flies" => $other_attached_layout_flies,
+            "other_attached_layout_files" => $other_attached_layout_files,
         );
 
 

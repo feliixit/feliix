@@ -235,8 +235,10 @@ try{
     $last_id = 0;
     if (!$stmt->execute())
     {
+        $arr = $stmt->errorInfo();
+
         http_response_code(501);
-        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $stmt->errorInfo()));
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
 
         die();
     }

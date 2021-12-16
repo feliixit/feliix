@@ -507,20 +507,19 @@ try{
   
     $batch_type = "other_attached_layout";
 
-    if($other_attached_layout == "true" || $other_attached_layout == "1" || $other_attached_layout == "t")
+
+    for($j=0; $j < count($other_attached_layout_file_array); $j++)
     {
-        for($j=0; $j < count($other_attached_layout_file_array); $j++)
+        if($other_attached_layout_file_array[$j]['checked'] == "true")
         {
-            if($other_attached_layout_file_array[$j]['checked'] == "true")
+            $key = "other_attached_layout_file_" . $j;
+            if (array_key_exists($key, $_FILES))
             {
-                $key = "other_attached_layout_file_" . $j;
-                if (array_key_exists($key, $_FILES))
-                {
-                    $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
-                }
+                $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
             }
         }
     }
+
   
     http_response_code(200);
     echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
