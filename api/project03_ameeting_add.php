@@ -273,7 +273,7 @@ try{
     $batch_id = $last_id;
     $batch_type = "attached_layout";
 
-    if($attached_layout == "true")
+    if($attached_layout == "true" || $attached_layout == "1" || $attached_layout == "t")
     {
         for($j=0; $j < count($attached_layout_file_array); $j++)
         {
@@ -290,7 +290,7 @@ try{
 
     $batch_type = "scope_attached_layout";
 
-    if($scope_attached_layout == "true")
+    if($scope_attached_layout == "true" || $scope_attached_layout == "1" || $scope_attached_layout == "t")
     {
         for($j=0; $j < count($scope_attached_layout_file_array); $j++)
         {
