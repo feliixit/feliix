@@ -2377,3 +2377,5 @@ CREATE TABLE IF NOT EXISTS `project_a_meeting` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
+ALTER TABLE project_a_meeting MODIFY COLUMN date_of_delivery varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
+ALTER TABLE project_a_meeting MODIFY COLUMN client_deadline varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';

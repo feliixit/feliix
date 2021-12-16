@@ -2429,7 +2429,7 @@ catch (Exception $e) {
 
                 <div class="namebox">
                     <!-- Stage Name -->
-                    <span class="stage_name">{{ stage }} Stage</span>
+                    <span class="stage_name">A Meeting / Close Deal Stage</span>
                 </div>
             </div>
         </div>
@@ -2592,7 +2592,7 @@ catch (Exception $e) {
 
                             <div class="file-element" v-for="(item,index) in attached_layout_file">
                                 <input type="checkbox" :id="'attached_layout' + item.name" v-model="item.checked" :disabled="!is_Editing">
-                                <label :for="'attached_layout' + item.name"><a>{{ item.name }}</a></label>
+                                <label :for="'attached_layout' + item.name"><a v-if="item.gcp_name !== ''" :href="baseURL + item.gcp_name" target="_blank">{{ item.name }}</a><a v-if="item.gcp_name === ''">{{ item.name }}</a></label>
                             </div>
 
 
@@ -2735,7 +2735,7 @@ catch (Exception $e) {
 
                             <div class="file-element" v-for="(item,index) in scope_attached_layout_file">
                                 <input type="checkbox" :id="'scope_attached_layout' + item.name" v-model="item.checked" :disabled="!is_Editing">
-                                <label :for="'scope_attached_layout' + item.name"><a>{{ item.name }}</a></label>
+                                <label :for="'scope_attached_layout' + item.name"><a v-if="item.gcp_name !== ''" :href="baseURL + item.gcp_name" target="_blank">{{ item.name }}</a><a v-if="item.gcp_name === ''">{{ item.name }}</a></label>
                             </div>
                         </div>
 
@@ -2917,7 +2917,7 @@ catch (Exception $e) {
 
                             <div class="file-element" v-for="(item,index) in other_attached_layout_file">
                                 <input type="checkbox" :id="'other_attached_layout' + item.name" v-model="item.checked" :disabled="!is_Editing">
-                                <label :for="'other_attached_layout' + item.name"><a>{{ item.name }}</a></label>
+                                <label :for="'other_attached_layout' + item.name"><a v-if="item.gcp_name !== ''" :href="baseURL + item.gcp_name" target="_blank">{{ item.name }}</a><a v-if="item.gcp_name == ''" >{{ item.name }}</a></label>
                             </div>
 
                         </div>

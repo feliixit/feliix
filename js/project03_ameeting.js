@@ -252,7 +252,7 @@ var app = new Vue({
               id:0,
               checked: true,
               file: fileTarget.files[i],
-              gcpname : '',
+              gcp_name : '',
               name: fileTarget.files[i].name,
             };
            
@@ -275,7 +275,7 @@ var app = new Vue({
               id:0,
               checked: true,
               file: fileTarget.files[i],
-              gcpname : '',
+              gcp_name : '',
               name: fileTarget.files[i].name,
             };
            
@@ -298,7 +298,7 @@ var app = new Vue({
               id:0,
               checked: true,
               file: fileTarget.files[i],
-              gcpname : '',
+              gcp_name : '',
               name: fileTarget.files[i].name,
             };
            
@@ -1261,6 +1261,7 @@ var app = new Vue({
     reset: function() {
       this.submit = false;
       this.is_Editing = false;
+      this.getProjectAMeeting(this.stage_id);
     },
 
     task_edit_create() {
