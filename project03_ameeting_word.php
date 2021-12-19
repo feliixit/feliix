@@ -285,9 +285,11 @@ $phpWord = new PhpOffice\PhpWord\PhpWord();
 // Adding an empty Section to the document...
 $section = $phpWord->addSection();
 // Adding Text element to the Section having font styled by default...
-$section->addText("SALES TEAM", array('bold' => true, 'align' => 'center', 'size' => 14));
+$section->addText("SALES TEAM", array('bold' => true, 'align' => 'middle', 'size' => 14));
 
-$section->addText("PROJECT TURNOVER CHECKLIST", array('bold' => true, 'align' => 'center', 'size' => 14));
+$section->addText("PROJECT TURNOVER CHECKLIST", array('bold' => true, 'align' => 'middle', 'size' => 14));
+
+$section->addText("", array('bold' => true, 'valign' => 'center', 'size' => 14));
 
 $capitalCell =
 [
@@ -312,40 +314,40 @@ $table = $section->addTable('table', [
     'borderSize' => 6, 
     'borderColor' => '000000', 
     'afterSpacing' => 0, 
-    'Spacing'=> 0, 
-    'cellMargin'=> 0
+    'Spacing'=> 5, 
+    'cellMargin'=> 0,
+    'font' => 'Verdana',
+    'size' => 11,
 ]);
 
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("Project Name:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($project_name, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("Project Name:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($project_name, array('underline' => 'single'));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("Project Category:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($category, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("Project Category:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($category, array('underline' => 'single'));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("Date of Down payment:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($down_payment_date, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("Date of Down payment:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($down_payment_date, array('underline' => 'single'));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("Account Executive:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($account_executive, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("Account Executive:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($account_executive, array('underline' => 'single'));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("PIC:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($pic, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("PIC:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($pic, array('underline' => 'single'));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true));
 
 /*
 $table->addRow();
@@ -354,10 +356,10 @@ $table->addCell(8500, $styleCell)->addText($updator != "" ? $updator . " at " . 
 */
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("1. Project Details", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "1. Project Details", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'size' => 12, 'font' => 'Verdana',  'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
 $cat_team = '';
 if($category_id == "1")
@@ -370,342 +372,331 @@ if($category_id == "2")
     $cat_team = "Lighting Project";
 }
 
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText($cat_team . " - Quotation #", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($quotation, array('underline' => 'single'));
-$table->addCell(1000, $styleCell)->addText("");
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("a. Client Name:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($client_name, array('underline' => 'single'));
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("b. Contact Person:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($contact_person, array('underline' => 'single'));
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("c. Contact Number:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($contact_number, array('underline' => 'single'));
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("d. Delivery Address:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText("");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($delivery_address_within == '1' || $delivery_address_within == 't') ? "■ Within Metro Manila" : "□ Within Metro Manila");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($delivery_address_outside == '1' || $delivery_address_outside == 't') ? "■ Outside Metro Manila" : "□ Outside Metro Manila");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . $cat_team . " - Quotation #", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($quotation, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("e. Exact Delivery Address:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($exact_delivery_address, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "a. Client Name:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($client_name, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("f. Detailed Delivery and Installation location ( Area / Floor / Department / Room Number )", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($detail_delivery_address, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "b. Contact Person:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($contact_person, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($attached_layout == '1' || $attached_layout == 't') ? "■ See attached approved furniture layout / lighting layout" : "□ See attached approved furniture layout / lighting layout");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "c. Contact Number:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($contact_number, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "d. Delivery Address:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true));
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($delivery_address_within == '1' || $delivery_address_within == 't') ? "■ Within Metro Manila" : "□ Within Metro Manila"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true));
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($delivery_address_outside == '1' || $delivery_address_outside == 't') ? "■ Outside Metro Manila" : "□ Outside Metro Manila"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "e. Exact Delivery Address:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($exact_delivery_address, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "f. Detailed Delivery and Installation location ( Area / Floor / Department / Room Number )", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($detail_delivery_address, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($attached_layout == '1' || $attached_layout == 't') ? "■ See attached approved furniture layout / lighting layout" : "□ See attached approved furniture layout / lighting layout"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
 foreach($attached_layout_files as $file)
 {
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText($file["name"], array('underline' => 'single'));
+    $table->addCell(10500, $styleCell)->addText("  " . "  " . $file["name"], array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
     
 }
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("g. Permit Processing:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "g. Permit Processing:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($delivery_permit == '1' || $delivery_permit == 't') ? "■ Delivery Permit" : "□ Delivery Permit");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($work_permit == '1' || $work_permit == 't') ? "■ Work Permit (for Delivery and Install projects)" : "□ Work Permit (for Delivery and Install projects)");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("Notes", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($permit_processing_note, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars((($delivery_permit == '1' || $delivery_permit == 't') ? "■ Delivery Permit" : "□ Delivery Permit"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("h. Other Client Concern / Request", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($other_request, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars((($work_permit == '1' || $work_permit == 't') ? "■ Work Permit (for Delivery and Install projects)" : "□ Work Permit (for Delivery and Install projects)"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("2. Delivery Schedule", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("a. Date of Delivery / Site Timeline:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($date_of_delivery, array('underline' => 'single'));
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("b. Deadline with the Client:", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText($client_deadline, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "Notes", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($permit_processing_note, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("3. Scope", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "h. Other Client Concern / Request", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($other_request, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("a. Delivery", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($delivery_1st == '1' || $delivery_1st == 't') ? "■ 1st delivery: List of items with stock" : "□ 1st delivery: List of items with stock");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("2. Delivery Schedule", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'size' => 12, 'font' => 'Verdana', 'Spacing'=> 5));
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "a. Date of Delivery / Site Timeline:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($date_of_delivery, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "b. Deadline with the Client:", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($client_deadline, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("  " . "3. Scope", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'size' => 12, 'font' => 'Verdana', 'Spacing'=> 5));
+
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "a. Delivery", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars((($delivery_1st == '1' || $delivery_1st == 't') ? "■ 1st delivery: List of items with stock" : "□ 1st delivery: List of items with stock"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
 
 if($delivery_1st == '1' || $delivery_1st == 't')
 {
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText($delivery_1st_items, array('underline' => 'single'));
-}
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($delivery_2nd == '1' || $delivery_2nd == 't') ? "■ 2nd delivery onwards: List of indent items" : "□ 2nd delivery onwards: List of indent items");
-
-if($delivery_2nd == '1' || $delivery_2nd == 't')
-{
-    $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText($delivery_2nd_items, array('underline' => 'single'));
-}
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("b. Installation", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText();
-
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($os_delivery_only == '1' || $os_delivery_only == 't') ? "■ Office Systems Furniture: Delivery Only" : "□ Office Systems Furniture: Delivery Only");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($os_delivery_install == '1' || $os_delivery_install == 't') ? "■ Office Systems Furniture: Delivery and Install" : "□ Office Systems Furniture: Delivery and Install");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($lt_delivery_only == '1' || $lt_delivery_only == 't') ? "■ Lighting: Delivery Only" : "□ Lighting: Delivery Only");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($lt_delivery_install == '1' || $lt_delivery_install == 't') ? "■ Lighting: Delivery and Install" : "□ Lighting: Delivery and Install");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($delivery_install == '1' || $delivery_install == 't') ? "■ Decorative Lighting: Delivery and Install" : "□ Decorative Lighting: Delivery and Install");
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("c. Tagging of Product");
-$table->addCell(1000, $styleCell)->addText("");
-
-
-$table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($scope_attached_layout == '1' || $scope_attached_layout == 't') ? "■ See attached approved furniture layout / lighting layout" : "□ See attached approved furniture layout / lighting layout");
-$table->addCell(1000, $styleCell)->addText("");
-
-foreach($scope_attached_layout_files as $file)
-{
-    $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText($file["name"], array('underline' => 'single'));
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . $delivery_1st_items, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
     
 }
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("4. 3rd Party Contractor", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars((($delivery_2nd == '1' || $delivery_2nd == 't') ? "■ 2nd delivery onwards: List of indent items" : "□ 2nd delivery onwards: List of indent items"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+if($delivery_2nd == '1' || $delivery_2nd == 't')
+{
+    $table->addRow();
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars($delivery_2nd_items, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+}
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "b. Installation", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars((($os_delivery_only == '1' || $os_delivery_only == 't') ? "■ Office Systems Furniture: Delivery Only" : "□ Office Systems Furniture: Delivery Only"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars((($os_delivery_install == '1' || $os_delivery_install == 't') ? "■ Office Systems Furniture: Delivery and Install" : "□ Office Systems Furniture: Delivery and Install"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true));
+$textrun->addText(htmlspecialchars((($lt_delivery_only == '1' || $lt_delivery_only == 't') ? "■ Lighting: Delivery Only" : "□ Lighting: Delivery Only"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($timeline_check == '1' || $timeline_check == 't') ? "■ Timeline" : "□ Timeline");
-$table->addCell(1000, $styleCell)->addText($timeline, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars((($lt_delivery_install == '1' || $lt_delivery_install == 't') ? "■ Lighting: Delivery and Install" : "□ Lighting: Delivery and Install"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars((($delivery_install == '1' || $delivery_install == 't') ? "■ Decorative Lighting: Delivery and Install" : "□ Decorative Lighting: Delivery and Install"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "c. Tagging of Product", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($scope_attached_layout == '1' || $scope_attached_layout == 't') ? "■  Please refer to approved layout for the exact location of items (attach approved floor plan)" : "□ Please refer to approved layout for the exact location of items (attach approved floor plan)"), ENT_COMPAT, 'UTF-8'), array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
+foreach($scope_attached_layout_files as $file)
+{
+    $table->addRow();
+    $table->addCell(10500, $styleCell)->addText("  " . "  " . "  " . $file["name"], array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    
+}
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("  " . "  " . "4. 3rd Party Contractor", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'size' => 12, 'font' => 'Verdana', 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($timeline_check == '1' || $timeline_check == 't') ? "■ Timeline" : "□ Timeline"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($timeline, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 
 
 if($category_id == "1")
 {
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText(($data_check == '1' || $data_check == 't') ? "■ Data" : "□ Data");
-    $table->addCell(1000, $styleCell)->addText($data, array('underline' => 'single'));
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . (($data_check == '1' || $data_check == 't') ? "■ Data" : "□ Data"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars($data, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText(($electrical_check == '1' || $electrical_check == 't') ? "■ Electrical" : "□ Electrical");
-    $table->addCell(1000, $styleCell)->addText($electrical, array('underline' => 'single'));
-    
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . (($electrical_check == '1' || $electrical_check == 't') ? "■ Electrical" : "□ Electrical"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars($electrical, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText(($flooring_check == '1' || $flooring_check == 't') ? "■ Flooring" : "□ Flooring");
-    $table->addCell(1000, $styleCell)->addText($flooring, array('underline' => 'single'));
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . (($flooring_check == '1' || $flooring_check == 't') ? "■ Flooring" : "□ Flooring"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars($flooring, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
 }
 
 if($category_id == "2")
 {
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("Type and Ceiling Height");
-    $table->addCell(1000, $styleCell)->addText($type_and_ceiling, array('underline' => 'single'));
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . "Type and Ceiling Height", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars($type_and_ceiling, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText(($painting_check == '1' || $painting_check == 't') ? "■ Painting" : "□ Painting");
-    $table->addCell(1000, $styleCell)->addText($painting, array('underline' => 'single'));
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . (($painting_check == '1' || $painting_check == 't') ? "■ Painting" : "□ Painting"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars($painting, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText(($ceiling_electrical_check == '1' || $ceiling_electrical_check == 't') ? "■ Electrical" : "□ Electrical");
-    $table->addCell(1000, $styleCell)->addText($ceiling_electrical, array('underline' => 'single'));
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . (($ceiling_electrical_check == '1' || $ceiling_electrical_check == 't') ? "■ Electrical" : "□ Electrical"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars($ceiling_electrical, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 }
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("5. Outsourcing c/o Admin (if needed)", array('bold' => true));
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("5. Outsourcing c/o Admin (if needed)", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'size' => 12, 'font' => 'Verdana', 'Spacing'=> 5));
 
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($manpower_check == '1' || $manpower_check == 't') ? "■ Manpower" : "□ Manpower");
-$table->addCell(1000, $styleCell)->addText($manpower, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($manpower_check == '1' || $manpower_check == 't') ? "■ Manpower" : "□ Manpower"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($manpower, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($materials_check == '1' || $materials_check == 't') ? "■ Materials" : "□ Materials");
-$table->addCell(1000, $styleCell)->addText($materials, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($materials_check == '1' || $materials_check == 't') ? "■ Materials" : "□ Materials"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($materials, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($trucking_services == '1' || $trucking_services == 't') ? "■ Trucking Services" : "□ Trucking Services");
-$table->addCell(1000, $styleCell)->addText("");
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($trucking_services == '1' || $trucking_services == 't') ? "■ Trucking Services" : "□ Trucking Services"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($purchasing_of_special_products_check == '1' || $purchasing_of_special_products_check == 't') ? "■ Purchasing of Special Products" : "□ Purchasing of Special Products");
-$table->addCell(1000, $styleCell)->addText($purchasing_of_special_products, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($purchasing_of_special_products_check == '1' || $purchasing_of_special_products_check == 't') ? "■ Purchasing of Special Products" : "□ Purchasing of Special Products"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($purchasing_of_special_products, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 $table->addRow();
-$table->addCell(400, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText("");
-$table->addCell(1000, $styleCell)->addText(($tools_check == '1' || $tools_check == 't') ? "■ Tools" : "□ Tools");
-$table->addCell(1000, $styleCell)->addText($tools, array('underline' => 'single'));
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("  " . "  " . "  " . (($tools_check == '1' || $tools_check == 't') ? "■ Tools" : "□ Tools"), ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+$textrun->addText(htmlspecialchars($tools, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+
+$table->addRow();
+$textrun = $table->addCell(10500, $styleCell)->addTextRun();
+$textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
 
 if(count($other_attached_layout_files))
 {
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("6. Others", array('bold' => true));
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
+    $textrun = $table->addCell(10500, $styleCell)->addTextRun();
+    $textrun->addText(htmlspecialchars("  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars("6. Others", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'size' => 12, 'font' => 'Verdana', 'Spacing'=> 5));
+
 }
 
 foreach($other_attached_layout_files as $file)
 {
     $table->addRow();
-    $table->addCell(400, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText("");
-    $table->addCell(1000, $styleCell)->addText($file["name"], array('underline' => 'single'));
+    $table->addCell(10500, $styleCell)->addText("  " . "  " . "  " . $file["name"], array('bold' => false, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
     
 }
 
