@@ -151,6 +151,23 @@ catch (Exception $e) {
     </script>
 
     <style>
+        a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.fourth header nav a, body.fourth header nav a:link {
+            color: #000;
+        }
+
+        body.fourth header nav a:hover {
+            color: #333;
+        }
+
+        body.fourth header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
         .tablebox .dialog {
             top: -20px;
         }
