@@ -285,9 +285,9 @@ $phpWord = new PhpOffice\PhpWord\PhpWord();
 // Adding an empty Section to the document...
 $section = $phpWord->addSection();
 // Adding Text element to the Section having font styled by default...
-$section->addText("SALES TEAM", array('bold' => true, 'align' => 'middle', 'size' => 14));
+$section->addText("  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "SALES TEAM", array('bold' => true, 'align' => 'middle', 'size' => 14));
 
-$section->addText("PROJECT TURNOVER CHECKLIST", array('bold' => true, 'align' => 'middle', 'size' => 14));
+$section->addText("  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "  " . "PROJECT TURNOVER CHECKLIST", array('bold' => true, 'align' => 'middle', 'size' => 14));
 
 $section->addText("", array('bold' => true, 'valign' => 'center', 'size' => 14));
 
@@ -516,8 +516,8 @@ if($delivery_1st == '1' || $delivery_1st == 't')
 {
     $table->addRow();
     $textrun = $table->addCell(10500, $styleCell)->addTextRun();
-    $textrun->addText(htmlspecialchars("", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
-    $textrun->addText(htmlspecialchars("  " . "  " . "  " . $delivery_1st_items, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars("  " . "  " . "  " . "", ENT_COMPAT, 'UTF-8'), array('bold' => true, 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
+    $textrun->addText(htmlspecialchars($delivery_1st_items, ENT_COMPAT, 'UTF-8'), array('underline' => 'single', 'font' => 'Verdana', 'size' => 11, 'Spacing'=> 5));
     
 }
 
