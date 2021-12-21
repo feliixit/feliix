@@ -508,13 +508,13 @@ var app = new Vue({
 
     account_privileges: function() {
 
-      if(this.record.info_account === 'Office Petty Cash' && (this.name === 'Mary Jude Jeng Articulo' || this.name === 'Dennis Lin'))
+      if(this.record.info_account === 'Office Petty Cash' && (this.name.trim() === 'Mary Jude Jeng Articulo' || this.name.trim() === 'Dennis Lin'))
         return true;
       
-      if(this.record.info_account === 'Online Transactions' && (this.name === 'Mary Jude Jeng Articulo' || this.name === 'Dennis Lin'))
+      if(this.record.info_account === 'Online Transactions' && (this.name.trim() === 'Mary Jude Jeng Articulo' || this.name.trim() === 'Dennis Lin'))
         return true;
 
-      if(this.record.info_account === 'Security Bank' && (this.name === 'Glendon Wendell Co' || this.name === 'Dennis Lin'))
+      if(this.record.info_account === 'Security Bank' && (this.name.trim() === 'Glendon Wendell Co' || this.name.trim() === 'Dennis Lin'))
         return true;
 
       return false;
