@@ -514,7 +514,7 @@ var app = new Vue({
       if(this.record.info_account === 'Online Transactions' && (this.name === 'Mary Jude Jeng Articulo' || this.name === 'Dennis Lin'))
         return true;
 
-      if(this.record.info_account === 'Security Bank' && (this.name === 'Mary Jude Jeng Articulo' || this.name === 'Dennis Lin'))
+      if(this.record.info_account === 'Security Bank' && (this.name === 'Glendon Wendell Co' || this.name === 'Dennis Lin'))
         return true;
 
       return false;

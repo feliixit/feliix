@@ -669,12 +669,16 @@ var app = new Vue({
     bulk_apply: function(){
       if(this.code_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
+          if(this.variation_product[i].checked === "")
+            continue;
           this.variation_product[i].code = this.bulk_code;
         }
       }
 
       if(this.price_ntd_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
+          if(this.variation_product[i].checked === "")
+            continue;
           if(this.price_ntd_action == "assign")
             this.variation_product[i].price_ntd = this.bulk_price_ntd;
           if(this.price_ntd_action == "add")
@@ -686,6 +690,8 @@ var app = new Vue({
 
       if(this.price_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
+          if(this.variation_product[i].checked === "")
+            continue;
           if(this.price_action == "assign")
             this.variation_product[i].price = this.bulk_price;
           if(this.price_action == "add")
@@ -697,18 +703,24 @@ var app = new Vue({
 
       if(this.price_ntd_last_change_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
+          if(this.variation_product[i].checked === "")
+            continue;
           this.variation_product[i].price_ntd_change = this.bulk_price_ntd_last_change;
         }
       }
 
       if(this.price_last_change_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
+          if(this.variation_product[i].checked === "")
+            continue;
           this.variation_product[i].price_change = this.bulk_price_last_change;
         }
       }
 
       if(this.quoted_price_last_change_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
+          if(this.variation_product[i].checked === "")
+            continue;
           this.variation_product[i].quoted_price_change = this.bulk_quoted_price_last_change;
         }
       }
@@ -718,6 +730,8 @@ var app = new Vue({
         if(typeof file !== 'undefined') 
         {
           for (let i=0; i<this.variation_product.length; i++) {
+            if(this.variation_product[i].checked === "")
+              continue;
             this.variation_product[i].url = this.bulk_url;
             document.getElementById('variation_' + this.variation_product[i].id).files[0] = file;
           }
@@ -726,6 +740,8 @@ var app = new Vue({
 
       if(this.status_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
+          if(this.variation_product[i].checked === "")
+            continue;
           this.variation_product[i].status = this.bulk_status;
         }
       }
