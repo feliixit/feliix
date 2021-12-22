@@ -338,6 +338,21 @@
             display: none;
         }
 
+        button.btn.dropdown-toggle {
+            background-color: white;
+            border: 1px solid #999;
+            border-radius: 0;
+        }
+
+        ul.dropdown-menu.inner li {
+            display: block;
+            border-right: none;
+        }
+
+        .dropdown-menu > .bs-searchbox > input[type='search'] {
+            border: 1px solid #ced4da;
+        }
+
 
     </style>
 
@@ -375,7 +390,7 @@
                                 <dt>Tag</dt>
                                 <dd>
                                     <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                            data-width="96%" title="No tag selected" id="tag01" v-model="fil_tag">
+                                            data-width="100%" title="No tag selected" id="tag01" v-model="fil_tag">
 
                                         <optgroup label="BY INSTALL LOCATION">
                                             <option value="CEILING">CEILING</option>
@@ -434,16 +449,13 @@
                                     </select>
                                 </dd>
 
-                                <div class="half">
-                                    <dt>Brand</dt>
-                                    <dd>
-                                        <select v-model="fil_brand">
-                                            <option value="">
-                                            <option v-for="(item, index) in brands">{{ item.brand }}</option>
-                                           
-                                        </select>
-                                    </dd>
-                                </div>
+                                <dt>Brand</dt>
+                                <dd>
+                                    <select v-model="fil_brand">
+                                        <option value="">
+                                        <option v-for="(item, index) in brands">{{ item.brand }}</option>
+                                    </select>
+                                </dd>
 <!--
                                 <div class="half">
                                     <dt></dt>
