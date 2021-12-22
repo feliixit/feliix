@@ -2945,7 +2945,9 @@ catch (Exception $e) {
                 </ul>
 
             </div>
-
+<?php
+if ($test_manager[2]  == "1") {
+?>
             <div class="btnbox">
                 <button type="button" class="btn btn-secondary btn-lg" style="width: 100px; font-weight: 600;" @click="cancel()" v-if="is_Editing">Cancel
                 </button>
@@ -2955,7 +2957,9 @@ catch (Exception $e) {
                         style="width: 100px; font-weight: 600;" @click="edit()" v-if="!is_Editing">Edit
                 </button>
             </div>
-
+<?php
+}
+?>
         </div>
 
     </div>

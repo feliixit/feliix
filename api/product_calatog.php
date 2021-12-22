@@ -49,6 +49,14 @@ else
       $page = (isset($_GET['page']) ?  $_GET['page'] : "");
       $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
+      $d = (isset($_GET['d']) ?  $_GET['d'] : "");
+      $c = (isset($_GET['c']) ?  $_GET['c'] : "");
+      $c = urldecode($c);
+      $t = (isset($_GET['t']) ?  $_GET['t'] : "");
+      $t = urldecode($t);
+      $tag_array = json_decode($t, true);
+      $b = (isset($_GET['b']) ?  $_GET['b'] : "");
+      $b = urldecode($b);
 
       $database = new Database();
       $db = $database->getConnection();
@@ -67,6 +75,40 @@ else
                 if (false === $page) {
                     $page = 1;
                 }
+            }
+
+            if($d != "" && $d != "0")
+            {
+                $sql = $sql . " and p.id = " . $d . " ";
+                $query_cnt = $query_cnt . " and p.id = " . $d . " ";
+            }
+
+            if($c != "")
+            {
+                $sql = $sql . " and p.code = '" . $c . "' ";
+                $query_cnt = $query_cnt . " and p.code = '" . $c . "' ";
+            }
+
+            $tag_sql = "";
+            if($tag_array != null)
+            {
+                for ($i = 0; $i < count($tag_array); $i++) {
+                    $tag_sql = $tag_sql . " p.tags like '%" . $tag_array[$i] . "%' or ";
+                }
+            }
+
+            if($tag_sql != "")
+            {
+                $tag_sql = substr($tag_sql, 0, -3);
+
+                $sql = $sql . " and (" . $tag_sql . ") ";
+                $query_cnt = $query_cnt . " and (" . $tag_sql . ") ";
+            }
+
+            if($b != "")
+            {
+                $sql = $sql . " and p.brand = '" . $b . "' ";
+                $query_cnt = $query_cnt . " and p.brand = '" . $b . "' ";
             }
     
             $sql = $sql . " ORDER BY p.created_at desc ";

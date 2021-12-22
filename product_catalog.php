@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
 
     <!-- jQuery和js載入 -->
@@ -48,6 +49,7 @@
     <script type="text/javascript"
             src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
+    <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
@@ -364,48 +366,118 @@
                     <div id="filter_dialog" class="dialog A"><h6>Filter Function:</h6>
                         <div class="formbox">
                             <dl>
+                                <dt>ID</dt>
+                                <dd><input type="text" v-model="fil_id"></dd>
+
                                 <dt>Code</dt>
-                                <dd><input type="text"></dd>
+                                <dd><input type="text" v-model="fil_code"></dd>
+
+                                <dt>Tag</dt>
+                                <dd>
+                                    <select class="selectpicker" multiple data-live-search="true" data-size="8"
+                                            data-width="96%" title="No tag selected" id="tag01" v-model="fil_tag">
+
+                                        <optgroup label="BY INSTALL LOCATION">
+                                            <option value="CEILING">CEILING</option>
+                                            <option value="FLOOR">FLOOR</option>
+                                            <option value="INDOOR">INDOOR</option>
+                                            <option value="INGROUND">INGROUND</option>
+                                            <option value="OUTDOOR">OUTDOOR</option>
+                                            <option value="POOL">POOL</option>
+                                            <option value="STREET">STREET</option>
+                                            <option value="TABLE">TABLE</option>
+                                            <option value="WALL">WALL</option>
+                                            <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
+                                            <option value="CABINET">CABINET</option>
+                                            <option value="OTHER FURNITURES ">OTHER FURNITURES</option>
+                                            <option value="UNDERWATER">UNDERWATER</option>
+                                        </optgroup>
+
+                                        <optgroup label="INSTALL METHOD">
+                                            <option value="POLE-MOUNTED">POLE-MOUNTED</option>
+                                            <option value="RECESSED">RECESSED</option>
+                                            <option value="SURFACE-MOUNTED">SURFACE-MOUNTED</option>
+                                            <option value="SUSPENDED">SUSPENDED</option>
+                                            <option value="STAND-ALONE">STAND-ALONE</option>
+                                        </optgroup>
+
+                                        <optgroup label="BY TYPE / FUNCTION">
+                                            <option value="ASSEMBLED">ASSEMBLED</option>
+                                            <option value="BOLLARD">BOLLARD</option>
+                                            <option value="LED BULB">LED BULB</option>
+                                            <option value="CUSTOMIZED">CUSTOMIZED</option>
+                                            <option value="DIMMER">DIMMER</option>
+                                            <option value="DIRECTIONAL">DIRECTIONAL</option>
+                                            <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
+                                            <option value="LED DRIVER">LED DRIVER</option>
+                                            <option value="FLOOD LIGHT">FLOOD LIGHT</option>
+                                            <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
+                                            <option value="LED STRIP">LED STRIP</option>
+                                            <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+                                            <option value="PANEL LIGHT">PANEL LIGHT</option>
+                                            <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
+                                            <option value="TRACK LIGHT">TRACK LIGHT</option>
+                                            <option value="TROFFER LIGHT">TROFFER LIGHT</option>
+                                            <option value="TUBE LIGHT">TUBE LIGHT</option>
+                                            <option value="WALL WASHER">WALL WASHER</option>
+                                            <option value="LIGHTBOX">LIGHTBOX</option>
+                                            <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
+                                            <option value="UV LED">UV LED</option>
+                                        </optgroup>
+
+                                        <optgroup label="ACCESSORY">
+                                            <option value="FUNCTIONAL ACCESSORY">FUNCTIONAL ACCESSORY</option>
+                                            <option value="INSTALL ACCESSORY">INSTALL ACCESSORY</option>
+                                            <option value="REPLACEMENT PART">REPLACEMENT PART</option>
+                                        </optgroup>
+
+                                    </select>
+                                </dd>
 
                                 <div class="half">
                                     <dt>Brand</dt>
                                     <dd>
+                                        <select v-model="fil_brand">
+                                            <option value="">
+                                            <option v-for="(item, index) in brands">{{ item.brand }}</option>
+                                           
+                                        </select>
+                                    </dd>
+                                </div>
+<!--
+                                <div class="half">
+                                    <dt></dt>
+                                    <dd><input type="text"></dd>
+                                </div>
+    -->
+                                <!--
+                                <div class="half">
+                                    <dt>Category</dt>
+                                    <dd>
                                         <select>
                                             <option value="0">
-                                            <option>Shan Ben</option>
-                                            <option>Everlight</option>
-                                            <option>Tons</option>
-                                            <option>Other</option>
+                                            <option>Lighting</option>
+                                            <option>Systems Furniture</option>
                                         </select>
                                     </dd>
                                 </div>
 
                                 <div class="half">
                                     <dt></dt>
-                                    <dd><input type="text"></dd>
+                                    <dd>
+                                        <select>
+                                            <option value="0">
+                                            <option>Indoor</option>
+                                            <option>Outdoor</option>
+                                            <option>Accessory</option>
+                                            <option>Cabinet</option>
+                                            <option>Chair</option>
+                                            <option>Table</option>
+                                            <option>Workstation</option>
+                                            <option>Partition</option>
+                                        </select>
+                                    </dd>
                                 </div>
-
-                                <dt>Category</dt>
-                                <dd>
-                                    <select>
-                                        <option value="0">
-                                        <option>Lighting</option>
-                                        <option>Systems Furniture</option>
-                                    </select>
-                                </dd>
-                                <dd>
-                                    <select>
-                                        <option value="0">
-                                        <option>Indoor</option>
-                                        <option>Outdoor</option>
-                                        <option>Accessory</option>
-                                        <option>Cabinet</option>
-                                        <option>Chair</option>
-                                        <option>Table</option>
-                                        <option>Workstation</option>
-                                        <option>Partition</option>
-                                    </select>
-                                </dd>
 
                                 <dt style="margin: 20px 0 -18px;">Price</dt>
                                 <div class="half">
@@ -417,6 +489,7 @@
                                     <dt>max</dt>
                                     <dd><input type="number" v-model="fil_amount_upper"></dd>
                                 </div>
+                                -->
 
                             </dl>
                             <div class="btnbox">
@@ -571,7 +644,7 @@
                     <td>
                         <ul>
                             <li>
-                                Id:
+                                ID:
                             </li>
                             <li>
                                {{ item.id }}
