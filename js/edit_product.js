@@ -701,6 +701,21 @@ var app = new Vue({
         }
       }
 
+      if(this.quoted_price_checked == true) {
+        for (let i=0; i<this.variation_product.length; i++) {
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+            continue;
+          if(this.quoted_price_action == "assign")
+            this.variation_product[i].quoted_price = this.bulk_quoted_price;
+          if(this.quoted_price_action == "add")
+            this.variation_product[i].quoted_price = this.variation_product[i].quoted_price + this.bulk_quoted_price;
+          if(this.quoted_price_action == "multiply")
+            this.variation_product[i].quoted_price = (this.variation_product[i].quoted_price * this.bulk_quoted_price);
+
+          this.variation_product[i].quoted_price_change = new Date().toISOString().slice(0, 10);
+        }
+      }
+
       if(this.price_ntd_last_change_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
           if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
@@ -949,7 +964,7 @@ var app = new Vue({
             else{
               if(this.image_checked == true) {
                 let file = document.getElementById('bulk_image').files[0];
-                if(typeof file !== 'undefined' && this.variation_product[i].url !== '') 
+                if(typeof file !== 'undefined' && this.variation_product[i].url !== '' && (this.variation_product[i].checked !== "" && this.variation_product[i].checked !== 0)) 
                 {
                   form_Data.append('variation_' + id, file);
                 }
