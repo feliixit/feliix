@@ -850,7 +850,7 @@ var app = new Vue({
               else{
                 if(this.image_checked == true) {
                   let file = document.getElementById('bulk_image').files[0];
-                  if(typeof file !== 'undefined') 
+                  if(typeof file !== 'undefined' && this.variation_product[i].url !== '') 
                   {
                     form_Data.append('variation_' + id, file);
                   }
