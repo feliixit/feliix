@@ -75,7 +75,18 @@ var app = new Vue({
             case "b":
               _this.fil_brand = decodeURI(tmp[1]);
               break;
-
+            case "of1":
+              _this.od_factor1 = tmp[1];
+              break;
+            case "ofd1":
+              _this.od_factor1_order = tmp[1];
+              break;
+            case "of2":
+              _this.od_factor2 = tmp[1];
+              break;
+            case "ofd2":
+              _this.od_factor2_order = tmp[1];
+              break;
             case "pg":
               _this.pg = tmp[1];
               break;
@@ -249,8 +260,6 @@ var app = new Vue({
       this.od_factor2 = '';
       this.od_factor2_order = '';
     
-      document.getElementById("start").value = "";
-      document.getElementById("end").value = "";
 
       document.getElementById("btn_filter").classList.remove("focus");
       document.getElementById("filter_dialog").classList.remove("show");
@@ -289,6 +298,14 @@ var app = new Vue({
         JSON.stringify(_this.fil_tag) +
         "&b=" +
         _this.fil_brand +
+        "&of1=" +
+        _this.od_factor1 +
+        "&ofd1=" +
+        _this.od_factor1_order +
+        "&of2=" +
+        _this.od_factor2 +
+        "&ofd2=" +
+        _this.od_factor2_order +
         "&pg=" +
         _this.page +
         "&page=" +
@@ -315,6 +332,14 @@ var app = new Vue({
         JSON.stringify(_this.fil_tag) +
         "&b=" +
         _this.fil_brand +
+        "&of1=" +
+        _this.od_factor1 +
+        "&ofd1=" +
+        _this.od_factor1_order +
+        "&of2=" +
+        _this.od_factor2 +
+        "&ofd2=" +
+        _this.od_factor2_order +
         "&pg=" +
         _this.page +
         "&page=" +
@@ -356,7 +381,10 @@ var app = new Vue({
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
-      
+        of1: _this.od_factor1,
+        ofd1: _this.od_factor1_order,
+        of2: _this.od_factor2,
+        ofd2: _this.od_factor2_order,
         page: _this.page,
         size: _this.perPage,
       };

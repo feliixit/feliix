@@ -525,23 +525,15 @@
                                         <select v-model="od_factor1">
                                             <option value="0"></option>
                                             <option value="1">
-                                                Execution Period -- Start Date
+                                                ID
                                             </option>
                                             <option value="2">
-                                                Execution Period -- End Date
+                                                Created Time
                                             </option>
                                             <option value="3">
-                                                Amount
+                                                Updated Time
                                             </option>
-                                            <option value="4">
-                                                Down Payment
-                                            </option>
-                                            <option value="5">
-                                                Payment
-                                            </option>
-                                            <option value="6">
-                                                A/R
-                                            </option>
+                                          
                                         </select>
                                     </dd>
                                 </div>
@@ -566,22 +558,13 @@
                                         <select v-model="od_factor2">
                                             <option value="0"></option>
                                             <option value="1">
-                                                Execution Period -- Start Date
+                                                ID
                                             </option>
                                             <option value="2">
-                                                Execution Period -- End Date
+                                                Created Time
                                             </option>
                                             <option value="3">
-                                                Amount
-                                            </option>
-                                            <option value="4">
-                                                Down Payment
-                                            </option>
-                                            <option value="5">
-                                                Payment
-                                            </option>
-                                            <option value="6">
-                                                A/R
+                                                Updated Time
                                             </option>
                                         </select>
                                     </dd>
@@ -751,9 +734,9 @@
                         <button id="edit01" @click="btnEditClick(item.id)"><i class="fas fa-edit"></i>
                         </button>
 
-                        <button id="copy01" @click="btnDuplicateClick(item.id)"><i class="fas fa-copy"></i></button>
+                        <!--<button id="copy01" @click="btnDuplicateClick(item.id)"><i class="fas fa-copy"></i></button>-->
 
-                        <button @click="btnDelClick(item.id)"><i class="fas fa-times"></i></button>
+                        <!--<button @click="btnDelClick(item.id)"><i class="fas fa-times"></i></button>-->
 
                     </td>
                 </tr>
