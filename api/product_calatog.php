@@ -85,21 +85,21 @@ else
 
             if($c != "")
             {
-                $sql = $sql . " and p.code = '" . $c . "' ";
-                $query_cnt = $query_cnt . " and p.code = '" . $c . "' ";
+                $sql = $sql . " and p.code like '%" . $c . "%' ";
+                $query_cnt = $query_cnt . " and p.code like '%" . $c . "%' ";
             }
 
             $tag_sql = "";
             if($tag_array != null)
             {
                 for ($i = 0; $i < count($tag_array); $i++) {
-                    $tag_sql = $tag_sql . " p.tags like '%" . $tag_array[$i] . "%' or ";
+                    $tag_sql = $tag_sql . " p.tags like '%" . $tag_array[$i] . "%' and ";
                 }
             }
 
             if($tag_sql != "")
             {
-                $tag_sql = substr($tag_sql, 0, -3);
+                $tag_sql = substr($tag_sql, 0, -4);
 
                 $sql = $sql . " and (" . $tag_sql . ") ";
                 $query_cnt = $query_cnt . " and (" . $tag_sql . ") ";
