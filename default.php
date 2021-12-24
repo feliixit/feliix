@@ -78,7 +78,7 @@ $(function(){
         </div>
 
         <div class="banner2" <?php if($show0 == false) echo('style="display:none;"'); ?>>
-            <img src="images/romans_1513.png" height="auto" width="96%"/>
+            <img src="images/communication.jpg" height="auto" width="96%"/>
         </div>
     </div>
 </div>
