@@ -251,6 +251,23 @@ $(function(){
 
                     <form>
                         <ul>
+                            <li><b>Change Releasing Account</b></li>
+                            <li>
+                                <select style="width:100%" v-model="new_info_account">
+                                    <option value="Office Petty Cash">Office Petty Cash</option>
+                                    <option value="Online Transactions">Online Transactions</option>
+                                    <option value="Security Bank">Security Bank</option>
+                                </select>
+                            </li>
+                        </ul>
+
+                        <div class="btnbox">
+                            <a class="btn red" @click="confirm_change_account()">Execute</a>
+                        </div>
+                    </form>
+
+                    <form>
+                        <ul>
                             <li><b>Voiding Reason</b></li>
                             <li><textarea style="width:100%" v-model="reject_reason"></textarea></li>
                         </ul>

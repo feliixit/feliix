@@ -9,6 +9,8 @@ var app = new Vue({
 
     submit: false,
 
+    new_info_account:'',
+
     receive_records: [],
     record: {},
 
@@ -108,6 +110,7 @@ var app = new Vue({
           _this.receive_records = response.data;
           if(_this.receive_records.length > 0)
           {
+            
             //_this.proof_id = 0;
               //_this.proof_id = _this.receive_records[0].id;
               //_this.detail();
@@ -255,6 +258,73 @@ var app = new Vue({
           _this.resetForm();
         });
     },
+
+    confirm_change_account: function() {
+      let _this = this;
+
+      OrgAccount = this.record.info_account;
+      if(OrgAccount !== this.new_info_account)
+      {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You are changing the payement account",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+        }).then((result) => {
+          if (result.value) {
+            _this.change_account();
+          }
+        });
+      }
+      
+    },
+
+    change_account: function() {
+      let _this = this;
+      targetId = this.record.id;
+      OrgAccount = this.record.info_account;
+
+      var form_Data = new FormData();
+
+      var token = localStorage.getItem("token");
+      form_Data.append("jwt", token);
+
+      form_Data.append("id", targetId);
+      form_Data.append("org_info_account", OrgAccount);
+      form_Data.append("new_info_account", this.new_info_account);
+      
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/petty_change_account",
+        data: form_Data,
+      })
+        .then(function(response) {
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.resetForm();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+          _this.resetForm();
+        });
+      },
+    
 
     approveReceiveRecord_MD: function(id) {
 
@@ -429,9 +499,25 @@ var app = new Vue({
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
+
+      this.new_info_account = this.record.info_account;
       
       this.reject_reason = "";
       this.view_detail = true;
+    },
+
+    account_privileges: function() {
+
+      if(this.record.info_account === 'Office Petty Cash' && (this.name.trim() === 'Mary Jude Jeng Articulo' || this.name.trim() === 'Dennis Lin'))
+        return true;
+      
+      if(this.record.info_account === 'Online Transactions' && (this.name.trim() === 'Mary Jude Jeng Articulo' || this.name.trim() === 'Dennis Lin'))
+        return true;
+
+      if(this.record.info_account === 'Security Bank' && (this.name.trim() === 'Glendon Wendell Co' || this.name.trim() === 'Dennis Lin'))
+        return true;
+
+      return false;
     },
 
     approve_op: function() {
@@ -447,6 +533,20 @@ var app = new Vue({
         //$(window).scrollTop(0);
         return;
       }
+
+      // check account privileges
+      if(this.account_privileges() === false)
+      {
+       
+          Swal.fire({
+            text: "Invalid Releaser",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          return;
+        
+      }
+      
 
       if (!this.$refs.file.files[0])
           {
@@ -488,6 +588,19 @@ var app = new Vue({
 
         //$(window).scrollTop(0);
         return;
+      }
+
+      // check account privileges
+      if(this.account_privileges() === false)
+      {
+       
+          Swal.fire({
+            text: "Invalid Releaser",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          return;
+        
       }
 
       if (!this.$refs.file.files[0])

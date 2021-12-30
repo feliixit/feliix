@@ -172,6 +172,7 @@ catch (Exception $e) {
             top: -20px;
         }
 
+
         .tablebox .dialog::before,
         .tablebox .dialog::after {
             top: 15px;
@@ -2944,7 +2945,9 @@ catch (Exception $e) {
                 </ul>
 
             </div>
-
+<?php
+if ($test_manager[2]  == "1") {
+?>
             <div class="btnbox">
                 <button type="button" class="btn btn-secondary btn-lg" style="width: 100px; font-weight: 600;" @click="cancel()" v-if="is_Editing">Cancel
                 </button>
@@ -2954,7 +2957,9 @@ catch (Exception $e) {
                         style="width: 100px; font-weight: 600;" @click="edit()" v-if="!is_Editing">Edit
                 </button>
             </div>
-
+<?php
+}
+?>
         </div>
 
     </div>
@@ -4747,11 +4752,11 @@ catch (Exception $e) {
     }
 </script>
 
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript" src="js/project03_ameeting.js" defer></script>
 <script defer src="js/a076d05399.js"></script>
 

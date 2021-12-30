@@ -9,6 +9,7 @@ var app = new Vue({
 
     //
     receive_records: [],
+    brands: [],
 
     proof_id: 0,
 
@@ -37,6 +38,11 @@ var app = new Vue({
     od_factor2: "",
     od_factor2_order: "",
 
+    fil_id: "",
+    fil_code: "",
+    fil_tag: [],
+    fil_brand: "",
+
     // info
     name :"",
     title: "",
@@ -57,6 +63,30 @@ var app = new Vue({
         if(tmp.length == 2)
         {
           switch (tmp[0]) {
+            case "d":
+              _this.fil_id = tmp[1];
+              break;
+            case "c":
+              _this.fil_code = decodeURI(tmp[1]);
+              break;
+            case "t":
+              _this.fil_tag = (decodeURI(tmp[1]) == '[]' || decodeURI(tmp[1]) == '') ? [] : JSON.parse(decodeURI(tmp[1]));
+              break;
+            case "b":
+              _this.fil_brand = decodeURI(tmp[1]);
+              break;
+            case "of1":
+              _this.od_factor1 = tmp[1];
+              break;
+            case "ofd1":
+              _this.od_factor1_order = tmp[1];
+              break;
+            case "of2":
+              _this.od_factor2 = tmp[1];
+              break;
+            case "ofd2":
+              _this.od_factor2_order = tmp[1];
+              break;
             case "pg":
               _this.pg = tmp[1];
               break;
@@ -77,6 +107,7 @@ var app = new Vue({
 
     this.get_records();
     this.getUserName();
+    this.get_brands();
 
   },
 
@@ -207,13 +238,12 @@ var app = new Vue({
     },
 
     filter_remove: function() {
-      this.fil_amount_lower = '';
-      this.fil_amount_upper = '';
+      this.fil_id = '';
+      this.fil_code = '';
+      this.fil_tag = [];
+      this.fil_brand = '';
    
     
-      document.getElementById("start").value = "";
-      document.getElementById("end").value = "";
-
       document.getElementById("btn_filter").classList.remove("focus");
       document.getElementById("filter_dialog").classList.remove("show");
 
@@ -230,8 +260,6 @@ var app = new Vue({
       this.od_factor2 = '';
       this.od_factor2_order = '';
     
-      document.getElementById("start").value = "";
-      document.getElementById("end").value = "";
 
       document.getElementById("btn_filter").classList.remove("focus");
       document.getElementById("filter_dialog").classList.remove("show");
@@ -259,13 +287,25 @@ var app = new Vue({
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
       _this.page = 1;
 
+
       window.location.href =
         "product_catalog?" +
         "d=" +
-        _this.fil_amount_lower +
-        "&e=" +
-        _this.fil_amount_upper +
-          
+        _this.fil_id +
+        "&c=" +
+        _this.fil_code +
+        "&t=" +
+        JSON.stringify(_this.fil_tag) +
+        "&b=" +
+        _this.fil_brand +
+        "&of1=" +
+        _this.od_factor1 +
+        "&ofd1=" +
+        _this.od_factor1_order +
+        "&of2=" +
+        _this.od_factor2 +
+        "&ofd2=" +
+        _this.od_factor2_order +
         "&pg=" +
         _this.page +
         "&page=" +
@@ -273,6 +313,7 @@ var app = new Vue({
         "&size=" +
         _this.perPage;
     },
+
 
     filter_apply: function() {
       let _this = this;
@@ -282,12 +323,23 @@ var app = new Vue({
 
 
       window.location.href =
-        "product_calatog?" +
+        "product_catalog?" +
         "d=" +
-        _this.fil_amount_lower +
-        "&e=" +
-        _this.fil_amount_upper +
-          
+        _this.fil_id +
+        "&c=" +
+        _this.fil_code +
+        "&t=" +
+        JSON.stringify(_this.fil_tag) +
+        "&b=" +
+        _this.fil_brand +
+        "&of1=" +
+        _this.od_factor1 +
+        "&ofd1=" +
+        _this.od_factor1_order +
+        "&of2=" +
+        _this.od_factor2 +
+        "&ofd2=" +
+        _this.od_factor2_order +
         "&pg=" +
         _this.page +
         "&page=" +
@@ -296,15 +348,43 @@ var app = new Vue({
         _this.perPage;
     },
 
+    get_brands: function() {
+      let _this = this;
+
+      const params = {
+  
+      };
+
+      let token = localStorage.getItem("accessToken");
+      axios
+        .get("api/product_brands", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(function(response) {
+          console.log(response.data);
+          let res = response.data;
+        
+            _this.brands = response.data;
+             
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+
     get_records: function() {
         let _this = this;
 
       const params = {
-        d: _this.fil_start_date,
-        e: _this.fil_end_date,
-        p: _this.fil_creator,
-        c: _this.fil_category,
-      
+        d: _this.fil_id,
+        c: _this.fil_code,
+        t: JSON.stringify(_this.fil_tag),
+        b: _this.fil_brand,
+        of1: _this.od_factor1,
+        ofd1: _this.od_factor1_order,
+        of2: _this.od_factor2,
+        ofd2: _this.od_factor2_order,
         page: _this.page,
         size: _this.perPage,
       };

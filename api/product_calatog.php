@@ -49,6 +49,19 @@ else
       $page = (isset($_GET['page']) ?  $_GET['page'] : "");
       $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
+      $d = (isset($_GET['d']) ?  $_GET['d'] : "");
+      $c = (isset($_GET['c']) ?  $_GET['c'] : "");
+      $c = urldecode($c);
+      $t = (isset($_GET['t']) ?  $_GET['t'] : "");
+      $t = urldecode($t);
+      $tag_array = json_decode($t, true);
+      $b = (isset($_GET['b']) ?  $_GET['b'] : "");
+      $b = urldecode($b);
+
+      $of1 = (isset($_GET['of1']) ?  $_GET['of1'] : '');
+      $ofd1 = (isset($_GET['ofd1']) ?  $_GET['ofd1'] : '');
+      $of2 = (isset($_GET['of2']) ?  $_GET['of2'] : '');
+      $ofd2 = (isset($_GET['ofd2']) ?  $_GET['ofd2'] : '');
 
       $database = new Database();
       $db = $database->getConnection();
@@ -68,8 +81,129 @@ else
                     $page = 1;
                 }
             }
+
+            if($d != "" && $d != "0")
+            {
+                $sql = $sql . " and p.id = " . $d . " ";
+                $query_cnt = $query_cnt . " and p.id = " . $d . " ";
+            }
+
+            if($c != "")
+            {
+                $sql = $sql . " and p.code like '%" . $c . "%' ";
+                $query_cnt = $query_cnt . " and p.code like '%" . $c . "%' ";
+            }
+
+            $tag_sql = "";
+            if($tag_array != null)
+            {
+                for ($i = 0; $i < count($tag_array); $i++) {
+                    $tag_sql = $tag_sql . " p.tags like '%" . $tag_array[$i] . "%' and ";
+                }
+            }
+
+            if($tag_sql != "")
+            {
+                $tag_sql = substr($tag_sql, 0, -4);
+
+                $sql = $sql . " and (" . $tag_sql . ") ";
+                $query_cnt = $query_cnt . " and (" . $tag_sql . ") ";
+            }
+
+            if($b != "")
+            {
+                $sql = $sql . " and p.brand = '" . $b . "' ";
+                $query_cnt = $query_cnt . " and p.brand = '" . $b . "' ";
+            }
     
-            $sql = $sql . " ORDER BY p.created_at desc ";
+            
+$sOrder = "";
+if($of1 != "" && $of1 != "0")
+{
+    switch ($of1)
+    {   
+        case 1:
+            if($ofd1 == 2)
+                $sOrder = "p.id desc";
+            else
+                $sOrder = "p.id ";
+            break;  
+        case 2:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce(p.created_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(p.created_at, '9999-99-99') ";
+            break;  
+        case 3:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce(p.updated_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(p.updated_at, '9999-99-99') ";
+            break;  
+        
+        default:
+    }
+}
+
+if($of2 != "" && $of2 != "0" && $sOrder != "")
+{
+    switch ($of2)
+    {
+        case 1:
+            if($ofd2 == 2)
+                $sOrder .= ", p.id desc";
+            else
+                $sOrder .= ", p.id";
+            break;  
+        case 2:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce(p.created_at, '0000-00-00') desc";
+            else
+                $sOrder .= ", Coalesce(p.created_at, '9999-99-99') ";
+            break;  
+        case 3:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce(p.updated_at, '0000-00-00') desc";
+            else
+                $sOrder .= ", Coalesce(p.updated_at, '9999-99-99') ";
+            break;  
+     
+        default:
+    }
+}
+
+
+if($of2 != "" && $of2 != "0" && $sOrder == "")
+{
+    switch ($of2)
+    {
+        case 1:
+            if($ofd2 == 2)
+                $sOrder = "p.id desc";
+            else
+                $sOrder = "p.id";
+            break;  
+        case 2:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce(p.created_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(p.created_at, '9999-99-99') ";
+            break;  
+        case 3:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce(p.updated_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(p.updated_at, '9999-99-99') ";
+            break;  
+     
+        default:
+    }
+}
+
+if($sOrder != "")
+    $sql = $sql . " order by  " . $sOrder;
+else
+    $sql = $sql . " ORDER BY p.created_at desc ";
     
             if (!empty($_GET['size'])) {
                 $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
