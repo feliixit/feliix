@@ -2379,3 +2379,52 @@ CREATE TABLE IF NOT EXISTS `project_a_meeting` (
 
 ALTER TABLE project_a_meeting MODIFY COLUMN date_of_delivery varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
 ALTER TABLE project_a_meeting MODIFY COLUMN client_deadline varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+
+-- 2022/01/04 quotation
+
+CREATE TABLE IF NOT EXISTS `quotation` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `project_category` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `quotation_no` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `quotation_date` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_third_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_by_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_by_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `footer_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `footer_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS quotation_page
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quotation_page_type
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+  `page_id` bigint(20) unsigned NOT NULL,
+  `block_type` varchar(1) DEFAULT '',
+  `block_name` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+	`create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
