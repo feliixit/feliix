@@ -95,6 +95,8 @@ else
         $stmt->bindParam(':prepare_by_second_line', $prepare_by_second_line);
         $stmt->bindParam(':footer_first_line', $footer_first_line);
         $stmt->bindParam(':footer_second_line', $footer_second_line);
+
+        $stmt->bindParam(':create_id', $user_id);
        
         $last_id = 0;
         // execute the query, also check if query was successful
