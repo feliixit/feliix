@@ -61,7 +61,7 @@ else
                                 from store_sales ss
                                 left join store_sales_record sr 
                                 on sr.sales_id = ss.id
-                                where 1=1 ";
+                                where ss.status <> -1 ";
 
         if($start_date!='') {
             $query = $query . " and ss.sales_date >= '$start_date' ";
