@@ -439,6 +439,7 @@ try {
                                 <li>
                                     <select class="form-control" v-model="payment_method">
                                         <option value="cash">Cash</option>
+                                        <option value="gcash">GCash</option>
                                         <option value="visa">Visa Card</option>
                                         <option value="master">Master Card</option>
                                         <option value="jcb">JCB Card</option>
