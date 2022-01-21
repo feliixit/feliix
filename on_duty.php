@@ -207,6 +207,7 @@ $(function(){
                         <dt>Location</dt>
                         <dd>
                             <select name="" id="" v-model="location">
+                            <option value="M">Main Office</option>
                             <?php
                                 if($show0 == 'true')
                                 {
@@ -215,7 +216,7 @@ $(function(){
                             <?php
                                 }
                             ?>
-                                <option value="M">Main Office</option>
+                                
                                 <option value="T">Taiwan Office</option>
                                 <option value="B">Shangri-La Store</option>
                                 <option value="C">Caloocan Warehouse</option>
