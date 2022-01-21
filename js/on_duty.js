@@ -39,7 +39,7 @@ var app = new Vue({
     },
 
     showPhoto: function(){
-      return (this.location=='A' || this.location=='B' || this.location=='C' || this.location=='D' || this.location=='E' || this.location=='F');
+      return (this.location=='A' || this.location=='M' || this.location=='B' || this.location=='C' || this.location=='D' || this.location=='E' || this.location=='F');
     }
   },
 

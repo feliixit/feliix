@@ -1,4 +1,12 @@
 <?php include 'check.php';?>
+<?php
+    date_default_timezone_set('Asia/Taipei');
+    $date = date("Y-m-d");
+    $show0 = false;
+
+    if($date < '2022-02-01')
+        $show0 = true;
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -199,7 +207,15 @@ $(function(){
                         <dt>Location</dt>
                         <dd>
                             <select name="" id="" v-model="location">
+                            <?php
+                                if($show0 == 'true')
+                                {
+                            ?>       
                                 <option value="A">Antel Office</option>
+                            <?php
+                                }
+                            ?>
+                                <option value="M">Main Office</option>
                                 <option value="T">Taiwan Office</option>
                                 <option value="B">Shangri-La Store</option>
                                 <option value="C">Caloocan Warehouse</option>
