@@ -584,7 +584,8 @@
 
         .tb_format1 thead tr th:first-of-type,
         .tb_format1 tbody tr td:first-of-type,
-        .tb_format1 tfoot tr td:first-of-type {
+        .tb_format1 tfoot tr td:first-of-type
+         {
             border-left: 2px solid #A0A0A0;
         }
 
@@ -1588,101 +1589,87 @@
                             <ul>
                                 <li class="head" style="width: 160px;">Choose Subtotal Block:</li>
                                 <li class="mix">
-                                    <select>
-                                        <option v-for="(block, index) in block_names">{{ block.name }}</option>
+                                    <select v-model="block_value">
+                                        <option v-for="(block, index) in block_names" :value="block">{{ block.name }}</option>
                                         
                                     </select>
 
-                                    <a class="btn small green">Load</a>
+                                    <a class="btn small green" @click="load_block()">Load</a>
                                 </li>
                             </ul>
                         </div>
 
 
-                        <div class="subtotalbox Type-A" style="display: none;">
+                        <div class="subtotalbox Type-A" v-if="edit_type_a">
 
                             <div class="title_box">
-                                MAIN BUILDING FAÇADE’ | "RGBW LIGHTING FAÇADE' FIXTURE"
+                                {{block_value.name}}
                             </div>
 
                             <div class="function_box">
-                                <select>
-                                    <option>Item with Image</option>
-                                    <option>Item without Image</option>
+                                <select id="with_image">
+                                    <option value="image">Item with Image</option>
+                                    <option value="noimage">Item without Image</option>
                                 </select>
-                                <a class="btn small green" >Add</a>
+                                <a class="btn small green" @click="add_block_a()">Add</a>
                             </div>
 
                             <div class="content_box">
 
-                                <ul>
+                                <ul v-for="(block, index) in temp_block_a">
                                     <li>
-                                        <span>Code:</span> <input type="text"><br>
-                                        <span>Image:</span>
-                                        <div class="itembox chosen">
+                                        <span>Code:</span> <input type="text" v-model="block.code"><br>
+                                        <span v-if="block.type == 'image' ">Image:</span>
+                                        <div v-if="block.type == 'image' " :class="['itembox', (block.url !== '' ? 'chosen' : '')]" >
                                             <div class="photo">
-                                                <input type="file" id="photo1" name="photo1">
-                                                <img src="images/qn_example1.png"/>
-                                                <div>x</div>
+                                                <input type="file" :name="'block_image_' + block.id" @change="onFileChangeImage($event, block.id)" :id="'block_image_' + block.id">
+                                                <img v-if="block.url" :src="block.url"/>
+                                                <div  @click="clear_photo(block.id)">x</div>
                                             </div>
 
                                         </div>
 
-                                        <br>
-                                        <span>Qty:</span> <input type="number"> Product Price: <input type="number">
-                                        Discount: <input type="number"> Amount: <input type="number"><br>
-                                        <span>Description:</span> <textarea rows="2"></textarea><br>
-                                        <span>Listing:</span> <textarea rows="4"></textarea>
+                                        <br v-if="block.type == 'image' ">
+                                        <span>Qty:</span> <input type="number" min="0" step="1" v-model="block.qty"> Product Price: <input type="number" v-model="block.price">
+                                        Discount: <input type="number" v-model="block.discount"> Amount: <input type="number" v-model="block.amount"><br>
+                                        <span>Description:</span> <textarea rows="2" v-model="block.desc"></textarea><br>
+                                        <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
                                     </li>
                                     <li>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-arrow-alt-circle-up" @click="block_a_up(index, block.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down" @click="block_a_down(index, block.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="block_a_del(block.id)"></i>
                                     </li>
                                 </ul>
 
-                                <ul>
-                                    <li>
-                                        <span>Code:</span> <input type="text"><br>
-                                        <span>Qty:</span> <input type="number"> Product Price: <input type="number">
-                                        Discount: <input type="number"> Amount: <input type="number"><br>
-                                        <span>Description:</span> <textarea rows="2"></textarea><br>
-                                        <span>Listing:</span> <textarea rows="4"></textarea>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </li>
-                                </ul>
 
                             </div>
                         </div>
 
 
-                        <div class="subtotalbox Type-B" style="display: none;">
+                        <div class="subtotalbox Type-B" v-if="edit_type_b">
 
                             <div class="title_box">
-                                INSTALLATION ( Price Breakdown )
+                                {{block_value.name}}
                             </div>
 
                             <div class="function_box">
-                                <a class="btn small green" >Add Item</a>
+                                <a class="btn small green" @click="add_block_b()">Add Item</a>
                             </div>
 
                             <div class="content_box">
 
-                                <ul>
+                                <ul v-for="(block, index) in temp_block_b">
                                     <li>
-                                        <span>Code:</span> <input type="text"><br>
-                                        <span>Discount:</span> <input type="number"> Amount: <input type="number"><br>
-                                        <span>Description:</span> <textarea rows="2"></textarea><br>
-                                        <span>Listing:</span> <textarea rows="4"></textarea>
+                                        <span>Code:</span> <input type="text" v-model="block.code"><br>
+                                        <span>Discount:</span> <input type="number" v-model="block.discount"> Amount: <input type="number" v-model="block.amount"><br>
+                                        <span>Description:</span> <textarea rows="2" v-model="block.desc"></textarea><br>
+                                        <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
                                     </li>
                                     <li>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-arrow-alt-circle-up" @click="block_b_up(index, block.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down" @click="block_b_down(index, block.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="block_b_del(block.id)"></i>
                                     </li>
                                 </ul>
 
@@ -1691,8 +1678,8 @@
 
                         <div class="formbox">
                             <div class="btnbox">
-                                <a class="btn small" @click="show_subtotal = false">Close</a>
-                                <a class="btn small green">Save</a>
+                                <a class="btn small" @click="subtotal_close()">Close</a>
+                                <a class="btn small green" @click="subtotal_save()">Save</a>
                             </div>
                         </div>
 
@@ -1709,11 +1696,9 @@
                             <dl>
                                 <dt class="head">Choose where the block of total locates at:</dt>
                                 <dd>
-                                    <select>
-                                        <option>Page 1</option>
-                                        <option>Page 2</option>
-                                        <option>Page 3</option>
-                                        <option>Page 4</option>
+                                    <select v-model="total.page">
+                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page }}</option>
+                   
                                     </select>
                                 </dd>
                             </dl>
@@ -1721,16 +1706,16 @@
                             <dl>
                                 <dt class="head">Discount:</dt>
                                 <dd>
-                                    <input type="number">
+                                    <input type="number" v-model="total.discount">
                                 </dd>
                             </dl>
 
                             <dl>
                                 <dt class="head">12% VAT:</dt>
                                 <dd>
-                                    <select>
-                                        <option>Yes</option>
-                                        <option>No</option>
+                                    <select v-model="total.vat">
+                                        <option value="Y">Yes</option>
+                                        <option value="">No</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -1738,9 +1723,9 @@
                             <dl>
                                 <dt class="head">Show "*price inclusive of VAT" in the Quotation:</dt>
                                 <dd>
-                                    <select>
-                                        <option>Yes</option>
-                                        <option>No</option>
+                                    <select v-model="total.show_vat">
+                                        <option value="Y">Yes</option>
+                                        <option value="">No</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -1748,7 +1733,7 @@
                             <dl>
                                 <dt class="head">Quotation Valid for:</dt>
                                 <dd>
-                                    <input type="text" placeholder="Input like 1 month, 45 days, ...">
+                                    <input type="text" v-model="total.valid" placeholder="Input like 1 month, 45 days, ...">
                                 </dd>
                             </dl>
 
@@ -1757,13 +1742,13 @@
                             <dl>
                                 <dt class="head">Grand Total:</dt>
                                 <dd>
-                                    <input type="number">
+                                    <input type="number" v-model="total.total">
                                 </dd>
                             </dl>
 
                             <div class="btnbox">
-                                <a class="btn small" @click="show_total = false">Close</a>
-                                <a class="btn small green">Save</a>
+                                <a class="btn small" @click="close_total()">Close</a>
+                                <a class="btn small green" @click="save_total()">Save</a>
                             </div>
                         </div>
 
@@ -1780,11 +1765,8 @@
                             <dl>
                                 <dt class="head">Choose where the block of terms and condition locates at:</dt>
                                 <dd>
-                                    <select>
-                                        <option>Page 1</option>
-                                        <option>Page 2</option>
-                                        <option>Page 3</option>
-                                        <option>Page 4</option>
+                                    <select v-model="term.page">
+                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page }}</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -1793,56 +1775,31 @@
 
                         <div class="termsbox">
                             <div class="function_box">
-                                <a class="btn small green" >Add Item</a>
+                                <a class="btn small green" @click="add_term_item()">Add Item</a>
                             </div>
 
                             <div class="content_box">
-                                <ul>
+                                <ul v-for="(item, index) in term.item">
                                     <li>
-                                        <span>Title:</span> <input type="text"><br>
-                                        <span>Brief:</span> <input type="text"><br>
-                                        <span>Listing:</span> <textarea rows="4"></textarea>
+                                        <span>Title:</span> <input type="text" v-model="item.title"><br>
+                                        <span>Brief:</span> <input type="text" v-model="item.brief"><br>
+                                        <span>Listing:</span> <textarea rows="4" v-model="item.list"></textarea>
                                     </li>
                                     <li>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </li>
-                                </ul>
-
-                                <ul>
-                                    <li>
-                                        <span>Title:</span> <input type="text"><br>
-                                        <span>Brief:</span> <input type="text"><br>
-                                        <span>Listing:</span> <textarea rows="4"></textarea>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-trash-alt"></i>
+                                        <i class="fas fa-arrow-alt-circle-up" @click="term_item_up(index, item.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down" @click="term_item_down(index, item.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="term_item_del(index, item.id)"></i>
                                     </li>
                                 </ul>
 
-                                <ul>
-                                    <li>
-                                        <span>Title:</span> <input type="text"><br>
-                                        <span>Brief:</span> <input type="text"><br>
-                                        <span>Listing:</span> <textarea rows="4"></textarea>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-arrow-alt-circle-up"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"></i>
-                                        <i class="fas fa-trash-alt"></i>
-                                    </li>
-                                </ul>
 
                             </div>
                         </div>
 
                         <div class="formbox">
                             <div class="btnbox">
-                                <a class="btn small" @click="show_term = false">Close</a>
-                                <a class="btn small green">Save</a>
+                                <a class="btn small" @click="close_term()">Close</a>
+                                <a class="btn small green" @click="term_save()">Save</a>
                             </div>
                         </div>
 
@@ -1859,11 +1816,8 @@
                             <dl>
                                 <dt class="head">Choose where the block of signature locates at:</dt>
                                 <dd>
-                                    <select>
-                                        <option>Page 1</option>
-                                        <option>Page 2</option>
-                                        <option>Page 3</option>
-                                        <option>Page 4</option>
+                                    <select v-model="sig.page">
+                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page }}</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -1878,37 +1832,24 @@
                                 </div>
 
                                 <div class="function_box">
-                                    <a class="btn small green" >Add</a>
+                                    <a class="btn small green" @click="add_sig_client_item()">Add</a>
                                 </div>
 
                                 <div class="content_box">
-                                    <ul>
+                                    <ul v-for="(item, index) in sig.item_client">
                                         <li>
-                                            <span>Name:</span> <input type="text"><br>
-                                            <span>Line 1:</span> <input type="text" placeholder="Position"><br>
-                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number"><br>
-                                            <span>Line 3:</span> <input type="text" placeholder="Email"><br>
+                                            <span>Name:</span> <input type="text" v-model="item.name"><br>
+                                            <span>Line 1:</span> <input type="text" placeholder="Position"  v-model="item.position"><br>
+                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number"  v-model="item.phone"><br>
+                                            <span>Line 3:</span> <input type="text" placeholder="Email"  v-model="item.email"><br>
                                         </li>
                                         <li>
-                                            <i class="fas fa-arrow-alt-circle-up"></i>
-                                            <i class="fas fa-arrow-alt-circle-down"></i>
-                                            <i class="fas fa-trash-alt"></i>
+                                            <i class="fas fa-arrow-alt-circle-up" @click="sig_item_client_up(index, item.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-down" @click="sig_item_client_down(index, item.id)"></i>
+                                            <i class="fas fa-trash-alt" @click="sig_item_client_del(index, item.id)"></i>
                                         </li>
                                     </ul>
 
-                                    <ul>
-                                        <li>
-                                            <span>Name:</span> <input type="text"><br>
-                                            <span>Line 1:</span> <input type="text" placeholder="Position"><br>
-                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number"><br>
-                                            <span>Line 3:</span> <input type="text" placeholder="Email"><br>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-arrow-alt-circle-up"></i>
-                                            <i class="fas fa-arrow-alt-circle-down"></i>
-                                            <i class="fas fa-trash-alt"></i>
-                                        </li>
-                                    </ul>
 
                                 </div>
                             </div>
@@ -1921,53 +1862,32 @@
                                 </div>
 
                                 <div class="function_box">
-                                    <a class="btn small green" >Add</a>
+                                    <a class="btn small green" @click="add_sig_company_item()">Add</a>
                                 </div>
 
                                 <div class="content_box">
-                                    <ul>
+                                    <ul v-for="(item, index) in sig.item_company">
                                         <li>
-                                            <span>Name:</span> <input type="text"><br>
-                                            <span>Line 1:</span> <input type="text" placeholder="Position"><br>
-                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number"><br>
-                                            <span>Line 3:</span> <input type="text" placeholder="Email"><br>
+                                            <span>Name:</span> <input type="text" v-model="item.name"><br>
+                                            <span>Line 1:</span> <input type="text" placeholder="Position" v-model="item.position"><br>
+                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number" v-model="item.phone"><br>
+                                            <span>Line 3:</span> <input type="text" placeholder="Email" v-model="item.email"><br>
                                             <span>Signature:</span>
-                                            <div class="itembox chosen">
+                                            <div :class="['itembox', (item.url !== '' ? 'chosen' : '')]">
                                                 <div class="photo">
-                                                    <input type="file" id="photo1" name="photo1">
-                                                    <img src="images/qn_example1.png"/>
-                                                    <div>x</div>
+                                                    <input type="file" :name="'sig_image_' + item.id" @change="onSigFileChangeImage($event, item.id)" :id="'sig_image_' + item.id">
+                                                    <img v-if="item.url" :src="item.url"/>
+                                                    <div @click="clear_sig_photo(item.id)">x</div>
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
-                                            <i class="fas fa-arrow-alt-circle-up"></i>
-                                            <i class="fas fa-arrow-alt-circle-down"></i>
-                                            <i class="fas fa-trash-alt"></i>
+                                            <i class="fas fa-arrow-alt-circle-up" @click="sig_item_company_up(index, item.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-down" @click="sig_item_company_down(index, item.id)"></i>
+                                            <i class="fas fa-trash-alt" @click="sig_item_company_del(index, item.id)"></i>
                                         </li>
                                     </ul>
 
-                                    <ul>
-                                        <li>
-                                            <span>Name:</span> <input type="text"><br>
-                                            <span>Line 1:</span> <input type="text" placeholder="Position"><br>
-                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number"><br>
-                                            <span>Line 3:</span> <input type="text" placeholder="Email"><br>
-                                            <span>Signature:</span>
-                                            <div class="itembox chosen">
-                                                <div class="photo">
-                                                    <input type="file" id="photo1" name="photo1">
-                                                    <img src="images/qn_example1.png"/>
-                                                    <div>x</div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-arrow-alt-circle-up"></i>
-                                            <i class="fas fa-arrow-alt-circle-down"></i>
-                                            <i class="fas fa-trash-alt"></i>
-                                        </li>
-                                    </ul>
 
                                 </div>
                             </div>
@@ -1976,8 +1896,8 @@
 
                         <div class="formbox">
                             <div class="btnbox">
-                                <a class="btn small" @click="show_signature = false">Close</a>
-                                <a class="btn small green">Save</a>
+                                <a class="btn small" @click="close_sig()">Close</a>
+                                <a class="btn small green" @click="sig_save()">Save</a>
                             </div>
                         </div>
 
@@ -1988,7 +1908,7 @@
         </div>
 
 
-        <div class="qn_page">
+        <div class="qn_page" v-for="(pg, index) in pages">
 
             <div class="qn_header">
 
@@ -2036,11 +1956,11 @@
 
                 <div class="area_subtotal">
 
-                    <table class="tb_format1">
+                    <table class="tb_format1" v-for="(tp, index) in pg.types" v-if="tp.type == 'A'">
                         <thead>
-
+                            
                         <tr>
-                            <th class="title" colspan="6">MAIN BUILDING FAÇADE’ | "RGBW LIGHTING FAÇADE' FIXTURE"</th>
+                            <th class="title" colspan="6">{{ tp.name }}</th>
                         </tr>
 
                         <tr>
@@ -2054,48 +1974,38 @@
                         </thead>
 
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td class="pic">
-                                <img src="images/qn_example1.png">
+                        <tr  v-for="(bk, index) in tp.blocks">
+                            <td>{{ index + 1 }}</td>
+                            <td class="pic" v-if="bk.type == 'image'">
+                                <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
                             </td>
-                            <td>
-                                <div class="code">FELIIX SB1303F9(500mm) Linear Light</div>
-                                <div class="brief">Locations: Pillar / Pediment / "De La Salle University" Name</div>
+                            <td v-if="bk.type == 'image'">
+                                <div class="code">{{ bk.code }}</div>
+                                <div class="brief">{{ bk.desc }}</div>
                                 <div class="listing">
-                                    • CONTROL section: DMX512<br>
-                                    • 5 Years Warrant
+                                    {{ bk.list }}
                                 </div>
                             </td>
-                            <td><span class="numbers">108</span></td>
-                            <td><span class="numbers">₱ 38,200.00</span></td>
-                            <td><span class="numbers">₱ 4,125,600.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td colspan="2">
-                                <div class="code">FELIIX SB1239FF4 Projection Light</div>
-                                <div class="brief">Locations: Cross</div>
+                            <td colspan="2" v-if="bk.type == ''">
+                                <div class="code">{{ bk.code }}</div>
+                                <div class="brief">{{ bk.desc }}
+                                </div>
                                 <div class="listing">
-                                    • CONTROL section: DMX512<br>
-                                    • 5 Years Warrant
+                                    {{ bk.list }}
                                 </div>
                             </td>
-                            <td><span class="numbers">7</span></td>
-                            <td><span class="numbers">₱ 31,840.00</span></td>
-                            <td><span class="numbers deleted">₱ 222,880.00<span>10% OFF</span></span><br>
-                                <span class="numbers">₱ 200,592.00</span>
-                            </td>
+                            <td><span class="numbers">{{ bk.qty }}</span></td>
+                            <td><span class="numbers">₱ {{ bk.price.toLocaleString() }}</span></td>
+                            <td><span class="numbers">₱ {{ bk.amount.toLocaleString() }}</span></td>
                         </tr>
-
+                          
                         </tbody>
 
                         <tfoot>
                         <tr>
                             <td colspan="4"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ 4,326,192.00</td>
+                            <td>₱ {{ tp.subtotal.toLocaleString() }}</td>
                         </tr>
 
                         </tfoot>
@@ -2103,102 +2013,36 @@
                     </table>
 
 
-                    <table class="tb_format1">
+                    <table class="tb_format2" v-for="(tp, index) in pg.types" v-if="tp.type == 'B'">
                         <thead>
 
                         <tr>
-                            <th class="title" colspan="6">CONTROL MODULE</th>
-                        </tr>
-
-                        <tr>
-                            <th>No</th>
-                            <th colspan="2">Description</th>
-                            <th>Qty.</th>
-                            <th>Product Price</th>
-                            <th>Amount</th>
+                            <th class="title" colspan="4">{{ tp.name }}</th>
                         </tr>
 
                         </thead>
 
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td class="pic">
-                                <img src="images/qn_example5.png">
-                            </td>
-                            <td>
-                                <div class="code">FELIIX SB-PALYCTL DMX Controller</div>
-                                <div class="brief">Need Accessories Box For IP Rating</div>
-                                <div class="listing">
-                                    • MAIN CONTROL PROGRAMMING DEVICE<br>
-                                    • 1 Year Warranty
-                                </div>
-                            </td>
-                            <td><span class="numbers">3</span></td>
-                            <td><span class="numbers">₱ 104,000.00</span></td>
-                            <td><span class="numbers">₱ 312,000.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td class="pic">
-                                <img src="images/qn_example6.png">
-                            </td>
-                            <td>
-                                <div class="code">FELIIX SB-AAS Sub-controller</div>
-                                <div class="brief">Need Accessories Box For IP Rating</div>
-                                <div class="listing">
-                                    • Repeater Control Programming Device<br>
-                                    • 1 Year Warranty
-                                </div>
-                            </td>
-                            <td><span class="numbers">6</span></td>
-                            <td><span class="numbers">₱ 78,000.00</span></td>
-                            <td><span class="numbers">₱ 468,000.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>3</td>
+                        <tr v-for="(bk, index) in tp.blocks">
+                            <td>{{ index + 1 }}</td>
                             <td colspan="2">
-                                <div class="code">FELIIX SB RGBW PROGRAMMING</div>
-                                <div class="brief">FOR THE RGBW PROGRAMMING INCLUDES DEFAULT PROGRAM AND ALSO
-                                    A REQUESTED (1) ONE RGBW PROGRAM OF CHOICE FOR 1 MINUTE ONLY
-                                </div>
+                                <div class="code">{{ bk.code }}</div>
+                                <div class="brief">{{ bk.desc }}</div>
                                 <div class="listing">
-                                    • Caution; One Time Only (And It Should Be Final)<br>
-                                    • 1 Event ONLY Including Software Installation
+                                    {{ bk.list }}
                                 </div>
                             </td>
-                            <td><span class="numbers">1</span></td>
-                            <td><span class="numbers">₱ 260,000.00</span></td>
-                            <td><span class="numbers">₱ 260,000.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>4</td>
-                            <td colspan="2">
-                                <div class="code">FELIIX SB RGBW MUSIC PROGRAMMING</div>
-                                <div class="brief">FOR THE RGBW CUSTOMISED MUSIC PROGRAMMING FOR 1 (ONE) MUSIC PROGRAM
-                                    OF CHOICE (2 MINUTES ONLY)</span><br>
-                                    • Caution; One Time Only (And It Should Be Final)
-                                </div>
-                                <div class="listing">
-                                    • Caution; One Time Only (And It Should Be Final)<br>
-                                    • 1 Event ONLY Including Software Installation
-                                </div>
-                            </td>
-                            <td><span class="numbers">2</span></td>
-                            <td><span class="numbers">₱ 260,000.00</span></td>
-                            <td><span class="numbers">₱ 520,000.00</span></td>
+                            <td v-if="bk.amount != 0"><span class="numbers">₱ {{ bk.amount.toLocaleString() }}</span></td>
+                            <td v-if="bk.amount == 0"><span class="numbers red">FREE AS PACKAGE!</span></td>
                         </tr>
 
                         </tbody>
 
                         <tfoot>
                         <tr>
-                            <td colspan="4"></td>
+                            <td colspan="2"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ 1,560,000.00</td>
+                            <td>₱ {{ tp.subtotal.toLocaleString() }}</td>
                         </tr>
 
                         </tfoot>
@@ -2207,11 +2051,76 @@
 
                 </div>
 
-                <div class="area_total"></div>
+                <div class="area_total">
+                    <table class="tb_total" v-for="(tt, index) in pg.total">
+                        <tbody>
+                        <tr>
+                            <td :rowspan="(tt.vat == 'Y' ? 3 : 2)">
+                                <div>Remarks: Quotation valid for <span class="valid_for">{{ tt.valid }}</span></div>
+                                <div></div>
+                            </td>
+                            <td>SUBTOTAL</td>
+                            <td><span class="numbers">₱ {{ tt.total.toLocaleString() }}</span></td>
+                        </tr>
 
-                <div class="area_terms"></div>
+                        <tr class="total_discount">
+                            <td>{{ tt.discount }}% DISCOUNT</td>
+                            <td><span class="numbers">₱ {{ (tt.total * tt.discount / 100).toLocaleString() }}</span></td>
+                        </tr>
 
-                <div class="area_conforme"></div>
+                        <tr class="total_vat" v-if="tt.vat == 'Y'">
+                            <td>(12% VAT)</td>
+                            <td><span class="numbers">₱ {{ (tt.total * 12 / 100).toLocaleString() }}</span></td>
+                        </tr>
+                        </tbody>
+
+                        <tfoot>
+                        <tr>
+                            <td><span class="total_discount" v-if="tt.show_vat == 'Y'">*price inclusive of VAT</span></td>
+                            <td>GRAND TOTAL</td>
+                            <td><span class="numbers">₱ {{ (tt.total - (tt.total * tt.discount / 100) - ( (tt.vat == 'Y' ? (tt.total * 12 / 100) : 0 ))).toLocaleString() }}</span></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="area_terms">
+                    <div class="terms" v-for="(tt, index) in pg.term">
+                        <div class="title">{{ tt.title }}</div>
+                        <div class="brief">{{ tt.brief }}</div>
+                        <div class="listing">
+                            {{ tt.list }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="area_conforme" style="margin-top: 30px;">
+                    <div class="conforme" v-if="pg.sig.item_client.length + pg.sig.item_company.length > 0">CONFORME</div>
+
+                    <div class="client_signature" v-if="pg.sig.item_client.length">
+
+                        <div class="signature" v-for="(tt, index) in pg.sig.item_client">
+                            <div class="pic"></div>
+                            <div class="name">{{ tt.name }}</div>
+                            <div class="line1">{{ tt.position }}</div>
+                            <div class="line2">{{ tt.phone }}</div>
+                            <div class="line3">{{ tt.email }}</div>
+                        </div>
+
+                    </div>
+
+                    <div class="company_signature" v-if="pg.sig.item_company.length">
+
+                        <div class="signature" v-for="(tt, index) in pg.sig.item_company">
+                            <div class="pic"><img :src="img_url + tt.photo" v-if="tt.photo != ''"></div>
+                            <div class="name">{{ tt.name }}</div>
+                            <div class="line1">{{ tt.position }}</div>
+                            <div class="line2">{{ tt.phone }}</div>
+                            <div class="line3">{{ tt.email }}</div>
+                        </div>
+                    </div>
+
+                </div>
 
             </div>
 
@@ -2220,558 +2129,13 @@
                 <div class="foot_divider"></div>
                 <div class="line1">{{ footer_first_line }}</div>
                 <div class="line2">{{ footer_second_line }}</div>
-                <div class="qn_page_number">1</div>
+                <div class="qn_page_number">{{ index + 1 }}</div>
 
             </div>
 
         </div>
 
 
-        <div class="qn_page">
-
-            <div class="qn_header">
-
-                <div class="left_block">
-
-                    <img class="logo" src="images/Feliix-Logo-Black.png">
-
-                    <div class="qn_title">
-                        <div class="line1">De La Salle University</div>
-                        <div class="line2">Façade' Lighting Proposal 2</div>
-                    </div>
-
-                    <div class="project_category">
-                        <div class="line1">Architectural</div>
-                        <div class="line2">Lighting Quotation</div>
-                    </div>
-
-                </div>
-
-                <div class="right_block">
-
-                    <div class="qn_number_date">
-                        Quotation No.: <span class="qn_number">Q#626A</span><br>
-                        Date: <span class="qn_date">08/30/2021</span>
-                    </div>
-
-                    <div class="qn_for">
-                        Prepared for:<br>
-                        <div class="line1">De La Salle University</div>
-                        <div class="line2">Manila, Philippines</div>
-                        <div class="line3">August 30, 2021</div>
-                    </div>
-
-                    <div class="qn_by">
-                        Prepared by:<br>
-                        <div class="line1">Feliix Inc.</div>
-                        <div class="line2">Makati, Philippines</div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="qn_body">
-
-                <div class="area_subtotal">
-
-                    <table class="tb_format1">
-                        <thead>
-
-                        <tr>
-                            <th class="title" colspan="6">"ACCESSORIES" (FOR THE MAIN LIGHTING FIXTURES & CONTROL
-                                MODULES ONLY, NOT
-                                INCLUDING INSTALLATION)
-                            </th>
-                        </tr>
-
-                        <tr>
-                            <th>No</th>
-                            <th colspan="2">Description</th>
-                            <th>Qty.</th>
-                            <th>Product Price</th>
-                            <th>Amount</th>
-                        </tr>
-
-                        </thead>
-
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td colspan="2">
-                                <div class="code">PT-SL-M15-MALE PLUG (IP65)</div>
-                                <div class="brief"></div>
-                                <div class="listing"></div>
-                            </td>
-                            <td><span class="numbers">130</span></td>
-                            <td><span class="numbers">₱ 1,000.00</span></td>
-                            <td><span class="numbers">₱ 130,000.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td colspan="2">
-                                <div class="code">PT-SL-M15-FEMALE PLUG (IP65)</div>
-                                <div class="brief"></div>
-                                <div class="listing"></div>
-                            </td>
-                            <td><span class="numbers">130</span></td>
-                            <td><span class="numbers">₱ 1,000.00</span></td>
-                            <td><span class="numbers">₱ 130,000.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>3</td>
-                            <td colspan="2">
-                                <div class="code">WIRE-2C-AWG20/2464</div>
-                                <div class="brief"></div>
-                                <div class="listing"></div>
-                            </td>
-                            <td><span class="numbers">3000</span></td>
-                            <td><span class="numbers">₱ 120.00</span></td>
-                            <td><span class="numbers">₱ 360,000.00</span></td>
-                        </tr>
-
-                        </tbody>
-
-                        <tfoot>
-                        <tr>
-                            <td colspan="4"></td>
-                            <td>SUBTOTAL</td>
-                            <td>₱ 620,000.00</td>
-                        </tr>
-
-                        </tfoot>
-
-                    </table>
-
-                    <table class="tb_format2">
-                        <thead>
-
-                        <tr>
-                            <th class="title" colspan="4">INSTALLATION ( Price Breakdown )</th>
-                        </tr>
-
-                        </thead>
-
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td colspan="2">
-                                <div class="code">INSTALLATION OF NEW LIGHTING FIXTURES</div>
-                                <div class="brief"></div>
-                                <div class="listing">
-                                    • Linear LED Projector RGBW<br>
-                                    • LED Spotlight RGBW<br>
-                                    • In-ground Lights RGBW<br>
-                                    • Accent Spot Light RGBW
-                                </div>
-                            </td>
-                            <td><span class="numbers">₱ 564,155.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td colspan="2">
-                                <div class="code">INSTALLATION WORKS FOR NEW MATERIALS SYSTEM POWER SUPPLY, CONTROL
-                                    WIRING & SIGNAL
-                                </div>
-                                <div class="brief"></div>
-                                <div class="listing">
-                                    • Wires, conduit, fittings, and boxes<br>
-                                    • Wiring accessories and termination works<br>
-                                    • Scaffolding materials and erection
-                                </div>
-                            </td>
-                            <td><span class="numbers">₱ 810,961.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>3</td>
-                            <td colspan="2">
-                                <div class="code">INDIRECT COST</div>
-                                <div class="brief"></div>
-                                <div class="listing">
-                                    • Mobilization / Demobilization<br>
-                                    • Transportation, Accomodation, Supervision, Coordination, and Testing
-                                </div>
-                            </td>
-                            <td><span class="numbers">₱ 324,884.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>4</td>
-                            <td colspan="2">
-                                <div class="code">DISASSEMBLY OF EXISTING RGBW FIXTURES ONLY</div>
-                                <div class="brief"></div>
-                                <div class="listing">
-                                    • Mobilization / Demobilization
-                                </div>
-                            </td>
-                            <td><span class="numbers red">FREE AS PACKAGE!</span></td>
-                        </tr>
-
-                        </tbody>
-
-                        <tfoot>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td>SUBTOTAL</td>
-                            <td>₱ 1,700,000.00</td>
-                        </tr>
-
-                        </tfoot>
-
-                    </table>
-
-                    <table class="tb_format2">
-                        <thead>
-
-                        <tr>
-                            <th class="title" colspan="4">OTHERS</th>
-                        </tr>
-
-                        </thead>
-
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td colspan="2">
-                                <div class="code">ACCOMODATION & LODGING, ETC.</div>
-                                <div class="brief"></div>
-                                <div class="listing"></div>
-                            </td>
-                            <td><span class="numbers">₱ 180,000.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td colspan="2">
-                                <div class="code">COVID 19 PROTOCOL</div>
-                                <div class="brief">Any additional Expenses in relation to the COVID-19 compliance for
-                                    the goverernment should be shouldered by the client/company
-                                    and will not be handled by Feliix and it's not part or excluded in this quotation.
-                                </div>
-                                <div class="listing"></div>
-                            </td>
-                            <td><span class="numbers">₱ 120,000.00</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>3</td>
-                            <td colspan="2">
-                                <div class="code">AIRSHIP FEE</div>
-                                <div class="brief">TO COMPLY FOR DECEMBER 15 COMPLETION,
-                                    IF PROJECT AWARDED BY SEPT. 15
-                                </div>
-                                <div class="listing"></div>
-                            </td>
-                            <td><span class="numbers">₱ 674,960.00</span></td>
-                        </tr>
-
-                        </tbody>
-
-                        <tfoot>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td>SUBTOTAL</td>
-                            <td>₱ 974,960.00</td>
-                        </tr>
-
-                        </tfoot>
-
-                    </table>
-
-                </div>
-
-                <div class="area_total"></div>
-
-                <div class="area_terms"></div>
-
-                <div class="area_conforme"></div>
-
-            </div>
-
-            <div class="qn_footer">
-
-                <div class="foot_divider"></div>
-                <div class="line1">Proposal 2 : Original RGBW Replacement</div>
-                <div class="line2">Main Building Façade’ | "RGBW Lighting Façade' Fixture</div>
-                <div class="qn_page_number">2</div>
-
-            </div>
-
-        </div>
-
-
-        <div class="qn_page">
-
-            <div class="qn_header">
-
-                <div class="left_block">
-
-                    <img class="logo" src="images/Feliix-Logo-Black.png">
-
-                    <div class="qn_title">
-                        <div class="line1">De La Salle University</div>
-                        <div class="line2">Façade' Lighting Proposal 2</div>
-                    </div>
-
-                    <div class="project_category">
-                        <div class="line1">Architectural</div>
-                        <div class="line2">Lighting Quotation</div>
-                    </div>
-
-                </div>
-
-                <div class="right_block">
-
-                    <div class="qn_number_date">
-                        Quotation No.: <span class="qn_number">Q#626A</span><br>
-                        Date: <span class="qn_date">08/30/2021</span>
-                    </div>
-
-                    <div class="qn_for">
-                        Prepared for:<br>
-                        <div class="line1">De La Salle University</div>
-                        <div class="line2">Manila, Philippines</div>
-                        <div class="line3">August 30, 2021</div>
-                    </div>
-
-                    <div class="qn_by">
-                        Prepared by:<br>
-                        <div class="line1">Feliix Inc.</div>
-                        <div class="line2">Makati, Philippines</div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="qn_body">
-
-                <div class="area_subtotal"></div>
-
-                <div class="area_total">
-
-                    <table class="tb_total">
-                        <tbody>
-                        <tr>
-                            <td rowspan="3">
-                                <div>Remarks: Quotation valid for <span class="valid_for">1 month</span></div>
-                                <div></div>
-                            </td>
-                            <td>SUBTOTAL</td>
-                            <td><span class="numbers">₱ 9,181,152.00</span></td>
-                        </tr>
-
-                        <tr class="total_discount">
-                            <td>10% DISCOUNT</td>
-                            <td><span class="numbers">₱ 918,115.2</span></td>
-                        </tr>
-
-                        <tr class="total_vat">
-                            <td>(12% VAT)</td>
-                            <td><span class="numbers">₱ 1,101,738.24</span></td>
-                        </tr>
-                        </tbody>
-
-                        <tfoot>
-                        <tr>
-                            <td><span class="total_discount">*price inclusive of VAT</span></td>
-                            <td>GRAND TOTAL</td>
-                            <td><span class="numbers">₱ 9,364,775.04</span></td>
-                        </tr>
-                        </tfoot>
-                    </table>
-
-                </div>
-
-                <div class="area_terms"></div>
-
-                <div class="area_conforme"></div>
-
-            </div>
-
-            <div class="qn_footer">
-
-                <div class="foot_divider"></div>
-                <div class="line1">Proposal 2 : Original RGBW Replacement</div>
-                <div class="line2">Main Building Façade’ | "RGBW Lighting Façade' Fixture</div>
-                <div class="qn_page_number">3</div>
-
-            </div>
-
-        </div>
-
-
-        <div class="qn_page">
-
-            <div class="qn_header">
-
-                <div class="left_block">
-
-                    <img class="logo" src="images/Feliix-Logo-Black.png">
-
-                    <div class="qn_title">
-                        <div class="line1">De La Salle University</div>
-                        <div class="line2">Façade' Lighting Proposal 2</div>
-                    </div>
-
-                    <div class="project_category">
-                        <div class="line1">Architectural</div>
-                        <div class="line2">Lighting Quotation</div>
-                    </div>
-
-                </div>
-
-                <div class="right_block">
-
-                    <div class="qn_number_date">
-                        Quotation No.: <span class="qn_number">Q#626A</span><br>
-                        Date: <span class="qn_date">08/30/2021</span>
-                    </div>
-
-                    <div class="qn_for">
-                        Prepared for:<br>
-                        <div class="line1">De La Salle University</div>
-                        <div class="line2">Manila, Philippines</div>
-                        <div class="line3">August 30, 2021</div>
-                    </div>
-
-                    <div class="qn_by">
-                        Prepared by:<br>
-                        <div class="line1">Feliix Inc.</div>
-                        <div class="line2">Makati, Philippines</div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="qn_body">
-
-                <div class="area_subtotal"></div>
-
-                <div class="area_total"></div>
-
-                <div class="area_terms">
-
-                    <div class="terms">
-                        <div class="title">WARRANTY</div>
-                        <div class="brief">Terms and Condition</div>
-                        <div class="listing">
-                            • 1 year warranty for Everlight, Feliix SSIT, SB Decorative<br>
-                            • 5 years warranty for Feliix SB, 2 years for driver, 1 year controller<br>
-                            • 3 years warranty for Feliix TONS<br>
-                            • 5 years warranty for Feliix Decorative<br>
-                            • Does not cover those defects brought about by normal wear/tear, misuse
-                            and improper installation not accordance to the installation instruction.<br>
-                            • Warranty is null and void when tampered/seal is broken<br>
-                        </div>
-                    </div>
-
-                    <div class="terms">
-                        <div class="title">PURCHASE ORDER</div>
-                        <div class="brief">Terms and Condition</div>
-                        <div class="listing">
-                            • FELIIX SB: LEAD TIME; 60-75 Days (Starts upon receiving the downpayment) if has stocks
-                            available (30 Days)<br>
-                            • EVERLIGHT | DECORATIVE | FELIIX SSIT: LEAD TIME; 60-75 Days (Starts upon receiving the
-                            downpayment)<br>
-                            • FELIIX TONS: LEAD TIME; 60-75 Days for 3000K & 90 days for 4000K (Starts upon receiving
-                            the downpayment<br>
-                            • 50% Downpayment before processing the items, 50% upon delivery<br>
-                            • Custom items- approval of specs by client and/or designer<br>
-                            • Installation of items is not part of the service unless requested by client for additional
-                            cost.
-                        </div>
-                    </div>
-
-                    <div class="terms">
-                        <div class="title">PAYMENT</div>
-                        <div class="brief">50% Downpayment & another 50% balance a day before the delivery</div>
-                        <div class="listing">
-                            • For Cheque, Kindly Address to Feliix Inc.<br>
-                            • For Wiring, Bank Details are shown as below:<br>
-                            (1) BDO BANK<br>
-                            Acct. Name: Feliix Inc. &nbsp;&nbsp;&nbsp;&nbsp; Acct No.: 006910116614 &nbsp;&nbsp;&nbsp;&nbsp;Branch:
-                            V.A. Rufino<br>
-                            (2) SECURITY BANK:<br>
-                            Acct. Name: Feliix Inc. &nbsp;&nbsp;&nbsp;&nbsp; Acct No.: 0000018155245 &nbsp;&nbsp;&nbsp;&nbsp;Swift
-                            Code: SETCPHMM<br>
-                            Address: 512 Edsa near Corner Urbano Plata St., Caloocan City
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="area_conforme" style="margin-top: 30px;">
-
-                    <div class="conforme">CONFORME</div>
-
-                    <div class="client_signature">
-
-                        <div class="signature">
-                            <div class="pic"></div>
-                            <div class="name">De La Salle University</div>
-                            <div class="line1">Manila, Philippines</div>
-                            <div class="line2"></div>
-                            <div class="line3"></div>
-                        </div>
-
-                    </div>
-
-                    <div class="company_signature">
-
-                        <div class="signature">
-                            <div class="pic"><img src="images/signature1.jpg"></div>
-                            <div class="name">Manilynne Nicol</div>
-                            <div class="line1">Assistant Sales Manager</div>
-                            <div class="line2">0917 558 0804</div>
-                            <div class="line3">manilynne@feliix.com</div>
-                        </div>
-
-                        <div class="signature">
-                            <div class="pic"><img src="images/signature2.jpg"></div>
-                            <div class="name">Nestor Rosales</div>
-                            <div class="line1">Senior Lighting Manager</div>
-                            <div class="line2">0917 702 9560</div>
-                            <div class="line3">nestor@feliix.com</div>
-                        </div>
-
-                        <div class="signature">
-                            <div class="pic"><img src="images/signature3.jpg"></div>
-                            <div class="name">Kristel Tan</div>
-                            <div class="line1">Managing Director</div>
-                            <div class="line2">0917 625 1198</div>
-                            <div class="line3">kristel@feliix.com</div>
-                        </div>
-
-                        <div class="signature">
-                            <div class="pic"><img src="images/signature4.jpg"></div>
-                            <div class="name">Kuan Ming Lu</div>
-                            <div class="line1">Managing Director</div>
-                            <div class="line2">(Taiwan Team)</div>
-                            <div class="line3">kuan@feliix.com</div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="qn_footer">
-
-                <div class="foot_divider"></div>
-                <div class="line1">Proposal 2 : Original RGBW Replacement</div>
-                <div class="line2">Main Building Façade’ | "RGBW Lighting Façade' Fixture</div>
-                <div class="qn_page_number">5</div>
-
-            </div>
-
-        </div>
 
 
     </div>

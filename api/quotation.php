@@ -53,7 +53,7 @@ if (!isset($jwt)) {
                     footer_second_line,
                     (SELECT COUNT(*) FROM quotation_page WHERE quotation_id = quotation.id and quotation_page.status <> -1) page_count
                     FROM quotation
-                    WHERE status <> -1 " . ($id != 0 ? " and id=$id" : ' ');
+                    WHERE status <> -1 and id=$id";
 
 
     $query = $query . " order by quotation.created_at desc ";
@@ -97,6 +97,9 @@ if (!isset($jwt)) {
         $pages = GetPages($row['id'], $db);
 
         $block_names = GetBlockNames($row['id'], $db);
+        $total_info = GetTotalInfo($row['id'], $db);
+        $term_info = GetTermInfo($row['id'], $db);
+        $sig_info = GetSigInfo($row['id'], $db);
 
         $merged_results[] = array(
             "id" => $id,
@@ -115,6 +118,9 @@ if (!isset($jwt)) {
             "page_count" => $page_count,
             "pages" => $pages,
             "block_names" => $block_names,
+            "total_info" => $total_info,
+            "term_info" => $term_info,
+            "sig_info" => $sig_info,
         );
     }
 
@@ -125,13 +131,17 @@ if (!isset($jwt)) {
 
 function GetBlockNames($qid, $db){
     $query = "
-            SELECT id,
-            block_type,
-            block_name
-            FROM   quotation_page_type
-            WHERE  quotation_id = " . $qid . "
-            AND `status` <> -1 
-            ORDER BY id
+            SELECT qpt.id,
+                qp.page,
+                block_type,
+                block_name,
+                page_id
+            FROM   quotation_page_type qpt
+            left join quotation_page qp on qpt.page_id = qp.id
+            WHERE  qpt.quotation_id = " . $qid . "
+            AND qpt.`status` <> -1 
+            and qp.`status` <> -1
+            ORDER BY qpt.id
     ";
 
     // prepare the query
@@ -142,18 +152,38 @@ function GetBlockNames($qid, $db){
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
-        $type = $row['block_type'];
-        $name = $row['block_name'];
-  
+        $page = $row['page'];
+        $block_type = $row['block_type'];
+        $block_name = $row['block_name'];
+        $page_id = $row['page_id'];
+
+        $blocks = [];
+
+        $blocks = GetBlocks($id, $db);
+        $subtotal = GetSubtotal($blocks);
+
         $merged_results[] = array(
             "id" => $id,
-            "type" => $type,
-            "name" => $name,
-         
+            "page" => $page,
+            "type" => $block_type,
+            "name" => $block_name,
+            "blocks" => $blocks,
+            "page_id" => $page_id,
+            "subtotal" => $subtotal,
         );
     }
 
     return $merged_results;
+}
+
+function GetSubtotal($ary)
+{
+    $total = 0;
+    foreach ($ary as $item) {
+        $total += $item['amount'];
+    }
+
+    return $total;
 }
 
 function GetPages($qid, $db){
@@ -176,14 +206,393 @@ function GetPages($qid, $db){
         $id = $row['id'];
         $page = $row['page'];
         $type = GetTypes($id, $db);
+        $total = GetTotal($qid, $page, $db);
+        $term = GetTerm($qid, $page, $db);
+        $sig = GetSig($qid, $page, $db);
   
         $merged_results[] = array(
             "id" => $id,
             "page" => $page,
             "types" => $type,
-         
+            "total" => $total,
+            "term" => $term,
+            "sig" => $sig,
         );
     }
+
+    return $merged_results;
+}
+
+function GetTotal($qid, $page, $db){
+    $query = "
+        SELECT 
+        `page`,
+        discount,
+        vat,
+        show_vat,
+        valid,
+        total
+        FROM   quotation_total
+        WHERE  quotation_id = " . $qid . "
+        AND  page = " . $page . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $page = $row['page'];
+        $discount = $row['discount'];
+        $vat = $row['vat'];
+        $show_vat = $row['show_vat'];
+        $valid = $row['valid'];
+        $total = $row['total'];
+
+        $merged_results[] = array(
+            "page" => $page,
+            "discount" => $discount,
+            "vat" => $vat,
+            "show_vat" => $show_vat,
+            "valid" => $valid,
+            "total" => $total,
+            
+            
+        );
+    }
+
+    return $merged_results;
+}
+
+
+function GetTerm($qid, $page, $db){
+    $query = "
+        SELECT 
+        `page`,
+        title,
+        brief,
+        list 
+        FROM   quotation_term
+        WHERE  quotation_id = " . $qid . "
+        AND  page = " . $page . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $page = $row['page'];
+        $title = $row['title'];
+        $brief = $row['brief'];
+        $list = $row['list'];
+    
+
+        $merged_results[] = array(
+            "page" => $page,
+            "title" => $title,
+            "brief" => $brief,
+            "list" => $list,
+          
+        );
+    }
+
+    return $merged_results;
+}
+
+
+function GetSigInfo($qid, $db)
+{
+    $query = "
+        SELECT 
+        id,
+        `page`,
+        `type`,
+        `name`,
+        `photo`,
+        position,
+        phone,
+        email 
+        FROM   quotation_signature
+        WHERE  quotation_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $item_client = [];
+    $item_company = [];
+
+    $merged_results = [];
+    
+    $id = 0;
+    $page = 0;
+    $type = '';
+    $name = '';
+    $photo = '';
+    $url = '';
+    $position = '';
+    $phone = '';
+    $email = '';
+  
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $page = $row['page'];
+        $type = $row['type'];
+        $name = $row['name'];
+        $photo = $row['photo'];
+        $position = $row['position'];
+        $phone = $row['phone'];
+        $email = $row['email'];
+       
+        if($type == 'C'){
+            $item_client[] = array(
+                "id" => $id,
+                "type" => $type,
+                "photo" => '',
+                "url" => '',
+                "name" => $name,
+                "position" => $position,
+                "phone" => $phone,
+                "email" => $email,
+            );
+        }
+        
+        if($type ==  'F'){
+            $item_company[] = array(
+                "id" => $id,
+                "type" => $type,
+                "photo" => $photo,
+                "url" =>  $photo != '' ? 'https://storage.cloud.google.com/feliiximg/' . $photo : '',
+                "name" => $name,
+                "position" => $position,
+                "phone" => $phone,
+                "email" => $email,
+            );
+        }
+        
+    }
+
+    $merged_results = array(
+        "page" => $page,
+        "item_client" => $item_client,
+        "item_company" => $item_company,
+               
+    );
+
+    return $merged_results;
+}
+
+
+function GetSig($qid, $page, $db)
+{
+    $query = "
+        SELECT 
+        id,
+        `page`,
+        `type`,
+        `name`,
+        `photo`,
+        position,
+        phone,
+        email 
+        FROM   quotation_signature
+        WHERE  quotation_id = " . $qid . "
+        AND  page = " . $page . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $item_client = [];
+    $item_company = [];
+
+    $merged_results = [];
+    
+    $id = 0;
+    $page = 0;
+    $type = '';
+    $name = '';
+    $photo = '';
+    $url = '';
+    $position = '';
+    $phone = '';
+    $email = '';
+  
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $page = $row['page'];
+        $type = $row['type'];
+        $name = $row['name'];
+        $photo = $row['photo'];
+        $position = $row['position'];
+        $phone = $row['phone'];
+        $email = $row['email'];
+       
+        if($type == 'C'){
+            $item_client[] = array(
+                "id" => $id,
+                "type" => $type,
+                "photo" => '',
+                "url" => '',
+                "name" => $name,
+                "position" => $position,
+                "phone" => $phone,
+                "email" => $email,
+            );
+        }
+        
+        if($type ==  'F'){
+            $item_company[] = array(
+                "id" => $id,
+                "type" => $type,
+                "photo" => $photo,
+                "url" =>  $photo != '' ? 'https://storage.cloud.google.com/feliiximg/' . $photo : '',
+                "name" => $name,
+                "position" => $position,
+                "phone" => $phone,
+                "email" => $email,
+            );
+        }
+        
+    }
+
+    $merged_results = array(
+        "page" => $page,
+        "item_client" => $item_client,
+        "item_company" => $item_company,
+               
+    );
+
+    return $merged_results;
+}
+
+function GetTermInfo($qid, $db)
+{
+    $query = "
+        SELECT 
+        id,
+        `page`,
+        title,
+        brief,
+        list 
+        FROM   quotation_term
+        WHERE  quotation_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $item = [];
+
+    $merged_results = [];
+    
+    $id = 0;
+    $page = 0;
+    $title = '';
+    $brief = '';
+    $list = '';
+  
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $page = $row['page'];
+        $title = $row['title'];
+        $brief = $row['brief'];
+        $list = $row['list'];
+       
+        $item[] = array(
+            "id" => $id,
+            "page" => $page,
+            "title" => $title,
+            "brief" => $brief,
+            "list" => $list,
+          
+        );
+        
+    }
+
+    $merged_results = array(
+        "page" => $page,
+        "item" => $item,
+               
+    );
+
+    return $merged_results;
+}
+
+
+function GetTotalInfo($qid, $db){
+    $query = "
+        SELECT 
+        id,
+        `page`,
+        discount,
+        vat,
+        show_vat,
+        valid,
+        total
+        FROM   quotation_total
+        WHERE  quotation_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    
+    $id = 0;
+    $page = 0;
+    $discount = 0;
+    $vat = '';
+    $show_vat = '';
+    $valid = '';
+    $total = '';
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $page = $row['page'];
+        $discount = $row['discount'];
+        $vat = $row['vat'];
+        $show_vat = $row['show_vat'];
+        $valid = $row['valid'];
+        $total = $row['total'];
+
+        
+    }
+
+    $merged_results = array(
+        "id" => $id,
+        "page" => $page,
+        "discount" => $discount,
+        "vat" => $vat,
+        "show_vat" => $show_vat,
+        "valid" => $valid,
+        "total" => $total,
+        
+        
+    );
 
     return $merged_results;
 }
@@ -204,17 +613,85 @@ function GetTypes($qid, $db){
     $stmt->execute();
 
     $merged_results = [];
+    
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
         $block_type = $row['block_type'];
         $block_name = $row['block_name'];
-  
+
+        $blocks = [];
+
+        $blocks = GetBlocks($id, $db);
+        $subtotal = GetSubtotal($blocks);
+
         $merged_results[] = array(
             "id" => $id,
             "type" => $block_type,
             "name" => $block_name,
-         
+            "blocks" => $blocks,
+            "subtotal" => $subtotal,
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetBlocks($qid, $db){
+    $query = "
+        SELECT id,
+        type_id,
+        `type`,
+        code,
+        photo,
+        qty,
+        price,
+        discount,
+        amount,
+        description,
+        listing
+        FROM   quotation_page_type_block
+        WHERE  type_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $type_id = $row['type_id'];
+        $type = $row['type'];
+        $code = $row['code'];
+        $photo = $row['photo'];
+        $qty = $row['qty'];
+        $price = $row['price'];
+        $discount = $row['discount'];
+        $amount = $row['amount'];
+        $description = $row['description'];
+        $listing = $row['listing'];
+    
+        $type = $photo == "" ? "" : "image";
+        $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+  
+        $merged_results[] = array(
+            "id" => $id,
+            "type_id" => $type_id,
+            "code" => $code,
+            "type" => $type,
+            "photo" => $photo,
+            "type" => $type,
+            "url" => $url,
+            "qty" => $qty,
+            "price" => $price,
+            "discount" => $discount,
+            "amount" => $amount,
+            "desc" => $description,
+            "list" => $listing,
           
         );
     }

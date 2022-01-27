@@ -6,6 +6,8 @@ var app = new Vue({
       // id of the quotation
       _id:0,
       id:0,
+
+      img_url: 'https://storage.cloud.google.com/feliiximg/',
     
       // menu
       show_header: false,
@@ -57,6 +59,22 @@ var app = new Vue({
 
       // block_names
       block_names : [],
+      block_value : [],
+
+      // blocks
+      blocks : [],
+
+      edit_type_a : false,
+      edit_type_b : false,
+
+      temp_block_a : [],
+      temp_block_b : [],
+
+      edit_type_a_image : false,
+      edit_type_a_noimage : false,
+
+      edit_type_b_noimage : false,
+
   
       position: [],
       title: [],
@@ -83,7 +101,29 @@ var app = new Vue({
          avg1:10.0,
          avg2:0.0,
      
-  
+      total: {
+        id:0,
+        page: 0,
+        discount:'',
+        vat : '',
+        show_vat : '',
+        valid : '',
+        total : '',
+      },
+
+      term:
+      {
+        page: 0,
+        item: [],
+      },
+
+      sig:
+      {
+        page: 0,
+        item_client: [],
+        item_company: [],
+      },
+
     },
   
     created() {
@@ -210,6 +250,641 @@ var app = new Vue({
     },
   
     methods: {
+
+      clear_sig_photo(_id) {
+        var item = this.sig.item_company.find(({ id }) => id === _id);
+        item.url = "";
+  
+        document.getElementById('sig_image_'+_id).value = "";
+      },
+      
+      onSigFileChangeImage(e, _id) {
+        const file = e.target.files[0];
+
+        var item = this.sig.item_company.find(({ id }) => id === _id);
+    
+        let url = URL.createObjectURL(file);
+  
+        item.url = url;
+          
+      },
+
+      sig_item_company_del: function(eid) {
+
+        var index = this.sig.item_company.findIndex(({ id }) => id === eid);
+        if (index > -1) {
+          this.sig.item_company.splice(index, 1);
+        }
+      },
+
+      sig_item_company_down: function(fromIndex, eid) {
+        var toIndex = fromIndex + 1;
+
+        if (toIndex > this.sig.item_company.length - 1) 
+          return;
+  
+        var element = this.sig.item_company.find(({ id }) => id === eid);
+        this.sig.item_company.splice(fromIndex, 1);
+        this.sig.item_company.splice(toIndex, 0, element);
+      },
+
+      sig_item_company_up: function(fromIndex, eid) {
+        var toIndex = fromIndex - 1;
+  
+        if (toIndex < 0) 
+          return;
+
+        var element = this.sig.item_company.find(({ id }) => id === eid);
+        this.sig.item_company.splice(fromIndex, 1);
+        this.sig.item_company.splice(toIndex, 0, element);
+      },
+
+      sig_item_client_del: function(eid) {
+
+        var index = this.sig.item_client.findIndex(({ id }) => id === eid);
+        if (index > -1) {
+          this.sig.item_client.splice(index, 1);
+        }
+      },
+
+      sig_item_client_down: function(fromIndex, eid) {
+        var toIndex = fromIndex + 1;
+
+        if (toIndex > this.sig.item_client.length - 1) 
+          return;
+  
+        var element = this.sig.item_client.find(({ id }) => id === eid);
+        this.sig.item_client.splice(fromIndex, 1);
+        this.sig.item_client.splice(toIndex, 0, element);
+      },
+
+      sig_item_client_up: function(fromIndex, eid) {
+        var toIndex = fromIndex - 1;
+  
+        if (toIndex < 0) 
+          return;
+
+        var element = this.sig.item_client.find(({ id }) => id === eid);
+        this.sig.item_client.splice(fromIndex, 1);
+        this.sig.item_client.splice(toIndex, 0, element);
+      },
+
+      add_sig_client_item() {
+        let order = 0;
+        
+        if(this.sig.item_client.length != 0)
+          order = Math.max.apply(Math, this.sig.item_client.map(function(o) { return o.id; }))
+          
+        obj = {
+          "id" : order + 1,
+          "type" : 'C',
+          "photo" : '',
+          "url" : '',
+          "name" : '',
+          "position" : '',
+          "phone" : '',
+          "email" : '',
+        }, 
+  
+        this.sig.item_client.push(obj);
+      },
+
+      add_sig_company_item() {
+        let order = 0;
+        
+        if(this.sig.item_company.length != 0)
+          order = Math.max.apply(Math, this.sig.item_company.map(function(o) { return o.id; }))
+          
+        obj = {
+          "id" : order + 1,
+          "type" : 'F',
+          "photo" : '',
+          "url" : '',
+          "name" : '',
+          "position" : '',
+          "phone" : '',
+          "email" : '',
+        }, 
+  
+        this.sig.item_company.push(obj);
+      },
+
+      sig_save: async function() {
+        if (this.submit == true) return;
+
+        if(this.sig.page == 0) return;
+
+        this.submit = true;
+  
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append("jwt", token);
+ 
+        form_Data.append("quotation_id", this.id);
+        form_Data.append("detail", JSON.stringify(this.sig));
+
+        for (var i = 0; i < this.sig.item_company.length; i++) {
+          let file = document.getElementById('sig_image_' + this.sig.item_company[i].id);
+          if(file) {
+            let f = file.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('sig_image_' + this.sig.item_company[i].id, f);
+          }
+        }
+      
+        axios({
+          method: "post",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          url: "api/quotation_sig_insert",
+          data: form_Data,
+        })
+          .then(function(response) {
+            //handle success
+            _this.id = response.data.id;
+            
+            Swal.fire({
+              html: response.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+  
+            _this.reload();
+            _this.submit = false;
+          })
+          .catch(function(error) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(error),
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+  
+            _this.reload();
+            _this.submit = false;
+          });
+      
+      },
+
+      close_sig() {
+        this.show_signature = false;
+
+      },
+
+      term_save: async function() {
+        if (this.submit == true) return;
+
+        if(this.term.page == 0) return;
+
+        this.submit = true;
+  
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append("jwt", token);
+ 
+        form_Data.append("quotation_id", this.id);
+        form_Data.append("detail", JSON.stringify(this.term));
+      
+        axios({
+          method: "post",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          url: "api/quotation_term_insert",
+          data: form_Data,
+        })
+          .then(function(response) {
+            //handle success
+            _this.id = response.data.id;
+            
+            Swal.fire({
+              html: response.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+  
+            _this.reload();
+            _this.submit = false;
+          })
+          .catch(function(error) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(error),
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+  
+            _this.reload();
+            _this.submit = false;
+          });
+      
+      },
+
+      close_term() {
+        this.show_term = false;
+
+      },
+
+      term_item_del: function(eid) {
+
+        var index = this.term.item.findIndex(({ id }) => id === eid);
+        if (index > -1) {
+          this.term.item.splice(index, 1);
+        }
+      },
+
+      term_item_down: function(fromIndex, eid) {
+        var toIndex = fromIndex + 1;
+
+        if (toIndex > this.term.item.length - 1) 
+          return;
+  
+        var element = this.term.item.find(({ id }) => id === eid);
+        this.term.item.splice(fromIndex, 1);
+        this.term.item.splice(toIndex, 0, element);
+      },
+
+      term_item_up: function(fromIndex, eid) {
+        var toIndex = fromIndex - 1;
+  
+        if (toIndex < 0) 
+          return;
+
+        var element = this.term.item.find(({ id }) => id === eid);
+        this.term.item.splice(fromIndex, 1);
+        this.term.item.splice(toIndex, 0, element);
+      },
+
+      add_term_item() {
+        let order = 0;
+        
+        if(this.term.item.length != 0)
+          order = Math.max.apply(Math, this.term.item.map(function(o) { return o.id; }))
+          
+        obj = {
+          "id" : order + 1,
+          "title" : '',
+          "brief" : '',
+          "list" : '',
+        }, 
+  
+        this.term.item.push(obj);
+      },
+
+      close_total() {
+        this.show_total = false;
+
+        if(this.total.id == 0)
+        {
+          this.total = {
+            id:0,
+            page: 0,
+            discount:'',
+            vat : '',
+            show_vat : '',
+            valid : '',
+            total : '',
+          };
+        }
+      },
+
+      save_total: async function() {
+        if (this.submit == true) return;
+
+        if(this.total.page == 0) return;
+
+        this.submit = true;
+  
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append("jwt", token);
+ 
+        form_Data.append("quotation_id", this.id);
+        form_Data.append("page", this.total.page);
+        form_Data.append("discount", this.total.discount);
+        form_Data.append("vat", this.total.vat);
+        form_Data.append("show_vat", this.total.show_vat);
+        form_Data.append("valid", this.total.valid);
+        form_Data.append("total", this.total.total);
+      
+        axios({
+          method: "post",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          url: "api/quotation_total_insert",
+          data: form_Data,
+        })
+          .then(function(response) {
+            //handle success
+            _this.id = response.data.id;
+            
+            Swal.fire({
+              html: response.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+  
+            _this.reload();
+            _this.submit = false;
+          })
+          .catch(function(error) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(error),
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+  
+            _this.reload();
+            _this.submit = false;
+          });
+      
+      },
+
+      subtotal_save_changes: async function (id, type_id, temp_block) {
+        if (this.submit == true) return;
+
+        this.submit = true;
+  
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append("jwt", token);
+ 
+        form_Data.append("id", id);
+        form_Data.append("type_id", type_id);
+        form_Data.append("block", JSON.stringify(temp_block));
+      
+        for (var i = 0; i < temp_block.length; i++) {
+          let file = document.getElementById('block_image_' + temp_block[i].id);
+          if(file) {
+            let f = file.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id, f);
+          }
+        }
+    
+
+        try {
+          let res = await axios({
+            method: 'post',
+            url: 'api/quotation_page_type_block_update',
+            data: form_Data,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+          if(res.status == 200){
+            // test for status you want, etc
+            _this.block_value = [];
+            _this.submit = false;
+
+            Swal.fire({
+              html: res.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+        } 
+          
+        } catch (err) {
+          console.log(err)
+          Swal.fire({
+            text: error,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+            _this.submit = false;
+        }
+
+        this.reload();
+
+        },
+
+      subtotal_save() {
+        if(this.block_value.id == undefined)
+          return;
+    
+        var _id = this.block_value.id;
+        var _type = this.block_value.type;
+        var _page = this.block_value.page;
+
+        var element = this.receive_records[0].pages.find(({ page }) => page === _page);
+        var type = element.types.find(({ id }) => id === _id);
+        
+        if(_type == "A" && this.temp_block_a.length > 0) {
+          type.block_a = this.temp_block_a;
+
+          this.subtotal_save_changes(this.id, _id, this.temp_block_a);
+        }
+
+        if(_type == "B" && this.temp_block_b.length > 0) {
+          type.block_b = this.temp_block_b;
+
+          this.subtotal_save_changes(this.id, _id, this.temp_block_b);
+        }
+        
+        
+        this.subtotal_close();
+
+      },
+
+      subtotal_close() {
+        this.show_subtotal = false;
+        this.edit_type_a = false;
+        this.edit_type_b = false;
+        this.temp_block_a = [];
+        this.temp_block_b = [];
+
+        this.edit_type_a_image = false;
+        this.edit_type_a_noimage = false;
+          
+        this.edit_type_b_noimage = false;
+
+        this.block_value = [];
+      },
+
+      block_b_up: function(fromIndex, eid) {
+        var toIndex = fromIndex - 1;
+  
+        if (toIndex < 0) 
+          return;
+
+        var element = this.temp_block_b.find(({ id }) => id === eid);
+        this.temp_block_b.splice(fromIndex, 1);
+        this.temp_block_b.splice(toIndex, 0, element);
+      },
+
+      block_b_down: function(fromIndex, eid) {
+        var toIndex = fromIndex + 1;
+
+        if (toIndex > this.temp_block_b.length - 1) 
+          return;
+  
+        var element = this.temp_block_b.find(({ id }) => id === eid);
+        this.temp_block_b.splice(fromIndex, 1);
+        this.temp_block_b.splice(toIndex, 0, element);
+      },
+
+      block_b_del: function(eid) {
+
+        var index = this.temp_block_b.findIndex(({ id }) => id === eid);
+        if (index > -1) {
+          this.temp_block_b.splice(index, 1);
+        }
+      },
+
+      block_a_up: function(fromIndex, eid) {
+        var toIndex = fromIndex - 1;
+  
+        if (toIndex < 0) 
+          return;
+
+        var element = this.temp_block_a.find(({ id }) => id === eid);
+        this.temp_block_a.splice(fromIndex, 1);
+        this.temp_block_a.splice(toIndex, 0, element);
+      },
+
+      block_a_down: function(fromIndex, eid) {
+        var toIndex = fromIndex + 1;
+
+        if (toIndex > this.temp_block_a.length - 1) 
+          return;
+  
+        var element = this.temp_block_a.find(({ id }) => id === eid);
+        this.temp_block_a.splice(fromIndex, 1);
+        this.temp_block_a.splice(toIndex, 0, element);
+      },
+
+      block_a_del: function(eid) {
+
+        var index = this.temp_block_a.findIndex(({ id }) => id === eid);
+        if (index > -1) {
+          this.temp_block_a.splice(index, 1);
+        }
+      },
+
+      clear_photo(_id) {
+        var item = this.temp_block_a.find(({ id }) => id === _id);
+        item.url = "";
+  
+        document.getElementById('block_image_'+_id).value = "";
+      },
+      
+      onFileChangeImage(e, _id) {
+        const file = e.target.files[0];
+
+        var item = this.temp_block_a.find(({ id }) => id === _id);
+    
+        let url = URL.createObjectURL(file);
+  
+        item.url = url;
+          
+      },
+
+      add_block_a() {
+        var block_a_image = document.getElementById('with_image').value;
+        var sn = 0;
+        var items = this.temp_block_a;
+
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].id > sn) {
+            sn = items[i].id;
+          }
+        }
+
+        sn = sn + 1;
+
+        item = {
+          id: sn,
+          url: "",
+          file: {
+            name: "",
+          },
+          type : block_a_image,
+          code: "",
+          qty: "",
+          price: "",
+          discount: "",
+          amount: "",
+          desc: "",
+          list: "",
+        };
+
+        items.push(item);
+
+      },
+
+      add_block_b() {
+      
+        var sn = 0;
+        var items = this.temp_block_b;
+
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].id > sn) {
+            sn = items[i].id;
+          }
+        }
+
+        sn = sn + 1;
+
+        item = {
+          id: sn,
+          
+          code: "",
+ 
+          discount: "",
+          amount: "",
+          desc: "",
+          list: "",
+        };
+
+        items.push(item);
+
+      },
+
+      load_block() {
+        var value = this.block_value;
+        
+        if(value.type == 'A')
+        {
+          this.edit_type_a = true;
+          this.edit_type_b = false;
+
+          this.edit_type_a_image = false;
+          this.edit_type_a_noimage = false;
+          
+          this.edit_type_b_noimage = false;
+
+          this.temp_block_a = this.block_value.blocks;
+        }
+
+        if(value.type == 'B')
+        {
+          this.edit_type_b = true;
+          this.edit_type_a = false;
+
+          this.edit_type_a_image = false;
+          this.edit_type_a_noimage = false;
+
+          this.edit_type_b_noimage = false;
+
+          this.temp_block_b = this.block_value.blocks;
+        }
+      
+      },
 
       filter_apply: function() {
         let _this = this;
@@ -341,8 +1016,17 @@ var app = new Vue({
               // page
               _this.pages = _this.receive_records[0].pages;
 
-              // block_names
+              // block_names(subtotal)
               _this.block_names = _this.receive_records[0].block_names;
+
+              // total
+              _this.total = _this.receive_records[0].total_info;
+
+              // term
+              _this.term = _this.receive_records[0].term_info;
+
+              // sig
+              _this.sig = _this.receive_records[0].sig_info;
 
               // temp
               _this.id = _this.receive_records[0].id;
@@ -382,6 +1066,9 @@ var app = new Vue({
         obj = {
           "id" : order + 1,
           "page" : order + 1,
+          "sig" : {},
+          "term" : [],
+          "total" : [],
           "types" : types,
         }, 
   
@@ -775,6 +1462,8 @@ var app = new Vue({
       },
 
       reload : function() {
+        this.close_all();
+
         if(this._id == 0 && this.id != 0) 
         {
           this._id = this.id;

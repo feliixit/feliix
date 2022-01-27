@@ -2428,3 +2428,78 @@ CREATE TABLE IF NOT EXISTS quotation_page_type
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quotation_page_type_block
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+  `type_id` bigint(20) unsigned NOT NULL,
+  `code` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `type` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `qty` decimal(10,2) DEFAULT 0.0,
+  `price` decimal(10,2) DEFAULT 0.0,
+  `discount` decimal(10,2) DEFAULT 0.0,
+  `amount` decimal(10,2) DEFAULT 0.0,
+  `description` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `listing` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+	`create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quotation_total
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+  `discount` decimal(10,2) DEFAULT 0.0,
+  `vat` varchar(2) DEFAULT '',
+  `show_vat` varchar(2) DEFAULT '',
+  `valid` varchar(128) DEFAULT '',
+  `total` decimal(10,2) DEFAULT 0.0,
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quotation_term
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+  `title` varchar(512) DEFAULT '',
+  `brief` varchar(512) DEFAULT '',
+  `list` varchar(512) DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+CREATE TABLE IF NOT EXISTS quotation_signature
+(
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+  `page` int(11) DEFAULT 0,
+  `type` varchar(2) DEFAULT '',
+  `photo` varchar(128) DEFAULT '',
+  `name` varchar(128) DEFAULT '',
+  `position` varchar(128) DEFAULT '',
+  `phone` varchar(128) DEFAULT '',
+  `email` varchar(128) DEFAULT '',
+  `status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
