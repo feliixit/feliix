@@ -1062,11 +1062,17 @@ var app = new Vue({
           order = Math.max.apply(Math, this.pages.map(function(o) { return o.id; }))
           
         types = [];
+
+        sig = {
+          "page" : order + 1,
+          "item_client" : [],
+          "item_company" : [],
+        }
         
         obj = {
           "id" : order + 1,
           "page" : order + 1,
-          "sig" : {},
+          "sig" : sig,
           "term" : [],
           "total" : [],
           "types" : types,

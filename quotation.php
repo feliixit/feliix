@@ -2095,9 +2095,9 @@
                 </div>
 
                 <div class="area_conforme" style="margin-top: 30px;">
-                    <div class="conforme" v-if="pg.sig.item_client.length + pg.sig.item_company.length > 0">CONFORME</div>
+                    <div class="conforme" v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0)  + (pg.sig != undefined ?  pg.sig.item_company.length : 0) > 0">CONFORME</div>
 
-                    <div class="client_signature" v-if="pg.sig.item_client.length">
+                    <div class="client_signature" v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0) > 0">
 
                         <div class="signature" v-for="(tt, index) in pg.sig.item_client">
                             <div class="pic"></div>
@@ -2109,7 +2109,7 @@
 
                     </div>
 
-                    <div class="company_signature" v-if="pg.sig.item_company.length">
+                    <div class="company_signature" v-if="(pg.sig != undefined ? pg.sig.item_company.length : 0) > 0">
 
                         <div class="signature" v-for="(tt, index) in pg.sig.item_company">
                             <div class="pic"><img :src="img_url + tt.photo" v-if="tt.photo != ''"></div>
