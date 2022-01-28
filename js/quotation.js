@@ -663,7 +663,7 @@ var app = new Vue({
         } catch (err) {
           console.log(err)
           Swal.fire({
-            text: error,
+            text: err,
             icon: "info",
             confirmButtonText: "OK",
           });
@@ -805,7 +805,7 @@ var app = new Vue({
 
         // let charge = this.payment_record.charge;
         let charge = Number(row.qty) * Number(row.price) * ((100 - row.discount) / 100);
-        row.amount = charge.toLocaleString();
+        row.amount = charge;
       },
 
       add_block_a() {

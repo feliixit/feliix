@@ -144,6 +144,11 @@ switch ($method) {
                 $description = isset($block_array[$i]['desc']) ? $block_array[$i]['desc'] : '';
                 $listing = isset($block_array[$i]['list']) ? $block_array[$i]['list'] : '';
 
+                $qty == '' ? $qty = 0 : $qty = $qty;
+                $price == '' ? $price = 0 : $price = $price;
+                $discount == '' ? $discount = 0 : $discount = $discount;
+                $amount == '' ? $amount = 0 : $amount = $amount;
+
                 // bind the values
                 $stmt->bindParam(':quotation_id', $last_id);
                 $stmt->bindParam(':type_id', $type_id);
