@@ -1995,8 +1995,8 @@
                                 </div>
                             </td>
                             <td><span class="numbers">{{ bk.qty }}</span></td>
-                            <td><span class="numbers">₱ {{ bk.price.toLocaleString() }}</span></td>
-                            <td><span class="numbers">₱ {{ bk.amount.toLocaleString() }}</span></td>
+                            <td><span class="numbers">₱ {{ bk.price !== undefined ? bk.price.toLocaleString() : '0.00' }}</span></td>
+                            <td><span class="numbers">₱ {{ bk.amount !== undefined ? bk.amount.toLocaleString() : '0.00' }}</span></td>
                         </tr>
                           
                         </tbody>
@@ -2005,7 +2005,7 @@
                         <tr>
                             <td colspan="4"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal.toLocaleString() }}</td>
+                            <td>₱ {{ tp.subtotal !== undefined ? tp.subtotal.toLocaleString() : '0.00' }}</td>
                         </tr>
 
                         </tfoot>
@@ -2032,7 +2032,7 @@
                                     {{ bk.list }}
                                 </div>
                             </td>
-                            <td v-if="bk.amount != 0"><span class="numbers">₱ {{ bk.amount.toLocaleString() }}</span></td>
+                            <td v-if="bk.amount != 0"><span class="numbers">₱ {{ bk.amount !== undefined ? bk.amount.toLocaleString() : '0.00' }}</span></td>
                             <td v-if="bk.amount == 0"><span class="numbers red">FREE AS PACKAGE!</span></td>
                         </tr>
 
@@ -2042,7 +2042,7 @@
                         <tr>
                             <td colspan="2"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal.toLocaleString() }}</td>
+                            <td>₱ {{ tp.subtotal !== undefined ? tp.subtotal.toLocaleString() : '0.00' }}</td>
                         </tr>
 
                         </tfoot>
@@ -2060,17 +2060,17 @@
                                 <div></div>
                             </td>
                             <td>SUBTOTAL</td>
-                            <td><span class="numbers">₱ {{ tt.total.toLocaleString() }}</span></td>
+                            <td><span class="numbers">₱ {{ tt.total !== undefined ? tt.total.toLocaleString() : '0.00' }}</span></td>
                         </tr>
 
                         <tr class="total_discount">
                             <td>{{ tt.discount }}% DISCOUNT</td>
-                            <td><span class="numbers">₱ {{ (tt.total * tt.discount / 100).toLocaleString() }}</span></td>
+                            <td><span class="numbers">₱ {{ (tt.total * tt.discount / 100) }}</span></td>
                         </tr>
 
                         <tr class="total_vat" v-if="tt.vat == 'Y'">
                             <td>(12% VAT)</td>
-                            <td><span class="numbers">₱ {{ (tt.total * 12 / 100).toLocaleString() }}</span></td>
+                            <td><span class="numbers">₱ {{ (tt.total * 12 / 100) }}</span></td>
                         </tr>
                         </tbody>
 
@@ -2078,7 +2078,7 @@
                         <tr>
                             <td><span class="total_discount" v-if="tt.show_vat == 'Y'">*price inclusive of VAT</span></td>
                             <td>GRAND TOTAL</td>
-                            <td><span class="numbers">₱ {{ (tt.total - (tt.total * tt.discount / 100) - ( (tt.vat == 'Y' ? (tt.total * 12 / 100) : 0 ))).toLocaleString() }}</span></td>
+                            <td><span class="numbers">₱ {{ (tt.total - (tt.total * tt.discount / 100) - ( (tt.vat == 'Y' ? (tt.total * 12 / 100) : 0 ))) }}</span></td>
                         </tr>
                         </tfoot>
                     </table>

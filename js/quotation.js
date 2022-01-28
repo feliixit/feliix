@@ -4,7 +4,7 @@ var app = new Vue({
       submit: false,
 
       // id of the quotation
-      _id:0,
+      l_id:0,
       id:0,
 
       img_url: 'https://storage.cloud.google.com/feliiximg/',
@@ -1470,9 +1470,9 @@ var app = new Vue({
       reload : function() {
         this.close_all();
 
-        if(this._id == 0 && this.id != 0) 
+        if(this.l_id == 0 && this.id != 0) 
         {
-          this._id = this.id;
+          this.l_id = this.id;
           this.filter_apply();
         }
         else
