@@ -805,7 +805,7 @@ var app = new Vue({
 
         // let charge = this.payment_record.charge;
         let charge = Number(row.qty) * Number(row.price) * ((100 - row.discount) / 100);
-        row.amount = charge;
+        row.amount = charge.toLocaleString();
       },
 
       add_block_a() {
@@ -861,6 +861,9 @@ var app = new Vue({
           id: sn,
           
           code: "",
+          photo: "",
+          qty: "",
+          price: "",
  
           discount: "",
           amount: "",

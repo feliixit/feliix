@@ -1996,7 +1996,10 @@
                             </td>
                             <td><span class="numbers">{{ bk.qty }}</span></td>
                             <td><span class="numbers">₱ {{ bk.price !== undefined ? bk.price.toLocaleString() : '0.00' }}</span></td>
-                            <td><span class="numbers">₱ {{ bk.amount !== undefined ? bk.amount.toLocaleString() : '0.00' }}</span></td>
+                            <td>
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price) }}<span v-if="bk.discount != 0">{{bk.discount}}% OFF</span></span><br v-if="bk.discount != 0">
+                                <span class="numbers">₱ {{ bk.amount !== undefined ? bk.amount.toLocaleString() : '0.00' }}</span>
+                            </td>
                         </tr>
                           
                         </tbody>
