@@ -139,6 +139,10 @@ var app = new Vue({
             switch (tmp[0]) {
               case "id":
                 _this.id = tmp[1];
+
+                if(_this.id != 0)
+                 _this.l_id = _this.id;
+
                 break;
               default:
                 console.log(`Too many args`);
@@ -792,6 +796,18 @@ var app = new Vue({
           
       },
 
+      chang_amount: function(row) {
+        if(row.qty == '')
+          return;
+
+        if(row.price == '')
+          return;
+
+        // let charge = this.payment_record.charge;
+        let charge = Number(row.qty) * Number(row.price) * ((100 - row.discount) / 100);
+        row.amount = charge;
+      },
+
       add_block_a() {
         var block_a_image = document.getElementById('with_image').value;
         var sn = 0;
@@ -814,6 +830,7 @@ var app = new Vue({
           },
           type : block_a_image,
           code: "",
+          photo: "",
           qty: "",
           price: "",
           discount: "",

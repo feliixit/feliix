@@ -1630,8 +1630,8 @@
                                         </div>
 
                                         <br v-if="block.type == 'image' ">
-                                        <span>Qty:</span> <input type="number" min="0" step="1" v-model="block.qty"> Product Price: <input type="number" v-model="block.price">
-                                        Discount: <input type="number" v-model="block.discount"> Amount: <input type="number" v-model="block.amount"><br>
+                                        <span>Qty:</span> <input type="number" min="0" step="1" v-model="block.qty" @change="chang_amount(block)"> Product Price: <input type="number" v-model="block.price" @change="chang_amount(block)">
+                                        Discount: <input type="number" v-model="block.discount" @change="chang_amount(block)"> Amount: <input type="number" v-model="block.amount"><br>
                                         <span>Description:</span> <textarea rows="2" v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
                                     </li>
