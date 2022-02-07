@@ -137,9 +137,8 @@ function GetSubTotalInfo($qid, $db)
     $total = 0;
 
     $query = "
-            select sum(amount) amt from quotation_page_type_block 
-            WHERE  quotation_id = " . $qid . "
-            AND `status` <> -1 
+            select sum(amount) amt from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . ")
     ";
 
     // prepare the query
