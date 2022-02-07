@@ -101,6 +101,8 @@ if (!isset($jwt)) {
         $term_info = GetTermInfo($row['id'], $db);
         $sig_info = GetSigInfo($row['id'], $db);
 
+        $subtotal_info = GetSubTotalInfo($row['id'], $db);
+
         $merged_results[] = array(
             "id" => $id,
             "first_line" => $first_line,
@@ -121,12 +123,38 @@ if (!isset($jwt)) {
             "total_info" => $total_info,
             "term_info" => $term_info,
             "sig_info" => $sig_info,
+            "subtotal_info" => $subtotal_info,
         );
     }
 
 
 
     echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+}
+
+function GetSubTotalInfo($qid, $db)
+{
+    $total = 0;
+
+    $query = "
+            select sum(amount) amt from quotation_page_type_block 
+            WHERE  quotation_id = " . $qid . "
+            AND `status` <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
+        $total = $row['amt'];
+
+    }
+
+    return $total;
 }
 
 function GetBlockNames($qid, $db){
@@ -245,6 +273,7 @@ function GetTotal($qid, $page, $db){
 
     $merged_results = [];
     
+    $discount = 0;
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $page = $row['page'];
@@ -627,6 +656,7 @@ function GetTypes($qid, $db){
 
         $merged_results[] = array(
             "id" => $id,
+            "org_id" => $id,
             "type" => $block_type,
             "name" => $block_name,
             "blocks" => $blocks,

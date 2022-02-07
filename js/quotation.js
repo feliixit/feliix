@@ -104,7 +104,7 @@ var app = new Vue({
       total: {
         id:0,
         page: 0,
-        discount:'',
+        discount:'0',
         vat : '',
         show_vat : '',
         valid : '',
@@ -123,6 +123,8 @@ var app = new Vue({
         item_client: [],
         item_company: [],
       },
+
+      subtotal:0,
 
     },
   
@@ -397,39 +399,42 @@ var app = new Vue({
               form_Data.append('sig_image_' + this.sig.item_company[i].id, f);
           }
         }
-      
-        axios({
-          method: "post",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          url: "api/quotation_sig_insert",
-          data: form_Data,
-        })
-          .then(function(response) {
-            //handle success
-            _this.id = response.data.id;
-            
-            Swal.fire({
-              html: response.data.message,
-              icon: "info",
-              confirmButtonText: "OK",
-            });
-  
-            _this.reload();
-            _this.submit = false;
-          })
-          .catch(function(error) {
-            //handle error
-            Swal.fire({
-              text: JSON.stringify(error),
-              icon: "info",
-              confirmButtonText: "OK",
-            });
-  
-            _this.reload();
-            _this.submit = false;
+
+        try {
+          let res = await axios({
+            method: 'post',
+            url: 'api/quotation_sig_insert',
+            data: form_Data,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           });
+
+          if(res.status == 200){
+            // test for status you want, etc
+        
+            _this.submit = false;
+
+            Swal.fire({
+              html: res.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+        } 
+          
+        } catch (err) {
+          console.log(err)
+          Swal.fire({
+            text: err,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+            _this.submit = false;
+        }
+
+        this.reload();
+      
       
       },
 
@@ -453,39 +458,42 @@ var app = new Vue({
  
         form_Data.append("quotation_id", this.id);
         form_Data.append("detail", JSON.stringify(this.term));
-      
-        axios({
-          method: "post",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          url: "api/quotation_term_insert",
-          data: form_Data,
-        })
-          .then(function(response) {
-            //handle success
-            _this.id = response.data.id;
-            
-            Swal.fire({
-              html: response.data.message,
-              icon: "info",
-              confirmButtonText: "OK",
-            });
-  
-            _this.reload();
-            _this.submit = false;
-          })
-          .catch(function(error) {
-            //handle error
-            Swal.fire({
-              text: JSON.stringify(error),
-              icon: "info",
-              confirmButtonText: "OK",
-            });
-  
-            _this.reload();
-            _this.submit = false;
+
+        try {
+          let res = await axios({
+            method: 'post',
+            url: 'api/quotation_term_insert',
+            data: form_Data,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           });
+
+          if(res.status == 200){
+            // test for status you want, etc
+   
+            _this.submit = false;
+
+            Swal.fire({
+              html: res.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+        } 
+          
+        } catch (err) {
+          console.log(err)
+          Swal.fire({
+            text: err,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+            _this.submit = false;
+        }
+
+        this.reload();
+  
       
       },
 
@@ -561,6 +569,16 @@ var app = new Vue({
         if (this.submit == true) return;
 
         if(this.total.page == 0) return;
+
+        if(this.total.discount > 100 || this.total.discount < 0)
+        {
+          Swal.fire({
+            text: "Discount must between 1 and 100.",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
 
         this.submit = true;
   
@@ -678,7 +696,10 @@ var app = new Vue({
       subtotal_save() {
         if(this.block_value.id == undefined)
           return;
-    
+
+        if(this.check_value() == false)
+          return;
+
         var _id = this.block_value.id;
         var _type = this.block_value.type;
         var _page = this.block_value.page;
@@ -701,6 +722,54 @@ var app = new Vue({
         
         this.subtotal_close();
 
+      },
+
+      check_value() {
+        for(var i = 0; i < this.temp_block_a.length; i++) {
+          if(this.temp_block_a[i].qty < 1 || this.temp_block_a[i].qty == '') {
+            Swal.fire({
+              text: "Qty must greater then 1.",
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+
+            return false;
+          }
+
+          if(this.temp_block_a[i].discount < 0 || this.temp_block_a[i].discount > 100 || this.temp_block_a[i].discount == '') {
+            Swal.fire({
+              text: "Discount must between 1 and 100.",
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+
+            return false;
+          }
+        }
+
+        for(var i = 0; i < this.temp_block_b.length; i++) {
+          if(this.temp_block_b[i].qty < 1 || this.temp_block_b[i].qty == '') {
+            Swal.fire({
+              text: "Qty must greater then 1.",
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+
+            return false;
+          }
+
+          if(this.temp_block_b[i].discount < 0 || this.temp_block_b[i].discount > 100 || this.temp_block_b[i].discount == '') {
+            Swal.fire({
+              text: "Discount must between 1 and 100.",
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+
+            return false;
+          }
+        }
+
+        return true;
       },
 
       subtotal_close() {
@@ -831,9 +900,9 @@ var app = new Vue({
           type : block_a_image,
           code: "",
           photo: "",
-          qty: "",
+          qty: "1",
           price: "",
-          discount: "",
+          discount: "0",
           amount: "",
           desc: "",
           list: "",
@@ -862,10 +931,10 @@ var app = new Vue({
           
           code: "",
           photo: "",
-          qty: "",
+          qty: "1",
           price: "",
  
-          discount: "",
+          discount: "0",
           amount: "",
           desc: "",
           list: "",
@@ -990,6 +1059,8 @@ var app = new Vue({
         this.temp_footer_first_line = '';
         this.temp_footer_second_line = '';
 
+        this.subtotal = 0;
+
         // page
         this.pages = [];
       },
@@ -1038,15 +1109,21 @@ var app = new Vue({
 
               // block_names(subtotal)
               _this.block_names = _this.receive_records[0].block_names;
+              
+              _this.subtotal = _this.receive_records[0].subtotal_info;
 
               // total
               _this.total = _this.receive_records[0].total_info;
+
+              _this.count_subtotal();
 
               // term
               _this.term = _this.receive_records[0].term_info;
 
               // sig
               _this.sig = _this.receive_records[0].sig_info;
+
+              
 
               // temp
               _this.id = _this.receive_records[0].id;
@@ -1073,6 +1150,17 @@ var app = new Vue({
             console.log(error);
           });
   
+      },
+
+      count_subtotal() {
+        if(this.total.total == '0.00')
+        {
+          this.total.total = (this.subtotal * (1 - this.total.discount * 0.01)).toFixed(2);
+          if(this.total.vat == 'Y')
+            this.total.total = (this.total.total * ( 1 + 0.12)).toFixed(2);
+        }
+
+    
       },
 
       add_page() {
@@ -1111,6 +1199,7 @@ var app = new Vue({
         
         obj = {
           "id" : obj_id + 1,
+          "org_id" : 0,
           "type" : document.getElementById('block_type_' + eid).value,
           "name" : "",
         }, 

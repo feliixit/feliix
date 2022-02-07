@@ -1442,7 +1442,7 @@
             <div class="block">
                 <!-- print -->
                 <div class="popupblock">
-                    <a id="" class="print" :ref=""></a>
+                    <a id="" class="print" onclick="window.print()"></a>
                 </div>
             </div>
 
@@ -1572,6 +1572,7 @@
                         <div class="formbox">
                             <div class="btnbox">
                                 <a class="btn small" @click="show_page = false">Close</a>
+                                <a class="btn small green" @click="page_save()">Save</a>
                             </div>
                         </div>
 
@@ -1956,8 +1957,8 @@
 
                 <div class="area_subtotal">
 
-                    <table class="tb_format1" v-for="(tp, index) in pg.types" v-if="tp.type == 'A'">
-                        <thead>
+                    <table :class="tp.type == 'A' ? 'tb_format1' : 'tb_format2'" v-for="(tp, index) in pg.types" >
+                        <thead v-if="tp.type == 'A'">
                             
                         <tr>
                             <th class="title" colspan="6">{{ tp.name }}</th>
@@ -1973,51 +1974,7 @@
 
                         </thead>
 
-                        <tbody>
-                        <tr  v-for="(bk, index) in tp.blocks">
-                            <td>{{ index + 1 }}</td>
-                            <td class="pic" v-if="bk.type == 'image'">
-                                <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
-                            </td>
-                            <td v-if="bk.type == 'image'">
-                                <div class="code">{{ bk.code }}</div>
-                                <div class="brief">{{ bk.desc }}</div>
-                                <div class="listing">
-                                    {{ bk.list }}
-                                </div>
-                            </td>
-                            <td colspan="2" v-if="bk.type == ''">
-                                <div class="code">{{ bk.code }}</div>
-                                <div class="brief">{{ bk.desc }}
-                                </div>
-                                <div class="listing">
-                                    {{ bk.list }}
-                                </div>
-                            </td>
-                            <td><span class="numbers">{{ bk.qty }}</span></td>
-                            <td><span class="numbers">₱ {{ bk.price !== undefined ? bk.price.toLocaleString() : '0.00' }}</span></td>
-                            <td>
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price) }}<span v-if="bk.discount != 0">{{bk.discount}}% OFF</span></span><br v-if="bk.discount != 0">
-                                <span class="numbers">₱ {{ bk.amount !== undefined ? bk.amount.toLocaleString() : '0.00' }}</span>
-                            </td>
-                        </tr>
-                          
-                        </tbody>
-
-                        <tfoot>
-                        <tr>
-                            <td colspan="4"></td>
-                            <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ? tp.subtotal.toLocaleString() : '0.00' }}</td>
-                        </tr>
-
-                        </tfoot>
-
-                    </table>
-
-
-                    <table class="tb_format2" v-for="(tp, index) in pg.types" v-if="tp.type == 'B'">
-                        <thead>
+                        <thead v-if="tp.type == 'B'">
 
                         <tr>
                             <th class="title" colspan="4">{{ tp.name }}</th>
@@ -2025,27 +1982,61 @@
 
                         </thead>
 
-                        <tbody>
+                        <tbody v-if="tp.type == 'A'">
+                        <tr  v-for="(bk, index) in tp.blocks">
+                            <td>{{ index + 1 }}</td>
+                            <td class="pic" v-if="bk.type == 'image'">
+                                <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
+                            </td>
+                            <td v-if="bk.type == 'image'">
+                                <div class="code">{{ bk.code }}</div>
+                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
+                                <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
+                            </td>
+                            <td colspan="2" v-if="bk.type == ''">
+                                <div class="code">{{ bk.code }}</div>
+                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}
+                                </div>
+                                <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
+                            </td>
+                            <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span></td>
+                            <td><span class="numbers">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span></td>
+                            <td>
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="bk.discount != 0">
+                                <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
+                            </td>
+                        </tr>
+                          
+                        </tbody>
+
+                        <tbody v-if="tp.type == 'B'">
                         <tr v-for="(bk, index) in tp.blocks">
                             <td>{{ index + 1 }}</td>
                             <td colspan="2">
                                 <div class="code">{{ bk.code }}</div>
-                                <div class="brief">{{ bk.desc }}</div>
-                                <div class="listing">
-                                    {{ bk.list }}
-                                </div>
+                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
+                                <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td v-if="bk.amount != 0"><span class="numbers">₱ {{ bk.amount !== undefined ? bk.amount.toLocaleString() : '0.00' }}</span></td>
+                            <td v-if="bk.amount != 0"><span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString() : '0.00' }}</span></td>
                             <td v-if="bk.amount == 0"><span class="numbers red">FREE AS PACKAGE!</span></td>
                         </tr>
 
                         </tbody>
 
-                        <tfoot>
+                        <tfoot v-if="tp.type == 'A'">
+                        <tr>
+                            <td colspan="4"></td>
+                            <td>SUBTOTAL</td>
+                            <td>₱ {{ tp.subtotal !== undefined ? Number(tp.subtotal).toFixed(2).toLocaleString() : '0.00' }}</td>
+                        </tr>
+
+                        </tfoot>
+
+                        <tfoot v-if="tp.type == 'B'">
                         <tr>
                             <td colspan="2"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ? tp.subtotal.toLocaleString() : '0.00' }}</td>
+                            <td>₱ {{ tp.subtotal !== undefined ? Number(tp.subtotal).toFixed(2).toLocaleString() : '0.00' }}</td>
                         </tr>
 
                         </tfoot>
@@ -2058,22 +2049,22 @@
                     <table class="tb_total" v-for="(tt, index) in pg.total">
                         <tbody>
                         <tr>
-                            <td :rowspan="(tt.vat == 'Y' ? 3 : 2)">
+                            <td :rowspan="(tt.vat == 'Y' && tt.discount !== '0.00' ? 3 :  2)">
                                 <div>Remarks: Quotation valid for <span class="valid_for">{{ tt.valid }}</span></div>
                                 <div></div>
                             </td>
                             <td>SUBTOTAL</td>
-                            <td><span class="numbers">₱ {{ tt.total !== undefined ? tt.total.toLocaleString() : '0.00' }}</span></td>
+                            <td><span class="numbers">₱ {{ subtotal !== undefined ? Number(subtotal).toFixed(2).toLocaleString() : '0.00' }}</span></td>
                         </tr>
 
-                        <tr class="total_discount">
-                            <td>{{ tt.discount }}% DISCOUNT</td>
-                            <td><span class="numbers">₱ {{ (tt.total * tt.discount / 100) }}</span></td>
+                        <tr class="total_discount"  v-if="tt.discount !== '0.00'">
+                            <td>{{ tt.discount !== undefined ? Math.floor(tt.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% DISCOUNT</td>
+                            <td><span class="numbers">₱ {{ (subtotal * tt.discount / 100) !== undefined ? (subtotal * tt.discount / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                         </tr>
 
                         <tr class="total_vat" v-if="tt.vat == 'Y'">
                             <td>(12% VAT)</td>
-                            <td><span class="numbers">₱ {{ (tt.total * 12 / 100) }}</span></td>
+                            <td><span class="numbers">₱ {{ (subtotal * (100 - tt.discount) / 100 * 12 / 100) !== undefined ? (subtotal * (100 - tt.discount) / 100 * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                         </tr>
                         </tbody>
 
@@ -2081,7 +2072,7 @@
                         <tr>
                             <td><span class="total_discount" v-if="tt.show_vat == 'Y'">*price inclusive of VAT</span></td>
                             <td>GRAND TOTAL</td>
-                            <td><span class="numbers">₱ {{ (tt.total - (tt.total * tt.discount / 100) - ( (tt.vat == 'Y' ? (tt.total * 12 / 100) : 0 ))) }}</span></td>
+                            <td><span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                         </tr>
                         </tfoot>
                     </table>
@@ -2090,10 +2081,8 @@
                 <div class="area_terms">
                     <div class="terms" v-for="(tt, index) in pg.term">
                         <div class="title">{{ tt.title }}</div>
-                        <div class="brief">{{ tt.brief }}</div>
-                        <div class="listing">
-                            {{ tt.list }}
-                        </div>
+                        <div class="brief" style="white-space: pre-line;">{{ tt.brief }}</div>
+                        <div class="listing" style="white-space: pre-line;">{{ tt.list }}</div>
                     </div>
                 </div>
 

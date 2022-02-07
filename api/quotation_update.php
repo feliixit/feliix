@@ -341,7 +341,8 @@ switch ($method) {
                 
                     $stmt->bindParam(':create_id', $user_id);
                 
-
+                    // type_id
+                    $type_id = 0;
                     try {
                         // execute the query, also check if query was successful
                         if (!$stmt->execute()) {
@@ -352,6 +353,8 @@ switch ($method) {
                             echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
                             die();
                         }
+                        else
+                            $type_id = $db->lastInsertId();
                     } catch (Exception $e) {
                         error_log($e->getMessage());
                         $db->rollback();
@@ -359,6 +362,8 @@ switch ($method) {
                         echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                         die();
                     }
+                    if($types_array[$j]['org_id'] != 0)
+                        UpdateTypeBlock($types_array[$j]['org_id'], $type_id, $db);
                 }  
             }
 
@@ -393,4 +398,39 @@ function IsExist($quotation_id, $db)
     }
 
     return $_id;
+}
+
+function UpdateTypeBlock($org_id, $new_id, $db){
+    
+    $query = "update quotation_page_type_block
+    SET type_id = :new_id where type_id=:org_id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':new_id', $new_id);
+
+    $stmt->bindParam(':org_id', $org_id);
+
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+      
+        }
+        else
+        {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+        }
+    }
+    catch (Exception $e)
+    {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
 }
