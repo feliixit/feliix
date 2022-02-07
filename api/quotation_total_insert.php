@@ -10,13 +10,17 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 
 $quotation_id = isset($_POST['quotation_id']) ? $_POST['quotation_id'] : 0;
-$page = isset($_POST['page']) ? $_POST['page'] : 0;
+$page = isset($_POST['page']) ? $_POST['page'] : 1;
 $discount = isset($_POST['discount']) ? $_POST['discount'] : 0;
 $vat = isset($_POST['vat']) ? $_POST['vat'] : '';
 $show_vat = isset($_POST['show_vat']) ? $_POST['show_vat'] : '';
 $valid = isset($_POST['valid']) ? $_POST['valid'] : '';
 $total = isset($_POST['total']) ? $_POST['total'] : 0;
 
+
+$total == '' ? $total = 0 : $total = $total;
+$discount == '' ? $discount = 0 : $discount = $discount;
+$page == '' ? $page = 1 : $page = $page;
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';

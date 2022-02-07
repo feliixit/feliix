@@ -78,6 +78,7 @@ else
         }
 
         $page = $detail_array['page'];
+        $page == '' ? $page = 1 : $page = $page;
      
         for($i=0 ; $i < count($detail_array['item']) ; $i++)
         {
