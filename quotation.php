@@ -1527,7 +1527,7 @@
 
                         <div class="page_form">
 
-                            <div class="pagebox" v-for="(page, page_index) in pages">
+                            <div class="pagebox" v-for="(page, page_index) in temp_pages">
 
                                 <div class="title_box">
                                     <ul>
@@ -2017,7 +2017,7 @@
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td v-if="bk.amount != 0"><span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString() : '0.00' }}</span></td>
+                            <td v-if="bk.amount != 0"><span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span></td>
                             <td v-if="bk.amount == 0"><span class="numbers red">FREE AS PACKAGE!</span></td>
                         </tr>
 
@@ -2027,7 +2027,7 @@
                         <tr>
                             <td colspan="4"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ? Number(tp.subtotal).toFixed(2).toLocaleString() : '0.00' }}</td>
+                            <td>₱ {{ tp.subtotal !== undefined ? Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</td>
                         </tr>
 
                         </tfoot>
@@ -2036,7 +2036,7 @@
                         <tr>
                             <td colspan="2"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ? Number(tp.subtotal).toFixed(2).toLocaleString() : '0.00' }}</td>
+                            <td>₱ {{ tp.subtotal !== undefined ? Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</td>
                         </tr>
 
                         </tfoot>
@@ -2054,7 +2054,7 @@
                                 <div></div>
                             </td>
                             <td>SUBTOTAL</td>
-                            <td><span class="numbers">₱ {{ subtotal !== undefined ? Number(subtotal).toFixed(2).toLocaleString() : '0.00' }}</span></td>
+                            <td><span class="numbers">₱ {{ subtotal !== undefined ? Number(subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span></td>
                         </tr>
 
                         <tr class="total_discount"  v-if="tt.discount !== '0.00'">
@@ -2064,7 +2064,7 @@
 
                         <tr class="total_vat" v-if="tt.vat == 'Y'">
                             <td>(12% VAT)</td>
-                            <td><span class="numbers">₱ {{ (subtotal * (100 - tt.discount) / 100 * 12 / 100) !== undefined ? (subtotal * (100 - tt.discount) / 100 * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                            <td><span class="numbers">₱ {{ (subtotal * 12 / 100) !== undefined ? (subtotal * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                         </tr>
                         </tbody>
 

@@ -67,7 +67,7 @@ $(function(){
         <!-- mainContent為動態內容包覆的內容區塊 -->
         
         <div class="banner1" <?php if($show0 == false) echo('style="display:none;"'); ?>>
-            <img src="images/action_and_word.png" height="auto" width="96%"/>
+            <img src="images/action_and_word.png" height="auto" width="90%"/>
             <!--<div style="font-size:5vw; font-weight: bold;">Wear Mask</div>
             <div style="font-size:5vw;; font-weight: bold;">Wash Hands</div>
             <div style="font-size:5vw;; font-weight: bold;">Don't Touch Face</div>

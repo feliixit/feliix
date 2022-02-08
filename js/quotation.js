@@ -56,6 +56,7 @@ var app = new Vue({
 
       // page
       pages : [],
+      temp_pages : [],
 
       // block_names
       block_names : [],
@@ -1063,6 +1064,7 @@ var app = new Vue({
 
         // page
         this.pages = [];
+        this.temp_pages = [];
       },
 
       getRecord: function() {
@@ -1106,6 +1108,7 @@ var app = new Vue({
 
               // page
               _this.pages = _this.receive_records[0].pages;
+              _this.temp_pages = JSON.parse(JSON.stringify(_this.pages));
 
               // block_names(subtotal)
               _this.block_names = _this.receive_records[0].block_names;
@@ -1157,17 +1160,18 @@ var app = new Vue({
         {
           this.total.total = (this.subtotal * (1 - this.total.discount * 0.01)).toFixed(2);
           if(this.total.vat == 'Y')
-            this.total.total = (this.total.total * ( 1 + 0.12)).toFixed(2);
+            this.total.total = (this.total.total * 1) + (this.subtotal * 0.12);
         }
 
+        this.total.total = this.total.total.toFixed(2);
     
       },
 
       add_page() {
         let order = 0;
         
-        if(this.pages.length != 0)
-          order = Math.max.apply(Math, this.pages.map(function(o) { return o.id; }))
+        if(this.temp_pages.length != 0)
+          order = Math.max.apply(Math, this.temp_pages.map(function(o) { return o.id; }))
           
         types = [];
 
@@ -1186,11 +1190,11 @@ var app = new Vue({
           "types" : types,
         }, 
   
-        this.pages.push(obj);
+        this.temp_pages.push(obj);
       },
 
       add_item(eid) {
-        var element = this.pages.find(({ id }) => id === eid);
+        var element = this.temp_pages.find(({ id }) => id === eid);
 
         let obj_id = 0;
 
@@ -1213,27 +1217,27 @@ var app = new Vue({
         if (toIndex < 0) 
           return;
 
-        var element = this.pages.find(({ id }) => id === eid);
-        this.pages.splice(fromIndex, 1);
-        this.pages.splice(toIndex, 0, element);
+        var element = this.temp_pages.find(({ id }) => id === eid);
+        this.temp_pages.splice(fromIndex, 1);
+        this.temp_pages.splice(toIndex, 0, element);
       },
 
       page_down: function(fromIndex, eid) {
         var toIndex = fromIndex + 1;
 
-        if (toIndex > this.pages.length - 1) 
+        if (toIndex > this.temp_pages.length - 1) 
           return;
   
-        var element = this.pages.find(({ id }) => id === eid);
-        this.pages.splice(fromIndex, 1);
-        this.pages.splice(toIndex, 0, element);
+        var element = this.temp_pages.find(({ id }) => id === eid);
+        this.temp_pages.splice(fromIndex, 1);
+        this.temp_pages.splice(toIndex, 0, element);
       },
 
       page_del: function(eid) {
 
-        var index = this.pages.findIndex(({ id }) => id === eid);
+        var index = this.temp_pages.findIndex(({ id }) => id === eid);
         if (index > -1) {
-          this.pages.splice(index, 1);
+          this.temp_pages.splice(index, 1);
         }
       },
 
@@ -1242,7 +1246,7 @@ var app = new Vue({
   
         if (toIndex < 0) toIndex = 0;
 
-        var page = this.pages.find(({ id }) => id === pid);
+        var page = this.temp_pages.find(({ id }) => id === pid);
   
         var element = page.types.find(({ id }) => id === eid);
         page.types.splice(fromIndex, 1);
@@ -1255,17 +1259,17 @@ var app = new Vue({
         if (toIndex < 0)
           return;
 
-        var page = this.pages.find(({ id }) => id === pid);
+        var page = this.temp_pages.find(({ id }) => id === pid);
   
         var element = page.types.find(({ id }) => id === eid);
         page.types.splice(fromIndex, 1);
-        this.pages[toIndex].types.splice(this.pages[toIndex].types.length - 1, 0, element);
+        this.temp_pages[toIndex].types.splice(this.temp_pages[toIndex].types.length - 1, 0, element);
       },
   
       set_down: function(pid, fromIndex, eid) {
         var toIndex = fromIndex + 1;
 
-        var page = this.pages.find(({ id }) => id === pid);
+        var page = this.temp_pages.find(({ id }) => id === pid);
   
         if (toIndex > page.types.length - 1) toIndex = page.types.length - 1;
   
@@ -1277,18 +1281,18 @@ var app = new Vue({
       set_down_page: function(pid, page_index, fromIndex, eid) {
         var toIndex = page_index + 1;
 
-        var page = this.pages.find(({ id }) => id === pid);
+        var page = this.temp_pages.find(({ id }) => id === pid);
   
         if (toIndex > page.types.length - 1) 
           return;
   
         var element = page.types.find(({ id }) => id === eid);
         page.types.splice(fromIndex, 1);
-        this.pages[toIndex].types.splice(this.pages[toIndex].types.length - 1, 0, element);
+        this.temp_pages[toIndex].types.splice(this.temp_pages[toIndex].types.length - 1, 0, element);
       },
 
       del_block: function(pid, eid) {
-        var page = this.pages.find(({ id }) => id === pid);
+        var page = this.temp_pages.find(({ id }) => id === pid);
         var index = page.types.findIndex(({ id }) => id === eid);
         if (index > -1) {
           page.types.splice(index, 1);
@@ -1503,7 +1507,7 @@ var app = new Vue({
         form_Data.append("footer_first_line", this.footer_first_line);
         form_Data.append("footer_second_line", this.footer_second_line);
 
-        form_Data.append("pages", JSON.stringify(this.pages));
+        form_Data.append("pages", JSON.stringify(this.temp_pages));
           
   
         if(this.id == 0) {

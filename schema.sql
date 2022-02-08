@@ -2503,3 +2503,14 @@ CREATE TABLE IF NOT EXISTS quotation_signature
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN qty int COLLATE utf8mb4_unicode_ci DEFAULT 0;
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN discount int COLLATE utf8mb4_unicode_ci DEFAULT 0;
+
+ALTER TABLE quotation_total MODIFY COLUMN discount int COLLATE utf8mb4_unicode_ci DEFAULT 0;
+
+ALTER TABLE quotation_total MODIFY COLUMN total decimal(12,2) DEFAULT 0.0;
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN amount decimal(12,2) DEFAULT 0.0;
