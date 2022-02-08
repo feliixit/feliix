@@ -208,7 +208,7 @@ $table->addCell(7500, ['borderSize' => 6])->addText($request_type, ['bold' => fa
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Project Name", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText($project_name1, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText(fiter_str($project_name1), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Reason", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
@@ -696,4 +696,10 @@ function GetLiquidateHistory($_id, $db)
     }
 
     return $merged_results;
+}
+
+function fiter_str($str)
+{
+    $str = str_replace("&", "AND", $str);
+    return $str;
 }
