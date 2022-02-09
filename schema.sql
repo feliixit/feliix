@@ -2505,12 +2505,20 @@ CREATE TABLE IF NOT EXISTS quotation_signature
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-ALTER TABLE quotation_page_type_block MODIFY COLUMN qty int COLLATE utf8mb4_unicode_ci DEFAULT 0;
+ALTER TABLE quotation_page_type_block MODIFY COLUMN qty int DEFAULT 0;
 
-ALTER TABLE quotation_page_type_block MODIFY COLUMN discount int COLLATE utf8mb4_unicode_ci DEFAULT 0;
+ALTER TABLE quotation_page_type_block MODIFY COLUMN discount int DEFAULT 0;
 
-ALTER TABLE quotation_total MODIFY COLUMN discount int COLLATE utf8mb4_unicode_ci DEFAULT 0;
+ALTER TABLE quotation_total MODIFY COLUMN discount int DEFAULT 0;
 
 ALTER TABLE quotation_total MODIFY COLUMN total decimal(12,2) DEFAULT 0.0;
 
 ALTER TABLE quotation_page_type_block MODIFY COLUMN amount decimal(12,2) DEFAULT 0.0;
+
+ALTER TABLE quotation_term MODIFY COLUMN brief  varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE quotation_term MODIFY COLUMN list  varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN `description`  varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN listing varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';

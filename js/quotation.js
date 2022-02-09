@@ -873,8 +873,11 @@ var app = new Vue({
         if(row.price == '')
           return;
 
+        row.qty = Math.floor(row.qty);
+        row.discount = Math.floor(row.discount);
+
         // let charge = this.payment_record.charge;
-        let charge = Number(row.qty) * Number(row.price) * ((100 - row.discount) / 100);
+        let charge = Math.floor(Number(row.qty)) * Number(row.price) * ((100 - Math.floor(row.discount)) / 100);
         row.amount = charge;
       },
 
