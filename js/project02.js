@@ -2457,6 +2457,7 @@ var app = new Vue({
                     //this.$forceUpdate();
                     _this.status_clear();
                     _this.getProject(_this.project_id);
+                    _this.getProjectProbs(_this.project_id);
                 })
                 .catch(function(response) {
                     //handle error

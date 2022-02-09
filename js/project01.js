@@ -159,6 +159,15 @@ var app = new Vue({
         console.log('Vue watch receive_records');
         this.setPages();
       },
+
+      status (value) {
+        if(value == 9) { 
+          this.probability = 100;
+          this.$refs.probability.setAttribute('disabled', '');
+        }
+        else
+          this.$refs.probability.removeAttribute('disabled');
+      },
 /*
     fil_project_category (value) {
         this.getRecords(value);

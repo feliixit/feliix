@@ -115,6 +115,72 @@ $query = "INSERT INTO project_statuses
 
                 $stmt1->execute();
 
+                if($project_status_edit == '9' && $pre_status != 'Completed')
+                {
+                    $query = "update project_main
+                    SET
+                        temp_estimate_close_prob = estimate_close_prob,
+                        updated_at = now(),
+                        updated_id = :uid 
+
+                    where id = :project_id ";
+
+                    // prepare the query
+                    $stmt1 = $db->prepare($query);
+
+                    $stmt1->bindParam(':project_id', $pid);
+                    $stmt1->bindParam(':uid', $user_id);
+
+                    $stmt1->execute();
+
+
+                    $query = "update project_main
+                    SET
+                        estimate_close_prob = 100
+
+                    where id = :project_id ";
+
+                    // prepare the query
+                    $stmt1 = $db->prepare($query);
+
+                    $stmt1->bindParam(':project_id', $pid);
+
+                    $stmt1->execute();
+                }
+
+                if($project_status_edit != '9' && $pre_status == 'Completed')
+                {
+                    $query = "update project_main
+                    SET
+                        estimate_close_prob = temp_estimate_close_prob * 1,
+                        updated_at = now(),
+                        updated_id = :uid
+
+                    where id = :project_id ";
+
+                    // prepare the query
+                    $stmt1 = $db->prepare($query);
+
+                    $stmt1->bindParam(':project_id', $pid);
+                    $stmt1->bindParam(':uid', $user_id);
+
+                    $stmt1->execute();
+
+
+                    $query = "update project_main
+                    SET
+                    temp_estimate_close_prob = ''
+
+                    where id = :project_id ";
+
+                    // prepare the query
+                    $stmt1 = $db->prepare($query);
+
+                    $stmt1->bindParam(':project_id', $pid);
+
+                    $stmt1->execute();
+                }
+
             }
             else
             {

@@ -2522,3 +2522,7 @@ ALTER TABLE quotation_term MODIFY COLUMN list  varchar(4096) COLLATE utf8mb4_uni
 ALTER TABLE quotation_page_type_block MODIFY COLUMN `description`  varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
 ALTER TABLE quotation_page_type_block MODIFY COLUMN listing varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- project01 modify
+ALTER TABLE project_main
+ADD COLUMN `temp_estimate_close_prob` varchar(3) DEFAULT '' AFTER estimate_close_prob;
