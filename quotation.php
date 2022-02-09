@@ -1442,7 +1442,7 @@
             <div class="block">
                 <!-- print -->
                 <div class="popupblock">
-                    <a id="" class="print" onclick="window.print()"></a>
+                    <a id="" class="print" @click="print_page()"></a>
                 </div>
             </div>
 
@@ -1631,8 +1631,8 @@
                                         </div>
 
                                         <br v-if="block.type == 'image' ">
-                                        <span>Qty:</span> <input type="number" min="0" step="1" v-model="block.qty" @change="chang_amount(block)"> Product Price: <input type="number" v-model="block.price" @change="chang_amount(block)">
-                                        Discount: <input type="number" v-model="block.discount" @change="chang_amount(block)"> Amount: <input type="number" v-model="block.amount"><br>
+                                        <span>Qty:</span> <input type="number" min="0" step="1" v-model="block.qty" @change="chang_amount(block)" oninput="this.value|=0"> Product Price: <input type="number" v-model="block.price" @change="chang_amount(block)">
+                                        Discount: <input type="number" v-model="block.discount" @change="chang_amount(block)" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br>
                                         <span>Description:</span> <textarea rows="2" v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
                                     </li>
@@ -1707,7 +1707,7 @@
                             <dl>
                                 <dt class="head">Discount:</dt>
                                 <dd>
-                                    <input type="number" v-model="total.discount">
+                                    <input type="number" v-model="total.discount" oninput="this.value|=0">
                                 </dd>
                             </dl>
 
@@ -1911,7 +1911,7 @@
 
         <div class="qn_page" v-for="(pg, index) in pages">
 
-            <div class="qn_header">
+            <div class="qn_header" v-if="show_title">
 
                 <div class="left_block">
 
@@ -2145,6 +2145,10 @@
             $("#collapseme").addClass("show");
         }
     });
+
+    window.onafterprint = (event) => {
+        app.show_title = true;
+    };
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 

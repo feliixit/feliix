@@ -127,6 +127,8 @@ var app = new Vue({
 
       subtotal:0,
 
+      show_title : true,
+
     },
   
     created() {
@@ -257,6 +259,12 @@ var app = new Vue({
     },
   
     methods: {
+
+      print_page() {
+        this.show_title = false;
+        app.$forceUpdate();
+        window.print();
+      },
 
       clear_sig_photo(_id) {
         var item = this.sig.item_company.find(({ id }) => id === _id);
