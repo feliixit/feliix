@@ -136,6 +136,44 @@ if(trim($probability) == "")
             error_log($e->getMessage());
         }
 
+        // insert project estimate_close_prob
+    
+        $query = "INSERT INTO project_est_prob
+        SET
+            project_id = :project_id,
+            comment = :comment,
+            prob = :prob,
+          
+            create_id = :create_id,
+            created_at = now()";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+    
+        // bind the values
+        $stmt->bindParam(':project_id', $last_id);
+        $stmt->bindParam(':comment', $reason);
+        $stmt->bindParam(':prob', $probability);
+
+        $stmt->bindParam(':create_id', $user_id);
+
+        // execute the query, also check if query was successful
+        try {
+            // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+              }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+            }
+        }
+        catch (Exception $e)
+        {
+            error_log($e->getMessage());
+        }
+
+
         if($last_id != 0)
             SendNotifyMail($last_id);
 

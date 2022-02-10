@@ -360,6 +360,11 @@
             font-size: 32px;
             font-weight: 700;
             line-height: 1.2;
+            height: 76.8px;
+        }
+
+        .qn_header .left_block .qn_title > div {
+            height: 38.4px;
         }
 
         .qn_header .left_block .project_category {
@@ -367,6 +372,7 @@
             font-size: 14px;
             font-weight: 700;
             line-height: 1.2;
+            height: 33.6px;
         }
 
         .qn_header .right_block {
@@ -393,6 +399,11 @@
             font-size: 14px;
             font-weight: 500;
             line-height: 1.2;
+            height: 67.2px;
+        }
+
+        .qn_header .right_block .qn_for > div {
+            height: 16.8px;
         }
 
         .qn_header .right_block .qn_by {
@@ -400,6 +411,11 @@
             font-size: 14px;
             font-weight: 500;
             line-height: 1.2;
+            height: 50.4px;
+        }
+
+        .qn_header .right_block .qn_by > div {
+            height: 16.8px;
         }
 
         .qn_page .qn_body {
@@ -408,6 +424,7 @@
 
         .qn_page .qn_footer {
             width: 100%;
+            height: 47px;
             padding: 30px;
             position: absolute;
             bottom: 0;
@@ -425,10 +442,12 @@
             font-size: 15px;
             font-weight: 800;
             line-height: 1.1;
+            height: 16.5px;
         }
 
         .qn_footer .line2 {
             font-size: 15px;
+            height: 22.5px;
         }
 
         .qn_footer .qn_page_number {
@@ -1049,12 +1068,8 @@
             height: 30px;
             border: 1px solid #707070;
             font-size: 14px;
-            width: 60px;
-            margin: 5px 15px 5px 0;
-        }
-
-        .subtotalbox .content_box ul li:nth-of-type(1) input[type='number']:nth-of-type(odd) {
-            width: 120px;
+            width: 95px;
+            margin: 5px 10px 5px 0;
         }
 
         .subtotalbox .content_box ul li:nth-of-type(1) textarea {
@@ -1423,6 +1438,31 @@
         }
 
 
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+            }
+
+            .mainContent {
+                padding: 0;
+                background-color: #FFF !important;
+            }
+
+            .qn_page {
+                zoom: 82%;
+                margin: 1px 0px 0px 7px;
+                page-break-after: always;
+            }
+
+            .noPrint {
+                display: none;
+            }
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
 
     </style>
 
@@ -1433,11 +1473,11 @@
 <div class="bodybox" id="app">
 
     <!-- header -->
-    <header>header</header>
+    <header class="noPrint">header</header>
     <!-- header end -->
     <div class="mainContent" style="background-color: rgb(230,230,230)">
 
-        <div class="list_function main">
+        <div class="list_function main noPrint">
 
             <div class="block">
                 <!-- print -->
@@ -1631,8 +1671,8 @@
                                         </div>
 
                                         <br v-if="block.type == 'image' ">
-                                        <span>Qty:</span> <input type="number" min="0" step="1" v-model="block.qty" @change="chang_amount(block)" oninput="this.value|=0"> Product Price: <input type="number" v-model="block.price" @change="chang_amount(block)">
-                                        Discount: <input type="number" v-model="block.discount" @change="chang_amount(block)" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br>
+                                        <span>Qty:</span> <input type="number" min="1" step="1" v-model="block.qty" @change="chang_amount(block)" oninput="this.value|=0"> Product Price: <input type="number" v-model="block.price" @change="chang_amount(block)">
+                                        Discount: <input type="number" v-model="block.discount"  min="0" max="100" @change="chang_amount(block)" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br>
                                         <span>Description:</span> <textarea rows="2" v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
                                     </li>
@@ -1663,7 +1703,8 @@
                                 <ul v-for="(block, index) in temp_block_b">
                                     <li>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
-                                        <span>Discount:</span> <input type="number" v-model="block.discount"> Amount: <input type="number" v-model="block.amount"><br>
+                                        <span>Price:</span> <input type="number" v-model="block.price" @change="chang_discount(block)"> Discount: <input type="number" v-model="block.discount" @change="chang_discount(block)" min="0" max="100" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br>
+                                        <!-- <span>Discount:</span> <input type="number" v-model="block.discount" @change="chang_discount(block)" min="0" max="100" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br> -->
                                         <span>Description:</span> <textarea rows="2" v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
                                     </li>
@@ -1707,14 +1748,14 @@
                             <dl>
                                 <dt class="head">Discount:</dt>
                                 <dd>
-                                    <input type="number" v-model="total.discount" oninput="this.value|=0">
+                                    <input type="number" v-model="total.discount"  min="0" max="100" step="1" oninput="this.value|=0" @change="change_total_amount(total)">
                                 </dd>
                             </dl>
 
                             <dl>
                                 <dt class="head">12% VAT:</dt>
                                 <dd>
-                                    <select v-model="total.vat">
+                                    <select v-model="total.vat" @change="change_total_amount(total)">
                                         <option value="Y">Yes</option>
                                         <option value="">No</option>
                                     </select>
@@ -2001,9 +2042,13 @@
                             </td>
                             <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span></td>
                             <td><span class="numbers">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span></td>
-                            <td>
+                            <td v-if="bk.amount != '0.00'">
                                 <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="bk.discount != 0">
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
+                            </td>
+                            <td v-if="bk.amount == '0.00'">
+                                <span class="numbers deleted">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
                         </tr>
                           
@@ -2017,8 +2062,14 @@
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td v-if="bk.amount != 0"><span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span></td>
-                            <td v-if="bk.amount == 0"><span class="numbers red">FREE AS PACKAGE!</span></td>
+                            <td v-if="bk.amount != '0.00'">
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="bk.discount != 0">
+                                <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
+                            </td>
+                            <td v-if="bk.amount == '0.00'">
+                                <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers red">FREE AS PACKAGE!</span>
+                            </td>
                         </tr>
 
                         </tbody>
@@ -2049,7 +2100,7 @@
                     <table class="tb_total" v-for="(tt, index) in pg.total">
                         <tbody>
                         <tr>
-                            <td :rowspan="(tt.vat == 'Y' && tt.discount !== '0.00' ? 3 :  2)">
+                            <td :rowspan="(tt.vat == 'Y' && tt.discount !== '0' ? 3 :  2)">
                                 <div>Remarks: Quotation valid for <span class="valid_for">{{ tt.valid }}</span></div>
                                 <div></div>
                             </td>
@@ -2057,7 +2108,7 @@
                             <td><span class="numbers">₱ {{ subtotal !== undefined ? Number(subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span></td>
                         </tr>
 
-                        <tr class="total_discount"  v-if="tt.discount !== '0.00'">
+                        <tr class="total_discount"  v-if="tt.discount !== '0'">
                             <td>{{ tt.discount !== undefined ? Math.floor(tt.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% DISCOUNT</td>
                             <td><span class="numbers">₱ {{ (subtotal * tt.discount / 100) !== undefined ? (subtotal * tt.discount / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                         </tr>

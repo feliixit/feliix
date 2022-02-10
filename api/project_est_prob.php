@@ -58,7 +58,8 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.estimate_close_prob prob, '' comment,  u.username, pm.created_at FROM project_main pm left join user u on u.id = pm.create_id  where pm.id = " . $pid . " and pm.status <> -1 union SELECT pm.prob, pm.comment, u.username, pm.created_at FROM project_est_prob pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -1  ";
+            // $sql = "SELECT pm.estimate_close_prob prob, '' comment,  u.username, pm.created_at FROM project_main pm left join user u on u.id = pm.create_id  where pm.id = " . $pid . " and pm.status <> -1 union SELECT pm.prob, pm.comment, u.username, pm.created_at FROM project_est_prob pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -1  ";
+            $sql = "SELECT pm.prob, pm.comment, u.username, pm.created_at FROM project_est_prob pm left join user u on u.id = pm.create_id  where project_id = " . $pid . " and pm.status <> -1 order by pm.created_at ";
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);

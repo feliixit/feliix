@@ -51,7 +51,7 @@ $project_status_edit = (isset($_POST['project_status_edit']) ?  $_POST['project_
 $project_status_reason = (isset($_POST['project_status_reason']) ?  $_POST['project_status_reason'] : '');
 
 $pre_status = GetProjectPreStatus($db, $pid);
-
+$pre_prob = GetProjectPreProb($db, $pid);
 
 $query = "INSERT INTO project_statuses
                 SET
@@ -146,6 +146,33 @@ $query = "INSERT INTO project_statuses
                     $stmt1->bindParam(':project_id', $pid);
 
                     $stmt1->execute();
+
+                    $_reason = "Because status changed to Completed";
+
+                    $query = "INSERT INTO project_est_prob
+                    SET
+                        project_id = :project_id,
+                        comment = :comment,
+                        prob = :prob,
+                    
+                        create_id = :create_id,
+                        created_at = now()";
+        
+                    // prepare the query
+                    $stmt1 = $db->prepare($query);
+
+                    $completed = 100;
+                
+                    // bind the values
+                    $stmt1->bindParam(':project_id', $pid);
+                    $stmt1->bindParam(':comment', $_reason);
+                    $stmt1->bindParam(':prob', $completed);
+        
+                    $stmt1->bindParam(':create_id', $user_id);
+
+                    $stmt1->execute();
+                    
+                    
                 }
 
                 if($project_status_edit != '9' && $pre_status == 'Completed')
@@ -179,6 +206,31 @@ $query = "INSERT INTO project_statuses
                     $stmt1->bindParam(':project_id', $pid);
 
                     $stmt1->execute();
+
+                    $_reason = "Because status changed from Completed to other status";
+
+                    $query = "INSERT INTO project_est_prob
+                    SET
+                        project_id = :project_id,
+                        comment = :comment,
+                        prob = :prob,
+                    
+                        create_id = :create_id,
+                        created_at = now()";
+        
+                    // prepare the query
+                    $stmt1 = $db->prepare($query);
+
+                
+                    // bind the values
+                    $stmt1->bindParam(':project_id', $pid);
+                    $stmt1->bindParam(':comment', $_reason);
+                    $stmt1->bindParam(':prob', $pre_prob);
+        
+                    $stmt1->bindParam(':create_id', $user_id);
+
+                    $stmt1->execute();
+                    
                 }
 
             }
@@ -230,6 +282,27 @@ function GetProjectPreStatus($db, $project_id)
 
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $status = $row['project_status'];
+        }
+    }
+
+    return $status;
+}
+
+function GetProjectPreProb($db, $project_id)
+{
+    $status = "";
+
+    if($status == "")
+    {
+        $sql = "SELECT temp_estimate_close_prob
+                    from project_main 
+            WHERE id = " . $project_id . "  ";
+
+        $stmt = $db->prepare( $sql );
+        $stmt->execute();
+
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $status = $row['temp_estimate_close_prob'];
         }
     }
 

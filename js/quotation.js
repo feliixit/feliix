@@ -260,6 +260,21 @@ var app = new Vue({
   
     methods: {
 
+      change_total_amount(row) {
+        
+        row.discount = Math.floor(row.discount);
+        if(row.discount > 100)
+          row.discount = 100;
+
+        row.total = (this.subtotal * (1 - row.discount * 0.01)).toFixed(2);
+        
+        if(row.vat == 'Y')
+          row.total = (row.total * 1) + (this.subtotal * 0.12);
+
+        row.total = Number(this.total.total).toFixed(2);
+
+      },
+
       print_page() {
         this.show_title = false;
         app.$forceUpdate();
@@ -582,7 +597,7 @@ var app = new Vue({
         if(this.total.discount > 100 || this.total.discount < 0)
         {
           Swal.fire({
-            text: "Discount must between 1 and 100.",
+            text: "Discount must between 0 and 100.",
             icon: "info",
             confirmButtonText: "OK",
           });
@@ -735,7 +750,7 @@ var app = new Vue({
 
       check_value() {
         for(var i = 0; i < this.temp_block_a.length; i++) {
-          if(this.temp_block_a[i].qty < 1 || this.temp_block_a[i].qty == '') {
+          if(this.temp_block_a[i].qty < 1 || this.temp_block_a[i].qty === '') {
             Swal.fire({
               text: "Qty must greater then 1.",
               icon: "info",
@@ -745,9 +760,9 @@ var app = new Vue({
             return false;
           }
 
-          if(this.temp_block_a[i].discount < 0 || this.temp_block_a[i].discount > 100 || this.temp_block_a[i].discount == '') {
+          if(this.temp_block_a[i].discount < 0 || this.temp_block_a[i].discount > 100 || this.temp_block_a[i].discount === '') {
             Swal.fire({
-              text: "Discount must between 1 and 100.",
+              text: "Discount must between 0 and 100.",
               icon: "info",
               confirmButtonText: "OK",
             });
@@ -757,7 +772,7 @@ var app = new Vue({
         }
 
         for(var i = 0; i < this.temp_block_b.length; i++) {
-          if(this.temp_block_b[i].qty < 1 || this.temp_block_b[i].qty == '') {
+          if(this.temp_block_b[i].qty < 1 || this.temp_block_b[i].qty === '') {
             Swal.fire({
               text: "Qty must greater then 1.",
               icon: "info",
@@ -767,9 +782,9 @@ var app = new Vue({
             return false;
           }
 
-          if(this.temp_block_b[i].discount < 0 || this.temp_block_b[i].discount > 100 || this.temp_block_b[i].discount == '') {
+          if(this.temp_block_b[i].discount < 0 || this.temp_block_b[i].discount > 100 || this.temp_block_b[i].discount === '') {
             Swal.fire({
-              text: "Discount must between 1 and 100.",
+              text: "Discount must between 0 and 100.",
               icon: "info",
               confirmButtonText: "OK",
             });
@@ -874,6 +889,15 @@ var app = new Vue({
           
       },
 
+      chang_discount : function(row) {
+        if(row.discount > 100)
+          row.discount = 100;
+
+        let charge = (Number(row.price) * (100 - Math.floor(row.discount)) / 100).toFixed(2);
+          row.amount = charge;
+       
+      },
+
       chang_amount: function(row) {
         if(row.qty == '')
           return;
@@ -883,9 +907,11 @@ var app = new Vue({
 
         row.qty = Math.floor(row.qty);
         row.discount = Math.floor(row.discount);
+        if(row.discount > 100)
+          row.discount = 100;
 
         // let charge = this.payment_record.charge;
-        let charge = Math.floor(Number(row.qty)) * Number(row.price) * ((100 - Math.floor(row.discount)) / 100);
+        let charge = (Number(row.qty)) * Number(row.price) * ((100 - Math.floor(row.discount)) / 100).toFixed(2);
         row.amount = charge;
       },
 
@@ -1174,7 +1200,7 @@ var app = new Vue({
             this.total.total = (this.total.total * 1) + (this.subtotal * 0.12);
         }
 
-        this.total.total = this.total.total.toFixed(2);
+        this.total.total = Number(this.total.total).toFixed(2);
     
       },
 
