@@ -78,7 +78,7 @@ $(function(){
                             <li class="head">Punch-In Location</li>
                             <li>{{ record.location_detail }}</li>
                         </ul>
-                        <ul v-if="record.location == 'A' || record.location == 'B' || record.location == 'C' || record.location == 'D' || record.location == 'E' || record.location == 'F' ">
+                        <ul v-if="record.location == 'A' || record.location == 'M' || record.location == 'B' || record.location == 'C' || record.location == 'D' || record.location == 'E' || record.location == 'F' ">
                             <li class="head" v-if="record.location == 'D' || record.location == 'E' || record.location == 'F' ">Further Explanation</li>
                             <li v-if="record.location == 'D' || record.location == 'E' || record.location == 'F' ">{{ record.duty_explain }}</li>
                             <li class="head"><span>Photo</span>
@@ -101,7 +101,7 @@ $(function(){
                             <li class="head">Punch-Out Location</li>
                             <li>{{ record.location_detail }}</li>
                         </ul>
-                        <ul v-if="record.location == 'A' || record.location == 'B' || record.location == 'C' || record.location == 'D' || record.location == 'E' || record.location == 'F' ">
+                        <ul v-if="record.location == 'A' || record.location == 'M' || record.location == 'B' || record.location == 'C' || record.location == 'D' || record.location == 'E' || record.location == 'F' ">
                             <li class="head" v-if="record.location == 'D' || record.location == 'E' || record.location == 'F' ">Further Explanation</li>
                             <li v-if="record.location == 'D' || record.location == 'E' || record.location == 'F' ">{{ record.duty_explain }}</li>
                             <li class="head"><span>Photo</span>

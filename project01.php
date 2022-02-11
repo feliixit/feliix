@@ -216,7 +216,7 @@ $(function(){
                                 </div>
                                 <dt>Estimated Closing Probability</dt>
                                 <dd>
-                                    <select v-model="probability">
+                                    <select v-model="probability" :ref="'probability'">
                                       <option value="0">0</option>
                                       <option value="10">10</option>
                                       <option value="20">20</option>

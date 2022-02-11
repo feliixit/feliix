@@ -2379,3 +2379,154 @@ CREATE TABLE IF NOT EXISTS `project_a_meeting` (
 
 ALTER TABLE project_a_meeting MODIFY COLUMN date_of_delivery varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
 ALTER TABLE project_a_meeting MODIFY COLUMN client_deadline varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+
+-- 2022/01/04 quotation
+
+CREATE TABLE IF NOT EXISTS `quotation` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `project_category` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `quotation_no` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `quotation_date` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_third_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_by_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_by_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `footer_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `footer_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS quotation_page
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quotation_page_type
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+  `page_id` bigint(20) unsigned NOT NULL,
+  `block_type` varchar(1) DEFAULT '',
+  `block_name` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+	`create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quotation_page_type_block
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+  `type_id` bigint(20) unsigned NOT NULL,
+  `code` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `type` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `qty` decimal(10,2) DEFAULT 0.0,
+  `price` decimal(10,2) DEFAULT 0.0,
+  `discount` decimal(10,2) DEFAULT 0.0,
+  `amount` decimal(10,2) DEFAULT 0.0,
+  `description` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `listing` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+	`create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quotation_total
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+  `discount` decimal(10,2) DEFAULT 0.0,
+  `vat` varchar(2) DEFAULT '',
+  `show_vat` varchar(2) DEFAULT '',
+  `valid` varchar(128) DEFAULT '',
+  `total` decimal(10,2) DEFAULT 0.0,
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quotation_term
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+  `title` varchar(512) DEFAULT '',
+  `brief` varchar(512) DEFAULT '',
+  `list` varchar(512) DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+CREATE TABLE IF NOT EXISTS quotation_signature
+(
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+  `page` int(11) DEFAULT 0,
+  `type` varchar(2) DEFAULT '',
+  `photo` varchar(128) DEFAULT '',
+  `name` varchar(128) DEFAULT '',
+  `position` varchar(128) DEFAULT '',
+  `phone` varchar(128) DEFAULT '',
+  `email` varchar(128) DEFAULT '',
+  `status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN qty int DEFAULT 0;
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN discount int DEFAULT 0;
+
+ALTER TABLE quotation_total MODIFY COLUMN discount int DEFAULT 0;
+
+ALTER TABLE quotation_total MODIFY COLUMN total decimal(12,2) DEFAULT 0.0;
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN amount decimal(12,2) DEFAULT 0.0;
+
+ALTER TABLE quotation_term MODIFY COLUMN brief  varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE quotation_term MODIFY COLUMN list  varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN `description`  varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE quotation_page_type_block MODIFY COLUMN listing varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- project01 modify
+ALTER TABLE project_main
+ADD COLUMN `temp_estimate_close_prob` varchar(3) DEFAULT '' AFTER estimate_close_prob;
+
+-- init project_main estimated probility
+INSERT INTO project_est_prob(project_id, comment, prob, create_id, created_at) 
+select id, 'Project created', estimate_close_prob, create_id, created_at from project_main

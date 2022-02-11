@@ -393,6 +393,14 @@ var app = new Vue({
 
   methods:{
 
+    open_prob() {
+      if(this.project_status !== 'Completed')
+        {
+          document.getElementById('prob_dialog').classList.add("show");
+            document.getElementById('status_fn4').classList.add("focus");
+        }
+    },
+
     deleteFile(index) {
       this.fileArray.splice(index, 1);
       var fileTarget = this.$refs.file;
@@ -2457,6 +2465,7 @@ var app = new Vue({
                     //this.$forceUpdate();
                     _this.status_clear();
                     _this.getProject(_this.project_id);
+                    _this.getProjectProbs(_this.project_id);
                 })
                 .catch(function(response) {
                     //handle error
