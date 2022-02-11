@@ -191,7 +191,8 @@ catch (Exception $e) {
             }
             ?>
             dialogshow($('.list_function a.fn3'), $('.list_function .dialog.fn3'));
-            dialogshow($('.list_function a.fn4'), $('.list_function .dialog.fn4'));
+            
+            // dialogshow($('.list_function a.fn4'), $('.list_function .dialog.fn4'));
             dialogshow($('.list_function a.fn5'), $('.list_function .dialog.fn5'));
             dialogshow($('.list_function a.fn6'), $('.list_function .dialog.fn6'));
             dialogshow($('.list_function a.fn7'), $('.list_function .dialog.fn7'));
@@ -751,7 +752,7 @@ catch (Exception $e) {
                     </div>
 
                     <div class="popupblock">
-                        <a id="status_fn4" class="fn4" :ref="'a_fn4'">Action to Est. Closing Prob.</a>
+                        <a id="status_fn4" class="fn4" :ref="'a_fn4'" @click="open_prob()">Action to Est. Closing Prob.</a>
                         <div id="prob_dialog" class="dialog fn4" :ref="'dlg_fn4'">
                             <h6>Action to Est. Closing Prob.:</h6>
                             <div class="formbox">

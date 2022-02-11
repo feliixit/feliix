@@ -2526,3 +2526,7 @@ ALTER TABLE quotation_page_type_block MODIFY COLUMN listing varchar(1024) COLLAT
 -- project01 modify
 ALTER TABLE project_main
 ADD COLUMN `temp_estimate_close_prob` varchar(3) DEFAULT '' AFTER estimate_close_prob;
+
+-- init project_main estimated probility
+INSERT INTO project_est_prob(project_id, comment, prob, create_id, created_at) 
+select id, 'Project created', estimate_close_prob, create_id, created_at from project_main

@@ -77,23 +77,23 @@
             cursor: pointer;
         }
 
-        body.fourth header nav a, body.fourth header nav a:link {
+        body.gray header nav a, body.gray header nav a:link {
             color: #000;
         }
 
-        body.fourth header nav a:hover {
+        body.gray header nav a:hover {
             color: #333;
         }
 
-        body.fourth header nav {
+        body.gray header nav {
             font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
         }
 
-        body.fourth header nav ul.info {
+        body.gray header nav ul.info {
             margin-bottom: 0;
         }
 
-        body.fourth header nav ul.info b {
+        body.gray header nav ul.info b {
             font-weight: bold;
         }
 
@@ -424,7 +424,7 @@
 
         .qn_page .qn_footer {
             width: 100%;
-            height: 47px;
+            height: 107px;
             padding: 30px;
             position: absolute;
             bottom: 0;
@@ -1597,7 +1597,9 @@
                                             <i class="fas fa-arrow-alt-circle-down" @click="set_down(page.id, block_index, block.id)"></i>
                                             <i class="fas fa-file-upload" @click="set_up_page(page.id, page_index, block_index, block.id)"></i>
                                             <i class="fas fa-file-download" @click="set_down_page(page.id, page_index, block_index, block.id)"></i>
+                                            <!--
                                             <i class="fas fa-save" @click="page_save()"></i>
+                                            -->
                                             <i class="fas fa-trash-alt" @click="del_block(page.id, block.id)"></i>
                                         </li>
                                     </ul>
@@ -2137,7 +2139,7 @@
                     </div>
                 </div>
 
-                <div class="area_conforme" style="margin-top: 30px;">
+                <div class="area_conforme" style="margin-top: 60px;">
                     <div class="conforme" v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0)  + (pg.sig != undefined ?  pg.sig.item_company.length : 0) > 0">CONFORME</div>
 
                     <div class="client_signature" v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0) > 0">
