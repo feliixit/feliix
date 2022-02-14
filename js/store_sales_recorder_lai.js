@@ -34,6 +34,7 @@ var app = new Vue({
     payment_method: "",
     teminal: "",
     remark: "",
+    client: "",
 
     keyword: "",
     comp: "",
@@ -229,7 +230,7 @@ var app = new Vue({
             confirmButtonText: "OK",
           });
 
-          _this.reload();
+          // _this.reload();
         });
 
     },
@@ -553,21 +554,22 @@ var app = new Vue({
     reset: function() {
       this.id = 0;
       this.sales_date = "";
+      this.company = "";
+      this.po = "";
+      this.dr = "";
+      this.note = "";
       this.sales_name = "";
       this.customer_name = "";
-      this.product = "";
-      this.qty = "";
-      this.price = "";
-      this.free = "";
       this.submit = false;
 
       this.payments = [];
       this.total_amount = "";
-      this.discount = "";
-      this.invoice = "";
-      this.payment_method = "";
-      this.teminal = "";
-      this.remark = "";
+      this.product_name = "";
+      this.qty = "";
+      this.price = "";
+      this.free = "";
+      this.client = "";
+      this.items = [];
    
       this.get_today();
     },
