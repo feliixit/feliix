@@ -240,6 +240,11 @@ header( 'location:index' );
             border: 2px solid rgb(222, 225, 230);
         }
 
+        .tb_items tr:nth-of-type(n+3) td:nth-of-type(1) {
+            text-align: left;
+            padding: 5px 10px;
+        }
+
         #panelchecked table tr.deleted td {
             text-decoration: line-through;
             text-decoration-color: red;
@@ -356,7 +361,7 @@ header( 'location:index' );
                                 <table>
                                     <tr>
                                         <td>
-                                            <input type="text" class="form-control" v-model="product_name"  maxlength="256">
+                                            <input type="text" class="form-control" v-model="product_name"  maxlength="512">
                                         </td>
 
                                         <td>
@@ -384,7 +389,7 @@ header( 'location:index' );
                                     </tr>
 
                                     <tr v-for="(item, index) in payments">
-                                        <td>{{item.product_name}}</td>
+                                        <td style="text-align: left;">{{item.product_name}}</td>
                                         <td>{{item.qty}}</td>
                                         <td>{{item.price}}</td>
                                         <td>
@@ -556,17 +561,17 @@ header( 'location:index' );
 
                     <th class="text-nowrap" style="width:7vw;">Company</th>
 
-                    <th class="text-nowrap" style="width:7vw;">Client</th>
+                    <th class="text-nowrap" style="width:20vw;">Client</th>
 
                     <th class="text-nowrap" style="width:20vw;">Product Name</th>
 
                     <th class="text-nowrap" style="width:4vw;">Qty</th>
 
-                    <th class="text-nowrap" style="width:10vw;">Unit Price</th>
+                    <th class="text-nowrap" style="width:5vw;">Unit Price</th>
 
-                    <th style="width:8vw;">Amount</th>
+                    <th style="width:5vw;">Amount</th>
 
-                    <th class="text-nowrap" style="width:5vw;">Total Amount</th>
+                    <th class="text-nowrap" style="width:8vw;">Total Amount</th>
 
                     <th class="text-nowrap" style="width:5vw;">Outside Sales</th>
 
@@ -589,9 +594,9 @@ header( 'location:index' );
 
                          <td v-if="j == 0" :rowspan="row.payment.length">{{ row.company }}</td>
 
-                        <td v-if="j == 0" :rowspan="row.payment.length">{{ row.client }}</td>
+                        <td style="text-align: left;" v-if="j == 0" :rowspan="row.payment.length">{{ row.client }}</td>
 
-                        <td>{{ item.product_name }}</td>
+                        <td style="text-align: left;">{{ item.product_name }}</td>
 
                         <td>{{ item.qty == "" ? "" : Number(item.qty).toLocaleString() }}</td>
 
