@@ -1832,7 +1832,7 @@
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="term_item_up(index, item.id)"></i>
                                         <i class="fas fa-arrow-alt-circle-down" @click="term_item_down(index, item.id)"></i>
-                                        <i class="fas fa-trash-alt" @click="term_item_del(index, item.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="term_item_del(index)"></i>
                                     </li>
                                 </ul>
 

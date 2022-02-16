@@ -3371,6 +3371,12 @@ catch (Exception $e) {
 
                         temp.push(obj_meeting);
                     }
+
+                    if (arrayLength > 0) {
+                        my_level = obj[0].my_l;
+                        my_id = obj[0].my_i;
+                        my_department = obj[0].my_d;
+                    }
                 }
 
 

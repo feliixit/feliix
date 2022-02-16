@@ -526,9 +526,9 @@ var app = new Vue({
 
       },
 
-      term_item_del: function(eid) {
+      term_item_del: function(fromIndex) {
 
-        var index = this.term.item.findIndex(({ id }) => id === eid);
+        var index = fromIndex;
         if (index > -1) {
           this.term.item.splice(index, 1);
         }

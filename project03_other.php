@@ -3424,6 +3424,153 @@ catch (Exception $e) {
             }
         }
 
+        
+        if(department === 'LT_T')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+                
+
+            if(level === "LIGHTING MANAGER" || level === "OPERATIONS MANAGER" )
+            {
+                if(creator_level === "ASSISTANT LIGHTING MANAGER" || creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT LIGHTING MANAGER" )
+            {
+                if(creator_level === "SR. LIGHTING DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. LIGHTING DESIGNER" )
+            {
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'OS_T')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+
+            if(level === "OFFICE SYSTEMS MANAGER" || level === "OPERATIONS MANAGER" )
+            {
+                if(creator_level === "ASSISTANT OFFICE SYSTEMS MANAGER" || creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT OFFICE SYSTEMS MANAGER" )
+            {
+                if(creator_level === "SR. OFFICE SYSTEMS DESIGNER"  || creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. OFFICE SYSTEMS DESIGNER" )
+            {
+                if(creator_level === "JR. ACCOUNT EXECUTIVE" || creator_level === "ACCOUNT EXECUTIVE" || creator_level === "SR. ACCOUNT EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'SLS')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+
+            if(level === "SALES MANAGER" || level === "STORE MANAGER")
+            {
+                if(creator_level !== "MANAGING DIRECTOR" && creator_level != "CHIEF ADVISOR")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT SALES MANAGER" || level === "ASSISTANT STORE MANAGER")
+            {
+                if(creator_level !== "MANAGING DIRECTOR" && 
+                   creator_level != "CHIEF ADVISOR" && 
+                   creator_level != "SALES MANAGER" && 
+                   creator_level != "STORE MANAGER")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. ACCOUNT EXECUTIVE" || level === "ACCOUNT EXECUTIVE" || level === "JR. ACCOUNT EXECUTIVE" || level === "SR. STORE SALES EXECUTIVE" || level === "STORE SALES EXECUTIVE")
+            {
+                if(creator_level !== "MANAGING DIRECTOR" && 
+                   creator_level != "CHIEF ADVISOR" && 
+                   creator_level != "SALES MANAGER" && 
+                   creator_level != "STORE MANAGER" && 
+                   creator_level != "ASSISTANT SALES MANAGER" && 
+                   creator_level != "ASSISTANT STORE MANAGER" && 
+                   creator_level != "SR. ACCOUNT EXECUTIVE" && 
+                   creator_level != "ACCOUNT EXECUTIVE" && 
+                   creator_level != "JR. ACCOUNT EXECUTIVE" && 
+                   creator_level != "SR. STORE SALES EXECUTIVE" && 
+                   creator_level != "STORE SALES EXECUTIVE")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
+        if(department === 'SVC')
+        {
+            if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
+            {
+                if(creator_level === "MANAGING DIRECTOR" || creator_level === "CHIEF ADVISOR")
+                {
+                    can_close = false;
+                }
+                else
+                    can_close = true;
+            }
+
+            if(level === "SERVICE MANAGER")
+            {
+                if(creator_level === "ASSISTANT SERVICE MANAGER")
+                {
+                    can_close = true;
+                }
+            }
+        }
+
         if(creator_id === uid)
             can_close = true;
 
@@ -3586,7 +3733,7 @@ catch (Exception $e) {
                     header: {
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'individual,admin,design,lighting,furniture,overall',
+                        right: 'individual,admin,design,lighting,furniture,sls,svc,overall',
                     },
 
                     //Individual按鈕：只顯示出Creator、Assignee或Collaborator是當前使用者的task在日曆上
@@ -3649,6 +3796,13 @@ catch (Exception $e) {
                                                 };
 
                                                 temp.push(obj_meeting);
+                                            }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
                                             }
                                         }
 
@@ -3716,6 +3870,13 @@ catch (Exception $e) {
 
                                                 temp.push(obj_meeting);
                                             }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
+                                            }
                                         }
 
                                         event_array_task = temp;
@@ -3782,6 +3943,13 @@ catch (Exception $e) {
 
                                                 temp.push(obj_meeting);
                                             }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
+                                            }
                                         }
 
                                         event_array_task = temp;
@@ -3846,12 +4014,19 @@ catch (Exception $e) {
                                                     },
                                                 };
 
-                                                event_array_task = temp;
+                                                
                                                 temp.push(obj_meeting);
+                                            }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
                                             }
                                         }
 
-
+                                        event_array_task = temp;
                                         calendar_task.addEventSource(temp);
 
                                     }
@@ -3915,7 +4090,162 @@ catch (Exception $e) {
 
                                                 temp.push(obj_meeting);
                                             }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
+                                            }
                                         }
+
+                                        event_array_task = temp;
+                                        calendar_task.addEventSource(temp);
+
+                                    }
+                                });
+                            }
+                        },
+
+                        sls: {
+                            text: 'SLS',
+                            click: function() {
+
+                                //刪除當前在日曆上的所有任務資訊
+                                calendar_task.removeAllEvents();
+
+                                //從資料庫中取出符合當前條件的任務
+
+                                let temp = [];
+                                //將符合條件的任務加入到日曆中
+                                // task status = Pending，則該任務顏色為 gray
+                                // task status = Close，則該任務顏色為 green
+                                // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
+                                // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
+                                var token = localStorage.getItem('token');
+
+                                localStorage.getItem('token');
+                                var form_Data = new FormData();
+
+                                form_Data.append('category', 'sls');
+
+                                $.ajax({
+                                    url: "api/project03_other_task_calendar",
+                                    type: "POST",
+                                    contentType: 'multipart/form-data',
+                                    processData: false,
+                                    contentType: false,
+                                    data: form_Data,
+
+                                    success: function(result) {
+                                        //console.log(result);
+                                        var obj = JSON.parse(result);
+                                        if (obj !== undefined) {
+                                            var arrayLength = obj.length;
+                                            for (var i = 0; i < arrayLength; i++) {
+                                                //console.log(obj[i]);
+
+                                                var obj_meeting = {
+                                                    id: obj[i].id,
+                                                    title: obj[i].title,
+                                                    //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                    start: moment(obj[i].due_date).format('YYYY-MM-DD'),
+                                                    backgroundColor: obj[i].color,
+                                                    borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
+                                                    },
+                                                };
+
+                                                temp.push(obj_meeting);
+                                            }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
+                                            }
+                                        }
+
+                                        event_array_task = temp;
+                                        calendar_task.addEventSource(temp);
+
+                                    }
+                                });
+                            }
+                        },
+
+                        svc: {
+                            text: 'SVC',
+                            click: function() {
+
+                                //刪除當前在日曆上的所有任務資訊
+                                calendar_task.removeAllEvents();
+
+                                //從資料庫中取出符合當前條件的任務
+
+                                let temp = [];
+                                //將符合條件的任務加入到日曆中
+                                // task status = Pending，則該任務顏色為 gray
+                                // task status = Close，則該任務顏色為 green
+                                // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
+                                // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
+                                var token = localStorage.getItem('token');
+
+                                localStorage.getItem('token');
+                                var form_Data = new FormData();
+
+                                form_Data.append('category', 'svc');
+
+                                $.ajax({
+                                    url: "api/project03_other_task_calendar",
+                                    type: "POST",
+                                    contentType: 'multipart/form-data',
+                                    processData: false,
+                                    contentType: false,
+                                    data: form_Data,
+
+                                    success: function(result) {
+                                        //console.log(result);
+                                        var obj = JSON.parse(result);
+                                        if (obj !== undefined) {
+                                            var arrayLength = obj.length;
+                                            for (var i = 0; i < arrayLength; i++) {
+                                                //console.log(obj[i]);
+
+                                                var obj_meeting = {
+                                                    id: obj[i].id,
+                                                    title: obj[i].title,
+                                                    //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                                                    start: moment(obj[i].due_date).format('YYYY-MM-DD'),
+                                                    backgroundColor: obj[i].color,
+                                                    borderColor: obj[i].color,
+                                                    extendedProps: {
+                                                        create_id:obj[i].create_id,
+                                                        category:obj[i].category,
+                                                        level:obj[i].level,
+                                                        task_status:obj[i].task_status,
+                                                        stage_id:obj[i].stage_id,
+                                                    },
+                                                };
+
+                                                temp.push(obj_meeting);
+                                            }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
+                                            }
+                                        }
+
+                                        
 
                                         event_array_task = temp;
                                         calendar_task.addEventSource(temp);
@@ -3981,6 +4311,13 @@ catch (Exception $e) {
 
                                                 temp.push(obj_meeting);
                                             }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
+                                            }
                                         }
 
                                         event_array_task = temp;
@@ -4007,6 +4344,14 @@ catch (Exception $e) {
                                                 window.open('https://feliix.myvnc.com/task_management_AD?sid=' + info.event.id, "_blank");
                                             else if(info.event.extendedProps.category == 'DS')
                                                 window.open('https://feliix.myvnc.com/task_management_DS?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'LT_T')
+                                                window.open('https://feliix.myvnc.com/task_management_LT?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'OS_T')
+                                                window.open('https://feliix.myvnc.com/task_management_OS?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'SLS')
+                                                window.open('https://feliix.myvnc.com/task_management_SLS?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'SVC')
+                                                window.open('https://feliix.myvnc.com/task_management_SVC?sid=' + info.event.id, "_blank");
                                             else
                                                 window.open('https://feliix.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
                                         }, 400);
