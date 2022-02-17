@@ -62,7 +62,7 @@ catch (Exception $e) {
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Feliix Project</title>
+    <title>Project Management</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -504,6 +504,10 @@ catch (Exception $e) {
 
         .fc-event-title {
             display: inline !important;
+        }
+
+        .fc-day-grid-event .fc-content {
+            white-space: inherit;
         }
 
         .fc-button-group > .fc-button {
