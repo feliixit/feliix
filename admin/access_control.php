@@ -245,6 +245,30 @@ $(function(){
                     <a class="btn" @click="save(7)">Save</a>
                 </div>
             </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Recorder of PO to Mr. Lai</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="payess8"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(8)">Cancel</a>
+                    <a class="btn" @click="save(8)">Save</a>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </div>

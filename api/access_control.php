@@ -17,6 +17,7 @@ $payess4 = (isset($_POST['payess4']) ?  $_POST['payess4'] : '');
 $payess5 = (isset($_POST['payess5']) ?  $_POST['payess5'] : '');
 $payess6 = (isset($_POST['payess6']) ?  $_POST['payess6'] : '');
 $payess7 = (isset($_POST['payess7']) ?  $_POST['payess7'] : '');
+$payess8 = (isset($_POST['payess8']) ?  $_POST['payess8'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -42,7 +43,7 @@ if (!isset($jwt)) {
     if ($action == 1) {
         //select all
         try {
-            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7 from access_control where id = 1";
+            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8 from access_control where id = 1";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
@@ -66,7 +67,8 @@ if (!isset($jwt)) {
                             salary = :salary,
                             salary_mgt = :salary_mgt,
                             salary_slip_mgt = :salary_slip_mgt,
-                            payess7 = :payess7
+                            payess7 = :payess7,
+                            payess8 = :payess8
                         where id = :id";
 
             // prepare the query
@@ -82,6 +84,7 @@ if (!isset($jwt)) {
             $payess5 = htmlspecialchars(strip_tags($payess5));
             $payess6 = htmlspecialchars(strip_tags($payess6));
             $payess7 = htmlspecialchars(strip_tags($payess7));
+            $payess8 = htmlspecialchars(strip_tags($payess8));
 
             // bind the values
             $stmt->bindParam(':id', $id);
@@ -92,6 +95,7 @@ if (!isset($jwt)) {
             $stmt->bindParam(':salary_mgt', $payess5);
             $stmt->bindParam(':salary_slip_mgt', $payess6);
             $stmt->bindParam(':payess7', $payess7);
+            $stmt->bindParam(':payess8', $payess8);
 
             try {
                 // execute the query, also check if query was successful

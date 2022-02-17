@@ -22,6 +22,7 @@ use \Firebase\JWT\JWT;
     $access7 = false;
     $access8 = false;
     $access9 = false;
+    $access10 = false;
 
     $pic_url = "man6.jpg";
 
@@ -88,6 +89,16 @@ try {
         $stmt->execute();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $access9 = true;
+        }
+
+        $access10 = false;
+        //if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
+        //    $access2 = true;
+        $query = "SELECT * FROM access_control WHERE payess8 LIKE '%" . $username . "%' ";
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $access10 = true;
         }
 
         // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(41), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
@@ -258,7 +269,7 @@ try {
                 <a class="list" href="performance_dashboard">Performance Evaluation</a>
             </li>
             <?php 
-                if($access1 == true || $access2 == true || $access3 == true || $access4 == true || $access8 == true || $access9 == true)
+                if($access1 == true || $access2 == true || $access3 == true || $access4 == true || $access8 == true || $access9 == true || $access10 == true)
                 {
             ?>
             <li class="gray05">
@@ -269,6 +280,7 @@ try {
                 <?=($access3 == true) ? '<a class="list" href="expense_recorder">Expense Recorder</a>' : '' ?>
                 <?=($access8 == true) ? '<a class="list" href="salary_recorder">Salary Recorder</a>' : '' ?>
                 <?=($access9 == true) ? '<a class="list" href="store_sales_recorder">Store Sales Recorder</a>' : '' ?>
+                <?=($access10 == true) ? '<a class="list" href="po_to_mrlai_recorder">Recorder of PO to Mr. Lai</a>' : '' ?>
             </li>
             <?php 
                 }
