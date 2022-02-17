@@ -34,7 +34,7 @@ $show_salary_slip_mgt = false;
 
 //if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
 //    $access2 = true;
-$query = "SELECT * FROM access_control WHERE payess7 LIKE '%" . $username . "%' ";
+$query = "SELECT * FROM access_control WHERE payess8 LIKE '%" . $username . "%' ";
 $stmt = $db->prepare( $query );
 $stmt->execute();
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
