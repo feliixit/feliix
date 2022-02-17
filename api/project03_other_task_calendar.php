@@ -321,6 +321,9 @@ function GetDepartments($department)
         case "ADMIN":
             $dep = "AD";
             break;
+        case "STORE":
+            $dep = "SLS";
+            break;
     }
 
     return $dep;

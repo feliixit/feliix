@@ -9,6 +9,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $keyword = (isset($_GET['keyword']) ? $_GET['keyword'] : "");
+$comp = (isset($_GET['comp']) ? $_GET['comp'] : "");
 $start_date = (isset($_GET['start_date']) ? $_GET['start_date'] : "");
 $end_date = (isset($_GET['end_date']) ? $_GET['end_date'] : "");
 $page = (isset($_GET['page']) ? $_GET['page'] : 1);
@@ -49,17 +50,17 @@ else
         $query = "SELECT  0 as is_checked, 
                                 ss.id, 
                                 ss.sales_date, 
-                                ss.sales_name, 
-                                ss.customer_name,
-                                ss.discount,
-                                ss.invoice,
-                                ss.remark,
-                                ss.payment_method,
-                                ss.teminal,
+                                ss.company, 
+                                ss.client,
+                                ss.sales_name,
+                                ss.total_amount,
+                                ss.po,
+                                ss.dr,
+                                ss.note,
                                 ss.`status`,
                                 DATE_FORMAT(ss.crt_time ,'%Y-%m-%d') crt_time
-                                from store_sales ss
-                                left join store_sales_record sr 
+                                from store_sales_lai ss
+                                left join store_sales_record_lai sr 
                                 on sr.sales_id = ss.id
                                 where ss.status <> -1 ";
 
@@ -72,22 +73,26 @@ else
         }
 
         if($keyword != '')
-            $query .= " AND (ss.sales_name like '%" . $keyword . "%' or ss.customer_name like '%" . $keyword . "%' or ss.remark like '%" . $keyword . "%' or sr.product_name like '%" . $keyword . "%') ";
+            $query .= " AND (ss.sales_name like '%" . $keyword . "%' or ss.company like '%" . $keyword . "%' or ss.note like '%" . $keyword . "%' or sr.product_name like '%" . $keyword . "%') ";
+
+        if($comp != '')
+            $query .= " AND (ss.company like '%" . $comp . "%') ";
+
 
         $query .= "group by
         ss.id, 
         ss.sales_date, 
-        ss.sales_name, 
-        ss.customer_name,
-        ss.discount,
-        ss.invoice,
-        ss.remark,
-        ss.payment_method,
-        ss.teminal,
+        ss.company, 
+        ss.client,
+        ss.sales_name,
+        ss.total_amount,
+        ss.po,
+        ss.dr,
+        ss.note,
         ss.`status`,
         ss.crt_time ";
         
-        $query .= " order by ss.sales_date ";
+        $query .= " order by ss.sales_date";
 
         $stmt = $db->prepare($query);
         $stmt->execute();
@@ -99,13 +104,13 @@ else
     
             $id = $row['id'];
             $sales_date = $row['sales_date'];
+            $company = $row['company'];
+            $client = $row['client'];
             $sales_name = $row['sales_name'];
-            $customer_name = $row['customer_name'];
-            $discount = $row['discount'];
-            $invoice = $row['invoice'];
-            $remark = $row['remark'];
-            $payment_method = $row['payment_method'];
-            $teminal = $row['teminal'];
+            $total_amount = $row['total_amount'];
+            $po = $row['po'];
+            $dr = $row['dr'];
+            $note = $row['note'];
             $status = $row['status'];
             $crt_time = $row['crt_time'];
 
@@ -115,13 +120,13 @@ else
                 "is_checked" => 0,
                 "id" => $id,
                 "sales_date" => $sales_date,
+                "company" => $company,
+                "client" => $client,
                 "sales_name" => $sales_name,
-                "customer_name" => $customer_name,
-                "discount" => $discount,
-                "invoice" => $invoice,
-                "remark" => $remark,
-                "payment_method" => GetPayment($payment_method),
-                "teminal" => $teminal,
+                "total_amount" => $total_amount,
+                "po" => $po,
+                "dr" => $dr,
+                "note" => $note,
                 "status" => $status,
                 "payment" => $items,
                 "total_amount" => GetAmount($items),
@@ -149,7 +154,7 @@ else
 function GetSalesDetail($sales_id, $db){
     $query = "
             SELECT 0 as is_checked, id, product_name, qty, price, free, DATE_FORMAT(crt_time, '%Y/%m/%d') crt_time
-                FROM store_sales_record
+                FROM store_sales_record_lai
             WHERE  sales_id = " . $sales_id . "
             AND `status` <> -1 
     ";

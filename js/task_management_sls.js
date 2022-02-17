@@ -55,6 +55,7 @@ var app = new Vue({
     my_department: "",
     my_title: "",
     username: "",
+    _uid:0,
 
     // TASKS
     title: "",
@@ -302,6 +303,21 @@ var app = new Vue({
   },
 
   methods: {
+
+    open_add() {
+ 
+          document.getElementById('add_a1').classList.add("show");
+            document.getElementById('dialog_a1').classList.add("focus");
+        
+    },
+
+    open_edit() {
+ 
+      document.getElementById('dialog_red_edit').classList.add("show");
+        document.getElementById('edit_red').classList.add("focus");
+    
+    },
+
     GetPage() {
 
       for(var _page = 1; ; _page++) {
@@ -336,7 +352,7 @@ var app = new Vue({
       )
         can_save = true;
 
-      if (this.my_title == "SALES MANAGER") {
+      if (this.my_title == "SALES MANAGER" || this.my_title == "STORE MANAGER") {
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR"
@@ -344,11 +360,34 @@ var app = new Vue({
           can_save = true;
       }
 
-      if (this.my_title == "ASSISTANT SALES MANAGER") {
+      if (this.my_title == "ASSISTANT SALES MANAGER" || this.my_title == "ASSISTANT STORE MANAGER") {
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR" &&
-          _creator_title != "SALES MANAGER"
+          _creator_title != "SALES MANAGER" &&
+          _creator_title != "STORE MANAGER"
+        )
+          can_save = true;
+      }
+
+      if (this.my_title == "SR. ACCOUNT EXECUTIVE" || 
+          this.my_title == "ACCOUNT EXECUTIVE" ||
+          this.my_title == "JR. ACCOUNT EXECUTIVE" ||
+          this.my_title == "SR. STORE SALES EXECUTIVE" ||
+          this.my_title == "STORE SALES EXECUTIVE"
+          ) {
+        if (
+          _creator_title != "MANAGING DIRECTOR" &&
+          _creator_title != "CHIEF ADVISOR" &&
+          _creator_title != "SALES MANAGER" &&
+          _creator_title != "STORE MANAGER" &&
+          _creator_title != "ASSISTANT SALES MANAGER" &&
+          _creator_title != "ASSISTANT STORE MANAGER" &&
+          _creator_title != "SR. ACCOUNT EXECUTIVE" &&
+          _creator_title != "ACCOUNT EXECUTIVE" &&
+          _creator_title != "JR. ACCOUNT EXECUTIVE" &&
+          _creator_title != "SR. STORE SALES EXECUTIVE" &&
+          _creator_title != "STORE SALES EXECUTIVE" 
         )
           can_save = true;
       }
@@ -411,6 +450,7 @@ var app = new Vue({
           _this.username = response.data.username;
           _this.my_department = response.data.department.trim().toUpperCase();
           _this.my_title = response.data.title.trim().toUpperCase();
+          _this._uid = response.data.user_id;
         })
         .catch(function(response) {
           //handle error
@@ -594,10 +634,10 @@ var app = new Vue({
           )
         );
 
-        if (!this.CanAccess(this.record.creator_title)) {
+        if (!this.CanAccess(this.record.creator_title)  && (this.record.creator_id != this._uid)) {
           Swal.fire({
             text:
-              "It is not allowed to edit/delete the task which was created by user with higher position.",
+              "It is not allowed to edit/delete the selected task.",
             icon: "warning",
             confirmButtonText: "OK",
           });
@@ -916,10 +956,11 @@ var app = new Vue({
             )
           );
 
-        if (!this.CanAccess(this.record.creator_title)) {
+
+        if (!this.CanAccess(this.record.creator_title) && (this.record.creator_id != this._uid)) {
           Swal.fire({
             text:
-              "It is not allowed to edit/delete the task which was created by user with higher position.",
+              "It is not allowed to edit/delete the selected task.",
             icon: "warning",
             confirmButtonText: "OK",
           });

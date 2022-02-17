@@ -2529,4 +2529,47 @@ ADD COLUMN `temp_estimate_close_prob` varchar(3) DEFAULT '' AFTER estimate_close
 
 -- init project_main estimated probility
 INSERT INTO project_est_prob(project_id, comment, prob, create_id, created_at) 
-select id, 'Project created', estimate_close_prob, create_id, created_at from project_main
+
+select id, 'Project created', estimate_close_prob, create_id, created_at from project_main;
+
+-- 2021/11/30 - lai sales record
+create table store_sales_lai
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`sales_date` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`company` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`client` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sales_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `total_amount` decimal(10,2) DEFAULT 0.0,
+	`po` varchar(128) DEFAULT '',
+	`dr` varchar(128) DEFAULT '',
+	`note` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+	`crt_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`crt_user` varchar(128) DEFAULT '',
+	`mdf_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`mdf_user` varchar(128) DEFAULT '',
+	`del_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`del_user` varchar(128) DEFAULT '',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+create table store_sales_record_lai
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `sales_id` bigint(20) unsigned NOT NULL,
+  `product_name` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+	`qty` int(11) DEFAULT 0,
+	`price` decimal(10,2) DEFAULT 0.0,
+	`free` varchar(1) DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+	`crt_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`crt_user` varchar(128) DEFAULT '',
+	`mdf_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`mdf_user` varchar(128) DEFAULT '',
+	`del_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	`del_user` varchar(128) DEFAULT '',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

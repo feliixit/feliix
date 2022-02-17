@@ -306,9 +306,38 @@
                     can_close = true;
             }
 
-            if(level === "SALES MANAGER")
+            if(level === "SALES MANAGER" || level === "STORE MANAGER")
             {
-                if(creator_level === "ASSISTANT SALES MANAGER")
+                if(creator_level !== "MANAGING DIRECTOR" && creator_level != "CHIEF ADVISOR")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "ASSISTANT SALES MANAGER" || level === "ASSISTANT STORE MANAGER")
+            {
+                if(creator_level !== "MANAGING DIRECTOR" && 
+                   creator_level != "CHIEF ADVISOR" && 
+                   creator_level != "SALES MANAGER" && 
+                   creator_level != "STORE MANAGER")
+                {
+                    can_close = true;
+                }
+            }
+
+            if(level === "SR. ACCOUNT EXECUTIVE" || level === "ACCOUNT EXECUTIVE" || level === "JR. ACCOUNT EXECUTIVE" || level === "SR. STORE SALES EXECUTIVE" || level === "STORE SALES EXECUTIVE")
+            {
+                if(creator_level !== "MANAGING DIRECTOR" && 
+                   creator_level != "CHIEF ADVISOR" && 
+                   creator_level != "SALES MANAGER" && 
+                   creator_level != "STORE MANAGER" && 
+                   creator_level != "ASSISTANT SALES MANAGER" && 
+                   creator_level != "ASSISTANT STORE MANAGER" && 
+                   creator_level != "SR. ACCOUNT EXECUTIVE" && 
+                   creator_level != "ACCOUNT EXECUTIVE" && 
+                   creator_level != "JR. ACCOUNT EXECUTIVE" && 
+                   creator_level != "SR. STORE SALES EXECUTIVE" && 
+                   creator_level != "STORE SALES EXECUTIVE")
                 {
                     can_close = true;
                 }
@@ -500,6 +529,13 @@
 
                                                         temp.push(obj_meeting);
                                                     }
+
+                                                    if(arrayLength > 0)
+                                                    {
+                                                        my_level = obj[0].my_l;
+                                                        my_id = obj[0].my_i;
+                                                        my_department = obj[0].my_d;
+                                                    }
                                                 }
 
                                                 event_array_task = temp;
@@ -567,6 +603,13 @@
 
                                                 temp.push(obj_meeting);
                                             }
+
+                                            if(arrayLength > 0)
+                                                    {
+                                                        my_level = obj[0].my_l;
+                                                        my_id = obj[0].my_i;
+                                                        my_department = obj[0].my_d;
+                                                    }
                                         }
 
                                         event_array_task = temp;
@@ -633,6 +676,13 @@
 
                                                 temp.push(obj_meeting);
                                             }
+
+                                            if(arrayLength > 0)
+                                                    {
+                                                        my_level = obj[0].my_l;
+                                                        my_id = obj[0].my_i;
+                                                        my_department = obj[0].my_d;
+                                                    }
                                         }
 
                                         event_array_task = temp;
@@ -698,6 +748,13 @@
                                                         };
 
                                                         temp.push(obj_meeting);
+                                                    }
+
+                                                    if(arrayLength > 0)
+                                                    {
+                                                        my_level = obj[0].my_l;
+                                                        my_id = obj[0].my_i;
+                                                        my_department = obj[0].my_d;
                                                     }
                                                 }
 
@@ -765,6 +822,13 @@
 
                                                         temp.push(obj_meeting);
                                                     }
+
+                                                    if(arrayLength > 0)
+                                                    {
+                                                        my_level = obj[0].my_l;
+                                                        my_id = obj[0].my_i;
+                                                        my_department = obj[0].my_d;
+                                                    }
                                                 }
 
                                                 event_array_task = temp;
@@ -830,6 +894,13 @@
                                                 };
 
                                                 temp.push(obj_meeting);
+                                            }
+
+                                            if(arrayLength > 0)
+                                            {
+                                                my_level = obj[0].my_l;
+                                                my_id = obj[0].my_i;
+                                                my_department = obj[0].my_d;
                                             }
                                         }
 
@@ -897,6 +968,13 @@
 
                                                 temp.push(obj_meeting);
                                             }
+
+                                            if(arrayLength > 0)
+                                                    {
+                                                        my_level = obj[0].my_l;
+                                                        my_id = obj[0].my_i;
+                                                        my_department = obj[0].my_d;
+                                                    }
                                         }
 
                                         event_array_task = temp;
@@ -961,6 +1039,13 @@
                                                         };
 
                                                         temp.push(obj_meeting);
+                                                    }
+
+                                                    if(arrayLength > 0)
+                                                    {
+                                                        my_level = obj[0].my_l;
+                                                        my_id = obj[0].my_i;
+                                                        my_department = obj[0].my_d;
                                                     }
                                                 }
 

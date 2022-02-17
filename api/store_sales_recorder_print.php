@@ -95,7 +95,7 @@ if($jwt){
         ss.`status`,
         ss.crt_time ";
         
-        $query .= " order by ss.id desc";
+        $query .= " order by ss.sales_date ";
 
         $stmt = $db->prepare($query);
         $stmt->execute();
