@@ -43,10 +43,10 @@ $show_salary_slip_mgt = true;
 
 // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
 // 為了測試先加上testmanager(87) by BB
-//if($show_salary_slip_mgt != true)
-//{
-//header( 'location:index' );
-//}
+if($show_salary_slip_mgt != true)
+{
+header( 'location:index' );
+}
 
 
 }
