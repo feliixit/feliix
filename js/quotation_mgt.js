@@ -78,32 +78,8 @@ var app = new Vue({
         tmp = v.split("=");
         if (tmp.length == 2) {
           switch (tmp[0]) {
-            case "fpc":
-              _this.fil_project_category = decodeURI(tmp[1]);
-              break;
-            case "fct":
-              _this.fil_client_type = decodeURI(tmp[1]);
-              break;
-            case "fp":
-              _this.fil_priority = decodeURI(tmp[1]);
-              break;
-            case "gp":
-                _this.fil_group = decodeURI(tmp[1]);
-              break;
-            case "fs":
-              _this.fil_status = decodeURI(tmp[1]);
-              break;
-            case "fcs":
-              _this.fil_stage = decodeURI(tmp[1]);
-              break;
             case "fpt":
               _this.fil_creator = decodeURI(tmp[1]);
-              break;
-            case "flo":
-              _this.fil_lower = decodeURI(tmp[1]);
-              break;
-            case "fup":
-              _this.fil_upper = decodeURI(tmp[1]);
               break;
             case "key":
               _this.fil_keyword = decodeURI(tmp[1]);
@@ -240,7 +216,7 @@ var app = new Vue({
       Swal.fire({
           title: "Duplicate",
           text: "Are you sure to duplicate this quotation?",
-          icon: "Info",
+          icon: "info",
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
@@ -426,15 +402,9 @@ var app = new Vue({
       let _this = this;
 
       const params = {
-                fpc: _this.fil_project_category,
-                fct: _this.fil_client_type,
-                fp: _this.fil_priority,
-                gp: _this.fil_group,
-                fs: _this.fil_status,
-                fcs: _this.fil_stage,
+
                 fpt: _this.fil_creator,
-                flo: _this.fil_lower,
-                fup: _this.fil_upper,
+       
                 key: _this.fil_keyword,
 
                 op1: _this.od_opt1,
@@ -626,24 +596,10 @@ var app = new Vue({
 
         window.location.href =
           "quotation_mgt?" +
-          "fpc=" +
-          _this.fil_project_category +
-          "&fct=" +
-          _this.fil_client_type +
-          "&fp=" +
-          _this.fil_priority +
-          "&gp=" +
-          _this.fil_group +
-          "&fs=" +
-          _this.fil_status +
-          "&fcs=" +
-          _this.fil_stage +
-          "&fpt=" +
+    
+          "fpt=" +
           _this.fil_creator +
-          "&flo=" +
-          _this.fil_lower +
-          "&fup=" +
-          _this.fil_upper +
+
           "&key=" +
           _this.fil_keyword +
           "&op1=" +
@@ -674,24 +630,10 @@ var app = new Vue({
 
         window.location.href =
           "quotation_mgt?" +
-          "fpc=" +
-          _this.fil_project_category +
-          "&fct=" +
-          _this.fil_client_type +
-          "&fp=" +
-          _this.fil_priority +
-          "&gp=" +
-          _this.fil_group +
-          "&fs=" +
-          _this.fil_status +
-          "&fcs=" +
-          _this.fil_stage +
-          "&fpt=" +
+ 
+          "fpt=" +
           _this.fil_creator +
-          "&flo=" +
-          _this.fil_lower +
-          "&fup=" +
-          _this.fil_upper +
+     
           "&key=" +
           _this.fil_keyword +
           "&op1=" +
@@ -711,24 +653,10 @@ var app = new Vue({
 
         window.location.href =
           "quotation_mgt?" +
-          "fpc=" +
-          _this.fil_project_category +
-          "&fct=" +
-          _this.fil_client_type +
-          "&fp=" +
-          _this.fil_priority +
-          "&gp=" +
-          _this.fil_group +
-          "&fs=" +
-          _this.fil_status +
-          "&fcs=" +
-          _this.fil_stage +
-          "&fpt=" +
+  
+          "fpt=" +
           _this.fil_creator +
-          "&flo=" +
-          _this.fil_lower +
-          "&fup=" +
-          _this.fil_upper +
+
           "&key=" +
           _this.fil_keyword +
           "&op1=" +
@@ -748,24 +676,10 @@ var app = new Vue({
 
         window.location.href =
           "quotation_mgt?" +
-          "fpc=" +
-          _this.fil_project_category +
-          "&fct=" +
-          _this.fil_client_type +
-          "&fp=" +
-          _this.fil_priority +
-          "&gp=" +
-          _this.fil_group +
-          "&fs=" +
-          _this.fil_status +
-          "&fcs=" +
-          _this.fil_stage +
-          "&fpt=" +
+ 
+          "fpt=" +
           _this.fil_creator +
-          "&flo=" +
-          _this.fil_lower +
-          "&fup=" +
-          _this.fil_upper +
+
           "&key=" +
           _this.fil_keyword +
           "&op1=" +

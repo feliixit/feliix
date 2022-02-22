@@ -42,18 +42,11 @@ $database = new Database();
 $db = $database->getConnection();
 
 $uid = (isset($_GET['uid']) ?  urldecode($_GET['uid']) : '');
-$fpc = (isset($_GET['fpc']) ?  urldecode($_GET['fpc']) : '');
-$fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
-$fp = (isset($_GET['fp']) ?  urldecode($_GET['fp']) : '');
-$fs = (isset($_GET['fs']) ?  urldecode($_GET['fs']) : '');
-$gp = (isset($_GET['gp']) ?  urldecode($_GET['gp']) : '');
-$fcs = (isset($_GET['fcs']) ?  urldecode($_GET['fcs']) : '');
+
 $fpt = (isset($_GET['fpt']) ?  $_GET['fpt'] : '');
 
 $fpt = urldecode($fpt);
 
-$flo = (isset($_GET['flo']) ?  urldecode($_GET['flo']) : '');
-$fup = (isset($_GET['fup']) ?  urldecode($_GET['fup']) : '');
 $key = (isset($_GET['key']) ?  $_GET['key'] : '');
 
 $key = urldecode($key);
