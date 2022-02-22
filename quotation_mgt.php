@@ -216,7 +216,7 @@ header( 'location:index' );
                         <h6>Create New Quotation:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt>Quotation Title</dt>
+                                <dt>Quotation Name</dt>
                                 <dd><input type="text" placeholder="" v-model="ins_title"></dd>
 
                                 <dt>Project Name</dt>
@@ -308,7 +308,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt>Keyword (only for quotation title, project name or quotation no.)</dt>
+                                <dt>Keyword (only for quotation name, project name or quotation no.)</dt>
                                 <dd><input type="text" v-model="fil_keyword"></dd>
 
                             </dl>
@@ -453,7 +453,7 @@ header( 'location:index' );
             <div class="tableframe">
                 <div class="tablebox lv1">
                     <ul class="head">
-                        <li>Quotation Title</li>
+                        <li>Quotation Name</li>
                         <li>Project Name</li>
                         <li>Quotation Number</li>
                         <li>Created Time</li>

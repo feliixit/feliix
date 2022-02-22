@@ -224,6 +224,7 @@ var app = new Vue({
         }).then((result) => {
           if (result.value) {
 
+            let me = _this;
 
               token = localStorage.getItem('token');
               var form_Data = new FormData();
@@ -243,11 +244,11 @@ var app = new Vue({
                   success: function (result) {
                       console.log(result);
                       Swal.fire({
-                        html: result.data.message,
+                        html: result.message,
                         icon: "info",
                         confirmButtonText: "OK",
                       });
-                      _this.clear();
+                      me.clear();
                   },
 
                   // show error message to user
@@ -277,6 +278,7 @@ var app = new Vue({
         }).then((result) => {
           if (result.value) {
 
+            let me = _this;
 
               token = localStorage.getItem('token');
               var form_Data = new FormData();
@@ -296,11 +298,11 @@ var app = new Vue({
                   success: function (result) {
                       console.log(result);
                       Swal.fire({
-                        html: result.data.message,
+                        html: result.message,
                         icon: "info",
                         confirmButtonText: "OK",
                       });
-                      _this.clear();
+                      me.clear();
                   },
 
                   // show error message to user
@@ -499,7 +501,7 @@ var app = new Vue({
 
             if (this.ins_title.trim() == '') {
               Swal.fire({
-                text: 'Please enter Title!',
+                text: 'Please Encode Quotation Name!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })
@@ -510,7 +512,7 @@ var app = new Vue({
 
             if (this.ins_project_id == 0) {
               Swal.fire({
-                text: 'Please select Project!',
+                text: 'Please Select Project!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })
@@ -571,6 +573,8 @@ var app = new Vue({
         
         document.getElementById('insert_dialog').classList.remove("show");
 
+        this.is_modifying = false;
+
         this.receive_records = [];
 
         this.getRecords();
@@ -580,10 +584,12 @@ var app = new Vue({
 
       cancel_filters:function() {
         document.getElementById('filter_dialog').classList.remove("show");
+        this.is_modifying = false;
       },
 
       cancel_orders:function() {
         document.getElementById('order_dialog').classList.remove("show");
+        this.is_modifying = false;
       },
 
       clear_orders: function() {
