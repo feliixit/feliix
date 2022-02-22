@@ -80,51 +80,12 @@ $query = "SELECT pm.id,
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
                 where pm.status <> -1 ";
 
-if($fpc != "")
-{
-    $query = $query . " and pm.catagory_id = " . $fpc . " ";
-}
-
-if($fct != "")
-{
-    $query = $query . " and pm.client_type_id = '" . $fct . "' ";
-}
-
-if($fp != "")
-{
-    $query = $query . " and pm.priority_id = '" . $fp . "' ";
-}
-
-if($fs != "")
-{
-    $query = $query . " and pm.project_status_id = '" . $fs . "' ";
-}
-
-if($gp != "")
-{
-    $query = $query . " and pm.group_id = '" . $gp . "' ";
-}
 
 if($fpt != "")
 {
     $query = $query . " and c_user.username = '" . $fpt . "' ";
 }
 
-if($flo != "" && $flo != "0")
-{
-    $query = $query . " and COALESCE((SELECT project_est_prob.prob 
-                                        FROM project_est_prob 
-                                        WHERE project_est_prob.project_id = pm.id 
-                                    order by created_at desc limit 1), pm.estimate_close_prob) >= " . $flo . " ";
-}
-
-if($fup != "" && $fup != "0")
-{
-    $query = $query . " and COALESCE((SELECT project_est_prob.prob 
-                                        FROM project_est_prob 
-                                        WHERE project_est_prob.project_id = pm.id 
-                                    order by created_at desc limit 1), pm.estimate_close_prob) <= " . $fup . " ";
-}
 
 $sOrder = "";
 if($op1 != "" && $op1 != "0")
@@ -143,12 +104,7 @@ if($op1 != "" && $op1 != "0")
             else
                 $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
             break;  
-        case 3:
-            if($od1 == 2)
-                $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) desc";
-            else
-                $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) ";
-            break;  
+       
         
         default:
     }
@@ -170,12 +126,7 @@ if($op2 != "" && $op2 != "0" && $sOrder != "")
             else
                 $sOrder .= ", Coalesce(pm.updated_at, '9999-99-99') ";
             break;  
-        case 3:
-            if($od2 == 2)
-                $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) desc";
-            else
-                $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) ";
-            break;  
+      
         
         default:
     }
@@ -198,12 +149,7 @@ if($op2 != "" && $op2 != "0" && $sOrder == "")
             else
                 $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
             break;  
-        case 3:
-            if($od2 == 2)
-                $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) desc";
-            else
-                $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = pm.id order by created_at desc limit 1), pm.estimate_close_prob) ";
-            break;  
+       
         
         default:
     }
@@ -233,57 +179,12 @@ if($fcs != "")
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
                 where pm.status <> -1 ";
 
-    if($fpc != "")
-    {
-        $query = $query . " and pm.catagory_id = " . $fpc . " ";
-    }
-
-    if($fct != "")
-    {
-        $query = $query . " and pm.client_type_id = '" . $fct . "' ";
-    }
-
-    if($fp != "")
-    {
-        $query = $query . " and pm.priority_id = '" . $fp . "' ";
-    }
-
-    if($gp != "")
-    {
-        $query = $query . " and pm.group_id = '" . $gp . "' ";
-    }
-
-    if($fs != "")
-    {
-        $query = $query . " and pm.project_status_id = '" . $fs . "' ";
-    }
-
     if($fpt != "")
     {
         $query = $query . " and c_user.username = '" . $fpt . "' ";
     }
 
  
-    if($fcs == 'Empty')
-        $query = $query . " ) t  WHERE t.stage = '' ";
-    else
-        $query = $query . " ) t  WHERE t.stage = '" . $fcs . "' ";
-
-    if($flo != "" && $flo != "0")
-    {
-        $query = $query . " and COALESCE((SELECT project_est_prob.prob 
-                                            FROM project_est_prob 
-                                            WHERE project_est_prob.project_id = pm.id 
-                                        order by created_at desc limit 1), pm.estimate_close_prob) >= " . $flo . " ";
-    }
-    
-    if($fup != "" && $fup != "0")
-    {
-        $query = $query . " and COALESCE((SELECT project_est_prob.prob 
-                                            FROM project_est_prob 
-                                            WHERE project_est_prob.project_id = pm.id 
-                                        order by created_at desc limit 1), pm.estimate_close_prob) <= " . $fup . " ";
-    }
 
     $sOrder = "";
     if($op1 != "" && $op1 != "0")
@@ -302,12 +203,7 @@ if($fcs != "")
                 else
                     $sOrder = "Coalesce(t.updated_at, '9999-99-99') ";
                 break;  
-            case 3:
-                if($od1 == 2)
-                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) desc";
-                else
-                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) ";
-                break;  
+      
             
             default:
         }
@@ -329,12 +225,7 @@ if($fcs != "")
                 else
                     $sOrder .= ", Coalesce(t.updated_at, '9999-99-99') ";
                 break;  
-            case 3:
-                if($od2 == 2)
-                    $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) desc";
-                else
-                    $sOrder = ", COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) ";
-                break;  
+      
           
             default:
         }
@@ -357,12 +248,7 @@ if($fcs != "")
                 else
                     $sOrder = "Coalesce(t.updated_at, '9999-99-99') ";
                 break;  
-            case 3:
-                if($od2 == 2)
-                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) desc";
-                else
-                    $sOrder = "COALESCE((SELECT project_est_prob.prob FROM project_est_prob WHERE project_est_prob.project_id = t.id order by created_at desc limit 1), t.estimate_close_prob) ";
-                break;  
+          
            
             default:
         }
@@ -380,8 +266,6 @@ if(!empty($_GET['page'])) {
         $page = 1;
     }
 }
-
-
 
 if(!empty($_GET['size'])) {
     $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
