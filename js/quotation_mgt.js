@@ -129,7 +129,6 @@ var app = new Vue({
   },
 
   mounted(){
- 
     
   },
 
@@ -173,6 +172,20 @@ var app = new Vue({
 
 
   methods:{
+
+    setupChosen: function(){
+      $(document).ready(function(){
+        //Chosen
+        $(".limitedNumbChosen").chosen({
+          max_selected_options: 2,
+          placeholder_text_multiple: "Which are two of most productive days of your week"
+        })
+        .bind("chosen:maxselected", function (){
+          window.alert("You reached your limited number of selections which is 2 selections!");
+        })
+       
+      });
+    },
 
     getCreators () {
 
@@ -384,6 +397,8 @@ var app = new Vue({
           for (let index = 1; index <= numberOfPages; index++) {
             this.pages.push(index);
           }
+
+          // this.setupChosen();
         },
 
         paginate: function (posts) {
