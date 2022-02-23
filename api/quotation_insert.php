@@ -22,6 +22,11 @@ $prepare_by_second_line = isset($_POST['prepare_by_second_line']) ? $_POST['prep
 $footer_first_line = isset($_POST['footer_first_line']) ? $_POST['footer_first_line'] : '';
 $footer_second_line = isset($_POST['footer_second_line']) ? $_POST['footer_second_line'] : '';
 
+$title = isset($_POST['title']) ? $_POST['title'] : '';
+$project_id = isset($_POST['project_id']) ? $_POST['project_id'] : 0;
+
+$project_id == 0 ? $project_id = 0 : $project_id = $project_id;
+
 $pages = (isset($_POST['pages']) ?  $_POST['pages'] : '[]');
 $pages_array = json_decode($pages,true);
 
@@ -62,6 +67,8 @@ else
     
         $query = "INSERT INTO quotation
         SET
+            `title` = :title,
+            `project_id` = :project_id,
             `first_line` = :first_line,
             `second_line` = :second_line,
             `project_category` = :project_category,
@@ -83,6 +90,8 @@ else
         $stmt = $db->prepare($query);
 
         // bind the values
+        $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':project_id', $project_id);
         $stmt->bindParam(':first_line', $first_line);
         $stmt->bindParam(':second_line', $second_line);
         $stmt->bindParam(':project_category', $project_category);

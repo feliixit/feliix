@@ -2576,3 +2576,12 @@ create table store_sales_record_lai
 -- store sales report
 ALTER TABLE access_control
 ADD COLUMN `payess8` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+
+-- 20220221 quotation management
+ALTER TABLE quotation
+ADD COLUMN `title` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '' AFTER id;
+
+ALTER TABLE quotation
+ADD COLUMN `project_id` bigint(20)  DEFAULT 0 AFTER title;
+
