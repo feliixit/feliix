@@ -299,7 +299,7 @@ var app = new Vue({
           
       },
 
-      sig_item_company_del: function(eid) {
+      sig_item_company_del: function(fromIndex, eid) {
 
         var index = this.sig.item_company.findIndex(({ id }) => id === eid);
         if (index > -1) {
@@ -329,7 +329,7 @@ var app = new Vue({
         this.sig.item_company.splice(toIndex, 0, element);
       },
 
-      sig_item_client_del: function(eid) {
+      sig_item_client_del: function(fromIndex, eid) {
 
         var index = this.sig.item_client.findIndex(({ id }) => id === eid);
         if (index > -1) {
