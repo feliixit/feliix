@@ -630,7 +630,7 @@ var app = new Vue({
         })
           .then(function(response) {
             //handle success
-            _this.id = response.data.id;
+            //_this.id = response.data.id;
             
             Swal.fire({
               html: response.data.message,
