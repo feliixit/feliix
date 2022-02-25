@@ -216,7 +216,7 @@ function GetCurrentMonth($strDate, $sale_person, $category, $db)
 
         $o_cumulate = $row['o_cumulate'];
         foreach($o_cumulate as $r)
-            $net_amount_o += $r['ar'];
+            $ar += $r['ar'];
     }
 
     $total1 = array(
@@ -483,7 +483,7 @@ function GetOneMonth($strDate, $sale_person, $category, $db)
 
         $o_cumulate = $row['o_cumulate'];
         foreach($o_cumulate as $r)
-            $net_amount_o += $r['ar'];
+            $ar += $r['ar'];
     }
 
     $total1 = array(
