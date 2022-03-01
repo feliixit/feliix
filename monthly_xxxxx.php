@@ -304,11 +304,11 @@ background-color: #94BABB;
                                     <dt style="margin-bottom: -15px;">Period of Time</dt>
                                     <div class="half">
                                         <dt>From</dt>
-                                        <dd><input type="month" id="start" name="start" ></dd>
+                                        <dd><input type="number" id="start" name="start" min="2019" max="2099" step="1" v-model="fil_start_date"></dd>
                                     </div>
                                     <div class="half">
                                         <dt>To</dt>
-                                        <dd><input type="month" id="end" name="end" ></dd>
+                                        <dd><input type="number" id="end" name="end" min="2019" max="2099" step="1" v-model="fil_end_date"></dd>
                                     </div>
 
                                 </dl>
@@ -333,7 +333,7 @@ background-color: #94BABB;
 
 
 
-                    <table class="spantable">
+                    <table class="spantable" v-for='(record, index) in receive_records'>
 
                         <thead>
 
@@ -356,7 +356,7 @@ background-color: #94BABB;
 
                         <tbody>
 
-                        <tr v-for='(rec, index) in receive_records.merged_results'>
+                        <tr v-for='(rec, index) in record.data.merged_results'>
                             <td>{{ rec.date }}</td>
                             <td>{{ Number(rec.total.net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                             <td>{{ Number(rec.total.net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
@@ -369,13 +369,13 @@ background-color: #94BABB;
 
                         <tr>
                             <td>Total</td>
-                            <td>{{ Number(receive_records.total_net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(receive_records.total_net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(receive_records.total_net_shagrila).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(receive_records.total_cash_received).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(receive_records.total_ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(receive_records.total_down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(receive_records.total_cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>{{ Number(record.data.total_net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>{{ Number(record.data.total_net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>{{ Number(record.data.total_net_shagrila).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>{{ Number(record.data.total_cash_received).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>{{ Number(record.data.total_ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>{{ Number(record.data.total_down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>{{ Number(record.data.total_cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                         </tr>
 
                         </tbody>

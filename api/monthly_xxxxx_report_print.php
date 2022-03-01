@@ -1,71 +1,27 @@
 <?php
-
-error_reporting(E_ERROR | E_PARSE);
-ini_set('display_errors', 1);
-$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+// required headers
+ error_reporting(0);
+ 
+ require '../vendor/autoload.php';
+// required to encode json web token
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 
+include_once 'config/conf.php';
+
 use \Firebase\JWT\JWT;
-
-$method = $_SERVER['REQUEST_METHOD'];
-
-date_default_timezone_set('Asia/Taipei');
-
-if (!isset($jwt)) {
-    http_response_code(401);
-
-    echo json_encode(array("message" => "Access denied."));
-    die();
-} else {
-    try {
-        // decode jwt
-        $access7 = false;
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
-        $user_id = $decoded->data->id;
-        $position = $decoded->data->position;
-        $department = $decoded->data->department;
-        $username = $decoded->data->username;
-
-        if(trim(strtoupper($department)) == '')
-        {
-            if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
-            {
-                $access7 = true;
-            }
-        }
-
-        if($username == "Glendon Wendell Co")
-        {
-            $access7 = true;
-        }
-
-        if(!$access7)
-        {
-         http_response_code(401);
-
-         echo json_encode(array("message" => "Access denied."));
-         die();
-        }
-    }
-    // if decode fails, it means jwt is invalid
-    catch (Exception $e) {
-
-        http_response_code(401);
-
-        echo json_encode(array("message" => "Access denied."));
-        die();
-    }
-}
-
-header('Access-Control-Allow-Origin: *');
-
+ 
+// files needed to connect to database
 include_once 'config/database.php';
 
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+ 
+// get database connection
 $database = new Database();
 $db = $database->getConnection();
 
@@ -76,63 +32,194 @@ $total_p = 0;
 $total_net_amount = 0;
 $total_tax_withheld = 0;
 
-switch ($method) {
-    case 'GET':
-        $strDate = (isset($_GET['d']) ?  $_GET['d'] : "");
-        $strEDate = (isset($_GET['e']) ?  $_GET['e'] : "");
-        $sale_person = (isset($_GET['p']) ?  $_GET['p'] : "");
-        $sale_person = urldecode($sale_person);
-        $category = (isset($_GET['c']) ?  $_GET['c'] : "");
+// get posted data
+$data = json_decode(file_get_contents("php://input"));
+ 
+// get jwt
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 
-        $total1 = [];
-    
-        if($strDate == '')
-        {
-            $strDate = date('Y-m-d');
+$strDate = (isset($_POST['d']) ?  $_POST['d'] : '');
+$strEDate = (isset($_POST['e']) ?  $_POST['e'] : '');
+$sale_person = (isset($_POST['p']) ?  $_POST['p'] : '');
+$sale_person = urldecode($sale_person);
+$category = (isset($_POST['c']) ?  $_POST['c'] : '');
 
-            $this_year = date("Y",strtotime($strDate . "first day of 0 year"));
-            $last_year = date("Y",strtotime($strDate . "first day of -1 year"));
 
-            $strDate    = $this_year;
+$conf = new Conf();
+
+// if jwt is not empty
+if($jwt){
+ 
+    // if decode succeed, show user details
+    try {
+ 
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+        // response in json format
+            http_response_code(200);
+
+            $total1 = [];
+
+            if($strDate == '')
+            {
+                $strDate = date('Y-m-d');
+  
+                $this_year = date("Y",strtotime($strDate . "first day of 0 year"));
+                $last_year = date("Y",strtotime($strDate . "first day of -1 year"));
+
+                $strDate    = $this_year;
                 $strEDate      = $last_year;
 
-
-        }
-
-        if($strDate != '' && $strEDate != "")
-        {
-            if($strDate > $strEDate)
-            {
-                $tempDate = $strDate;
-                $strDate = $strEDate;
-                $strEDate = $tempDate;
             }
 
-            $interval = DateInterval::createFromDateString('1 year');
-            $period = new DatePeriod(new DateTime($strDate . "-01-01"), $interval, new DateTime(date("Y-m-d",strtotime($strEDate . "-12-31"))));
-            foreach ($period as $dt) {
-                $strDate = $dt->format("Y") . "-01-01";
-                $strEDate = $dt->format("Y") . "-12-31";
-                $merged_results =  GetYearCurrentMonth($strDate, $strEDate, $sale_person, $category, $db);
+            if($strDate != '' && $strEDate != "")
+            {
+                if($strDate > $strEDate)
+                {
+                    $tempDate = $strDate;
+                    $strDate = $strEDate;
+                    $strEDate = $tempDate;
+                }
 
-                $total1[] = array(
-                    "data" => $merged_results,
-                    "year" => $strDate,
-                   
-                );
+                $interval = DateInterval::createFromDateString('1 year');
+                $period = new DatePeriod(new DateTime($strDate . "-01-01"), $interval, new DateTime(date("Y-m-d",strtotime($strEDate . "-12-31"))));
+                foreach ($period as $dt) {
+                    $strDate = $dt->format("Y") . "-01-01";
+                    $strEDate = $dt->format("Y") . "-12-31";
+                    $merged_results =  GetYearCurrentMonth($strDate, $strEDate, $sale_person, $category, $db);
 
+                    $total1[] = array(
+                        "data" => $merged_results,
+                        "year" => $strDate,
+                    
+                    );
+
+                }
+
+                
+            }
+
+            $reversed = array_reverse($total1);
+          
+            // response in json format
+            $styleArray = array(
+                'borders' => array(
+                    'allBorders' => array(
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => array('rgb' => '000000'),
+                    ),
+                ),
+            );
+
+            $spreadsheet = new Spreadsheet();
+
+            $spreadsheet->getProperties()->setCreator('PhpOffice')
+                    ->setLastModifiedBy('PhpOffice')
+                    ->setTitle('Office 2007 XLSX Test Document')
+                    ->setSubject('Office 2007 XLSX Test Document')
+                    ->setDescription('PhpOffice')
+                    ->setKeywords('PhpOffice')
+                    ->setCategory('PhpOffice');
+
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setTitle("Sheet 1");
+            $sheet->getMergeCells();
+
+            $i = 1;
+            foreach($reversed as $rs)
+            {
+                // title 
+                $i = $i + 1;
+                $sheet->setCellValue('A'. $i, 'Date');
+                $sheet->setCellValue('B'. $i, 'Lighting');
+                $sheet->setCellValue('C'. $i, 'Office Systems');
+                $sheet->setCellValue('D'. $i, 'Shangri-La');
+                $sheet->setCellValue('E'. $i, 'Cash Received');
+                $sheet->setCellValue('F'. $i, 'A/R');
+                $sheet->setCellValue('G'. $i, 'Down Payment');
+                $sheet->setCellValue('H'. $i, 'Expense');
+     
+                $sheet->getStyle('A' . $i . ':' . 'H' . $i)->getFont()->setBold(true);
+
+                foreach($rs["data"]["merged_results"] as $row)
+                {
+                  
+                    $i = $i + 1;
+                    $sheet->setCellValue('A' . $i, $row['date']);
+                    $sheet->setCellValue('B' . $i, number_format((float)$row["total"]['net_amount_l'], 2, '.', ''));
+                    $sheet->setCellValue('C' . $i, number_format((float)$row["total"]['net_amount_o'], 2, '.', ''));
+                    $sheet->setCellValue('D' . $i, number_format((float)$row["total"]['net_shagrila'], 2, '.', ''));
+                    $sheet->setCellValue('E' . $i, number_format((float)$row["total"]['cash_received'], 2, '.', ''));
+                    $sheet->setCellValue('F' . $i, number_format((float)$row["total"]['ar'], 2, '.', ''));
+                    $sheet->setCellValue('G' . $i, number_format((float)$row["total"]['down_payment'], 2, '.', ''));
+                    $sheet->setCellValue('H' . $i, number_format((float)$row["total"]['cash_expense'], 2, '.', ''));
+                                
+                    
+                }
+
+                $i = $i + 1;
+                $sheet->setCellValue('A' . $i, "Total:");
+                $sheet->setCellValue('B' . $i, number_format((float)$rs["data"]['total_net_amount_l'], 2, '.', ''));
+                $sheet->setCellValue('C' . $i, number_format((float)$rs["data"]['total_net_amount_o'], 2, '.', ''));
+                $sheet->setCellValue('D' . $i, number_format((float)$rs["data"]['total_net_shagrila'], 2, '.', ''));
+                $sheet->setCellValue('E' . $i, number_format((float)$rs["data"]['total_cash_received'], 2, '.', ''));
+                $sheet->setCellValue('F' . $i, number_format((float)$rs["data"]['total_ar'], 2, '.', ''));
+                $sheet->setCellValue('G' . $i, number_format((float)$rs["data"]['total_down_payment'], 2, '.', ''));
+                $sheet->setCellValue('H' . $i, number_format((float)$rs["data"]['total_cash_expense'], 2, '.', ''));
+
+                $sheet->getStyle('A' . $i . ':' . 'H' . $i)->getFont()->setBold(true);
+                //$sheet->getStyle('A'. $i. ':' . 'J' . $i)->applyFromArray($styleArray);
+
+                $i = $i + 2;
             }
 
             
-        }
+            // $sheet->getStyle('A1:' . 'J' . --$i)->applyFromArray($styleArray);
 
-        $reversed = array_reverse($total1);
-        
-        echo json_encode($reversed, JSON_UNESCAPED_SLASHES);
+           
 
-        break;
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="file.xlsx"');
 
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+            // If you're serving to IE over SSL, then the following may be needed
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header('Pragma: public'); // HTTP/1.0
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save('php://output');
+
+
+            exit;
+    }
+ 
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+    
+        // set response code
+        http_response_code(401);
+    
+        // show error message
+        echo json_encode(array(
+            "message" => "Access denied.",
+            "error" => $e->getMessage()
+        ));
+    }
 }
+// show error message if jwt is empty
+else{
+ 
+    // set response code
+    http_response_code(401);
+ 
+    // tell the user access denied
+    echo json_encode(array("message" => "Access denied."));
+}
+
 
 function GetYearCurrentMonth($strDate, $strEDate, $sale_person, $category, $db)
 {
@@ -1498,3 +1585,5 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 
         return $merged_results;
 }
+
+?>

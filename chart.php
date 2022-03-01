@@ -191,6 +191,7 @@ catch (Exception $e) {
                 <a class="tag B" href="monthly_cash_flow_report">Monthly Cash Flow Report</a>
                 <a class="tag C" href="monthly_new_project_report">Monthly New Project Report</a>
                 <a class="tag D focus">Chart</a>
+                <a class="tag E" href="monthly_xxxxx">xxxxx</a>
             </div>
             <!-- Blocks -->
             <div class="block D focus">

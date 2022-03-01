@@ -19,6 +19,7 @@ var app = new Vue({
     proof_remark: "",
 
     proof_id: 0,
+ 
 
     // paging
     page: 1,
@@ -41,8 +42,8 @@ var app = new Vue({
 
     creators: {},
 
-    fil_start_date: "",
-    fil_end_date: "",
+    fil_start_date: 0,
+    fil_end_date: 0,
     fil_creator: "",
     fil_category: "",
     
@@ -68,12 +69,14 @@ var app = new Vue({
         {
           switch (tmp[0]) {
             case "d":
-              document.getElementById("start").value = tmp[1].substring(0,7);
+              document.getElementById("start").value = tmp[1];
               _this.fil_start_date = tmp[1];
+              _this.start = tmp[1];
               break;
             case "e":
-              document.getElementById("end").value = tmp[1].substring(0,7);
+              document.getElementById("end").value = tmp[1];
               _this.fil_end_date = tmp[1];
+              _this.end = tmp[1];
               break;
             case "c":
               _this.fil_category = tmp[1];
@@ -98,6 +101,8 @@ var app = new Vue({
       });
     }
 
+    this.getDefaultDate();
+
     this.getLeaveCredit(id);
 
     this.getCreators();
@@ -109,8 +114,8 @@ var app = new Vue({
   },
 
   mounted() {
-    document.getElementById("start").value = this.fil_start_date.substring(0,7);
-    document.getElementById("end").value = this.fil_end_date.substring(0,7);
+    
+
   },
 
   watch: {
@@ -126,6 +131,45 @@ var app = new Vue({
   },
 
   methods: {
+    getDefaultDate(){
+      
+
+      if(this.fil_start_date == 0 || this.fil_start_date == "")
+      {
+        var d1 = new Date();
+        sdate1 = d1.toISOString().slice(0,4);
+        var newDate1 = new Date(d1.getFullYear() -1, d1.getMonth(), d1.getDay());
+        edate1 = newDate1.toISOString().slice(0,4);
+
+        this.fil_end_date = sdate1.substring(0,4) * 1;
+        this.fil_start_date = edate1.substring(0,4) * 1;
+      }
+  
+      if(this.fil_end_date == 0 || this.fil_end_date == "")
+      {
+        var today = new Date();
+        var d2 = new Date(today.getFullYear(), today.getYear(), 0);
+  
+        sdate2 = today.toISOString().slice(0,10);
+      
+        edate2 = this.formatDate(d2);
+
+        this.fil_end_date = edate2.substring(0,4) * 1;
+      }
+
+      if(this.fil_start_date > 2099)
+        this.fil_start_date = 2099;
+
+      if(this.fil_end_date > 2099)
+        this.fil_end_date = 2099;
+
+      if(this.fil_start_date < 2019)
+        this.fil_start_date = 2019;
+
+      if(this.fil_end_date < 2019)
+        this.fil_end_date = 2019;
+    },
+
     pre_page: function(){
       let tenPages = Math.floor((this.page - 1) / 10) + 1;
 
@@ -309,19 +353,19 @@ var app = new Vue({
   
       if($('#start').val())
       {
-        var d1 = new Date($('#start').val() + '-01');
+        var d1 = new Date($('#start').val() + '-01-01');
         sdate1 = d1.toISOString().slice(0,10);
-        var newDate1 = new Date(d1.setMonth(d1.getMonth()+1));
+        var newDate1 = new Date(d1.setYear(d1.get()+1));
         edate1 = newDate1.toISOString().slice(0,10);
 
-        this.fil_start_date = sdate1;
-        this.fil_end_date = edate1;
+        this.fil_start_date = sdate1.substring(0,4);
+        this.fil_end_date = edate1.substring(0,4);
       }
   
       if($('#end').val())
       {
         var today = new Date($('#end').val());
-        var d2 = new Date(today.getFullYear(), today.getMonth()+1, 0);
+        var d2 = new Date(today.getFullYear(), today.getYear()+1, 0);
   
         sdate2 = today.toISOString().slice(0,10);
       
@@ -380,7 +424,7 @@ var app = new Vue({
       if(_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
 
-      this.getPeriodDate();
+      this.getDefaultDate();
 
       window.location.href =
         "monthly_xxxxx?" +
@@ -749,7 +793,7 @@ var app = new Vue({
 
       axios({
         method: "post",
-        url: "api/monthly_xxxxx_print",
+        url: "api/monthly_xxxxx_report_print",
         data: form_Data,
         responseType: "blob",
       })
@@ -758,7 +802,7 @@ var app = new Vue({
                 const link = document.createElement('a');
                 link.href = url;
                
-                  link.setAttribute('download', 'Monthly Sales Report.xlsx');
+                  link.setAttribute('download', 'Monthly xxxx Report.xlsx');
                
                 document.body.appendChild(link);
                 link.click();
