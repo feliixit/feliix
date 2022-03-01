@@ -277,7 +277,7 @@ try {
 
     <div class="header">
         <div style="display: flex; align-items: center;">
-            <a href="default" style="margin-left: 42px; transform: scaleX(1.4);">
+            <a href="default" style="margin-left: 42px; transform: scaleX(1.4); text-decoration: none;">
                 <span style="color: white; font-size: 22px; font-weight: 600;">&#9776;</span>
             </a>
 
