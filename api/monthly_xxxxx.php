@@ -984,7 +984,7 @@ function GetDownPaymentDetail($_pid, $PeriodStart, $PeriodEnd, $db)
             ";
             
             $sql = $sql . " 
-            AND pm.id = " . $_pid . " order by pp.id limit 1";
+            AND pm.id = " . $_pid . " order by pp.received_date, pp.id limit 1";
 
     $merged_results = array();
 
