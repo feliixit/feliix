@@ -141,14 +141,14 @@ var app = new Vue({
         var newDate1 = new Date(d1.getFullYear() -1, d1.getMonth(), d1.getDay());
         edate1 = newDate1.toISOString().slice(0,4);
 
-        this.fil_start_date = sdate1.substring(0,4) * 1;
-        this.fil_end_date = edate1.substring(0,4) * 1;
+        this.fil_end_date = sdate1.substring(0,4) * 1;
+        this.fil_start_date = edate1.substring(0,4) * 1;
       }
   
       if(this.fil_end_date == 0 || this.fil_end_date == "")
       {
         var today = new Date();
-        var d2 = new Date(today.getFullYear(), today.getYear()-1, 0);
+        var d2 = new Date(today.getFullYear(), today.getYear(), 0);
   
         sdate2 = today.toISOString().slice(0,10);
       
