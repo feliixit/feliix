@@ -160,7 +160,7 @@ function GetCurrentMonth($strDate, $sale_person, $category, $db)
     $report1 = GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
     $shagrila = GetMonthShagri($PeriodStart, $PeriodEnd, $db);
     $cash_record = GetMonthCashReceived($PeriodStart, $PeriodEnd, $db);
-    $down_payment = GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
+    //$down_payment = GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
     $expense_record = GetMonthExpense($PeriodStart, $PeriodEnd, $db);
 
     $net_amount_o = 0;
@@ -190,15 +190,15 @@ function GetCurrentMonth($strDate, $sale_person, $category, $db)
     }
 
     $down_payment_amount = 0;
-    foreach($down_payment as $row)
+    foreach($report1 as $row)
     {
-        $l_catagory = $row['l_catagory'];
-        foreach($l_catagory as $r)
-            $down_payment_amount += $r['dsum'];
+        $l_downpayment = $row['l_downpayment'];
+        foreach($l_downpayment as $r)
+            $down_payment_amount += $r['amount'];
 
-        $o_catagory = $row['o_catagory'];
-        foreach($o_catagory as $r)
-            $down_payment_amount += $r['dsum'];
+        $o_downpayment = $row['o_downpayment'];
+        foreach($o_downpayment as $r)
+            $down_payment_amount += $r['amount'];
     }
 
     $cash_expense = 0;
@@ -428,7 +428,7 @@ function GetOneMonth($strDate, $sale_person, $category, $db)
     $report1 = GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
     $shagrila = GetMonthShagri($PeriodStart, $PeriodEnd, $db);
     $cash_record = GetMonthCashReceived($PeriodStart, $PeriodEnd, $db);
-    $down_payment = GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
+    //$down_payment = GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
     $expense_record = GetMonthExpense($PeriodStart, $PeriodEnd, $db);
     
     $net_amount_o = 0;
@@ -457,15 +457,15 @@ function GetOneMonth($strDate, $sale_person, $category, $db)
     }
 
     $down_payment_amount = 0;
-    foreach($down_payment as $row)
+    foreach($report1 as $row)
     {
-        $l_catagory = $row['l_catagory'];
-        foreach($l_catagory as $r)
-            $down_payment_amount += $r['dsum'];
+        $l_downpayment = $row['l_downpayment'];
+        foreach($l_downpayment as $r)
+            $down_payment_amount += $r['amount'];
 
-        $o_catagory = $row['o_catagory'];
-        foreach($o_catagory as $r)
-            $down_payment_amount += $r['dsum'];
+        $o_downpayment = $row['o_downpayment'];
+        foreach($o_downpayment as $r)
+            $down_payment_amount += $r['amount'];
     }
 
     $cash_expense = 0;
@@ -654,6 +654,9 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
         $l_cumulate = [];
         $o_cumulate = [];
 
+        $l_downpayment = [];
+        $o_downpayment = [];
+
         $subtotal  = 0;
     
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -738,6 +741,9 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 
                     "l_cumulate" => $l_cumulate,
                     "o_cumulate" => $o_cumulate,
+
+                    "l_downpayment" => $l_downpayment,
+                    "o_downpayment" =>  $o_downpayment,
              
                     "sub_amount" => $sub_amount,
                     "sub_ar" => $sub_ar,
@@ -755,6 +761,9 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 
                 $l_cumulate = [];
                 $o_cumulate = [];
+
+                $l_downpayment = [];
+                $o_downpayment = [];
 
                 $sub_amount = 0;
                 $sub_ar = 0;
@@ -774,6 +783,10 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $ary = GetCumulateDetail($row['pid'], $sale_person, $category, $db);
                 if($ary != null)
                     array_push($o_cumulate, $ary);
+
+                $down_ary = GetDownPaymentDetail($row['pid'], $PeriodStart, $PeriodEnd, $db);
+                if($down_ary != null)
+                    array_push($o_downpayment, $down_ary);
             }
             if($row['catagory_id'] == 2)
             {
@@ -781,6 +794,10 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $ary = GetCumulateDetail($row['pid'], $sale_person, $category, $db);
                 if($ary != null)
                     array_push($l_cumulate, $ary);
+
+                $down_ary = GetDownPaymentDetail($row['pid'], $PeriodStart, $PeriodEnd, $db);
+                if($down_ary != null)
+                    array_push($l_downpayment, $down_ary);
             }
 
         }
@@ -864,6 +881,9 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 
                 "l_cumulate" => $l_cumulate,
                 "o_cumulate" => $o_cumulate,
+
+                "l_downpayment" => $l_downpayment,
+                "o_downpayment" => $o_downpayment,
   
                 "sub_amount" => $sub_amount,
                 "sub_ar" => $sub_ar,
@@ -951,6 +971,39 @@ function GetCashDetail($_pid, $sdate, $edate, $sale_person, $category, $db)
 }
 
 
+function GetDownPaymentDetail($_pid, $PeriodStart, $PeriodEnd, $db)
+{
+    $sql = "SELECT pp.amount 
+            FROM   project_proof pp
+            LEFT JOIN project_main pm
+                    ON pp.project_id = pm.id
+        
+            WHERE pp.status = 1
+            AND pp.received_date <> ''
+            and pp.received_date > '" . $PeriodStart . " 23:59:59' AND pp.received_date < '" . $PeriodEnd . "'
+            ";
+            
+            $sql = $sql . " 
+            AND pm.id = " . $_pid . " order by pp.id limit 1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results = array(
+            "amount" => $row["amount"],
+          
+        );
+    }
+
+    return $merged_results;
+}
+
+
+
+
 function GetCumulateDetail($_pid, $sale_person, $category, $db)
 {
     $sql = "SELECT user.username,
@@ -966,6 +1019,7 @@ function GetCumulateDetail($_pid, $sale_person, $category, $db)
             LEFT JOIN user
                     ON pm.create_id = user.id
             WHERE pp.status = 1
+            AND pp.received_date <> ''
            
             ";
 
@@ -1079,7 +1133,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                         
                         (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . " 23:59:59' and p.received_date < '" . $PeriodEnd . "') dsum,
                         (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date > '" . $PeriodStart . " 23:59:59' and p.received_date < '" . $PeriodEnd . "') psum,
-                        
+
                         (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 0 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "') total_dsum,
                         (SELECT IFNULL(SUM(amount), 0) FROM project_proof p WHERE p.project_id = pm.id AND p.status <> -1 AND p.kind = 1 AND p.received_date <> '' AND p.received_date < '" . $PeriodEnd . "') total_psum
 
@@ -1165,6 +1219,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
         $sub_net_amount = 0;
         $sub_tax_withheld = 0;
 
+
         $l_catagory = [];
         $o_catagory = [];
 
@@ -1178,6 +1233,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $sub_ar = 0;
                 $sub_d = 0;
                 $sub_p = 0;
+          
                 $total_d = 0;
                 $total_p = 0;
                 $sub_net_amount = 0;
@@ -1216,6 +1272,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     $sub_ar += $value['ar'];
                     $sub_d += $value['dsum'];
                     $sub_p += $value['psum'];
+               
                     $total_d += $value['total_dsum'];
                     $total_p += $value['total_psum'];
                     $sub_net_amount += $value['net_amount'];
@@ -1238,6 +1295,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     $sub_ar += $value['ar'];
                     $sub_d += $value['dsum'];
                     $sub_p += $value['psum'];
+                
                     $total_d += $value['total_dsum'];
                     $total_p += $value['total_psum'];
                     $sub_net_amount += $value['net_amount'];
@@ -1265,6 +1323,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     "sub_ar" => $sub_ar,
                     "sub_d" => $sub_d,
                     "sub_p" => $sub_p,
+                    
                     "total_d" => $total_d,
                     "total_p" => $total_p,
                     "sub_net_amount" => $sub_net_amount,
@@ -1281,6 +1340,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $sub_ar = 0;
                 $sub_d = 0;
                 $sub_p = 0;
+          
                 $total_d = 0;
                 $total_p = 0;
                 $sub_net_amount = 0;
@@ -1303,6 +1363,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
             $sub_ar = 0;
             $sub_d = 0;
             $sub_p = 0;
+          
             $total_d = 0;
             $total_p = 0;
             $sub_net_amount = 0;
@@ -1341,6 +1402,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $sub_ar += $value['ar'];
                 $sub_d += $value['dsum'];
                 $sub_p += $value['psum'];
+              
                 $total_d += $value['total_dsum'];
                 $total_p += $value['total_psum'];
                 $sub_net_amount += $value['net_amount'];
@@ -1363,6 +1425,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $sub_ar += $value['ar'];
                 $sub_d += $value['dsum'];
                 $sub_p += $value['psum'];
+          
                 $total_d += $value['total_dsum'];
                     $total_p += $value['total_psum'];
                 $sub_net_amount += $value['net_amount'];
@@ -1389,6 +1452,7 @@ function GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 "sub_ar" => $sub_ar,
                 "sub_d" => $sub_d,
                 "sub_p" => $sub_p,
+                
                 "total_d" => $total_d,
                     "total_p" => $total_p,
                 "sub_net_amount" => $sub_net_amount,
