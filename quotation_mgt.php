@@ -301,6 +301,25 @@ header( 'location:index' );
                                 </dd>
                                 -->
 
+                                <dt>Project Category</dt>
+                                <dd>
+                                    <select  v-model="fil_project_category">
+                                    <option value=""></option>
+                                        <option value="2">Lighting</option>
+                                        <option value="1">Office Systems</option>
+                                    </select>
+                                </dd>
+
+                                <dt>Project Creator</dt>
+                                <dd>
+                                    <select  v-model="fil_project_creator">
+                                    <option value=""></option>
+                                    <option v-for="item in users" :value="item.id" :key="item.id">
+                                            {{ item.username }}
+                                        </option>
+                                    </select>
+                                </dd>
+                                                          
                                 <dt>Quotation Creator</dt>
                                 <dd>
                                     <select v-model="fil_creator">

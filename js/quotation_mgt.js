@@ -20,6 +20,8 @@ var app = new Vue({
     is_modifying: false,
 
     fil_project_category : '',
+    fil_project_creator : '',
+
     fil_client_type : '',
     fil_priority: '',
     fil_status : '',
@@ -48,6 +50,8 @@ var app = new Vue({
     statuses : {},
     stages : {},
     creators : {},
+
+    users : {},
 
     submit : false,
     // paging
@@ -78,6 +82,12 @@ var app = new Vue({
         tmp = v.split("=");
         if (tmp.length == 2) {
           switch (tmp[0]) {
+            case "fc":
+              _this.fil_project_category = decodeURI(tmp[1]);
+              break;
+            case "fpc":
+              _this.fil_project_creator = decodeURI(tmp[1]);
+              break;
             case "fpt":
               _this.fil_creator = decodeURI(tmp[1]);
               break;
@@ -112,6 +122,7 @@ var app = new Vue({
     this.getRecords();
     this.getProjects();
     this.getCreators();
+    this.getUsers();
   },
 
   computed: {
@@ -172,6 +183,28 @@ var app = new Vue({
 
 
   methods:{
+
+    getUsers () {
+
+      let _this = this;
+
+      let token = localStorage.getItem('accessToken');
+
+      axios
+          .get('api/admin/quotation_project_creators', { headers: {"Authorization" : `Bearer ${token}`} })
+          .then(
+          (res) => {
+              _this.users = res.data;
+          },
+          (err) => {
+              alert(err.response);
+          },
+          )
+          .finally(() => {
+              
+          });
+  },
+
 
     setupChosen: function(){
       $(document).ready(function(){
@@ -420,6 +453,8 @@ var app = new Vue({
 
       const params = {
 
+                fc : _this.fil_project_category,
+                fpc: _this.fil_project_creator,
                 fpt: _this.fil_creator,
        
                 key: _this.fil_keyword,
@@ -620,7 +655,10 @@ var app = new Vue({
     
           "fpt=" +
           _this.fil_creator +
-
+          "&fc=" +
+          _this.fil_project_category +
+          "&fpc=" +
+          _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
           "&op1=" +
@@ -637,6 +675,7 @@ var app = new Vue({
 
       clear_filters: function() {
         this.fil_project_category = '';
+        this.fil_project_creator = '';
         this.fil_client_type = '';
         this.fil_priority = '';
         this.fil_group = '';
@@ -654,7 +693,10 @@ var app = new Vue({
  
           "fpt=" +
           _this.fil_creator +
-     
+          "&fc=" +
+          _this.fil_project_category +
+          "&fpc=" +
+          _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
           "&op1=" +
@@ -677,7 +719,10 @@ var app = new Vue({
   
           "fpt=" +
           _this.fil_creator +
-
+          "&fc=" +
+          _this.fil_project_category +
+          "&fpc=" +
+          _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
           "&op1=" +
@@ -700,7 +745,10 @@ var app = new Vue({
  
           "fpt=" +
           _this.fil_creator +
-
+          "&fc=" +
+          _this.fil_project_category +
+          "&fpc=" +
+          _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
           "&op1=" +
