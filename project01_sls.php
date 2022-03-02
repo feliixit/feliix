@@ -61,7 +61,7 @@ try {
 <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
 <!-- SEO -->
-<title>FELIIX template pc</title>
+<title>Project Management (Sales)</title>
 <meta name="keywords" content="FELIIX">
 <meta name="Description" content="FELIIX">
 <meta name="robots" content="all" />
