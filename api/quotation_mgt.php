@@ -45,7 +45,12 @@ $uid = (isset($_GET['uid']) ?  urldecode($_GET['uid']) : '');
 
 $fpt = (isset($_GET['fpt']) ?  $_GET['fpt'] : '');
 
+$fc = (isset($_GET['fc']) ?  $_GET['fc'] : '');
+
 $fpt = urldecode($fpt);
+
+$fpc = (isset($_GET['fpc']) ?  $_GET['fpc'] : '');
+$fpc = urldecode($fpc);
 
 $key = (isset($_GET['key']) ?  $_GET['key'] : '');
 
@@ -78,6 +83,7 @@ $query = "SELECT pm.id,
           FROM quotation pm 
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
+                left join project_main p on pm.project_id = p.id
                 where pm.status <> -1 ";
 
 
@@ -86,6 +92,15 @@ if($fpt != "")
     $query = $query . " and c_user.username = '" . $fpt . "' ";
 }
 
+if($fpc != "")
+{
+    $query = $query . " and p.create_id = " . $fpc . " ";
+}
+
+if($fc != "")
+{
+    $query = $query . " and p.catagory_id = " . $fc . " ";
+}
 
 $sOrder = "";
 if($op1 != "" && $op1 != "0")
