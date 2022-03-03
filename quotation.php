@@ -532,9 +532,16 @@ header( 'location:index' );
 
         .area_conforme .signature {
             text-align: center;
-            width: 230px;
             padding-top: 20px;
         }
+
+        <!--
+        .area_conforme .signature {
+            text-align: center;
+           width: 230px;
+            padding-top: 20px;
+        }
+        -->
 
         .area_conforme .signature .pic {
             width: 230px;
