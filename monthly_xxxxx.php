@@ -358,13 +358,20 @@ background-color: #94BABB;
 
                         <tr v-for='(rec, index) in record.data.merged_results'>
                             <td>{{ rec.date }}</td>
-                            <td>₱ {{ Number(rec.total.net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>₱ {{ Number(rec.total.net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>₱ {{ Number(rec.total.net_shagrila).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>₱ {{ Number(rec.total.cash_received).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>₱ {{ Number(rec.total.ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>₱ {{ Number(rec.total.down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>₱ {{ Number(rec.total.cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.net_shagrila).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.cash_received).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
+                            <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
+                            <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
+                            <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
+                            <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
+                            <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
+                            <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
                         </tr>
 
                         <tr>
