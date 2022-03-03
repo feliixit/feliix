@@ -197,7 +197,7 @@ background-color: #94BABB;
             background-color: #94BABB;
             background-size: contain;
             background-repeat: no-repeat;
-            background-image: url(images/ui/btn_filter_white.svg);
+            background-image: url(images/ui/icon_magnifier_white.svg);
         }
 
 
@@ -358,24 +358,24 @@ background-color: #94BABB;
 
                         <tr v-for='(rec, index) in record.data.merged_results'>
                             <td>{{ rec.date }}</td>
-                            <td>{{ Number(rec.total.net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(rec.total.net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(rec.total.net_shagrila).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(rec.total.cash_received).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(rec.total.ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(rec.total.down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(rec.total.cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(rec.total.net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(rec.total.net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(rec.total.net_shagrila).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(rec.total.cash_received).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(rec.total.ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(rec.total.down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(rec.total.cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                         </tr>
 
                         <tr>
                             <td>Total</td>
-                            <td>{{ Number(record.data.total_net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(record.data.total_net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(record.data.total_net_shagrila).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(record.data.total_cash_received).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(record.data.total_ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(record.data.total_down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                            <td>{{ Number(record.data.total_cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(record.data.total_net_amount_l).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(record.data.total_net_amount_o).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(record.data.total_net_shagrila).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(record.data.total_cash_received).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(record.data.total_ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(record.data.total_down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(record.data.total_cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                         </tr>
 
                         </tbody>
