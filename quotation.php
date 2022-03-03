@@ -398,7 +398,7 @@ header( 'location:index' );
         }
 
         .qn_header .left_block {
-            width: 72%;
+            width: 71%;
             float: left;
             padding-left: 30px;
         }
@@ -430,8 +430,9 @@ header( 'location:index' );
         }
 
         .qn_header .right_block {
-            width: 28%;
+            width: 29%;
             float: right;
+            padding-right: 3px;
         }
 
         .qn_header .right_block .qn_number_date {
@@ -458,6 +459,8 @@ header( 'location:index' );
 
         .qn_header .right_block .qn_for > div {
             height: 16.8px;
+            width: 100%;
+            overflow: hidden;
         }
 
         .qn_header .right_block .qn_by {
@@ -2041,7 +2044,7 @@ header( 'location:index' );
                     </div>
 
                     <div class="qn_by">
-                        Prepared by:<br>
+                        <br>
                         <div class="line1">{{ prepare_by_first_line }}</div>
                         <div class="line2">{{ prepare_by_second_line }}</div>
                     </div>
