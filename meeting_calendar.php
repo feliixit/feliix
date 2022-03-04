@@ -650,7 +650,7 @@ try {
                                 _app1.attendee = [];
                                 _app1.attachments = [];
 
-                                _app.users = _app.users_org;
+                                _app1.users = _app1.users_org;
 
                                 $('#newProject').val(_app1.project_name);
                                 $('#fileload').val('');
