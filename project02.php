@@ -144,7 +144,7 @@ catch (Exception $e) {
     <link rel="apple-touch-icon" href="images/iosicon.png" />
 
     <!-- SEO -->
-    <title>FELIIX template pc</title>
+    <title>Project Management</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all" />
@@ -853,69 +853,32 @@ catch (Exception $e) {
                             </div>
                         </div>
                     </div>
-                    <!--
 
                 <div class="popupblock">
-                    <a id="a_fn7" class="fn7" :ref="'a_fn7'">Upload Quotation</a>
+                    <a id="a_fn7" class="fn7" :ref="'a_fn7'">Create New Quotation</a>
                     <div id="dlg_fn7" class="dialog fn7" :ref="'dlg_fn7'">
-                        <h6>Upload Quotation:</h6>
+                        <h6>Create New Quotation:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt class="head">Description:</dt>
-                                <dd><textarea name="" id="" v-model="quote_remark"></textarea></dd>
-                                <dd style="display: flex; justify-content: flex_start;">
-                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
-                                    <div class="pub-con" ref="bg">
-                                        <div class="input-zone">
-                                          <span class="upload-des">choose file</span>
-                                          <input
-                                            class="input"
-                                            type="file"
-                                            name="quote_file"
-                                            value
-                                            placeholder="choose file"
-                                            ref="quote_file"
-                                            v-show="quote_canSub"
-                                            @change="quote_changeFile()"
-                                            multiple
-                                          />
-                                    </div>
-                                  </div>
+                                <dt class="head">Quotation Name:</dt>
+                                <dd><input type="text" v-model="quotation_name"></dd>
+                                <dt class="head">Project Name:</dt>
+                                <dd>
+                                    <select readonly>
+                                        <option>{{ project_name }}</option>
+                                    </select>
                                 </dd>
 
-                                <div class="file-list">
-                                  <div class="file-item" v-for="(item,index) in quote_fileArray" :key="index">
-                                    <p>
-                                      {{item.name}}
-                                      <span
-                                        @click="quote_deleteFile(index)"
-                                        v-show="item.progress==0"
-                                        class="upload-delete"
-                                      ><i class="fas fa-backspace"></i>
-                                        </span>
-                                    </p>
-                                    <div class="progress-container" v-show="item.progress!=0">
-                                      <div class="progress-wrapper">
-                                        <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                      </div>
-                                      <div class="progress-rate">
-                                        <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                        <span v-else><i class="fas fa-check-circle"></i></span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-
                                 <div class="btnbox">
-                                    <a class="btn small" @click="quote_clear">Cancel</a>
-                                    <a class="btn small green" @click="quote_create">Upload</a>
+                                    <a class="btn small" @click="quotation_clear">Cancel</a>
+                                    <a class="btn small green" @click="quotation_add">Create</a>
                                 </div>
                             </dl>
                         </div>
                     </div>
                 </div>
 
-                
+                <!--
                 <div class="popupblock">
                     <a id="status_fn6" class="fn6" :ref="'a_fn6'">Submit Downpayment Proof</a>
                     <div id="prof_dialog" class="dialog fn6" :ref="'dlg_fn6'">
@@ -1168,8 +1131,12 @@ if ($access6 == true) {
                         <ul>
                             <li class="morespace">
                                 <div v-for='(receive_record, index) in project_quotes' v-bind:style="[receive_record.final_quotation == 1 ? { 'color':'#F37058', '': ''} : { }]">• {{ receive_record.comment }} <br v-if="receive_record.items.length > 0">
-                                    <span v-for="item in receive_record.items">
+                                    <span v-for="item in receive_record.items" v-if="receive_record.type == 'f'">
                                         <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a>
+                                    </span>
+
+                                    <span v-if="receive_record.type == 'p'">
+                                        <a :href="'quotation?id=' + receive_record.id" target="_blank" class="attch">https://feliix.myvnc.com/quotation?id={{receive_record.id}}</a>
                                     </span>
                                     <br>({{ receive_record.username }} at {{ receive_record.created_at }})
                                 </div>

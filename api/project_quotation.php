@@ -57,27 +57,22 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT pm.id, pm.remark comment, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at, pm.final_quotation FROM project_quotation pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'quote' where project_id = " . $pid . " and pm.status <> -1 ";
+            $sql = "
+                    select *
+                        from (
+                        SELECT 'f' type, pm.id, pm.remark comment, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at, pm.final_quotation 
+                        FROM project_quotation pm 
+                        left join user u on u.id = pm.create_id 
+                        LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'quote' 
+                        where project_id =  " . $pid . "  and pm.status <> -1
+                        union 
+                        select 'p' type, pm.id, pm.title comment, pm.title filename, '' bucket, '' gcp_name, u.username, pm.created_at, '' final_quotation
+                        from quotation pm
+                        left join user u on u.id = pm.create_id 
+                        where pm.project_id = " . $pid . " and pm.status <> -1
+                        ) a
+                    ORDER BY a.created_at desc ";
 
-            if(!empty($_GET['page'])) {
-                $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
-                if(false === $page) {
-                    $page = 1;
-                }
-            }
-
-            $sql = $sql . " ORDER BY pm.id ";
-
-            if(!empty($_GET['size'])) {
-                $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
-                if(false === $size) {
-                    $size = 10;
-                }
-
-                $offset = ($page - 1) * $size;
-
-                $sql = $sql . " LIMIT " . $offset . "," . $size;
-            }
 
             $merged_results = array();
 
@@ -91,13 +86,16 @@ else
             $username = "";
             $created_at = "";
             $final_quotation = "";
+            $type = "";
             $items = [];
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                 if($id != $row['id'] && $id != 0)
                 {
-                    $merged_results[] = array( "comment" => $comment,
+                    $merged_results[] = array( "id" => $id,
+                        "type" => $type,
+                        "comment" => $comment,
                                             "items" => $items,
                                             "username" => $username,
                                             "created_at" => $created_at,
@@ -116,6 +114,7 @@ else
                 $bucket = $row['bucket'];
                 $comment = $row['comment'];
                 $final_quotation = $row['final_quotation'];
+                $type = $row['type'];
 
                 if($filename != "")
                   $items[] = array('filename' => $filename,
@@ -125,7 +124,8 @@ else
 
             if($id != 0)
             {
-                $merged_results[] = array( "comment" => $comment,
+                $merged_results[] = array("id" => $id,"type" => $type,
+                "comment" => $comment,
                                                 "items" => $items,
                                                 "username" => $username,
                                                 "created_at" => $created_at,
