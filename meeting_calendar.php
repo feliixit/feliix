@@ -203,6 +203,15 @@ try {
             display: inline !important;
         }
 
+        .select_disabled {
+            pointer-events:none;
+            color: #bfcbd9;
+            cursor: not-allowed;
+            background-image: none;
+            background-color: #eef1f6;
+            border-color: #d1dbe5;   
+        }
+
         @media (min-width: 576px) {
 
             .modal-xl {
