@@ -679,6 +679,18 @@ try {
                         $("#oldEndTime").val(obj_meeting.end.split("T")[1]);
                         $("#oldContent").val(obj_meeting.content);
 
+                        _app1.users = _app1.users_org.concat(_app1.old_attendee);
+
+                        _app1.users = _app1.users.filter((value, index, self) =>
+                            index === self.findIndex((t) => (
+                            t.username === value.username && t.id === value.id
+                            ))
+                        )
+
+                        _app1.users.sort(function (a, b) {
+                            return a.username.toLowerCase().localeCompare(b.username.toLowerCase());
+                        });
+
                         var container = $("#sc_product_files_old");
                         container.empty();
 
