@@ -154,6 +154,9 @@ var app = new Vue({
     // expense record
     expense_record: [],
 
+    // Quotation name
+    quotation_name: '',
+
     verified_quotation: false,
 
     submit : false,
@@ -204,6 +207,7 @@ var app = new Vue({
         _this.getKeyPerson(_this.project_id);
         _this.getPartyContactor(_this.project_id);
         _this.getExpenseRecord(_this.project_id);
+       
       });
     }
 
@@ -1470,6 +1474,78 @@ var app = new Vue({
             document.getElementById('detail_dialog').classList.remove("show");
             document.getElementById('status_fn5').classList.remove("focus");
         },
+
+        quotation_add() {
+          let _this = this;
+
+          if (this.quotation_name.trim() == '') {
+            Swal.fire({
+              text: 'Please Encode Quotation Name!',
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            })
+              
+              //$(window).scrollTop(0);
+              return;
+          }
+
+          _this.submit = true;
+            var form_Data = new FormData();
+
+            var token = localStorage.getItem("token");
+
+            form_Data.append("jwt", token);
+            form_Data.append('title', _this.quotation_name.trim());
+            form_Data.append('project_id', _this.project_id);
+
+            form_Data.append("first_line", '');
+            form_Data.append("second_line", '');
+            form_Data.append("project_category", '');
+            form_Data.append("quotation_no", '');
+            form_Data.append("quotation_date", '');
+            form_Data.append("prepare_for_first_line", '');
+            form_Data.append("prepare_for_second_line", '');
+            form_Data.append("prepare_for_third_line", '');
+            form_Data.append("prepare_by_first_line", '');
+            form_Data.append("prepare_by_second_line", '');
+
+            form_Data.append("footer_first_line", '');
+            form_Data.append("footer_second_line", '');
+
+            form_Data.append("pages", JSON.stringify([]));
+
+            axios({
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    },
+                    url: 'api/quotation_insert',
+                    data: form_Data
+                })
+                .then(function(response) {
+                    //handle success
+                    //this.$forceUpdate();
+                    _this.quotation_clear();
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                });
+        },
+
+        quotation_clear() {
+
+          this.quotation_name = '';
+       
+
+          //this.getProjectDetail(this.project_id);
+          this.getProjectQuotation(this.project_id);
+          this.canSub = true;
+          
+          document.getElementById('dlg_fn7').classList.remove("show");
+          document.getElementById('a_fn7').classList.remove("focus");
+      },
 
 
         prof_clear() {
