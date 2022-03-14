@@ -1158,7 +1158,11 @@ function RefactorInstallerNeeded($merged_results)
         // installer_needed_array to string concate by comma
         $merged_results[$key]['installer_needed'] = trim(implode(",", $installer_needed_array), ",");
 
-        $merged_results[$key]['installer_needed_other'] = trim($merged_results[$key]['installer_needed_other'], ",");
+        $merged_results[$key]['installer_needed_other'] = str_replace(" ", "", $merged_results[$key]['installer_needed_other']);
+
+        // remove duplicate installer_needed_other value
+        $merged_results[$key]['installer_needed_other'] = trim(implode(",", array_unique(explode(",", $merged_results[$key]['installer_needed_other']))), ",");
+
         
     }
 
