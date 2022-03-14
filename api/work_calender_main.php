@@ -1114,6 +1114,7 @@ function RefactorInstallerNeeded($merged_results)
     // iterate over each row and filter installer_needed to installer_needed_other
     foreach ($merged_results as $key => $value) {
         // convert installer_needed into array
+        $value['installer_needed'] = str_replace(" ", "", $value['installer_needed']);
         $installer_needed_array = explode(",", $value['installer_needed']);
         // if installer_needed_array contains AS,RM,RS,CJ,JO
         if (in_array("AS", $installer_needed_array)) {
