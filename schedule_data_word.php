@@ -197,9 +197,19 @@ $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("project_relevant:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
 
+// CONCAT installer_needed and installer_needed_other and remove duplicate
+$installer_needed_other = str_replace(" ", "", $installer_needed_other);
+$installer_needed = str_replace(" ", "", $installer_needed);
+$installer_needed_other_array = explode(",", $installer_needed_other);
+$installer_needed_array = explode(",", $installer_needed);
+$installer_needed_array = array_merge($installer_needed_array, $installer_needed_other_array);
+$installer_needed_array = array_unique($installer_needed_array);
+
+$merged_installer = trim(implode(",", $installer_needed_array), ",");
+
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($installer_needed . " " . $installer_needed_other);
+$table->addCell(8500, ['borderSize' => 6])->addText($merged_installer);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Things to Bring:", array('bold' => true));
