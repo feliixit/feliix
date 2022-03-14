@@ -1124,6 +1124,14 @@ function RefactorInstallerNeeded($merged_results)
             $installer_needed_array = array_diff($installer_needed_array, array("AS"));
         }
 
+        if (in_array("RS", $installer_needed_array)) {
+            // set installer_needed_other to AS,RM,RS,CJ,JO
+            $merged_results[$key]['installer_needed_other'] .= ",RS";
+
+            // remove AS from installer_needed_array
+            $installer_needed_array = array_diff($installer_needed_array, array("RS"));
+        }
+
         if (in_array("RM", $installer_needed_array)) {
             // set installer_needed_other to AS,RM,RS,CJ,JO
             $merged_results[$key]['installer_needed_other'] .= ",RM";
