@@ -481,6 +481,7 @@ try {
                     </div>
 
                     <div class="col-10">
+                        <!--
 
                         <div class="custom-control custom-checkbox" style="display:inline-block;">
                             <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="AS" id="AS">
@@ -515,6 +516,33 @@ try {
                         <div class="custom-control custom-checkbox" style="display:inline-block; margin-left:1%;">
                             <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="JM" id="JM">
                             <label class="custom-control-label" for="JM">JM</label>
+                        </div>
+
+                        -->
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="EO" id="EO">
+                            <label class="custom-control-label" for="EO">EO</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="JM" id="JM">
+                            <label class="custom-control-label" for="JM">JM</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="JC" id="JC">
+                            <label class="custom-control-label" for="JC">JC</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="GV" id="GV">
+                            <label class="custom-control-label" for="GV">GV</label>
+                        </div>
+
+                        <div class="custom-control custom-checkbox" style="display:inline-block;">
+                            <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="JS" id="JS">
+                            <label class="custom-control-label" for="JS">JS</label>
                         </div>
 
                         <br>
