@@ -268,8 +268,12 @@ var app = new Vue({
 
         row.total = (this.subtotal * (1 - row.discount * 0.01)).toFixed(2);
         
+        /* 20220315 Grand Total = subtotal x (1-discount*0.01) +  subtotal x (1-discount*0.01) * ( 1 + 12%*yes/no)
         if(row.vat == 'Y')
           row.total = (row.total * 1) + (this.subtotal * 0.12);
+          */
+        if(row.vat == 'Y')
+          row.total = (row.total * 1) + (row.total * 0.12);
 
         row.total = Number(this.total.total).toFixed(2);
 
@@ -1196,8 +1200,13 @@ var app = new Vue({
         if(this.total.total == '0.00')
         {
           this.total.total = (this.subtotal * (1 - this.total.discount * 0.01)).toFixed(2);
+
+          /* 20220315 Grand Total = subtotal x (1-discount*0.01) +  subtotal x (1-discount*0.01) * ( 1 + 12%*yes/no)
           if(this.total.vat == 'Y')
             this.total.total = (this.total.total * 1) + (this.subtotal * 0.12);
+            */
+          if(this.total.vat == 'Y')
+            this.total.total = (this.total.total * 1) + (this.total.total * 0.12);
         }
 
         this.total.total = Number(this.total.total).toFixed(2);
