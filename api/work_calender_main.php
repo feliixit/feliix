@@ -98,6 +98,10 @@ if (!isset($jwt)) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
+
+            $merged_results = RefactorInstallerNeeded($merged_results);
+    
+
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
         } catch (Exception $e) {
             http_response_code(401);
@@ -258,6 +262,9 @@ if (!isset($jwt)) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $merged_results[] = $row;
             }
+
+            $merged_results = RefactorInstallerNeeded($merged_results);
+            
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
         } catch (Exception $e) {
             http_response_code(401);
@@ -895,7 +902,20 @@ function get_schedule_file($id)
     
     $table->addRow();
     $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
-    $table->addCell(8500, ['borderSize' => 6])->addText($installer_needed . " " . $installer_needed_other);
+
+    // CONCAT installer_needed and installer_needed_other and remove duplicate
+    //$installer_needed_other = str_replace(" ", "", $installer_needed_other);
+    //$installer_needed = str_replace(" ", "", $installer_needed);
+    $installer_needed_other_array = explode(",", $installer_needed_other);
+    $installer_needed_array = explode(",", $installer_needed);
+    $installer_needed_array = array_merge($installer_needed_array, $installer_needed_other_array);
+    $installer_needed_array = array_unique($installer_needed_array);
+   
+    $merged_installer = trim(implode(", ", $installer_needed_array), ", ");
+
+    $merged_installer = str_replace("  ", " ", $merged_installer);
+
+    $table->addCell(8500, ['borderSize' => 6])->addText($merged_installer);
     
     $table->addRow();
     $table->addCell(2000, ['borderSize' => 6])->addText("Things to Bring:", array('bold' => true));
@@ -1100,4 +1120,64 @@ function grab_image($image_url,$image_file){
     curl_exec ($ch);
     curl_close ($ch);
     fclose($fp);
+}
+
+function RefactorInstallerNeeded($merged_results)
+{
+    // iterate over each row and filter installer_needed to installer_needed_other
+    foreach ($merged_results as $key => $value) {
+        // convert installer_needed into array
+        $value['installer_needed'] = str_replace(" ", "", $value['installer_needed']);
+        $installer_needed_array = explode(",", $value['installer_needed']);
+        // if installer_needed_array contains AS,RM,RS,CJ,JO
+        if (in_array("AS", $installer_needed_array)) {
+            // set installer_needed_other to AS,RM,RS,CJ,JO
+            $merged_results[$key]['installer_needed_other'] .= ",AS";
+
+            // remove AS from installer_needed_array
+            $installer_needed_array = array_diff($installer_needed_array, array("AS"));
+        }
+
+        if (in_array("RS", $installer_needed_array)) {
+            // set installer_needed_other to AS,RM,RS,CJ,JO
+            $merged_results[$key]['installer_needed_other'] .= ",RS";
+
+            // remove AS from installer_needed_array
+            $installer_needed_array = array_diff($installer_needed_array, array("RS"));
+        }
+
+        if (in_array("RM", $installer_needed_array)) {
+            // set installer_needed_other to AS,RM,RS,CJ,JO
+            $merged_results[$key]['installer_needed_other'] .= ",RM";
+
+            // remove AS from installer_needed_array
+            $installer_needed_array = array_diff($installer_needed_array, array("RM"));
+        }
+
+        if (in_array("CJ", $installer_needed_array)) {
+            $merged_results[$key]['installer_needed_other'] .= ",CJ";
+
+            // remove AS from installer_needed_array
+            $installer_needed_array = array_diff($installer_needed_array, array("CJ"));
+        }
+
+        if (in_array("JO", $installer_needed_array)) {
+            $merged_results[$key]['installer_needed_other'] .= ",JO";
+
+            // remove AS from installer_needed_array
+            $installer_needed_array = array_diff($installer_needed_array, array("JO"));
+        }
+
+        // installer_needed_array to string concate by comma
+        $merged_results[$key]['installer_needed'] = trim(implode(",", $installer_needed_array), ",");
+
+        //$merged_results[$key]['installer_needed_other'] = str_replace(" ", "", $merged_results[$key]['installer_needed_other']);
+
+        // remove duplicate installer_needed_other value
+        $merged_results[$key]['installer_needed_other'] = trim(implode(", ", array_unique(explode(",", $merged_results[$key]['installer_needed_other']))), ", ");
+
+        $merged_results[$key]['installer_needed_other'] = str_replace("  ", " ", $merged_results[$key]['installer_needed_other']);
+    }
+
+    return $merged_results;
 }

@@ -1521,26 +1521,21 @@ var initial = () =>  {
             }
 
             for (i = 0; i < installer.length; i++) {
-                if (installer[i] == "AS")
+                if (installer[i] == "EO")
                     document.getElementsByName("sc_Installer_needed")[0].checked = true;
 
-                if (installer[i] == "RM")
+                if (installer[i] == "JM")
                     document.getElementsByName("sc_Installer_needed")[1].checked = true;
 
-                if (installer[i] == "RS")
+                if (installer[i] == "JC")
                     document.getElementsByName("sc_Installer_needed")[2].checked = true;
 
-                if (installer[i] == "CJ")
+                if (installer[i] == "GV")
                     document.getElementsByName("sc_Installer_needed")[3].checked = true;
 
-                if (installer[i] == "JO")
+                if (installer[i] == "JS")
                     document.getElementsByName("sc_Installer_needed")[4].checked = true;
 
-                if (installer[i] == "EO")
-                    document.getElementsByName("sc_Installer_needed")[5].checked = true;
-
-                if (installer[i] == "JM")
-                    document.getElementsByName("sc_Installer_needed")[6].checked = true;
             }
 
             //加入Agenda內容(先刪除未儲存的)
@@ -2108,8 +2103,7 @@ function Change_Schedule_State(status, time_status) {
     document.getElementsByName("sc_Installer_needed")[2].disabled = status;
     document.getElementsByName("sc_Installer_needed")[3].disabled = status;
     document.getElementsByName("sc_Installer_needed")[4].disabled = status;
-    document.getElementsByName("sc_Installer_needed")[5].disabled = status;
-    document.getElementsByName("sc_Installer_needed")[6].disabled = status;
+
 
     document.getElementById("sc_Installer_needed_other").disabled = status;
 
@@ -2231,26 +2225,21 @@ $(document).on("click", "#btn_cancel", function () {
     }
 
     for (i = 0; i < installer.length; i++) {
-        if (installer[i] == "AS")
+        if (installer[i] == "EO")
             document.getElementsByName("sc_Installer_needed")[0].checked = true;
 
-        if (installer[i] == "RM")
+        if (installer[i] == "JM")
             document.getElementsByName("sc_Installer_needed")[1].checked = true;
 
-        if (installer[i] == "RS")
+        if (installer[i] == "JC")
             document.getElementsByName("sc_Installer_needed")[2].checked = true;
 
-        if (installer[i] == "CJ")
+        if (installer[i] == "GV")
             document.getElementsByName("sc_Installer_needed")[3].checked = true;
 
-        if (installer[i] == "JO")
+        if (installer[i] == "JS")
             document.getElementsByName("sc_Installer_needed")[4].checked = true;
 
-        if (installer[i] == "EO")
-            document.getElementsByName("sc_Installer_needed")[5].checked = true;
-
-        if (installer[i] == "JM")
-            document.getElementsByName("sc_Installer_needed")[6].checked = true;
     }
 
     document.getElementsByName("sc_Installer_needed_other").value = sc_content.Installer_needed_other;
