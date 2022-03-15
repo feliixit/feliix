@@ -913,6 +913,8 @@ function get_schedule_file($id)
    
     $merged_installer = trim(implode(", ", $installer_needed_array), ", ");
 
+    $merged_installer = str_replace("  ", " ", $merged_installer);
+
     $table->addCell(8500, ['borderSize' => 6])->addText($merged_installer);
     
     $table->addRow();
@@ -1174,7 +1176,7 @@ function RefactorInstallerNeeded($merged_results)
         // remove duplicate installer_needed_other value
         $merged_results[$key]['installer_needed_other'] = trim(implode(", ", array_unique(explode(",", $merged_results[$key]['installer_needed_other']))), ", ");
 
-        
+        $merged_results[$key]['installer_needed_other'] = str_replace("  ", " ", $merged_results[$key]['installer_needed_other']);
     }
 
     return $merged_results;
