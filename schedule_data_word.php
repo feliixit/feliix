@@ -205,7 +205,7 @@ $installer_needed_array = explode(",", $installer_needed);
 $installer_needed_array = array_merge($installer_needed_array, $installer_needed_other_array);
 $installer_needed_array = array_unique($installer_needed_array);
 
-$merged_installer = trim(implode(",", $installer_needed_array), ",");
+$merged_installer = trim(implode(", ", $installer_needed_array), ", ");
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
