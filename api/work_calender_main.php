@@ -904,8 +904,8 @@ function get_schedule_file($id)
     $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
 
     // CONCAT installer_needed and installer_needed_other and remove duplicate
-    $installer_needed_other = str_replace(" ", "", $installer_needed_other);
-    $installer_needed = str_replace(" ", "", $installer_needed);
+    //$installer_needed_other = str_replace(" ", "", $installer_needed_other);
+    //$installer_needed = str_replace(" ", "", $installer_needed);
     $installer_needed_other_array = explode(",", $installer_needed_other);
     $installer_needed_array = explode(",", $installer_needed);
     $installer_needed_array = array_merge($installer_needed_array, $installer_needed_other_array);
@@ -1169,7 +1169,7 @@ function RefactorInstallerNeeded($merged_results)
         // installer_needed_array to string concate by comma
         $merged_results[$key]['installer_needed'] = trim(implode(",", $installer_needed_array), ",");
 
-        $merged_results[$key]['installer_needed_other'] = str_replace(" ", "", $merged_results[$key]['installer_needed_other']);
+        //$merged_results[$key]['installer_needed_other'] = str_replace(" ", "", $merged_results[$key]['installer_needed_other']);
 
         // remove duplicate installer_needed_other value
         $merged_results[$key]['installer_needed_other'] = trim(implode(", ", array_unique(explode(",", $merged_results[$key]['installer_needed_other']))), ", ");

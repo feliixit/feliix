@@ -198,8 +198,8 @@ $table->addCell(2000, ['borderSize' => 6])->addText("project_relevant:", array('
 $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
 
 // CONCAT installer_needed and installer_needed_other and remove duplicate
-$installer_needed_other = str_replace(" ", "", $installer_needed_other);
-$installer_needed = str_replace(" ", "", $installer_needed);
+//$installer_needed_other = str_replace(" ", "", $installer_needed_other);
+//$installer_needed = str_replace(" ", "", $installer_needed);
 $installer_needed_other_array = explode(",", $installer_needed_other);
 $installer_needed_array = explode(",", $installer_needed);
 $installer_needed_array = array_merge($installer_needed_array, $installer_needed_other_array);
