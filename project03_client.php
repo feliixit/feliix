@@ -20,29 +20,29 @@ try {
     $decoded = JWT::decode($jwt, $key, array('HS256'));
 
     $GLOBALS['username'] = $decoded->data->username;
-    $GLOBALS['position'] = $decoded->data->position;
-    $GLOBALS['department'] = $decoded->data->department;
+$GLOBALS['position'] = $decoded->data->position;
+$GLOBALS['department'] = $decoded->data->department;
 
-    $test_manager = $decoded->data->test_manager;
-    $user_id = $decoded->data->id;
+$test_manager = $decoded->data->test_manager;
+$user_id = $decoded->data->id;
 
-    //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
-    //    header( 'location:index.php' );
+//if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
+//    header( 'location:index.php' );
 
-    $sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
-        if (  $sid < 1 || !is_numeric($sid)) {
-          header( 'location:project01' );
-        }
+$sid = (isset($_GET['sid']) ?  $_GET['sid'] : 0);
+if (  $sid < 1 || !is_numeric($sid)) {
+header( 'location:project01' );
+}
 
-    $is_creator = IsCreator($sid, $user_id);
-    
-    if($test_manager[2] == "0" && $is_creator == "1")
-        $test_manager[2] = "1";
+$is_creator = IsCreator($sid, $user_id);
+
+if($test_manager[2] == "0" && $is_creator == "1")
+$test_manager[2] = "1";
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
 
-    header('location:index');
+header('location:index');
 }
 
 ?>
@@ -51,41 +51,41 @@ catch (Exception $e) {
 <!DOCTYPE html>
 <html>
 <head>
-<!-- 共用資料 -->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover"/>
+    <!-- 共用資料 -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, min-width=640, user-scalable=0, viewport-fit=cover"/>
 
-<!-- favicon.ico iOS icon 152x152px -->
-<link rel="shortcut icon" href="images/favicon.ico" />
-<link rel="Bookmark" href="images/favicon.ico" />
-<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-<link rel="apple-touch-icon" href="images/iosicon.png"/>
+    <!-- favicon.ico iOS icon 152x152px -->
+    <link rel="shortcut icon" href="images/favicon.ico"/>
+    <link rel="Bookmark" href="images/favicon.ico"/>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
+    <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
-<!-- SEO -->
-<title>FELIIX template pc</title>
-<meta name="keywords" content="FELIIX">
-<meta name="Description" content="FELIIX">
-<meta name="robots" content="all" />
-<meta name="author" content="FELIIX" />
+    <!-- SEO -->
+    <title>FELIIX template pc</title>
+    <meta name="keywords" content="FELIIX">
+    <meta name="Description" content="FELIIX">
+    <meta name="robots" content="all"/>
+    <meta name="author" content="FELIIX"/>
 
-<!-- Open Graph protocol -->
-<meta property="og:site_name" content="FELIIX" />
-<!--<meta property="og:url" content="分享網址" />-->
-<meta property="og:type" content="website" />
-<meta property="og:description" content="FELIIX" />
-<!--<meta property="og:image" content="分享圖片(1200×628)" />-->
-<!-- Google Analytics -->
+    <!-- Open Graph protocol -->
+    <meta property="og:site_name" content="FELIIX"/>
+    <!--<meta property="og:url" content="分享網址" />-->
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="FELIIX"/>
+    <!--<meta property="og:image" content="分享圖片(1200×628)" />-->
+    <!-- Google Analytics -->
 
-<!-- CSS -->
-<link rel="stylesheet" type="text/css" href="css/default.css"/>
-<link rel="stylesheet" type="text/css" href="css/ui.css"/>
-<link rel="stylesheet" type="text/css" href="css/case.css"/>
-<link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/default.css"/>
+    <link rel="stylesheet" type="text/css" href="css/ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/case.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
 
-<link rel="stylesheet" href="css/vue-select.css" type="text/css">
+    <link rel="stylesheet" href="css/vue-select.css" type="text/css">
 
 
-<style>
+    <style>
         .meetingform-buttons {
             display: flex;
             justify-content: center;
@@ -203,7 +203,7 @@ catch (Exception $e) {
         }
     </style>
 
-    
+
     <style scoped>
         .extendex-top {
             background: none;
@@ -273,8 +273,8 @@ catch (Exception $e) {
 
         .btn-container .btn.btn-blue {
             background: linear-gradient(180deg,
-                    rgba(128, 137, 229, 1) 0%,
-                    rgba(87, 84, 196, 1) 100%);
+            rgba(128, 137, 229, 1) 0%,
+            rgba(87, 84, 196, 1) 100%);
             font-size: 1rem;
         }
 
@@ -473,8 +473,8 @@ catch (Exception $e) {
             font-weight: 700
         }
 
-        @media all and (-ms-high-contrast:none),
-        (-ms-high-contrast:active) {
+        @media all and (-ms-high-contrast: none),
+        (-ms-high-contrast: active) {
             .swal2-popup.swal2-toast .swal2-icon .swal2-icon-content {
                 font-size: .25em
             }
@@ -664,22 +664,22 @@ catch (Exception $e) {
             justify-content: flex-end
         }
 
-        .swal2-container.swal2-bottom-end>:first-child,
-        .swal2-container.swal2-bottom-left>:first-child,
-        .swal2-container.swal2-bottom-right>:first-child,
-        .swal2-container.swal2-bottom-start>:first-child,
-        .swal2-container.swal2-bottom>:first-child {
+        .swal2-container.swal2-bottom-end > :first-child,
+        .swal2-container.swal2-bottom-left > :first-child,
+        .swal2-container.swal2-bottom-right > :first-child,
+        .swal2-container.swal2-bottom-start > :first-child,
+        .swal2-container.swal2-bottom > :first-child {
             margin-top: auto
         }
 
-        .swal2-container.swal2-grow-fullscreen>.swal2-modal {
+        .swal2-container.swal2-grow-fullscreen > .swal2-modal {
             display: flex !important;
             flex: 1;
             align-self: stretch;
             justify-content: center
         }
 
-        .swal2-container.swal2-grow-row>.swal2-modal {
+        .swal2-container.swal2-grow-row > .swal2-modal {
             display: flex !important;
             flex: 1;
             align-content: center;
@@ -715,7 +715,7 @@ catch (Exception $e) {
             align-items: flex-end
         }
 
-        .swal2-container.swal2-grow-column>.swal2-modal {
+        .swal2-container.swal2-grow-column > .swal2-modal {
             display: flex !important;
             flex: 1;
             align-content: center;
@@ -726,12 +726,12 @@ catch (Exception $e) {
             transition: none !important
         }
 
-        .swal2-container:not(.swal2-top):not(.swal2-top-start):not(.swal2-top-end):not(.swal2-top-left):not(.swal2-top-right):not(.swal2-center-start):not(.swal2-center-end):not(.swal2-center-left):not(.swal2-center-right):not(.swal2-bottom):not(.swal2-bottom-start):not(.swal2-bottom-end):not(.swal2-bottom-left):not(.swal2-bottom-right):not(.swal2-grow-fullscreen)>.swal2-modal {
+        .swal2-container:not(.swal2-top):not(.swal2-top-start):not(.swal2-top-end):not(.swal2-top-left):not(.swal2-top-right):not(.swal2-center-start):not(.swal2-center-end):not(.swal2-center-left):not(.swal2-center-right):not(.swal2-bottom):not(.swal2-bottom-start):not(.swal2-bottom-end):not(.swal2-bottom-left):not(.swal2-bottom-right):not(.swal2-grow-fullscreen) > .swal2-modal {
             margin: auto
         }
 
-        @media all and (-ms-high-contrast:none),
-        (-ms-high-contrast:active) {
+        @media all and (-ms-high-contrast: none),
+        (-ms-high-contrast: active) {
             .swal2-container .swal2-modal {
                 margin: 0 !important
             }
@@ -1312,12 +1312,12 @@ catch (Exception $e) {
             background: #3085d6
         }
 
-        .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step {
+        .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step {
             background: #add8e6;
             color: #fff
         }
 
-        .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line {
+        .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step-line {
             background: #add8e6
         }
 
@@ -1375,8 +1375,8 @@ catch (Exception $e) {
             }
         }
 
-        @media all and (-ms-high-contrast:none),
-        (-ms-high-contrast:active) {
+        @media all and (-ms-high-contrast: none),
+        (-ms-high-contrast: active) {
             .swal2-range input {
                 width: 100% !important
             }
@@ -1881,7 +1881,7 @@ catch (Exception $e) {
             background-color: transparent !important
         }
 
-        body.swal2-no-backdrop .swal2-container>.swal2-modal {
+        body.swal2-no-backdrop .swal2-container > .swal2-modal {
             box-shadow: 0 0 10px rgba(0, 0, 0, .4)
         }
 
@@ -1946,7 +1946,7 @@ catch (Exception $e) {
                 overflow-y: scroll !important
             }
 
-            body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)>[aria-hidden=true] {
+            body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) > [aria-hidden=true] {
                 display: none
             }
 
@@ -2060,17 +2060,17 @@ catch (Exception $e) {
         }
 
         .select_disabled {
-            pointer-events:none;
+            pointer-events: none;
             color: #bfcbd9;
             cursor: not-allowed;
             background-image: none;
             background-color: #eef1f6;
-            border-color: #d1dbe5;   
-            
+            border-color: #d1dbe5;
+
         }
 
         .tablebox .dialog {
-            top: -20px;    
+            top: -20px;
         }
 
 
@@ -2079,24 +2079,24 @@ catch (Exception $e) {
         }
 
 
-
-        body.fourth .mainContent > .block .tablebox.lv3c {   
+        body.fourth .mainContent > .block .tablebox.lv3c {
             margin: 15px auto;
+            padding-bottom: 5px;
         }
 
 
-        div.tablebox.lv3a a.attch{
+        div.tablebox.lv3a a.attch {
             color: var(--fth05);
             transition: .3s;
-            margin: 0 15px 0 0;    
+            margin: 0 15px 0 0;
             font-size: 13px;
         }
 
-        div.tablebox.lv3a a.attch:hover{
+        div.tablebox.lv3a a.attch:hover {
             color: var(--fth01);
         }
 
-        div.tablebox.lv3a a.attch::before{
+        div.tablebox.lv3a a.attch::before {
             content: '';
             width: 8px;
             height: 8px;
@@ -2108,56 +2108,76 @@ catch (Exception $e) {
             transition: .3s;
         }
 
-        div.tablebox.lv3a a.attch:hover::before{
+        div.tablebox.lv3a a.attch:hover::before {
             background-color: var(--fth01);
         }
 
-        .mainContent {    
+        .mainContent {
             min-height: 150vh;
         }
- 
+
+        div.tablebox.lv3b li.cmt p a.attch
+        {
+            display: block;
+            color: #25a2b8;
+            transition: .3s;
+            margin: 2px 0 2px 5px;
+            font-size: 13px;
+        }
+
+        div.tablebox.lv3b li.cmt p i.t {
+            display: block;
+        }
+
     </style>
 
-<link rel="stylesheet" type="text/css" href="https://unpkg.com/fullcalendar@5.1.0/main.min.css">
-<script defer type="text/javascript" src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
-<script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/fullcalendar@5.1.0/main.min.css">
+    <script defer type="text/javascript" src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
+    <script defer type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
-<!-- jQuery和js載入 -->
-<script type="text/javascript" src="js/rm/jquery-3.4.1.min.js" ></script>
-<script type="text/javascript" src="js/rm/realmediaScript.js"></script>
-<script type="text/javascript" src="js/main.js" defer></script>
+    <!-- jQuery和js載入 -->
+    <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
+    <script type="text/javascript" src="js/main.js" defer></script>
 
-<script>
-$(function(){
-    $('header').load('include/header.php');
-    //
+    <script>
+        $(function () {
+            $('header').load('include/header.php');
+            //
 
-    //dialogshow($('.tablebox a.add.a1'),$('.tablebox .dialog.a1'));   
-    //dialogshow($('.tablebox a.add.a2'),$('.tablebox .dialog.a2'));
-    //dialogshow($('.tablebox a.add.a3'),$('.tablebox .dialog.a3'));
-    // dialogshow($('.tablebox a.add.a4'),$('.tablebox .dialog.a4'));
-    // dialogshow($('.tablebox a.add.a5'),$('.tablebox .dialog.a5'));
-    //dialogshow($('.tablebox a.add.a6'),$('.tablebox .dialog.a6'));
-    //dialogshow($('.tablebox a.add.a7'),$('.tablebox .dialog.a7'));
-    //dialogshow($('.tablebox a.add.a8'),$('.tablebox .dialog.a8'));
-    
-    $('header').click(function(){dialogclear()});
-    $('.block.right').click(function(){dialogclear()});
-    $('.block.left ul li:first-child').click(function(){dialogclear()});
-    
-})
+            //dialogshow($('.tablebox a.add.a1'),$('.tablebox .dialog.a1'));
+            //dialogshow($('.tablebox a.add.a2'),$('.tablebox .dialog.a2'));
+            //dialogshow($('.tablebox a.add.a3'),$('.tablebox .dialog.a3'));
+            // dialogshow($('.tablebox a.add.a4'),$('.tablebox .dialog.a4'));
+            // dialogshow($('.tablebox a.add.a5'),$('.tablebox .dialog.a5'));
+            //dialogshow($('.tablebox a.add.a6'),$('.tablebox .dialog.a6'));
+            //dialogshow($('.tablebox a.add.a7'),$('.tablebox .dialog.a7'));
+            //dialogshow($('.tablebox a.add.a8'),$('.tablebox .dialog.a8'));
 
-</script>
+            $('header').click(function () {
+                dialogclear()
+            });
+            $('.block.right').click(function () {
+                dialogclear()
+            });
+            $('.block.left ul li:first-child').click(function () {
+                dialogclear()
+            });
+
+        })
+
+    </script>
 
 </head>
 
 <body class="fourth">
- 	
+
 <div class="bodybox">
     <!-- header -->
-	<header>header</header>
+    <header>header</header>
     <!-- header end -->
-    <div class="mainContent"  id='app'>
+    <div class="mainContent" id='app'>
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="block left">
             <div class="tablebox lv2a b-4">
@@ -2182,15 +2202,16 @@ $(function(){
                 </ul>
                 <ul>
                     <li>
-                        <div v-for='(receive_record, index) in stage_client_venue'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        <div v-for='(receive_record, index) in stage_client_venue'>{{ receive_record.message }} ({{
+                            receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
                     <li>
                         <a id="add_a1" class="add a1" <?php 
   if ($test_manager[2]  == "1")
   {
-?> @click="dialogshow1" 
-<?php 
+?> @click="dialogshow1"
+                        <?php
   }
 ?>></a>
                         <div id="dialog_a1" class="dialog a1">
@@ -2214,14 +2235,17 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li><div v-for='(receive_record, index) in stage_client_sales'>{{ receive_record.salesname }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
-                        </div></li>
+                    <li>
+                        <div v-for='(receive_record, index) in stage_client_sales'>{{ receive_record.salesname }} ({{
+                            receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
+                    </li>
                     <li>
                         <a id="add_a2" class="add a2" <?php 
   if ($test_manager[2]  == "1")
   {
-?> @click="dialogshow2" 
-<?php 
+?> @click="dialogshow2"
+                        <?php
   }
 ?>></a>
                         <div id="dialog_a2" class="dialog a2">
@@ -2229,9 +2253,10 @@ $(function(){
                                 <dl>
                                     <dd>
                                         <select v-model="uid">
-                                          <option v-for="(item, index) in users" :value="item.id" :key="item.username">
-                                              {{ item.username }}
-                                          </option>
+                                            <option v-for="(item, index) in users" :value="item.id"
+                                                    :key="item.username">
+                                                {{ item.username }}
+                                            </option>
                                         </select>
                                     </dd>
                                     <dd>
@@ -2250,21 +2275,23 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li><div v-for='(receive_record, index) in stage_client_date'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                    <li>
+                        <div v-for='(receive_record, index) in stage_client_date'>{{ receive_record.message }} ({{
+                            receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
                     <li>
                         <a id="add_a3" class="add a3" <?php 
   if ($test_manager[2]  == "1")
   {
-?> @click="dialogshow3" 
-<?php 
+?> @click="dialogshow3"
+                        <?php
   }
 ?>></a>
                         <div id="dialog_a3" class="dialog a3">
                             <div class="formbox">
                                 <dl>
-                                    <dd><input type="date" v-model="dt" /></dd>
+                                    <dd><input type="date" v-model="dt"/></dd>
                                     <dd>
                                         <div class="btnbox">
                                             <a class="btn small orange" @click="date_clear">Cancel</a>
@@ -2282,16 +2309,19 @@ $(function(){
                 </ul>
                 <ul>
                     <li>
-                    <div v-if="project_proirity">{{ project_status }}  ({{ project_created_by }} at {{ project_created_at }})</div>
-                        <div v-for='(receive_record, index) in stage_client_status'>{{ receive_record.status }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        <div v-if="project_proirity">{{ project_status }} ({{ project_created_by }} at {{
+                            project_created_at }})
+                        </div>
+                        <div v-for='(receive_record, index) in stage_client_status'>{{ receive_record.status }} ({{
+                            receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
                     <li>
                         <a id="add_a4" class="add a4" <?php 
   if ($test_manager[2]  == "1")
   {
-?> @click="dialogshow4" 
-<?php 
+?> @click="dialogshow4"
+                        <?php
   }
 ?>></a>
                         <div id="dialog_a4" class="dialog a4">
@@ -2329,16 +2359,19 @@ $(function(){
                 </ul>
                 <ul>
                     <li>
-                        <div v-if="project_proirity">{{ project_proirity }}  ({{ project_created_by }} at {{ project_created_at }})</div>
-                        <div v-for='(receive_record, index) in stage_client_priority'>{{ receive_record.priority }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
+                        <div v-if="project_proirity">{{ project_proirity }} ({{ project_created_by }} at {{
+                            project_created_at }})
+                        </div>
+                        <div v-for='(receive_record, index) in stage_client_priority'>{{ receive_record.priority }} ({{
+                            receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
                     <li>
                         <a id="add_a5" class="add a5" <?php 
   if ($test_manager[2]  == "1")
   {
-?> @click="dialogshow5" 
-<?php 
+?> @click="dialogshow5"
+                        <?php
   }
 ?>></a>
                         <div id="dialog_a5" class="dialog a5">
@@ -2370,20 +2403,23 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li><div v-for='(receive_record, index) in stage_client_amount'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
-                        </div></li>
+                    <li>
+                        <div v-for='(receive_record, index) in stage_client_amount'>{{ receive_record.message }} ({{
+                            receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
+                    </li>
                     <li>
                         <a id="add_a6" class="add a6" <?php 
   if ($test_manager[2]  == "1")
   {
-?> @click="dialogshow6" 
-<?php 
+?> @click="dialogshow6"
+                        <?php
   }
 ?>></a>
                         <div id="dialog_a6" class="dialog a6">
                             <div class="formbox">
                                 <dl>
-                                    <dd><input type="number" v-model="amount" /></dd>
+                                    <dd><input type="number" v-model="amount"/></dd>
                                     <dd>
                                         <div class="btnbox">
                                             <a class="btn small orange" @click="amount_clear">Cancel</a>
@@ -2400,14 +2436,17 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                    <li><div v-for='(receive_record, index) in stage_client_competitor'>{{ receive_record.message }}  ({{ receive_record.username }} at {{ receive_record.created_at }})
-                        </div></li>
+                    <li>
+                        <div v-for='(receive_record, index) in stage_client_competitor'>{{ receive_record.message }} ({{
+                            receive_record.username }} at {{ receive_record.created_at }})
+                        </div>
+                    </li>
                     <li>
                         <a id="add_a7" class="add a7" <?php 
   if ($test_manager[2]  == "1")
   {
-?> @click="dialogshow7" 
-<?php 
+?> @click="dialogshow7"
+                        <?php
   }
 ?>></a>
                         <div id="dialog_a7" class="dialog a7">
@@ -2430,20 +2469,22 @@ $(function(){
                     <li><!--請留空--></li>
                 </ul>
                 <ul>
-                <li>
-                        <div v-for='(receive_record, index) in stage_client_infomation'>{{ receive_record.message }} ({{ receive_record.username }} at {{ receive_record.created_at }})
+                    <li>
+                        <div v-for='(receive_record, index) in stage_client_infomation'>{{ receive_record.message }} ({{
+                            receive_record.username }} at {{ receive_record.created_at }})
                             <br v-if="receive_record.items.length > 0">
-                                <span v-for="item in receive_record.items">
-                                <a :href="baseURL + item.gcp_name" target="_blank" class="attch">{{item.filename}}</a></span>
-                         
+                            <span v-for="item in receive_record.items">
+                                <a :href="baseURL + item.gcp_name" target="_blank"
+                                   class="attch">{{item.filename}}</a></span>
+
                         </div>
                     </li>
                     <li>
                         <a id="add_a8" class="add a8" <?php 
   if ($test_manager[2]  == "1")
   {
-?> @click="dialogshow8" 
-<?php 
+?> @click="dialogshow8"
+                        <?php
   }
 ?>></a>
                         <div id="dialog_a8" class="dialog a8">
@@ -2451,47 +2492,48 @@ $(function(){
                                 <dl>
                                     <dd><textarea placeholder="" v-model="prof_remark"></textarea></dd>
                                     <dd style="display: flex; justify-content: flex_start;">
-                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
-                                    <div class="pub-con" ref="bg">
-                                        <div class="input-zone">
-                                          <span class="upload-des">choose file</span>
-                                          <input
-                                            class="input"
-                                            type="file"
-                                            name="prof_file"
-                                            value
-                                            placeholder="choose file"
-                                            ref="prof_file"
-                                            v-show="prof_canSub"
-                                            @change="prof_changeFile()"
-                                            multiple
-                                          />
-                                    </div>
-                                  </div>
-                                </dd>
+                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                        <div class="pub-con" ref="bg">
+                                            <div class="input-zone">
+                                                <span class="upload-des">choose file</span>
+                                                <input
+                                                        class="input"
+                                                        type="file"
+                                                        name="prof_file"
+                                                        value
+                                                        placeholder="choose file"
+                                                        ref="prof_file"
+                                                        v-show="prof_canSub"
+                                                        @change="prof_changeFile()"
+                                                        multiple
+                                                />
+                                            </div>
+                                        </div>
+                                    </dd>
 
-                                <div class="file-list">
-                                  <div class="file-item" v-for="(item,index) in prof_fileArray" :key="index">
-                                    <p style="text-align: left;">
-                                      {{item.name}}
-                                      <span
-                                        @click="prof_deleteFile(index)"
-                                        v-show="item.progress==0"
-                                        class="upload-delete"
-                                      ><i class="fas fa-backspace"></i>
+                                    <div class="file-list">
+                                        <div class="file-item" v-for="(item,index) in prof_fileArray" :key="index">
+                                            <p style="text-align: left;">
+                                                {{item.name}}
+                                                <span
+                                                        @click="prof_deleteFile(index)"
+                                                        v-show="item.progress==0"
+                                                        class="upload-delete"
+                                                ><i class="fas fa-backspace"></i>
                                         </span>
-                                    </p>
-                                    <div class="progress-container" v-show="item.progress!=0">
-                                      <div class="progress-wrapper">
-                                        <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
-                                      </div>
-                                      <div class="progress-rate">
-                                        <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
-                                        <span v-else><i class="fas fa-check-circle"></i></span>  
-                                      </div>
+                                            </p>
+                                            <div class="progress-container" v-show="item.progress!=0">
+                                                <div class="progress-wrapper">
+                                                    <div class="progress-progress"
+                                                         :style="'width:'+item.progress*100+'%'"></div>
+                                                </div>
+                                                <div class="progress-rate">
+                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                    <span v-else><i class="fas fa-check-circle"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                  </div>
-                                </div>
                                     <dd>
                                         <div class="btnbox">
                                             <a class="btn small orange" @click="prof_clear">Cancel</a>
@@ -2508,56 +2550,134 @@ $(function(){
         <div class="block right">
             <div class="list_function">
                 <a class="btn small green" id="btn_arrange">Arrange Meeting</a>
-                <a class="btn small orange" style="float: right;" :href="'project02?p=' + project_id">Back to Main Page</a>
+                <a class="btn small orange" style="float: right;" :href="'project02?p=' + project_id">Back to Main
+                    Page</a>
             </div>
             <div class="teskbox">
                 <h5>Project Task Tracker</h5>
                 <!-- list -->
                 <div class="tablebox lv3b">
                     <!-- 一筆Tesk -->
-                   <ul v-for='(receive_record, index) in project03_client_stage_task'>
-                       <li><b>{{ receive_record.num }}</b></li>
-                       <li class="cmt">
-                            <p>{{ receive_record.message }} <i class="t">{{ receive_record.username }} at {{ receive_record.created_at }}</i></p>
-                                <p v-for="item in receive_record.items">
-                                    {{ item.f_message }}
-                                    <i class="t"> {{ item.f_username }} at {{ item.f_created_at }}</i>
-                                </p>
-                       </li>
-                       <li style="position:relative;">
+                    <ul v-for='(receive_record, index) in project03_client_stage_task'>
+                        <li><b>{{ receive_record.num }}</b></li>
+                        <li class="cmt">
+                            <p>
+                                {{ receive_record.message }}
+                                <a v-for="item in receive_record.attachments" class="attch" :href="'https://storage.cloud.google.com/feliiximg/' + item.gcp_name" target="_blank">{{ item.name }}</a>
+                                <i class="t">{{ receive_record.username }} at {{receive_record.created_at }}</i>
 
-                        <a  class="btn small orange cmt" @click="comment_show(receive_record.id)">Comment</a>
+                            </p>
 
-                        <div :id="'btn' + receive_record.id" :ref="'dialog' + receive_record.num" class="commentbox">
-                            <div class="arrow"></div>
-                            <div class="arrowcover"></div>
+                            <p v-for="item in receive_record.items">
+                                {{ item.f_message }}
+                                <a class="attch" v-for="it in item.f_attachments" :href="'https://storage.cloud.google.com/feliiximg/'+ it.gcp_name" target="_blank">{{ it.name }}</a>
+                                <i class="t"> {{ item.f_username }} at {{ item.f_created_at }}</i>
+                            </p>
+                        </li>
+                        <li style="position:relative;">
 
-                            <div class="commentbody" >
-                                <textarea :id="'comment' + receive_record.id" :ref="'comment' + receive_record.id"></textarea>
+                            <a class="btn small orange cmt" @click="comment_show(receive_record.id)">Comment</a>
 
-                                <div class="commentfooter">
-                                    <a class="btn small orange btncancel" style="cursor: pointer;" @click="comment_clear(receive_record.id)">Cancel</a>
-                                    <a class="btn small green btncreate" @click="comment_create(receive_record.id)">Create</a>
+                            <div :id="'btn' + receive_record.id" :ref="'dialog' + receive_record.num"
+                                 class="commentbox">
+                                <div class="arrow"></div>
+                                <div class="arrowcover"></div>
+
+                                <div class="commentbody">
+                                    <textarea :id="'comment' + receive_record.id"
+                                              :ref="'comment' + receive_record.id"></textarea>
+
+
+                                    <div style="display: flex; justify-content: flex_start;">
+                                        <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                        <div class="pub-con" ref="bg">
+                                            <div class="input-zone">
+                                                <span class="upload-des">choose file</span>
+                                                <input class="input" type="file" :ref="'file_msg_r_' + receive_record.id" placeholder="choose file" @change="changeMsgFile_r(receive_record.id)" multiple />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="file-list">
+                                        <div class="file-item" v-for="(item,index) in msgItems_r(receive_record.id)" :key="index">
+                                            <p style="text-align: left;">
+                                                {{item.name}}
+                                                <span @click="deleteMsgFile_r(receive_record.id, index)" v-show="item.progress==0"
+                                                      class="upload-delete"><i class="fas fa-backspace"></i></span>
+                                            </p>
+                                            <div class="progress-container" v-show="item.progress!=0">
+                                                <div class="progress-wrapper">
+                                                    <div class="progress-progress"
+                                                         :style="'width:'+item.progress*100+'%'"></div>
+                                                </div>
+                                                <div class="progress-rate">
+                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                    <span v-else><i class="fas fa-check-circle"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="commentfooter">
+                                        <a class="btn small orange btncancel" style="cursor: pointer;"
+                                           @click="comment_clear(receive_record.id)">Cancel</a>
+                                        <a class="btn small green btncreate" @click="comment_create(receive_record.id)">Create</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </li>
-                   </ul>
-                   <!-- 一筆Tesk end -->
-                 
-               </div>
+                        </li>
+                    </ul>
+                    <!-- 一筆Tesk end -->
+
+                </div>
                 <!-- list end -->
                 <div class="tablebox lv3c">
                     <ul>
-                        <li><textarea name="" id="" placeholder="Create a task here" v-model="stage_task"></textarea></li>
-                        <li><a class="btn small green" <?php 
-  if ($test_manager[2]  == "1")
+                        <li>
+                            <textarea name="" id="" placeholder="Create a task here" v-model="stage_task"></textarea>
+
+                            <div style="padding-left: 10px; display: flex; justify-content: flex_start;">
+                                <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                <div class="pub-con" ref="bg">
+                                    <div class="input-zone">
+                                        <span class="upload-des">choose file</span>
+                                        <input class="input" type="file" name="file_r" value
+                                               placeholder="choose file" ref="file_r" v-show="canSub_r"
+                                               @change="changeFile_r()" multiple/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="file-list" style="padding-left: 10px;">
+                                <div class="file-item" v-for="(item,index) in fileArray_r" :key="index">
+                                    <p style="text-align: left;">
+                                        {{item.name}}
+                                        <span @click="deleteFile_r(index)" v-show="item.progress==0"
+                                              class="upload-delete"><i class="fas fa-backspace"></i></span>
+                                    </p>
+                                    <div class="progress-container" v-show="item.progress!=0">
+                                        <div class="progress-wrapper">
+                                            <div class="progress-progress"
+                                                 :style="'width:'+item.progress*100+'%'"></div>
+                                        </div>
+                                        <div class="progress-rate">
+                                            <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                            <span v-else><i class="fas fa-check-circle"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="btn small green" <?php
+  if ("1"  == "1")
   {
 ?> @click="task_create"
-<?php 
+                            <?php
   }
-?>>Create</a></li>
+?>>Create</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -2571,14 +2691,14 @@ $(function(){
 <script>
     var eventObj;
 
-    $(document).on("click", "#btn_arrange", function() {
+    $(document).on("click", "#btn_arrange", function () {
 
 
         $('#meeting').show();
     });
 
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         let calendarEl = document.getElementById('calendar');
 
@@ -2623,39 +2743,38 @@ $(function(){
             contentType: false,
             data: form_Data,
 
-            success: function(result) {
-                console.log(result);
+            success: function (result) {
+                //console.log(result);
                 var obj = JSON.parse(result);
                 if (obj !== undefined) {
                     var arrayLength = obj.length;
                     for (var i = 0; i < arrayLength; i++) {
-                        console.log(obj[i]);
+                        //console.log(obj[i]);
 
                         var title = "";
-                        if(obj[i].project_name.trim() === '')
+                        if (obj[i].project_name.trim() === '')
                             title = obj[i].subject.trim();
                         else
                             title = '[ ' + obj[i].project_name.trim() + ' ] ' + obj[i].subject.trim();
 
                         var attach = "";
-                        for(var j = 0; j < obj[i].attach.length; j++)
-                        {
+                        for (var j = 0; j < obj[i].attach.length; j++) {
                             attach += obj[i].attach[j].filename + ",";
                         }
 
-                        if(attach !== "")
+                        if (attach !== "")
                             attach = attach.slice(0, -1);
 
                         var obj_description = {
                             title: obj[i].subject.trim(),
                             project_name: obj[i].project_name.trim(),
                             attendee: obj[i].attendee.trim(),
-                            items:obj[i].items,
-                            attach:attach,
+                            items: obj[i].items,
+                            attach: attach,
                             location: obj[i].location.trim(),
                             start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
                             end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
-                            content: obj[i].message.trim(),	
+                            content: obj[i].message.trim(),
                             creator: obj[i].created_by.trim(),
                         };
 
@@ -2699,7 +2818,7 @@ $(function(){
                                 //從資料庫中取出符合當前條件的任務
 
                                 let temp = [];
-                               
+
                                 var token = localStorage.getItem('token');
 
                                 localStorage.getItem('token');
@@ -2707,7 +2826,7 @@ $(function(){
 
                                 form_Data.append('jwt', token);
                                 form_Data.append('action', 11);
-               
+
 
                                 $.ajax({
                                     url: "api/work_calender_meetings",
@@ -2717,13 +2836,13 @@ $(function(){
                                     contentType: false,
                                     data: form_Data,
 
-                                    success: function(result) {
+                                    success: function (result) {
                                         //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var title = "";
                                                 if (obj[i].project_name.trim() === '')
@@ -2771,7 +2890,7 @@ $(function(){
                                 });
                             }
                         },
-                        
+
                         overall: {
                             text: 'All',
                             click: function () {
@@ -2781,7 +2900,7 @@ $(function(){
                                 //從資料庫中取出符合當前條件的任務
 
                                 let temp = [];
-                               
+
                                 var token = localStorage.getItem('token');
 
                                 localStorage.getItem('token');
@@ -2798,13 +2917,13 @@ $(function(){
                                     contentType: false,
                                     data: form_Data,
 
-                                    success: function(result) {
+                                    success: function (result) {
                                         //console.log(result);
                                         var obj = JSON.parse(result);
                                         if (obj !== undefined) {
                                             var arrayLength = obj.length;
                                             for (var i = 0; i < arrayLength; i++) {
-                                                console.log(obj[i]);
+                                                //console.log(obj[i]);
 
                                                 var title = "";
                                                 if (obj[i].project_name.trim() === '')
@@ -2855,11 +2974,11 @@ $(function(){
 
                         addEventButton: {
                             text: 'Add Meeting',
-                            click: function() {
+                            click: function () {
                                 $('#addmeeting-form').trigger("reset");
                                 $('#editmeeting-form').hide();
                                 $('#addmeeting-form').show();
-                                
+
                                 _app1.old_attendee = [];
                                 _app1.attendee = [];
                                 _app1.attachments = [];
@@ -2874,7 +2993,7 @@ $(function(){
 
 
                     //日曆上meeting被點擊的方法
-                    eventClick: function(info) {
+                    eventClick: function (info) {
                         $('#editmeeting-form').trigger("reset");
                         $('#addmeeting-form').hide();
                         $('#editmeeting-form > fieldset').prop('disabled', true);
@@ -2904,17 +3023,16 @@ $(function(){
                         var container = $("#sc_product_files_old");
                         container.empty();
 
-                        if(obj_meeting.attach !== "")
-                        {
+                        if (obj_meeting.attach !== "") {
                             var files = obj_meeting.attach.split(",");
                             files.forEach((element) => {
                                 var elm = '<div class="file-element">' +
                                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
-                                    '<label for="' + element + '">' + 
-                                        '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                                    '<label for="' + element + '">' +
+                                    '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
                                     '</label>' +
-                                  '</div>';
-              
+                                    '</div>';
+
                                 $(elm).appendTo(container);
                             });
                         }
@@ -2940,22 +3058,18 @@ $(function(){
             },
 
             // show error message to user
-            error: function(xhr, resp, text) {
+            error: function (xhr, resp, text) {
 
             }
         });
 
 
-        
-
-
     });
 
 
-    $(document).on("click", "#btn_edit", function() {
+    $(document).on("click", "#btn_edit", function () {
 
-        if($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>")
-        {
+        if ($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>") {
             app1.warning('Only meeting creator can execute this action!');
             return;
         }
@@ -2965,15 +3079,14 @@ $(function(){
         $("#oldCreator").prop('disabled', true);
 
         $("#oldAttendee").removeClass("select_disabled");
-  
+
         //$("oldAttendee").prop('disabled', false);
         var file_elements = document.getElementsByName("file_elements_old");
 
         var item = 0;
-        for(let i = 0;i < file_elements.length; i++)
-        {
+        for (let i = 0; i < file_elements.length; i++) {
             file_elements[i].disabled = false;
-          
+
         }
 
 
@@ -2987,7 +3100,7 @@ $(function(){
     });
 
 
-    $(document).on("click", "#btn_cancel", function() {
+    $(document).on("click", "#btn_cancel", function () {
 
         //表單變成不可修改
         $('#editmeeting-form > fieldset').prop('disabled', true);
@@ -3014,7 +3127,7 @@ $(function(){
 
     });
 
-    $(document).on("click", "#btn_save", function() {
+    $(document).on("click", "#btn_save", function () {
 
         //##任一欄位如果為空則提示欄位不得為空
         //結束時間須晚於開始時間
@@ -3049,7 +3162,7 @@ $(function(){
             return;
         }
 
-        var names = app1.old_attendee.map(function(item) {
+        var names = app1.old_attendee.map(function (item) {
             return item['username'];
         });
 
@@ -3071,7 +3184,7 @@ $(function(){
 
         //##修改後的內容 update到資料庫
         var id = eventObj.id;
-    
+
         var file_elements = document.getElementsByName("file_elements_old");
 
         var attach = "";
@@ -3082,7 +3195,7 @@ $(function(){
 
         token = localStorage.getItem('token');
         var form_Data = new FormData();
-      
+
         form_Data.append('action', 3);
 
         form_Data.append('id', id);
@@ -3097,34 +3210,29 @@ $(function(){
         form_Data.append('is_enabled', true);
 
         var item = 0;
-        for(let i = 0;i < file_elements.length; i++)
-        {
-            if(file_elements[i].checked)
-            {
+        for (let i = 0; i < file_elements.length; i++) {
+            if (file_elements[i].checked) {
                 attach += file_elements[i].value + ",";
-                for( var j = 0; j < app1.attachments.length; j++ ){
+                for (var j = 0; j < app1.attachments.length; j++) {
                     let file = app1.attachments[j];
-                    if(file.name === file_elements[i].value)
-                    {
+                    if (file.name === file_elements[i].value) {
                         form_Data.append('files[' + item++ + ']', file);
                         break;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 remove += "'" + file_elements[i].value + "',";
             }
         }
 
-        if(attach !== "")
+        if (attach !== "")
             attach = attach.slice(0, -1);
 
-        if(remove !== "")
+        if (remove !== "")
             remove = remove.slice(0, -1);
 
         form_Data.append('remove', remove);
-   
+
         var _app1 = app1;
         var _app = app;
 
@@ -3137,9 +3245,9 @@ $(function(){
             contentType: false,
             data: form_Data,
 
-            success: function(result) {
-                console.log(result);
-           
+            success: function (result) {
+                //console.log(result);
+
                 _app1.notify_mail(id, 2);
 
                 var obj_meeting = {
@@ -3150,7 +3258,7 @@ $(function(){
                     start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
                     end: $("#oldDate").val() + "T" + $("#oldEndTime").val(),
                     content: $("#oldContent").val(),
-                    attach:attach,
+                    attach: attach,
                     //creator: "創建人的系統名字" + " " + "按下save鈕的日期時間(小時:分即可)"
                     creator: "<?php echo $GLOBALS['username'] ?>",
                     location: $("#oldLocation").val(),
@@ -3158,7 +3266,7 @@ $(function(){
                 $("#oldCreator").val(obj_meeting.creator);
 
                 var title = $("#oldSubject").val().trim();
-                if(_app.project_name !== "")
+                if (_app.project_name !== "")
                     title = '[ ' + _app.project_name + ' ] ' + $("#oldSubject").val().trim();
 
                 //把修改後的會議資訊 update 到日曆上
@@ -3171,12 +3279,12 @@ $(function(){
             },
 
             // show error message to user
-            error: function(xhr, resp, text) {
+            error: function (xhr, resp, text) {
 
             }
         });
 
-     
+
         //按鈕也會改變
         $("#btn_cancel").hide();
         $("#btn_save").hide();
@@ -3186,12 +3294,11 @@ $(function(){
 
     });
 
-    $(document).on("click", "#btn_delete", function() {
+    $(document).on("click", "#btn_delete", function () {
 
         var _app1 = app1;
 
-        if($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>")
-        {
+        if ($("#oldCreator")[0].value !== "<?php echo $GLOBALS['username'] ?>") {
             app1.warning('Only meeting creator can execute this action!');
             return;
         }
@@ -3204,9 +3311,9 @@ $(function(){
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes'
-          }).then((result) => {
+        }).then((result) => {
             if (result.value) {
-              
+
                 $("#editmeeting-form").hide();
 
                 //##從資料庫中刪除該會議
@@ -3228,32 +3335,31 @@ $(function(){
                     contentType: false,
                     data: form_Data,
 
-                    success: function(result) {
-                        console.log(result);
+                    success: function (result) {
+                        //console.log(result);
 
                         //從日曆中刪除該會議
                         eventObj.remove();
-                        
+
                         _app1.notify_mail(id, 3);
                     },
 
                     // show error message to user
-                    error: function(xhr, resp, text) {
+                    error: function (xhr, resp, text) {
 
                     }
                 });
-              
-            } else {
-          
-            }
-          });
 
-        
+            } else {
+
+            }
+        });
+
 
     });
 
 
-    $(document).on("click", "#btn_add", function() {
+    $(document).on("click", "#btn_add", function () {
         //結束時間須晚於開始時間
         let start = moment($("#newDate").val() + " " + $("#newStartTime").val(), "YYYY/MM/DD HH:mm");
         let end = moment($("#newDate").val() + " " + $("#newEndTime").val(), "YYYY/MM/DD HH:mm");
@@ -3286,7 +3392,7 @@ $(function(){
             return;
         }
 
-        var names = app1.attendee.map(function(item) {
+        var names = app1.attendee.map(function (item) {
             return item['username'];
         });
 
@@ -3303,15 +3409,13 @@ $(function(){
         var file_elements = document.getElementsByName("file_elements");
 
         var attach = "";
-        for(let i = 0;i < file_elements.length; i++)
-        {
-            if(file_elements[i].checked)
-            {
+        for (let i = 0; i < file_elements.length; i++) {
+            if (file_elements[i].checked) {
                 attach += file_elements[i].value + ",";
             }
         }
 
-        if(attach !== "")
+        if (attach !== "")
             attach = attach.slice(0, -1);
 
 
@@ -3323,7 +3427,7 @@ $(function(){
         //##寄送通知信件給會議參與者
         token = localStorage.getItem('token');
         var form_Data = new FormData();
-      
+
         form_Data.append('action', 2);
         form_Data.append('jwt', token);
         form_Data.append('subject', $("#newSubject").val().trim());
@@ -3338,20 +3442,17 @@ $(function(){
 
         var file_elements = document.getElementsByName("file_elements");
         var item = 0;
-        for(let i = 0;i < file_elements.length; i++)
-        {
-            if(file_elements[i].checked)
-            {
-                for( var j = 0; j < app1.attachments.length; j++ ){
-                let file = app1.attachments[j];
-                if(file.name === file_elements[i].value)
-                {
-                    form_Data.append('files[' + item++ + ']', file);
-                    break;
-                }
+        for (let i = 0; i < file_elements.length; i++) {
+            if (file_elements[i].checked) {
+                for (var j = 0; j < app1.attachments.length; j++) {
+                    let file = app1.attachments[j];
+                    if (file.name === file_elements[i].value) {
+                        form_Data.append('files[' + item++ + ']', file);
+                        break;
+                    }
                 }
             }
-                
+
         }
 
         var _app1 = app1;
@@ -3366,17 +3467,16 @@ $(function(){
             contentType: false,
             data: form_Data,
 
-            success: function(response) {
+            success: function (response) {
                 var obj = JSON.parse(response);
-           
+
                 //##寄送通知信件給會議參與者,告知修改後訊息
                 _app1.notify_mail(obj.id, 1);
 
                 var title = '[ ' + _app.project_name + ' ] ' + $("#newSubject").val().trim();
 
                 //把新增會議 呈現於日曆上
-                if(obj.id != 0)
-                {
+                if (obj.id != 0) {
                     var obj_meeting = {
                         id: obj.id,
                         title: $("#newSubject").val().trim(),
@@ -3387,7 +3487,7 @@ $(function(){
                         end: $("#newDate").val() + "T" + $("#newEndTime").val(),
                         location: $("#newLocation").val(),
                         content: $("#newContent").val(),
-                        attach:attach,
+                        attach: attach,
                         //creator: "創建人的系統名字" + " " + "按下Add按鈕的日期時間(小時:分即可)"
                         creator: "<?php echo $GLOBALS['username'] ?>"
                     };
@@ -3404,12 +3504,11 @@ $(function(){
             },
 
             // show error message to user
-            error: function(xhr, resp, text) {
+            error: function (xhr, resp, text) {
 
             }
         });
 
-        
 
         $("#addmeeting-form").hide();
 
@@ -3428,30 +3527,27 @@ $(function(){
     }
 
     function onChangeFileUpload(target) {
-        
+
         var fileTarget = $("#fileload");
         var container = $("#sc_product_files");
 
         for (i = 0; i < fileTarget[0].files.length; i++) {
             // remove duplicate
             if (app1.attachments.indexOf(fileTarget[0].files[i]) == -1 ||
-                app1.attachments.length == 0) 
-            {
+                app1.attachments.length == 0) {
                 var fileItem = Object.assign(fileTarget[0].files[i]);
 
                 var elm = '<div class="file-element">' +
-                                    '<input type="checkbox" id="' + fileTarget[0].files[i].name + '" name="file_elements" value="' + fileTarget[0].files[i].name + '" checked>' +
-                                    '<label for="' + fileTarget[0].files[i].name + '">' + 
-                                        '<a>' + fileTarget[0].files[i].name + '</a>' + 
-                                    '</label>' +
-                                  '</div>';
-              
+                    '<input type="checkbox" id="' + fileTarget[0].files[i].name + '" name="file_elements" value="' + fileTarget[0].files[i].name + '" checked>' +
+                    '<label for="' + fileTarget[0].files[i].name + '">' +
+                    '<a>' + fileTarget[0].files[i].name + '</a>' +
+                    '</label>' +
+                    '</div>';
+
                 $(elm).appendTo(container);
 
                 app1.attachments.push(fileItem);
-            }
-            else
-            {
+            } else {
                 fileTarget[0].value = "";
             }
         }
@@ -3462,14 +3558,13 @@ $(function(){
 
         var container = $("#sc_product_files_old");
 
-        if(attach !== "")
-        {
+        if (attach !== "") {
             var files = attach.split(",");
             files.forEach((element) => {
                 var elm = '<div class="file-element">' +
                     '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
-                    '<label for="' + element + '">' + 
-                        '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                    '<label for="' + element + '">' +
+                    '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' +
                     '</label>' +
                     '</div>';
 
@@ -3479,278 +3574,299 @@ $(function(){
     }
 
     function onChangeFileUploadOld(target) {
-        
+
         var fileTarget = $("#fileload_old");
         var container = $("#sc_product_files_old");
 
         for (i = 0; i < fileTarget[0].files.length; i++) {
             // remove duplicate
             if (app1.attachments.indexOf(fileTarget[0].files[i]) == -1 ||
-                app1.attachments.length == 0) 
-            {
+                app1.attachments.length == 0) {
                 var fileItem = Object.assign(fileTarget[0].files[i]);
 
                 var elm = '<div class="file-element">' +
-                                    '<input type="checkbox" id="' + fileTarget[0].files[i].name + '" name="file_elements_old" value="' + fileTarget[0].files[i].name + '" checked>' +
-                                    '<label for="' + fileTarget[0].files[i].name + '">' + 
-                                        '<a>' + fileTarget[0].files[i].name + '</a>' + 
-                                    '</label>' +
-                                  '</div>';
-              
+                    '<input type="checkbox" id="' + fileTarget[0].files[i].name + '" name="file_elements_old" value="' + fileTarget[0].files[i].name + '" checked>' +
+                    '<label for="' + fileTarget[0].files[i].name + '">' +
+                    '<a>' + fileTarget[0].files[i].name + '</a>' +
+                    '</label>' +
+                    '</div>';
+
                 $(elm).appendTo(container);
 
                 app1.attachments.push(fileItem);
-            }
-            else
-            {
+            } else {
                 fileTarget[0].value = "";
             }
         }
     }
 </script>
 
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="js/vue-select.js"></script>
-<script defer src="js/axios.min.js"></script> 
+<script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script type="text/javascript" src="js/project03_client.js" defer></script>
-<script defer src="js/a076d05399.js"></script> 
+<script type="text/javascript" src="js/project03_client.js?random=<?php echo uniqid(); ?>" defer></script>
+<script defer src="js/a076d05399.js"></script>
 
 <style scoped>
 
-input:focus::-webkit-input-placeholder{
-    color: transparent!important;
-}
-input:focus::-moz-placeholder{
-    color: transparent!important;
-}
-input:focus:-moz-placeholder{
-    color: transparent!important;
-}
+    input:focus::-webkit-input-placeholder {
+        color: transparent !important;
+    }
 
-.extendex-top {
-  background: none;
-  box-shadow: none;
-}
-.bg-whi {
-  min-height: 100vh;
-  box-sizing: border-box;
-}
-.top-box {
+    input:focus::-moz-placeholder {
+        color: transparent !important;
+    }
 
-  background-size: 100%;
-}
-.pub-con {
-  box-sizing: border-box;
-  background-size: 100%;
-  text-align: center;
-  position: relative;
-}
-.input-zone {
-  width: 5rem;
-  background-size: 2.13rem;
-  border-radius: 0.38rem;
-  border: 0.06rem solid rgba(112, 112, 112, 1);
-  position: relative;
-  color: var(--fth04);
-  font-size: 0.88rem;
-  box-sizing: border-box;
-}
-.input {
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 2;
-}
-.pad {
-  padding: 0.5rem 1.7rem 0 0rem;
-  font-size: 0.88rem;
-}
-.btn-container {
-  margin: 0.69rem auto;
-  text-align: center;
-}
-.btn-container .btn {
-  width: 10.56rem;
-  height: 2.5rem;
-  border-radius: 1.25rem;
-  border: none;
-  color: #ffffff;
-}
-.btn-container .btn.btn-gray {
-  background: rgba(201, 201, 201, 1);
-}
-.btn-container .btn.btn-blue {
-  background: linear-gradient(
-    180deg,
-    rgba(128, 137, 229, 1) 0%,
-    rgba(87, 84, 196, 1) 100%
-  );
-  font-size: 1rem;
-}
-.tips {
-  margin-top: 1.69rem;
-}
-.file-list {
-  font-size: 0.88rem;
-  color: #5a5cc6;
-}
-.file-list .file-item {
-  margin-top: 0.63rem;
-}
-.file-list .file-item p {
-  line-height: 1.25rem;
-  position: relative;
-}
-.file-list img {
-  width: 1.25rem;
-  cursor: pointer;
-}
-.file-list img.upload-delete {
-  position: absolute;
-  bottom: 0;
-  margin: 0 auto;
-  margin-left: 1rem;
-}
-.progress-wrapper {
-  position: relative;
-  height: 0.5rem;
-  border: 0.06rem solid rgba(92, 91, 200, 1);
-  border-radius: 1px;
-  box-sizing: border-box;
-  width: 87%;
-}
-.progress-wrapper .progress-progress {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 0%;
-  border-radius: 1px;
-  background-color: #5c5bc8;
-  z-index: 1;
-}
-.progress-rate {
-  font-size: 14px;
-  height: 100%;
-  z-index: 2;
-  width: 12%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.progress-rate span {
-  display: inline-block;
-  width: 100%;
-  text-align: right;
-}
-.progress-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.file-list img.upload-success {
-  margin-left: 0;
-}
+    input:focus:-moz-placeholder {
+        color: transparent !important;
+    }
+
+    .extendex-top {
+        background: none;
+        box-shadow: none;
+    }
+
+    .bg-whi {
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
+
+    .top-box {
+
+        background-size: 100%;
+    }
+
+    .pub-con {
+        box-sizing: border-box;
+        background-size: 100%;
+        text-align: center;
+        position: relative;
+    }
+
+    .input-zone {
+        width: 5rem;
+        background-size: 2.13rem;
+        border-radius: 0.38rem;
+        border: 0.06rem solid rgba(112, 112, 112, 1);
+        position: relative;
+        color: var(--fth04);
+        font-size: 0.88rem;
+        box-sizing: border-box;
+    }
+
+    .input {
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
+    }
+
+    .pad {
+        padding: 0.5rem 1.7rem 0 0rem;
+        font-size: 0.88rem;
+    }
+
+    .btn-container {
+        margin: 0.69rem auto;
+        text-align: center;
+    }
+
+    .btn-container .btn {
+        width: 10.56rem;
+        height: 2.5rem;
+        border-radius: 1.25rem;
+        border: none;
+        color: #ffffff;
+    }
+
+    .btn-container .btn.btn-gray {
+        background: rgba(201, 201, 201, 1);
+    }
+
+    .btn-container .btn.btn-blue {
+        background: linear-gradient(
+                180deg,
+                rgba(128, 137, 229, 1) 0%,
+                rgba(87, 84, 196, 1) 100%
+        );
+        font-size: 1rem;
+    }
+
+    .tips {
+        margin-top: 1.69rem;
+    }
+
+    .file-list {
+        font-size: 0.88rem;
+        color: #5a5cc6;
+    }
+
+    .file-list .file-item {
+        margin-top: 0.63rem;
+    }
+
+    .file-list .file-item p {
+        line-height: 1.25rem;
+        position: relative;
+    }
+
+    .file-list img {
+        width: 1.25rem;
+        cursor: pointer;
+    }
+
+    .file-list img.upload-delete {
+        position: absolute;
+        bottom: 0;
+        margin: 0 auto;
+        margin-left: 1rem;
+    }
+
+    .progress-wrapper {
+        position: relative;
+        height: 0.5rem;
+        border: 0.06rem solid rgba(92, 91, 200, 1);
+        border-radius: 1px;
+        box-sizing: border-box;
+        width: 87%;
+    }
+
+    .progress-wrapper .progress-progress {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0%;
+        border-radius: 1px;
+        background-color: #5c5bc8;
+        z-index: 1;
+    }
+
+    .progress-rate {
+        font-size: 14px;
+        height: 100%;
+        z-index: 2;
+        width: 12%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .progress-rate span {
+        display: inline-block;
+        width: 100%;
+        text-align: right;
+    }
+
+    .progress-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .file-list img.upload-success {
+        margin-left: 0;
+    }
 </style>
 
 <style>
-        
-        .commentbox {
-            position: absolute;
-            border: 5px solid #00811e;
-            background-color: #FFF;
-            min-width: 500px;
-            padding: 15px 25px 10px 15px;
-            left: calc(50% - 575px);
-            top: -40px;
-            z-index: 1000;
-            
-            opacity: 0;
-            pointer-events: none;
-        }
 
-        .diashow {
-            
-            opacity: 1 !important;
-            pointer-events: auto !important;
-        }
-        
-        .arrow {
-            border-color: transparent transparent transparent #00811e;
-            border-style: solid solid solid solid;
-            border-width: 14px 28px;
-            right: -56px;
-            top: 55px;
-            position: absolute;
-            width: 0px;
-            height: 0px;
-            z-index: 1;
-        }
+    .commentbox {
+        position: absolute;
+        border: 5px solid #00811e;
+        background-color: #FFF;
+        min-width: 500px;
+        padding: 15px 25px 10px 15px;
+        left: calc(50% - 575px);
+        top: -40px;
+        z-index: 1000;
 
-        .arrowcover{
-            border-color: transparent transparent transparent #fff;
-            border-style: solid solid solid solid;
-            border-width: 14px 28px;
-            position: absolute;
-            top: 55px;
-            right: -46px;
-            width: 0px;
-            height: 0px;
-            z-index: 1;
-        }
+        opacity: 0;
+        pointer-events: none;
+    }
 
-        .commentbody {
-            border: none;
-            padding: 0;
-            width: 100%;
-        }
+    .diashow {
 
-        .commentbody textarea {
-            border: 1px solid #707070;
-            padding: 1px 3px;
-            font-size: 14px;
-            border-radius: 6px;
-            width: 100%;
-            height: 70px;
-            margin-bottom: 10px;
-        }
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
 
-        .commentfooter {
-            padding: 0 0 5px;
-            text-align: right;
-            width: 100%;
-            display: inline-block;
-        }
+    .arrow {
+        border-color: transparent transparent transparent #00811e;
+        border-style: solid solid solid solid;
+        border-width: 14px 28px;
+        right: -56px;
+        top: 55px;
+        position: absolute;
+        width: 0px;
+        height: 0px;
+        z-index: 1;
+    }
 
-        .btncancel {
-            text-align: center;
-            margin: 0 10px;
-        }
-        
-        .btncreate {
-            text-align: center;
-            margin: 0;
-            margin-left: 10px;
-        }
-        
-        a.btncancel:hover {
-            background-color: #F37058;
-            cursor: pointer;
-        }
+    .arrowcover {
+        border-color: transparent transparent transparent #fff;
+        border-style: solid solid solid solid;
+        border-width: 14px 28px;
+        position: absolute;
+        top: 55px;
+        right: -46px;
+        width: 0px;
+        height: 0px;
+        z-index: 1;
+    }
 
-        a.btncreate:hover {
-            background-color: #F37058;
-            cursor: pointer;
-        }
+    .commentbody {
+        border: none;
+        padding: 0;
+        width: 100%;
+    }
 
-        div.tablebox.lv3a>ul:nth-of-type(even)>li:first-of-type>div + div{
-            margin-top: 10px;
-            }
-        
-  </style>
+    .commentbody textarea {
+        border: 1px solid #707070;
+        padding: 1px 3px;
+        font-size: 14px;
+        border-radius: 6px;
+        width: 100%;
+        height: 70px;
+        margin-bottom: 10px;
+    }
+
+    .commentfooter {
+        padding: 0 0 5px;
+        text-align: right;
+        width: 100%;
+        display: inline-block;
+    }
+
+    .btncancel {
+        text-align: center;
+        margin: 0 10px;
+    }
+
+    .btncreate {
+        text-align: center;
+        margin: 0;
+        margin-left: 10px;
+    }
+
+    a.btncancel:hover {
+        background-color: #F37058;
+        cursor: pointer;
+    }
+
+    a.btncreate:hover {
+        background-color: #F37058;
+        cursor: pointer;
+    }
+
+    div.tablebox.lv3a > ul:nth-of-type(even) > li:first-of-type > div + div {
+        margin-top: 10px;
+    }
+
+</style>
 </html>
