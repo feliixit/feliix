@@ -27,10 +27,15 @@ try {
 $GLOBALS['position'] = $decoded->data->position;
 $GLOBALS['department'] = $decoded->data->department;
 
-// 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
-$test_manager = $decoded->data->test_manager;
-
+if($GLOBALS['department'] == 'Lighting' || $GLOBALS['department'] == 'Office' || $GLOBALS['department'] == 'Sales'){
+  $test_manager = "1";
 }
+
+//  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
+if($user_id == 48 || $user_id == 2 || $user_id == 1 || $user_id == 6 || $user_id == 3)
+    $test_manager = "1";
+}
+
 catch (Exception $e){
 
 header( 'location:index' );
