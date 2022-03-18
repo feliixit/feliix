@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
 </head>
 
 <style>
@@ -105,8 +106,8 @@
         <div class="wrap">
             <div class="main">
                 <div class="logo"><img src="images/ui/logo_dark.svg" alt=""></div>
-                <div class="user"><input type="text" placeholder="Email" v-model='uid'></div>
-                <div class="password"><input type="password" placeholder="Password" v-model='password'></div>
+                <div class="user"><input type="text" id="username" placeholder="Email" v-model='uid'></div>
+                <div class="password"><input type="password" id="password" placeholder="Password" v-model='password'></div>
                 <div class="forgot"><input type="button" value="Sign Up" @click="register();"></div>
                 <div class="forgot"><input type="button" value="Forgot Password" onclick="window.location.href='forget_password'"></div>
                 <input type="hidden" name="recaptcha_response" id="recaptchaResponse">
@@ -128,5 +129,14 @@
     //        });
     //    });
 
+    $(document).keypress(function (e) {
+  if (e.which === 13 && $('input[type="password"]').is(':focus')) {
+    if ($('input[type="password"]').val().length < 1) {
+      e.preventDefault();
+    }
+    else
+        app.checkLogin();
+  }
+});
 </script>
 </html>

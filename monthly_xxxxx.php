@@ -344,6 +344,7 @@ background-color: #94BABB;
                             <th rowspan="2">A/R</th>
                             <th rowspan="2">Down Payment</th>
                             <th rowspan="2">Expense</th>
+                            <th rowspan="2">Mr. Lai</th>
                         </tr>
 
                         <tr>
@@ -365,6 +366,8 @@ background-color: #94BABB;
                             <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                             <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                             <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td v-if="rec.date <= new Date().toJSON().slice(0,10).replace(/-/g,'/')">₱ {{ Number(rec.total.lai_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
                             <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
                             <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
                             <td  v-if="rec.date > new Date().toJSON().slice(0,10).replace(/-/g,'/')"></td>
@@ -383,6 +386,7 @@ background-color: #94BABB;
                             <td>₱ {{ Number(record.data.total_ar).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                             <td>₱ {{ Number(record.data.total_down_payment).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                             <td>₱ {{ Number(record.data.total_cash_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                            <td>₱ {{ Number(record.data.total_lai_expense).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
                         </tr>
 
                         </tbody>
