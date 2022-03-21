@@ -336,7 +336,7 @@ var app = new Vue({
       )
         can_save = true;
 
-      if (this.my_title == "SERVICE MANAGER") {
+      if (this.my_title == "SERVICE MANAGER" || this.my_title == "LIGHTING MANAGER" || this.my_title == "OFFICE SYSTEMS MANAGER") {     // 20220321 for service leave
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR"
@@ -344,11 +344,13 @@ var app = new Vue({
           can_save = true;
       }
 
-      if (this.my_title == "ASSISTANT SERVICE MANAGER") {
+      if (this.my_title == "ASSISTANT SERVICE MANAGER") { // 20220321 for service leave
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR" &&
-          _creator_title != "SERVICE MANAGER"
+          _creator_title != "SERVICE MANAGER" &&
+          _creator_title != "LIGHTING MANAGER" &&
+          _creator_title != "OFFICE SYSTEMS MANAGERR"
         )
           can_save = true;
       }

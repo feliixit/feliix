@@ -344,7 +344,7 @@
             }
         }
 
-        if(department === 'SVC')
+        if(department === 'SVC' || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
             {
@@ -356,7 +356,7 @@
                     can_close = true;
             }
 
-            if(level === "SERVICE MANAGER")
+            if(level === "SERVICE MANAGER" || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
             {
                 if(creator_level === "ASSISTANT SERVICE MANAGER")
                 {
