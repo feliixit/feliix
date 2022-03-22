@@ -24,18 +24,19 @@ try {
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
 
-$GLOBALS['position'] = $decoded->data->position;
-$GLOBALS['department'] = $decoded->data->department;
+            $GLOBALS['position'] = $decoded->data->position;
+            $GLOBALS['department'] = $decoded->data->department;
+            
+            if($GLOBALS['department'] == 'Lighting' || $GLOBALS['department'] == 'Office' || $GLOBALS['department'] == 'Sales'){
+              $test_manager = "1";
+            }
+            
+            //  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
+            if($user_id == 48 || $user_id == 2 || $user_id == 11 || $user_id == 6 || $user_id == 3)
+                $test_manager = "1";
+            }
 
-// 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
-$test_manager = $decoded->data->test_manager;
 
-if ($test_manager[0]  == "0")
-{
-  header( 'location:index' );
-  }
-
-}
 catch (Exception $e){
 
 header( 'location:index' );
@@ -1544,7 +1545,18 @@ header( 'location:index' );
 
             <div class="block fn">
                 <div class="popupblock">
+                <?php
+                if ($test_manager[0]  == "1")
+                {
+                ?>
                     <a id="status_fn1" class="fn1" :ref="'a_fn1'" @click="show_header = !show_header">Header</a>
+                <?php
+                } else {
+                ?>
+                    <a>Header</a>
+                <?php
+                }
+                ?>
                     <div id="header_dialog" class="dialog fn1 show" :ref="'dlg_fn1'" v-show="show_header">
                         <h6>Header</h6>
                         <div class="formbox">
@@ -1591,7 +1603,18 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
+                    <?php
+                    if ($test_manager[0]  == "1")
+                    {
+                    ?>
                     <a id="status_fn1" class="fn1" :ref="'a_fn1'" @click="show_footer = !show_footer">Footer</a>
+                    <?php
+                    } else {
+                    ?>
+                        <a>Footer</a>
+                    <?php
+                    }
+                    ?>
                     <div id="footer_dialog" class="dialog fn1 show" :ref="'dlg_fn1'"  v-show="show_footer">
                         <h6>Footer</h6>
                         <div class="formbox">
@@ -1615,7 +1638,19 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
+                    
+                    <?php
+                    if ($test_manager[0]  == "1")
+                    {
+                    ?>
                     <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_page = !show_page">Page</a>
+                    <?php
+                    } else {
+                    ?>
+                        <a>Page</a>
+                    <?php
+                    }
+                    ?>
                     <div id="page_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_page">
                         <h6>Page
                             <a class="add_page" @click="add_page()"></a>
@@ -1679,7 +1714,19 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
+                    
+                    <?php
+                    if ($test_manager[0]  == "1")
+                    {
+                    ?>
                     <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_subtotal = !show_subtotal">Subtotal</a>
+                    <?php
+                    } else {
+                    ?>
+                        <a>Subtotal</a>
+                    <?php
+                    }
+                    ?>
                     <div id="subtotal_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_subtotal">
                         <h6>Subtotal</h6>
 
@@ -1788,7 +1835,19 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
+                    
+                    <?php
+                    if ($test_manager[0]  == "1")
+                    {
+                    ?>
                     <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_total = !show_total">Total</a>
+                    <?php
+                    } else {
+                    ?>
+                        <a>Total</a>
+                    <?php
+                    }
+                    ?>
                     <div id="total_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_total">
                         <h6>Total</h6>
 
@@ -1857,7 +1916,19 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
+                    
+                    <?php
+                    if ($test_manager[0]  == "1")
+                    {
+                    ?>
                     <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_term = !show_term">Terms and Condition</a>
+                    <?php
+                    } else {
+                    ?>
+                        <a>Terms and Condition</a>
+                    <?php
+                    }
+                    ?>
                     <div id="terms_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_term">
                         <h6>Terms and Condition</h6>
 
@@ -1908,7 +1979,19 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
+                    
+                    <?php
+                    if ($test_manager[0]  == "1")
+                    {
+                    ?>
                     <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_signature = !show_signature">Signature</a>
+                    <?php
+                    } else {
+                    ?>
+                        <a>Signature</a>
+                    <?php
+                    }
+                    ?>
                     <div id="signature_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_signature">
                         <h6>Signature</h6>
 
