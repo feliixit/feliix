@@ -3,6 +3,12 @@ Vue.component('v-select', VueSelect.VueSelect)
 var app = new Vue({
   el: '#app',
   data: {
+    canSub_r: true,
+    finish_r: false,
+
+    fileArray_r: [],
+    arrMsg_r: [],
+
     stage_id: 0,
     receive_records: [],
     record: {},
@@ -178,6 +184,67 @@ var app = new Vue({
 
 
   methods: {
+    deleteMsgFile_r(item_id, index) {
+      this.current_msg_item_id_r = item_id;
+
+      this.arrMsg_r[item_id].splice(index, 1);
+      var fileTarget = this.$refs['file_msg_r_' + item_id][0];
+      fileTarget.value = "";
+      Vue.set(this.arrMsg_r, 0, '');
+    },
+    
+    changeMsgFile_r(item_id) {
+      this.current_msg_item_id_r = item_id;
+
+      var arr = this.arrMsg_r[item_id];
+      if (typeof arr === 'undefined' || arr.length == 0)
+        this.arrMsg_r[item_id] = [];
+
+      var fileTarget = this.$refs['file_msg_r_' + item_id][0];
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.arrMsg_r[item_id].indexOf(fileTarget.files[i]) == -1 ||
+          this.arrMsg_r[item_id].length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.arrMsg_r[item_id].push(fileItem);
+          Vue.set(this.arrMsg_r, 0, '');
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    msgItems_r(item_id) {
+      var arr = this.arrMsg_r[item_id];
+      return arr;
+    },
+
+
+    deleteFile_r(index) {
+      this.fileArray_r.splice(index, 1);
+      var fileTarget = this.$refs.file_r;
+      fileTarget.value = "";
+    },
+
+    changeFile_r() {
+      var fileTarget = this.$refs.file_r;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.fileArray_r.indexOf(fileTarget.files[i]) == -1 ||
+          this.fileArray_r.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.fileArray_r.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
 
     setPages() {
       console.log('setPages');
@@ -407,6 +474,7 @@ var app = new Vue({
       document.getElementById('dialog_a2').classList.remove("show");
       document.getElementById('add_a2').classList.remove("focus");
     },
+
 
     sales_create() {
       let _this = this;
@@ -1142,6 +1210,8 @@ var app = new Vue({
                },
 
               comment_clear(trackid) {
+
+                
                   
                   document.getElementById('btn'+trackid).classList.remove("diashow");
                   this.$refs['comment' + trackid][0].value = "";
@@ -1173,6 +1243,14 @@ var app = new Vue({
                   form_Data.append('message', this.stage_task.trim());
                   form_Data.append('type', 'task');
 
+                  form_Data.append("attached_file", JSON.stringify(this.fileArray_r));
+
+                  for(var j = 0; j < this.fileArray_r.length; j++) {
+                    let file = this.fileArray_r[j];
+                    if(typeof file !== 'undefined' && file !== null) 
+                      form_Data.append('attached_file' + j, file);
+                  }
+
                   const token = sessionStorage.getItem('token');
 
                   axios({
@@ -1188,6 +1266,7 @@ var app = new Vue({
                           //handle success
                       
                             _this.stage_task = "";
+                            _this.fileArray_r = [];
                         
                             _this.get_stage_client_task(_this.stage_id);
 
@@ -1234,6 +1313,14 @@ var app = new Vue({
                   form_Data.append('message', comment.trim());
                   form_Data.append('type', 'comment');
 
+                  form_Data.append("attached_file", JSON.stringify(this.arrMsg_r[task_id]));
+
+                  for(var j = 0; j < this.arrMsg_r[task_id].length; j++) {
+                    let file = this.arrMsg_r[task_id][j];
+                    if(typeof file !== 'undefined' && file !== null) 
+                      form_Data.append('attached_file' + j, file);
+                  }
+
                   const token = sessionStorage.getItem('token');
 
                   axios({
@@ -1249,6 +1336,7 @@ var app = new Vue({
                           //handle success
                       
                             _this.$refs['comment' + task_id][0].value = "";
+                            _this.arrMsg_r[task_id] = [];
                             
                             _this.get_stage_client_task(_this.stage_id);
                             _this.clear_all_diag();

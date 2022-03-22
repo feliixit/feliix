@@ -152,6 +152,7 @@ function GetYearCurrentMonth($strDate, $strEDate, $sale_person, $category, $db)
         $total_ar = 0;
         $total_down_payment = 0;
         $total_cash_expense = 0;
+        $total_lai_expense = 0;
 
         foreach ($merged_results as $mo) {
             $amount = $mo['total'];
@@ -162,6 +163,7 @@ function GetYearCurrentMonth($strDate, $strEDate, $sale_person, $category, $db)
             $total_ar += $amount['ar'];
             $total_down_payment += $amount['down_payment'];
             $total_cash_expense += $amount['cash_expense'];
+            $total_lai_expense += $amount['lai_expense'];
         }
 
         $total1 = array(
@@ -173,6 +175,7 @@ function GetYearCurrentMonth($strDate, $strEDate, $sale_person, $category, $db)
             "total_ar" => $total_ar,
             "total_down_payment" => $total_down_payment,
             "total_cash_expense" => $total_cash_expense,
+            "total_lai_expense" => $total_lai_expense,
         );
 
     return $total1;
@@ -188,9 +191,12 @@ function GetCurrentMonth($strDate, $sale_person, $category, $db)
     $cash_record = GetMonthCashReceived($PeriodStart, $PeriodEnd, $db);
     //$down_payment = GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
     $expense_record = GetMonthExpense($PeriodStart, $PeriodEnd, $db);
+    $Lai_record = GetLaiExpense($PeriodStart, $PeriodEnd, $db);
 
     $net_amount_o = 0;
     $net_amount_l = 0;
+
+    
 
     foreach($report1 as $row)
     {
@@ -245,6 +251,12 @@ function GetCurrentMonth($strDate, $sale_person, $category, $db)
             $ar += $r['ar'];
     }
 
+    $lai_expense = 0;
+    foreach($Lai_record as $row)
+    {
+        $lai_expense += $row['amount'];
+    }
+
     $total1 = array(
         "net_amount_o" => $net_amount_o,
         "net_amount_l" => $net_amount_l,
@@ -252,6 +264,7 @@ function GetCurrentMonth($strDate, $sale_person, $category, $db)
         "cash_received" => $cash_received + $net_shagrila,
         "down_payment" => $down_payment_amount,
         "cash_expense" => $cash_expense,
+        "lai_expense" => $lai_expense,
         "ar" => $ar,
     );
 
@@ -311,6 +324,46 @@ function GetMonthExpense($start_date, $end_date, $db)
 
         if($end_date!='') {
             $query = $query . " and paid_date < '$end_date' ";
+        }
+
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+    
+        $merged_results = [];
+        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    
+            $amount = $row['amount'];
+
+            $merged_results[] = array( 
+                "amount" => $amount,
+              
+            );
+        }
+
+        // response in json format
+        return $merged_results;
+      
+    }
+    catch (Exception $e){
+    
+        return [];
+    }
+}
+
+function GetLaiExpense($start_date, $end_date, $db)
+{
+    try {
+
+        $query = "select sum(total_amount) amount from store_sales_lai 
+                                where status <> -1 ";
+
+        if($start_date!='') {
+            $query = $query . " and sales_date > '$start_date' ";
+        }
+
+        if($end_date!='') {
+            $query = $query . " and sales_date < '$end_date' ";
         }
 
         $stmt = $db->prepare($query);
@@ -456,6 +509,8 @@ function GetOneMonth($strDate, $sale_person, $category, $db)
     $cash_record = GetMonthCashReceived($PeriodStart, $PeriodEnd, $db);
     //$down_payment = GetMonthCashReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db);
     $expense_record = GetMonthExpense($PeriodStart, $PeriodEnd, $db);
+
+    $Lai_record = GetLaiExpense($PeriodStart, $PeriodEnd, $db);
     
     $net_amount_o = 0;
     $net_amount_l = 0;
@@ -500,6 +555,12 @@ function GetOneMonth($strDate, $sale_person, $category, $db)
         $cash_expense += $row['amount'];
     }
 
+    $lai_expense = 0;
+    foreach($Lai_record as $row)
+    {
+        $lai_expense += $row['amount'];
+    }
+
     $ar = 0;
     foreach($report1 as $row)
     {
@@ -519,6 +580,7 @@ function GetOneMonth($strDate, $sale_person, $category, $db)
         "cash_received" => $cash_received + $net_shagrila,
         "down_payment" => $down_payment_amount,
         "cash_expense" => $cash_expense,
+        "lai_expense" => $lai_expense,
         "ar" => $ar,
     );
 
