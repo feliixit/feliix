@@ -595,7 +595,7 @@ var app = new Vue({
           if(this.price_ntd_action == "assign")
             this.variation_product[i].price_ntd = this.bulk_price_ntd;
           if(this.price_ntd_action == "add")
-            this.variation_product[i].price_ntd = this.variation_product[i].price_ntd + this.bulk_price_ntd;
+            this.variation_product[i].price_ntd = Number(this.variation_product[i].price_ntd) + Number(this.bulk_price_ntd);
           if(this.price_ntd_action == "multiply")
             this.variation_product[i].price_ntd = (this.variation_product[i].price_ntd * this.bulk_price_ntd);
 
@@ -610,7 +610,7 @@ var app = new Vue({
           if(this.price_action == "assign")
             this.variation_product[i].price = this.bulk_price;
           if(this.price_action == "add")
-            this.variation_product[i].price = this.variation_product[i].price + this.bulk_price;
+            this.variation_product[i].price = Number(this.variation_product[i].price) + Number(this.bulk_price);
           if(this.price_action == "multiply")
             this.variation_product[i].price = (this.variation_product[i].price * this.bulk_price);
 
@@ -625,7 +625,7 @@ var app = new Vue({
           if(this.quoted_price_action == "assign")
             this.variation_product[i].quoted_price = this.bulk_quoted_price;
           if(this.quoted_price_action == "add")
-            this.variation_product[i].quoted_price = this.variation_product[i].quoted_price + this.bulk_quoted_price;
+            this.variation_product[i].quoted_price = Number(this.variation_product[i].quoted_price) + Number(this.bulk_quoted_price);
           if(this.quoted_price_action == "multiply")
             this.variation_product[i].quoted_price = (this.variation_product[i].quoted_price * this.bulk_quoted_price);
 
@@ -886,11 +886,11 @@ var app = new Vue({
           form_Data.append("brand", _this.brand);
 
           let tag01 = $('#tag01').val();
-          let tag02 = $('#tag02').val();
+         // let tag02 = $('#tag02').val();
           if( _this.category === '10000000')
             form_Data.append("tags", tag01.join());
           else
-            form_Data.append("tags", tag02.join());
+            form_Data.append("tags", "");
 
           form_Data.append("code", _this.code);
           form_Data.append("price_ntd", _this.price_ntd);
@@ -982,8 +982,8 @@ var app = new Vue({
       $('#tag01').val('default');
       $('#tag01').selectpicker('refresh');
 
-      $('#tag02').val('default');
-      $('#tag02').selectpicker('refresh');
+     // $('#tag02').val('default');
+     // $('#tag02').selectpicker('refresh');
       
       this.price = "";
       this.quoted_price = "";
@@ -1014,6 +1014,8 @@ var app = new Vue({
       $('#variation2_value').tagsinput('removeAll');
       this.variation3_value = '';
       $('#variation3_value').tagsinput('removeAll');
+
+      $('#related_product').tagsinput('removeAll');
 
       this.variation1_custom = '';
       this.variation2_custom = '';

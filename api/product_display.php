@@ -89,6 +89,8 @@ else
             $product = [];
             $accessory = [];
 
+            $related_product = [];
+
             $tags = '';
             $moq = '';
             $quoted_price = '';
@@ -138,6 +140,7 @@ else
                 $price_ntd_change = $row['price_ntd_change'];
 
                 $product = GetProduct($id, $db);
+                $related_product = GetRelatedProduct($row["related_product"], $db);
 
                 $variation1_value = [];
                 $variation2_value = [];
@@ -355,6 +358,7 @@ else
                                     "status" => $status,
                                     "created_at" => $created_at,
                                     "create_id" => $create_id,
+                                    "related_product" => $related_product,
                                     "product" => $product,
                                     "variation1_text" => $variation1_text,
                                     "variation2_text" => $variation2_text,
@@ -410,6 +414,25 @@ function GetValue($str)
     $obj = explode('=>', $str);
 
     return isset($obj[1]) ? $obj[1] : "";
+}
+
+function GetRelatedProduct($ids, $db)
+{
+    $merged_results = [];
+
+    if($ids == "")
+        return $merged_results;
+
+    $sql = "SELECT * FROM product_category WHERE id IN ($ids)";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }
 
 function GetProduct($id, $db){

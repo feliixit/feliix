@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>FELIIX template</title>
+    <title>Product Display</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -76,7 +76,7 @@
         }
 
         body.gray select {
-            background-image: url(images/ui/icon_form_select_arrow_gray.svg);
+            background-image: url(../images/ui/icon_form_select_arrow_gray.svg);
         }
 
         .NTD_price {
@@ -113,11 +113,7 @@
 
         .imagebox .selected_image {
             padding: 20px;
-            width: 340px;
-            height: 340px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            text-align: center;
         }
 
         .imagebox .selected_image img {
@@ -135,6 +131,7 @@
         .imagebox .image_list img {
             max-width: 100px;
             max-height: 100px;
+            object-fit: contain;
             margin: 5px 10px;
             cursor: pointer;
             border: 2px solid #ced4da;
@@ -154,7 +151,7 @@
             padding: 30px 20px 5px;
         }
 
-        .infobox .basic_info div.tags{
+        .infobox .basic_info div.tags {
             margin-bottom: 0.5rem;
         }
 
@@ -166,10 +163,6 @@
             font-weight: 600;
             border-radius: 5px;
             padding: 0 7px;
-        }
-
-        .infobox .basic_info div.tags span + span {
-            margin-left: 5px;
         }
 
         .infobox .price_stock {
@@ -221,7 +214,7 @@
             margin-bottom: 5px;
         }
 
-        .infobox .variants .dropdown-menu li{
+        .infobox .variants .dropdown-menu li {
             margin-left: 0;
         }
 
@@ -281,21 +274,52 @@
             margin: 15px 20px;
         }
 
-        .lower_section .desc_imgbox{
+        .lower_section .desc_imgbox {
             width: 100%;
             padding: 0 15px;
             margin: 10px 0 20px;
         }
 
-        .lower_section .desc_imgbox img{
+        .lower_section .desc_imgbox img {
             width: calc(50% - 8px);
             margin: 5px 0;
         }
 
-        .lower_section .desc_imgbox img:nth-of-type(odd){
+        .lower_section .desc_imgbox img:nth-of-type(odd) {
             margin-right: 10px;
         }
 
+
+        .row.custom {
+            margin: 5px 0 0 0;
+        }
+
+        .col.custom {
+            width: 24%;
+            padding-left: 5px;
+            padding-right: 5px;
+            text-align: center;
+        }
+
+        .col.custom > img {
+            max-height: 200px;
+            max-width: 100%;
+        }
+
+        .col.custom > div > a {
+            text-decoration: none;
+            color: blue;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+        }
+
+
+        .carousel-control-next, .carousel-control-prev {
+            opacity: 0.7;
+            top: 35%;
+            width: 4%;
+        }
 
     </style>
 
@@ -320,7 +344,7 @@
                     <img v-if="url1" :src="url1" @click="change_url(url1)"/>
                     <img v-if="url2" :src="url2" @click="change_url(url2)"/>
                     <img v-if="url3" :src="url3" @click="change_url(url3)"/>
-                    <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)">
+                    <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
                 </div>
 
             </div>
@@ -429,6 +453,39 @@
 
             </table>
 
+        </div>
+
+        <div class="middle_section" v-if="related_product.length > 0">
+            <h5>Related Products</h5>
+
+            <div id="carouselExampleControls" class="carousel slide">
+
+                <div class="carousel-inner">
+
+                    <div v-for='(g, groupIndex) in groupedItems' :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                        <div class="row custom">
+                            <div class="col custom" v-for='(item, index) in g'>
+                                <img :src="baseURL + item.photo1" :alt="index + 1 + ' slide'">
+                                <div>
+                                    <a :href="'product_display?id=' + item.id" >
+                                        {{ item.code }}
+                                    </a>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
         </div>
 
 

@@ -183,6 +183,9 @@ else
             die();
         }
 
+        // update other related_product
+        update_relative_ids($related_product, $last_id, $db);
+
         $batch_id = $last_id;
         $batch_type = "product_photo";
 
@@ -681,7 +684,7 @@ function valid_id($ids, $db) {
     else
         return "";
 
-    $query = "SELECT id FROM product_category WHERE id IN ($new_ids)";
+    $query = "SELECT id FROM product_category WHERE id IN ($new_ids) order by id";
     $stmt = $db->prepare($query);
     $stmt->execute();
 
@@ -694,5 +697,78 @@ function valid_id($ids, $db) {
         $new_ids = substr($new_ids, 0, -1);
     
     return $new_ids;
+}
 
+// update_relative_ids 
+function update_relative_ids($ids, $me_id, $db) {
+    $id_array = explode(',', $ids);
+    $new_ids = "";
+
+    for($i = 0; $i < count($id_array); $i++)
+    {
+        if (is_numeric($id_array[$i])) {
+            $new_ids .= $id_array[$i] . ",";
+        }
+    }
+
+    if($new_ids != "")
+        $new_ids = substr($new_ids, 0, -1);
+    else
+        return "";
+
+    $query = "SELECT id FROM product_category WHERE id IN ($new_ids)";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $new_ids = "";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $related_product = get_relatived_id_from_other_product($row['id'], $db);
+        $related_product .= "," . $me_id;
+
+        $id_array = explode(',', $related_product);
+
+        // remove duplicate from array
+        $related_product = array_unique($id_array);
+        // remove empty from array
+        $related_product = array_filter($related_product, "not_empty");
+        // order array
+        sort($related_product);
+        // array to string separated by comma
+        $related_product = implode(',', $related_product);
+
+        update_relative_ids_in_product_category($row['id'], $related_product, $db);
+
+    }
+
+}
+
+function update_relative_ids_in_product_category($id, $related_product, $db) {
+    $query = "UPDATE product_category SET related_product = :related_product WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':related_product', $related_product);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+}
+
+function not_empty($array) 
+{ 
+    // returns if the input integer is even 
+    if($array!="") 
+       return TRUE; 
+    else 
+       return FALSE;  
+} 
+
+function get_relatived_id_from_other_product($id, $db) {
+    $query = "SELECT related_product FROM product_category WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $new_ids = "";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $new_ids = $row['related_product'];
+    }
+
+    return $new_ids;
 }

@@ -81,6 +81,8 @@ else
         $user_name = $decoded->data->username;
         $user_department = $decoded->data->department;
 
+        // preserve previous data
+        $original_relative_product = get_related_product($id, $db);
         
         // now you can apply
         $uid = $user_id;
@@ -176,6 +178,8 @@ else
         {
             $stmt->bindParam(':quoted_price', $quoted_price);
         }
+
+        $related_product = valid_id($related_product, $db);
         
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':related_product', $related_product);
@@ -209,6 +213,9 @@ else
             echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
             die();
         }
+
+        // update other related_product
+        update_relative_ids($related_product, $original_relative_product, $id, $db);
 
         $batch_id = $last_id;
         $batch_type = "product_photo";
@@ -264,93 +271,96 @@ else
         }
 
         // accessory
-        for ($i = 0; $i < count($accessory_array); $i++) {
-            $category = $accessory_array[$i]['category'];
-            $cat_id = $accessory_array[$i]['cat_id'];
-            $detail = $accessory_array[$i]['detail'];
+        if($accessory_mode == 1)
+        {
+            for ($i = 0; $i < count($accessory_array); $i++) {
+                $category = $accessory_array[$i]['category'];
+                $cat_id = $accessory_array[$i]['cat_id'];
+                $detail = $accessory_array[$i]['detail'];
 
-            for($j=0; $j < count($detail); $j++)
-            {
-                $query = "INSERT INTO accessory
-                SET
-                    `category_id` = :category_id,
-                    `product_id` = :product_id,
-                    `accessory_type` = :accessory_type,
-                    `code` = :code,
-                    `accessory_name` = :accessory_name, ";
-                if($detail[$j]['price_ntd'] != '' && !is_null($detail[$j]['price_ntd']) && $detail[$j]['price_ntd'] != 'null')
+                for($j=0; $j < count($detail); $j++)
                 {
-                    $query .= "`price_ntd` = :price_ntd, ";
-                }
-                if($detail[$j]['price'] != '' && !is_null($detail[$j]['price']) && $detail[$j]['price'] != 'null')
-                {
-                    $query .= "`price` = :price, ";
-                }
-                $query .= "
-                    `enabled` = :enabled,
-                   
-                    `status` = 0,
-                    `create_id` = :create_id,
-                    `created_at` = now()";
-    
-                // prepare the query
-                $stmt = $db->prepare($query);
-    
-                // bind the values
-                $stmt->bindParam(':category_id', $cat_id);
-                $stmt->bindParam(':product_id', $product_id);
-                $stmt->bindParam(':accessory_type', $category);
-                $stmt->bindParam(':code', $detail[$j]['code']);
-                $stmt->bindParam(':accessory_name', $detail[$j]['name']);
-                if($detail[$j]['price_ntd'] != '' && !is_null($detail[$j]['price_ntd']) && $detail[$j]['price_ntd'] != 'null')
-                {
-                    $stmt->bindParam(':price_ntd', $detail[$j]['price_ntd']);
-                }
-                if($detail[$j]['price'] != '' && !is_null($detail[$j]['price']) && $detail[$j]['price'] != 'null')
-                {
-                    $stmt->bindParam(':price', $detail[$j]['price']);
-                }
-                $stmt->bindParam(':enabled', $detail[$j]['enabled']);
-                $stmt->bindParam(':create_id', $uid);
-    
-                $last_id = 0;
-                // execute the query, also check if query was successful
-                try {
+                    $query = "INSERT INTO accessory
+                    SET
+                        `category_id` = :category_id,
+                        `product_id` = :product_id,
+                        `accessory_type` = :accessory_type,
+                        `code` = :code,
+                        `accessory_name` = :accessory_name, ";
+                    if($detail[$j]['price_ntd'] != '' && !is_null($detail[$j]['price_ntd']) && $detail[$j]['price_ntd'] != 'null')
+                    {
+                        $query .= "`price_ntd` = :price_ntd, ";
+                    }
+                    if($detail[$j]['price'] != '' && !is_null($detail[$j]['price']) && $detail[$j]['price'] != 'null')
+                    {
+                        $query .= "`price` = :price, ";
+                    }
+                    $query .= "
+                        `enabled` = :enabled,
+                    
+                        `status` = 0,
+                        `create_id` = :create_id,
+                        `created_at` = now()";
+        
+                    // prepare the query
+                    $stmt = $db->prepare($query);
+        
+                    // bind the values
+                    $stmt->bindParam(':category_id', $cat_id);
+                    $stmt->bindParam(':product_id', $product_id);
+                    $stmt->bindParam(':accessory_type', $category);
+                    $stmt->bindParam(':code', $detail[$j]['code']);
+                    $stmt->bindParam(':accessory_name', $detail[$j]['name']);
+                    if($detail[$j]['price_ntd'] != '' && !is_null($detail[$j]['price_ntd']) && $detail[$j]['price_ntd'] != 'null')
+                    {
+                        $stmt->bindParam(':price_ntd', $detail[$j]['price_ntd']);
+                    }
+                    if($detail[$j]['price'] != '' && !is_null($detail[$j]['price']) && $detail[$j]['price'] != 'null')
+                    {
+                        $stmt->bindParam(':price', $detail[$j]['price']);
+                    }
+                    $stmt->bindParam(':enabled', $detail[$j]['enabled']);
+                    $stmt->bindParam(':create_id', $uid);
+        
+                    $last_id = 0;
                     // execute the query, also check if query was successful
-                    if ($stmt->execute()) {
-                        $last_id = $db->lastInsertId();
-                    } else {
-                        $arr = $stmt->errorInfo();
-                        error_log($arr[2]);
+                    try {
+                        // execute the query, also check if query was successful
+                        if ($stmt->execute()) {
+                            $last_id = $db->lastInsertId();
+                        } else {
+                            $arr = $stmt->errorInfo();
+                            error_log($arr[2]);
+                            $db->rollback();
+                            http_response_code(501);
+                            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                            die();
+                        }
+                    } catch (Exception $e) {
+                        error_log($e->getMessage());
                         $db->rollback();
                         http_response_code(501);
-                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                         die();
                     }
-                } catch (Exception $e) {
-                    error_log($e->getMessage());
-                    $db->rollback();
-                    http_response_code(501);
-                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-                    die();
-                }
 
-                $batch_id = $last_id;
-                $batch_type = "accessory_photo";
+                    $batch_id = $last_id;
+                    $batch_type = "accessory_photo";
 
-                $key = "accessory_" . $cat_id . "_" . $detail[$j]['id'];
-                if (array_key_exists($key, $_FILES))
-                {
-                    $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
-                    if($update_name != "")
-                        UpdateImageNameAccessory($update_name, $batch_id, $db);
+                    $key = "accessory_" . $cat_id . "_" . $detail[$j]['id'];
+                    if (array_key_exists($key, $_FILES))
+                    {
+                        $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
+                        if($update_name != "")
+                            UpdateImageNameAccessory($update_name, $batch_id, $db);
+                    }
+                    elseif($detail[$j]['photo'] != "")
+                    {
+                        UpdateImageNameAccessory($detail[$j]['photo'], $batch_id, $db);
+                    }
                 }
-                elseif($detail[$j]['photo'] != "")
-                {
-                    UpdateImageNameAccessory($detail[$j]['photo'], $batch_id, $db);
-                }
+                
             }
-            
         }
 
         // delete accessory
@@ -384,152 +394,155 @@ else
 
 
         // variation
-        for ($i = 0; $i < count($variation_array); $i++) {
-            $id = $variation_array[$i]['id'];
-            $code = $variation_array[$i]['code'];
-            $k1 = $variation_array[$i]['k1'];
-            $k2 = $variation_array[$i]['k2'];
-            $k3 = $variation_array[$i]['k3'];
-            $v1 = $variation_array[$i]['v1'];
-            $v2 = $variation_array[$i]['v2'];
-            $v3 = $variation_array[$i]['v3'];
-            $price = $variation_array[$i]['price'];
-            $price_change = $variation_array[$i]['price_change'];
-            $quoted_price = $variation_array[$i]['quoted_price'];
-            $quoted_price_change = $variation_array[$i]['quoted_price_change'];
-            $quoted_price_org = $variation_array[$i]['quoted_price_org'];
-            $price_ntd = $variation_array[$i]['price_ntd'];
-            $price_ntd_change = $variation_array[$i]['price_ntd_change'];
-            $price_org = $variation_array[$i]['price_org'];
-            $price_ntd_org = $variation_array[$i]['price_ntd_org'];
-            $photo = $variation_array[$i]['photo'];
-            $enabled = $variation_array[$i]['status'];
-            $category_id = '';
+        if($variation_mode == 1)
+        {
+            for ($i = 0; $i < count($variation_array); $i++) {
+                $id = $variation_array[$i]['id'];
+                $code = $variation_array[$i]['code'];
+                $k1 = $variation_array[$i]['k1'];
+                $k2 = $variation_array[$i]['k2'];
+                $k3 = $variation_array[$i]['k3'];
+                $v1 = $variation_array[$i]['v1'];
+                $v2 = $variation_array[$i]['v2'];
+                $v3 = $variation_array[$i]['v3'];
+                $price = $variation_array[$i]['price'];
+                $price_change = $variation_array[$i]['price_change'];
+                $quoted_price = $variation_array[$i]['quoted_price'];
+                $quoted_price_change = $variation_array[$i]['quoted_price_change'];
+                $quoted_price_org = $variation_array[$i]['quoted_price_org'];
+                $price_ntd = $variation_array[$i]['price_ntd'];
+                $price_ntd_change = $variation_array[$i]['price_ntd_change'];
+                $price_org = $variation_array[$i]['price_org'];
+                $price_ntd_org = $variation_array[$i]['price_ntd_org'];
+                $photo = $variation_array[$i]['photo'];
+                $enabled = $variation_array[$i]['status'];
+                $category_id = '';
 
-            $st_variation = $k1 . '=>' . $v1;
-            $rd_variation = $k2 . '=>' . $v2;
-            $th_variation = $k3 . '=>' . $v3;
-    
-            $query = "INSERT INTO product
-            SET
-                `category_id` = :category_id,
-                `product_id` = :product_id,
-                `1st_variation` = :1st_variation,
-                `2rd_variation` = :2rd_variation,
-                `3th_variation` = :3th_variation,
-                `code` = :code, ";
+                $st_variation = $k1 . '=>' . $v1;
+                $rd_variation = $k2 . '=>' . $v2;
+                $th_variation = $k3 . '=>' . $v3;
+        
+                $query = "INSERT INTO product
+                SET
+                    `category_id` = :category_id,
+                    `product_id` = :product_id,
+                    `1st_variation` = :1st_variation,
+                    `2rd_variation` = :2rd_variation,
+                    `3th_variation` = :3th_variation,
+                    `code` = :code, ";
+                    if($price_ntd != '' && !is_null($price_ntd) && $price_ntd != 'null')
+                    {
+                        $query .= "`price_ntd` = :price_ntd, ";
+                    }
+
+                    if($price != '' && !is_null($price) && $price != 'null')
+                    {
+                        $query .= "`price` = :price, ";
+                    }
+                    
+                    if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
+                    {
+                        $query .= "`quoted_price` = :quoted_price, ";
+                    }
+                    
+                    if(($price_ntd != $price_ntd_org) || $price_ntd_change != '')
+                    {
+                        if($price_ntd_change != '')
+                        {
+                            $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
+                        }
+                        else
+                            $query .= "`price_ntd_change` = now(), ";
+                    }
+
+                    if(($price != $price_org) || $price_change != '')
+                    {
+                        if($price_change != '')
+                        {
+                            $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
+                        }
+                        else
+                            $query .= "`price_change` = now(), ";
+                    }
+                    
+                    if(($quoted_price != $quoted_price_org) || $quoted_price_change != '')
+                    {
+                        if($quoted_price_change != '')
+                        {
+                            $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
+                        }
+                        else
+                            $query .= "`quoted_price_change` = now(), ";
+                    }
+
+                    $query .= "`enabled` = :enabled,
+                    
+                    `status` = 0,
+                    `create_id` = :create_id,
+                    `created_at` = now()";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+
+                // bind the values
+                $stmt->bindParam(':category_id', $category_id);
+                $stmt->bindParam(':product_id', $product_id);
+                $stmt->bindParam(':1st_variation', $st_variation);
+                $stmt->bindParam(':2rd_variation', $rd_variation);
+                $stmt->bindParam(':3th_variation', $th_variation);
+                $stmt->bindParam(':code', $code);
+        
                 if($price_ntd != '' && !is_null($price_ntd) && $price_ntd != 'null')
                 {
-                    $query .= "`price_ntd` = :price_ntd, ";
+                    $stmt->bindParam(':price_ntd', $price_ntd);
                 }
-
                 if($price != '' && !is_null($price) && $price != 'null')
                 {
-                    $query .= "`price` = :price, ";
+                    $stmt->bindParam(':price', $price);
                 }
-                
                 if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
                 {
-                    $query .= "`quoted_price` = :quoted_price, ";
+                    $stmt->bindParam(':quoted_price', $quoted_price);
                 }
-                
-                if(($price_ntd != $price_ntd_org) || $price_ntd_change != '')
-                {
-                    if($price_ntd_change != '')
-                    {
-                        $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
-                    }
-                    else
-                        $query .= "`price_ntd_change` = now(), ";
-                }
+                $stmt->bindParam(':enabled', $enabled);
+                $stmt->bindParam(':create_id', $uid);
 
-                if(($price != $price_org) || $price_change != '')
-                {
-                    if($price_change != '')
-                    {
-                        $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
-                    }
-                    else
-                        $query .= "`price_change` = now(), ";
-                }
-                
-                if(($quoted_price != $quoted_price_org) || $quoted_price_change != '')
-                {
-                    if($quoted_price_change != '')
-                    {
-                        $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
-                    }
-                    else
-                        $query .= "`quoted_price_change` = now(), ";
-                }
-
-                $query .= "`enabled` = :enabled,
-                
-                `status` = 0,
-                `create_id` = :create_id,
-                `created_at` = now()";
-
-            // prepare the query
-            $stmt = $db->prepare($query);
-
-            // bind the values
-            $stmt->bindParam(':category_id', $category_id);
-            $stmt->bindParam(':product_id', $product_id);
-            $stmt->bindParam(':1st_variation', $st_variation);
-            $stmt->bindParam(':2rd_variation', $rd_variation);
-            $stmt->bindParam(':3th_variation', $th_variation);
-            $stmt->bindParam(':code', $code);
-       
-            if($price_ntd != '' && !is_null($price_ntd) && $price_ntd != 'null')
-            {
-                $stmt->bindParam(':price_ntd', $price_ntd);
-            }
-            if($price != '' && !is_null($price) && $price != 'null')
-            {
-                $stmt->bindParam(':price', $price);
-            }
-            if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
-            {
-                $stmt->bindParam(':quoted_price', $quoted_price);
-            }
-            $stmt->bindParam(':enabled', $enabled);
-            $stmt->bindParam(':create_id', $uid);
-
-            $last_id = 0;
-            // execute the query, also check if query was successful
-            try {
+                $last_id = 0;
                 // execute the query, also check if query was successful
-                if ($stmt->execute()) {
-                    $last_id = $db->lastInsertId();
-                } else {
-                    $arr = $stmt->errorInfo();
-                    error_log($arr[2]);
+                try {
+                    // execute the query, also check if query was successful
+                    if ($stmt->execute()) {
+                        $last_id = $db->lastInsertId();
+                    } else {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
                     $db->rollback();
                     http_response_code(501);
-                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                     die();
                 }
-            } catch (Exception $e) {
-                error_log($e->getMessage());
-                $db->rollback();
-                http_response_code(501);
-                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-                die();
-            }
 
-            $batch_id = $last_id;
-            $batch_type = "variation_photo";
+                $batch_id = $last_id;
+                $batch_type = "variation_photo";
 
-            $key = "variation_" . $id;
-            if (array_key_exists($key, $_FILES))
-            {
-                $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
-                if($update_name != "")
-                    UpdateImageNameVariation($update_name, $batch_id, $db);
-            }
-            elseif($photo != "")
-            {
-                UpdateImageNameVariation($photo, $batch_id, $db);
+                $key = "variation_" . $id;
+                if (array_key_exists($key, $_FILES))
+                {
+                    $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
+                    if($update_name != "")
+                        UpdateImageNameVariation($update_name, $batch_id, $db);
+                }
+                elseif($photo != "")
+                {
+                    UpdateImageNameVariation($photo, $batch_id, $db);
+                }
             }
         }
             
@@ -764,3 +777,140 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
     }
 }
 
+
+function valid_id($ids, $db) {
+    $id_array = explode(',', $ids);
+    $new_ids = "";
+
+    for($i = 0; $i < count($id_array); $i++)
+    {
+        if (is_numeric($id_array[$i])) {
+            $new_ids .= $id_array[$i] . ",";
+        }
+    }
+
+    if($new_ids != "")
+        $new_ids = substr($new_ids, 0, -1);
+    else
+        return "";
+
+    $query = "SELECT id FROM product_category WHERE id IN ($new_ids) order by id";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $new_ids = "";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $new_ids .= $row['id'] . ",";
+    }
+
+    if($new_ids != "")
+        $new_ids = substr($new_ids, 0, -1);
+    
+    return $new_ids;
+}
+
+// update_relative_ids 
+function update_relative_ids($ids, $org_ids, $me_id, $db) {
+    $id_array = explode(',', $ids);
+    $org_ids_array = explode(',', $org_ids);
+
+    // get array difference
+    $diff = array_diff($org_ids_array, $id_array);
+    foreach ($diff as &$value) 
+    {
+        if (is_numeric($value)) {
+            if (in_array($value, $org_ids_array)) {
+                remove_relative_ids($value, $me_id, $db);
+            }
+            
+        }
+    }
+
+    $new_ids = "";
+
+    for($i = 0; $i < count($id_array); $i++)
+    {
+        if (is_numeric($id_array[$i])) {
+            $new_ids .= $id_array[$i] . ",";
+        }
+    }
+
+    if($new_ids != "")
+        $new_ids = substr($new_ids, 0, -1);
+    else
+        return "";
+
+    $query = "SELECT id FROM product_category WHERE id IN ($new_ids)";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $new_ids = "";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $related_product = get_related_product($row['id'], $db);
+        $related_product .= "," . $me_id;
+
+        $id_array = explode(',', $related_product);
+
+        // remove duplicate from array
+        $related_product = array_unique($id_array);
+        // remove empty from array
+        $related_product = array_filter($related_product, "not_empty");
+        // order array
+        sort($related_product);
+        // array to string separated by comma
+        $related_product = implode(',', $related_product);
+
+        update_relative_ids_in_product_category($row['id'], $related_product, $db);
+
+    }
+
+}
+
+function update_relative_ids_in_product_category($id, $related_product, $db) {
+    $query = "UPDATE product_category SET related_product = :related_product WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':related_product', $related_product);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+}
+
+function not_empty($array) 
+{ 
+    // returns if the input integer is even 
+    if($array!="") 
+       return TRUE; 
+    else 
+       return FALSE;  
+} 
+
+function get_related_product($id, $db) {
+    $query = "SELECT related_product FROM product_category WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $new_ids = "";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $new_ids = $row['related_product'];
+    }
+
+    return $new_ids;
+}
+
+
+function remove_relative_ids($id, $org, $db)
+{
+    // get related_product from id and remove org
+    $original_related_product = get_related_product($id, $db);
+    $ids_array = explode(',', $original_related_product);
+    // remove $org from array
+    $ids_array = array_diff($ids_array, array($org));
+    // remove empty from array
+    $related_product = array_filter($ids_array, "not_empty");
+    // order array
+    sort($related_product);
+    // array to string separated by comma
+    $related_product = implode(',', $related_product);
+
+    update_relative_ids_in_product_category($id, $related_product, $db);
+}

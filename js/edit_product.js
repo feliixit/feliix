@@ -297,8 +297,8 @@ var app = new Vue({
 
             if(_this.category === '10000000')
               $('#tag01').selectpicker('val', select_items);
-            if(_this.category === '20000000')
-              $('#tag02').selectpicker('val', select_items);
+           // if(_this.category === '20000000')
+           //   $('#tag02').selectpicker('val', select_items);
 
             var related_product = _this.record[0]['related_product'].split(',');
             for(var i=0; i<related_product.length; i++)
@@ -682,7 +682,7 @@ var app = new Vue({
           if(this.price_ntd_action == "assign")
             this.variation_product[i].price_ntd = this.bulk_price_ntd;
           if(this.price_ntd_action == "add")
-            this.variation_product[i].price_ntd = this.variation_product[i].price_ntd + this.bulk_price_ntd;
+            this.variation_product[i].price_ntd = Number(this.variation_product[i].price_ntd) + Number(this.bulk_price_ntd);
           if(this.price_ntd_action == "multiply")
             this.variation_product[i].price_ntd = (this.variation_product[i].price_ntd * this.bulk_price_ntd);
         }
@@ -695,7 +695,7 @@ var app = new Vue({
           if(this.price_action == "assign")
             this.variation_product[i].price = this.bulk_price;
           if(this.price_action == "add")
-            this.variation_product[i].price = this.variation_product[i].price + this.bulk_price;
+            this.variation_product[i].price = Number(this.variation_product[i].price) + Number(this.bulk_price);
           if(this.price_action == "multiply")
             this.variation_product[i].price = (this.variation_product[i].price * this.bulk_price);
         }
@@ -708,7 +708,7 @@ var app = new Vue({
           if(this.quoted_price_action == "assign")
             this.variation_product[i].quoted_price = this.bulk_quoted_price;
           if(this.quoted_price_action == "add")
-            this.variation_product[i].quoted_price = this.variation_product[i].quoted_price + this.bulk_quoted_price;
+            this.variation_product[i].quoted_price = Number(this.variation_product[i].quoted_price) + Number(this.bulk_quoted_price);
           if(this.quoted_price_action == "multiply")
             this.variation_product[i].quoted_price = (this.variation_product[i].quoted_price * this.bulk_quoted_price);
 
@@ -1019,11 +1019,11 @@ var app = new Vue({
           form_Data.append("moq", _this.moq);
 
           let tag01 = $('#tag01').val();
-          let tag02 = $('#tag02').val();
+       //   let tag02 = $('#tag02').val();
           if( _this.category === '10000000')
             form_Data.append("tags", tag01.join());
           else
-            form_Data.append("tags", tag02.join());
+            form_Data.append("tags", "");
 
           let related_product = $('#related_product').val();
           form_Data.append("related_product", related_product);
@@ -1067,6 +1067,7 @@ var app = new Vue({
               });
 
               _this.reset();
+              _this.submit = false;
 
             })
             .catch(function(error) {
@@ -1088,7 +1089,7 @@ var app = new Vue({
     },
 
     reset: function() {
-      return;
+      this.submit = false;
 
       this.category = "";
       this.sub_category = "";
@@ -1139,7 +1140,7 @@ var app = new Vue({
       this.variation2_custom = '';
       this.variation3_custom = '';
 
-      this.submit = false;
+      
 
       $("#variation_mode").bootstrapToggle("off");
       $("#accessory_mode").bootstrapToggle("off");
@@ -1160,6 +1161,7 @@ var app = new Vue({
       document.getElementById('select_all_product').checked = false;
       document.getElementById('bulk_select_all_product').checked = false;
 
+      this.get_records(this.id);
     },
 
     toggle_product() {

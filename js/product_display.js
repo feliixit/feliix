@@ -79,6 +79,10 @@ var app = new Vue({
 
     variation_product: [],
 
+    related_product : [],
+    nColumns: 4,
+    groupedItems: [],
+
     show_accessory: false,
 
     v1:"",
@@ -180,6 +184,14 @@ var app = new Vue({
   },
 
   methods: {
+    chunk: function(arr, size) {
+      var newArr = [];
+      for (var i=0; i<arr.length; i+=size) {
+        newArr.push(arr.slice(i, i+size));
+      }
+      this.groupedItems  = newArr;
+    },
+
     getUserName: function() {
       var token = localStorage.getItem('token');
       var form_Data = new FormData();
@@ -437,6 +449,9 @@ var app = new Vue({
             _this.variation1_value = _this.record[0]['variation1_value'];
             _this.variation2_value = _this.record[0]['variation2_value'];
             _this.variation3_value = _this.record[0]['variation3_value'];
+
+            _this.related_product = _this.record[0]['related_product'];
+            _this.chunk(_this.related_product, 4);
 
             _this.variation1 = _this.record[0]['variation1'];
             _this.variation2 = _this.record[0]['variation2'];
