@@ -300,11 +300,13 @@ var app = new Vue({
            // if(_this.category === '20000000')
            //   $('#tag02').selectpicker('val', select_items);
 
+            $('#related_product').tagsinput('removeAll');
             var related_product = _this.record[0]['related_product'].split(',');
             for(var i=0; i<related_product.length; i++)
             {
               $('#related_product').tagsinput('add', related_product[i]);
             }
+            $('#related_product').selectpicker('refresh');
          
             if(_this.variation_mode == 1)
                 $("#variation_mode").bootstrapToggle("on");
@@ -338,6 +340,7 @@ var app = new Vue({
             _this.variation3_custom = _this.record[0]['variation3_custom'];
             
             _this.set_up_variants();
+
 
             _this.edit_mode = true;
           })
@@ -1066,7 +1069,8 @@ var app = new Vue({
                 confirmButtonText: "OK",
               });
 
-              _this.reset();
+              //_this.reset();
+              _this.get_records(_this.id);
               _this.submit = false;
 
             })

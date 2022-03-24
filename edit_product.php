@@ -1656,7 +1656,7 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 
-<script src="js/edit_product.js"></script>
+<script src="js/edit_product.js?rand=<?php echo uniqid(); ?>"></script>
 
 <script>
 
