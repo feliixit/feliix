@@ -40,7 +40,6 @@
     <link rel="stylesheet" href="css/bootstrap-select.min.css">
 
 
-
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
@@ -114,11 +113,14 @@
         .imagebox .selected_image {
             padding: 20px;
             text-align: center;
+            width: 300px;
+            height: 300px;
         }
 
         .imagebox .selected_image img {
-            max-width: 300px;
-            max-height: 300px;
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
         }
 
         .imagebox .image_list {
@@ -163,6 +165,15 @@
             font-weight: 600;
             border-radius: 5px;
             padding: 0 7px;
+            margin: 0 3px;
+        }
+
+        .infobox .basic_info div.tags span:first-of-type {
+            margin-left: 0;
+        }
+
+        .infobox .basic_info div.tags span:last-of-type {
+            margin-right: 0;
         }
 
         .infobox .price_stock {
@@ -387,7 +398,8 @@
                     <li v-show="variation1_value[0] !== '' && variation1_value[0] !== undefined">
                         <select class="form-control" v-model="v1" @change="change_v()">
                             <option value=""></option>
-                            <option v-for="(item, index) in variation1_value" :value="item" :key="item">{{item}}</option>
+                            <option v-for="(item, index) in variation1_value" :value="item" :key="item">{{item}}
+                            </option>
                         </select>
                     </li>
                     <li v-if="variation2_value[0] !== '' && variation2_value[0] !== undefined">
@@ -396,7 +408,8 @@
                     <li v-show="variation2_value[0] !== '' && variation2_value[0] !== undefined">
                         <select class="form-control" v-model="v2" @change="change_v()">
                             <option value=""></option>
-                            <option v-for="(item, index) in variation2_value" :value="item" :key="item">{{item}}</option>
+                            <option v-for="(item, index) in variation2_value" :value="item" :key="item">{{item}}
+                            </option>
                         </select>
                     </li>
                     <li v-if="variation3_value[0] !== '' && variation3_value[0] !== undefined">
@@ -405,7 +418,8 @@
                     <li v-show="variation3_value[0] !== '' && variation3_value[0] !== undefined">
                         <select class="form-control" v-model="v3" @change="change_v()">
                             <option value=""></option>
-                            <option v-for="(item, index) in variation3_value" :value="item" :key="item">{{item}}</option>
+                            <option v-for="(item, index) in variation3_value" :value="item" :key="item">{{item}}
+                            </option>
                         </select>
                     </li>
 
@@ -413,7 +427,9 @@
                         <li>{{ item.category }}</li>
                         <li>
                             <select class="selectpicker" data-width="100%" :id="'tag'+index">
-                                <option :data-thumbnail="detail.url" v-for="(detail, index) in item.detail[0]">{{detail.code}}</option>
+                                <option :data-thumbnail="detail.url" v-for="(detail, index) in item.detail[0]">
+                                    {{detail.code}}
+                                </option>
                             </select>
                         </li>
                     </template>
@@ -434,20 +450,20 @@
 
             <table>
                 <tbody>
-                    <template v-for="(item, index) in specification">
-                        <tr>
-                            <td>
-                                {{item.k1}}
-                            </td>
-                            <td>
-                                {{item.v1}}
-                            </td>
-                            <td>
-                                {{item.k2}}
-                            </td>
-                            <td> {{item.v2}}</td>
-                        </tr>
-                    </template>
+                <template v-for="(item, index) in specification">
+                    <tr>
+                        <td>
+                            {{item.k1}}
+                        </td>
+                        <td>
+                            {{item.v1}}
+                        </td>
+                        <td>
+                            {{item.k2}}
+                        </td>
+                        <td> {{item.v2}}</td>
+                    </tr>
+                </template>
 
                 </tbody>
 
@@ -462,17 +478,18 @@
 
                 <div class="carousel-inner">
 
-                    <div v-for='(g, groupIndex) in groupedItems' :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                    <div v-for='(g, groupIndex) in groupedItems'
+                         :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
                         <div class="row custom">
                             <div class="col custom" v-for='(item, index) in g'>
-                                <img :src="baseURL + item.photo1" :alt="index + 1 + ' slide'">
+                                <img :src="baseURL + item.photo1" :alt="No Product Picture">
                                 <div>
-                                    <a :href="'product_display?id=' + item.id" >
+                                    <a :href="'product_display?id=' + item.id">
                                         {{ item.code }}
                                     </a>
                                 </div>
                             </div>
-                           
+
                         </div>
                     </div>
 
@@ -511,7 +528,6 @@
 
 
 </body>
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
