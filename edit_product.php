@@ -712,7 +712,6 @@
         <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
         <option value="TRACK LIGHT">TRACK LIGHT</option>
         <option value="TROFFER LIGHT">TROFFER LIGHT</option>
-        <option value="LINEAR LIGHT">LINEAR LIGHT</option>
         <option value="WALL WASHER">WALL WASHER</option>
         <option value="LIGHTBOX">LIGHTBOX</option>
         <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
@@ -1656,7 +1655,7 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 
-<script src="js/edit_product.js"></script>
+<script src="js/edit_product.js?rand=<?php echo uniqid(); ?>"></script>
 
 <script>
 

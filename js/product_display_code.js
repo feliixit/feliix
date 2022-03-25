@@ -379,7 +379,7 @@ var app = new Vue({
         let token = localStorage.getItem("accessToken");
   
         axios
-          .get("api/product_display", {
+          .get("api/product_display_code", {
             params,
             headers: { Authorization: `Bearer ${token}` },
           })

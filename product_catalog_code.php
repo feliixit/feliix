@@ -372,7 +372,7 @@
 
                 <!-- 點擊後跳轉去建立產品頁面 -->
                 <div class="new_function">
-                    <a class="add" href="add_product"></a>
+                    <a class="add" href="add_product_code"></a>
                 </div>
 
                 <!-- 篩選功能 -->
@@ -638,7 +638,7 @@
                         <input type="checkbox" class="alone">
                     </td>
                     <td>
-                        <a target="_blank" :href="'product_display?id='+item.id"><img :src="baseURL + item.photo1" v-if="item.photo1"></a>
+                        <a target="_blank" :href="'product_display_code?id='+item.id"><img :src="baseURL + item.photo1" v-if="item.photo1"></a>
                     </td>
                     <td>
                         <ul>
@@ -655,7 +655,7 @@
                                 Code:
                             </li>
                             <li>
-                               <a target="_blank" :href="'product_display?id='+item.id">{{ item.code }}</a>
+                               <a target="_blank" :href="'product_display_code?id='+item.id">{{ item.code }}</a>
                             </li>
 
                         </ul>
@@ -801,6 +801,6 @@
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/product_calatog.js"></script>
+<script src="js/product_calatog_code.js"></script>
 
 </html>

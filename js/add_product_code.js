@@ -930,7 +930,7 @@ var app = new Vue({
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            url: "api/add_product_insert",
+            url: "api/add_product_insert_code",
             data: form_Data,
           })
             .then(function(response) {

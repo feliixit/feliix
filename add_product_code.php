@@ -1582,7 +1582,7 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 
-<script src="js/add_product.js"></script>
+<script src="js/add_product_code.js"></script>
 
 <script>
 

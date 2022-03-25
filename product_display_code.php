@@ -548,7 +548,7 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 
-<script src="js/product_display.js"></script>
+<script src="js/product_display_code.js"></script>
 
 <script>
     $(".btn").click(function () {

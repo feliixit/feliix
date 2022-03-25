@@ -140,7 +140,7 @@ else
                 $price_ntd_change = $row['price_ntd_change'];
 
                 $product = GetProduct($id, $db);
-                $related_product = GetRelatedProduct($row["related_product"], $db);
+                $related_product = GetRelatedProductCode($id, $db);
 
                 $variation1_value = [];
                 $variation2_value = [];
@@ -835,5 +835,24 @@ function GetCategory($cat_id, $db){
 
     return $merged_results;
 }
+
+function GetRelatedProductCode($id, $db){
+    $sql = "SELECT * FROM product_category where code in (SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1)";
+
+    $sql = $sql . " ORDER BY code ";
+
+    $merged_results = [];
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+
+}
+
 
 ?>

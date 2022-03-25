@@ -2584,6 +2584,27 @@ function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_s
 
 }
 
+function GetSvcMangerLeaveNotifiers()
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "SELECT user.id, username, email, title, department FROM user 
+    LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id
+        WHERE user.title_id in (10, 15)";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
 function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
 {
     $tab = "";
@@ -2646,6 +2667,14 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
     }
 
     $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    // 20220321 for service leave
+    $notifior = GetSvcMangerLeaveNotifiers();
     foreach($notifior as &$list)
     {
         $mail->AddCC($list["email"], $list["username"]);

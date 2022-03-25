@@ -71,10 +71,10 @@ else
             $price_ntd_org = '';
             $price_ntd_change = '';
             $price = '';
-            $price_quoted = '';
             $price_org = '';
             $price_change = '';
             $description = '';
+            $relative_product = '';
             $notes = '';
             $photo1 = '';
             $photo2 = '';
@@ -88,8 +88,6 @@ else
             $created_at = '';
             $product = [];
             $accessory = [];
-
-            $related_product = [];
 
             $tags = '';
             $moq = '';
@@ -108,17 +106,17 @@ else
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                 $id = $row['id'];
-                $category = GetCategory($row['category'], $db);
+                $category = $row['category'];
                 $sub_category = $row['sub_category'];
-                $sub_category_name = GetCategory($row['sub_category'], $db);
+                $sub_category_name = $row['sub_category_name'];
                 $brand = $row['brand'];
                 $code = $row['code'];
                 $price_ntd = $row['price_ntd'];
-                $price_quoted = $row['quoted_price'];
                 $price_org = $row['price'];
                 $price_ntd_org = $row['price_ntd'];
                 $price = $row['price'];
                 $description = $row['description'];
+                $related_product = GetRelatedProduct($id, $db);
                 $notes = $row['notes'];
                 $photo1 = $row['photo1'];
                 $photo2 = $row['photo2'];
@@ -140,16 +138,10 @@ else
                 $price_ntd_change = $row['price_ntd_change'];
 
                 $product = GetProduct($id, $db);
-                $related_product = GetRelatedProduct($row["related_product"], $db);
 
                 $variation1_value = [];
                 $variation2_value = [];
                 $variation3_value = [];
-
-                // for price
-                $pro_price_ntd = [];
-                $pro_price = [];
-                $pro_price_quoted = [];
 
                 if(count($product) > 0)
                 {
@@ -175,102 +167,9 @@ else
                         {
                             array_push($variation3_value,$product[$i]['v3']);
                         }
-
-                        // price_retail
-                        if (!in_array($product[$i]['price'],$pro_price))
-                        {
-                            array_push($pro_price,$product[$i]['price']);
-                        }
-                        // price_ntd
-                        if (!in_array($product[$i]['price_ntd'],$pro_price_ntd))
-                        {
-                            array_push($pro_price_ntd,$product[$i]['price_ntd']);
-                        }
-
-                         // price_quoted
-                         if (!in_array($product[$i]['quoted_price'],$pro_price_quoted))
-                         {
-                             array_push($pro_price_quoted,$product[$i]['quoted_price']);
-                         }
                     }
 
                 }
-
-                sort($pro_price);
-                sort($pro_price_ntd);
-                sort($pro_price_quoted);
-
-                $s_price = "";
-                if(count($pro_price) == 1)
-                {
-                    $s_price = "PHP " . number_format($pro_price[0]);
-                }
-                if(count($pro_price) > 1)
-                {
-                    $b = "";
-                    $e = "";
-                    for($i=0; $i<count($pro_price); $i++)
-                    {
-                        if($b == "")
-                            $b = $pro_price[$i];
-
-                        $e = $pro_price[$i];
-                    }
-                    $s_price = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
-                }
-
-                $s_price_ntd = "";
-                if(count($pro_price_ntd) == 1)
-                {
-                    $s_price_ntd = "NTD " . number_format($pro_price_ntd[0]);
-                }
-                if(count($pro_price_ntd) > 1)
-                {
-                    $b = "";
-                    $e = "";
-                    for($i=0; $i<count($pro_price_ntd); $i++)
-                    {
-                        if($b == "")
-                            $b = $pro_price_ntd[$i];
-
-                        $e = $pro_price_ntd[$i];
-                    }
-                    $s_price_ntd = "NTD " . number_format($b) . " ~ " . "NTD " . number_format($e);
-                }
-
-                $s_price_quoted = "";
-                if(count($pro_price_quoted) == 1)
-                {
-                    $s_price_quoted = "PHP " . number_format($pro_price_quoted[0]);
-                }
-                if(count($pro_price_quoted) > 1)
-                {
-                    $b = "";
-                    $e = "";
-                    for($i=0; $i<count($pro_price_quoted); $i++)
-                    {
-                        if($b == "")
-                            $b = $pro_price_quoted[$i];
-
-                        $e = $pro_price_quoted[$i];
-                    }
-                    $s_price_quoted = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
-                }
-
-                if($s_price == "")
-                    $price = "PHP " .  number_format($price);
-                else
-                    $price = $s_price;
-
-                if($s_price_ntd == "")
-                    $price_ntd = "NTD " .  number_format($price_ntd);
-                else
-                    $price_ntd = $s_price_ntd; 
-
-                if($s_price_quoted == "")
-                    $price_quoted = "PHP " .  number_format($price_quoted);
-                else
-                    $price_quoted = $s_price_quoted; 
 
                 $accessory = GetAccessory($id, $db);
                 $sub_category_item = GetSubCategoryItem($category, $db);
@@ -339,12 +238,10 @@ else
                 $merged_results[] = array( "id" => $id,
                                     "category" => $category,
                                     "sub_category" => $sub_category,
-                                    "sub_category_name" => $sub_category_name,
                                     "brand" => $brand,
                                     "code" => $code,
                                     "price_ntd" => $price_ntd,
                                     "price" => $price,
-                                    "price_quoted" => $price_quoted,
                                     "price_ntd_org" => $price_ntd_org,
                                     "price_org" => $price_org,
                                     "description" => $description,
@@ -358,7 +255,6 @@ else
                                     "status" => $status,
                                     "created_at" => $created_at,
                                     "create_id" => $create_id,
-                                    "related_product" => $related_product,
                                     "product" => $product,
                                     "variation1_text" => $variation1_text,
                                     "variation2_text" => $variation2_text,
@@ -376,10 +272,11 @@ else
                                     "special_information" => $special_information,
                                     "accessory_information" => $accessory_information,
                                     "sub_category_item" => $sub_category_item,
+                                    "related_product" => $related_product,
                                     "notes" => $notes,
                                     "moq" => $moq,
-                                    "tags" => explode(',', $tags),
-                                    "quoted_price" => $price_quoted,
+                                    "tags" => $tags,
+                                    "quoted_price" => $quoted_price,
                                     "quoted_price_org" => $quoted_price_org,
                                     "quoted_price_change" => substr($quoted_price_change, 0, 10),
                                     "price_change" => substr($price_change, 0, 10),
@@ -414,25 +311,6 @@ function GetValue($str)
     $obj = explode('=>', $str);
 
     return isset($obj[1]) ? $obj[1] : "";
-}
-
-function GetRelatedProduct($ids, $db)
-{
-    $merged_results = [];
-
-    if($ids == "")
-        return $merged_results;
-
-    $sql = "SELECT * FROM product_category WHERE id IN ($ids)";
-
-    $stmt = $db->prepare( $sql );
-    $stmt->execute();
-
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $merged_results[] = $row;
-    }
-
-    return $merged_results;
 }
 
 function GetProduct($id, $db){
@@ -718,6 +596,28 @@ function GetLevel3($cat_id, $db){
 
 }
 
+function GetRelatedProduct($id, $db){
+    $sql = "SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1";
+
+    $sql = $sql . " ORDER BY code ";
+
+    $merged_results = "";
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results .= $row['code'] . ",";
+    }
+
+    if($merged_results != "")
+    {
+        $merged_results = substr($merged_results, 0, strlen($merged_results) - 1);
+    }
+
+    return $merged_results;
+
+}
 
 function GetDetail($cat_id, $db){
     $sql = "SELECT cat_id, sn, `option` FROM product_category_attribute_detail WHERE cat_id = '". $cat_id . "' and STATUS <> -1";
@@ -819,21 +719,5 @@ function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
 
 }
 
-function GetCategory($cat_id, $db){
-    $sql = "SELECT category FROM product_category_attribute WHERE cat_id = '". $cat_id . "' and STATUS <> -1";
-
-    $merged_results = "";
-
-    $stmt = $db->prepare( $sql );
-    $stmt->execute();
-
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
-        $merged_results = $row['category'];
-      
-    }
-
-    return $merged_results;
-}
 
 ?>

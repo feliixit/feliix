@@ -46,6 +46,25 @@ try {
             $access6 = true;
         }
     }
+
+    // 20220321 for service leave
+    if(trim(strtoupper($department)) == 'LIGHTING')
+    {
+        if(trim(strtoupper($position)) == 'LIGHTING MANAGER')
+        {
+            $access6 = true;
+        }
+    }
+
+    if(trim(strtoupper($department)) == 'OFFICE')
+    {
+        if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
+        {
+            $access6 = true;
+        }
+    }
+    // end of 20220321 for service leave
+
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -3274,7 +3293,7 @@ catch (Exception $e) {
             }
         }
 
-        if(department === 'SVC')
+        if(department === 'SVC' || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
             {
@@ -3286,7 +3305,7 @@ catch (Exception $e) {
                     can_close = true;
             }
 
-            if(level === "SERVICE MANAGER")
+            if(level === "SERVICE MANAGER" || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER') // 20220321 for service leave
             {
                 if(creator_level === "ASSISTANT SERVICE MANAGER")
                 {
