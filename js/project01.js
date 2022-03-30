@@ -56,6 +56,8 @@ var app = new Vue({
     ],
     perPage: 20,
 
+    total : 0,
+
   },
 
   created () {
@@ -117,6 +119,12 @@ var app = new Vue({
             case "pg":
               _this.pg = tmp[1];
               break;
+            case "page":
+              _this.page = tmp[1];
+              break;
+            case "size":
+              _this.perPage = tmp[1];
+              break;
             default:
               console.log(`Too many args`);
           }
@@ -136,8 +144,8 @@ var app = new Vue({
 
   computed: {
     displayedPosts () {
-      if(this.pg == 0)
-        this.apply_filters();
+      //if(this.pg == 0)
+      //  this.apply_filters();
 
       this.setPages();
         return this.paginate(this.receive_records);
@@ -197,7 +205,11 @@ var app = new Vue({
     setPages () {
           console.log('setPages');
           this.pages = [];
-          let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+
+          let numberOfPages = Math.ceil(this.total / this.perPage);
+
+          if(this.fil_keyword != '')
+            numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
 
           if(numberOfPages == 1)
             this.page = 1;
@@ -217,7 +229,11 @@ var app = new Vue({
           let perPage = this.perPage;
           let from = (page * perPage) - perPage;
           let to = (page * perPage);
-          return  this.receive_records.slice(from, to);
+
+          if(this.fil_keyword != '')
+            return this.receive_records.slice(from, to);
+          else
+            return  this.receive_records;
         },
 
     getRecords: function(keyword) {
@@ -239,14 +255,19 @@ var app = new Vue({
                 od1: _this.od_ord1,
                 op2: _this.od_opt2,
                 od2: _this.od_ord2,
+
+                page: _this.page,
+                size: _this.perPage,
             };
 
-      
+            this.total = 0;
     
           let token = localStorage.getItem('accessToken');
     
-          axios
-              .get('api/project01', { params, headers: {"Authorization" : `Bearer ${token}`} })
+            if(this.fil_keyword != '')
+            {
+              axios
+              .get('api/project01_org', { params, headers: {"Authorization" : `Bearer ${token}`} })
               .then(
               (res) => {
                   _this.receive_records = res.data;
@@ -263,7 +284,31 @@ var app = new Vue({
               )
               .finally(() => {
                   
+              });}
+            else
+            {
+              axios
+              .get('api/project01', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.receive_records = res.data;
+                  _this.total = _this.receive_records[0].cnt;
+
+                  if(_this.pg !== 0)
+                  { 
+                    _this.page = _this.pg;
+                    _this.setPages();
+                  }
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
               });
+            }
+          
       },
 
     getProjectCategorys () {
@@ -612,7 +657,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
       clear_filters: function() {
@@ -626,6 +675,8 @@ var app = new Vue({
         this.fil_lower = '';
         this.fil_upper = '';
         this.fil_keyword = '';
+        this.page = 1;
+
 
         let _this = this;
 
@@ -660,13 +711,17 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
       apply_filters: function() {
         let _this = this;
-
-        window.location.href =
+        
+          window.location.href =
           "project01?" +
           "fpc=" +
           _this.fil_project_category +
@@ -697,44 +752,54 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
+        
       },
 
       apply_orders: function() {
         let _this = this;
-
-        window.location.href =
-          "project01?" +
-          "fpc=" +
-          _this.fil_project_category +
-          "&fct=" +
-          _this.fil_client_type +
-          "&fp=" +
-          _this.fil_priority +
-          "&gp=" +
-          _this.fil_group +
-          "&fs=" +
-          _this.fil_status +
-          "&fcs=" +
-          _this.fil_stage +
-          "&fpt=" +
-          _this.fil_creator +
-          "&flo=" +
-          _this.fil_lower +
-          "&fup=" +
-          _this.fil_upper +
-          "&key=" +
-          _this.fil_keyword +
-          "&op1=" +
-          _this.od_opt1 +
-          "&od1=" +
-          _this.od_ord1 +
-          "&op2=" +
-          _this.od_opt2 +
-          "&od2=" +
-          _this.od_ord2 +
-          "&pg=" +
-          _this.page;
+  
+          window.location.href =
+            "project01?" +
+            "fpc=" +
+            _this.fil_project_category +
+            "&fct=" +
+            _this.fil_client_type +
+            "&fp=" +
+            _this.fil_priority +
+            "&gp=" +
+            _this.fil_group +
+            "&fs=" +
+            _this.fil_status +
+            "&fcs=" +
+            _this.fil_stage +
+            "&fpt=" +
+            _this.fil_creator +
+            "&flo=" +
+            _this.fil_lower +
+            "&fup=" +
+            _this.fil_upper +
+            "&key=" +
+            _this.fil_keyword +
+            "&op1=" +
+            _this.od_opt1 +
+            "&od1=" +
+            _this.od_ord1 +
+            "&op2=" +
+            _this.od_opt2 +
+            "&od2=" +
+            _this.od_ord2 +
+            "&pg=" +
+            _this.page + 
+            "&page=" +
+            _this.page +
+            "&size=" +
+            _this.perPage;
+       
       },
 
         shallowCopy(obj) {
