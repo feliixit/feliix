@@ -99,37 +99,24 @@ $query = "SELECT pm.id,
                 LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
                 LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id = 6 ";
 
-// for record size
-$query_cnt = "SELECT count(*) cnt FROM project_main pm  
-LEFT JOIN project_category pc ON pm.catagory_id = pc.id 
-LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id 
-LEFT JOIN project_priority pp ON pm.priority_id = pp.id 
-LEFT JOIN project_status ps ON pm.project_status_id = ps.id 
-LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
-LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id = 6 ";
-
 if($fpc != "")
 {
     $query = $query . " and pm.catagory_id = " . $fpc . " ";
-    $query_cnt = $query_cnt . " and pm.catagory_id = " . $fpc . " ";
 }
 
 if($fct != "")
 {
     $query = $query . " and pm.client_type_id = '" . $fct . "' ";
-    $query_cnt = $query_cnt . " and pm.client_type_id = '" . $fct . "' ";
 }
 
 if($fp != "")
 {
     $query = $query . " and pm.priority_id = '" . $fp . "' ";
-    $query_cnt = $query_cnt . " and pm.priority_id = '" . $fp . "' ";
 }
 
 if($fpt != "")
 {
     $query = $query . " and user.username = '" . $fpt . "' ";
-    $query_cnt = $query_cnt . " and user.username = '" . $fpt . "' ";
 }
 
 if($flo != "" && $flo != "0")
@@ -138,19 +125,11 @@ if($flo != "" && $flo != "0")
                                         FROM project_est_prob 
                                         WHERE project_est_prob.project_id = pm.id 
                                     order by created_at desc limit 1), pm.estimate_close_prob) >= " . $flo . " ";
-    $query_cnt = $query_cnt . " and COALESCE((SELECT project_est_prob.prob 
-                                        FROM project_est_prob 
-                                        WHERE project_est_prob.project_id = pm.id 
-                                    order by created_at desc limit 1), pm.estimate_close_prob) >= " . $flo . " ";
 }
 
 if($fup != "" && $fup != "0")
 {
     $query = $query . " and COALESCE((SELECT project_est_prob.prob 
-                                        FROM project_est_prob 
-                                        WHERE project_est_prob.project_id = pm.id 
-                                    order by created_at desc limit 1), pm.estimate_close_prob) <= " . $fup . " ";
-    $query_cnt = $query_cnt . " and COALESCE((SELECT project_est_prob.prob 
                                         FROM project_est_prob 
                                         WHERE project_est_prob.project_id = pm.id 
                                     order by created_at desc limit 1), pm.estimate_close_prob) <= " . $fup . " ";
@@ -290,74 +269,26 @@ if($fcs != "")
                      LEFT JOIN user
                      ON        pm.create_id = user.id
                      WHERE     pm.project_status_id = 6 ";
-    $query_cnt = "SELECT count(*)
-    FROM   (
-                     SELECT    pm.id,
-                               Coalesce(pc.category, '') category,
-                               pct.client_type,
-                               pct.class_name pct_class,
-                               pp.priority,
-                               pp.class_name pp_class,
-                               pm.project_name,
-                               Coalesce(ps.project_status, '') project_status,
-                               Coalesce(
-                                         (
-                                         SELECT   project_est_prob.prob
-                                         FROM     project_est_prob
-                                         WHERE    project_est_prob.project_id = pm.id
-                                         ORDER BY created_at DESC
-                                         LIMIT    1), pm.estimate_close_prob) estimate_close_prob, 
-                                         user.username, 
-                                         Date_format(pm.created_at, '%Y-%m-%d') created_at, 
-                                         DATE_FORMAT(pm.updated_at, '%Y-%m-%d') updated_at, 
-                                         Coalesce(
-                                        (
-                                        SELECT    project_stage.stage
-                                        FROM      project_stages
-                                        LEFT JOIN project_stage
-                                        ON        project_stage.id = project_stages.stage_id
-                                        WHERE     project_stages.project_id = pm.id
-                                        AND       project_stages.stages_status_id = 1
-                                        ORDER BY  `sequence` DESC
-                                        LIMIT     1), '') stage
-                     FROM      project_main pm
-                     LEFT JOIN project_category pc
-                     ON        pm.catagory_id = pc.id
-                     LEFT JOIN project_client_type pct
-                     ON        pm.client_type_id = pct.id
-                     LEFT JOIN project_priority pp
-                     ON        pm.priority_id = pp.id
-                     LEFT JOIN project_status ps
-                     ON        pm.project_status_id = ps.id
-                     LEFT JOIN project_stage pst
-                     ON        pm.stage_id = pst.id
-                     LEFT JOIN user
-                     ON        pm.create_id = user.id
-                     WHERE     pm.project_status_id = 6 ";
 
     if($fpc != "")
     {
         $query = $query . " and pm.catagory_id = " . $fpc . " ";
-        $query_cnt = $query_cnt . " and pm.catagory_id = " . $fpc . " ";
     }
 
     if($fct != "")
     {
         $query = $query . " and pm.client_type_id = '" . $fct . "' ";
-        $query_cnt = $query_cnt . " and pm.client_type_id = '" . $fct . "' ";
     }
 
     if($fp != "")
     {
         $query = $query . " and pm.priority_id = '" . $fp . "' ";
-        $query_cnt = $query_cnt . " and pm.priority_id = '" . $fp . "' ";
     }
 
 
     if($fpt != "")
     {
         $query = $query . " and user.username = '" . $fpt . "' ";
-        $query_cnt = $query_cnt . " and user.username = '" . $fpt . "' ";
     }
 
  
@@ -366,18 +297,9 @@ if($fcs != "")
     else
         $query = $query . " ) t  WHERE t.stage = '" . $fcs . "' ";
 
-    if($fcs == 'Empty')
-        $query_cnt = $query_cnt . " ) t  WHERE t.stage = '' ";
-    else
-        $query_cnt = $query_cnt . " ) t  WHERE t.stage = '" . $fcs . "' ";
-
     if($flo != "" && $flo != "0")
     {
         $query = $query . " and COALESCE((SELECT project_est_prob.prob 
-                                            FROM project_est_prob 
-                                            WHERE project_est_prob.project_id = pm.id 
-                                        order by created_at desc limit 1), pm.estimate_close_prob) >= " . $flo . " ";
-        $query_cnt = $query_cnt . " and COALESCE((SELECT project_est_prob.prob 
                                             FROM project_est_prob 
                                             WHERE project_est_prob.project_id = pm.id 
                                         order by created_at desc limit 1), pm.estimate_close_prob) >= " . $flo . " ";
@@ -386,10 +308,6 @@ if($fcs != "")
     if($fup != "" && $fup != "0")
     {
         $query = $query . " and COALESCE((SELECT project_est_prob.prob 
-                                            FROM project_est_prob 
-                                            WHERE project_est_prob.project_id = pm.id 
-                                        order by created_at desc limit 1), pm.estimate_close_prob) <= " . $fup . " ";
-        $query_cnt = $query_cnt . " and COALESCE((SELECT project_est_prob.prob 
                                             FROM project_est_prob 
                                             WHERE project_est_prob.project_id = pm.id 
                                         order by created_at desc limit 1), pm.estimate_close_prob) <= " . $fup . " ";
@@ -508,12 +426,7 @@ if(!empty($_GET['size'])) {
 $stmt = $db->prepare( $query );
 $stmt->execute();
 
-$cnt = 0;
-$stmt_cnt = $db->prepare( $query_cnt );
-$stmt_cnt->execute();
-while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
-    $cnt = $row['cnt'];
-}
+
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id = $row['id'];
@@ -550,20 +463,18 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "stage" => $stage,
         "recent" => $recent,
         "reason" => $reason,
-        "cnt" => $cnt,
     );
 }
 
 $filter_result = [];
 
-/*
 if($key != "")
 {
     foreach ($merged_results as &$value) {
         if(
             preg_match("/{$key}/i", $value['project_name']) ||
             $key == (count($value['recent']) == 1 ? substr($value['recent'][0]['created_at'], 0, 10) : "") ||
-            preg_match("/{$key}/i", (count($value['recent']) == 1 ? substr($value['recent'][0]['username'], 0, 10) : "")))
+            preg_match("/{$key}/i", (count($value['recent']) == 1 ? $value['recent'][0]['username'] : "")))
         {
             $filter_result[] = $value;
         }
@@ -571,8 +482,7 @@ if($key != "")
 }
 else
     $filter_result = $merged_results;
-    */
-    $filter_result = $merged_results;
+
 echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
 
 

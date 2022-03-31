@@ -513,7 +513,7 @@ $(function(){
                      <li>Current Stage</li>
                      <li>Client Stage's<br>Recent Message</li>
                  </ul>
-                 <ul v-for='(receive_record, index) in displayedPosts'>
+                 <ul v-for='(receive_record, index) in receive_records'>
                      <li>{{ receive_record.category }}</li>
                      <li><i v-bind:class="receive_record.pct_class">{{ receive_record.client_type }}</i></li>
                      <li><i v-bind:class="receive_record.pp_class">{{ receive_record.priority }}</i></li>
@@ -533,10 +533,12 @@ $(function(){
            <div class="list_function">
                <!-- 分頁 -->
                <div class="pagenation">
-                  <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--">Previous</a>
-                  <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
-                  <a class="next" :disabled="page == pages.length" @click="page++">Next</a>
-              </div>
+                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; apply_filters()">Previous</a>
+                  
+                    <a class="page" v-for="pg in pages" @click="page=pg; apply_filters()" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                  
+                    <a class="next" :disabled="page == pages.length" @click="page++; apply_filters()">Next</a>
+                </div>
            </div>
         </div>
     </div>
@@ -545,5 +547,5 @@ $(function(){
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/project01_sls.js"></script>
+<script defer src="js/project01_sls.js?rand=<?php echo uniqid(); ?>"></script>
 </html>
