@@ -54,6 +54,8 @@ var app = new Vue({
     ],
     perPage: 20,
 
+    total : 0,
+
   },
 
   created () {
@@ -111,6 +113,12 @@ var app = new Vue({
               break;
             case "pg":
               _this.pg = tmp[1];
+              break;
+              case "page":
+            _this.page = tmp[1];
+              break;
+            case "size":
+              _this.perPage = tmp[1];
               break;
             default:
               console.log(`Too many args`);
@@ -182,7 +190,11 @@ var app = new Vue({
     setPages () {
           console.log('setPages');
           this.pages = [];
-          let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+          
+          let numberOfPages = Math.ceil(this.total / this.perPage);
+
+          if(this.fil_keyword != '')
+            numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
 
           if(numberOfPages == 1)
             this.page = 1;
@@ -202,7 +214,11 @@ var app = new Vue({
           let perPage = this.perPage;
           let from = (page * perPage) - perPage;
           let to = (page * perPage);
-          return  this.receive_records.slice(from, to);
+          
+          if(this.fil_keyword != '')
+            return this.receive_records.slice(from, to);
+          else
+            return  this.receive_records;
         },
 
     getRecords: function(keyword) {
@@ -223,31 +239,60 @@ var app = new Vue({
                 od1: _this.od_ord1,
                 op2: _this.od_opt2,
                 od2: _this.od_ord2,
+
+                page: _this.page,
+                size: _this.perPage,
             };
 
-      
+            this.total = 0;
     
           let token = localStorage.getItem('accessToken');
     
-          axios
-              .get('api/project01_disapproved', { params, headers: {"Authorization" : `Bearer ${token}`} })
-              .then(
-              (res) => {
-                  _this.receive_records = res.data;
+          if(this.fil_keyword != '')
+          {
+            axios
+                .get('api/project01_disapproved_org', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.receive_records = res.data;
 
-                  if(_this.pg !== 0)
-                  { 
-                    _this.page = _this.pg;
-                    _this.setPages();
-                  }
-              },
-              (err) => {
-                  alert(err.response);
-              },
-              )
-              .finally(() => {
-                  
-              });
+                    if(_this.pg !== 0)
+                    { 
+                      _this.page = _this.pg;
+                      _this.setPages();
+                    }
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+          }
+          else
+          {
+            axios
+                .get('api/project01_disapproved', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.receive_records = res.data;
+                    _this.total = _this.receive_records[0].cnt;
+
+                    if(_this.pg !== 0)
+                    { 
+                      _this.page = _this.pg;
+                      _this.setPages();
+                    }
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+          }
       },
 
     getProjectCategorys () {
@@ -573,7 +618,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
       clear_filters: function() {
@@ -586,6 +635,7 @@ var app = new Vue({
         this.fil_lower = '';
         this.fil_upper = '';
         this.fil_keyword = '';
+        this.page = 1;
 
         let _this = this;
 
@@ -618,7 +668,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
       apply_filters: function() {
@@ -653,7 +707,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
       apply_orders: function() {
@@ -688,7 +746,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
         shallowCopy(obj) {
