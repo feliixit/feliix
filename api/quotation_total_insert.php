@@ -144,7 +144,7 @@ else
 
             $stmt->bindParam(':id', $_id);
 
-            $last_id = $_id;
+            $last_id = $quotation_id;
             // execute the query, also check if query was successful
             try {
                 // execute the query, also check if query was successful
