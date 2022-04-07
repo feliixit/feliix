@@ -177,7 +177,7 @@ else
             // prepare the query
             $stmt = $db->prepare($query);
 
-            $stmt->bindParam(':id', $last_id);
+            $stmt->bindParam(':id', "i", $last_id);
 
             // execute the query, also check if query was successful
             try {
