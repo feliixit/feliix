@@ -57,7 +57,9 @@ else
         // now you can apply
         $uid = $user_id;
 
-        $_id = IsExist($quotation_id, $db);
+        $pre_vat = '';
+
+        $_id = IsExist($quotation_id, $pre_vat, $db);
         if($_id == 0)
         {
         
@@ -163,6 +165,40 @@ else
             }
         }
 
+        // recaculate prduct amount with vat
+        if($pre_vat != 'P' && $vat == 'P')
+        {
+            $query = "update quotation_page_type_block
+                SET
+                    `amount` = qty * price * 1.12 * (1 - discount / 100)
+             
+                    where quotation_id = :id";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            $stmt->bindParam(':id', $last_id);
+
+            // execute the query, also check if query was successful
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+        }
+
         $db->commit();
 
         
@@ -182,11 +218,10 @@ else
 }
 
 
-function IsExist($quotation_id, $db)
+function IsExist($quotation_id, &$pre_vat, $db)
 {
-    $sql = "SELECT id from quotation_total where quotation_id = :quotation_id";
+    $sql = "SELECT id, vat from quotation_total where quotation_id = :quotation_id";
            
-
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':quotation_id',  $quotation_id);
     $stmt->execute();
@@ -194,6 +229,7 @@ function IsExist($quotation_id, $db)
     $_id = 0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $_id = $row['id'];
+        $pre_vat = $row['vat'];
     }
 
     return $_id;
