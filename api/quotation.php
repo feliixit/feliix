@@ -164,7 +164,7 @@ function GetSubTotalNoVat($qid, $db)
     $total = 0;
 
     $query = "
-            select sum(qty * price * (1 - discount / 100))  from quotation_page_type_block
+            select sum(qty * price * (1 - discount / 100)) amt from quotation_page_type_block
             WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . ")
     ";
 
