@@ -178,6 +178,9 @@ var app = new Vue({
 
     projectname:'',
 
+    // 20220407
+    quotation_type:'n',
+
   },
 
   created () {
