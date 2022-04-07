@@ -102,6 +102,7 @@ if (!isset($jwt)) {
         $sig_info = GetSigInfo($row['id'], $db);
 
         $subtotal_info = GetSubTotalInfo($row['id'], $db);
+        $subtotal_novat = GetSubTotalNoVat($row['id'], $db);
 
         $merged_results[] = array(
             "id" => $id,
@@ -124,6 +125,7 @@ if (!isset($jwt)) {
             "term_info" => $term_info,
             "sig_info" => $sig_info,
             "subtotal_info" => $subtotal_info,
+            "subtotal_novat" => $subtotal_novat
         );
     }
 
@@ -155,6 +157,32 @@ function GetSubTotalInfo($qid, $db)
 
     return $total;
 }
+
+
+function GetSubTotalNoVat($qid, $db)
+{
+    $total = 0;
+
+    $query = "
+            select sum(qty * price * (1 - discount / 100))  from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . ")
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
+        $total = $row['amt'];
+
+    }
+
+    return $total;
+}
+
 
 function GetBlockNames($qid, $db){
     $query = "

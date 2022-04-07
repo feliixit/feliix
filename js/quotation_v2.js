@@ -126,6 +126,7 @@ var app = new Vue({
       },
 
       subtotal:0,
+      subtotal_novat:0,
 
       show_title : true,
 
@@ -336,7 +337,7 @@ var app = new Vue({
         if(row.discount > 100)
           row.discount = 100;
 
-        row.total = (this.subtotal * (1 - row.discount * 0.01)).toFixed(2);
+        row.total = (this.subtotal_novat * (1 - row.discount * 0.01)).toFixed(2);
         
         if(row.vat == 'Y' || row.vat == 'P')
           row.total = (row.total * 1.12);
@@ -1173,6 +1174,7 @@ var app = new Vue({
         this.temp_footer_second_line = '';
 
         this.subtotal = 0;
+        this.subtotal_novat = 0;
 
         // page
         this.pages = [];
@@ -1226,6 +1228,7 @@ var app = new Vue({
               _this.block_names = _this.receive_records[0].block_names;
               
               _this.subtotal = _this.receive_records[0].subtotal_info;
+              _this.subtotal_novat = _this.receive_records[0].subtotal_novat;
 
               // total
               _this.total = _this.receive_records[0].total_info;
