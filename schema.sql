@@ -2599,5 +2599,3 @@ CREATE TABLE IF NOT EXISTS `product_related` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
 -- 20220406 quotation management II
-ALTER TABLE quotation_page_type_block
-ADD COLUMN `vat` varchar(2) DEFAULT '' AFTER amount;

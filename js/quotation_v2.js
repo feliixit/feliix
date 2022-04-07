@@ -338,7 +338,7 @@ var app = new Vue({
 
         row.total = (this.subtotal * (1 - row.discount * 0.01)).toFixed(2);
         
-        if(row.vat == 'Y')
+        if(row.vat == 'Y' || row.vat == 'P')
           row.total = (row.total * 1) + (this.subtotal * 0.12);
 
         row.total = Number(this.total.total).toFixed(2);
