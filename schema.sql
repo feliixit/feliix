@@ -2599,3 +2599,18 @@ CREATE TABLE IF NOT EXISTS `product_related` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
 -- 20220406 quotation management II
+CREATE TABLE IF NOT EXISTS quotation_payment_term
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+  `payment_method` varchar(512) DEFAULT '',
+  `brief` varchar(512) DEFAULT '',
+  `list` JSON,
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

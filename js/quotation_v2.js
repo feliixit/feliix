@@ -16,6 +16,7 @@ var app = new Vue({
       show_subtotal: false,
       show_total: false,
       show_term: false,
+      show_payment_term: false,
       show_signature: false,
 
       // header
@@ -117,6 +118,19 @@ var app = new Vue({
         page: 0,
         item: [],
       },
+
+      payment_term:
+      {
+        page: 0,
+        payment_method: '',
+        brief : '',
+        item: { 
+          first_line : '',
+          second_line : '',
+          third_line : '',
+        },
+      },
+
 
       sig:
       {
@@ -239,6 +253,7 @@ var app = new Vue({
           this.show_subtotal = false;
           this.show_total = false;
           this.show_term = false;
+          this.show_payment_term = false;
           this.show_signature = false;
         }
       },
@@ -250,6 +265,7 @@ var app = new Vue({
           this.show_subtotal = false;
           this.show_total = false;
           this.show_term = false;
+          this.show_payment_term = false;
           this.show_signature = false;
         }
       },
@@ -261,6 +277,7 @@ var app = new Vue({
           this.show_subtotal = false;
           this.show_total = false;
           this.show_term = false;
+          this.show_payment_term = false;
           this.show_signature = false;
         }
       },
@@ -283,6 +300,7 @@ var app = new Vue({
           this.show_subtotal = false;
           this.show_header = false;
           this.show_term = false;
+          this.show_payment_term = false;
           this.show_signature = false;
         }
       },
@@ -294,6 +312,19 @@ var app = new Vue({
           this.show_subtotal = false;
           this.show_total = false;
           this.show_header = false;
+          this.show_payment_term = false;
+          this.show_signature = false;
+        }
+      },
+
+      show_payment_term() {
+        if(this.show_payment_term) {
+          this.show_footer = false;
+          this.show_page = false;
+          this.show_subtotal = false;
+          this.show_total = false;
+          this.show_header = false;
+          this.show_term = false;
           this.show_signature = false;
         }
       },
@@ -305,6 +336,7 @@ var app = new Vue({
           this.show_subtotal = false;
           this.show_total = false;
           this.show_term = false;
+          this.show_payment_term = false;
           this.show_header = false;
         }
       },
@@ -538,10 +570,13 @@ var app = new Vue({
 
       },
 
-      term_save: async function() {
+      
+
+      
+      payment_term_save: async function() {
         if (this.submit == true) return;
 
-        if(this.term.page == 0) return;
+        if(this.payment_term.page == 0) return;
 
         this.submit = true;
   
@@ -552,12 +587,12 @@ var app = new Vue({
         form_Data.append("jwt", token);
  
         form_Data.append("quotation_id", this.id);
-        form_Data.append("detail", JSON.stringify(this.term));
+        form_Data.append("detail", JSON.stringify(this.payment_term));
 
         try {
           let res = await axios({
             method: 'post',
-            url: 'api/quotation_term_insert',
+            url: 'api/quotation_payment_term_insert',
             data: form_Data,
             headers: {
               "Content-Type": "multipart/form-data",
@@ -597,11 +632,24 @@ var app = new Vue({
 
       },
 
+      close_payment_term() {
+        this.show_payment_term = false;
+
+      },
+
       term_item_del: function(fromIndex) {
 
         var index = fromIndex;
         if (index > -1) {
           this.term.item.splice(index, 1);
+        }
+      },
+
+      payment_term_item_del: function(fromIndex) {
+
+        var index = fromIndex;
+        if (index > -1) {
+          this.payment_term.item.splice(index, 1);
         }
       },
 
@@ -616,6 +664,17 @@ var app = new Vue({
         this.term.item.splice(toIndex, 0, element);
       },
 
+      payment_term_item_down: function(fromIndex, eid) {
+        var toIndex = fromIndex + 1;
+
+        if (toIndex > this.payment_term.item.length - 1) 
+          return;
+  
+        var element = this.payment_term.item.find(({ id }) => id === eid);
+        this.payment_term.item.splice(fromIndex, 1);
+        this.payment_term.item.splice(toIndex, 0, element);
+      },
+
       term_item_up: function(fromIndex, eid) {
         var toIndex = fromIndex - 1;
   
@@ -625,6 +684,17 @@ var app = new Vue({
         var element = this.term.item.find(({ id }) => id === eid);
         this.term.item.splice(fromIndex, 1);
         this.term.item.splice(toIndex, 0, element);
+      },
+
+      payment_term_item_up: function(fromIndex, eid) {
+        var toIndex = fromIndex - 1;
+  
+        if (toIndex < 0) 
+          return;
+
+        var element = this.payment_term.item.find(({ id }) => id === eid);
+        this.payment_term.item.splice(fromIndex, 1);
+        this.payment_term.item.splice(toIndex, 0, element);
       },
 
       add_term_item() {
@@ -641,6 +711,23 @@ var app = new Vue({
         }, 
   
         this.term.item.push(obj);
+      },
+
+      
+      add_payment_term_item() {
+        let order = 0;
+        
+        if(this.payment_term.item.length != 0)
+          order = Math.max.apply(Math, this.payment_term.item.map(function(o) { return o.id; }))
+          
+        obj = {
+          "id" : order + 1,
+          "first_line" : '',
+          "second_line" : '',
+          "third_line" : '',
+        }, 
+  
+        this.payment_term.item.push(obj);
       },
 
       close_total() {
@@ -1240,6 +1327,9 @@ var app = new Vue({
               // term
               _this.term = _this.receive_records[0].term_info;
 
+              // term
+              _this.payment_term = _this.receive_records[0].payment_term_info;
+
               // sig
               _this.sig = _this.receive_records[0].sig_info;
 
@@ -1303,6 +1393,7 @@ var app = new Vue({
           "page" : order + 1,
           "sig" : sig,
           "term" : [],
+          "payment_term" : [],
           "total" : [],
           "types" : types,
         }, 
@@ -1716,6 +1807,7 @@ var app = new Vue({
         this.show_subtotal = false;
         this.show_total = false;
         this.show_term = false;
+        this.show_payment_term = false;
         this.show_header = false;
         console.log("close all");
       },

@@ -2430,7 +2430,7 @@ header( 'location:index' );
                     if ($test_manager[0]  == "1")
                     {
                     ?>
-                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_term = !show_term">Payment Terms</a>
+                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_payment_term = !show_payment_term">Payment Terms</a>
                     <?php
                     } else {
                     ?>
@@ -2438,7 +2438,7 @@ header( 'location:index' );
                     <?php
                     }
                     ?>
-                    <div id="payment_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_term">
+                    <div id="payment_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_payment_term">
                         <h6>Payment Terms</h6>
 
                         <div class="formbox">
@@ -2456,71 +2456,46 @@ header( 'location:index' );
                             <dl>
                                 <dt class="head">Payment Method:</dt>
                                 <dd>
-                                    <input type="text" value="Cash; Cheque; Credit Card; Bank Wiring;">
+                                    <!-- <input type="text" value="Cash; Cheque; Credit Card; Bank Wiring;"> -->
+
+                                    <input type="text" v-model="payment_term.payment_method">
                                 </dd>
 
                                 <dt class="head">Brief:</dt>
                                 <dd>
-                                    <input type="text" value="50% Downpayment & another 50% balance a day before the delivery">
+                                    <input type="text" v-model="payment_term.brief">
                                 </dd>
                             </dl>
                         </div>
 
                         <div class="termsbox">
                             <div class="function_box">
-                                <a class="btn small green" @click="add_term_item()">Add Account</a>
+                                <a class="btn small green" @click="add_payment_term_item()">Add Account</a>
                             </div>
 
                             <div class="content_box">
-                                <ul v-for="(item, index) in term.item">
+                                <ul v-for="(item, index) in payment_term.item">
                                     <li>
-                                        <span>Bank Name:</span> <input type="text" value="BDO"><br>
-                                        <span>First Line:</span> <input type="text" value="Acct Name: Feliix Inc. Acct no: 006910116614"><br>
-                                        <span>Second Line:</span> <input type="text" value="Branch: V.A Rufino"><br>
-                                        <span>Third Line:</span> <input type="text"><br>
+                                        <span>Bank Name:</span> <input type="text" v-model="item.bank_name"><br>
+                                        <span>First Line:</span> <input type="text" v-model="item.first_line"><br>
+                                        <span>Second Line:</span> <input type="text" v-model="item.second_line"><br>
+                                        <span>Third Line:</span> <input type="text" v-model="item.third_line"><br>
                                     </li>
                                     <li>
-                                        <i class="fas fa-arrow-alt-circle-up" @click="term_item_up(index, item.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-up" @click="payment_term_item_up(index, item.id)"></i>
                                         <i class="fas fa-arrow-alt-circle-down"
-                                           @click="term_item_down(index, item.id)"></i>
-                                        <i class="fas fa-trash-alt" @click="term_item_del(index)"></i>
+                                           @click="payment_term_item_down(index, item.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="payment_term_item_del(index)"></i>
                                     </li>
                                 </ul>
-                                <ul v-for="(item, index) in term.item">
-                                    <li>
-                                        <span>Bank Name:</span> <input type="text" value="SECURITY BANK"><br>
-                                        <span>First Line:</span> <input type="text" value="Acct. Name: Feliix Inc. Acct no: 0000018155245"><br>
-                                        <span>Second Line:</span> <input type="text"value="Swift code: SETCPHMM"><br>
-                                        <span>Third Line:</span> <input type="text" value="Address: 512 Edsa near Corner Urbano Plata St., Caloocan City"><br>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-arrow-alt-circle-up" @click="term_item_up(index, item.id)"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"
-                                           @click="term_item_down(index, item.id)"></i>
-                                        <i class="fas fa-trash-alt" @click="term_item_del(index)"></i>
-                                    </li>
-                                </ul>
-                                <ul v-for="(item, index) in term.item">
-                                    <li>
-                                        <span>Bank Name:</span> <input type="text" v-model="item.title"><br>
-                                        <span>First Line:</span> <input type="text" v-model="item.brief"><br>
-                                        <span>Second Line:</span> <input type="text" v-model="item.brief"><br>
-                                        <span>Third Line:</span> <input type="text" v-model="item.brief"><br>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-arrow-alt-circle-up" @click="term_item_up(index, item.id)"></i>
-                                        <i class="fas fa-arrow-alt-circle-down"
-                                           @click="term_item_down(index, item.id)"></i>
-                                        <i class="fas fa-trash-alt" @click="term_item_del(index)"></i>
-                                    </li>
-                                </ul>
+                                
                             </div>
                         </div>
 
                         <div class="formbox">
                             <div class="btnbox">
-                                <a class="btn small" @click="close_term()">Close</a>
-                                <a class="btn small green" @click="term_save()">Save</a>
+                                <a class="btn small" @click="close_payment_term()">Close</a>
+                                <a class="btn small green" @click="payment_term_save()">Save</a>
                             </div>
                         </div>
 
@@ -2790,7 +2765,7 @@ header( 'location:index' );
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td v-if="product_vat == 'P'"><span class="numbers">₱ {{ bk.price !== undefined ? (Number(bk.price) * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            <td v-if="product_vat == 'P'"><span class="numbers">₱ {{ bk.price !== undefined ? (Number(bk.price)).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
                             </td>
                             <td v-if="bk.amount != '0.00' && product_vat == 'P'">
                                 <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1.12 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span

@@ -99,6 +99,7 @@ if (!isset($jwt)) {
         $block_names = GetBlockNames($row['id'], $db);
         $total_info = GetTotalInfo($row['id'], $db);
         $term_info = GetTermInfo($row['id'], $db);
+        $payment_term_info = GetPaymentTermInfo($row['id'], $db);
         $sig_info = GetSigInfo($row['id'], $db);
 
         $subtotal_info = GetSubTotalInfo($row['id'], $db);
@@ -123,6 +124,7 @@ if (!isset($jwt)) {
             "block_names" => $block_names,
             "total_info" => $total_info,
             "term_info" => $term_info,
+            "payment_term_info" => $payment_term_info,
             "sig_info" => $sig_info,
             "subtotal_info" => $subtotal_info,
             "subtotal_novat" => $subtotal_novat
@@ -588,6 +590,58 @@ function GetTermInfo($qid, $db)
 
     $merged_results = array(
         "page" => $page,
+        "item" => $item,
+               
+    );
+
+    return $merged_results;
+}
+
+
+function GetPaymentTermInfo($qid, $db)
+{
+    $query = "
+        SELECT 
+        id,
+        `page`,
+        payment_method,
+        brief,
+        list 
+        FROM   quotation_payment_term
+        WHERE  quotation_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $item = [];
+
+    $merged_results = [];
+    
+    $id = 0;
+    $page = 0;
+    $payment_method = '';
+    $brief = '';
+    $list = '';
+  
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $page = $row['page'];
+        $payment_method = $row['payment_method'];
+        $brief = $row['brief'];
+        $list = $row['list'];
+       
+        $item[] = json_decode($list, TRUE); 
+        
+    }
+
+    $merged_results = array(
+        "page" => $page,
+        "payment_method" => $payment_method,
+        "brief" => $brief,
         "item" => $item,
                
     );
