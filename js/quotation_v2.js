@@ -125,6 +125,7 @@ var app = new Vue({
         payment_method: '',
         brief : '',
         item: { 
+          bank_name : '',
           first_line : '',
           second_line : '',
           third_line : '',
@@ -722,6 +723,7 @@ var app = new Vue({
           
         obj = {
           "id" : order + 1,
+          "bank_name" : '',
           "first_line" : '',
           "second_line" : '',
           "third_line" : '',

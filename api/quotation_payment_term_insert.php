@@ -80,54 +80,55 @@ else
         $page = $detail_array['page'];
         $page == '' ? $page = 1 : $page = $page;
      
-        for($i=0 ; $i < count($detail_array['item']) ; $i++)
-        {
-            $query = "INSERT INTO quotation_payment_term
-            SET
-                `quotation_id` = :quotation_id,
-                `page` = :page,
-                `payment_method` = :payment_method,
-                `brief` = :brief,
-                `list` = :list,
-                                
-                `status` = 0,
-                `create_id` = :create_id,
-                `created_at` =  now() ";
+    
+        $query = "INSERT INTO quotation_payment_term
+        SET
+            `quotation_id` = :quotation_id,
+            `page` = :page,
+            `payment_method` = :payment_method,
+            `brief` = :brief,
+            `list` = :list,
+                            
+            `status` = 0,
+            `create_id` = :create_id,
+            `created_at` =  now() ";
 
-            // prepare the query
-            $stmt = $db->prepare($query);
+        // prepare the query
+        $stmt = $db->prepare($query);
 
-            // bind the values
-            $stmt->bindParam(':quotation_id', $quotation_id);
-            $stmt->bindParam(':page', $page);
-            $stmt->bindParam(':payment_method', $detail_array['item'][$i]['payment_method']);
-            $stmt->bindParam(':brief', $detail_array['item'][$i]['brief']);
-            $stmt->bindParam(':list', $detail_array['item'][$i]['list']);
-          
-            $stmt->bindParam(':create_id', $user_id);
+        $list = json_encode($detail_array['item']);
+
+        // bind the values
+        $stmt->bindParam(':quotation_id', $quotation_id);
+        $stmt->bindParam(':page', $page);
+        $stmt->bindParam(':payment_method', $detail_array['payment_method']);
+        $stmt->bindParam(':brief', $detail_array['brief']);
+        $stmt->bindParam(':list', $list);
         
-            $last_id = 0;
+        $stmt->bindParam(':create_id', $user_id);
+    
+        $last_id = 0;
+        // execute the query, also check if query was successful
+        try {
             // execute the query, also check if query was successful
-            try {
-                // execute the query, also check if query was successful
-                if ($stmt->execute()) {
-                    $last_id = $db->lastInsertId();
-                } else {
-                    $arr = $stmt->errorInfo();
-                    error_log($arr[2]);
-                    $db->rollback();
-                    http_response_code(501);
-                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
-                    die();
-                }
-            } catch (Exception $e) {
-                error_log($e->getMessage());
+            if ($stmt->execute()) {
+                $last_id = $db->lastInsertId();
+            } else {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
                 $db->rollback();
                 http_response_code(501);
-                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
                 die();
             }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
         }
+    
     
 
         $db->commit();

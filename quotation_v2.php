@@ -2445,7 +2445,7 @@ header( 'location:index' );
                             <dl>
                                 <dt class="head">Choose where the block of payment terms locates at:</dt>
                                 <dd>
-                                    <select v-model="term.page">
+                                    <select v-model="payment_term.page">
                                         <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
                                             }}
                                         </option>
@@ -2875,21 +2875,19 @@ header( 'location:index' );
                     </div>
                 </div>
 
-                <div class="area_payment" v-if="1 == 0">
+                <div class="area_payment" v-if="pg.payment_term.page !== undefined">
                     <table class="tb_payment">
                         <tbody>
                         <tr>
                             <td colspan="2">Payment Terms:</td>
                             <td>
-                                <span>Cash</span>
-                                <span>Cheque</span>
-                                <span>Credit Card</span>
-                                <span>Bank Wiring</span>
+                                <span v-for="(tt, index) in pg.payment_term.payment_method">{{ tt }}</span>
+                               
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3">
-                                50% Downpayment & another 50% balance a day before the delivery
+                            {{ pg.payment_term.brief }}
                             </td>
                         </tr>
                         <tr>
@@ -2902,27 +2900,17 @@ header( 'location:index' );
                             <td>
                                 <b>For Bank Details for Wiring</b>
 
-                                <div class="acount_info">
-                                    <span class="account_name">BDO</span>
+                                <div class="acount_info" v-for="(tt, index) in pg.payment_term.list">
+                                    <span class="account_name">{{ tt.bank_name }}</span>
                                     <span>: </span>
                                     <div class="first_line">
-                                        Acct Name: Feliix Inc. Acct no: 006910116614
+                                    {{ tt.first_line }}
                                     </div>
-                                    <div class="second_line">Branch: V.A Rufino</div>
-                                    <div class="third_line"></div>
+                                    <div class="second_line">{{ tt.second_line }}</div>
+                                    <div class="third_line">{{ tt.third_line }}</div>
                                 </div>
 
-                                <div class="acount_info">
-                                    <span class="account_name">SECURITY BANK</span>
-                                    <span>: </span>
-                                    <div class="first_line">
-                                        Acct. Name: Feliix Inc. Acct no: 0000018155245
-                                    </div>
-                                    <div class="second_line">Swift code: SETCPHMM</div>
-                                    <div class="third_line">Address: 512 Edsa near Corner Urbano Plata St., Caloocan
-                                        City
-                                    </div>
-                                </div>
+                           
                             </td>
                         </tr>
                         </tbody>

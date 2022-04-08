@@ -265,6 +265,7 @@ function GetPages($qid, $db){
         $type = GetTypes($id, $db);
         $total = GetTotal($qid, $page, $db);
         $term = GetTerm($qid, $page, $db);
+        $payment_term = GetPaymentTerm($qid, $page, $db);
         $sig = GetSig($qid, $page, $db);
   
         $merged_results[] = array(
@@ -273,6 +274,7 @@ function GetPages($qid, $db){
             "types" => $type,
             "total" => $total,
             "term" => $term,
+            "payment_term" => $payment_term,
             "sig" => $sig,
         );
     }
@@ -361,6 +363,51 @@ function GetTerm($qid, $page, $db){
             "title" => $title,
             "brief" => $brief,
             "list" => $list,
+          
+        );
+    }
+
+    return $merged_results;
+}
+
+
+function GetPaymentTerm($qid, $page, $db){
+    $query = "
+        SELECT 
+        `page`,
+        payment_method,
+        brief,
+        list 
+        FROM   quotation_payment_term
+        WHERE  quotation_id = " . $qid . "
+        AND  page = " . $page . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $page = $row['page'];
+        $payment = $row['payment_method'];
+        $brief = $row['brief'];
+        $list = $row['list'];
+    
+        $payment_method = explode (";", $payment);
+        $payment_method= array_filter($payment_method);
+        $payment_method = array_map('trim', $payment_method);
+        $item = json_decode($list, TRUE); 
+
+        $merged_results = array(
+            "page" => $page,
+            "payment_method" => $payment_method,
+            "brief" => $brief,
+            "list" => $item,
           
         );
     }
@@ -623,9 +670,11 @@ function GetPaymentTermInfo($qid, $db)
     
     $id = 0;
     $page = 0;
-    $payment_method = '';
-    $brief = '';
-    $list = '';
+    $payment_method = 'Cash; Cheque; Credit Card; Bank Wiring;';
+    $brief = '50% Downpayment & another 50% balance a day before the delivery';
+    $list = '[{"id":"0", "bank_name": "BDO", "first_line":"Feliix Inc. Acct no: 006910116614", "second_line":"Branch: V.A Rufino", "third_line":""}, {"id":"1", "bank_name": "SECURITY BANK", "first_line":"Feliix Inc. Acct no: 0000018155245", "second_line":"Swift code: SETCPHMM", "third_line":"Address: 512 Edsa near Corner Urbano Plata St., Caloocan City"}]';
+
+    $item = json_decode($list, TRUE); 
   
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -634,7 +683,7 @@ function GetPaymentTermInfo($qid, $db)
         $brief = $row['brief'];
         $list = $row['list'];
        
-        $item[] = json_decode($list, TRUE); 
+        $item = json_decode($list, TRUE); 
         
     }
 
