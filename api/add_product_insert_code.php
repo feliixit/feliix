@@ -301,7 +301,7 @@ else
         // variation
         for ($i = 0; $i < count($variation_array); $i++) {
             $id = $variation_array[$i]['id'];
-            $code = $variation_array[$i]['code'];
+            // $code = $variation_array[$i]['code'];
             $k1 = $variation_array[$i]['k1'];
             $k2 = $variation_array[$i]['k2'];
             $k3 = $variation_array[$i]['k3'];
