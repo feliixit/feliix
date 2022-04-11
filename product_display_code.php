@@ -388,12 +388,12 @@
 
                 </ul>
 
-                <ul class="variants">
+                <ul class="variants" v-if="variation1_value.length > 0">
                     <li>
                         Select:
                     </li>
                     <li v-if="variation1_value[0] !== '' && variation1_value[0] !== undefined">
-                        {{ variation1 !== 'custom' ? variation1 : variation1_custom}}
+                        {{ variation1 !== 'custom' ? variation1 + ': ' : variation1_custom + ': '}} <template v-for="(item, index) in variation1_value">{{item + ', '}} </template>
                     </li>
                     <li v-show="variation1_value[0] !== '' && variation1_value[0] !== undefined">
                         <select class="form-control" v-model="v1" @change="change_v()">
@@ -403,7 +403,7 @@
                         </select>
                     </li>
                     <li v-if="variation2_value[0] !== '' && variation2_value[0] !== undefined">
-                        {{ variation2 !== 'custom' ? variation2 : variation2_custom }}
+                        {{ variation2 !== 'custom' ? variation2 + ': ' : variation2_custom + ': ' }} <template v-for="(item, index) in variation2_value">{{item + ', '}} </template>
                     </li>
                     <li v-show="variation2_value[0] !== '' && variation2_value[0] !== undefined">
                         <select class="form-control" v-model="v2" @change="change_v()">
@@ -413,7 +413,7 @@
                         </select>
                     </li>
                     <li v-if="variation3_value[0] !== '' && variation3_value[0] !== undefined">
-                        {{ variation3 !== 'custom' ? variation3 : variation3_custom }}
+                        {{ variation3 !== 'custom' ? variation3 + ': ' : variation3_custom + ': ' }} <template v-for="(item, index) in variation3_value">{{item + ', '}} </template>
                     </li>
                     <li v-show="variation3_value[0] !== '' && variation3_value[0] !== undefined">
                         <select class="form-control" v-model="v3" @change="change_v()">
@@ -437,7 +437,7 @@
                 </ul>
 
                 <div class="btnbox">
-                    <button class="btn btn-info">Add</button>
+                    <!-- <button class="btn btn-info">Add</button> -->
                 </div>
 
             </div>
@@ -445,7 +445,7 @@
         </div>
 
 
-        <div class="middle_section">
+        <div class="middle_section" v-if="specification.length > 0">
             <h5>Specification</h5>
 
             <table>
@@ -506,10 +506,14 @@
         </div>
 
 
-        <div class="lower_section">
+        <div class="lower_section" v-if="notes != '' || description != ''">
             <h5>Description</h5>
             <p>
                 {{ description }}
+            </p>
+
+            <p v-if="notes != ''">
+                Notes: {{ notes }}
             </p>
 
             <!--
