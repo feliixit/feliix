@@ -115,7 +115,7 @@ var app = new Vue({
 
     displayedPosts() {
       if(this.pg == 0)
-        this.filter_apply_new();
+        this.filter_apply();
 
       this.setPages();
       return this.paginate(this.receive_records);
