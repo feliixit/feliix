@@ -393,7 +393,7 @@
                         Select:
                     </li>
                     <li v-if="variation1_value[0] !== '' && variation1_value[0] !== undefined">
-                        {{ variation1 !== 'custom' ? variation1 + ': ' : variation1_custom + ': '}} <template v-for="(item, index) in variation1_value">{{item + ', '}} </template>
+                        {{ variation1 !== 'custom' ? variation1 + ': ' : variation1_custom + ': '}} <template v-for="(item, index) in variation1_value">{{ (index + 1 !== variation1_value.length) ? item + ', ' : item}} </template>
                     </li>
                     <li v-show="variation1_value[0] !== '' && variation1_value[0] !== undefined">
                         <select class="form-control" v-model="v1" @change="change_v()">
@@ -403,7 +403,7 @@
                         </select>
                     </li>
                     <li v-if="variation2_value[0] !== '' && variation2_value[0] !== undefined">
-                        {{ variation2 !== 'custom' ? variation2 + ': ' : variation2_custom + ': ' }} <template v-for="(item, index) in variation2_value">{{item + ', '}} </template>
+                        {{ variation2 !== 'custom' ? variation2 + ': ' : variation2_custom + ': ' }} <template v-for="(item, index) in variation2_value">{{ (index + 1 !== variation2_value.length) ? item + ', ' : item}} </template>
                     </li>
                     <li v-show="variation2_value[0] !== '' && variation2_value[0] !== undefined">
                         <select class="form-control" v-model="v2" @change="change_v()">
@@ -413,7 +413,7 @@
                         </select>
                     </li>
                     <li v-if="variation3_value[0] !== '' && variation3_value[0] !== undefined">
-                        {{ variation3 !== 'custom' ? variation3 + ': ' : variation3_custom + ': ' }} <template v-for="(item, index) in variation3_value">{{item + ', '}} </template>
+                        {{ variation3 !== 'custom' ? variation3 + ': ' : variation3_custom + ': ' }} <template v-for="(item, index) in variation3_value">{{ (index + 1 !== variation3_value.length) ? item + ', ' : item}} </template>
                     </li>
                     <li v-show="variation3_value[0] !== '' && variation3_value[0] !== undefined">
                         <select class="form-control" v-model="v3" @change="change_v()">
