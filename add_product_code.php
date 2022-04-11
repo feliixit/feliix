@@ -870,7 +870,7 @@
         </div>
 
 
-        <div class="toggle-switch" v-show="edit_mode == true && accessory_infomation.length > 0">
+        <div class="toggle-switch" v-show="edit_mode == true && accessory_infomation.length > 0 && 1== 0">
             <label for="accessory_mode" class="description">Has Accessory?</label>
             <input type="checkbox" data-toggle="toggle" data-width="100px" data-onstyle="primary" 
                    data-offstyle="secondary" data-on="Yes" data-off="No" id="accessory_mode">
@@ -999,7 +999,7 @@
                         <th>{{ variation1_text }}</th>
                         <th>{{ variation2_text }}</th>
                         <th>{{ variation3_text }}</th>
-                        <th>Code</th>
+                        <!-- <th>Code</th> -->
                         <th class="NTD_price" v-show="show_ntd === true">Cost Price (NTD)</th>
                         <th>Suggested Retail Price</th>
                         <th>Quoted Price</th>
@@ -1014,7 +1014,7 @@
                         <td>{{ item.v1 }}</td>
                         <td>{{ item.v2 }}</td>
                         <td>{{ item.v3 }}</td>
-                        <td><input type="text" class="form-control" v-model="item.code"></td>
+                     <!--   <td><input type="text" class="form-control" v-model="item.code"></td> -->
                         <td class="NTD_price" v-show="show_ntd === true"><input type="number" class="form-control" v-model="item.price_ntd" @change="product_price_ntd_changed(item.id)"><input type="text" class="form-control updated_date" v-model="item.price_ntd_change"></td>
                         <td><input type="number" class="form-control" v-model="item.price" @change="product_price_changed(item.id)"><input type="text" class="form-control updated_date" v-model="item.price_change"></td>
                         <td><input type="number" class="form-control" v-model="item.quoted_price" @change="product_quoted_price_changed(item.id)"><input type="text" class="form-control updated_date" v-model="item.quoted_price_change"></td>
@@ -1213,7 +1213,7 @@
                         </thead>
 
                         <tbody>
-                        <tr>
+                        <tr v-show="1 == 0">
                             <td><input class="alone" type="checkbox" value="1" v-model="code_checked"></td>
                             <td>Code</td>
                             <td><input type="text" class="form-control" v-model='bulk_code'></td>

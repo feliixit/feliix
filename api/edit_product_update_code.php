@@ -96,22 +96,37 @@ else
             {
                 $query .= "`price_ntd` = :price_ntd, ";
             }
+            else
+            {
+                $query .= "`price_ntd` = NULL, ";
+            }
 
             if($price != '' && !is_null($price) && $price != 'null')
             {
                 $query .= "`price` = :price, ";
+            }
+            else
+            {
+                $query .= "`price` = NULL, ";
             }
 
             if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
             {
                 $query .= "`quoted_price` = :quoted_price, ";
             }
+            else
+            {
+                $query .= "`quoted_price` = NULL, ";
+            }
 
             if($price_ntd != $price_ntd_org)
             {
                 if($price_ntd_change != '')
                 {
-                    $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
+                    if($price_ntd == '')
+                        $query .= "`price_ntd_change` = null, ";
+                    else
+                        $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
                 }
                 else
                     $query .= "`price_ntd_change` = now(), ";
@@ -121,7 +136,10 @@ else
             {
                 if($price_change != '')
                 {
-                    $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
+                    if($price_ntd == '')
+                        $query .= "`price_change` = null, ";
+                    else
+                        $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
                 }
                 else
                     $query .= "`price_change` = now(), ";
@@ -131,7 +149,10 @@ else
             {
                 if($quoted_price_change != '')
                 {
-                    $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
+                    if($price_ntd == '')
+                        $query .= "`quoted_price_change` = null, ";
+                    else
+                        $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
                 }
                 else
                     $query .= "`quoted_price_change` = now(), ";
