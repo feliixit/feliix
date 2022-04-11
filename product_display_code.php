@@ -506,13 +506,13 @@
         </div>
 
 
-        <div class="lower_section" v-if="notes != null || description != ''">
+        <div class="lower_section" v-if="(notes != null && notes != '') || description != ''">
             <h5>Description</h5>
             <p>
                 {{ description }}
             </p>
 
-            <p v-if="notes != null">
+            <p v-if="notes != null && notes != ''">
                 Notes: {{ notes }}
             </p>
 
