@@ -317,7 +317,9 @@ try {
                 <a class="list" href="../salary_slip">Salary Slip</a>
             </li>
             <li class="gray02">
-                <a class="uni">Profile<br>Section</a>
+                <a class="uni">Product<br>Database</a>
+                <a class="list" href="../product_catalog_code">Product Catalog</a>
+                <a class="list" href="../frequently_used_options">Attribute’s Frequently Used Options</a>
             </li>
             <li class="cyan01" style="border: 3px solid var(--cyan01);">
                 <a class="uni" href="user">System<br>Section</a>
