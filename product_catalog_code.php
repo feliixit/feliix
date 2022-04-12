@@ -254,6 +254,7 @@
             font-weight: 600;
             padding: 1px 7px 1px 5px;
             max-width: 230px;
+            vertical-align: top;
         }
 
         #tb_product_list ul li:nth-of-type(2) span {
@@ -758,14 +759,12 @@
                 <div class="pagenation">
                     <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply_new();">Prev 10</a>
 
-                    <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply_new();" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply_new();" v-bind:style="[pg == page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg }}</a>
 
                     <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply_new();">Next 10</a>
                 </div>
             </div>
         </div>
-
-
 
 
     </div>
