@@ -227,49 +227,53 @@ else
             $stmt = $db->prepare( $sql );
             $stmt->execute();
 
-            $id = '';
-            $category = '';
-            $tags = '';
-            $sub_category = '';
-       
-            $brand = '';
-            $code = '';
-            $price_ntd = '';
-            $price_ntd_org = '';
-            $price_ntd_change = '';
-            $price_quoted = '';
-            $price = '';
-            $price_org = '';
-            $price_change = '';
-            $description = '';
-            $notes = '';
-            $photo1 = '';
-            $photo2 = '';
-            $photo3 = '';
-            $accessory_mode = '';
-            $attributes = '';
-            $variation_mode = '';
-            $variation = '';
-            $status = '';
-            $create_id = '';
-            $created_at = '';
-            $product = [];
-            $accessory = [];
-
-
-            $quoted_price = '';
-            $quoted_price_change = '';
-
-            $variation1_text = "1st Variation";
-            $variation2_text = "2nd Variation";
-            $variation3_text = "3rd Variation";
-
-            $special_infomation = [];
-            $accessory_information = [];
-
-            $sub_cateory_item = [];
+            
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $id = '';
+                $category = '';
+                $tags = '';
+                $sub_category = '';
+        
+                $brand = '';
+                $code = '';
+                $price_ntd = '';
+                $price_ntd_org = '';
+                $price_ntd_change = '';
+                $price_quoted = '';
+                $price = '';
+                $price_org = '';
+                $price_change = '';
+                $description = '';
+                $notes = '';
+                $photo1 = '';
+                $photo2 = '';
+                $photo3 = '';
+                $accessory_mode = '';
+                $attributes = '';
+                $variation_mode = '';
+                $variation = '';
+                $status = '';
+                $create_id = '';
+                $created_at = '';
+                $product = [];
+                $accessory = [];
+
+
+                $quoted_price = '';
+                $quoted_price_change = '';
+
+                $variation1_text = "1st Variation";
+                $variation2_text = "2nd Variation";
+                $variation3_text = "3rd Variation";
+
+                $special_infomation = [];
+                $accessory_information = [];
+
+                $sub_cateory_item = [];
+
+
 
                 $id = $row['id'];
                 $category = GetCategory($row['category'], $db);

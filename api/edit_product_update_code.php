@@ -96,45 +96,66 @@ else
             {
                 $query .= "`price_ntd` = :price_ntd, ";
             }
+            else
+            {
+                $query .= "`price_ntd` = null, ";
+            }
 
             if($price != '' && !is_null($price) && $price != 'null')
             {
                 $query .= "`price` = :price, ";
+            }
+            else
+            {
+                $query .= "`price` = null, ";
             }
 
             if($quoted_price != '' && !is_null($quoted_price) && $quoted_price != 'null')
             {
                 $query .= "`quoted_price` = :quoted_price, ";
             }
+            else
+            {
+                $query .= "`quoted_price` = null, ";
+            }
 
             if($price_ntd != $price_ntd_org)
             {
-                if($price_ntd_change != '')
-                {
-                    $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
-                }
-                else
-                    $query .= "`price_ntd_change` = now(), ";
+                //if($price_ntd_change != '')
+                //{
+                    if($price_ntd == '')
+                        $query .= "`price_ntd_change` = null, ";
+                    else
+                        $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
+                //}
+                //else
+                //    $query .= "`price_ntd_change` = now(), ";
             }
             
             if($price != $price_org)
             {
-                if($price_change != '')
-                {
-                    $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
-                }
-                else
-                    $query .= "`price_change` = now(), ";
+                //if($price_change != '')
+                //{
+                    if($price_ntd == '')
+                        $query .= "`price_change` = null, ";
+                    else
+                        $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
+                //}
+                //else
+                //    $query .= "`price_change` = now(), ";
             }
 
             if($quoted_price != $quoted_price_org)
             {
-                if($quoted_price_change != '')
-                {
-                    $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
-                }
-                else
-                    $query .= "`quoted_price_change` = now(), ";
+                //if($quoted_price_change != '')
+                //{
+                    if($price_ntd == '')
+                        $query .= "`quoted_price_change` = null, ";
+                    else
+                        $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
+                //}
+                //else
+                //    $query .= "`quoted_price_change` = now(), ";
             }
 
             if($url1 == '')
@@ -398,7 +419,7 @@ else
         {
             for ($i = 0; $i < count($variation_array); $i++) {
                 $id = $variation_array[$i]['id'];
-                $code = $variation_array[$i]['code'];
+                // $code = $variation_array[$i]['code'];
                 $k1 = $variation_array[$i]['k1'];
                 $k2 = $variation_array[$i]['k2'];
                 $k3 = $variation_array[$i]['k3'];

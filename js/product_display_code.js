@@ -305,7 +305,7 @@ var app = new Vue({
         v1  = '';
         v2  = '';
       }
-
+/*
       if(k1 == "" && this.record[0]['notes'] !== "")
       {
         k1 = 'Notes';
@@ -322,7 +322,7 @@ var app = new Vue({
         v1  = '';
         v2  = '';
       }
-
+*/
       if(k1 !== "" && k2 == "")
       {
         k2 = '';

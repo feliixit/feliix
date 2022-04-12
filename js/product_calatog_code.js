@@ -115,7 +115,7 @@ var app = new Vue({
 
     displayedPosts() {
       if(this.pg == 0)
-        this.filter_apply_new();
+        this.filter_apply();
 
       this.setPages();
       return this.paginate(this.receive_records);
@@ -285,8 +285,7 @@ var app = new Vue({
 
       if(_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
-      _this.page = 1;
-
+     
 
       window.location.href =
         "product_catalog_code?" +
@@ -321,6 +320,7 @@ var app = new Vue({
       if(_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
 
+      this.page = 1;
 
       window.location.href =
         "product_catalog_code?" +
