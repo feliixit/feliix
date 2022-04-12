@@ -74,6 +74,31 @@
             background-color: #707071;
         }
 
+        a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.gray header nav a, body.gray header nav a:link {
+            color: #000;
+        }
+
+        body.gray header nav a:hover {
+            color: #333;
+        }
+
+        body.gray header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
+        body.gray header nav ul.info {
+            margin-bottom: 0;
+        }
+
+        body.gray header nav ul.info b {
+            font-weight: bold;
+        }
+
         body.gray select {
             background-image: url(../images/ui/icon_form_select_arrow_gray.svg);
         }
@@ -127,12 +152,12 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
-            padding: 0 10px 20px 20px;
+            padding: 0 10px 20px 10px;
         }
 
         .imagebox .image_list img {
-            max-width: 100px;
-            max-height: 100px;
+            width: 140px;
+            height: 140px;
             object-fit: contain;
             margin: 5px 10px;
             cursor: pointer;
@@ -177,7 +202,7 @@
         }
 
         .infobox .price_stock {
-            border-bottom: 2px solid rgb(225, 225, 225);
+            margin-bottom: 0;
             margin-left: 20px;
             padding: 15px 20px;
         }
@@ -205,7 +230,9 @@
         }
 
         .infobox .variants {
+            border-top: 2px solid rgb(225, 225, 225);
             margin-left: 20px;
+            margin-top: 1rem;
             padding: 0 20px;
         }
 
@@ -213,6 +240,7 @@
             color: #212529;
             font-size: 16px;
             margin-left: 15px;
+            margin-bottom: 3px;
         }
 
         .infobox .variants li:nth-of-type(odd) {
@@ -265,6 +293,11 @@
         .middle_section tbody tr td:nth-of-type(odd) {
             color: #B3B3B3;
             padding: 10px;
+            width: 20%;
+        }
+
+        .middle_section tbody tr td:nth-of-type(even) {
+            width: 30%;
         }
 
         .lower_section {
@@ -313,8 +346,9 @@
         }
 
         .col.custom > img {
-            max-height: 200px;
-            max-width: 100%;
+            height: 150px;
+            width: 150%;
+            object-fit: contain;
         }
 
         .col.custom > div > a {
@@ -363,7 +397,7 @@
 
             <div class="infobox">
                 <div class="basic_info">
-                    <h3>{{code}}</h3>
+                    <h3 style="word-break: break-all;">{{code}}</h3>
                     <h6>{{brand}}</h6>
                     <h6 v-if="category == 'Lighting'">{{ category}}</h6>
                     <h6 v-if="category != 'Lighting'">{{ category}} >> {{ sub_category_name}}</h6>
@@ -379,7 +413,7 @@
                     </li>
 
                     <li>
-                        Retail Price: <span>{{price}}</span><span></span>
+                        Standard Retail Price: <span>{{price}}</span><span></span>
                     </li>
 
                     <li>
@@ -390,7 +424,7 @@
 
                 <ul class="variants" v-if="variation1_value.length > 0">
                     <li>
-                        Select:
+                        Variants
                     </li>
                     <li v-if="variation1_value[0] !== '' && variation1_value[0] !== undefined">
                         {{ variation1 !== 'custom' ? variation1 + ': ' : variation1_custom + ': '}} <template v-for="(item, index) in variation1_value">{{ (index + 1 !== variation1_value.length) ? item + ', ' : item}} </template>
@@ -484,7 +518,7 @@
                             <div class="col custom" v-for='(item, index) in g'>
                                 <img :src="baseURL + item.photo1" :alt="'No Product Picture'">
                                 <div>
-                                    <a :href="'product_display?id=' + item.id">
+                                    <a :href="'product_display_code?id=' + item.id">
                                         {{ item.code }}
                                     </a>
                                 </div>
