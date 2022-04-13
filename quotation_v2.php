@@ -618,15 +618,18 @@ header( 'location:index' );
 
         .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) {
             padding: 5px 100px 5px 30px;
+        }
+
+        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) > div{
             display: flex;
             justify-content: space-between;
         }
 
-        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) span {
+        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) > div > span {
             position: relative;
         }
 
-        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) span::before {
+        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) > div > span::before {
             content: "";
             width: 20px;
             height: 20px;
@@ -2881,7 +2884,9 @@ header( 'location:index' );
                         <tr>
                             <td colspan="2">Payment Terms:</td>
                             <td>
-                                <span v-for="(tt, index) in pg.payment_term.payment_method">{{ tt }}</span>
+                                <div>
+                                    <span v-for="(tt, index) in pg.payment_term.payment_method">{{ tt }}</span>
+                                </div>
                                
                             </td>
                         </tr>
