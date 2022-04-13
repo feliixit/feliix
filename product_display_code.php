@@ -347,7 +347,7 @@
 
         .col.custom > img {
             height: 150px;
-            width: 150%;
+            width: 150px;
             object-fit: contain;
         }
 
