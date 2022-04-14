@@ -562,6 +562,8 @@ else
                                         );
                 }
 
+                $moq = $row['moq'];
+
                 $merged_results[] = array( "id" => $id,
                                     "category" => $category,
                                     "sub_category" => $sub_category,
@@ -602,6 +604,9 @@ else
                                     "variation3_custom" => $variation3_custom,
                                     "attribute_list" => $attribute_list,
                                     "sub_category_item" => $sub_category_item,
+                                    "special_information" => $special_information,
+                                    "moq" => $moq,
+                                    "notes" => $notes,
                                     "cnt" => $cnt,
 
                 );

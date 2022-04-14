@@ -1942,7 +1942,7 @@ header( 'location:index' );
 
 <div class="bodybox" id="app">
 
-    <div class="mask" :ref="'mask'" style="display:none"></div>
+    <div class="mask" :ref="'mask'"></div>
 
     <!-- header -->
     <header class="noPrint">header</header>
@@ -2180,7 +2180,7 @@ header( 'location:index' );
                                     <option value="noimage">Item without Image</option>
                                 </select>
                                 <a class="btn small green" @click="add_block_a()">Add</a>
-                                <a class="btn small green" @click="add_block_a()">Product Catalog</a>
+                                <a class="btn small green" @click="product_catalog_a()">Product Catalog</a>
                             </div>
 
                             <div class="content_box">
@@ -2234,7 +2234,7 @@ header( 'location:index' );
 
                             <div class="function_box">
                                 <a class="btn small green" @click="add_block_b()">Add Item</a>
-                                <a class="btn small green" @click="add_block_b()">Product Catalog</a>
+                                <a class="btn small green" @click="product_catalog_b()">Product Catalog</a>
                             </div>
 
                             <div class="content_box">
@@ -2991,10 +2991,11 @@ header( 'location:index' );
 
                     <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
 
-                        <input type="text" placeholder="Code">
+                        <input type="text" placeholder="Code" v-model="fil_code">
 
-                        <select>
-                            <option>Choose Brand...</option>
+                        <select v-model="fil_brand">
+                            <option value="">Choose Brand...</option>
+                            <option v-for="(item, index) in brands">{{ item.brand }}</option>
                         </select>
 
                         <select class="selectpicker" multiple data-live-search="true" data-size="8"
@@ -3060,17 +3061,17 @@ header( 'location:index' );
 
                         </select>
 
-                        <a class="btn small green">Search</a>
+                        <a class="btn small green" @click="filter_apply_new()">Search</a>
 
                     </div>
 
                     <div class="list_function" style="margin: 7px 0;">
                         <div class="pagenation">
-                            <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
-                            <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply();"
-                               v-bind:style="[pg == page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg
+                            <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
+                            <a class="page" v-for="pg in product_pages_10" @click="product_page=pg; filter_apply(pg);"
+                               v-bind:style="[pg == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg
                                 }}</a>
-                            <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply();">Next
+                            <a class="next" :disabled="product_page == product_pages.length" @click="nex_page(); filter_apply();">Next
                                 10</a>
                         </div>
                     </div>
@@ -3088,10 +3089,10 @@ header( 'location:index' );
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
+                            <tr v-for="(item, index) in displayedPosts">
 
                                 <td><img
-                                        src="https://storage.cloud.google.com/feliiximg/1640223836_TONS_WALL_OUTDOOR_2.jpg">
+                                    :src="img_url + item.photo1">
                                 </td>
                                 <td>
                                     <ul>
@@ -3099,34 +3100,37 @@ header( 'location:index' );
                                             ID:
                                         </li>
                                         <li>
-                                            28
+                                        {{ item.id }}
                                         </li>
                                     </ul>
                                     <ul>
                                         <li>
                                             Code:
                                         </li>
-                                        <li>DA-933R(C7)</li>
+                                        <li>{{ item.code }}</li>
                                     </ul>
                                     <ul>
                                         <li>
                                             Category:
                                         </li>
-                                        <li>
-                                            Lighting
+                                        <li v-if="item.category == 'Lighting'">
+                                            {{ item.category}}
+                                        </li>
+                                        <li v-if="item.category != 'Lighting'">
+                                            {{ item.category}} >> {{ item.sub_category_name}}
                                         </li> <!----></ul>
                                     <ul>
                                         <li>
                                             Tags:
                                         </li>
-                                        <li><span>CEILING</span><span>INDOOR</span></li>
+                                        <li><span v-for="(it, index) in item.tags">{{ it }}</span></li>
                                     </ul>
                                     <ul>
                                         <li>
                                             Brand:
                                         </li>
                                         <li>
-                                            TONS
+                                        {{ item.brand }}
                                         </li>
                                     </ul>
                                     <ul>
@@ -3134,7 +3138,7 @@ header( 'location:index' );
                                             Created:
                                         </li>
                                         <li>
-                                            2022-02-15 15:20:04
+                                        {{ item.created_at }}
                                         </li>
                                     </ul>
                                     <ul>
@@ -3142,209 +3146,41 @@ header( 'location:index' );
                                             Updated:
                                         </li>
                                         <li>
-
+                                        {{ item.updated_at }}
                                         </li>
                                     </ul>
                                 </td>
                                 <td>
-                                    <ul>
+                                    <ul v-for="(att, index) in item.attribute_list">
                                         <li>
-                                            Beam Angle:
+                                            {{ att.category }}:
                                         </li>
-                                        <li><span>20</span><span>30</span></li> <!----></ul>
-                                    <ul>
-                                        <li>
-                                            CCT:
+                                        <li v-if="att.value.length > 1">
+                                            <span v-for="(att_value, index) in att.value">{{att_value}}</span>
                                         </li>
-                                        <li><span>2700K</span><span>3000K</span><span>4000K</span><span>5000K</span>
-                                        </li> <!----></ul>
-                                    <ul>
-                                        <li>
-                                            Color Finish:
+                                        <li v-if="att.value.length == 1">
+                                            <template v-for="(att_value, index) in att.value">{{att_value}}</template>
                                         </li>
-                                        <li><span>White</span><span>Black</span><span>Silver</span></li> <!----></ul>
+
+                                    </ul>
                                 </td>
-                                <td><span style="display: none;">CP: NTD 165,033<br></span>
-                                    <span>SRP: PHP 6,000<br></span> <span>QP: PHP 0<br></span></td>
                                 <td>
-                                    <button id="edit01"><i aria-hidden="true" class="fas fa-caret-right"></i></button>
+                                    <span v-show="show_ntd === true">CP: {{ item.price_ntd }}<br></span>
+                                    <span>SRP: {{ item.price }}<br></span>
+                                    <span>QP: {{ item.quoted_price }}<br></span>
+                                </td>
+                                <td>
+                                    <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true" class="fas fa-caret-right"></i></button>
                                 </td>
                             </tr>
-                            <tr>
-
-                                <td><img
-                                        src="https://storage.cloud.google.com/feliiximg/1640223836_TONS_WALL_OUTDOOR_2.jpg">
-                                </td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            ID:
-                                        </li>
-                                        <li>
-                                            27
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Code:
-                                        </li>
-                                        <li>DA-933R(C7)</li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Category:
-                                        </li>
-                                        <li>
-                                            Lighting
-                                        </li> <!----></ul>
-                                    <ul>
-                                        <li>
-                                            Tags:
-                                        </li>
-                                        <li><span>CEILING</span><span>SURFACE-MOUNTED</span></li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Brand:
-                                        </li>
-                                        <li>
-                                            Tons
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Created:
-                                        </li>
-                                        <li>
-                                            2022-02-15 14:41:47
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Updated:
-                                        </li>
-                                        <li>
-
-                                        </li>
-                                    </ul>
-                                </td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            Lumens:
-                                        </li> <!---->
-                                        <li>694 Lm</li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            CRI / RA:
-                                        </li> <!---->
-                                        <li>RA &gt; 90</li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Wattage:
-                                        </li> <!---->
-                                        <li>9.5W</li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            IP Rating:
-                                        </li> <!---->
-                                        <li>IP44</li>
-                                    </ul>
-                                </td>
-                                <td><span style="display: none;">CP: NTD 1,000<br></span>
-                                    <span>SRP: PHP 4,000<br></span> <span>QP: PHP 0<br></span></td>
-                                <td>
-                                    <button id="edit01"><i aria-hidden="true" class="fas fa-caret-right"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-
-                                <td><img
-                                        src="https://storage.cloud.google.com/feliiximg/1640223836_TONS_WALL_OUTDOOR_2.jpg">
-                                </td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            ID:
-                                        </li>
-                                        <li>
-                                            25
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Code:
-                                        </li>
-                                        <li></li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Category:
-                                        </li>
-                                        <li>
-                                            Lighting
-                                        </li> <!----></ul>
-                                    <ul>
-                                        <li>
-                                            Tags:
-                                        </li>
-                                        <li><span></span></li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Brand:
-                                        </li>
-                                        <li>
-                                            RSA
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Created:
-                                        </li>
-                                        <li>
-                                            2021-12-23 09:55:16
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Updated:
-                                        </li>
-                                        <li>
-                                            2021-12-23 11:51:09
-                                        </li>
-                                    </ul>
-                                </td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            Beam Angle:
-                                        </li>
-                                        <li><span>1</span><span>2</span><span>3</span></li> <!----></ul>
-                                    <ul>
-                                        <li>
-                                            Lumens:
-                                        </li> <!---->
-                                        <li>4</li>
-                                    </ul>
-                                </td>
-                                <td><span style="display: none;">CP: NTD 0<br></span> <span>SRP: PHP 0<br></span> <span>QP: PHP 500 ~ PHP 500<br></span>
-                                </td>
-                                <td>
-                                    <button id="edit01"><i aria-hidden="true" class="fas fa-caret-right"></i></button>
-                                </td>
-                            </tr>
-
+                            
 
                             </tbody>
                         </table>
 
                     </div>
 
-
+<!--
                     <div>
                         <table id="tb_product_list" class="table  table-sm table-bordered">
                             <thead>
@@ -3440,7 +3276,7 @@ header( 'location:index' );
                                     <span>QP: {{ item.quoted_price }}<br></span>
                                 </td>
                                 <td>
-                                    <button id="edit01" @click="btnEditClick(item.id)"><i
+                                    <button id="edit01"><i
                                             class="fas fa-caret-right"></i></i>
                                     </button>
 
@@ -3449,7 +3285,7 @@ header( 'location:index' );
                             </tbody>
                         </table>
                     </div>
-
+                            -->
 
                 </div>
 
@@ -3467,26 +3303,34 @@ header( 'location:index' );
         <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
 
             <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
-
-                <div class="upper_section">
+                
+            <template v-if="product.variation_mode != 1">
+            <div class="upper_section">
                     <div class="imagebox">
-                        <div class="selected_image"><img
-                                        src="https://storage.cloud.google.com/feliiximg/1640223836_TONS_WALL_OUTDOOR_2.jpg">
-                        </div>
-                        <div class="image_list"><img
-                                        src="https://storage.cloud.google.com/feliiximg/1640223836_TONS_WALL_OUTDOOR_2.jpg"> <!----></div>
+                        <div class="selected_image">
+                        <img :src="url">
+                    </div>
+                    <div class="image_list">
+                        <img v-if="product.photo1" :src="img_url + product.photo1" @click="change_url(product.photo1)"/>
+                        <img v-if="product.photo2" :src="img_url + product.photo2" @click="change_url(product.photo2)"/>
+                        <img v-if="product.photo3" :src="img_url + product.photo3" @click="change_url(product.photo3)"/>
+                        <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                    </div>
                     </div>
                     <div class="infobox">
-                        <div class="basic_info"><h3>DA-933R(C7)</h3> <h6>TONS</h6> <h6>Lighting</h6>
+                        <div class="basic_info"><h3>{{product.code}}</h3> <h6>{{product.brand}}</h6> 
+                        <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
+                        <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{ product.sub_category_name}}</h6>
                             <!---->
-                            <div class="tags"><span>CEILING</span><span>INDOOR</span></div>
+                            <div class="tags"><span v-for="(it, index) in product.tags">{{ it }}</span></div>
                         </div>
                         <ul class="price_stock">
                             <li>
-                                Retail Price: <span>PHP 6,000</span><span></span></li>
+                                Retail Price: <span>{{product.price}}</span><span></span></li>
                             <li>
-                                Quoted Price: <span>PHP 0</span><span></span></li>
+                                Quoted Price: <span>{{product.quoted_price}}</span><span></span></li>
                         </ul>
+                        
                         <ul class="variants" style="display: none;">
                             <li>
                                 Select:
@@ -3503,6 +3347,8 @@ header( 'location:index' );
                             <li style="display: none;"><select class="form-control">
                                 <option value=""></option>
                             </select></li> <!----><!----><!----></ul>
+
+
                         <div class="btnbox">
                             <ul>
                                 <li>
@@ -3524,7 +3370,7 @@ header( 'location:index' );
 
                             <ul>
                                 <li>
-                                    <button class="btn btn-warning">Cancel</button>
+                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
                                 </li>
 
                             </ul>
@@ -3534,76 +3380,30 @@ header( 'location:index' );
                 <div class="middle_section"><h5>Specification</h5>
                     <table>
                         <tbody>
-                        <tr>
-                            <td>
-                                Beam Angle
-                            </td>
-                            <td>
-                                30⁰
-                            </td>
-                            <td>
-                                Lumens
-                            </td>
-                            <td> 420 lm</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                CRI / RA
-                            </td>
-                            <td>
-                                &gt; 90
-                            </td>
-                            <td>
-                                CCT
-                            </td>
-                            <td> 3000K</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Wattage
-                            </td>
-                            <td>
-                                5W
-                            </td>
-                            <td>
-                                IP Rating
-                            </td>
-                            <td> IP44</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Life Hours
-                            </td>
-                            <td>
-                                50,000 hours
-                            </td>
-                            <td>
-                                Color Finish
-                            </td>
-                            <td> SILVER</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Installation
-                            </td>
-                            <td>
-                                RECESSED
-                            </td>
-                            <td>
-
-                            </td>
-                            <td></td>
-                        </tr>
+                            <template v-for="(item, index) in specification">
+                                <tr>
+                                    <td>
+                                        {{item.k1}}
+                                    </td>
+                                    <td>
+                                        {{item.v1}}
+                                    </td>
+                                    <td>
+                                        {{item.k2}}
+                                    </td>
+                                    <td> {{item.v2}}</td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div> <!---->
                 <div class="lower_section"><h5>Description</h5>
                     <p>
-
+                    {{ product.description }}
                     </p>
                 </div>
-
-
+                </template>
+<template v-if="product.variation_mode == 1">
                 <div class="upper_section">
 
                     <div class="imagebox">
@@ -3611,9 +3411,9 @@ header( 'location:index' );
                             <img :src="url">
                         </div>
                         <div class="image_list">
-                            <img v-if="url1" :src="url1" @click="change_url(url1)"/>
-                            <img v-if="url2" :src="url2" @click="change_url(url2)"/>
-                            <img v-if="url3" :src="url3" @click="change_url(url3)"/>
+                        <img v-if="product.photo1" :src="img_url + product.photo1" @click="change_url(product.photo1)"/>
+                        <img v-if="product.photo2" :src="img_url + product.photo2" @click="change_url(product.photo2)"/>
+                        <img v-if="product.photo3" :src="img_url + product.photo3" @click="change_url(product.photo3)"/>
                             <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
                         </div>
 
@@ -3622,23 +3422,22 @@ header( 'location:index' );
 
                     <div class="infobox">
                         <div class="basic_info">
-                            <h3>{{code}}</h3>
-                            <h6>{{brand}}</h6>
-                            <h6 v-if="category == 'Lighting'">{{ category}}</h6>
-                            <h6 v-if="category != 'Lighting'">{{ category}} >> {{ sub_category_name}}</h6>
+                        <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6> 
+                            <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
+                            <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{ product.sub_category_name}}</h6>
                             <div class="tags">
-                                <span v-for="(it, index) in tags">{{ it }}</span>
+                                <span v-for="(it, index) in product.tags">{{ it }}</span>
                             </div>
                         </div>
 
                         <ul class="price_stock">
 
                             <li>
-                                Retail Price: <span>{{price}}</span><span></span>
+                                Retail Price: <span>{{product.price}}</span><span></span>
                             </li>
 
                             <li>
-                                Quoted Price: <span>{{quoted_price}}</span><span></span>
+                                Quoted Price: <span>{{product.quoted_price}}</span><span></span>
                             </li>
 
                         </ul>
@@ -3647,38 +3446,38 @@ header( 'location:index' );
                             <li>
                                 Select:
                             </li>
-                            <li v-if="variation1_value[0] !== '' && variation1_value[0] !== undefined">
-                                {{ variation1 !== 'custom' ? variation1 : variation1_custom}}
+                            <li v-if="product.variation1_value[0] !== '' && product.variation1_value[0] !== undefined">
+                                {{ product.variation1 !== 'custom' ? product.variation1 : product.variation1_custom}}
                             </li>
-                            <li v-show="variation1_value[0] !== '' && variation1_value[0] !== undefined">
+                            <li v-show="product.variation1_value[0] !== '' && product.variation1_value[0] !== undefined">
                                 <select class="form-control" v-model="v1" @change="change_v()">
                                     <option value=""></option>
-                                    <option v-for="(item, index) in variation1_value" :value="item" :key="item">{{item}}
+                                    <option v-for="(item, index) in product.variation1_value" :value="item" :key="item">{{item}}
                                     </option>
                                 </select>
                             </li>
-                            <li v-if="variation2_value[0] !== '' && variation2_value[0] !== undefined">
-                                {{ variation2 !== 'custom' ? variation2 : variation2_custom }}
+                            <li v-if="product.variation2_value[0] !== '' && product.variation2_value[0] !== undefined">
+                                {{ product.variation2 !== 'custom' ? product.variation2 : product.variation2_custom }}
                             </li>
-                            <li v-show="variation2_value[0] !== '' && variation2_value[0] !== undefined">
+                            <li v-show="product.variation2_value[0] !== '' && product.variation2_value[0] !== undefined">
                                 <select class="form-control" v-model="v2" @change="change_v()">
                                     <option value=""></option>
-                                    <option v-for="(item, index) in variation2_value" :value="item" :key="item">{{item}}
+                                    <option v-for="(item, index) in product.variation2_value" :value="item" :key="item">{{item}}
                                     </option>
                                 </select>
                             </li>
-                            <li v-if="variation3_value[0] !== '' && variation3_value[0] !== undefined">
-                                {{ variation3 !== 'custom' ? variation3 : variation3_custom }}
+                            <li v-if="product.variation3_value[0] !== '' && product.variation3_value[0] !== undefined">
+                                {{ product.variation3 !== 'custom' ? product.variation3 : product.variation3_custom }}
                             </li>
-                            <li v-show="variation3_value[0] !== '' && variation3_value[0] !== undefined">
+                            <li v-show="product.variation3_value[0] !== '' && product.variation3_value[0] !== undefined">
                                 <select class="form-control" v-model="v3" @change="change_v()">
                                     <option value=""></option>
-                                    <option v-for="(item, index) in variation3_value" :value="item" :key="item">{{item}}
+                                    <option v-for="(item, index) in product.variation3_value" :value="item" :key="item">{{item}}
                                     </option>
                                 </select>
                             </li>
 
-                            <template v-for="(item, index) in accessory_infomation" v-if="show_accessory">
+                            <template v-for="(item, index) in product.accessory_infomation" v-if="show_accessory">
                                 <li>{{ item.category }}</li>
                                 <li>
                                     <select class="selectpicker" data-width="100%" :id="'tag'+index">
@@ -3712,7 +3511,7 @@ header( 'location:index' );
 
                             <ul>
                                 <li>
-                                    <button class="btn btn-warning">Cancel</button>
+                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
                                 </li>
 
                             </ul>
@@ -3723,7 +3522,7 @@ header( 'location:index' );
                 </div>
 
 
-                <div class="middle_section">
+                <div class="middle_section" v-if="specification.length > 0">
                     <h5>Specification</h5>
 
                     <table>
@@ -3749,18 +3548,18 @@ header( 'location:index' );
 
                 </div>
 
-                <div class="middle_section" v-if="related_product.length > 0">
+                <div class="middle_section" v-if="product.related_product">
                     <h5>Related Products</h5>
 
                     <div id="carouselExampleControls" class="carousel slide">
 
                         <div class="carousel-inner">
 
-                            <div v-for='(g, groupIndex) in groupedItems'
+                            <div v-for='(g, groupIndex) in product.groupedItems'
                                  :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
                                 <div class="row custom">
                                     <div class="col custom" v-for='(item, index) in g'>
-                                        <img :src="baseURL + item.photo1" :alt="'No Product Picture'">
+                                        <img :src="img_url + item.photo1" :alt="'No Product Picture'">
                                         <div>
                                             <a :href="'product_display?id=' + item.id">
                                                 {{ item.code }}
@@ -3786,12 +3585,15 @@ header( 'location:index' );
                 </div>
 
 
-                <div class="lower_section">
+                <div class="lower_section" v-if="(product.notes != null && product.notes != '') || product.description != ''">
                     <h5>Description</h5>
                     <p>
-                        {{ description }}
+                        {{ product.description }}
                     </p>
 
+                    <p v-if="product.notes != null && product.notes != ''">
+                        Notes: {{ product.notes }}
+                    </p>
                     <!--
                     <div class="desc_imgbox">
                         <img src="images/realwork.png">
@@ -3801,10 +3603,10 @@ header( 'location:index' );
                     </div>
                     -->
                 </div>
-
+                </template>
 
             </div>
-
+            
         </div>
 
 

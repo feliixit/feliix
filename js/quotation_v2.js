@@ -8,7 +8,7 @@ var app = new Vue({
       id:0,
 
       img_url: 'https://storage.cloud.google.com/feliiximg/',
-    
+       
       // menu
       show_header: false,
       show_footer: false,
@@ -89,6 +89,9 @@ var app = new Vue({
   
   
       receive_records: [],
+
+      product_records: [],
+      product : {},
   
       title_info: {},
       template: {},
@@ -147,15 +150,17 @@ var app = new Vue({
 
       // version II new parameters
 
-      fil_tag : [],
+      
 
         // paging
-        page: 1,
-        pg:0,
-        //perPage: 10,
-        pages: [],
+        product_page: 1,
+    pg:0,
+    //perPage: 10,
+    product_pages: [],
 
-        pages_10: [],
+    product_pages_10: [],
+
+    product_total:0,
 
         inventory: [
         {name: '10', id: 10},
@@ -198,6 +203,21 @@ var app = new Vue({
         // vat for each product
         product_vat : '',
 
+        // info
+        name :"",
+        title: "",
+        is_manager: "",
+
+        url : "",
+
+        brands: [],
+        fil_brand: "",
+        fil_code: "",
+        fil_tag : [],
+
+        special_infomation: [],
+        special_infomation_detail: [],
+        attributes:[],
     },
   
     created() {
@@ -226,17 +246,26 @@ var app = new Vue({
       }
       
       this.getRecord();
-      
+      this.get_product_records();
+      this.getUserName();
+      this.get_brands();
     },
   
     computed: {
         displayedPosts() {
-//            if(this.pg == 0)
-//              this.filter_apply_new();
+            //if(this.pg == 0)
+            //  this.filter_apply_new();
       
-//            this.setPages();
-//            return this.paginate(this.receive_records);
+            this.setPages();
+            return this.paginate(this.product_records);
           },
+
+          show_ntd : function() {
+            if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+             return true;
+            else
+            return false;
+          }
     },
   
     mounted() {
@@ -352,14 +381,282 @@ var app = new Vue({
     },
   
     methods: {
+      set_up_specification() {
+        let k1 = '';
+        let k2 = '';
+ 
+        let v1 = '';
+        let v2 = '';
+ 
+       for(var i=0; i < this.special_infomation.length; i++)
+       {
+         if(this.special_infomation[i].value != "")
+         {
+           if(k1 == "")
+           {
+             k1 = this.special_infomation[i].category;
+             v1 = this.special_infomation[i].value;
+           }else if(k1 !== "" && k2 == "")
+           {
+             k2 = this.special_infomation[i].category;
+             v2 = this.special_infomation[i].value;
+ 
+             obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+             this.specification.push(obj);
+             k1  = '';
+             k2  = '';
+             v1  = '';
+             v2  = '';
+           }
+         }
+       }
+ 
+       if(k1 == "" && this.product.moq !== "")
+       {
+         k1 = 'MOQ';
+         v1 = this.product.moq;
+       }else if(k1 !== "" && k2 == "" && this.product.moq !== "")
+       {
+         k2 = 'MOQ';
+         v2 = this.product.moq;
+     
+         obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+         this.specification.push(obj);
+         k1  = '';
+         k2  = '';
+         v1  = '';
+         v2  = '';
+       }
+ /*
+       if(k1 == "" && this.record[0]['notes'] !== "")
+       {
+         k1 = 'Notes';
+         v1 = this.record[0]['notes'];
+       }else if(k1 !== "" && k2 == "" && this.record[0]['notes'] !== "")
+       {
+         k2 = 'Notes';
+         v2 = this.record[0]['notes'];
+     
+         obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+         this.specification.push(obj);
+         k1  = '';
+         k2  = '';
+         v1  = '';
+         v2  = '';
+       }
+ */
+       if(k1 !== "" && k2 == "")
+       {
+         k2 = '';
+         v2 = '';
+     
+         obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+         this.specification.push(obj);
+       
+       }
+     },
 
-        
-    filter_apply_new: function() {
+      get_brands: function() {
         let _this = this;
   
-        if(_this.page < 1) _this.page = 1;
-        if (_this.page > _this.pages.length) _this.page = _this.pages.length;
-        _this.page = 1;
+        const params = {
+    
+        };
+  
+        let token = localStorage.getItem("accessToken");
+        axios
+          .get("api/product_brands", {
+            params,
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then(function(response) {
+            console.log(response.data);
+            let res = response.data;
+          
+              _this.brands = response.data;
+               
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      },
+
+      change_url: function(url) {
+        this.url = this.img_url + url;
+      },
+
+      close_single: function() {
+        $('#modal_product_display').modal('toggle');
+    },
+
+      btnEditClick: function(product) {
+        $('#modal_product_display').modal('toggle');
+        this.product = product;
+        this.url = this.img_url + this.product.photo1;
+
+        this.special_infomation = product.special_information[0].lv3[0];
+        this.attributes = product.attribute_list;
+
+        this.set_up_variants();
+        this.set_up_specification();
+      },
+
+      set_up_variants() {
+        for(var i=0; i<this.product.variation1_value.length; i++)
+        {
+          $('#variation1_value').tagsinput('add', this.product.variation1_value[i]);
+        }
+        for(var i=0; i<this.product.variation2_value.length; i++)
+        {
+          $('#variation2_value').tagsinput('add', this.product.variation2_value[i]);
+        }
+        for(var i=0; i<this.product.variation3_value.length; i++)
+        {
+          $('#variation3_value').tagsinput('add', this.product.variation3_value[i]);
+        }
+  
+        
+      },
+
+      set_special_attributes() {
+        for (let i = 0; i < this.attributes.length; i++) {
+          let cat_id = this.attributes[i].cat_id;
+          let value = this.attributes[i].value;
+          for (let j = 0; j < this.special_infomation.length; j++) {
+            if(this.special_infomation[j].cat_id == cat_id)
+              this.$refs[cat_id][0].value = value;
+          }
+        }
+      },
+
+      getUserName: function() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append('jwt', token);
+  
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/on_duty_get_myname',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            _this.name = response.data.username;
+            _this.is_manager = response.data.is_manager;
+            _this.title = response.data.title.toLowerCase();
+  
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
+      },
+      
+    get_product_records: function() {
+      let _this = this;
+
+    const params = {
+      d: '',
+      c: '',
+      t: '',
+      b: '',
+      of1: '',
+      ofd1: '',
+      of2: '',
+      ofd2: '',
+      page: 1,
+      size: 10,
+    };
+
+    let token = localStorage.getItem("accessToken");
+
+    this.product_total = 0;
+
+    axios
+      .get("api/product_calatog", {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(function(response) {
+        console.log(response.data);
+        let res = response.data;
+        if(res.length > 0) 
+        {
+          _this.product_records = response.data;
+          _this.product_total = _this.product_records[0].cnt;
+        }
+
+        if(_this.pg !== 0)
+        { 
+          _this.product_page = _this.pg;
+          _this.setPages();
+        }
+        
+  
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  },
+        
+    filter_apply_new: function() {
+      let _this = this;
+
+      _this.pg = 1;
+
+      const params = {
+        d: '',
+        c: _this.fil_code,
+        t: JSON.stringify(_this.fil_tag),
+        b: _this.fil_brand,
+        of1: '',
+        ofd1: '',
+        of2: '',
+        ofd2: '',
+        page: _this.pg,
+        size: 10,
+      };
+  
+      let token = localStorage.getItem("accessToken");
+  
+      this.product_total = 0;
+  
+      axios
+        .get("api/product_calatog", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(function(response) {
+          console.log(response.data);
+          let res = response.data;
+          if(res.length > 0) 
+          {
+            _this.product_records = response.data;
+            _this.product_total = _this.product_records[0].cnt;
+          }
+
+          _this.pg = 1;
+  
+          if(_this.pg !== 0)
+          { 
+            _this.product_page = _this.pg;
+            _this.setPages();
+          }
+          
+    
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
   
   
       },
@@ -1178,13 +1475,53 @@ var app = new Vue({
       
       },
 
-      filter_apply: function() {
+      filter_apply: function(pg) {
         let _this = this;
+
+        pg !== undefined ? this.pg  = pg : this.pg = this.product_page;
   
-        window.location.href =
-          "quotation?" +
-          "id=" +
-          _this.id
+        const params = {
+          d: '',
+          c: _this.fil_code,
+          t: JSON.stringify(_this.fil_tag),
+          b: _this.fil_brand,
+          of1: '',
+          ofd1: '',
+          of2: '',
+          ofd2: '',
+          page: _this.pg,
+          size: 10,
+        };
+    
+        let token = localStorage.getItem("accessToken");
+    
+        this.product_total = 0;
+    
+        axios
+          .get("api/product_calatog", {
+            params,
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then(function(response) {
+            console.log(response.data);
+            let res = response.data;
+            if(res.length > 0) 
+            {
+              _this.product_records = response.data;
+              _this.product_total = _this.product_records[0].cnt;
+            }
+    
+            if(_this.pg !== 0)
+            { 
+              _this.product_page = _this.pg;
+              _this.setPages();
+            }
+            
+      
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
       },
 
       cancel_header() {
@@ -1802,6 +2139,14 @@ var app = new Vue({
           this.getRecord();
       },
 
+      product_catalog_a() {
+        $('#modal_product_catalog').modal('toggle');
+      },
+
+      product_catalog_b() {
+        $('#modal_product_catalog').modal('toggle');
+    },
+
       close_all() {
         this.show_signature = false;
         this.show_footer = false;
@@ -1818,29 +2163,7 @@ var app = new Vue({
           this.filter_apply();
       },
   
-      setPages() {
-        console.log("setPages");
-        this.pages = [];
-        let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
-  
-        if (numberOfPages == 1) this.page = 1;
-        for (let index = 1; index <= numberOfPages; index++) {
-          this.pages.push(index);
-        }
-      },
-  
-      paginate: function(posts) {
-        console.log("paginate");
-        if (this.page < 1) this.page = 1;
-        if (this.page > this.pages.length) this.page = this.pages.length;
-  
-        let page = this.page;
-        let perPage = this.perPage;
-        let from = page * perPage - perPage;
-        let to = page * perPage;
-        return this.receive_records.slice(from, to);
-      },
-  
+    
       
       getLeaveCredit: function() {
         let _this = this;
@@ -2033,6 +2356,94 @@ var app = new Vue({
         }
         return result;
       },
+
+      pre_page: function(){
+        let tenPages = Math.floor((this.product_page - 1) / 10) + 1;
+  
+          this.product_page = parseInt(this.product_page) - 10;
+          if(this.product_page < 1)
+            this.product_page = 1;
+   
+          this.product_pages_10 = [];
+  
+          let from = tenPages * 10;
+          let to = (tenPages + 1) * 10;
+  
+          this.product_pages_10 = this.product_pages.slice(from, to);
+        
+      },
+  
+      nex_page: function(){
+        let tenPages = Math.floor((this.product_page - 1) / 10) + 1;
+  
+        this.product_page = parseInt(this.product_page) + 10;
+        if(this.product_page > this.product_pages.length)
+          this.product_page = this.product_pages.length;
+  
+        let from = tenPages * 10;
+        let to = (tenPages + 1) * 10;
+        let pages_10 = this.product_pages.slice(from, to);
+  
+        if(pages_10.length > 0)
+          this.product_pages_10 = pages_10;
+  
+      },
+  
+      setPages() {
+        console.log("setPages");
+        this.product_pages = [];
+        let numberOfPages = Math.ceil(this.product_total / this.perPage);
+  
+        if (numberOfPages == 1) this.product_page = 1;
+        if (this.product_page < 1) this.product_page = 1;
+        for (let index = 1; index <= numberOfPages; index++) {
+          this.product_pages.push(index);
+        }
+      },
+  
+      paginate: function(posts) {
+        console.log("paginate");
+        if (this.product_page < 1) this.product_page = 1;
+        if (this.product_page > this.product_pages.length) this.product_page = this.product_pages.length;
+  
+        let tenPages = Math.floor((this.product_page - 1) / 10);
+        if(tenPages < 0)
+          tenPages = 0;
+        this.product_pages_10 = [];
+        let from = tenPages * 10;
+        let to = (tenPages + 1) * 10;
+        
+        this.product_pages_10 = this.product_pages.slice(from, to);
+  
+        return this.product_records;
+      },
+
+      change_v(){
+        let item_product = this.shallowCopy(
+          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
+        )
+  
+        if(item_product.id != undefined)
+        {
+          if(item_product.photo != "")
+            this.url = this.img_url + item_product.photo;
+          else
+            this.url = "";
+          this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
+          this.price = "PHP " + Number(item_product.price).toLocaleString();
+          this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
+        }
+        else
+        {
+          this.url = this.img_url + this.product['photo1'];
+          this.price_ntd = this.product['price_ntd'];
+          this.price = this.product['price'];
+          this.quoted_price = this.product['quoted_price'];
+        }
+  
+      },
+
+
     }
   
   });
