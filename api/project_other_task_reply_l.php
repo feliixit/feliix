@@ -155,14 +155,15 @@ function GetTaskDetail($id, $db)
             pt.collaborator,
             due_date,
             detail,
-            message,
+            potmr.message,
             u.username,
-            pmsg.created_at,
-            pmsg.create_id _id
-            FROM project_other_task_message_l pmsg
+            potmr.created_at,
+            potmr.create_id _id
+            FROM project_other_task_message_reply_l potmr
+            left join project_other_task_message_l pmsg on potmr.message_id = pmsg.id 
             LEFT JOIN project_other_task_l pt ON pmsg.task_id = pt.id
-            LEFT JOIN user u ON u.id = pmsg.create_id
-            WHERE pmsg.id = :id";
+            LEFT JOIN user u ON u.id = potmr.create_id
+            where potmr.id = :id";
 
     $merged_results = array();
 
