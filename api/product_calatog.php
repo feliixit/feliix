@@ -270,6 +270,7 @@ else
 
                 $special_infomation = [];
                 $accessory_information = [];
+                $related_product = [];
 
                 $sub_cateory_item = [];
 
@@ -303,6 +304,7 @@ else
                 $updated_at = $row['updated_at'];
 
                 $product = GetProduct($id, $db);
+                $related_product = GetRelatedProductCode($id, $db);
 
                 $quoted_price = $row['quoted_price'];
                 $quoted_price_org = $row['quoted_price'];
@@ -607,6 +609,7 @@ else
                                     "special_information" => $special_information,
                                     "moq" => $moq,
                                     "notes" => $notes,
+                                    "related_product" => $related_product,
                                     "cnt" => $cnt,
 
                 );
@@ -940,6 +943,23 @@ function GetLevel3($cat_id, $db){
 
 }
 
+function GetRelatedProductCode($id, $db){
+    $sql = "SELECT * FROM product_category where code in (SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1)";
+
+    $sql = $sql . " ORDER BY code ";
+
+    $merged_results = [];
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+
+}
 
 function GetDetail($cat_id, $db){
     $sql = "SELECT cat_id, sn, `option` FROM product_category_attribute_detail WHERE cat_id = '". $cat_id . "' and STATUS <> -1";

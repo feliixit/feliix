@@ -218,6 +218,8 @@ var app = new Vue({
         special_infomation: [],
         special_infomation_detail: [],
         attributes:[],
+
+        toggle_type:'',
     },
   
     created() {
@@ -381,6 +383,213 @@ var app = new Vue({
     },
   
     methods: {
+      add_with_image(all) {
+
+        var photo = "";
+        var price = "";
+        var list = "";
+
+        let item_product = this.shallowCopy(
+          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
+        )
+
+        if(item_product.id != undefined)
+        {
+          if(item_product.photo != "")
+            photo = item_product.photo;
+            price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
+            list = (item_product.k1 + ': ' + item_product.v1) + "\n" + (item_product.k2 + ': ' + item_product.v2) + "\n" + (item_product.k3 + ': ' + item_product.v3) + this.product.description + "\n";
+        }
+        else
+        {
+          photo = this.product.photo1;
+          price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+          list = "";
+        }
+
+        if(all == 'all')
+        {
+          list = "";
+          list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(',') + "\n";
+          list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(',') + "\n";
+          list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(',') + "\n";
+        }
+
+        for(var i=0; i<this.specification.length; i++)
+        {
+            if(this.specification[i].k1 !== '')
+              list += this.specification[i].k1 + ': ' + this.specification[i].v1 + "\n";
+            if(this.specification[i].k2 !== '')
+              list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
+        }
+
+
+        var block_a_image = 'image';
+        var sn = 0;
+        if(this.toggle_type == 'A')
+          var items = this.temp_block_a;
+
+        if(this.toggle_type == 'B')
+          var items = this.temp_block_b;
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].id > sn) {
+            sn = items[i].id;
+          }
+        }
+
+        sn = sn + 1;
+
+        if(this.toggle_type == 'A')
+        {
+          item = {
+            id: sn,
+            url: this.img_url + photo,
+            file: {
+              name: "",
+            },
+            type : block_a_image,
+            code: this.product.code,
+            photo: photo,
+            qty: "1",
+            price: price,
+            discount: "0",
+            amount: "1",
+            desc: "",
+            list: list,
+          };
+        }
+
+        if(this.toggle_type == 'B')
+        {
+          item = {
+            id: sn,
+            
+            code: "",
+            photo: photo,
+            qty: "1",
+            price: price,
+
+            discount: "0",
+            amount: "1",
+            desc: "",
+            list: list,
+          };
+        }
+
+        items.push(item);
+      },
+
+      add_without_image(all) {
+
+        var photo = "";
+        var price = "";
+        var list = "";
+
+        let item_product = this.shallowCopy(
+          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
+        )
+
+        if(item_product.id != undefined)
+        {
+          if(item_product.photo != "")
+            photo = item_product.photo;
+            price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
+            if(this.v1 != "")
+              list += (item_product.k1 + ': ' + item_product.v1) + "\n";
+            if(this.v2 != "")
+              list += (item_product.k2 + ': ' + item_product.v2) + "\n";
+            if(this.v3 != "")
+              list += (item_product.k3 + ': ' + item_product.v3) + "\n";
+        }
+        else
+        {
+          photo = this.product.photo1;
+          price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+          list = "";
+        }
+
+        if(all == 'all')
+        {
+          list = "";
+          var k1, k2, k3;
+          k1 = this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1;
+          k2 = this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2;
+          k3 = this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3;
+
+          if(k1 !== '')
+            list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(',') + "\n";
+          if(k2 !== '')
+            list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(',') + "\n";
+          if(k3 !== '')
+            list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(',') + "\n";
+        }
+
+        for(var i=0; i<this.specification.length; i++)
+        {
+            if(this.specification[i].k1 !== '')
+              list += this.specification[i].k1 + ': ' + this.specification[i].v1 + "\n";
+            if(this.specification[i].k2 !== '')
+              list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
+        }
+
+
+        var block_a_image = 'noimage';
+        var sn = 0;
+        if(this.toggle_type == 'A')
+          var items = this.temp_block_a;
+
+        if(this.toggle_type == 'B')
+          var items = this.temp_block_b;
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].id > sn) {
+            sn = items[i].id;
+          }
+        }
+
+        sn = sn + 1;
+
+        if(this.toggle_type == 'A')
+        {
+          item = {
+            id: sn,
+            url: "",
+            file: {
+              name: "",
+            },
+            type : block_a_image,
+            code: this.product.code,
+            photo: "",
+            qty: "1",
+            price: price,
+            discount: "0",
+            amount: "1",
+            desc: "",
+            list: list,
+          };
+        }
+
+        if(this.toggle_type == 'B')
+        {
+          item = {
+            id: sn,
+            
+            code: this.product.code,
+            photo: "",
+            qty: "1",
+            price: price,
+
+            discount: "0",
+            amount: "1",
+            desc: "",
+            list: list,
+          };
+        }
+
+        items.push(item);
+      },
+      
       set_up_specification() {
         let k1 = '';
         let k2 = '';
@@ -496,6 +705,8 @@ var app = new Vue({
 
         this.special_infomation = product.special_information[0].lv3[0];
         this.attributes = product.attribute_list;
+
+        this.related_product  = product.related_product;
 
         this.set_up_variants();
         this.set_up_specification();
@@ -2140,10 +2351,12 @@ var app = new Vue({
       },
 
       product_catalog_a() {
+        this.toggle_type = 'A';
         $('#modal_product_catalog').modal('toggle');
       },
 
       product_catalog_b() {
+        this.toggle_type = 'B';
         $('#modal_product_catalog').modal('toggle');
     },
 

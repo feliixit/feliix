@@ -92,7 +92,7 @@ header( 'location:index' );
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
@@ -103,7 +103,7 @@ header( 'location:index' );
     <script type="text/javascript"
             src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
-
+    <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
     <script>
@@ -3351,20 +3351,20 @@ header( 'location:index' );
 
                         <div class="btnbox">
                             <ul>
-                                <li>
-                                    <button class="btn btn-info">Add with Image</button>
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info">Add without Image</button>
+                                    <button class="btn btn-info" @click="add_without_image()">Add without Image</button>
                                 </li>
                             </ul>
 
-                            <ul>
-                                <li>
-                                    <button class="btn btn-info">Add all spec. with Image</button>
+                            <ul v-if="product.variation_mode == 1">
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with Image</button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info">Add all spec. without Image</button>
+                                    <button class="btn btn-info" @click="add_without_image('all')">Add all spec. without Image</button>
                                 </li>
                             </ul>
 
@@ -3492,20 +3492,20 @@ header( 'location:index' );
 
                         <div class="btnbox">
                             <ul>
-                                <li>
-                                    <button class="btn btn-info">Add with Image</button>
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info">Add without Image</button>
+                                    <button class="btn btn-info" @click="add_without_image()">Add without Image</button>
                                 </li>
                             </ul>
 
                             <ul>
-                                <li>
-                                    <button class="btn btn-info">Add all spec. with Image</button>
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with Image</button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info">Add all spec. without Image</button>
+                                    <button class="btn btn-info" @click="add_without_image('all')">Add all spec. without Image</button>
                                 </li>
                             </ul>
 
