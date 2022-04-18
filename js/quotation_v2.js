@@ -708,7 +708,7 @@ var app = new Vue({
       },
 
       change_url: function(url) {
-        this.url = this.img_url + url;
+        this.url = (url !== '' ? this.img_url + url : '');
       },
 
       close_single: function() {
@@ -718,7 +718,7 @@ var app = new Vue({
       btnEditClick: function(product) {
         $('#modal_product_display').modal('toggle');
         this.product = product;
-        this.url = this.img_url + this.product.photo1;
+        this.url = this.product.photo1 !== '' ? this.img_url + this.product.photo1 : '';
 
         this.special_infomation = product.special_information[0].lv3[0];
         this.attributes = product.attribute_list;

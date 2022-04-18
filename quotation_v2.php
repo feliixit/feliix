@@ -3123,7 +3123,7 @@ header( 'location:index' );
                             <tr v-for="(item, index) in displayedPosts">
 
                                 <td><img
-                                    :src="img_url + item.photo1">
+                                    :src="img_url + item.photo1" v-if="item.photo1 !== ''">
                                 </td>
                                 <td>
                                     <ul>
@@ -3150,11 +3150,11 @@ header( 'location:index' );
                                         <li v-if="item.category != 'Lighting'">
                                             {{ item.category}} >> {{ item.sub_category_name}}
                                         </li> <!----></ul>
-                                    <ul v-if="item.tags !== undefined ? item.tags[0] !== '' : false">
+                                    <ul>
                                         <li>
                                             Tags:
                                         </li>
-                                        <li><span v-for="(it, index) in item.tags">{{ it }}</span></li>
+                                        <li><span v-for="(it, index) in item.tags" v-if="item.tags !== undefined ? item.tags[0] !== '' : false">{{ it }}</span></li>
                                     </ul>
                                     <ul>
                                         <li>
@@ -3339,7 +3339,7 @@ header( 'location:index' );
             <div class="upper_section">
                     <div class="imagebox">
                         <div class="selected_image">
-                        <img :src="url">
+                        <img :src="url" v-if="url !== ''">
                     </div>
                     <div class="image_list">
                         <img v-if="product.photo1" :src="img_url + product.photo1" @click="change_url(product.photo1)"/>
