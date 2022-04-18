@@ -3435,7 +3435,7 @@ header( 'location:index' );
 
                         <div class="carousel-inner">
 
-                            <div v-for='(g, groupIndex) in product.groupedItems'
+                            <div v-for='(g, groupIndex) in groupedItems'
                                  :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
                                 <div class="row custom">
                                     <div class="col custom" v-for='(item, index) in g'>
@@ -3624,7 +3624,7 @@ header( 'location:index' );
 
                         <div class="carousel-inner">
 
-                            <div v-for='(g, groupIndex) in product.groupedItems'
+                            <div v-for='(g, groupIndex) in groupedItems'
                                  :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
                                 <div class="row custom">
                                     <div class="col custom" v-for='(item, index) in g'>
