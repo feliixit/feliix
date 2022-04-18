@@ -214,6 +214,7 @@ var app = new Vue({
         fil_brand: "",
         fil_code: "",
         fil_tag : [],
+        fil_id: "",
 
         special_infomation: [],
         special_infomation_detail: [],
@@ -410,9 +411,10 @@ var app = new Vue({
         if(all == 'all')
         {
           list = "";
-          list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(',') + "\n";
-          list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(',') + "\n";
-          list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(',') + "\n";
+          list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n";
+          list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n";
+          list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
+          photo = this.product.photo1;
         }
 
         for(var i=0; i<this.specification.length; i++)
@@ -438,25 +440,28 @@ var app = new Vue({
           }
         }
 
+        list.replace(/\n+$/, "");
         sn = sn + 1;
 
         if(this.toggle_type == 'A')
         {
           item = {
             id: sn,
-            url: this.img_url + photo,
+            url: photo !== '' ? this.img_url + photo  : '',
             file: {
               name: "",
             },
             type : block_a_image,
             code: this.product.code,
             photo: photo,
-            qty: "1",
+            qty: "",
             price: price,
             discount: "0",
-            amount: "1",
+            amount: "",
             desc: "",
             list: list,
+            num:"",
+            pid: this.product.id,
           };
         }
 
@@ -471,13 +476,17 @@ var app = new Vue({
             price: price,
 
             discount: "0",
-            amount: "1",
+            amount: "",
             desc: "",
             list: list,
+            num:"",
+            pid: this.product.id,
           };
         }
 
         items.push(item);
+
+        alert('Add Successfully');
       },
 
       add_without_image(all) {
@@ -518,11 +527,11 @@ var app = new Vue({
           k3 = this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3;
 
           if(k1 !== '')
-            list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(',') + "\n";
+            list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n";
           if(k2 !== '')
-            list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(',') + "\n";
+            list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n";
           if(k3 !== '')
-            list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(',') + "\n";
+            list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
         }
 
         for(var i=0; i<this.specification.length; i++)
@@ -533,6 +542,7 @@ var app = new Vue({
               list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
         }
 
+        list.replace(/\n+$/, "");
 
         var block_a_image = 'noimage';
         var sn = 0;
@@ -561,12 +571,14 @@ var app = new Vue({
             type : block_a_image,
             code: this.product.code,
             photo: "",
-            qty: "1",
+            qty: "",
             price: price,
             discount: "0",
-            amount: "1",
+            amount: "",
             desc: "",
             list: list,
+            num:"",
+            pid: this.product.id,
           };
         }
 
@@ -581,13 +593,16 @@ var app = new Vue({
             price: price,
 
             discount: "0",
-            amount: "1",
+            amount: "",
             desc: "",
             list: list,
+            num:"",
+            pid: this.product.id,
           };
         }
 
         items.push(item);
+        alert('Add Successfully');
       },
       
       set_up_specification() {
@@ -596,6 +611,8 @@ var app = new Vue({
  
         let v1 = '';
         let v2 = '';
+
+        this.specification = [];
  
        for(var i=0; i < this.special_infomation.length; i++)
        {
@@ -825,7 +842,7 @@ var app = new Vue({
       _this.pg = 1;
 
       const params = {
-        d: '',
+        d: _this.fil_id,
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
@@ -839,6 +856,7 @@ var app = new Vue({
   
       let token = localStorage.getItem("accessToken");
   
+      this.product_records = [];
       this.product_total = 0;
   
       axios
@@ -1617,6 +1635,8 @@ var app = new Vue({
           amount: "",
           desc: "",
           list: "",
+          num:"",
+          pid:0,
         };
 
         items.push(item);
@@ -1649,6 +1669,8 @@ var app = new Vue({
           amount: "",
           desc: "",
           list: "",
+          num:"",
+          pid:0,
         };
 
         items.push(item);
@@ -1692,7 +1714,7 @@ var app = new Vue({
         pg !== undefined ? this.pg  = pg : this.pg = this.product_page;
   
         const params = {
-          d: '',
+          d: _this.fil_id,
           c: _this.fil_code,
           t: JSON.stringify(_this.fil_tag),
           b: _this.fil_brand,

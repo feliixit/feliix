@@ -280,9 +280,9 @@ header( 'location:index' );
         #tb_product_list tbody tr td:nth-of-type(5) button {
             border: 2px solid black;
             width: 34px;
+            height: 34px;
             box-sizing: border-box;
             padding: 6px;
-            font-size: 20px;
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) ul:last-of-type {
@@ -799,6 +799,7 @@ header( 'location:index' );
         .tb_format1 tbody tr td div.code {
             font-size: 16px;
             font-weight: 800;
+            word-break: break-all;
         }
 
         .tb_format1 tbody tr td div.brief {
@@ -941,6 +942,7 @@ header( 'location:index' );
         .tb_format2 tbody tr td div.code {
             font-size: 16px;
             font-weight: 800;
+            word-break: break-all;
         }
 
         .tb_format2 tbody tr td div.brief {
@@ -1628,23 +1630,26 @@ header( 'location:index' );
             background-color: #707071;
         }
 
+        .modal .modal_function .left_function{
+            width: 90%;
+            margin-right: 20px;
+        }
 
         .modal .modal_function input[type='text'] {
-            height: 30px;
+            height: 38px;
             border: 1px solid #707070;
-            font-size: 14px;
+            font-size: 16px;
             width: 250px;
-            margin: 5px 10px 5px 0;
+            margin: 5px 20px 5px 0;
         }
 
         .modal .modal_function select {
             background-image: url(images/ui/icon_form_select_arrow_gray.svg);
             border: 1px solid #707070;
             padding: 1px 3px 1px 10px;
-            font-size: 14px;
-            height: 30px;
-            width: 170px;
-            margin-right: 10px;
+            font-size: 16px;
+            height: 38px;
+            width: 280px;
         }
 
         .modal .modal_function select:nth-of-type(2) {
@@ -1654,6 +1659,22 @@ header( 'location:index' );
         .modal .modal_function > a.btn {
             margin-left: 10px;
             color: #FFF !important;
+        }
+
+        .modal .modal_function button.btn.dropdown-toggle {
+            background-color: white;
+            border: 1px solid #999;
+            border-radius: 0;
+        }
+
+        .modal .modal_function ul.dropdown-menu.inner li {
+            display: block;
+            border-right: none;
+        }
+
+        .modal .modal_function .dropdown-menu > .bs-searchbox > input[type='search'] {
+            border: 1px solid #ced4da;
+            font-size: 14px;
         }
 
         .upper_section {
@@ -1905,6 +1926,8 @@ header( 'location:index' );
             top: 35%;
             width: 4%;
         }
+
+
 
 
         @media print {
@@ -2187,6 +2210,7 @@ header( 'location:index' );
 
                                 <ul v-for="(block, index) in temp_block_a">
                                     <li>
+                                        <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num"> <input type="text" v-model="block.pid" hidden><br>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
                                         <span v-if="block.type == 'image' ">Image:</span>
                                         <div v-if="block.type == 'image' "
@@ -2241,6 +2265,7 @@ header( 'location:index' );
 
                                 <ul v-for="(block, index) in temp_block_b">
                                     <li>
+                                        <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num"> <input type="text" v-model="block.pid" hidden><br>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
                                         <span>Price:</span> <input type="number" v-model="block.price"
                                                                    @change="chang_discount(block)"> Discount: <input
@@ -2712,7 +2737,7 @@ header( 'location:index' );
 
                         <tbody v-if="tp.type == 'A'">
                         <tr v-for="(bk, index) in tp.blocks">
-                            <td>{{ index + 1 }}</td>
+                            <td>{{ bk.num }}</td>
                             <td class="pic" v-if="bk.type == 'image'">
                                 <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
                             </td>
@@ -2723,8 +2748,7 @@ header( 'location:index' );
                             </td>
                             <td colspan="2" v-if="bk.type == ''">
                                 <div class="code">{{ bk.code }}</div>
-                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}
-                                </div>
+                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
                             <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
@@ -2762,7 +2786,7 @@ header( 'location:index' );
 
                         <tbody v-if="tp.type == 'B'">
                         <tr v-for="(bk, index) in tp.blocks">
-                            <td>{{ index + 1 }}</td>
+                            <td>{{ bk.num }}</td>
                             <td colspan="2">
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
@@ -2991,75 +3015,82 @@ header( 'location:index' );
 
                     <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
 
-                        <input type="text" placeholder="Code" v-model="fil_code">
+                        <div class="left_function" style="width: 90%;">
 
-                        <select v-model="fil_brand">
-                            <option value="">Choose Brand...</option>
-                            <option v-for="(item, index) in brands">{{ item.brand }}</option>
-                        </select>
+                            <input type="text" placeholder="ID" v-model="fil_id">
 
-                        <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                data-width="100%" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
+                            <input type="text" placeholder="Code" v-model="fil_code">
 
-                            <optgroup label="BY INSTALL LOCATION">
-                                <option value="CEILING">CEILING</option>
-                                <option value="FLOOR">FLOOR</option>
-                                <option value="INDOOR">INDOOR</option>
-                                <option value="INGROUND">INGROUND</option>
-                                <option value="OUTDOOR">OUTDOOR</option>
-                                <option value="STREET">STREET</option>
-                                <option value="TABLE">TABLE</option>
-                                <option value="WALL">WALL</option>
-                                <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
-                                <option value="CABINET">CABINET</option>
-                                <option value="OTHER FURNITURES ">OTHER FURNITURES</option>
-                                <option value="UNDERWATER">UNDERWATER</option>
-                            </optgroup>
+                            <select v-model="fil_brand">
+                                <option value="">Choose Brand...</option>
+                                <option v-for="(item, index) in brands">{{ item.brand }}</option>
+                            </select>
 
-                            <optgroup label="INSTALL METHOD">
-                                <option value="POLE-MOUNTED">POLE-MOUNTED</option>
-                                <option value="RECESSED">RECESSED</option>
-                                <option value="SURFACE-MOUNTED">SURFACE-MOUNTED</option>
-                                <option value="SUSPENDED">SUSPENDED</option>
-                                <option value="STAND-ALONE">STAND-ALONE</option>
-                            </optgroup>
+                            <br>
 
-                            <optgroup label="BY TYPE / FUNCTION">
-                                <option value="ASSEMBLED">ASSEMBLED</option>
-                                <option value="BOLLARD">BOLLARD</option>
-                                <option value="LED BULB">LED BULB</option>
-                                <option value="CUSTOMIZED">CUSTOMIZED</option>
-                                <option value="DIMMER">DIMMER</option>
-                                <option value="DIRECTIONAL">DIRECTIONAL</option>
-                                <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
-                                <option value="LED DRIVER">LED DRIVER</option>
-                                <option value="FLOOD LIGHT">FLOOD LIGHT</option>
-                                <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
-                                <option value="LED STRIP">LED STRIP</option>
-                                <option value="LINEAR LIGHT">LINEAR LIGHT</option>
-                                <option value="PANEL LIGHT">PANEL LIGHT</option>
-                                <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
-                                <option value="TRACK LIGHT">TRACK LIGHT</option>
-                                <option value="TROFFER LIGHT">TROFFER LIGHT</option>
-                                <option value="LINEAR LIGHT">LINEAR LIGHT</option>
-                                <option value="WALL WASHER">WALL WASHER</option>
-                                <option value="LIGHTBOX">LIGHTBOX</option>
-                                <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
-                                <option value="UV LED">UV LED</option>
-                                <option value="ALUMINUM PROFILE">ALUMINUM PROFILE</option>
-                                <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
-                                <option value="LED TUBE">LED TUBE</option>
-                                <option value="STAGE LIGHT">STAGE LIGHT</option>
-                                <option value="AUDIO EQUIPMENT">AUDIO EQUIPMENT</option>
-                            </optgroup>
+                            <select class="selectpicker" multiple data-live-search="true" data-size="8"
+                                    data-width="100%" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
 
-                            <optgroup label="ACCESSORY">
-                                <option value="FUNCTIONAL ACCESSORY">FUNCTIONAL ACCESSORY</option>
-                                <option value="INSTALL ACCESSORY">INSTALL ACCESSORY</option>
-                                <option value="REPLACEMENT PART">REPLACEMENT PART</option>
-                            </optgroup>
+                                <optgroup label="BY INSTALL LOCATION">
+                                    <option value="CEILING">CEILING</option>
+                                    <option value="FLOOR">FLOOR</option>
+                                    <option value="INDOOR">INDOOR</option>
+                                    <option value="INGROUND">INGROUND</option>
+                                    <option value="OUTDOOR">OUTDOOR</option>
+                                    <option value="STREET">STREET</option>
+                                    <option value="TABLE">TABLE</option>
+                                    <option value="WALL">WALL</option>
+                                    <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
+                                    <option value="CABINET">CABINET</option>
+                                    <option value="OTHER FURNITURES ">OTHER FURNITURES</option>
+                                    <option value="UNDERWATER">UNDERWATER</option>
+                                </optgroup>
 
-                        </select>
+                                <optgroup label="INSTALL METHOD">
+                                    <option value="POLE-MOUNTED">POLE-MOUNTED</option>
+                                    <option value="RECESSED">RECESSED</option>
+                                    <option value="SURFACE-MOUNTED">SURFACE-MOUNTED</option>
+                                    <option value="SUSPENDED">SUSPENDED</option>
+                                    <option value="STAND-ALONE">STAND-ALONE</option>
+                                </optgroup>
+
+                                <optgroup label="BY TYPE / FUNCTION">
+                                    <option value="ASSEMBLED">ASSEMBLED</option>
+                                    <option value="BOLLARD">BOLLARD</option>
+                                    <option value="LED BULB">LED BULB</option>
+                                    <option value="CUSTOMIZED">CUSTOMIZED</option>
+                                    <option value="DIMMER">DIMMER</option>
+                                    <option value="DIRECTIONAL">DIRECTIONAL</option>
+                                    <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
+                                    <option value="LED DRIVER">LED DRIVER</option>
+                                    <option value="FLOOD LIGHT">FLOOD LIGHT</option>
+                                    <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
+                                    <option value="LED STRIP">LED STRIP</option>
+                                    <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+                                    <option value="PANEL LIGHT">PANEL LIGHT</option>
+                                    <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
+                                    <option value="TRACK LIGHT">TRACK LIGHT</option>
+                                    <option value="TROFFER LIGHT">TROFFER LIGHT</option>
+                                    <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+                                    <option value="WALL WASHER">WALL WASHER</option>
+                                    <option value="LIGHTBOX">LIGHTBOX</option>
+                                    <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
+                                    <option value="UV LED">UV LED</option>
+                                    <option value="ALUMINUM PROFILE">ALUMINUM PROFILE</option>
+                                    <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
+                                    <option value="LED TUBE">LED TUBE</option>
+                                    <option value="STAGE LIGHT">STAGE LIGHT</option>
+                                    <option value="AUDIO EQUIPMENT">AUDIO EQUIPMENT</option>
+                                </optgroup>
+
+                                <optgroup label="ACCESSORY">
+                                    <option value="FUNCTIONAL ACCESSORY">FUNCTIONAL ACCESSORY</option>
+                                    <option value="INSTALL ACCESSORY">INSTALL ACCESSORY</option>
+                                    <option value="REPLACEMENT PART">REPLACEMENT PART</option>
+                                </optgroup>
+
+                            </select>
+                        </div>
 
                         <a class="btn small green" @click="filter_apply_new()">Search</a>
 
@@ -3377,7 +3408,7 @@ header( 'location:index' );
                         </div>
                     </div>
                 </div>
-                <div class="middle_section"><h5>Specification</h5>
+                <div class="middle_section" v-if="specification.length > 0"><h5>Specification</h5>
                     <table>
                         <tbody>
                             <template v-for="(item, index) in specification">
@@ -3397,7 +3428,7 @@ header( 'location:index' );
                         </tbody>
                     </table>
                 </div> <!---->
-                <div class="lower_section"><h5>Description</h5>
+                <div class="lower_section"  v-if="(product.notes != null && product.notes != '') || product.description != ''"><h5>Description</h5>
                     <p>
                     {{ product.description }}
                     </p>
@@ -3548,7 +3579,7 @@ header( 'location:index' );
 
                 </div>
 
-                <div class="middle_section" v-if="product.related_product">
+                <div class="middle_section" v-if="product.related_product !== undefined ? product.related_product.length !== 0 : false">
                     <h5>Related Products</h5>
 
                     <div id="carouselExampleControls" class="carousel slide">

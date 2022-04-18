@@ -2523,6 +2523,7 @@ ALTER TABLE quotation_page_type_block MODIFY COLUMN `description`  varchar(1024)
 
 ALTER TABLE quotation_page_type_block MODIFY COLUMN listing varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
+
 -- project01 modify
 ALTER TABLE project_main
 ADD COLUMN `temp_estimate_close_prob` varchar(3) DEFAULT '' AFTER estimate_close_prob;
@@ -2614,3 +2615,7 @@ CREATE TABLE IF NOT EXISTS quotation_payment_term
   `updated_at` timestamp NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 20220418 
+ALTER TABLE quotation_page_type_block ADD COLUMN num VARCHAR(10) DEFAULT '';
+ALTER TABLE quotation_page_type_block ADD COLUMN pid bigint(20) DEFAULT 0;

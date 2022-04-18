@@ -809,7 +809,9 @@ function GetBlocks($qid, $db){
         discount,
         amount,
         description,
-        listing
+        listing,
+        num,
+        pid
         FROM   quotation_page_type_block
         WHERE  type_id = " . $qid . "
         AND `status` <> -1 
@@ -830,6 +832,8 @@ function GetBlocks($qid, $db){
         $photo = $row['photo'];
         $qty = $row['qty'];
         $price = $row['price'];
+        $num = $row['num'];
+        $pid = $row['pid'];
         $discount = $row['discount'];
         $amount = $row['amount'];
         $description = $row['description'];
@@ -847,6 +851,8 @@ function GetBlocks($qid, $db){
             "type" => $type,
             "url" => $url,
             "qty" => $qty,
+            "num" => $num,
+            "pid" => $pid,
             "price" => $price,
             "discount" => $discount,
             "amount" => $amount,
