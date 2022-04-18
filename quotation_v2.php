@@ -3427,7 +3427,42 @@ header( 'location:index' );
                             </template>
                         </tbody>
                     </table>
-                </div> <!---->
+                </div>
+                <div class="middle_section" v-if="product.related_product !== undefined ? product.related_product.length !== 0 : false">
+                    <h5>Related Products</h5>
+
+                    <div id="carouselExampleControls" class="carousel slide">
+
+                        <div class="carousel-inner">
+
+                            <div v-for='(g, groupIndex) in product.groupedItems'
+                                 :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                <div class="row custom">
+                                    <div class="col custom" v-for='(item, index) in g'>
+                                        <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                        <div>
+                                            <a :href="'product_display?id=' + item.id">
+                                                {{ item.code }}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                           data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                           data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
                 <div class="lower_section"  v-if="(product.notes != null && product.notes != '') || product.description != ''"><h5>Description</h5>
                     <p>
                     {{ product.description }}

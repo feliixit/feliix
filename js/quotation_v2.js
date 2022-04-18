@@ -411,9 +411,9 @@ var app = new Vue({
         if(all == 'all')
         {
           list = "";
-          list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n";
-          list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n";
-          list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
+          list += this.product.variation1 === "custom" ? this.product.variation1_custom : (this.product.variation1 !== '' ? this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n" : '');
+          list += this.product.variation2 === "custom" ? this.product.variation2_custom : (this.product.variation2 !== '' ? this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n" : '');
+          list += this.product.variation3 === "custom" ? this.product.variation3_custom : (this.product.variation3 !== '' ? this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n" : '');
           photo = this.product.photo1;
         }
 
