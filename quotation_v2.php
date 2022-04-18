@@ -3150,7 +3150,7 @@ header( 'location:index' );
                                         <li v-if="item.category != 'Lighting'">
                                             {{ item.category}} >> {{ item.sub_category_name}}
                                         </li> <!----></ul>
-                                    <ul>
+                                    <ul v-if="item.tags !== undefined ? item.tags[0] !== '' : false">
                                         <li>
                                             Tags:
                                         </li>
@@ -3459,7 +3459,7 @@ header( 'location:index' );
                         <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6> 
                             <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
                             <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{ product.sub_category_name}}</h6>
-                            <div class="tags">
+                            <div class="tags" v-if="product.tags !== undefined ? product.tags[0] !== '' : false">
                                 <span v-for="(it, index) in product.tags">{{ it }}</span>
                             </div>
                         </div>
