@@ -3432,6 +3432,9 @@ header( 'location:index' );
                     <p>
                     {{ product.description }}
                     </p>
+                    <p v-if="product.notes != null && product.notes != ''">
+                        Notes: {{ product.notes }}
+                    </p>
                 </div>
                 </template>
 <template v-if="product.variation_mode == 1">
@@ -3621,7 +3624,6 @@ header( 'location:index' );
                     <p>
                         {{ product.description }}
                     </p>
-
                     <p v-if="product.notes != null && product.notes != ''">
                         Notes: {{ product.notes }}
                     </p>
