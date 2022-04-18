@@ -59,6 +59,8 @@ var app = new Vue({
       pages : [],
       temp_pages : [],
 
+      
+
       // block_names
       block_names : [],
       block_value : [],
@@ -221,6 +223,8 @@ var app = new Vue({
         attributes:[],
 
         toggle_type:'',
+
+        groupedItems : [],
     },
   
     created() {
@@ -725,8 +729,18 @@ var app = new Vue({
 
         this.related_product  = product.related_product;
 
+        this.chunk(this.related_product, 4);
+
         this.set_up_variants();
         this.set_up_specification();
+      },
+
+      chunk: function(arr, size) {
+        var newArr = [];
+        for (var i=0; i<arr.length; i+=size) {
+          newArr.push(arr.slice(i, i+size));
+        }
+        this.groupedItems  = newArr;
       },
 
       set_up_variants() {
