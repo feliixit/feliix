@@ -753,10 +753,10 @@ var app = new Vue({
             _this.product = response.data[0];
             _this.url = _this.product.photo1 !== '' ? _this.img_url + _this.product.photo1 : '';
 
-            _this.special_infomation = product.special_information[0].lv3[0];
-            _this.attributes = product.attribute_list;
+            _this.special_infomation = _this.product.special_information[0].lv3[0];
+            _this.attributes = _this.product.attribute_list;
     
-            _this.related_product  = product.related_product;
+            _this.related_product  = _this.product.related_product;
     
             _this.chunk(_this.related_product, 4);
     
