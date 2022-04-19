@@ -3441,7 +3441,7 @@ header( 'location:index' );
                                     <div class="col custom" v-for='(item, index) in g'>
                                         <img :src="img_url + item.photo1" :alt="'No Product Picture'">
                                         <div>
-                                            <a :href="'product_display?id=' + item.id">
+                                            <a @click="getSingleProduct(item.id)">
                                                 {{ item.code }}
                                             </a>
                                         </div>
@@ -3630,7 +3630,7 @@ header( 'location:index' );
                                     <div class="col custom" v-for='(item, index) in g'>
                                         <img :src="img_url + item.photo1" :alt="'No Product Picture'">
                                         <div>
-                                            <a :href="'product_display?id=' + item.id">
+                                            <a @click="getSingleProduct(item.id)">
                                                 {{ item.code }}
                                             </a>
                                         </div>

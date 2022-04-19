@@ -719,6 +719,59 @@ var app = new Vue({
         $('#modal_product_display').modal('toggle');
     },
 
+    getSingleProduct : function(id) {
+      $('#modal_product_display').modal('toggle');
+
+      let _this = this;
+
+
+      const params = {
+        d: id,
+        c: '',
+        t: '',
+        b: '',
+        of1: '',
+        ofd1: '',
+        of2: '',
+        ofd2: '',
+        page: 1,
+        size: 10,
+      };
+  
+      let token = localStorage.getItem("accessToken");
+  
+      axios
+        .get("api/product_calatog", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(function(response) {
+          console.log(response.data);
+          let res = response.data;
+          if(res.length > 0) 
+          {
+            _this.product = response.data[0];
+            _this.url = _this.product.photo1 !== '' ? _this.img_url + _this.product.photo1 : '';
+
+            _this.special_infomation = product.special_information[0].lv3[0];
+            _this.attributes = product.attribute_list;
+    
+            _this.related_product  = product.related_product;
+    
+            _this.chunk(_this.related_product, 4);
+    
+            _this.set_up_variants();
+            _this.set_up_specification();
+          }
+
+    
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+    },
+
       btnEditClick: function(product) {
         $('#modal_product_display').modal('toggle');
         this.product = product;
