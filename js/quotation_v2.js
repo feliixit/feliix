@@ -720,7 +720,7 @@ var app = new Vue({
     },
 
     getSingleProduct : function(id) {
-      $('#modal_product_display').modal('toggle');
+
 
       let _this = this;
 
