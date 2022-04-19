@@ -430,7 +430,7 @@ var app = new Vue({
         }
 
         if(price == null)
-          price = this.srp !== 0 ?  this.srp : this.srp_quoted;
+        price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
 
         var block_a_image = 'image';
         var sn = 0;
@@ -525,7 +525,7 @@ var app = new Vue({
         }
 
         if(price == null)
-          price = this.srp !== 0 ?  this.srp : this.srp_quoted;
+          price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
 
         if(all == 'all')
         {
