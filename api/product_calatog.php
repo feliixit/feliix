@@ -312,6 +312,9 @@ else
                 $price_change = $row['price_change'];
                 $price_ntd_change = $row['price_ntd_change'];
 
+                $srp = 0;
+                $srp_qoute = 0;
+
                 // for price
                 $pro_price_ntd = [];
                 $pro_price_quoted = [];
@@ -359,9 +362,12 @@ else
                         $e = $pro_price[$i];
                     }
                     $s_price = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
+
+                    $srp = $e;
                 }
 
                 $s_price_ntd = "";
+                
                 if(count($pro_price_ntd) == 1)
                 {
                     $s_price_ntd = "NTD " . number_format($pro_price_ntd[0]);
@@ -397,6 +403,8 @@ else
                         $e = $pro_price_quoted[$i];
                     }
                     $s_price_quoted = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
+
+                    $srp_qoute = $e;
                 }
 
                 if($s_price == "")
@@ -611,6 +619,8 @@ else
                                     "notes" => $notes,
                                     "related_product" => $related_product,
                                     "cnt" => $cnt,
+                                    "srp" => $srp,
+                                    "srp_quoted" => $srp_quoted,
 
                 );
             }

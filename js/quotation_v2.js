@@ -429,6 +429,8 @@ var app = new Vue({
               list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
         }
 
+        if(price == null)
+          price = this.srp !== 0 ?  this.srp : this.srp_quoted;
 
         var block_a_image = 'image';
         var sn = 0;
@@ -521,6 +523,9 @@ var app = new Vue({
           price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
           list = "";
         }
+
+        if(price == null)
+          price = this.srp !== 0 ?  this.srp : this.srp_quoted;
 
         if(all == 'all')
         {
