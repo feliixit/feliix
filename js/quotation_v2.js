@@ -418,7 +418,7 @@ var app = new Vue({
           list += this.product.variation1 === "custom" ? this.product.variation1_custom : (this.product.variation1 !== '' ? this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n" : '');
           list += this.product.variation2 === "custom" ? this.product.variation2_custom : (this.product.variation2 !== '' ? this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n" : '');
           list += this.product.variation3 === "custom" ? this.product.variation3_custom : (this.product.variation3 !== '' ? this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n" : '');
-          photo = this.product.photo1;
+          //photo = this.product.photo1;
         }
 
         for(var i=0; i<this.specification.length; i++)
@@ -760,6 +760,10 @@ var app = new Vue({
 
             _this.quoted_price = _thisproduct.quoted_price;
             _this.price = _thisproduct.price;
+
+            _this.v1 = "";
+            _this.v2 = "";
+            _this.v3 = "";
     
             _this.chunk(_this.related_product, 4);
     
@@ -787,6 +791,10 @@ var app = new Vue({
 
         this.quoted_price = product.quoted_price;
         this.price = product.price;
+
+        this.v1 = "";
+        this.v2 = "";
+        this.v3 = "";
 
         this.chunk(this.related_product, 4);
 
