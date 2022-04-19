@@ -3357,9 +3357,9 @@ header( 'location:index' );
                         </div>
                         <ul class="price_stock">
                             <li>
-                                Retail Price: <span>{{product.price}}</span><span></span></li>
+                                Retail Price: <span>{{price}}</span><span></span></li>
                             <li>
-                                Quoted Price: <span>{{product.quoted_price}}</span><span></span></li>
+                                Quoted Price: <span>{{quoted_price}}</span><span></span></li>
                         </ul>
                         
                         <ul class="variants" style="display: none;">
@@ -3502,11 +3502,11 @@ header( 'location:index' );
                         <ul class="price_stock">
 
                             <li>
-                                Retail Price: <span>{{product.price}}</span><span></span>
+                                Retail Price: <span>{{price}}</span><span></span>
                             </li>
 
                             <li>
-                                Quoted Price: <span>{{product.quoted_price}}</span><span></span>
+                                Quoted Price: <span>{{quoted_price}}</span><span></span>
                             </li>
 
                         </ul>

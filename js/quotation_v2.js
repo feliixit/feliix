@@ -757,6 +757,9 @@ var app = new Vue({
             _this.attributes = _this.product.attribute_list;
     
             _this.related_product  = _this.product.related_product;
+
+            _this.quoted_price = _thisproduct.quoted_price;
+            _this.price = _thisproduct.price;
     
             _this.chunk(_this.related_product, 4);
     
@@ -781,6 +784,9 @@ var app = new Vue({
         this.attributes = product.attribute_list;
 
         this.related_product  = product.related_product;
+
+        this.quoted_price = product.quoted_price;
+        this.price = product.price;
 
         this.chunk(this.related_product, 4);
 
