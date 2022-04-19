@@ -418,7 +418,8 @@ var app = new Vue({
           list += this.product.variation1 === "custom" ? this.product.variation1_custom : (this.product.variation1 !== '' ? this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n" : '');
           list += this.product.variation2 === "custom" ? this.product.variation2_custom : (this.product.variation2 !== '' ? this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n" : '');
           list += this.product.variation3 === "custom" ? this.product.variation3_custom : (this.product.variation3 !== '' ? this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n" : '');
-          //photo = this.product.photo1;
+          photo = this.product.photo1;
+          price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
         }
 
         for(var i=0; i<this.specification.length; i++)
@@ -524,9 +525,6 @@ var app = new Vue({
           list = "";
         }
 
-        if(price == null)
-          price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
-
         if(all == 'all')
         {
           list = "";
@@ -541,7 +539,13 @@ var app = new Vue({
             list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n";
           if(k3 !== '')
             list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
+
+          photo = this.product.photo1;
+          price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
         }
+
+        if(price == null)
+          price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
 
         for(var i=0; i<this.specification.length; i++)
         {
