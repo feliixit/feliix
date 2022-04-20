@@ -2591,7 +2591,7 @@ function GetSvcMangerLeaveNotifiers()
 
     $sql = "SELECT user.id, username, email, title, department FROM user 
     LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id
-        WHERE user.title_id in (10, 15)";
+        WHERE user.title_id in (10, 15) and user.status = 1";
 
     $merged_results = array();
 
@@ -4272,7 +4272,7 @@ function GetNotifiersByName($names)
 
     $sql = "SELECT user.id, username, email, title, department FROM user 
     LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id
-        WHERE user.username in (" . $result . ")";
+        WHERE user.username in (" . $result . ") and user.status = 1";
 
     $merged_results = array();
 
@@ -4293,7 +4293,7 @@ function GetNotifiers($id)
 
     $sql = "SELECT user.id, username, email, title, department FROM user 
     LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id
-        WHERE user.id in (" . $id . ")";
+        WHERE user.id in (" . $id . ")  and user.status = 1";
 
     $merged_results = array();
 
@@ -4314,7 +4314,7 @@ function GetPettyVoidNotifiers()
 
     $sql = "SELECT username, email FROM expense_flow ap
     LEFT JOIN user u ON ap.uid = u.id 
-    WHERE flow in (1, 2, 3)";
+    WHERE flow in (1, 2, 3) and u.status = 1";
 
     $merged_results = array();
 
@@ -4966,7 +4966,7 @@ function GetProject01NotifiersByCatagory($catagory)
                 'Office Systems Manager',
                 'Office Systems Assistant Manager',
                 'Operations Manager',
-                'Managing Director') ";
+                'Managing Director')  and u.status = 1";
     }
     else
     {
@@ -4981,7 +4981,7 @@ function GetProject01NotifiersByCatagory($catagory)
                 'Lighting Manager',
                 'Lighting Assistant Manager',
                 'Operations Manager',
-                'Managing Director') ";
+                'Managing Director')  and u.status = 1";
     }
 
     $merged_results = array();
@@ -5010,7 +5010,7 @@ function GetProjectNotifiersByCatagory($catagory)
             ON u.title_id = ut.id 
             WHERE title IN(
                 'Office Systems Manager',
-                'Managing Director') ";
+                'Managing Director') and u.status = 1";
     }
     else
     {
@@ -5021,7 +5021,7 @@ function GetProjectNotifiersByCatagory($catagory)
             ON u.title_id = ut.id 
             WHERE title IN(
                 'Lighting Manager',
-                'Managing Director') ";
+                'Managing Director') and u.status = 1";
     }
 
     $merged_results = array();
@@ -5047,7 +5047,7 @@ function GetProjectServiceNotifiers()
             LEFT JOIN user_title ut
             ON u.title_id = ut.id 
             WHERE title IN(
-                'Service Manager') ";
+                'Service Manager') and u.status = 1";
 
 
     $merged_results = array();
@@ -5083,7 +5083,7 @@ function GetProjectNotifiers()
             'Office Systems Manager',
             'Office Systems Assistant Manager',
             'Operations Manager',
-            'Managing Director') ";
+            'Managing Director') and u.status = 1";
 
     $merged_results = array();
 
