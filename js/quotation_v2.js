@@ -767,8 +767,8 @@ var app = new Vue({
     
             _this.related_product  = _this.product.related_product;
 
-            _this.quoted_price = _thisproduct.quoted_price;
-            _this.price = _thisproduct.price;
+            _this.quoted_price = _this.product.quoted_price;
+            _this.price = _this.product.price;
 
             _this.v1 = "";
             _this.v2 = "";
