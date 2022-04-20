@@ -884,7 +884,7 @@ var app = new Vue({
           can_save = true;
       }
 
-      if(this.username.trim().toUpperCase() == 'ARGEL ARGANA')
+      if(this.username.trim().toUpperCase() == 'EDNEIL FERNANDEZ')
       {
         can_save = true;
       }

@@ -805,7 +805,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
     //if($kind == 1 && $send_mail == 'true')
     if($kind == 0 || $kind == 1)
-        $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+        $mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
         
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -1124,7 +1124,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
-    $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+    $mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -1213,7 +1213,7 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
 
     if($kind == 0 || $kind == 1)
-        $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+        $mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -1370,7 +1370,7 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC($email1, $name);
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
-    $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
+    $mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
