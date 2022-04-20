@@ -403,7 +403,12 @@ var app = new Vue({
           if(item_product.photo != "")
             photo = item_product.photo;
             price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
-            list = (item_product.k1 + ': ' + item_product.v1) + "\n" + (item_product.k2 + ': ' + item_product.v2) + "\n" + (item_product.k3 + ': ' + item_product.v3) + this.product.description + "\n";
+            if(this.v1 != "")
+              list += (item_product.k1 + ': ' + item_product.v1) + "\n";
+            if(this.v2 != "")
+              list += (item_product.k2 + ': ' + item_product.v2) + "\n";
+            if(this.v3 != "")
+              list += (item_product.k3 + ': ' + item_product.v3) + "\n";
         }
         else
         {
@@ -415,11 +420,21 @@ var app = new Vue({
         if(all == 'all')
         {
           list = "";
-          list += this.product.variation1 === "custom" ? this.product.variation1_custom : (this.product.variation1 !== '' ? this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n" : '');
-          list += this.product.variation2 === "custom" ? this.product.variation2_custom : (this.product.variation2 !== '' ? this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n" : '');
-          list += this.product.variation3 === "custom" ? this.product.variation3_custom : (this.product.variation3 !== '' ? this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n" : '');
+          var k1, k2, k3;
+          k1 = this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1;
+          k2 = this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2;
+          k3 = this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3;
+
+          if(k1 !== '')
+            list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n";
+          if(k2 !== '')
+            list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n";
+          if(k3 !== '')
+            list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
+
           photo = this.product.photo1;
-          price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+          if(this.product.price_org !== null && this.product.quoted_price_org !== null)
+            price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
         }
 
         for(var i=0; i<this.specification.length; i++)
@@ -541,7 +556,9 @@ var app = new Vue({
             list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
 
           photo = this.product.photo1;
-          price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+
+          if(this.product.price_org !== null && this.product.quoted_price_org !== null)
+            price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
         }
 
         if(price == null)
