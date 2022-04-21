@@ -398,6 +398,11 @@ var app = new Vue({
           this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
         )
 
+        if(this.product.product.length > 0 && item_product.id == undefined && all != 'all') {
+          alert('Please choose an option for each attribute');
+          return;
+        }
+
         if(item_product.id != undefined)
         {
           if(item_product.photo != "")
@@ -523,6 +528,11 @@ var app = new Vue({
         let item_product = this.shallowCopy(
           this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
         )
+
+        if(this.product.product.length > 0 && item_product.id == undefined && all != 'all') {
+          alert('Please choose an option for each attribute');
+          return;
+        }
 
         if(item_product.id != undefined)
         {
