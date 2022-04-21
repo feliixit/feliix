@@ -649,7 +649,7 @@ var app = new Vue({
         data: form_Data
       })
         .then(function (response) {
-          _this.getProjectOtherTask(_pid);
+          _this.getProjectOtherTask(_this.proof_id);
        
         })
         .catch(function (response) {
