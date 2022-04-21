@@ -1256,7 +1256,7 @@ var app = new Vue({
         data: form_Data
       })
         .then(function (response) {
-          _this.getProjectOtherTask(_this.proof_id);
+          _this.reload_task(_this.proof_id);
        
         })
         .catch(function (response) {
