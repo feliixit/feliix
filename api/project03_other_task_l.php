@@ -786,7 +786,7 @@ function GetReply($msg_id, $db, $id, $name, $msg, $uid)
 
 function GetRefMsgName($ref_id, $db)
 {
-    $sql = "select r.username replyer
+    $sql = "select distinct r.username replyer
             from project_other_task_message_reply_l pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
             where pmsgrp.id = " . $ref_id;
@@ -805,7 +805,7 @@ function GetRefMsgName($ref_id, $db)
 
 function GetRefMsgValue($ref_id, $db)
 {
-    $sql = "select message reply
+    $sql = "select distinct message reply
             from project_other_task_message_reply_l pmsgrp 
             LEFT JOIN user r ON r.id = pmsgrp.create_id 
             where pmsgrp.id = " . $ref_id;

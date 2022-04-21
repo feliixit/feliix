@@ -551,7 +551,7 @@ function GetMessage($task_id, $db, $uid)
         $filename = $row['filename'];
 
         // got it
-        $got_it = GetGotIt($row['message_id'], 'ad', $db);
+        $got_it = GetGotIt($row['message_id'], 'ds', $db);
         foreach ($got_it as $g) {
             if ($g['uid'] == $uid) {
                 $i_got_it = true;
@@ -604,7 +604,7 @@ function GetMessage($task_id, $db, $uid)
 
 function GetGotIt($msg_id, $kind, $db)
 {
-    $sql = "select u.id uid, u.username username
+    $sql = "select distinct u.id uid, u.username username
             from project_got_it g
             LEFT JOIN user u ON u.id = g.create_id
             where g.message_id = " . $msg_id . " AND g.kind = '" . $kind . "' order by g.created_at desc";
@@ -626,7 +626,7 @@ function GetGotIt($msg_id, $kind, $db)
 
 function GetGotItReply($reply_id, $kind, $db)
 {
-    $sql = "select u.id uid, u.username username
+    $sql = "select distinct u.id uid, u.username username
             from project_got_it g
             LEFT JOIN user u ON u.id = g.create_id
             where g.reply_id = " . $reply_id . " AND g.kind = '" . $kind . "' order by g.created_at desc";
@@ -736,7 +736,7 @@ function GetReply($msg_id, $db, $id, $name, $msg, $uid)
         }
 
         // got it
-        $got_it = GetGotItReply($row['replay_id'], 'ad', $db);
+        $got_it = GetGotItReply($row['replay_id'], 'ds', $db);
         // look for user_id in got_it
         foreach ($got_it as $g) {
             if ($g['uid'] == $uid) {
