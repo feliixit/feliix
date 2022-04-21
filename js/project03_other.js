@@ -581,7 +581,7 @@ var app = new Vue({
       document.getElementById('task_reply_dlg_r_' + item_id).classList.remove("show");
     },
 
-    task_load () {
+    task_load() {
       if(this.task_id_to_load != 0)
       {
         this.record = {};
@@ -591,7 +591,7 @@ var app = new Vue({
       }
     },
 
-    task_load_r () {
+    task_load_r() {
       if(this.task_id_to_load_r != 0)
       {
         this.record_r = {};
@@ -1813,6 +1813,42 @@ var app = new Vue({
 
     },
 
+    got_it_message(message_id, reply_id) {
+      let _this = this;
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      // if reply_id != 0, it means it is a reply
+      if (reply_id != 0) {
+        reply_id = message_id;
+        message_id = 0;
+      }
+
+      form_Data.append('message_id', message_id);
+      form_Data.append('reply_id', reply_id);
+      form_Data.append('kind', 'pj');
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project_got_it',
+        data: form_Data
+      })
+        .then(function (response) {
+          _this.getProjectOtherTask(_this.stage_id);
+       
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () {  });
+    },
 
     comment_create(task_id) {
       this.current_task_id = task_id;
