@@ -433,7 +433,10 @@ var app = new Vue({
             list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
 
           photo = this.product.photo1;
-          if(this.product.price_org !== null && this.product.quoted_price_org !== null)
+          if(this.product.srp !== null || this.product.srp_quoted !== null)
+            price = this.product.srp !== null ? this.product.srp : this.product.srp_quoted;
+
+          if(price == null)
             price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
         }
 
@@ -446,7 +449,7 @@ var app = new Vue({
         }
 
         if(price == null)
-        price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
+          price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
 
         var block_a_image = 'image';
         var sn = 0;
@@ -557,7 +560,10 @@ var app = new Vue({
 
           photo = this.product.photo1;
 
-          if(this.product.price_org !== null && this.product.quoted_price_org !== null)
+          if(this.product.srp !== null || this.product.srp_quoted !== null)
+            price = this.product.srp !== null ? this.product.srp : this.product.srp_quoted;
+
+          if(price == null)
             price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
         }
 
