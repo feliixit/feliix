@@ -552,7 +552,7 @@ function GetMessage($task_id, $db, $uid)
 
 function GetGotIt($msg_id, $kind, $db)
 {
-    $sql = "select distinct u.id uid, u.username username
+    $sql = "select  u.id uid, u.username username
             from project_got_it g
             LEFT JOIN user u ON u.id = g.create_id
             where g.message_id = " . $msg_id . " AND g.kind = '" . $kind . "' order by g.created_at desc";
@@ -574,7 +574,7 @@ function GetGotIt($msg_id, $kind, $db)
 
 function GetGotItReply($reply_id, $kind, $db)
 {
-    $sql = "select distinct u.id uid, u.username username
+    $sql = "select  u.id uid, u.username username
             from project_got_it g
             LEFT JOIN user u ON u.id = g.create_id
             where g.reply_id = " . $reply_id . " AND g.kind = '" . $kind . "' order by g.created_at desc";
