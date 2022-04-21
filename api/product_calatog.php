@@ -349,6 +349,7 @@ else
                 if(count($pro_price) == 1)
                 {
                     $s_price = "PHP " . number_format($pro_price[0]);
+                    $srp = $pro_price[0];
                 }
                 if(count($pro_price) > 1)
                 {
@@ -390,6 +391,7 @@ else
                 if(count($pro_price_quoted) == 1)
                 {
                     $s_price_quoted = "PHP " . number_format($pro_price_quoted[0]);
+                    $srp_quoted = $pro_price_quoted[0];
                 }
                 if(count($pro_price_quoted) > 1)
                 {
