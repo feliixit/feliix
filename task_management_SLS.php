@@ -2825,7 +2825,7 @@ catch (Exception $e) {
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                 </i>
-                                                <div class="already_read">
+                                                <div class="already_read"><template v-for="got in item.got_it">{{ got.username }}</template></div>
 
                                             </div>
                                             <div class="btnbox">
@@ -2878,7 +2878,7 @@ catch (Exception $e) {
 
                                             </div>
 
-                                            <div class="already_read" v-for="got in item.got_it">{{ got.username }}</div>
+                                            <div class="already_read"><template v-for="got in item.got_it">{{ got.username }}</template></div>
                                         </div>
                                     </li>
 
