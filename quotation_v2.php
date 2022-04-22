@@ -247,7 +247,8 @@ header( 'location:index' );
         }
 
         #tb_product_list tbody tr td:nth-of-type(2) {
-            width: 400px;
+            width: 420px;
+            padding-right: 20px
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) {
@@ -283,6 +284,7 @@ header( 'location:index' );
             height: 34px;
             box-sizing: border-box;
             padding: 6px;
+            line-height: 1.0;
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) ul:last-of-type {
@@ -310,6 +312,10 @@ header( 'location:index' );
             border-radius: 5px;
             padding: 0 7px 2px 6px;
             margin: 0 2px;
+        }
+
+        #tb_product_list ul li.code{
+            word-break: break-all;
         }
 
         .NTD_price {
@@ -1707,12 +1713,12 @@ header( 'location:index' );
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
-            padding: 0 10px 20px 20px;
+            padding: 0 10px 20px 10px;
         }
 
         .imagebox .image_list img {
-            max-width: 100px;
-            max-height: 100px;
+            width: 140px;
+            height: 140px;
             object-fit: contain;
             margin: 5px 10px;
             cursor: pointer;
@@ -1909,8 +1915,9 @@ header( 'location:index' );
         }
 
         .col.custom > img {
-            max-height: 200px;
-            max-width: 100%;
+            height: 150px;
+            width: 150px;
+            object-fit: contain;
         }
 
         .col.custom > div > a {
@@ -3138,7 +3145,7 @@ header( 'location:index' );
                                         <li>
                                             Code:
                                         </li>
-                                        <li>{{ item.code }}</li>
+                                        <li class="code">{{ item.code }}</li>
                                     </ul>
                                     <ul>
                                         <li>
@@ -3333,7 +3340,7 @@ header( 'location:index' );
 
         <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
 
-            <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
+            <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
                 
             <template v-if="product.variation_mode != 1">
             <div class="upper_section">
@@ -3349,7 +3356,7 @@ header( 'location:index' );
                     </div>
                     </div>
                     <div class="infobox">
-                        <div class="basic_info"><h3>{{product.code}}</h3> <h6>{{product.brand}}</h6> 
+                        <div class="basic_info"><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>{{product.brand}}</h6>
                         <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
                         <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{ product.sub_category_name}}</h6>
                             <!---->
@@ -3357,7 +3364,7 @@ header( 'location:index' );
                         </div>
                         <ul class="price_stock">
                             <li>
-                                Retail Price: <span>{{price}}</span><span></span></li>
+                                Suggested Retail Price: <span>{{price}}</span><span></span></li>
                             <li>
                                 Quoted Price: <span>{{quoted_price}}</span><span></span></li>
                         </ul>
