@@ -59,7 +59,7 @@ switch ($method) {
         $reply_id = (isset($_POST['reply_id']) ?  $_POST['reply_id'] : 0);
         $message = (isset($_POST['reply']) ?  $_POST['reply'] : '');
     
-        $query = "INSERT INTO project_other_task_message_reply_sl
+        $query = "INSERT INTO project_other_task_message_reply_sv
         SET
             `message_id` = :msg_id,
             `reply_id` = :reply_id,
