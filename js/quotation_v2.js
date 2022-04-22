@@ -824,7 +824,7 @@ var app = new Vue({
       btnEditClick: function(product) {
         $('#modal_product_display').modal('toggle');
         this.product = product;
-        this.url = this.product.photo1 !== '' && this.product.photo1 !== undefined ? this.img_url + this.product.photo1 : '';
+        this.url = (this.product.photo1 !== '' && this.product.photo1 !== undefined) ? this.img_url + this.product.photo1 : '';
 
         this.special_infomation = product.special_information[0].lv3[0];
         this.attributes = product.attribute_list;
