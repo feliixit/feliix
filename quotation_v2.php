@@ -3509,7 +3509,7 @@ header( 'location:index' );
                         <ul class="price_stock">
 
                             <li>
-                                Retail Price: <span>{{price}}</span><span></span>
+                                Suggested Retail Price: <span>{{price}}</span><span></span>
                             </li>
 
                             <li>
