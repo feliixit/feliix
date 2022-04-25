@@ -2934,7 +2934,7 @@ catch (Exception $e) {
         </div>
     </div>
 
-    <div id="tasks">
+    <div id="tasks" style="visibility: hidden;">
 
         <div style="text-align: right;">
             <button style="border: none;" onclick="hideWindow('#tasks')"><i class="fa fa-times fa-lg"></i></button>
@@ -2944,7 +2944,7 @@ catch (Exception $e) {
 
     </div>
 
-    <div id="meeting">
+    <div id="meeting" style="visibility: hidden;">
 
         <div style="text-align: right;">
             <button style="border: none;" onclick="hideWindow('#meeting')"><i class="fa fa-times fa-lg"></i></button>
@@ -4182,6 +4182,8 @@ catch (Exception $e) {
                 });
 
                 calendar_task.render();
+                $("#tasks").hide();
+                $("#tasks").css({"visibility": "visible"});
             },
         });
 
@@ -4382,8 +4384,8 @@ catch (Exception $e) {
 
                 calendar.render();
                 $("#meeting").hide();
-
-                $("#tasks").hide();
+                $("#meeting").css({"visibility": "visible"});
+                
 
             },
 
