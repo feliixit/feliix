@@ -38,6 +38,7 @@ var app = new Vue({
     price_change: "",
     moq: "",
     description: "",
+    out:'',
     notes: "",
     accessory_mode: false,
     variation_mode: false,
@@ -81,6 +82,8 @@ var app = new Vue({
     bulk_url:'',
     status_checked:'',
     bulk_status:'',
+
+
 
     price_ntd_last_change_checked:'',
     bulk_price_ntd_last_change: '',
@@ -902,6 +905,8 @@ var app = new Vue({
           form_Data.append("moq", _this.moq);
           form_Data.append("description", _this.description);
 
+          form_Data.append("out", _this.out);
+
           let related_product = $('#related_product').val();
           form_Data.append("related_product", related_product);
 
@@ -993,6 +998,7 @@ var app = new Vue({
       this.price_ntd_change = "";
       this.moq = "";
       this.description = "";
+      this.out = "";
       this.notes = "";
       this.url1 = null;
       this.url2 = null;

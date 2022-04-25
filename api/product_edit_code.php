@@ -75,6 +75,7 @@ else
             $price_change = '';
             $description = '';
             $relative_product = '';
+            $out = '';
             $notes = '';
             $photo1 = '';
             $photo2 = '';
@@ -117,6 +118,7 @@ else
                 $price = $row['price'];
                 $description = $row['description'];
                 $related_product = GetRelatedProduct($id, $db);
+                $out = $row['out'];
                 $notes = $row['notes'];
                 $photo1 = $row['photo1'];
                 $photo2 = $row['photo2'];
@@ -273,6 +275,7 @@ else
                                     "accessory_information" => $accessory_information,
                                     "sub_category_item" => $sub_category_item,
                                     "related_product" => $related_product,
+                                    "out" => $out,
                                     "notes" => $notes,
                                     "moq" => $moq,
                                     "tags" => $tags,

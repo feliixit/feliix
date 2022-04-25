@@ -2634,3 +2634,7 @@ CREATE TABLE IF NOT EXISTS project_got_it
   `updated_at` timestamp NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- add phase out
+ALTER TABLE product_category
+ADD COLUMN `out` VARCHAR(1) DEFAULT '' COLLATE utf8mb4_unicode_ci AFTER description;

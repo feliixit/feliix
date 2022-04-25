@@ -246,6 +246,7 @@ else
                 $price_org = '';
                 $price_change = '';
                 $description = '';
+                $out = '';
                 $notes = '';
                 $photo1 = '';
                 $photo2 = '';
@@ -289,6 +290,7 @@ else
                 $price_ntd_org = $row['price_ntd'];
                 $price = $row['price'];
                 $description = $row['description'];
+                $out = $row['out'];
                 $notes = $row['notes'];
                 $photo1 = $row['photo1'];
                 $photo2 = $row['photo2'];
@@ -618,6 +620,7 @@ else
                                     "sub_category_item" => $sub_category_item,
                                     "special_information" => $special_information,
                                     "moq" => $moq,
+                                    "out" => $out,
                                     "notes" => $notes,
                                     "related_product" => $related_product,
                                     "cnt" => $cnt,

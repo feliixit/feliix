@@ -24,6 +24,8 @@ $description = (isset($_POST['description']) ?  $_POST['description'] : '');
 $notes = (isset($_POST['notes']) ? $_POST['notes'] : '');
 $related_product = (isset($_POST['related_product']) ? $_POST['related_product'] : '');
 
+$out = (isset($_POST['out'])) ? $_POST['out'] : '';
+
 $accessory_mode = (isset($_POST['accessory_mode']) ? $_POST['accessory_mode'] : 0);
 $variation_mode = (isset($_POST['variation_mode']) ? $_POST['variation_mode'] : 0);
 
@@ -110,6 +112,7 @@ else
         $query .= "
             `moq` = :moq,
             `description` = :description,
+            `out` = :out,
             `notes` = :notes,
             `accessory_mode` = :accessory_mode,
             `variation_mode` = :variation_mode,
@@ -152,6 +155,7 @@ else
 
         $stmt->bindParam(':moq', $moq);
         $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':out', $out);
         // $stmt->bindParam(':related_product', $related_product);
         $stmt->bindParam(':notes', $notes);
         $stmt->bindParam(':accessory_mode', $accessory_mode);
