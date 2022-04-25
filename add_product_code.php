@@ -850,6 +850,18 @@
                 </li>
             </ul>
 
+            <ul>
+                <li>
+                    Phased Out
+                </li>
+                <li>
+                    <select class="form-control one_third" v-model="out">
+                        <option value="">No</option>
+                        <option value="Y">Yes</option>
+                    </select>
+                </li>
+            </ul>
+
         </div>
 
 

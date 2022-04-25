@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>FELIIX template</title>
+    <title>Product Catalog</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -238,6 +238,13 @@
             box-sizing: border-box;
             padding: 6px
 
+        }
+
+        #tb_product_list tbody tr td:nth-of-type(3) ul li span.phasedout{
+            background-color: red;
+            color: white;
+            padding: 0px 5px 3px;
+            border-radius: 10px;
         }
 
         #tb_product_list tbody tr td:nth-of-type(4) ul:last-of-type {
@@ -642,6 +649,12 @@
                         <a target="_blank" :href="'product_display_code?id='+item.id"><img :src="baseURL + item.photo1" v-if="item.photo1"></a>
                     </td>
                     <td>
+                        <ul v-if="item.out == 'Y'">
+                        <li>
+                                <span class="phasedout">Phased Out</span>
+                        </li>
+                        <li></li>
+                        </ul>
                         <ul>
                             <li>
                                 ID:

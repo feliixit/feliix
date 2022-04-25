@@ -46,6 +46,7 @@ var app = new Vue({
     price_ntd_org: "",
     price_org: "",
     description: "",
+    out: "",
     notes: "",
     accessory_mode: false,
     variation_mode: false,
@@ -284,6 +285,7 @@ var app = new Vue({
             _this.price_ntd_org = _this.record[0]['price_ntd_org'];
             _this.price_org = _this.record[0]['price_org'];
             _this.description = _this.record[0]['description'];
+            _this.out = _this.record[0]['out'];
             _this.notes = _this.record[0]['notes'];
             _this.accessory_mode = _this.record[0]['accessory_mode'];
             _this.variation_mode = _this.record[0]['variation_mode'];
@@ -1015,6 +1017,7 @@ var app = new Vue({
           form_Data.append("price_ntd_org", _this.price_ntd_org);
           form_Data.append("price_org", _this.price_org);
           form_Data.append("description", _this.description);
+          form_Data.append("out", _this.out);
           form_Data.append("notes", _this.notes);
           form_Data.append("quoted_price", _this.quoted_price);
           form_Data.append("quoted_price_org", _this.quoted_price_org);
@@ -1115,6 +1118,7 @@ var app = new Vue({
       this.price_change = "";
       this.price_ntd_change = "";
       this.description = "";
+      this.out = "";
       this.notes = "";
       this.quoted_price = "";
       this.quoted_price_change = "";

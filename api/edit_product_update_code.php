@@ -23,6 +23,7 @@ $price = (isset($_POST['price']) ?  $_POST['price'] : '');
 $price_change = (isset($_POST['price_change']) ?  $_POST['price_change'] : '');
 $description = (isset($_POST['description']) ?  $_POST['description'] : '');
 $related_product = (isset($_POST['related_product']) ? $_POST['related_product'] : '');
+$out = (isset($_POST['out']) ? $_POST['out'] : '');
 $notes = (isset($_POST['notes']) ? $_POST['notes'] : '');
 
 $quoted_price = (isset($_POST['quoted_price']) ?  $_POST['quoted_price'] : '');
@@ -167,6 +168,7 @@ else
 
             $query .= "`description` = :description,
   
+            `out` = :out,
             `notes` = :notes,
             `tags` = :tags,
             `moq` = :moq,
@@ -204,6 +206,7 @@ else
         
         $stmt->bindParam(':description', $description);
         // $stmt->bindParam(':related_product', $related_product);
+        $stmt->bindParam(':out', $out);
         $stmt->bindParam(':notes', $notes);
         $stmt->bindParam(':tags', $tags);
         $stmt->bindParam(':moq', $moq);
