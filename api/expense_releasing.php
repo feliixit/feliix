@@ -73,6 +73,11 @@ switch ($method) {
             
             array_push($arry_apartment_id, $apartment_id);
             array_push($array_flow, $flow);
+
+            if($row['flow'] == "6")
+            {
+                array_push($array_flow, "'Security Bank => Office Petty Cash'");
+            }
         }
         
         if(sizeof($array_flow) == 0)
@@ -294,6 +299,9 @@ function GetPettyType($loc)
             break;
         case "2":
             $location = "Reimbursement";
+            break;
+        case "3":
+            $location = "Petty Cash Replenishment";
             break;
         default:
             $location = "";

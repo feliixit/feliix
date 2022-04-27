@@ -249,7 +249,7 @@ $(function(){
                         </ul>
                     </div>
 
-                    <form>
+                    <form v-if="!record.request_type == 'Petty Cash Replenishment'">
                         <ul>
                             <li><b>Change Releasing Account</b></li>
                             <li>
@@ -287,6 +287,7 @@ $(function(){
                             <a class="btn"  @click="export_petty">Export Voucher</a>
                             <a class="btn" :disabled="submit == true" @click="approve_op" v-if="record.request_type_id == 1">Finish Releasing</a>
                             <a class="btn" :disabled="submit == true" @click="approve_md" v-if="record.request_type_id == 2">Finish Releasing</a>
+                            <a class="btn" :disabled="submit == true" @click="approve_pcr" v-if="record.request_type_id == 3">Finish Releasing</a>
                         </div>
                     </form>
 
