@@ -94,7 +94,14 @@ var app = new Vue({
 
   mounted() {},
 
-  watch: {},
+  watch: {
+    request_type: function(val) {
+      if (val == "3") {
+        this.project_name = "Petty Cash Replenishment";
+      
+      } 
+    }
+  },
 
   methods: {
     validateNumber: function(obj) {
