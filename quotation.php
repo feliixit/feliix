@@ -24,17 +24,17 @@ try {
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
 
-            $GLOBALS['position'] = $decoded->data->position;
-            $GLOBALS['department'] = $decoded->data->department;
-            
-            if($GLOBALS['department'] == 'Lighting' || $GLOBALS['department'] == 'Office' || $GLOBALS['department'] == 'Sales'){
-              $test_manager = "1";
-            }
-            
-            //  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
-            if($user_id == 48 || $user_id == 2 || $user_id == 11 || $user_id == 6 || $user_id == 3)
-                $test_manager = "1";
-            }
+$GLOBALS['position'] = $decoded->data->position;
+$GLOBALS['department'] = $decoded->data->department;
+
+if($GLOBALS['department'] == 'Lighting' || $GLOBALS['department'] == 'Office' || $GLOBALS['department'] == 'Sales'){
+$test_manager = "1";
+}
+
+//  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
+if($user_id == 48 || $user_id == 2 || $user_id == 11 || $user_id == 6 ||  $user_id == 1 || $user_id == 3)
+$test_manager = "1";
+}
 
 
 catch (Exception $e){
@@ -92,7 +92,7 @@ header( 'location:index' );
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
@@ -103,7 +103,7 @@ header( 'location:index' );
     <script type="text/javascript"
             src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
-
+    <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
     <script>
@@ -243,53 +243,51 @@ header( 'location:index' );
         }
 
         #tb_product_list tbody tr td:nth-of-type(1) {
-            width: 50px;
+            width: 115px;
         }
 
         #tb_product_list tbody tr td:nth-of-type(2) {
-            width: 130px;
+            width: 420px;
+            padding-right: 20px
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) {
-            width: 350px;
-        }
-
-        #tb_product_list tbody tr td:nth-of-type(4) {
             width: 460px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(5) {
+        #tb_product_list tbody tr td:nth-of-type(4) {
             width: 220px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(6) {
-            width: 100px;
+        #tb_product_list tbody tr td:nth-of-type(5) {
+            width: 80px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(2) img {
+        #tb_product_list tbody tr td:nth-of-type(1) img {
             max-width: 100px;
             max-height: 100px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(3) ul {
+        #tb_product_list tbody tr td:nth-of-type(2) ul {
             margin-bottom: 0;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(4) ul {
+        #tb_product_list tbody tr td:nth-of-type(3) ul {
             margin-bottom: 0;
             border-bottom: 1px solid #dee2e6;
             padding-bottom: 3px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(7) button {
+        #tb_product_list tbody tr td:nth-of-type(5) button {
             border: 2px solid black;
             width: 34px;
+            height: 34px;
             box-sizing: border-box;
-            padding: 6px
-
+            padding: 6px;
+            line-height: 1.0;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(4) ul:last-of-type {
+        #tb_product_list tbody tr td:nth-of-type(3) ul:last-of-type {
             border-bottom: none;
         }
 
@@ -312,7 +310,12 @@ header( 'location:index' );
             display: inline-block;
             font-weight: 600;
             border-radius: 5px;
-            padding: 0 7px;
+            padding: 0 7px 2px 6px;
+            margin: 0 2px;
+        }
+
+        #tb_product_list ul li.code{
+            word-break: break-all;
         }
 
         .NTD_price {
@@ -592,6 +595,86 @@ header( 'location:index' );
             margin-bottom: 0;
         }
 
+        .area_payment .tb_payment {
+            width: 100%;
+            margin: 10px;
+        }
+
+        .tb_payment td {
+            text-align: left;
+            padding: 5px 10px;
+            border-right: 1px solid #A0A0A0;
+            border-bottom: 1px solid #A0A0A0;
+            height: 37px;
+        }
+
+        .tb_payment tbody tr td:first-of-type {
+            border-left: 1px solid #A0A0A0;
+            font-style: italic;
+            vertical-align: top;
+        }
+
+        .tb_payment tbody tr:nth-of-type(1) td {
+            border-top: 1px solid #A0A0A0;
+        }
+
+        .tb_payment tbody tr:nth-of-type(1) td:first-of-type {
+            border-right: none;
+        }
+
+        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) {
+            padding: 5px 100px 5px 30px;
+        }
+
+        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) > div{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) > div > span {
+            position: relative;
+        }
+
+        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) > div > span::before {
+            content: "";
+            width: 20px;
+            height: 20px;
+            border: 1px solid black;
+            display: inline-block;
+            position: absolute;
+            top: 2.5px;
+            left: -25px;
+        }
+
+        .tb_payment tbody tr:nth-of-type(2) td {
+            text-align: center;
+            font-weight: 700;
+
+        }
+
+        .tb_payment tbody tr:nth-of-type(3) td {
+            vertical-align: top;
+            line-height: 1.8;
+        }
+
+        .tb_payment tbody tr:nth-of-type(3) td:first-of-type {
+            text-align: center;
+            width: 90px;
+        }
+
+        .tb_payment tbody tr:nth-of-type(3) td:nth-of-type(2) {
+            width: 220px;
+        }
+
+        .acount_info > span:first-of-type {
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .acount_info > .first_line {
+            display: inline-block;
+        }
+
         .area_total .tb_total {
             width: 100%;
         }
@@ -632,14 +715,14 @@ header( 'location:index' );
         .tb_total tbody tr td:nth-last-of-type(2), .tb_total tfoot tr td:nth-last-of-type(2) {
             font-weight: 800;
             text-align: center;
-            width: 260px;
+            width: 225px;
         }
 
         .tb_total tbody tr td:nth-last-of-type(1), .tb_total tfoot tr td:nth-last-of-type(1) {
-            width: 240px;
+            width: 225px;
+            padding: 5px 15px;
             text-align: right;
         }
-
 
         .qn_body .area_subtotal {
             width: 100%;
@@ -660,8 +743,7 @@ header( 'location:index' );
 
         .tb_format1 thead tr th:first-of-type,
         .tb_format1 tbody tr td:first-of-type,
-        .tb_format1 tfoot tr td:first-of-type
-         {
+        .tb_format1 tfoot tr td:first-of-type {
             border-left: 2px solid #A0A0A0;
         }
 
@@ -687,13 +769,14 @@ header( 'location:index' );
         }
 
         .tb_format1 tbody tr td.pic {
-            width: 135px;
+            width: 125px;
+            text-align: center;
         }
 
         .tb_format1 tbody tr td {
             font-size: 14px;
             vertical-align: top;
-            padding: 15px 20px;
+            padding: 15px;
         }
 
         .tb_format1 tfoot tr td:nth-of-type(1) {
@@ -712,6 +795,7 @@ header( 'location:index' );
             font-size: 16px;
             font-weight: 800;
             color: rgb(0, 117, 58);
+            padding: 5px 15px;
         }
 
         .tb_format1 tbody tr td:nth-of-type(1) {
@@ -721,6 +805,7 @@ header( 'location:index' );
         .tb_format1 tbody tr td div.code {
             font-size: 16px;
             font-weight: 800;
+            word-break: break-all;
         }
 
         .tb_format1 tbody tr td div.brief {
@@ -736,7 +821,7 @@ header( 'location:index' );
 
         .tb_format1 tbody tr td span.numbers {
             font-weight: 800;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .tb_format1 tbody tr td span.numbers.red {
@@ -766,32 +851,43 @@ header( 'location:index' );
             background-color: red;
             padding: 0px 5px 1px;
             border-radius: 7px;
-            top: 7px;
-            left: -80px;
-            font-size: 16px;
+            top: 10px;
+            left: -75px;
+            font-size: 15px;
             font-weight: 500;
         }
 
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-of-type(1), .tb_format1 tbody tr td:nth-of-type(1) {
             width: 64px;
+            text-align: center;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1 tbody tr td:nth-last-of-type(3) {
-            width: 100px;
+            width: 75px;
             text-align: center;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(2),
         .tb_format1 tbody tr td:nth-last-of-type(2) {
-            width: 160px;
+            width: 150px;
             text-align: right;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(1),
         .tb_format1 tbody tr td:nth-last-of-type(1) {
-            width: 240px;
+            width: 225px;
             text-align: right;
+        }
+
+        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1.vat tbody tr td:nth-last-of-type(3) {
+            width: 150px;
+            text-align: right;
+        }
+
+        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1.vat tbody tr td:nth-last-of-type(4) {
+            width: 75px;
+            text-align: center;
         }
 
         .area_subtotal .tb_format2 {
@@ -824,7 +920,7 @@ header( 'location:index' );
         .tb_format2 tbody tr td {
             font-size: 14px;
             vertical-align: top;
-            padding: 15px 20px;
+            padding: 15px;
         }
 
         .tb_format2 tfoot tr td:nth-of-type(1) {
@@ -852,6 +948,7 @@ header( 'location:index' );
         .tb_format2 tbody tr td div.code {
             font-size: 16px;
             font-weight: 800;
+            word-break: break-all;
         }
 
         .tb_format2 tbody tr td div.brief {
@@ -867,7 +964,7 @@ header( 'location:index' );
 
         .tb_format2 tbody tr td span.numbers {
             font-weight: 800;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .tb_format2 tbody tr td span.numbers.red {
@@ -897,25 +994,37 @@ header( 'location:index' );
             background-color: red;
             padding: 0px 5px 1px;
             border-radius: 7px;
-            top: 7px;
-            left: -80px;
-            font-size: 16px;
+            top: 10px;
+            left: -75px;
+            font-size: 15px;
             font-weight: 500;
         }
 
         .tb_format2 tbody tr td:nth-of-type(1) {
             width: 64px;
+            text-align: center;
         }
 
-        .tb_format2 tbody tr td:nth-last-of-type(1),
-        .tb_format2 tfoot tr td:nth-last-of-type(1) {
-            width: 240px;
+        .tb_format2 tbody tr td:nth-last-of-type(1) {
+            width: 225px;
             text-align: right;
+        }
+
+        .tb_format2 tfoot tr td:nth-last-of-type(1) {
+            width: 225px;
+            text-align: right;
+            padding: 5px 15px;
         }
 
         .tb_format2 tfoot tr td:nth-last-of-type(2) {
             width: 160px;
         }
+
+        .tb_format2.vat tbody tr td:nth-last-of-type(2) {
+            width: 150px;
+            text-align: right;
+        }
+
 
         .pagebox {
             border: 1px solid black;
@@ -1026,7 +1135,7 @@ header( 'location:index' );
             cursor: pointer;
         }
 
-        #page_dialog, #subtotal_dialog, #terms_dialog {
+        #page_dialog, #subtotal_dialog, #terms_dialog, #payment_dialog {
             min-width: 1000px;
             pointer-events: auto;
         }
@@ -1053,10 +1162,14 @@ header( 'location:index' );
             border-bottom: none;
         }
 
-        #page_dialog .page_form, #subtotal_dialog .subtotalbox, #terms_dialog .termsbox {
+        #page_dialog .page_form, #subtotal_dialog .subtotalbox, #terms_dialog .termsbox{
             max-height: 400px;
             overflow-y: auto;
+        }
 
+        #payment_dialog .termsbox {
+            max-height: 300px;
+            overflow-y: auto;
         }
 
         .subtotalbox {
@@ -1313,6 +1426,35 @@ header( 'location:index' );
             cursor: pointer;
         }
 
+        #payment_dialog .formbox dl:first-of-type {
+            margin-bottom: 0px;
+            border-bottom: 1px solid black;
+        }
+
+        #payment_dialog .formbox dl:nth-of-type(2) {
+            margin-bottom: 0px;
+            padding: 0 10px;
+        }
+
+        #payment_dialog .formbox dl dd select {
+            width: 370px;
+        }
+
+        #payment_dialog .termsbox .content_box ul li:nth-of-type(1) span {
+            display: inline-block;
+            width: 120px;
+            padding-right: 5px;
+            text-align: right;
+        }
+
+        #payment_dialog .termsbox .content_box ul li:nth-of-type(1) input[type='text'] {
+            height: 30px;
+            border: 1px solid #707070;
+            font-size: 14px;
+            width: calc(100% - 155px);
+            margin: 5px 0;
+        }
+
 
         .signaturebox {
             margin-bottom: 5px;
@@ -1464,7 +1606,7 @@ header( 'location:index' );
             width: 310px;
         }
 
-        .list_function.main{
+        .list_function.main {
             border-color: #00811e;
         }
 
@@ -1494,6 +1636,306 @@ header( 'location:index' );
             background-color: #707071;
         }
 
+        .modal .modal_function .left_function{
+            width: 90%;
+            margin-right: 20px;
+        }
+
+        .modal .modal_function input[type='text'] {
+            height: 38px;
+            border: 1px solid #707070;
+            font-size: 16px;
+            width: 250px;
+            margin: 5px 20px 5px 0;
+        }
+
+        .modal .modal_function select {
+            background-image: url(images/ui/icon_form_select_arrow_gray.svg);
+            border: 1px solid #707070;
+            padding: 1px 3px 1px 10px;
+            font-size: 16px;
+            height: 38px;
+            width: 280px;
+        }
+
+        .modal .modal_function select:nth-of-type(2) {
+            width: 350px;
+        }
+
+        .modal .modal_function > a.btn {
+            margin-left: 10px;
+            color: #FFF !important;
+        }
+
+        .modal .modal_function button.btn.dropdown-toggle {
+            background-color: white;
+            border: 1px solid #999;
+            border-radius: 0;
+        }
+
+        .modal .modal_function ul.dropdown-menu.inner li {
+            display: block;
+            border-right: none;
+        }
+
+        .modal .modal_function .dropdown-menu > .bs-searchbox > input[type='search'] {
+            border: 1px solid #ced4da;
+            font-size: 14px;
+        }
+
+        .upper_section {
+            margin: 20px 20px 0;
+            border: 2px solid rgb(225, 225, 225);
+            display: flex;
+        }
+
+        .imagebox {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .imagebox .selected_image {
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            height: 300px;
+        }
+
+        .imagebox .selected_image img {
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+        }
+
+        .imagebox .image_list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            padding: 0 10px 20px 10px;
+        }
+
+        .imagebox .image_list img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            margin: 5px 10px;
+            cursor: pointer;
+            border: 2px solid #ced4da;
+        }
+
+        .imagebox .image_list img:hover {
+            border-color: #F0502F;
+        }
+
+        .infobox {
+            width: 50%;
+        }
+
+        .infobox .basic_info {
+            border-bottom: 2px solid rgb(225, 225, 225);
+            margin-left: 20px;
+            padding: 30px 20px 5px;
+        }
+
+        .infobox .basic_info div.tags {
+            margin-bottom: 0.5rem;
+        }
+
+        .infobox .basic_info div.tags span {
+            background-color: #5bc0de;
+            color: #fff;
+            font-size: 14px;
+            display: inline-block;
+            font-weight: 600;
+            border-radius: 5px;
+            padding: 0 7px;
+            margin: 0 3px;
+        }
+
+        .infobox .basic_info div.tags span:first-of-type {
+            margin-left: 0;
+        }
+
+        .infobox .basic_info div.tags span:last-of-type {
+            margin-right: 0;
+        }
+
+        .infobox .price_stock {
+            border-bottom: 2px solid rgb(225, 225, 225);
+            margin-left: 20px;
+            padding: 15px 20px;
+        }
+
+        .infobox .price_stock > li {
+            color: rgb(83, 132, 155);
+            font-size: 18px;
+            font-weight: 600;
+            padding: 8px 0;
+        }
+
+        .infobox .price_stock > li span:nth-of-type(1) {
+            font-size: 22px;
+            color: #6C757D;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .infobox .price_stock > li span:nth-of-type(2) {
+            font-size: 16px;
+            font-weight: 400;
+            color: #6C757D;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .infobox .variants {
+            margin-left: 20px;
+            padding: 0 20px;
+        }
+
+        .infobox .variants li {
+            color: #212529;
+            font-size: 16px;
+            margin-left: 15px;
+        }
+
+        .infobox .variants li:nth-of-type(odd) {
+            margin-bottom: 15px;
+        }
+
+        .infobox .variants li:nth-of-type(1) {
+            font-weight: 700;
+            margin-left: 0;
+            margin-bottom: 5px;
+        }
+
+        .infobox .variants .dropdown-menu li {
+            margin-left: 0;
+        }
+
+        .infobox .variants .btn-light {
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            outline: none;
+        }
+
+        .infobox .variants .btn-light:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+        }
+
+        .infobox .btnbox ul {
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .infobox .btnbox ul li > button {
+            width: 230px;
+
+        }
+
+        .middle_section {
+            margin: 0 20px;
+            border: 2px solid rgb(225, 225, 225);
+            border-top: none;
+        }
+
+        .middle_section h5 {
+            background-color: #E0E0E0;
+            text-align: center;
+            padding: 5px 0 8px;
+            margin-bottom: 0;
+        }
+
+        .middle_section table {
+            margin: 5px 20px;
+            width: calc(100% - 40px);
+        }
+
+        .middle_section tbody tr:nth-of-type(n+2) {
+            border-top: 1px solid rgb(225, 225, 225);
+        }
+
+        .middle_section tbody tr td:nth-of-type(odd) {
+            color: #B3B3B3;
+            padding: 10px;
+            width: 20%;
+        }
+
+        .middle_section tbody tr td:nth-of-type(even) {
+            width: 30%;
+        }
+
+        .lower_section {
+            margin: 0 20px 20px;
+            border: 2px solid rgb(225, 225, 225);
+            border-top: none;
+            text-align: left;
+        }
+
+        .lower_section h5 {
+            background-color: #E0E0E0;
+            text-align: center;
+            padding: 5px 0 8px;
+            margin-bottom: 0;
+        }
+
+        .lower_section p {
+            margin: 15px 20px;
+        }
+
+        .lower_section .desc_imgbox {
+            width: 100%;
+            padding: 0 15px;
+            margin: 10px 0 20px;
+        }
+
+        .lower_section .desc_imgbox img {
+            width: calc(50% - 8px);
+            margin: 5px 0;
+        }
+
+        .lower_section .desc_imgbox img:nth-of-type(odd) {
+            margin-right: 10px;
+        }
+
+
+        .row.custom {
+            margin: 5px 0 0 0;
+        }
+
+        .col.custom {
+            width: 24%;
+            padding-left: 5px;
+            padding-right: 5px;
+            text-align: center;
+        }
+
+        .col.custom > img {
+            height: 150px;
+            width: 150px;
+            object-fit: contain;
+        }
+
+        .col.custom > div > a {
+            text-decoration: none;
+            color: blue;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+        }
+
+        .carousel-control-next, .carousel-control-prev {
+            opacity: 0.7;
+            top: 35%;
+            width: 4%;
+        }
+
+
+
 
         @media print {
             * {
@@ -1509,6 +1951,7 @@ header( 'location:index' );
                 zoom: 82%;
                 margin: 1px 0px 0px 7px;
                 page-break-after: always;
+                overflow-y: hidden;
             }
 
             .noPrint {
@@ -1529,6 +1972,8 @@ header( 'location:index' );
 
 <div class="bodybox" id="app">
 
+    <div class="mask" :ref="'mask'"></div>
+
     <!-- header -->
     <header class="noPrint">header</header>
     <!-- header end -->
@@ -1545,16 +1990,16 @@ header( 'location:index' );
 
             <div class="block fn">
                 <div class="popupblock">
-                <?php
+                    <?php
                 if ($test_manager[0]  == "1")
                 {
                 ?>
                     <a id="status_fn1" class="fn1" :ref="'a_fn1'" @click="show_header = !show_header">Header</a>
-                <?php
+                    <?php
                 } else {
                 ?>
                     <a>Header</a>
-                <?php
+                    <?php
                 }
                 ?>
                     <div id="header_dialog" class="dialog fn1 show" :ref="'dlg_fn1'" v-show="show_header">
@@ -1611,11 +2056,11 @@ header( 'location:index' );
                     <?php
                     } else {
                     ?>
-                        <a>Footer</a>
+                    <a>Footer</a>
                     <?php
                     }
                     ?>
-                    <div id="footer_dialog" class="dialog fn1 show" :ref="'dlg_fn1'"  v-show="show_footer">
+                    <div id="footer_dialog" class="dialog fn1 show" :ref="'dlg_fn1'" v-show="show_footer">
                         <h6>Footer</h6>
                         <div class="formbox">
                             <dl>
@@ -1638,7 +2083,7 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
-                    
+
                     <?php
                     if ($test_manager[0]  == "1")
                     {
@@ -1647,7 +2092,7 @@ header( 'location:index' );
                     <?php
                     } else {
                     ?>
-                        <a>Page</a>
+                    <a>Page</a>
                     <?php
                     }
                     ?>
@@ -1663,8 +2108,10 @@ header( 'location:index' );
                                 <div class="title_box">
                                     <ul>
                                         <li>Page {{page_index + 1}}</li>
-                                        <li><i class="fas fa-arrow-alt-circle-up" @click="page_up(page_index, page.id)"></i>
-                                            <i class="fas fa-arrow-alt-circle-down" @click="page_down(page_index, page.id)"></i>
+                                        <li><i class="fas fa-arrow-alt-circle-up"
+                                               @click="page_up(page_index, page.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-down"
+                                               @click="page_down(page_index, page.id)"></i>
                                             <i class="fas fa-trash-alt" @click="page_del(page.id)"></i>
                                         </li>
                                     </ul>
@@ -1684,10 +2131,14 @@ header( 'location:index' );
                                             Name: <input type="text" v-model="block.name">
                                         </li>
                                         <li>
-                                            <i class="fas fa-arrow-alt-circle-up" @click="set_up(page.id, block_index, block.id)"></i>
-                                            <i class="fas fa-arrow-alt-circle-down" @click="set_down(page.id, block_index, block.id)"></i>
-                                            <i class="fas fa-file-upload" @click="set_up_page(page.id, page_index, block_index, block.id)"></i>
-                                            <i class="fas fa-file-download" @click="set_down_page(page.id, page_index, block_index, block.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-up"
+                                               @click="set_up(page.id, block_index, block.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-down"
+                                               @click="set_down(page.id, block_index, block.id)"></i>
+                                            <i class="fas fa-file-upload"
+                                               @click="set_up_page(page.id, page_index, block_index, block.id)"></i>
+                                            <i class="fas fa-file-download"
+                                               @click="set_down_page(page.id, page_index, block_index, block.id)"></i>
                                             <!--
                                             <i class="fas fa-save" @click="page_save()"></i>
                                             -->
@@ -1714,7 +2165,7 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
-                    
+
                     <?php
                     if ($test_manager[0]  == "1")
                     {
@@ -1723,7 +2174,7 @@ header( 'location:index' );
                     <?php
                     } else {
                     ?>
-                        <a>Subtotal</a>
+                    <a>Subtotal</a>
                     <?php
                     }
                     ?>
@@ -1736,8 +2187,9 @@ header( 'location:index' );
                                 <li class="head" style="width: 160px;">Choose Subtotal Block:</li>
                                 <li class="mix">
                                     <select v-model="block_value">
-                                        <option v-for="(block, index) in block_names" :value="block">{{ block.name }}</option>
-                                        
+                                        <option v-for="(block, index) in block_names" :value="block">{{ block.name }}
+                                        </option>
+
                                     </select>
 
                                     <a class="btn small green" @click="load_block()">Load</a>
@@ -1758,32 +2210,44 @@ header( 'location:index' );
                                     <option value="noimage">Item without Image</option>
                                 </select>
                                 <a class="btn small green" @click="add_block_a()">Add</a>
+                                <a class="btn small green" @click="product_catalog_a()">Product Catalog</a>
                             </div>
 
                             <div class="content_box">
 
                                 <ul v-for="(block, index) in temp_block_a">
                                     <li>
+                                        <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num"> <input type="text" v-model="block.pid" hidden><br>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
                                         <span v-if="block.type == 'image' ">Image:</span>
-                                        <div v-if="block.type == 'image' " :class="['itembox', (block.url !== '' ? 'chosen' : '')]" >
+                                        <div v-if="block.type == 'image' "
+                                             :class="['itembox', (block.url !== '' ? 'chosen' : '')]">
                                             <div class="photo">
-                                                <input type="file" :name="'block_image_' + block.id" @change="onFileChangeImage($event, block.id)" :id="'block_image_' + block.id">
+                                                <input type="file" :name="'block_image_' + block.id"
+                                                       @change="onFileChangeImage($event, block.id)"
+                                                       :id="'block_image_' + block.id">
                                                 <img v-if="block.url" :src="block.url"/>
-                                                <div  @click="clear_photo(block.id)">x</div>
+                                                <div @click="clear_photo(block.id)">x</div>
                                             </div>
 
                                         </div>
 
                                         <br v-if="block.type == 'image' ">
-                                        <span>Qty:</span> <input type="number" min="1" step="1" v-model="block.qty" @change="chang_amount(block)" oninput="this.value|=0"> Product Price: <input type="number" v-model="block.price" @change="chang_amount(block)">
-                                        Discount: <input type="number" v-model="block.discount"  min="0" max="100" @change="chang_amount(block)" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br>
-                                        <span>Description:</span> <textarea rows="2" v-model="block.desc"></textarea><br>
+                                        <span>Qty:</span> <input type="number" min="1" step="1" v-model="block.qty"
+                                                                 @change="chang_amount(block)" oninput="this.value|=0">
+                                        Product Price: <input type="number" v-model="block.price"
+                                                              @change="chang_amount(block)">
+                                        Discount: <input type="number" v-model="block.discount" min="0" max="100"
+                                                         @change="chang_amount(block)" oninput="this.value|=0"> Amount:
+                                        <input type="number" v-model="block.amount"><br>
+                                        <span>Description:</span> <textarea rows="2"
+                                                                            v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
                                     </li>
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="block_a_up(index, block.id)"></i>
-                                        <i class="fas fa-arrow-alt-circle-down" @click="block_a_down(index, block.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down"
+                                           @click="block_a_down(index, block.id)"></i>
                                         <i class="fas fa-trash-alt" @click="block_a_del(block.id)"></i>
                                     </li>
                                 </ul>
@@ -1801,21 +2265,29 @@ header( 'location:index' );
 
                             <div class="function_box">
                                 <a class="btn small green" @click="add_block_b()">Add Item</a>
+                                <a class="btn small green" @click="product_catalog_b()">Product Catalog</a>
                             </div>
 
                             <div class="content_box">
 
                                 <ul v-for="(block, index) in temp_block_b">
                                     <li>
+                                        <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num"> <input type="text" v-model="block.pid" hidden><br>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
-                                        <span>Price:</span> <input type="number" v-model="block.price" @change="chang_discount(block)"> Discount: <input type="number" v-model="block.discount" @change="chang_discount(block)" min="0" max="100" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br>
+                                        <span>Price:</span> <input type="number" v-model="block.price"
+                                                                   @change="chang_discount(block)"> Discount: <input
+                                            type="number" v-model="block.discount" @change="chang_discount(block)"
+                                            min="0" max="100" oninput="this.value|=0"> Amount: <input type="number"
+                                                                                                      v-model="block.amount"><br>
                                         <!-- <span>Discount:</span> <input type="number" v-model="block.discount" @change="chang_discount(block)" min="0" max="100" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br> -->
-                                        <span>Description:</span> <textarea rows="2" v-model="block.desc"></textarea><br>
+                                        <span>Description:</span> <textarea rows="2"
+                                                                            v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
                                     </li>
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="block_b_up(index, block.id)"></i>
-                                        <i class="fas fa-arrow-alt-circle-down" @click="block_b_down(index, block.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down"
+                                           @click="block_b_down(index, block.id)"></i>
                                         <i class="fas fa-trash-alt" @click="block_b_del(block.id)"></i>
                                     </li>
                                 </ul>
@@ -1835,7 +2307,7 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
-                    
+
                     <?php
                     if ($test_manager[0]  == "1")
                     {
@@ -1844,7 +2316,7 @@ header( 'location:index' );
                     <?php
                     } else {
                     ?>
-                        <a>Total</a>
+                    <a>Total</a>
                     <?php
                     }
                     ?>
@@ -1856,8 +2328,10 @@ header( 'location:index' );
                                 <dt class="head">Choose where the block of total locates at:</dt>
                                 <dd>
                                     <select v-model="total.page">
-                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page }}</option>
-                   
+                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
+                                            }}
+                                        </option>
+
                                     </select>
                                 </dd>
                             </dl>
@@ -1865,7 +2339,8 @@ header( 'location:index' );
                             <dl>
                                 <dt class="head">Discount:</dt>
                                 <dd>
-                                    <input type="number" v-model="total.discount"  min="0" max="100" step="1" oninput="this.value|=0" @change="change_total_amount(total)">
+                                    <input type="number" v-model="total.discount" min="0" max="100" step="1"
+                                           oninput="this.value|=0" @change="change_total_amount(total)">
                                 </dd>
                             </dl>
 
@@ -1873,7 +2348,8 @@ header( 'location:index' );
                                 <dt class="head">12% VAT:</dt>
                                 <dd>
                                     <select v-model="total.vat" @change="change_total_amount(total)">
-                                        <option value="Y">Yes</option>
+                                        <option value="P">Yes (12% VAT is shown in each individual product)</option>
+                                        <option value="Y">Yes (12% VAT is shown in the block of Total)</option>
                                         <option value="">No</option>
                                     </select>
                                 </dd>
@@ -1892,7 +2368,8 @@ header( 'location:index' );
                             <dl>
                                 <dt class="head">Quotation Valid for:</dt>
                                 <dd>
-                                    <input type="text" v-model="total.valid" placeholder="Input like 1 month, 45 days, ...">
+                                    <input type="text" v-model="total.valid"
+                                           placeholder="Input like 1 month, 45 days, ...">
                                 </dd>
                             </dl>
 
@@ -1916,16 +2393,17 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
-                    
+
                     <?php
                     if ($test_manager[0]  == "1")
                     {
                     ?>
-                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_term = !show_term">Terms and Condition</a>
+                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_term = !show_term">Terms and
+                        Condition</a>
                     <?php
                     } else {
                     ?>
-                        <a>Terms and Condition</a>
+                    <a>Terms and Condition</a>
                     <?php
                     }
                     ?>
@@ -1937,7 +2415,9 @@ header( 'location:index' );
                                 <dt class="head">Choose where the block of terms and condition locates at:</dt>
                                 <dd>
                                     <select v-model="term.page">
-                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page }}</option>
+                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
+                                            }}
+                                        </option>
                                     </select>
                                 </dd>
                             </dl>
@@ -1958,7 +2438,8 @@ header( 'location:index' );
                                     </li>
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="term_item_up(index, item.id)"></i>
-                                        <i class="fas fa-arrow-alt-circle-down" @click="term_item_down(index, item.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down"
+                                           @click="term_item_down(index, item.id)"></i>
                                         <i class="fas fa-trash-alt" @click="term_item_del(index)"></i>
                                     </li>
                                 </ul>
@@ -1979,16 +2460,96 @@ header( 'location:index' );
 
 
                 <div class="popupblock">
-                    
+
                     <?php
                     if ($test_manager[0]  == "1")
                     {
                     ?>
-                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_signature = !show_signature">Signature</a>
+                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_payment_term = !show_payment_term">Payment Terms</a>
                     <?php
                     } else {
                     ?>
-                        <a>Signature</a>
+                    <a>Payment Terms</a>
+                    <?php
+                    }
+                    ?>
+                    <div id="payment_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_payment_term">
+                        <h6>Payment Terms</h6>
+
+                        <div class="formbox">
+                            <dl>
+                                <dt class="head">Choose where the block of payment terms locates at:</dt>
+                                <dd>
+                                    <select v-model="payment_term.page">
+                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
+                                            }}
+                                        </option>
+                                    </select>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt class="head">Payment Method:</dt>
+                                <dd>
+                                    <!-- <input type="text" value="Cash; Cheque; Credit Card; Bank Wiring;"> -->
+
+                                    <input type="text" v-model="payment_term.payment_method">
+                                </dd>
+
+                                <dt class="head">Brief:</dt>
+                                <dd>
+                                    <input type="text" v-model="payment_term.brief">
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <div class="termsbox">
+                            <div class="function_box">
+                                <a class="btn small green" @click="add_payment_term_item()">Add Account</a>
+                            </div>
+
+                            <div class="content_box">
+                                <ul v-for="(item, index) in payment_term.item">
+                                    <li>
+                                        <span>Bank Name:</span> <input type="text" v-model="item.bank_name"><br>
+                                        <span>First Line:</span> <input type="text" v-model="item.first_line"><br>
+                                        <span>Second Line:</span> <input type="text" v-model="item.second_line"><br>
+                                        <span>Third Line:</span> <input type="text" v-model="item.third_line"><br>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-arrow-alt-circle-up" @click="payment_term_item_up(index, item.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-down"
+                                           @click="payment_term_item_down(index, item.id)"></i>
+                                        <i class="fas fa-trash-alt" @click="payment_term_item_del(index)"></i>
+                                    </li>
+                                </ul>
+                                
+                            </div>
+                        </div>
+
+                        <div class="formbox">
+                            <div class="btnbox">
+                                <a class="btn small" @click="close_payment_term()">Close</a>
+                                <a class="btn small green" @click="payment_term_save()">Save</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="popupblock">
+
+                    <?php
+                    if ($test_manager[0]  == "1")
+                    {
+                    ?>
+                    <a id="project_fn2" class="fn2" :ref="'a_fn2'"
+                       @click="show_signature = !show_signature">Signature</a>
+                    <?php
+                    } else {
+                    ?>
+                    <a>Signature</a>
                     <?php
                     }
                     ?>
@@ -2000,7 +2561,9 @@ header( 'location:index' );
                                 <dt class="head">Choose where the block of signature locates at:</dt>
                                 <dd>
                                     <select v-model="sig.page">
-                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page }}</option>
+                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
+                                            }}
+                                        </option>
                                     </select>
                                 </dd>
                             </dl>
@@ -2022,14 +2585,20 @@ header( 'location:index' );
                                     <ul v-for="(item, index) in sig.item_client">
                                         <li>
                                             <span>Name:</span> <input type="text" v-model="item.name"><br>
-                                            <span>Line 1:</span> <input type="text" placeholder="Position"  v-model="item.position"><br>
-                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number"  v-model="item.phone"><br>
-                                            <span>Line 3:</span> <input type="text" placeholder="Email"  v-model="item.email"><br>
+                                            <span>Line 1:</span> <input type="text" placeholder="Position"
+                                                                        v-model="item.position"><br>
+                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number"
+                                                                        v-model="item.phone"><br>
+                                            <span>Line 3:</span> <input type="text" placeholder="Email"
+                                                                        v-model="item.email"><br>
                                         </li>
                                         <li>
-                                            <i class="fas fa-arrow-alt-circle-up" @click="sig_item_client_up(index, item.id)"></i>
-                                            <i class="fas fa-arrow-alt-circle-down" @click="sig_item_client_down(index, item.id)"></i>
-                                            <i class="fas fa-trash-alt" @click="sig_item_client_del(index, item.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-up"
+                                               @click="sig_item_client_up(index, item.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-down"
+                                               @click="sig_item_client_down(index, item.id)"></i>
+                                            <i class="fas fa-trash-alt"
+                                               @click="sig_item_client_del(index, item.id)"></i>
                                         </li>
                                     </ul>
 
@@ -2052,22 +2621,30 @@ header( 'location:index' );
                                     <ul v-for="(item, index) in sig.item_company">
                                         <li>
                                             <span>Name:</span> <input type="text" v-model="item.name"><br>
-                                            <span>Line 1:</span> <input type="text" placeholder="Position" v-model="item.position"><br>
-                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number" v-model="item.phone"><br>
-                                            <span>Line 3:</span> <input type="text" placeholder="Email" v-model="item.email"><br>
+                                            <span>Line 1:</span> <input type="text" placeholder="Position"
+                                                                        v-model="item.position"><br>
+                                            <span>Line 2:</span> <input type="text" placeholder="Phone Number"
+                                                                        v-model="item.phone"><br>
+                                            <span>Line 3:</span> <input type="text" placeholder="Email"
+                                                                        v-model="item.email"><br>
                                             <span>Signature:</span>
                                             <div :class="['itembox', (item.url !== '' ? 'chosen' : '')]">
                                                 <div class="photo">
-                                                    <input type="file" :name="'sig_image_' + item.id" @change="onSigFileChangeImage($event, item.id)" :id="'sig_image_' + item.id">
+                                                    <input type="file" :name="'sig_image_' + item.id"
+                                                           @change="onSigFileChangeImage($event, item.id)"
+                                                           :id="'sig_image_' + item.id">
                                                     <img v-if="item.url" :src="item.url"/>
                                                     <div @click="clear_sig_photo(item.id)">x</div>
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
-                                            <i class="fas fa-arrow-alt-circle-up" @click="sig_item_company_up(index, item.id)"></i>
-                                            <i class="fas fa-arrow-alt-circle-down" @click="sig_item_company_down(index, item.id)"></i>
-                                            <i class="fas fa-trash-alt" @click="sig_item_company_del(index, item.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-up"
+                                               @click="sig_item_company_up(index, item.id)"></i>
+                                            <i class="fas fa-arrow-alt-circle-down"
+                                               @click="sig_item_company_down(index, item.id)"></i>
+                                            <i class="fas fa-trash-alt"
+                                               @click="sig_item_company_del(index, item.id)"></i>
                                         </li>
                                     </ul>
 
@@ -2139,11 +2716,11 @@ header( 'location:index' );
 
                 <div class="area_subtotal">
 
-                    <table :class="tp.type == 'A' ? 'tb_format1' : 'tb_format2'" v-for="(tp, index) in pg.types" >
+                    <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']" v-for="(tp, index) in pg.types">
                         <thead v-if="tp.type == 'A'">
-                            
+
                         <tr>
-                            <th class="title" colspan="6">{{ tp.name }}</th>
+                            <th class="title" :colspan="product_vat == 'P' ? 7 : 6">{{ tp.name }}</th>
                         </tr>
 
                         <tr>
@@ -2151,6 +2728,7 @@ header( 'location:index' );
                             <th colspan="2">Description</th>
                             <th>Qty.</th>
                             <th>Product Price</th>
+                            <th v-if="product_vat == 'P'">12% VAT</th>
                             <th>Amount</th>
                         </tr>
 
@@ -2159,14 +2737,14 @@ header( 'location:index' );
                         <thead v-if="tp.type == 'B'">
 
                         <tr>
-                            <th class="title" colspan="4">{{ tp.name }}</th>
+                            <th class="title" :colspan="product_vat == 'P' ? 5 : 4">{{ tp.name }}</th>
                         </tr>
 
                         </thead>
 
                         <tbody v-if="tp.type == 'A'">
-                        <tr  v-for="(bk, index) in tp.blocks">
-                            <td>{{ index + 1 }}</td>
+                        <tr v-for="(bk, index) in tp.blocks">
+                            <td>{{ bk.num }}</td>
                             <td class="pic" v-if="bk.type == 'image'">
                                 <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
                             </td>
@@ -2177,37 +2755,71 @@ header( 'location:index' );
                             </td>
                             <td colspan="2" v-if="bk.type == ''">
                                 <div class="code">{{ bk.code }}</div>
-                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}
-                                </div>
+                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span></td>
-                            <td><span class="numbers">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span></td>
-                            <td v-if="bk.amount != '0.00'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="bk.discount != 0">
+                            <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
+                            </td>
+                            <td><span class="numbers">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            </td>
+                            <td v-if="product_vat == 'P'"><span class="numbers">₱ {{ bk.price !== undefined ? (Number(bk.price) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            </td>
+
+                            <td v-if="bk.amount != '0.00' && product_vat == 'P'">
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                    v-if="bk.discount != 0">
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
                             </td>
-                            <td v-if="bk.amount == '0.00'">
+                            <td v-if="bk.amount == '0.00' && product_vat == 'P'">
+                                <span class="numbers deleted">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers red">FREE AS PACKAGE!</span>
+                            </td>
+
+
+                            <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                    v-if="bk.discount != 0">
+                                <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
+                            </td>
+                            <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
                                 <span class="numbers deleted">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
                         </tr>
-                          
+
                         </tbody>
 
                         <tbody v-if="tp.type == 'B'">
                         <tr v-for="(bk, index) in tp.blocks">
-                            <td>{{ index + 1 }}</td>
+                            <td>{{ bk.num }}</td>
                             <td colspan="2">
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td v-if="bk.amount != '0.00'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="bk.discount != 0">
+                            <td v-if="product_vat == 'P'"><span class="numbers">₱ {{ bk.price !== undefined ? (Number(bk.price)).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            </td>
+                            <td v-if="bk.amount != '0.00' && product_vat == 'P'">
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1.12 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                    v-if="bk.discount != 0">
+                                <span class="numbers">₱ {{ bk.amount !== undefined ? (Number(bk.amount)).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
+                            </td>
+                            <td v-if="bk.amount == '0.00' && product_vat == 'P'">
+                                <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1.12 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers red">FREE AS PACKAGE!</span>
+                            </td>
+
+
+                            <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                    v-if="bk.discount != 0">
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
                             </td>
-                            <td v-if="bk.amount == '0.00'">
+                            <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
                                 <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
@@ -2217,18 +2829,24 @@ header( 'location:index' );
 
                         <tfoot v-if="tp.type == 'A'">
                         <tr>
-                            <td colspan="4"></td>
+                            <td :colspan="product_vat == 'P' ? 5 : 4"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ? Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</td>
+                            <td>₱ {{ tp.subtotal !== undefined ?
+                                Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                "$1,") : '0.00' }}
+                            </td>
                         </tr>
 
                         </tfoot>
 
                         <tfoot v-if="tp.type == 'B'">
                         <tr>
-                            <td colspan="2"></td>
+                            <td :colspan="product_vat == 'P' ? 3 : 2"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ? Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</td>
+                            <td>₱ {{ tp.subtotal !== undefined ?
+                                Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                "$1,") : '0.00' }}
+                            </td>
                         </tr>
 
                         </tfoot>
@@ -2246,30 +2864,38 @@ header( 'location:index' );
                                 <div></div>
                             </td>
                             <td>SUBTOTAL</td>
-                            <td><span class="numbers">₱ {{ subtotal !== undefined ? Number(subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span></td>
+                            <td><span class="numbers">₱ {{ subtotal !== undefined ? Number(subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
+                            </td>
                         </tr>
 
-                        <tr class="total_discount"  v-if="tt.discount !== '0'">
-                            <td>{{ tt.discount !== undefined ? Math.floor(tt.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% DISCOUNT</td>
-                            <td><span class="numbers">₱ {{ (subtotal * tt.discount / 100) !== undefined ? (subtotal * tt.discount / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                        <tr class="total_discount" v-if="tt.discount !== '0'">
+                            <td>{{ tt.discount !== undefined ?
+                                Math.floor(tt.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}%
+                                DISCOUNT
+                            </td>
+                            <td><span class="numbers">₱ {{ (subtotal * tt.discount / 100) !== undefined ? (subtotal * tt.discount / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            </td>
                         </tr>
-<!--
+                        <!--
+                                                <tr class="total_vat" v-if="tt.vat == 'Y'">
+                                                    <td>(12% VAT)</td>
+                                                    <td><span class="numbers">₱ {{ (subtotal * 12 / 100) !== undefined ? (subtotal * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                                </tr>
+                            -->
                         <tr class="total_vat" v-if="tt.vat == 'Y'">
                             <td>(12% VAT)</td>
-                            <td><span class="numbers">₱ {{ (subtotal * 12 / 100) !== undefined ? (subtotal * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
-                        </tr>
-    -->
-                        <tr class="total_vat" v-if="tt.vat == 'Y'">
-                            <td>(12% VAT)</td>
-                            <td><span class="numbers">₱ {{ ((subtotal * (100 - tt.discount) / 100) * 12 / 100) !== undefined ? ((subtotal * (100 - tt.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                            <td><span class="numbers">₱ {{ ((subtotal * (100 - tt.discount) / 100) * 12 / 100) !== undefined ? ((subtotal * (100 - tt.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            </td>
                         </tr>
                         </tbody>
 
                         <tfoot>
                         <tr>
-                            <td><span class="total_discount" v-if="tt.show_vat == 'Y'">*price inclusive of VAT</span></td>
+                            <td><span class="total_discount" v-if="tt.show_vat == 'Y'">*price inclusive of VAT</span>
+                            </td>
                             <td>GRAND TOTAL</td>
-                            <td><span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                            <td><span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            </td>
                         </tr>
                         </tfoot>
                     </table>
@@ -2283,8 +2909,55 @@ header( 'location:index' );
                     </div>
                 </div>
 
+                <div class="area_payment" v-if="pg.payment_term.page !== undefined">
+                    <table class="tb_payment">
+                        <tbody>
+                        <tr>
+                            <td colspan="2">Payment Terms:</td>
+                            <td>
+                                <div>
+                                    <span v-for="(tt, index) in pg.payment_term.payment_method">{{ tt }}</span>
+                                </div>
+                               
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                            {{ pg.payment_term.brief }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Notes:</td>
+                            <td>
+                                <b>For Cheque</b><br>
+                                Kindly Address to<br>
+                                Feliix Inc.
+                            </td>
+                            <td>
+                                <b>For Bank Details for Wiring</b>
+
+                                <div class="acount_info" v-for="(tt, index) in pg.payment_term.list">
+                                    <span class="account_name">{{ tt.bank_name }}</span>
+                                    <span>: </span>
+                                    <div class="first_line">
+                                    {{ tt.first_line }}
+                                    </div>
+                                    <div class="second_line">{{ tt.second_line }}</div>
+                                    <div class="third_line">{{ tt.third_line }}</div>
+                                </div>
+
+                           
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="area_conforme" style="margin-top: 60px;">
-                    <div class="conforme" v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0)  + (pg.sig != undefined ?  pg.sig.item_company.length : 0) > 0">CONFORME</div>
+                    <div class="conforme"
+                         v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0)  + (pg.sig != undefined ?  pg.sig.item_company.length : 0) > 0">
+                        CONFORME
+                    </div>
 
                     <div class="client_signature" v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0) > 0">
 
@@ -2325,9 +2998,696 @@ header( 'location:index' );
         </div>
 
 
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true" id="modal_product_catalog">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+
+            <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
+
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myLargeModalLabel">Product Catalog</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn_close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
+
+                        <div class="left_function" style="width: 90%;">
+
+                            <input type="text" placeholder="ID" v-model="fil_id">
+
+                            <input type="text" placeholder="Code" v-model="fil_code">
+
+                            <select v-model="fil_brand">
+                                <option value="">Choose Brand...</option>
+                                <option v-for="(item, index) in brands">{{ item.brand }}</option>
+                            </select>
+
+                            <br>
+
+                            <select class="selectpicker" multiple data-live-search="true" data-size="8"
+                                    data-width="100%" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
+
+                                <optgroup label="BY INSTALL LOCATION">
+                                    <option value="CEILING">CEILING</option>
+                                    <option value="FLOOR">FLOOR</option>
+                                    <option value="INDOOR">INDOOR</option>
+                                    <option value="INGROUND">INGROUND</option>
+                                    <option value="OUTDOOR">OUTDOOR</option>
+                                    <option value="STREET">STREET</option>
+                                    <option value="TABLE">TABLE</option>
+                                    <option value="WALL">WALL</option>
+                                    <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
+                                    <option value="CABINET">CABINET</option>
+                                    <option value="OTHER FURNITURES ">OTHER FURNITURES</option>
+                                    <option value="UNDERWATER">UNDERWATER</option>
+                                </optgroup>
+
+                                <optgroup label="INSTALL METHOD">
+                                    <option value="POLE-MOUNTED">POLE-MOUNTED</option>
+                                    <option value="RECESSED">RECESSED</option>
+                                    <option value="SURFACE-MOUNTED">SURFACE-MOUNTED</option>
+                                    <option value="SUSPENDED">SUSPENDED</option>
+                                    <option value="STAND-ALONE">STAND-ALONE</option>
+                                </optgroup>
+
+                                <optgroup label="BY TYPE / FUNCTION">
+                                    <option value="ASSEMBLED">ASSEMBLED</option>
+                                    <option value="BOLLARD">BOLLARD</option>
+                                    <option value="LED BULB">LED BULB</option>
+                                    <option value="CUSTOMIZED">CUSTOMIZED</option>
+                                    <option value="DIMMER">DIMMER</option>
+                                    <option value="DIRECTIONAL">DIRECTIONAL</option>
+                                    <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
+                                    <option value="LED DRIVER">LED DRIVER</option>
+                                    <option value="FLOOD LIGHT">FLOOD LIGHT</option>
+                                    <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
+                                    <option value="LED STRIP">LED STRIP</option>
+                                    <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+                                    <option value="PANEL LIGHT">PANEL LIGHT</option>
+                                    <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
+                                    <option value="TRACK LIGHT">TRACK LIGHT</option>
+                                    <option value="TROFFER LIGHT">TROFFER LIGHT</option>
+                                    <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+                                    <option value="WALL WASHER">WALL WASHER</option>
+                                    <option value="LIGHTBOX">LIGHTBOX</option>
+                                    <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
+                                    <option value="UV LED">UV LED</option>
+                                    <option value="ALUMINUM PROFILE">ALUMINUM PROFILE</option>
+                                    <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
+                                    <option value="LED TUBE">LED TUBE</option>
+                                    <option value="STAGE LIGHT">STAGE LIGHT</option>
+                                    <option value="AUDIO EQUIPMENT">AUDIO EQUIPMENT</option>
+                                </optgroup>
+
+                                <optgroup label="ACCESSORY">
+                                    <option value="FUNCTIONAL ACCESSORY">FUNCTIONAL ACCESSORY</option>
+                                    <option value="INSTALL ACCESSORY">INSTALL ACCESSORY</option>
+                                    <option value="REPLACEMENT PART">REPLACEMENT PART</option>
+                                </optgroup>
+
+                            </select>
+                        </div>
+
+                        <a class="btn small green" @click="filter_apply_new()">Search</a>
+
+                    </div>
+
+                    <div class="list_function" style="margin: 7px 0;">
+                        <div class="pagenation">
+                            <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
+                            <a class="page" v-for="pg in product_pages_10" @click="product_page=pg; filter_apply(pg);"
+                               v-bind:style="[pg == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg
+                                }}</a>
+                            <a class="next" :disabled="product_page == product_pages.length" @click="nex_page(); filter_apply();">Next
+                                10</a>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <table id="tb_product_list" class="table  table-sm table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Information</th>
+                                <th>Specification</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item, index) in displayedPosts">
+
+                                <td><img
+                                    :src="img_url + item.photo1" v-if="item.photo1 !== ''">
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            ID:
+                                        </li>
+                                        <li>
+                                        {{ item.id }}
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Code:
+                                        </li>
+                                        <li class="code">{{ item.code }}</li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Category:
+                                        </li>
+                                        <li v-if="item.category == 'Lighting'">
+                                            {{ item.category}}
+                                        </li>
+                                        <li v-if="item.category != 'Lighting'">
+                                            {{ item.category}} >> {{ item.sub_category_name}}
+                                        </li> <!----></ul>
+                                    <ul>
+                                        <li>
+                                            Tags:
+                                        </li>
+                                        <li><span v-for="(it, index) in item.tags" v-if="item.tags !== undefined ? item.tags[0] !== '' : false">{{ it }}</span></li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Brand:
+                                        </li>
+                                        <li>
+                                        {{ item.brand }}
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Created:
+                                        </li>
+                                        <li>
+                                        {{ item.created_at }}
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Updated:
+                                        </li>
+                                        <li>
+                                        {{ item.updated_at }}
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul v-for="(att, index) in item.attribute_list">
+                                        <li>
+                                            {{ att.category }}:
+                                        </li>
+                                        <li v-if="att.value.length > 1">
+                                            <span v-for="(att_value, index) in att.value">{{att_value}}</span>
+                                        </li>
+                                        <li v-if="att.value.length == 1">
+                                            <template v-for="(att_value, index) in att.value">{{att_value}}</template>
+                                        </li>
+
+                                    </ul>
+                                </td>
+                                <td>
+                                    <span v-show="show_ntd === true">CP: {{ item.price_ntd }}<br></span>
+                                    <span>SRP: {{ item.price }}<br></span>
+                                    <span>QP: {{ item.quoted_price }}<br></span>
+                                </td>
+                                <td>
+                                    <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true" class="fas fa-caret-right"></i></button>
+                                </td>
+                            </tr>
+                            
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+<!--
+                    <div>
+                        <table id="tb_product_list" class="table  table-sm table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Information</th>
+                                <th>Specification</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item, index) in displayedPosts">
+                                <td>
+                                    <img :src="baseURL + item.photo1" v-if="item.photo1">
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            ID:
+                                        </li>
+                                        <li>
+                                            {{ item.id }}
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Code:
+                                        </li>
+                                        <li>
+                                            {{ item.code }}
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Category:
+                                        </li>
+                                        <li v-if="item.category == 'Lighting'">
+                                            {{ item.category}}
+                                        </li>
+                                        <li v-if="item.category != 'Lighting'">
+                                            {{ item.category}} >> {{ item.sub_category_name}}
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Tags:
+                                        </li>
+                                        <li>
+                                            <span v-for="(it, index) in item.tags">{{ it }}</span>
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Brand:
+                                        </li>
+                                        <li>
+                                            {{ item.brand }}
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Created:
+                                        </li>
+                                        <li>
+                                            {{ item.created_at }}
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li>
+                                            Updated:
+                                        </li>
+                                        <li>
+                                            {{ item.updated_at }}
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul v-for="(att, index) in item.attribute_list">
+                                        <li>
+                                            {{ att.category }}:
+                                        </li>
+                                        <li v-if="att.value.length > 1">
+                                            <span v-for="(att_value, index) in att.value">{{att_value}}</span>
+                                        </li>
+                                        <li v-if="att.value.length == 1">
+                                            <template v-for="(att_value, index) in att.value">{{att_value}}</template>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <span>SRP: {{ item.price }}<br></span>
+                                    <span>QP: {{ item.quoted_price }}<br></span>
+                                </td>
+                                <td>
+                                    <button id="edit01"><i
+                                            class="fas fa-caret-right"></i></i>
+                                    </button>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                            -->
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true" id="modal_product_display">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+
+            <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
+                
+            <template v-if="product.variation_mode != 1">
+            <div class="upper_section">
+                    <div class="imagebox">
+                        <div class="selected_image">
+                        <img :src="url" v-if="url !== ''">
+                    </div>
+                    <div class="image_list">
+                        <img v-if="product.photo1" :src="img_url + product.photo1" @click="change_url(product.photo1)"/>
+                        <img v-if="product.photo2" :src="img_url + product.photo2" @click="change_url(product.photo2)"/>
+                        <img v-if="product.photo3" :src="img_url + product.photo3" @click="change_url(product.photo3)"/>
+                        <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                    </div>
+                    </div>
+                    <div class="infobox">
+                        <div class="basic_info"><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>{{product.brand}}</h6>
+                        <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
+                        <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{ product.sub_category_name}}</h6>
+                            <!---->
+                            <div class="tags"><span v-for="(it, index) in product.tags">{{ it }}</span></div>
+                        </div>
+                        <ul class="price_stock">
+                            <li>
+                                Suggested Retail Price: <span>{{price}}</span><span></span></li>
+                            <li>
+                                Quoted Price: <span>{{quoted_price}}</span><span></span></li>
+                        </ul>
+                        
+                        <ul class="variants" style="display: none;">
+                            <li>
+                                Select:
+                            </li>
+                            <li>Beam Angle</li><!---->
+                            <li><select class="form-control">
+                                <option value=""></option>
+                            </select></li>
+                             <li>CCT</li><!---->
+                            <li style="display: none;"><select class="form-control">
+                                <option value=""></option>
+                            </select></li> <!---->
+                            <li>Color Finish</li>
+                            <li style="display: none;"><select class="form-control">
+                                <option value=""></option>
+                            </select></li> <!----><!----><!----></ul>
+
+
+                        <div class="btnbox">
+                            <ul>
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
+                                </li>
+                                <li>
+                                    <button class="btn btn-info" @click="add_without_image()">Add without Image</button>
+                                </li>
+                            </ul>
+
+                            <ul v-if="product.variation_mode == 1">
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with Image</button>
+                                </li>
+                                <li>
+                                    <button class="btn btn-info" @click="add_without_image('all')">Add all spec. without Image</button>
+                                </li>
+                            </ul>
+
+                            <ul>
+                                <li>
+                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="middle_section" v-if="specification.length > 0"><h5>Specification</h5>
+                    <table>
+                        <tbody>
+                            <template v-for="(item, index) in specification">
+                                <tr>
+                                    <td>
+                                        {{item.k1}}
+                                    </td>
+                                    <td>
+                                        {{item.v1}}
+                                    </td>
+                                    <td>
+                                        {{item.k2}}
+                                    </td>
+                                    <td> {{item.v2}}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="middle_section" v-if="product.related_product !== undefined ? product.related_product.length !== 0 : false">
+                    <h5>Related Products</h5>
+
+                    <div id="carouselExampleControls" class="carousel slide">
+
+                        <div class="carousel-inner">
+
+                            <div v-for='(g, groupIndex) in groupedItems'
+                                 :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                <div class="row custom">
+                                    <div class="col custom" v-for='(item, index) in g'>
+                                        <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                        <div>
+                                            <a @click="getSingleProduct(item.id)">
+                                                {{ item.code }}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                           data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                           data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="lower_section"  v-if="(product.notes != null && product.notes != '') || product.description != ''"><h5>Description</h5>
+                    <p>
+                    {{ product.description }}
+                    </p>
+                    <p v-if="product.notes != null && product.notes != ''">
+                        Notes: {{ product.notes }}
+                    </p>
+                </div>
+                </template>
+<template v-if="product.variation_mode == 1">
+                <div class="upper_section">
+
+                    <div class="imagebox">
+                        <div class="selected_image">
+                            <img :src="url" v-if="url !== ''">
+                        </div>
+                        <div class="image_list">
+                        <img v-if="product.photo1" :src="img_url + product.photo1" @click="change_url(product.photo1)"/>
+                        <img v-if="product.photo2" :src="img_url + product.photo2" @click="change_url(product.photo2)"/>
+                        <img v-if="product.photo3" :src="img_url + product.photo3" @click="change_url(product.photo3)"/>
+                            <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                        </div>
+
+                    </div>
+
+
+                    <div class="infobox">
+                        <div class="basic_info">
+                        <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6> 
+                            <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
+                            <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{ product.sub_category_name}}</h6>
+                            <div class="tags" v-if="product.tags !== undefined ? product.tags[0] !== '' : false">
+                                <span v-for="(it, index) in product.tags">{{ it }}</span>
+                            </div>
+                        </div>
+
+                        <ul class="price_stock">
+
+                            <li>
+                                Suggested Retail Price: <span>{{price}}</span><span></span>
+                            </li>
+
+                            <li>
+                                Quoted Price: <span>{{quoted_price}}</span><span></span>
+                            </li>
+
+                        </ul>
+
+                        <ul class="variants">
+                            <li>
+                                Select:
+                            </li>
+                            <li v-if="product.variation1_value[0] !== '' && product.variation1_value[0] !== undefined">
+                                {{ product.variation1 !== 'custom' ? product.variation1 : product.variation1_custom}}
+                            </li>
+                            <li v-show="product.variation1_value[0] !== '' && product.variation1_value[0] !== undefined">
+                                <select class="form-control" v-model="v1" @change="change_v()">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in product.variation1_value" :value="item" :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+                            <li v-if="product.variation2_value[0] !== '' && product.variation2_value[0] !== undefined">
+                                {{ product.variation2 !== 'custom' ? product.variation2 : product.variation2_custom }}
+                            </li>
+                            <li v-show="product.variation2_value[0] !== '' && product.variation2_value[0] !== undefined">
+                                <select class="form-control" v-model="v2" @change="change_v()">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in product.variation2_value" :value="item" :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+                            <li v-if="product.variation3_value[0] !== '' && product.variation3_value[0] !== undefined">
+                                {{ product.variation3 !== 'custom' ? product.variation3 : product.variation3_custom }}
+                            </li>
+                            <li v-show="product.variation3_value[0] !== '' && product.variation3_value[0] !== undefined">
+                                <select class="form-control" v-model="v3" @change="change_v()">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in product.variation3_value" :value="item" :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+
+                            <template v-for="(item, index) in product.accessory_infomation" v-if="show_accessory">
+                                <li>{{ item.category }}</li>
+                                <li>
+                                    <select class="selectpicker" data-width="100%" :id="'tag'+index">
+                                        <option :data-thumbnail="detail.url" v-for="(detail, index) in item.detail[0]">
+                                            {{detail.code}}
+                                        </option>
+                                    </select>
+                                </li>
+                            </template>
+
+                        </ul>
+
+                        <div class="btnbox">
+                            <ul>
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
+                                </li>
+                                <li>
+                                    <button class="btn btn-info" @click="add_without_image()">Add without Image</button>
+                                </li>
+                            </ul>
+
+                            <ul>
+                                <li v-if="toggle_type == 'A'">
+                                    <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with Image</button>
+                                </li>
+                                <li>
+                                    <button class="btn btn-info" @click="add_without_image('all')">Add all spec. without Image</button>
+                                </li>
+                            </ul>
+
+                            <ul>
+                                <li>
+                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="middle_section" v-if="specification.length > 0">
+                    <h5>Specification</h5>
+
+                    <table>
+                        <tbody>
+                        <template v-for="(item, index) in specification">
+                            <tr>
+                                <td>
+                                    {{item.k1}}
+                                </td>
+                                <td>
+                                    {{item.v1}}
+                                </td>
+                                <td>
+                                    {{item.k2}}
+                                </td>
+                                <td> {{item.v2}}</td>
+                            </tr>
+                        </template>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="middle_section" v-if="product.related_product !== undefined ? product.related_product.length !== 0 : false">
+                    <h5>Related Products</h5>
+
+                    <div id="carouselExampleControls" class="carousel slide">
+
+                        <div class="carousel-inner">
+
+                            <div v-for='(g, groupIndex) in groupedItems'
+                                 :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                <div class="row custom">
+                                    <div class="col custom" v-for='(item, index) in g'>
+                                        <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                        <div>
+                                            <a @click="getSingleProduct(item.id)">
+                                                {{ item.code }}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                           data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                           data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="lower_section" v-if="(product.notes != null && product.notes != '') || product.description != ''">
+                    <h5>Description</h5>
+                    <p>
+                        {{ product.description }}
+                    </p>
+                    <p v-if="product.notes != null && product.notes != ''">
+                        Notes: {{ product.notes }}
+                    </p>
+                    <!--
+                    <div class="desc_imgbox">
+                        <img src="images/realwork.png">
+                        <img src="images/realwork.png">
+                        <img src="images/wash_hands.png">
+                        <img src="images/realwork.png">
+                    </div>
+                    -->
+                </div>
+                </template>
+
+            </div>
+            
+        </div>
 
 
     </div>
+
+
 </div>
 
 
@@ -2346,9 +3706,11 @@ header( 'location:index' );
     window.onafterprint = (event) => {
         app.show_title = true;
     };
+
+
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
-<script defer src="js/axios.min.js"></script> 
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/quotation.js"></script>
+<script defer src="js/quotation_v2.js"></script>
 </html>

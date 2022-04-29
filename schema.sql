@@ -2523,6 +2523,7 @@ ALTER TABLE quotation_page_type_block MODIFY COLUMN `description`  varchar(1024)
 
 ALTER TABLE quotation_page_type_block MODIFY COLUMN listing varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
+
 -- project01 modify
 ALTER TABLE project_main
 ADD COLUMN `temp_estimate_close_prob` varchar(3) DEFAULT '' AFTER estimate_close_prob;
@@ -2597,3 +2598,43 @@ CREATE TABLE IF NOT EXISTS `product_related` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20220406 quotation management II
+CREATE TABLE IF NOT EXISTS quotation_payment_term
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+  `payment_method` varchar(512) DEFAULT '',
+  `brief` varchar(512) DEFAULT '',
+  `list` JSON,
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 20220418 
+ALTER TABLE quotation_page_type_block ADD COLUMN num VARCHAR(10) DEFAULT '';
+ALTER TABLE quotation_page_type_block ADD COLUMN pid bigint(20) DEFAULT 0;
+
+-- task with got INT
+CREATE TABLE IF NOT EXISTS project_got_it
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `message_id` bigint(20) DEFAULT 0,
+	`reply_id` bigint(20) DEFAULT 0,
+  `kind` varchar(2) DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- add phase out
+ALTER TABLE product_category
+ADD COLUMN `out` VARCHAR(1) DEFAULT '' COLLATE utf8mb4_unicode_ci AFTER description;
