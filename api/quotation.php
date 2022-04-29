@@ -99,9 +99,11 @@ if (!isset($jwt)) {
         $block_names = GetBlockNames($row['id'], $db);
         $total_info = GetTotalInfo($row['id'], $db);
         $term_info = GetTermInfo($row['id'], $db);
+        $payment_term_info = GetPaymentTermInfo($row['id'], $db);
         $sig_info = GetSigInfo($row['id'], $db);
 
         $subtotal_info = GetSubTotalInfo($row['id'], $db);
+        $subtotal_novat = GetSubTotalNoVat($row['id'], $db);
 
         $merged_results[] = array(
             "id" => $id,
@@ -122,8 +124,10 @@ if (!isset($jwt)) {
             "block_names" => $block_names,
             "total_info" => $total_info,
             "term_info" => $term_info,
+            "payment_term_info" => $payment_term_info,
             "sig_info" => $sig_info,
             "subtotal_info" => $subtotal_info,
+            "subtotal_novat" => $subtotal_novat
         );
     }
 
@@ -155,6 +159,32 @@ function GetSubTotalInfo($qid, $db)
 
     return $total;
 }
+
+
+function GetSubTotalNoVat($qid, $db)
+{
+    $total = 0;
+
+    $query = "
+            select sum(qty * price * (1 - discount / 100)) amt from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . ")
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
+        $total = $row['amt'];
+
+    }
+
+    return $total;
+}
+
 
 function GetBlockNames($qid, $db){
     $query = "
@@ -235,6 +265,7 @@ function GetPages($qid, $db){
         $type = GetTypes($id, $db);
         $total = GetTotal($qid, $page, $db);
         $term = GetTerm($qid, $page, $db);
+        $payment_term = GetPaymentTerm($qid, $page, $db);
         $sig = GetSig($qid, $page, $db);
   
         $merged_results[] = array(
@@ -243,6 +274,7 @@ function GetPages($qid, $db){
             "types" => $type,
             "total" => $total,
             "term" => $term,
+            "payment_term" => $payment_term,
             "sig" => $sig,
         );
     }
@@ -331,6 +363,51 @@ function GetTerm($qid, $page, $db){
             "title" => $title,
             "brief" => $brief,
             "list" => $list,
+          
+        );
+    }
+
+    return $merged_results;
+}
+
+
+function GetPaymentTerm($qid, $page, $db){
+    $query = "
+        SELECT 
+        `page`,
+        payment_method,
+        brief,
+        list 
+        FROM   quotation_payment_term
+        WHERE  quotation_id = " . $qid . "
+        AND  page = " . $page . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $page = $row['page'];
+        $payment = $row['payment_method'];
+        $brief = $row['brief'];
+        $list = $row['list'];
+    
+        $payment_method = explode (";", $payment);
+        $payment_method= array_filter($payment_method);
+        $payment_method = array_map('trim', $payment_method);
+        $item = json_decode($list, TRUE); 
+
+        $merged_results = array(
+            "page" => $page,
+            "payment_method" => $payment_method,
+            "brief" => $brief,
+            "list" => $item,
           
         );
     }
@@ -568,6 +645,60 @@ function GetTermInfo($qid, $db)
 }
 
 
+function GetPaymentTermInfo($qid, $db)
+{
+    $query = "
+        SELECT 
+        id,
+        `page`,
+        payment_method,
+        brief,
+        list 
+        FROM   quotation_payment_term
+        WHERE  quotation_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $item = [];
+
+    $merged_results = [];
+    
+    $id = 0;
+    $page = 0;
+    $payment_method = 'Cash; Cheque; Credit Card; Bank Wiring;';
+    $brief = '50% Downpayment & another 50% balance a day before the delivery';
+    $list = '[{"id":"0", "bank_name": "BDO", "first_line":"Acct. Name: Feliix Inc. Acct no: 006910116614", "second_line":"Branch: V.A Rufino", "third_line":""}, {"id":"1", "bank_name": "SECURITY BANK", "first_line":"Acct. Name: Feliix Inc. Acct no: 0000018155245", "second_line":"Swift code: SETCPHMM", "third_line":"Address: 512 Edsa near Corner Urbano Plata St., Caloocan City"}]';
+
+    $item = json_decode($list, TRUE); 
+  
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $page = $row['page'];
+        $payment_method = $row['payment_method'];
+        $brief = $row['brief'];
+        $list = $row['list'];
+       
+        $item = json_decode($list, TRUE); 
+        
+    }
+
+    $merged_results = array(
+        "page" => $page,
+        "payment_method" => $payment_method,
+        "brief" => $brief,
+        "item" => $item,
+               
+    );
+
+    return $merged_results;
+}
+
+
 function GetTotalInfo($qid, $db){
     $query = "
         SELECT 
@@ -678,7 +809,9 @@ function GetBlocks($qid, $db){
         discount,
         amount,
         description,
-        listing
+        listing,
+        num,
+        pid
         FROM   quotation_page_type_block
         WHERE  type_id = " . $qid . "
         AND `status` <> -1 
@@ -699,6 +832,8 @@ function GetBlocks($qid, $db){
         $photo = $row['photo'];
         $qty = $row['qty'];
         $price = $row['price'];
+        $num = $row['num'];
+        $pid = $row['pid'];
         $discount = $row['discount'];
         $amount = $row['amount'];
         $description = $row['description'];
@@ -716,6 +851,8 @@ function GetBlocks($qid, $db){
             "type" => $type,
             "url" => $url,
             "qty" => $qty,
+            "num" => $num,
+            "pid" => $pid,
             "price" => $price,
             "discount" => $discount,
             "amount" => $amount,

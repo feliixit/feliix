@@ -410,6 +410,9 @@ function GetPettyType($loc)
         case "2":
             $location = "Reimbursement";
             break;
+        case "3":
+            $location = "Petty Cash Replenishment";
+            break;
         default:
             $location = "";
             break;

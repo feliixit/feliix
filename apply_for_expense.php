@@ -362,6 +362,7 @@ body.green input[type=date] {
                             <select style="width:100%" v-model="request_type">
                                 <option value="1">New</option>
                                 <option value="2">Reimbursement</option>
+                                <option value="3">Petty Cash Replenishment</option>
                             </select>
                         </li>
 

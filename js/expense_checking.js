@@ -360,6 +360,9 @@ var app = new Vue({
         this.receive_records.find((element) => element.id == this.proof_id)
       );
 
+      if(this.record.request_type == 'Petty Cash Replenishment')
+        this.record.info_account = "Security Bank => Office Petty Cash";
+
       this.reject_reason = "";
       this.view_detail = true;
 

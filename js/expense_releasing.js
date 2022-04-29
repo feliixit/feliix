@@ -325,6 +325,59 @@ var app = new Vue({
         });
       },
     
+      
+    approveReceiveRecord_PCR: function(id) {
+
+      if(this.submit == true) return;
+      this.submit = true;
+
+      let _this = this;
+      targetId = this.record.id;
+      var form_Data = new FormData();
+
+      var token = localStorage.getItem("token");
+      form_Data.append("jwt", token);
+
+      form_Data.append("crud", "Finish Releasing PCR");
+      form_Data.append("id", id);
+      form_Data.append("remark", "");
+
+      for( var i = 0; i < this.$refs.file.files.length; i++ ){
+        let file = this.$refs.file.files[i];
+        form_Data.append('files[' + i + ']', file);
+      }
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/petty_cash_action",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          //this.$forceUpdate();
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.resetForm();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+          _this.resetForm();
+        });
+    },
+
 
     approveReceiveRecord_MD: function(id) {
 
@@ -517,6 +570,9 @@ var app = new Vue({
       if(this.record.info_account === 'Security Bank' && (this.name.trim() === 'Glendon Wendell Co' || this.name.trim() === 'Dennis Lin'))
         return true;
 
+      if(this.record.info_account === 'Security Bank => Office Petty Cash' && (this.name.trim() === 'Glendon Wendell Co' || this.name.trim() === 'Dennis Lin'))
+        return true;
+
       return false;
     },
 
@@ -627,6 +683,64 @@ var app = new Vue({
         if (result.value) {
   
           _this.approveReceiveRecord_MD(this.proof_id);
+
+
+        }
+      });
+    },
+
+    
+    approve_pcr: function() {
+      let _this = this;
+
+      if (this.proof_id < 1) {
+        Swal.fire({
+          text: "Please select applicant to be approved!",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      // check account privileges
+      if(this.account_privileges() === false)
+      {
+       
+          Swal.fire({
+            text: "Invalid Releaser",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          return;
+        
+      }
+
+      if (!this.$refs.file.files[0])
+        {
+          Swal.fire({
+            text: 'File Attachment required',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+          })
+          //this.err_msg = 'Location Photo required';
+          //$(window).scrollTop(0);
+          return false;
+        }
+
+      Swal.fire({
+        title: "Are you sure to proceed this action?",
+        text: "Finish releasing and the status of this application will become completed",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.value) {
+  
+          _this.approveReceiveRecord_PCR(this.proof_id);
 
 
         }

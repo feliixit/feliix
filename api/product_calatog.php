@@ -271,6 +271,7 @@ else
 
                 $special_infomation = [];
                 $accessory_information = [];
+                $related_product = [];
 
                 $sub_cateory_item = [];
 
@@ -305,12 +306,16 @@ else
                 $updated_at = $row['updated_at'];
 
                 $product = GetProduct($id, $db);
+                $related_product = GetRelatedProductCode($id, $db);
 
                 $quoted_price = $row['quoted_price'];
                 $quoted_price_org = $row['quoted_price'];
                 $quoted_price_change = $row['quoted_price_change'];
                 $price_change = $row['price_change'];
                 $price_ntd_change = $row['price_ntd_change'];
+
+                $srp = 0;
+                $srp_quoted = 0;
 
                 // for price
                 $pro_price_ntd = [];
@@ -346,6 +351,7 @@ else
                 if(count($pro_price) == 1)
                 {
                     $s_price = "PHP " . number_format($pro_price[0]);
+                    $srp = $pro_price[0];
                 }
                 if(count($pro_price) > 1)
                 {
@@ -359,9 +365,12 @@ else
                         $e = $pro_price[$i];
                     }
                     $s_price = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
+
+                    $srp = $e;
                 }
 
                 $s_price_ntd = "";
+
                 if(count($pro_price_ntd) == 1)
                 {
                     $s_price_ntd = "NTD " . number_format($pro_price_ntd[0]);
@@ -384,6 +393,7 @@ else
                 if(count($pro_price_quoted) == 1)
                 {
                     $s_price_quoted = "PHP " . number_format($pro_price_quoted[0]);
+                    $srp_quoted = $pro_price_quoted[0];
                 }
                 if(count($pro_price_quoted) > 1)
                 {
@@ -397,6 +407,8 @@ else
                         $e = $pro_price_quoted[$i];
                     }
                     $s_price_quoted = "PHP " . number_format($b) . " ~ " . "PHP " . number_format($e);
+
+                    $srp_quoted = $e;
                 }
 
                 if($s_price == "")
@@ -564,6 +576,8 @@ else
                                         );
                 }
 
+                $moq = $row['moq'];
+
                 $merged_results[] = array( "id" => $id,
                                     "category" => $category,
                                     "sub_category" => $sub_category,
@@ -604,8 +618,14 @@ else
                                     "variation3_custom" => $variation3_custom,
                                     "attribute_list" => $attribute_list,
                                     "sub_category_item" => $sub_category_item,
-"out" => $out,
+                                    "special_information" => $special_information,
+                                    "moq" => $moq,
+                                    "out" => $out,
+                                    "notes" => $notes,
+                                    "related_product" => $related_product,
                                     "cnt" => $cnt,
+                                    "srp" => $srp,
+                                    "srp_quoted" => $srp_quoted,
 
                 );
             }
@@ -938,6 +958,23 @@ function GetLevel3($cat_id, $db){
 
 }
 
+function GetRelatedProductCode($id, $db){
+    $sql = "SELECT * FROM product_category where code in (SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1)";
+
+    $sql = $sql . " ORDER BY code ";
+
+    $merged_results = [];
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+
+}
 
 function GetDetail($cat_id, $db){
     $sql = "SELECT cat_id, sn, `option` FROM product_category_attribute_detail WHERE cat_id = '". $cat_id . "' and STATUS <> -1";

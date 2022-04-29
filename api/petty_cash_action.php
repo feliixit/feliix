@@ -511,6 +511,117 @@ if (!isset($jwt)) {
             }
         } 
 
+        
+        // for expense record petty ash replincement
+        if ($crud == "Releasing" || $crud == "Finish Releasing PCR") {
+
+            $_record = GetRecordDetail($id, $db);
+            $_record_list = GetList($id, $db);
+            $_record_attachments = GetAttachments($id, $db);
+            $_record_release_attachments = GetReleaseAttachments($id, $db);
+
+            $_account = 0;
+            $_related_account = "";
+            $_category = "";
+            $_sub_category = "";
+            $_details = "";
+
+            $_request_no = "";
+            $_project_name = "";
+            $_project_name1 = "";
+
+            $_payee = "";
+
+            $_cash_in = 0;
+            $_cash_out = 0;
+            $_remarks = "";
+            $_is_marked = 0;
+            $_is_locked = 0;
+            $_created_by = "SYSTEM";
+
+            $_id = 0;
+
+            if(sizeof($_record) > 0)
+            {
+                $_account = 1;
+               
+                $_category = $_record[0]["info_category"];
+                $_subcategory = $_record[0]["info_sub_category"];
+                $_payee = $_record[0]["username"];
+                $_request_no = $_record[0]["request_no"];
+                $_project_name = $_record[0]["project_name"];
+                $_project_name1 = $_record[0]["project_name1"];
+                $_id = $_record[0]["id"];
+            }
+
+            $_details = 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
+
+            if($_project_name != "")
+                $_details = $_details . 'Reason: ' . $_project_name . '<br>';
+            
+            foreach ($_record_list as &$list) {
+                $_details .= "● " . $list["payee"] . ", " . $list["particulars"] . ", Price = " . $list["price"]*1 . ", Qty = " . $list["qty"]*1 . ", Amount = " . $list["price"] * $list["qty"] . "<br>";
+
+                $_cash_in += $list["price"] * $list["qty"];
+            }
+            
+            foreach($_record_attachments as &$list){
+                $_pic_url .= $list["gcp_name"] . ",";
+                $_real_url .= $list["filename"] . ",";
+            }
+
+            $query = "INSERT INTO price_record
+                (`account`,`category`, `sub_category`, `related_account`, `project_name`, `details`, `gcp_url`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
+                VALUES (:account,:category, :sub_category, :related_account, :project_name, :details, :gcp_url, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by) ";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            $remark_liquidated = $remark;
+
+            // bind the values
+            $stmt->bindParam(':account', $_account);
+            $stmt->bindParam(':category', $_category);
+            $stmt->bindParam(':sub_category', $_subcategory);
+            $stmt->bindParam(':related_account', $_related_account);
+
+            $stmt->bindParam(':project_name', $_project_name1);
+
+            $stmt->bindParam(':details', rtrim($_details, "<br>"));
+            $stmt->bindParam(':gcp_url', rtrim($_gcp_url, ","));
+            $stmt->bindParam(':pic_url', rtrim($_pic_url, ","));
+            $stmt->bindParam(':payee', $_payee);
+
+
+            $stmt->bindParam(':paid_date', date("Y-m-d"));
+            $stmt->bindParam(':cash_in', $_cash_in);
+            $stmt->bindParam(':cash_out', $_cash_out);
+            $stmt->bindParam(':remarks', $_remarks);
+
+
+            $stmt->bindParam(':is_locked', $_is_locked);
+            $stmt->bindParam(':is_marked', $_is_marked);
+            $stmt->bindParam(':created_by', $_created_by);
+
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+        } 
+
 
         if ($crud == "Verifier Verified") {
 
@@ -870,6 +981,9 @@ function SendNotifyMail($id, $action)
         case "Finish Releasing":
             $location = 9;
             break;
+        case "Finish Releasing PCR":
+            $location = 9;
+            break;
         case "Verifier Rejected":
             $location = 7;
             break;
@@ -1054,6 +1168,9 @@ function &GetAction($loc)
         case "Finish Releasing":
             $location = 9;
             break;
+        case "Finish Releasing PCR":
+            $location = 9;
+            break;
         case "Verifier Rejected":
             $location = 7;
             break;
@@ -1109,6 +1226,9 @@ function &GetDesc($loc)
             $location = "Releaser Voided";
             break;
         case "Finish Releasing":
+            $location = "Releaser Released";
+            break;
+        case "Finish Releasing PCR":
             $location = "Releaser Released";
             break;
     }

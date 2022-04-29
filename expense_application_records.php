@@ -409,7 +409,7 @@ body.green input[type=date] {
                             <ul>
                                 <li class="head">Liquidation Files</li>
                                 <li><a v-if="record.request_type == 'New'" v-for='(item, index) in record.liquidate_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
-                                    <div v-if="record.request_type == 'Reimbursement'">---</div>
+                                    <div v-if="record.request_type == 'Reimbursement' || record.request_type == 'Petty Cash Replenishment'">---</div>
                                 </li>
                             </ul>
                             <ul>
@@ -427,7 +427,7 @@ body.green input[type=date] {
                             <ul>
                                 <li class="head">Proof of Return or Release</li>
                                 <li><a v-if="record.request_type == 'New'" v-for='(item, index) in record.verified_items' :key="index" :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>
-                                    <div v-if="record.request_type == 'Reimbursement'">---</div>
+                                    <div v-if="record.request_type == 'Reimbursement' || record.request_type == 'Petty Cash Replenishment'">---</div>
                                 </li>
                             </ul>
                         </div>
