@@ -1155,7 +1155,7 @@ var app = new Vue({
       sig_save: async function() {
         if (this.submit == true) return;
 
-        if(this.sig.page == 0) return;
+        //if(this.sig.page == 0) return;
 
         this.submit = true;
   
@@ -1220,13 +1220,65 @@ var app = new Vue({
 
       },
 
+      term_save: async function() {
+        if (this.submit == true) return;
+
+        //if(this.term.page == 0) return;
+
+        this.submit = true;
+  
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append("jwt", token);
+ 
+        form_Data.append("quotation_id", this.id);
+        form_Data.append("detail", JSON.stringify(this.term));
+
+        try {
+          let res = await axios({
+            method: 'post',
+            url: 'api/quotation_term_insert',
+            data: form_Data,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+          if(res.status == 200){
+            // test for status you want, etc
+   
+            _this.submit = false;
+
+            Swal.fire({
+              html: res.data.message,
+              icon: "info",
+              confirmButtonText: "OK",
+            });
+        } 
+          
+        } catch (err) {
+          console.log(err)
+          Swal.fire({
+            text: err,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+            _this.submit = false;
+        }
+
+        this.reload();
+  
       
+      },
 
       
       payment_term_save: async function() {
         if (this.submit == true) return;
 
-        if(this.payment_term.page == 0) return;
+        //if(this.payment_term.page == 0) return;
 
         this.submit = true;
   
@@ -1401,7 +1453,7 @@ var app = new Vue({
       save_total: async function() {
         if (this.submit == true) return;
 
-        if(this.total.page == 0) return;
+        //if(this.total.page == 0) return;
 
         if(this.total.discount > 100 || this.total.discount < 0)
         {
