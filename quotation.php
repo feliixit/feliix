@@ -596,7 +596,7 @@ header( 'location:index' );
         }
 
         .area_payment .tb_payment {
-            width: 100%;
+            width: calc( 100% - 20px);
             margin: 10px;
         }
 
@@ -2328,6 +2328,7 @@ header( 'location:index' );
                                 <dt class="head">Choose where the block of total locates at:</dt>
                                 <dd>
                                     <select v-model="total.page">
+                                        <option value="0"></option>
                                         <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
                                             }}
                                         </option>
@@ -2415,6 +2416,7 @@ header( 'location:index' );
                                 <dt class="head">Choose where the block of terms and condition locates at:</dt>
                                 <dd>
                                     <select v-model="term.page">
+                                        <option value="0"></option>
                                         <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
                                             }}
                                         </option>
@@ -2481,6 +2483,7 @@ header( 'location:index' );
                                 <dt class="head">Choose where the block of payment terms locates at:</dt>
                                 <dd>
                                     <select v-model="payment_term.page">
+                                        <option value="0"></option>
                                         <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
                                             }}
                                         </option>
@@ -2561,6 +2564,7 @@ header( 'location:index' );
                                 <dt class="head">Choose where the block of signature locates at:</dt>
                                 <dd>
                                     <select v-model="sig.page">
+                                        <option value="0"></option>
                                         <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
                                             }}
                                         </option>
