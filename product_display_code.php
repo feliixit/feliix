@@ -366,6 +366,29 @@
             width: 4%;
         }
 
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+            }
+
+            .mainContent {
+                padding: 0;
+                background-color: #FFF !important;
+                zoom: 85%;
+                margin: 1px 0px 0px 7px;
+                overflow-y: hidden;
+            }
+
+            .noPrint {
+                display: none;
+            }
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
     </style>
 
 </head>
@@ -375,7 +398,7 @@
 <div class="bodybox" id="app">
 
     <!-- header -->
-    <header>header</header>
+    <header class="noPrint">header</header>
     <!-- header end -->
     <div class="mainContent">
 
@@ -471,7 +494,8 @@
                 </ul>
 
                 <div class="btnbox">
-                    <!-- <button class="btn btn-info">Add</button> -->
+                    <button class="btn btn-info" @click="print_page()">Export</button>
+                    
                 </div>
 
             </div>
