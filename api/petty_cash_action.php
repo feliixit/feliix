@@ -513,7 +513,7 @@ if (!isset($jwt)) {
 
         
         // for expense record petty ash replincement
-        if ($crud == "Releasing" || $crud == "Finish Releasing PCR") {
+        if ($crud == "Finish Releasing PCR") {
 
             $_record = GetRecordDetail($id, $db);
             $_record_list = GetList($id, $db);
@@ -667,6 +667,9 @@ if (!isset($jwt)) {
                         break;
                 }
 
+                if($_record[0]["info_account"] == "Online Transactions" && $_record[0]["request_type"] == 1)
+                    $_account = 1;
+                
                 $_category = $_record[0]["info_category"];
                 $_subcategory = $_record[0]["info_sub_category"];
                 $_payee = $_record[0]["username"];
@@ -1238,7 +1241,7 @@ function &GetDesc($loc)
 
 function GetRecordDetail($_id, $db)
 {
-    $sql = "SELECT ap.id, request_no, project_name1, project_name, info_account, info_category, info_sub_category, u.username, amount_verified
+    $sql = "SELECT ap.request_type, ap.id, request_no, project_name1, project_name, info_account, info_category, info_sub_category, u.username, amount_verified
             FROM apply_for_petty ap 
             LEFT JOIN user u ON ap.uid = u.id 
             where ap.id = :id";

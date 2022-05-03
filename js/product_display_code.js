@@ -532,6 +532,9 @@ var app = new Vue({
       }
     },
 
+    print_page() {
+      window.print();
+    },
 
     onFileChange(e, num) {
       const file = e.target.files[0];
