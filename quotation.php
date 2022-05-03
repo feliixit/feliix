@@ -596,7 +596,7 @@ header( 'location:index' );
         }
 
         .area_payment .tb_payment {
-            width: 100%;
+            width: calc( 100% - 20px);
             margin: 10px;
         }
 
