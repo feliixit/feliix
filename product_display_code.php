@@ -493,7 +493,7 @@
 
                 </ul>
 
-                <div class="btnbox">
+                <div class="btnbox noPrint">
                     <button class="btn btn-info" @click="print_page()">Export</button>
                     
                 </div>
