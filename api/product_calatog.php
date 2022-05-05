@@ -73,7 +73,7 @@ else
             $query_cnt = "SELECT count(*) cnt FROM product_category p  WHERE  p.STATUS <> -1 ";
 
             // product main
-            $sql = "SELECT p.* FROM product_category p  WHERE  p.STATUS <> -1";
+            $sql = "SELECT p.*, cu.username created_name, uu.username updated_name FROM product_category p left join `user` cu on cu.id = p.create_id left join `user` uu on uu.id = p.updated_id WHERE  p.STATUS <> -1";
 
             if (!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -304,6 +304,9 @@ else
                 $created_at = $row['created_at'];
                 $updated_id = $row['updated_id'];
                 $updated_at = $row['updated_at'];
+
+                $created_name = $row['created_name'];
+                $updated_name = $row['updated_name'];
 
                 $product = GetProduct($id, $db);
                 $related_product = GetRelatedProductCode($id, $db);
@@ -603,6 +606,8 @@ else
                                     "create_id" => $create_id,
                                     "updated_at" => $updated_at,
                                     "updated_id" => $updated_id,
+                                    "created_name" => $created_name,
+                                    "updated_name" => $updated_name,
                                     "product" => $product,
                                     "variation1_text" => $variation1_text,
                                     "variation2_text" => $variation2_text,

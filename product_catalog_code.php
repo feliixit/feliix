@@ -710,7 +710,7 @@
                                 Created:
                             </li>
                             <li>
-                                {{ item.created_at }}
+                                {{ item.created_at }} {{ item.created_name !== null ? '(' + item.created_name + ')' : '' }}
                             </li>
 
                         </ul>
@@ -720,7 +720,7 @@
                                 Updated:
                             </li>
                             <li>
-                                {{ item.updated_at }}
+                                {{ item.updated_at }} {{ item.updated_name !== null ? '(' + item.updated_name + ')' : '' }}
                             </li>
 
                         </ul>
