@@ -303,6 +303,13 @@ header( 'location:index' );
             max-width: 230px;
         }
 
+        #tb_product_list ul li:nth-of-type(1) span {
+            background-color: red;
+            color: white;
+            padding: 0px 5px 3px;
+            border-radius: 10px;
+        }
+
         #tb_product_list ul li:nth-of-type(2) span {
             background-color: #5bc0de;
             color: #fff;
@@ -3137,6 +3144,12 @@ header( 'location:index' );
                                     :src="img_url + item.photo1" v-if="item.photo1 !== ''">
                                 </td>
                                 <td>
+                                    <ul v-if="item.out == 'Y'">
+                                        <li>
+                                                <span class="phasedout">Phased Out</span>
+                                        </li>
+                                        <li></li>
+                                    </ul>
                                     <ul>
                                         <li>
                                             ID:

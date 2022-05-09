@@ -54,6 +54,7 @@ $db = $database->getConnection();
 
 switch ($method) {
     case 'GET':
+        $uid = $user_id;
         $stage_id = (isset($_GET['stage_id']) ?  $_GET['stage_id'] : 0);
 
         $status = (isset($_GET['status']) ?  $_GET['status'] : '');
@@ -178,7 +179,7 @@ switch ($method) {
             if(empty($collaborator ))
                 $collaborator = GetUserInfo($row['collaborator'], $db);
             $collaborator_id = explode(",", $row['collaborator']);
-            $message = GetMessage($row['task_id'], $db);
+            $message = GetMessage($row['task_id'], $db, $uid);
             $gcp_name = $row['gcp_name'];
             $filename = $row['filename'];
             $detail = $row['detail'];
@@ -417,7 +418,7 @@ function GetStatus($loc)
 }
 
 
-function GetMessage($task_id, $db)
+function GetMessage($task_id, $db, $uid)
 {
     $sql = "select pmsgrp.id message_id, pmsgrp.message message, pmsgrp.`status` message_status, r.id uid, r.username messager, r.pic_url messager_pic, pmsgrp.created_at message_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
@@ -447,6 +448,9 @@ function GetMessage($task_id, $db)
     $reply = [];
     $items = [];
 
+    $got_it = [];
+    $i_got_it = false;
+
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if ($message_id != $row['message_id'] && $message_id != 0) {
             $merged_results[] = array(
@@ -467,6 +471,8 @@ function GetMessage($task_id, $db)
                 "update_date" => $update_date,
 
                 "items" => $items,
+                "i_got_it" => $i_got_it,
+                "got_it" => $got_it,
             );
 
             if(!empty($reply))
@@ -474,6 +480,8 @@ function GetMessage($task_id, $db)
 
             $reply = [];
             $items = [];
+            $got_it = [];
+            $i_got_it = false;
         }
 
         $message_id = $row['message_id'];
@@ -488,11 +496,22 @@ function GetMessage($task_id, $db)
         $update_date = $row['update_date'];
 
         if(empty($reply))
-            $reply = GetReply($row['message_id'], $db, $message_id, $messager, $message);
+            $reply = GetReply($row['message_id'], $db, $message_id, $messager, $message, $uid);
      
         $gcp_name = $row['gcp_name'];
         $filename = $row['filename'];
-      
+
+        // got it
+        $got_it = GetGotIt($row['message_id'], 'pj', $db);
+        foreach ($got_it as $g) {
+            if ($g['uid'] == $uid) {
+                $i_got_it = true;
+                break;
+            }
+        }
+
+        if($uid == $row["uid"])
+            $i_got_it = true;
 
         if ($filename != "")
             $items[] = array(
@@ -520,6 +539,8 @@ function GetMessage($task_id, $db)
             "update_date" => $update_date,
         
             "items" => $items,
+            "got_it" => $got_it,
+            "i_got_it" => $i_got_it,
         );
 
         if(!empty($reply))
@@ -529,7 +550,51 @@ function GetMessage($task_id, $db)
     return $merged_results;
 }
 
-function GetReply($msg_id, $db, $id, $name, $msg)
+function GetGotIt($msg_id, $kind, $db)
+{
+    $sql = "select  u.id uid, u.username username
+            from project_got_it g
+            LEFT JOIN user u ON u.id = g.create_id
+            where g.message_id = " . $msg_id . " AND g.kind = '" . $kind . "' order by g.created_at";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $got_it = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $got_it[] = array(
+            "uid" => $row['uid'],
+            "username" => $row['username'],
+        );
+    }
+
+    return $got_it;
+}
+
+function GetGotItReply($reply_id, $kind, $db)
+{
+    $sql = "select  u.id uid, u.username username
+            from project_got_it g
+            LEFT JOIN user u ON u.id = g.create_id
+            where g.reply_id = " . $reply_id . " AND g.kind = '" . $kind . "' order by g.created_at";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $got_it = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $got_it[] = array(
+            "uid" => $row['uid'],
+            "username" => $row['username'],
+        );
+    }
+
+    return $got_it;
+}
+
+function GetReply($msg_id, $db, $id, $name, $msg, $uid)
 {
     $sql = "select pmsgrp.id replay_id, pmsgrp.message reply, pmsgrp.`status` reply_status, r.id uid, r.username replyer, r.pic_url replyer_pic, pmsgrp.created_at reply_date, COALESCE(p.username, '') updator, COALESCE(pmsgrp.updated_at, '') update_date,
             COALESCE(h.filename, '') filename, COALESCE(h.gcp_name, '') gcp_name
@@ -557,6 +622,9 @@ function GetReply($msg_id, $db, $id, $name, $msg)
     $updator = "";
     $update_date = "";
 
+    $got_it = [];
+    $i_got_it = false;
+
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if ($replay_id != $row['replay_id'] && $replay_id != 0) {
             $merged_results[] = array(
@@ -578,9 +646,14 @@ function GetReply($msg_id, $db, $id, $name, $msg)
                 "update_date" => $update_date,
          
                 "items" => $items,
+
+                "got_it" => $got_it,
+                "i_got_it" => $i_got_it,
             );
 
             $items = [];
+            $got_it = [];
+            $i_got_it = false;
         }
 
         $replay_id = $row['replay_id'];
@@ -597,6 +670,18 @@ function GetReply($msg_id, $db, $id, $name, $msg)
         $gcp_name = $row['gcp_name'];
         $filename = $row['filename'];
       
+        // got it
+        $got_it = GetGotItReply($row['replay_id'], 'pj', $db);
+        // look for user_id in got_it
+        foreach ($got_it as $g) {
+            if ($g['uid'] == $uid) {
+                $i_got_it = true;
+                break;
+            }
+        }
+
+        if($uid == $row["uid"])
+            $i_got_it = true;
 
         if ($filename != "")
             $items[] = array(
@@ -624,6 +709,8 @@ function GetReply($msg_id, $db, $id, $name, $msg)
             "update_date" => $update_date,
         
             "items" => $items,
+            "got_it" => $got_it,
+            "i_got_it" => $i_got_it,
         );
     }
 

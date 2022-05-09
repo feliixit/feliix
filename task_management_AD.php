@@ -2314,6 +2314,22 @@ catch (Exception $e) {
             width: 200px;
             vertical-align: bottom;
         }
+
+        .block.left .msg .msgbox.dialogclear{
+            position: relative;
+            padding-bottom: 72px;
+        }
+
+        .block.left .msg .msgbox.dialogclear p{
+            min-width: 240px;
+        }
+
+        .block.left .msg .msgbox.dialogclear .already_read{
+            font-size: 10px;
+            color: rgb(30,107,168);
+            position: absolute;
+            bottom: 0;
+        }
     </style>
 
 </head>
@@ -2803,9 +2819,11 @@ catch (Exception $e) {
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                 </i>
+                                                <div class="already_read"><template v-for="(got, index) in item.got_it">{{ got.username }}<span v-if="index + 1 < item.got_it.length">, </span></template></div>
 
                                             </div>
                                             <div class="btnbox">
+                                                <a class="btn small green"  @click="got_it_message(item.message_id, item.ref_id)" v-if="item.i_got_it == false">Got it</a>
                                                 <a class="btn small green reply r1" :id="'task_reply_btn_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg(item.message_id + '_' + item.ref_id)">Reply</a>
                                                 <!-- dialog -->
                                                 <div class="dialog reply r1" :id="'task_reply_dlg_' + item.message_id + '_' + item.ref_id">
@@ -2835,6 +2853,9 @@ catch (Exception $e) {
                                                         </dl>
                                                     </div>
                                                 </div>
+
+                                                
+
                                                 <!-- dialog end -->
                                                 <a class="btn small yellow" @click="msg_delete(item.message_id, item.ref_id, item.messager_id, '<?php echo $user_id; ?>')">Delete</a>
                                             </div>
@@ -2847,8 +2868,11 @@ catch (Exception $e) {
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
                                                     
                                                 </i>
+                                                
 
                                             </div>
+
+                                            <div class="already_read"><template v-for="(got, index) in item.got_it">{{ got.username }}<span v-if="index + 1 < item.got_it.length">, </span></template></div>
                                         </div>
                                     </li>
 

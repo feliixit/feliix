@@ -45,7 +45,7 @@ if (!isset($jwt)) {
 header('Access-Control-Allow-Origin: *');
 
 include_once 'config/database.php';
-include_once 'mail.php';
+//include_once 'mail.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -55,16 +55,15 @@ switch ($method) {
     case 'POST':
         // get database connection
         $uid = $user_id;
-        $msg_id = (isset($_POST['msg_id']) ?  $_POST['msg_id'] : 0);
         $reply_id = (isset($_POST['reply_id']) ?  $_POST['reply_id'] : 0);
-        $message = (isset($_POST['reply']) ?  $_POST['reply'] : '');
+        $message_id = (isset($_POST['message_id']) ?  $_POST['message_id'] : 0);
+        $kind = (isset($_POST['kind']) ?  $_POST['kind'] : '');
     
-        $query = "INSERT INTO project_other_task_message_reply_sv
+        $query = "INSERT INTO project_got_it
         SET
-            `message_id` = :msg_id,
+            `message_id` = :message_id,
             `reply_id` = :reply_id,
-            `message` = :message,
-          
+            `kind` = :kind,
             `create_id` = :create_id,
             `created_at` = now()";
 
@@ -72,10 +71,9 @@ switch ($method) {
         $stmt = $db->prepare($query);
 
         // bind the values
-        $stmt->bindParam(':msg_id', $msg_id);
+        $stmt->bindParam(':message_id', $message_id);
         $stmt->bindParam(':reply_id', $reply_id);
-        $stmt->bindParam(':message', $message);
-       
+        $stmt->bindParam(':kind', $kind);
         $stmt->bindParam(':create_id', $uid);
 
         $last_id = 0;
@@ -92,7 +90,8 @@ switch ($method) {
             error_log($e->getMessage());
         }
 
-        SendNotifyMail($last_id, $uid);
+        // send notify mail
+        //SendNotifyMail($last_id, $uid);
 
         $returnArray = array('batch_id' => $last_id);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
@@ -101,6 +100,8 @@ switch ($method) {
 
         break;
 }
+
+
 
 function SendNotifyMail($last_id, $uid)
 {
@@ -142,7 +143,7 @@ function SendNotifyMail($last_id, $uid)
     $username = $_record[0]["username"];
     $_id = $_record[0]["_id"];
 
-    message_notify_dept("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, "", $detail, $stage_id, $msg, $username, $created_at, $_id, 'SVS');
+    message_notify_dept("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, "", $detail, $stage_id, $msg, $username, $created_at, $_id, 'AD');
 
 }
 
@@ -154,15 +155,14 @@ function GetTaskDetail($id, $db)
             pt.collaborator,
             due_date,
             detail,
-            potmr.message,
+            message,
             u.username,
-            potmr.created_at,
-            potmr.create_id _id
-            FROM project_other_task_message_reply_sv potmr
-            left join project_other_task_message_sv pmsg on potmr.message_id = pmsg.id 
-            LEFT JOIN project_other_task_sv pt ON pmsg.task_id = pt.id
-            LEFT JOIN user u ON u.id = potmr.create_id
-            where potmr.id = :id";
+            pmsg.created_at,
+            pmsg.create_id _id
+            FROM project_other_task_message_a pmsg
+            LEFT JOIN project_other_task_a pt ON pmsg.task_id = pt.id
+            LEFT JOIN user u ON u.id = pmsg.create_id
+            WHERE pmsg.id = :id";
 
     $merged_results = array();
 

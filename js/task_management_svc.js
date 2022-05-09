@@ -1227,6 +1227,44 @@ var app = new Vue({
         });
     },
 
+    
+    got_it_message(message_id, reply_id) {
+      let _this = this;
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      // if reply_id != 0, it means it is a reply
+      if (reply_id != 0) {
+        reply_id = message_id;
+        message_id = 0;
+      }
+
+      form_Data.append('message_id', message_id);
+      form_Data.append('reply_id', reply_id);
+      form_Data.append('kind', 'sv');
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project_got_it',
+        data: form_Data
+      })
+        .then(function (response) {
+          _this.reload_task(_this.proof_id);
+       
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () {  });
+    },
+
     task_upload(batch_id) {
       this.canSub = false;
       var myArr = this.fileArray;
