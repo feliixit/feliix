@@ -212,6 +212,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
    
+    $post = GetRecentPost($row['id'], $db);
 
     $merged_results[] = array(
         "is_edited" => 1,
@@ -225,6 +226,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_by" => $updated_by,
         "created_at" => $created_at,
         "updated_at" => $updated_at,
+        "post" => $post,
      
     );
 }
@@ -247,3 +249,75 @@ else
     $filter_result = $merged_results;
 
 echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
+
+
+
+function GetRecentPost($quotation_id, $db){
+    $query = "SELECT username, p.updated_at FROM quotation p LEFT JOIN user u ON p.updated_id = u.id  WHERE p.id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.created_at updated_at  FROM quotation_page p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.created_at updated_at FROM quotation_page_type p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.created_at updated_at FROM quotation_page_type_block p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.updated_at FROM quotation_total p LEFT JOIN user u ON p.updated_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.created_at updated_at FROM quotation_total p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.created_at updated_at FROM quotation_term p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.created_at updated_at FROM quotation_signature p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    UNION all
+              SELECT username, p.created_at updated_at FROM quotation_payment_term p LEFT JOIN user u ON p.create_id = u.id  WHERE p.quotation_id = " . $quotation_id . " and p.status <> -1  
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    $filter_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    // if($key != "")
+    // {
+    //     foreach ($merged_results as &$value) {
+    //         if(
+    //             preg_match("/{$key}/i", $value['username']) || 
+    //             ($key == substr($value['created_at'], 0, 10)))
+    //         {
+    //             $filter_result[] = $value;
+    //         }
+    //     }
+    // }
+    // else
+        $filter_result = $merged_results;
+
+    $sorted_result = [];
+
+    if(count($filter_result) > 0)
+    {
+        usort($filter_result, function ($item1, $item2) {
+            return $item2['updated_at'] <=> $item1['updated_at'];
+        });
+    
+        foreach ($filter_result as $arr)
+        {
+            $sorted_result[] = array(
+                "updated_at" => $arr['updated_at'],
+                "username" => $arr['username'],
+            
+            );
+         
+            break;
+        }
+    }
+
+    return $sorted_result;
+}
+
+?>
