@@ -2927,7 +2927,7 @@ catch (Exception $e) {
                                             </div>
                                             <div class="btnbox">
                                                 <a class="btn small green" @click="got_it_message(item.message_id, item.ref_id)" v-if="item.i_got_it == false">Got it</a>
-                                                <a class="btn small green reply r1" :id="'task_reply_btn_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg(item.message_id + '_' + item.ref_id)">Reply</a>
+                                                <a class="btn small green reply r1" v-if="item.ref_id == 0" :id="'task_reply_btn_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg(item.message_id + '_' + item.ref_id)">Reply</a>
                                                 <!-- dialog -->
                                                 <div class="dialog reply r1" :id="'task_reply_dlg_' + item.message_id + '_' + item.ref_id">
                                                     <div class="formbox">
@@ -3088,7 +3088,7 @@ catch (Exception $e) {
                                                         </i>
                                                     </div>
                                                     <div class="btnbox">
-                                                        <a class="btn small green reply r3" :id="'task_reply_btn_r_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg_r(item.message_id + '_' + item.ref_id)">Reply</a>
+                                                        <a class="btn small green reply r3" v-if="item.ref_id == 0" :id="'task_reply_btn_r_' + item.message_id + '_' + item.ref_id" @click="openTaskMsgDlg_r(item.message_id + '_' + item.ref_id)">Reply</a>
                                                         <!-- dialog -->
                                                         <div class="dialog reply r3" :id="'task_reply_dlg_r_' + item.message_id + '_' + item.ref_id">
                                                             <div class="formbox">

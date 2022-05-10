@@ -502,7 +502,7 @@ header( 'location:index' );
                         </li>
                         <li>{{ receive_record.quotation_no }}</li>
                         <li>{{receive_record.created_at}}<br>{{receive_record.created_by}}</li>
-                        <li>{{receive_record.updated_at}}<br>{{receive_record.updated_by}}</li>
+                        <li>{{receive_record.post[0].updated_at}}<br>{{receive_record.post[0].username}}</li>
                         <li>
                             <button v-show = "receive_record.is_edited == 1" @click="editRow(receive_record)"><i class="fas fa-edit"></i></button>
                             <button v-show = "receive_record.is_edited == 1" @click="duplicateRow(receive_record)"><i class="fas fa-copy"></i></button>
