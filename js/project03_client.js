@@ -1313,13 +1313,17 @@ var app = new Vue({
                   form_Data.append('message', comment.trim());
                   form_Data.append('type', 'comment');
 
-                  form_Data.append("attached_file", JSON.stringify(this.arrMsg_r[task_id]));
+                  if(this.arrMsg_r[task_id] !== undefined){
+                    form_Data.append("attached_file", JSON.stringify(this.arrMsg_r[task_id]));
 
                   for(var j = 0; j < this.arrMsg_r[task_id].length; j++) {
                     let file = this.arrMsg_r[task_id][j];
                     if(typeof file !== 'undefined' && file !== null) 
                       form_Data.append('attached_file' + j, file);
                   }
+                }
+                else
+                  form_Data.append("attached_file", []);
 
                   const token = sessionStorage.getItem('token');
 
