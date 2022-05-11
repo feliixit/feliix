@@ -2916,7 +2916,7 @@ catch (Exception $e) {
                                     <li v-if="item.message_status == 0">
                                         <div class="msg">
                                             <div class="msgbox dialogclear">
-                                                <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
+                                                <p style="color: #AAA;"  v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
                                                 <p>{{ item.message }}</p>
                                                 <i v-for="file in item.items">
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
@@ -3080,7 +3080,7 @@ catch (Exception $e) {
                                             <li v-if="item.message_status == 0">
                                                 <div class="msg">
                                                     <div class="msgbox dialogclear">
-                                                        <p v-if="item.ref_id != 0"><a href="" class="tag_name">@{{ item.ref_name}}</a> {{ item.ref_msg}}</p>
+                                                        <p style="color: #AAA;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
                                                         <p>{{ item.message }}</p>
                                                         <i v-for="file in item.items">
                                                             <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
