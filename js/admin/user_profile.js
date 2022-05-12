@@ -184,7 +184,7 @@ var app = new Vue({
                 //alert("請選一筆資料進行修改 (Please select one row to edit!)");
                 //$(window).scrollTop(0);
                 Swal.fire({
-                    html: "請選一筆資料進行修改 (Please select one user to edit!)",
+                    html: "Please select one user to edit!",
                     icon: "info",
                     confirmButtonText: "OK",
                   });
@@ -285,7 +285,7 @@ var app = new Vue({
                 //alert("請選一筆資料進行刪除 (Please select one row to remove!)");
                 //$(window).scrollTop(0);
                 Swal.fire({
-                    html: "請選一筆資料進行刪除 (Please select one user to remove!)",
+                    html: "Please select one user to remove!",
                     icon: "info",
                     confirmButtonText: "OK",
                   });
@@ -294,7 +294,7 @@ var app = new Vue({
 
             Swal.fire({
                 title: "Remove",
-                text: "確定要刪除照片? (Are you sure to remove user's photo?)",
+                text: "Are you sure to remove user's photo?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -361,6 +361,20 @@ var app = new Vue({
 
         onFileChange(e) {
             const file = e.target.files[0];
+
+            if (file.size > 1048576) {
+              
+
+              Swal.fire({
+                html: "Please choose another photo whose size is lower than 1 mb.",
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+
+              document.getElementById('photo').value= null;
+
+              return;
+            } 
       
             this.pic_url = URL.createObjectURL(file);
          
