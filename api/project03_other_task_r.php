@@ -328,7 +328,7 @@ function GetMessage($task_id, $db)
                 "ref_name" => "",
                 "ref_msg" => "",
                 "message" => $message,
-                "message_id" => $message_id,
+               
                 "message_status" => $message_status,
                 "messager" => $messager,
                 "messager_pic" => $messager_pic,
@@ -382,7 +382,7 @@ function GetMessage($task_id, $db)
             "ref_name" => "",
             "ref_msg" => "",
             "message" => $message,
-            "message_id" => $message_id,
+          
             "message_status" => $message_status,
             "messager" => $messager,
             "messager_pic" => $messager_pic,
@@ -440,9 +440,10 @@ function GetReply($msg_id, $db, $id, $name, $msg)
                 "ref_name" => $name,
                 "ref_msg" => $msg,
                 "message" => $reply,
-                "message_id" => $reply_id,
+              
                 "message_status" => $reply_status,
                 "messager" => $replyer,
+                "messager_id" => $replyer_id,
                 "messager_pic" => $replyer_pic,
 
                 "message_date" => explode(" ", $reply_date)[0],

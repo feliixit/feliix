@@ -59,13 +59,14 @@ try{
             status = -1,
             updated_id = :updated_id,
             updated_at = now()
-        where id = :id ";
+        where message_id = :message_id and id = :id ";
 
         // prepare the query
         $stmt = $db->prepare($query);
 
         $stmt->bindParam(':updated_id', $uid);
-        $stmt->bindParam(':id', $item_id);
+        $stmt->bindParam(':message_id', $item_id);
+        $stmt->bindParam(':id', $message_id);
     }
     else 
     {
