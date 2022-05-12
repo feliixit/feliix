@@ -4376,9 +4376,10 @@ function project01_notify_mail($request_type, $project_name, $username, $created
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
-    if($estimate_close_prob == "80" || $estimate_close_prob == "90" || $estimate_close_prob == "100")
+    // 當使用者在project01.php透過「+按鈕」新建立一個專案且該專案的狀態(status)是 Approved 時，系統寄發的通知信的收件人中，需要再新增 Service Manager (也就是 Edneil Fernandez，edneil@feliix.com)
+    if($estimate_close_prob == "80" || $estimate_close_prob == "90" || $estimate_close_prob == "100" || $project_status == "Approved" || $project_status == "Completed")
     {
-        $notifior = GetProjectServiceNotifiers($category);
+        $notifior = GetProjectServiceNotifiers();
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -4587,6 +4588,16 @@ function project02_status_change_notify_mail($project_name, $project_category, $
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    // 當使用者在project01.php透過「+按鈕」新建立一個專案且該專案的狀態(status)是 Approved 時，系統寄發的通知信的收件人中，需要再新增 Service Manager (也就是 Edneil Fernandez，edneil@feliix.com)
+    if($project_status == "Approved" || $project_status == "Completed")
+    {
+        $notifior = GetProjectServiceNotifiers();
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
     }
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -5061,6 +5072,7 @@ function GetProjectServiceNotifiers()
 
     return $merged_results;
 }
+
 
 function GetProjectNotifiers()
 {
