@@ -2638,3 +2638,10 @@ CREATE TABLE IF NOT EXISTS project_got_it
 -- add phase out
 ALTER TABLE product_category
 ADD COLUMN `out` VARCHAR(1) DEFAULT '' COLLATE utf8mb4_unicode_ci AFTER description;
+
+-- 20220512 user profile
+ALTER TABLE user
+ADD COLUMN `address`  varchar(255) DEFAULT '' after pic_url;
+
+ALTER TABLE user
+ADD COLUMN `tel`  varchar(255) DEFAULT '' after pic_url;
