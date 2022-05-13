@@ -243,7 +243,7 @@ else
                 $query = "INSERT INTO quotation_term
                 SET
                     `quotation_id` = :quotation_id,
-                    `page` = 1,
+                    `page` = 0,
                     `title` = :title,
                     `brief` = :brief,
                     `list` = :list,
@@ -298,7 +298,7 @@ else
                 $query = "INSERT INTO quotation_term
                 SET
                     `quotation_id` = :quotation_id,
-                    `page` = 1,
+                    `page` = 0,
                     `title` = :title,
                     `brief` = :brief,
                     `list` = :list,
@@ -342,7 +342,7 @@ else
                 $query = "INSERT INTO quotation_term
                 SET
                     `quotation_id` = :quotation_id,
-                    `page` = 1,
+                    `page` = 0,
                     `title` = :title,
                     `brief` = :brief,
                     `list` = :list,
@@ -395,7 +395,7 @@ Any returned deliveries due to unfinished site and/or resulting for items not to
                 $query = "INSERT INTO quotation_term
                 SET
                     `quotation_id` = :quotation_id,
-                    `page` = 1,
+                    `page` = 0,
                     `title` = :title,
                     `brief` = :brief,
                     `list` = :list,

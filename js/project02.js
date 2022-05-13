@@ -1514,6 +1514,7 @@ var app = new Vue({
 
             form_Data.append("footer_first_line", '');
             form_Data.append("footer_second_line", '');
+            form_Data.append("add_term", 'y');
 
             form_Data.append("pages", JSON.stringify([]));
 
