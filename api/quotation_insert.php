@@ -22,6 +22,8 @@ $prepare_by_second_line = isset($_POST['prepare_by_second_line']) ? $_POST['prep
 $footer_first_line = isset($_POST['footer_first_line']) ? $_POST['footer_first_line'] : '';
 $footer_second_line = isset($_POST['footer_second_line']) ? $_POST['footer_second_line'] : '';
 
+$add_term = isset($_POST['add_term']) ? $_POST['add_term'] : '';
+
 $title = isset($_POST['title']) ? $_POST['title'] : '';
 $project_id = isset($_POST['project_id']) ? $_POST['project_id'] : 0;
 
@@ -47,6 +49,9 @@ $conf = new Conf();
 
 use \Firebase\JWT\JWT;
 use Google\Cloud\Storage\StorageClient;
+
+const OFFICE = 1;
+const LIGHTING = 2;
 
 if ( !isset( $jwt ) ) {
     http_response_code(401);
@@ -218,6 +223,215 @@ else
                     die();
                 }
             }  
+
+        }
+
+        if($add_term == 'y'){
+            $project_category = GetProjectInfo($project_id, $db);
+
+            if($project_category == LIGHTING)
+            {
+                $title = "Warranty";
+                $brief = "Terms and Condition";
+                $list = "【*1 year warranty for Everlight, Feliix SSIT, and Feliix SB Decorative】
+【*2 years warranty for Feliix SB & Colors】
+【*3 years warranty for Feliix TONS】
+【*5 years warranty for Feliix Decorative】
+【*Does not cover defects resulting from normal wear, improper use, or improper installation which does not conform to the installation instructions.】
+【*Warranty is null and void when tampered/seal is broken】";
+
+                $query = "INSERT INTO quotation_term
+                SET
+                    `quotation_id` = :quotation_id,
+                    `page` = 1,
+                    `title` = :title,
+                    `brief` = :brief,
+                    `list` = :list,
+                    `status` = 0,
+                    `create_id` = :create_id,
+                    `created_at` = now()";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+                // bind the values
+                $stmt->bindParam(':quotation_id', $last_id);
+                $stmt->bindParam(':title', $title);
+                $stmt->bindParam(':brief', $brief);
+                $stmt->bindParam(':list', $list);
+            
+                $stmt->bindParam(':create_id', $user_id);
+            
+
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+
+                $title = "Purchased Order";
+                $brief = "Terms and Condition";
+                $list = '"FELIIX SB"
+【*LEAD TIME; 60-75 Working Days; changes, will depend on the availability of stocks(Starts upon receiving the downpayment)】
+
+"EVERLIGHT | DECORATIVE | FELIIX SSIT"
+【*LEAD TIME; 60-75 Working Days; changes, will depend on the availability of stocks(Starts upon receiving the downpayment)】
+
+"FELIIX TONS"
+【*LEAD TIME; 60-75 Working Days; changes, will depend on the availability of stocks(Starts upon receiving the downpayment)】
+
+【*50% Downpayment before processing the items, 50% upon delivery】
+【*Custom items- approval of specs by client and/or designer】
+【*Installation of items is not part of the service unless requested by client for additional cost.】';
+
+                $query = "INSERT INTO quotation_term
+                SET
+                    `quotation_id` = :quotation_id,
+                    `page` = 1,
+                    `title` = :title,
+                    `brief` = :brief,
+                    `list` = :list,
+                    `status` = 0,
+                    `create_id` = :create_id,
+                    `created_at` = now()";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+                // bind the values
+                $stmt->bindParam(':quotation_id', $last_id);
+                $stmt->bindParam(':title', $title);
+                $stmt->bindParam(':brief', $brief);
+                $stmt->bindParam(':list', $list);
+            
+                $stmt->bindParam(':create_id', $user_id);
+            
+
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+
+                $title = "Disclaimer";
+                $brief = "";
+                $list = "Feliix Inc. is not responsible for specification and layout revisions that may affect lux outcomes, unless it is a proposal produced and approved by the company itself.";
+
+                $query = "INSERT INTO quotation_term
+                SET
+                    `quotation_id` = :quotation_id,
+                    `page` = 1,
+                    `title` = :title,
+                    `brief` = :brief,
+                    `list` = :list,
+                    `status` = 0,
+                    `create_id` = :create_id,
+                    `created_at` = now()";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+                // bind the values
+                $stmt->bindParam(':quotation_id', $last_id);
+                $stmt->bindParam(':title', $title);
+                $stmt->bindParam(':brief', $brief);
+                $stmt->bindParam(':list', $list);
+            
+                $stmt->bindParam(':create_id', $user_id);
+            
+
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+            }
+
+            if($project_category == OFFICE)
+            {
+                $title = "Terms and Conditions";
+                $brief = "";
+                $list = "1. Warranty: 2 years upon delivery and lifetime service warranty. This limited warranty does not cover those defects brought about by normal wear and tear. During the Warranty Period, Feliix Inc. will repair or replace products or parts of a product that proves defective because of improper material or workmanship under normal use and maintenance.
+2. Quotation valid for 2 Weeks.
+3. Leadtime:30- 45 Days (Start production upon P.O and down payment)
+4. Above price is subject to change without prior notice due to exchange rate of Dollar to Peso.
+Building freight charges to be charged accordingly to client.
+Any returned deliveries due to unfinished site and/or resulting for items not to be installed, will be billed 30 days after delivery on site and/or acknowledgement of arrival of goods.
+5. Covid related requirements (e.g. Swab Test, etc.) are reimbursable to the client.";
+
+                $query = "INSERT INTO quotation_term
+                SET
+                    `quotation_id` = :quotation_id,
+                    `page` = 1,
+                    `title` = :title,
+                    `brief` = :brief,
+                    `list` = :list,
+                    `status` = 0,
+                    `create_id` = :create_id,
+                    `created_at` = now()";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+                // bind the values
+                $stmt->bindParam(':quotation_id', $last_id);
+                $stmt->bindParam(':title', $title);
+                $stmt->bindParam(':brief', $brief);
+                $stmt->bindParam(':list', $list);
+            
+                $stmt->bindParam(':create_id', $user_id);
+            
+
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+            }
         }
 
         $db->commit();
@@ -238,3 +452,12 @@ else
     }
 }
 
+function GetProjectInfo($id, $db) {
+    $query = "SELECT catagory_id FROM project_main WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['catagory_id'];
+
+}
