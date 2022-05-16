@@ -114,7 +114,7 @@
     <div class="mainContent" id="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A">User</a>
+            <a class="tag A" href="user">User</a>
             <a class="tag F focus">User Profile</a>
             <a class="tag B" href="department">Department</a>
             <a class="tag C" href="position">Position</a>
