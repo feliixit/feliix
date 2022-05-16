@@ -2768,7 +2768,7 @@ header( 'location:index' );
                         <thead v-if="tp.type == 'B'">
 
                         <tr>
-                            <th class="title" :colspan="product_vat == 'P' ? 5 : 4">{{ tp.name }}</th>
+                            <th class="title" :colspan="product_vat == 'P' ? 4 : 4">{{ tp.name }}</th>
                         </tr>
 
                         </thead>
@@ -2791,15 +2791,18 @@ header( 'location:index' );
                             </td>
                             <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
                             </td>
-                            <td><span class="numbers">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            <td><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                    <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                    v-if="bk.discount != 0">
+                                <span class="numbers" v-if="bk.discount != 0">₱ {{ bk.price !== undefined ? Number(bk.price - (bk.price * (bk.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
                             </td>
-                            <td v-if="product_vat == 'P'"><span class="numbers">₱ {{ bk.price !== undefined ? (Number(bk.price) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            <td v-if="product_vat == 'P'"><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price !== undefined ? (Number(bk.price) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                <span class="numbers" v-if="bk.discount !== 0">₱ {{ bk.price !== undefined ? (Number(bk.price - (bk.price * (bk.discount / 100))) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
                             </td>
 
                             <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                    v-if="bk.discount != 0">
+                                
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat == 'P'">
@@ -2809,9 +2812,7 @@ header( 'location:index' );
 
 
                             <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                    v-if="bk.discount != 0">
+                               
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
@@ -2830,16 +2831,15 @@ header( 'location:index' );
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td v-if="product_vat == 'P'"><span class="numbers">₱ {{ bk.price !== undefined ? (Number(bk.price)).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                            </td>
+                        
                             <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1.12 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
                                         v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
                                     v-if="bk.discount != 0">
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? (Number(bk.amount)).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1.12 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
 
@@ -2872,7 +2872,7 @@ header( 'location:index' );
 
                         <tfoot v-if="tp.type == 'B'">
                         <tr>
-                            <td :colspan="product_vat == 'P' ? 3 : 2"></td>
+                            <td :colspan="product_vat == 'P' ? 2 : 2"></td>
                             <td>SUBTOTAL</td>
                             <td>₱ {{ tp.subtotal !== undefined ?
                                 Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
