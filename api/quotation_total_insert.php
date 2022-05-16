@@ -172,7 +172,7 @@ else
                 SET
                     `amount` = qty * price * 1.12 * (1 - discount / 100)
              
-                    where quotation_id = :id";
+                    where quotation_id = :id and type in ('image', 'noimage') ";
 
             // prepare the query
             $stmt = $db->prepare($query);
