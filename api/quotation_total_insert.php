@@ -232,6 +232,38 @@ else
             }
         }
 
+        /*
+        // update quotation_page_type.real_amount
+        $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block GROUP BY type_id) as s
+                    SET p.real_amount = s.mysum
+                    WHERE p.id = s.type_id
+                    and p.quotation_id = :id";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        $stmt->bindParam(':id', $last_id, PDO::PARAM_INT);
+
+        // execute the query, also check if query was successful
+        try {
+            // execute the query, also check if query was successful
+            if (!$stmt->execute()) {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                die();
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
+        }
+        */
+
         $db->commit();
 
         

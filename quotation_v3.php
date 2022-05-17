@@ -2148,7 +2148,7 @@ header( 'location:index' );
                                         <li>
                                             Type-{{block.type}} Subtotal Block<br>
                                             Name: <input type="text" v-model="block.name"><br>
-                                            Subtotal Amount: <input type="number"> <input type="checkbox" class="alone"> Not Show "Subtotal Amount"
+                                            Subtotal Amount: <input type="number" v-model="block.real_amount"> <input type="checkbox" class="alone" value="1" v-model="block.not_show"> Not Show "Subtotal Amount"
                                         </li>
                                         <li>
                                             <i class="fas fa-arrow-alt-circle-up"
@@ -2399,7 +2399,7 @@ header( 'location:index' );
                             <dl>
                                 <dt class="head">System Computed Grand Total:</dt>
                                 <dd>
-                                    <input type="number" v-model="total.total" style="opacity: 0.6;" disabled>
+                                    <input type="number" v-model="total.real_total" style="opacity: 0.6;" disabled>
                                 </dd>
                             </dl>
 
@@ -2860,24 +2860,32 @@ header( 'location:index' );
 
                         </tbody>
 
-                        <tfoot v-if="tp.type == 'A'">
+                        <tfoot v-if="tp.type == 'A' && tp.not_show != '1'">
                         <tr>
                             <td :colspan="product_vat == 'P' ? 5 : 4"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ?
+                            <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
                                 Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                "$1,") : '0.00' }}
+                            </td>
+                            <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
+                                Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
                                 "$1,") : '0.00' }}
                             </td>
                         </tr>
 
                         </tfoot>
 
-                        <tfoot v-if="tp.type == 'B'">
+                        <tfoot v-if="tp.type == 'B' && tp.not_show != '1'">
                         <tr>
                             <td :colspan="product_vat == 'P' ? 2 : 2"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ?
+                            <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
                                 Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                "$1,") : '0.00' }}
+                            </td>
+                            <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
+                                Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
                                 "$1,") : '0.00' }}
                             </td>
                         </tr>
@@ -2917,7 +2925,7 @@ header( 'location:index' );
                             -->
                         <tr class="total_vat" v-if="tt.vat == 'Y'">
                             <td>(12% VAT)</td>
-                            <td><span class="numbers">₱ {{ ((subtotal * (100 - tt.discount) / 100) * 12 / 100) !== undefined ? ((subtotal * (100 - tt.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            <td><span class="numbers">₱ {{ ((subtotal_info_not_show_a * (100 - tt.discount) / 100) * 12 / 100) !== undefined ? ((subtotal_info_not_show_a * (100 - tt.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
                             </td>
                         </tr>
                         </tbody>
@@ -2927,7 +2935,9 @@ header( 'location:index' );
                             <td><span class="total_discount" v-if="tt.show_vat == 'Y'">*price inclusive of VAT</span>
                             </td>
                             <td>GRAND TOTAL</td>
-                            <td><span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            <td>
+                                <span class="numbers deleted" v-if="tt.total != total.real_total">₱ {{ total.real_total !== "" ? Number(total.real_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br v-if="tt.total != total.real_total">
+                                <span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
                             </td>
                         </tr>
                         </tfoot>

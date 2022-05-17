@@ -2645,3 +2645,10 @@ ADD COLUMN `address`  varchar(255) DEFAULT '' after pic_url;
 
 ALTER TABLE user
 ADD COLUMN `tel`  varchar(255) DEFAULT '' after pic_url;
+
+-- 20220516 page block
+ALTER TABLE quotation_page_type
+ADD COLUMN `not_show`  varchar(2) DEFAULT '' after block_name;
+
+ALTER TABLE quotation_page_type
+ADD COLUMN `real_amount` decimal(10,2) DEFAULT 0.0 after not_show;

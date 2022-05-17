@@ -209,6 +209,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     `page_id` = :page_id,
                     `block_type` = :block_type,
                     `block_name` = :block_name,
+                    `not_show` = :not_show,
+                    `real_amount` = :real_amount,
                     `status` = 0,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -221,6 +223,9 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                 $stmt->bindParam(':page_id', $page_id);
                 $stmt->bindParam(':block_type', $types_array[$j]['type']);
                 $stmt->bindParam(':block_name', $types_array[$j]['name']);
+
+                $stmt->bindParam(':not_show', $types_array[$j]['not_show']);
+                $stmt->bindParam(':real_amount', $types_array[$j]['real_amount']);
               
                 $stmt->bindParam(':create_id', $user_id);
             
@@ -578,6 +583,8 @@ function GetBlockNames($qid, $db){
                 qp.page,
                 block_type,
                 block_name,
+                not_show,
+                real_amount,
                 page_id
             FROM   quotation_page_type qpt
             left join quotation_page qp on qpt.page_id = qp.id
@@ -599,6 +606,8 @@ function GetBlockNames($qid, $db){
         $block_type = $row['block_type'];
         $block_name = $row['block_name'];
         $page_id = $row['page_id'];
+        $not_show = $row['not_show'];
+        $real_amount = $row['real_amount'];
 
         $blocks = [];
 
@@ -610,6 +619,8 @@ function GetBlockNames($qid, $db){
             "page" => $page,
             "type" => $block_type,
             "name" => $block_name,
+            "not_show" => $not_show,
+            "real_amount" => $real_amount,
             "blocks" => $blocks,
             "page_id" => $page_id,
             "subtotal" => $subtotal,
@@ -1045,7 +1056,9 @@ function GetTypes($qid, $db){
     $query = "
         SELECT id,
         block_type,
-        block_name
+        block_name,
+        not_show,
+        real_amount
         FROM   quotation_page_type
         WHERE  page_id = " . $qid . "
         AND `status` <> -1 
@@ -1064,6 +1077,9 @@ function GetTypes($qid, $db){
         $block_type = $row['block_type'];
         $block_name = $row['block_name'];
 
+        $not_show = $row['not_show'];
+        $real_amount = $row['real_amount'];
+
         $blocks = [];
 
         $blocks = GetBlocks($id, $db);
@@ -1074,6 +1090,8 @@ function GetTypes($qid, $db){
             "org_id" => $id,
             "type" => $block_type,
             "name" => $block_name,
+            "not_show" => $not_show,
+            "real_amount" => $real_amount,
             "blocks" => $blocks,
             "subtotal" => $subtotal,
         );

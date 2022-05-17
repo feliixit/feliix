@@ -148,6 +148,9 @@ var app = new Vue({
       subtotal:0,
       subtotal_novat:0,
 
+      subtotal_info_not_show_a:0,
+      subtotal_info_not_show_b:0,
+
       show_title : true,
 
       // version II new parameters
@@ -1019,13 +1022,14 @@ var app = new Vue({
         if(row.discount > 100)
           row.discount = 100;
 
-        row.total = (this.subtotal_novat * (1 - row.discount * 0.01)).toFixed(2);
+        row.total = ((this.subtotal_info_not_show_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
         
         if(row.vat == 'Y' || row.vat == 'P')
-          row.total = (row.total * 1.12);
+          row.total =  (row.total * 1) + (this.subtotal_info_not_show_a * (1 - row.discount * 0.01) * 0.12);
 
         row.total = Number(row.total).toFixed(2);
-
+        //this.real_total = row.total;
+        row.real_total = row.total;
       },
 
       print_page() {
@@ -2008,7 +2012,8 @@ var app = new Vue({
         this.temp_footer_second_line = '';
 
         this.subtotal = 0;
-        this.subtotal_novat = 0;
+        this.subtotal_novat_a = 0;
+        this.subtotal_novat_b = 0;
 
         // page
         this.pages = [];
@@ -2062,13 +2067,16 @@ var app = new Vue({
               _this.block_names = _this.receive_records[0].block_names;
               
               _this.subtotal = _this.receive_records[0].subtotal_info;
-              _this.subtotal_novat = _this.receive_records[0].subtotal_novat;
+              _this.subtotal_novat_a = _this.receive_records[0].subtotal_novat_a;
+              _this.subtotal_novat_b = _this.receive_records[0].subtotal_novat_b;
 
               // total
               _this.total = _this.receive_records[0].total_info;
               // get product_vat from total.vat
               _this.total.vat !== undefined ? _this.product_vat = _this.total.vat : _this.product_vat = '';
 
+              _this.subtotal_info_not_show_a = _this.receive_records[0].subtotal_info_not_show_a;
+              _this.subtotal_info_not_show_b = _this.receive_records[0].subtotal_info_not_show_b;
               _this.count_subtotal();
 
               // term
@@ -2114,10 +2122,19 @@ var app = new Vue({
         {
           this.total.total = (this.subtotal * (1 - this.total.discount * 0.01)).toFixed(2);
           if(this.total.vat == 'Y')
-            this.total.total = (this.total.total * 1) + (this.subtotal * 0.12);
+            this.total.total = (this.total.total * 1) + (this.subtotal_novat_a * 0.12);
         }
 
         this.total.total = Number(this.total.total).toFixed(2);
+
+
+
+        this.total.real_total = ((this.subtotal_info_not_show_a * 1 + this.subtotal_info_not_show_b * 1)  * (1 - this.total.discount * 0.01)).toFixed(2);
+
+        if(this.total.vat == 'Y')
+          this.total.real_total = (this.total.real_total * 1) + (this.subtotal_info_not_show_a * (1 - this.total.discount * 0.01) * 0.12);
+
+          this.total.real_total = Number(this.total.real_total).toFixed(2);
     
       },
 
@@ -2161,6 +2178,8 @@ var app = new Vue({
           "org_id" : 0,
           "type" : document.getElementById('block_type_' + eid).value,
           "name" : "",
+          "real_amount" : "0.0",
+          "not_show" : "",
         }, 
 
         element.types.push(obj);
