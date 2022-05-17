@@ -232,7 +232,7 @@ else
             }
         }
 
-        /*
+        
         // update quotation_page_type.real_amount
         $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block GROUP BY type_id) as s
                     SET p.real_amount = s.mysum
@@ -262,7 +262,7 @@ else
             echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
             die();
         }
-        */
+        
 
         $db->commit();
 
