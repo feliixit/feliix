@@ -109,7 +109,11 @@ if (!isset($jwt)) {
         $subtotal_info_not_show_a = GetSubTotalInfoNotShowA($row['id'], $db);
         $subtotal_info_not_show_b = GetSubTotalInfoNotShowB($row['id'], $db);
 
-        $total_info['real_total'] = 0;
+        $total_info['back_total'] = ($subtotal_info_not_show_a + $subtotal_info_not_show_b) * (100 - $total_info['discount']) / 100;
+        if($total_info['vat'] == 'Y')
+            $total_info['back_total'] += $subtotal_info_not_show_a * (100 - $total_info['discount']) / 100 * 0.12;
+
+        $total_info['back_total'] = number_format($total_info['back_total'], 2, '.', '');
 
         $merged_results[] = array(
             "id" => $id,
@@ -896,7 +900,8 @@ function GetTotalInfo($qid, $db){
         "total" => $total,
         
         "real_total" => 0,
-        
+
+        "back_total" => 0,
     );
 
     return $merged_results;

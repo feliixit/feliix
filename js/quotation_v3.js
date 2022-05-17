@@ -116,8 +116,11 @@ var app = new Vue({
         show_vat : '',
         valid : '',
         total : '',
+        real_total : '',
+        back_total : '',
       },
 
+      
       term:
       {
         page: 0,
@@ -147,6 +150,9 @@ var app = new Vue({
 
       subtotal:0,
       subtotal_novat:0,
+
+      subtotal_novat_a:0,
+      subtotal_novat_b:0,
 
       subtotal_info_not_show_a:0,
       subtotal_info_not_show_b:0,
@@ -1024,8 +1030,17 @@ var app = new Vue({
 
         row.total = ((this.subtotal_info_not_show_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
         
-        if(row.vat == 'Y' || row.vat == 'P')
-          row.total =  (row.total * 1) + (this.subtotal_info_not_show_a * (1 - row.discount * 0.01) * 0.12);
+        if(row.vat == 'Y')
+        {
+          row.total = ((this.subtotal_novat_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
+          row.total =  (row.total * 1) + (this.subtotal_novat_a * (1 - row.discount * 0.01) * 0.12);
+        }
+
+        if(row.vat == 'P')
+        {
+          row.total = ((this.subtotal_novat_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
+          row.total =  (row.total * 1) + (this.subtotal_novat_a * (1 - row.discount * 0.01) * 0.12);
+        }
 
         row.total = Number(row.total).toFixed(2);
         //this.real_total = row.total;
@@ -2120,7 +2135,7 @@ var app = new Vue({
       count_subtotal() {
         if(this.total.total == '0.00')
         {
-          this.total.total = (this.subtotal * (1 - this.total.discount * 0.01)).toFixed(2);
+          this.total.total = (this.subtotal * (1 - this.total.discount * 0.01));
           if(this.total.vat == 'Y')
             this.total.total = (this.total.total * 1) + (this.subtotal_novat_a * 0.12);
         }
@@ -2129,7 +2144,7 @@ var app = new Vue({
 
 
 
-        this.total.real_total = ((this.subtotal_info_not_show_a * 1 + this.subtotal_info_not_show_b * 1)  * (1 - this.total.discount * 0.01)).toFixed(2);
+        this.total.real_total = ((this.subtotal_info_not_show_a * 1 + this.subtotal_info_not_show_b * 1)  * (1 - this.total.discount * 0.01));
 
         if(this.total.vat == 'Y')
           this.total.real_total = (this.total.real_total * 1) + (this.subtotal_info_not_show_a * (1 - this.total.discount * 0.01) * 0.12);

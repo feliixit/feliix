@@ -2936,7 +2936,7 @@ header( 'location:index' );
                             </td>
                             <td>GRAND TOTAL</td>
                             <td>
-                                <span class="numbers deleted" v-if="tt.total != total.real_total">₱ {{ total.real_total !== "" ? Number(total.real_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br v-if="tt.total != total.real_total">
+                                <span class="numbers deleted" v-if="tt.total != total.back_total">₱ {{ total.back_total !== "" ? Number(total.back_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br v-if="tt.total != total.back_total">
                                 <span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
                             </td>
                         </tr>
