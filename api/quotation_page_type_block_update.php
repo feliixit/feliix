@@ -214,12 +214,14 @@ switch ($method) {
             $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block GROUP BY type_id) as s
                     SET p.real_amount = s.mysum
                     WHERE p.id = s.type_id
-                    and p.quotation_id = :id";
+                    and p.quotation_id = :id
+                    and p.id = :type_id";
 
             // prepare the query
             $stmt = $db->prepare($query);
 
             $stmt->bindParam(':id', $last_id, PDO::PARAM_INT);
+            $stmt->bindParam(':type_id', $type_id, PDO::PARAM_INT);
 
             // execute the query, also check if query was successful
             try {
