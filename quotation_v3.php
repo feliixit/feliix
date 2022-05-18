@@ -2935,9 +2935,12 @@ header( 'location:index' );
                             <td><span class="total_discount" v-if="tt.show_vat == 'Y'">*price inclusive of VAT</span>
                             </td>
                             <td>GRAND TOTAL</td>
-                            <td>
+                            <td v-if="tt.total != '0.00'">
                                 <span class="numbers deleted" v-if="tt.total != total.back_total">₱ {{ total.back_total !== "" ? Number(total.back_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br v-if="tt.total != total.back_total">
                                 <span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            </td>
+                            <td v-if="tt.total == '0.00'">
+                                <span class="numbers">₱ {{ total.back_total !== "" ? Number(total.back_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
                             </td>
                         </tr>
                         </tfoot>

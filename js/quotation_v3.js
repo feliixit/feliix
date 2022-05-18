@@ -1028,23 +1028,25 @@ var app = new Vue({
         if(row.discount > 100)
           row.discount = 100;
 
-        row.total = ((this.subtotal_info_not_show_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
+        var total = 0;
+
+        total = ((this.subtotal_info_not_show_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
         
         if(row.vat == 'Y')
         {
-          row.total = ((this.subtotal_novat_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
-          row.total =  (row.total * 1) + (this.subtotal_novat_a * (1 - row.discount * 0.01) * 0.12);
+          total = ((this.subtotal_novat_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
+          total =  (total * 1) + (this.subtotal_novat_a * (1 - row.discount * 0.01) * 0.12);
         }
 
         if(row.vat == 'P')
         {
-          row.total = ((this.subtotal_novat_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
-          row.total =  (row.total * 1) + (this.subtotal_novat_a * (1 - row.discount * 0.01) * 0.12);
+          total = ((this.subtotal_novat_a * 1 + this.subtotal_info_not_show_b * 1) * (1 - row.discount * 0.01)).toFixed(2);
+          total =  (total * 1) + (this.subtotal_novat_a * (1 - row.discount * 0.01) * 0.12);
         }
 
-        row.total = Number(row.total).toFixed(2);
+        total = Number(total).toFixed(2);
         //this.real_total = row.total;
-        row.real_total = row.total;
+        row.real_total = total;
       },
 
       print_page() {
@@ -2135,14 +2137,13 @@ var app = new Vue({
       count_subtotal() {
         if(this.total.total == '0.00')
         {
-          this.total.total = (this.subtotal * (1 - this.total.discount * 0.01));
-          if(this.total.vat == 'Y')
-            this.total.total = (this.total.total * 1) + (this.subtotal_novat_a * 0.12);
+          //this.total.total = (this.subtotal * (1 - this.total.discount * 0.01));
+          //if(this.total.vat == 'Y')
+          //  this.total.total = (this.total.total * 1) + (this.subtotal_novat_a * 0.12);
+          this.total.total = "";
         }
-
-        this.total.total = Number(this.total.total).toFixed(2);
-
-
+        else
+          this.total.total = Number(this.total.total).toFixed(2);
 
         this.total.real_total = ((this.subtotal_info_not_show_a * 1 + this.subtotal_info_not_show_b * 1)  * (1 - this.total.discount * 0.01));
 
