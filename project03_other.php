@@ -2519,6 +2519,7 @@ catch (Exception $e) {
                                             </div>
                                         </dd>
                                     </dl>
+                                    
                                     <dl>
                                         <dt>Due Date:</dt>
                                         <dd>
@@ -2877,6 +2878,10 @@ catch (Exception $e) {
                                     </i>
 
                                 </li>
+                            </ul>
+                            <ul>
+                                <li><b>Created at</b></li>
+                                <li>{{ receive_record.task_date }}</li>
                             </ul>
                             <ul>
                                 <li><b>Due Date</b></li>

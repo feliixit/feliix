@@ -317,6 +317,7 @@ function SendNotifyMail($last_id, $stage_id)
     $stages_status = $_record[0]["stages_status"];
     $stages = $_record[0]["stage"];
     $create_id = $_record[0]["create_id"];
+    $created_at = $_record[0]["created_at"];
 
     $assignee = $_record[0]["assignee"];
     $collaborator = $_record[0]["collaborator"];
@@ -324,7 +325,7 @@ function SendNotifyMail($last_id, $stage_id)
     $due_date = str_replace("-", "/", $_record[0]["due_date"]);
     $detail = $_record[0]["detail"];
 
-    task_notify("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id);
+    task_notify("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at);
 
 }
 
@@ -332,6 +333,7 @@ function GetTaskDetail($id, $db)
 {
     $sql = "SELECT  project_name, title task_name, 
             (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, 
+            pt.created_at,
             pt.create_id,
             pt.assignee,
             pt.collaborator,

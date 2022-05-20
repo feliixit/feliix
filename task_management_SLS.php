@@ -2780,6 +2780,10 @@ catch (Exception $e) {
                                 </li>
                             </ul>
                             <ul>
+                                <li><b>Created at</b></li>
+                                <li>{{ receive_record.task_date }}</li>
+                            </ul>
+                            <ul>
                                 <li><b>Due Date</b></li>
                                 <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
                             </ul>
