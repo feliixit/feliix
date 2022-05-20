@@ -118,7 +118,7 @@ function SendNotifyMail($last_id, $uid)
     $stages_status = $_record[0]["stages_status"];
     $stages = $_record[0]["stage"];
     $create_id = $_record[0]["create_id"];
-
+    $created_at = $_record[0]["created_at"];
     $assignee = $_record[0]["assignee"];
     $collaborator = $_record[0]["collaborator"];
 
@@ -127,7 +127,7 @@ function SendNotifyMail($last_id, $uid)
 
     $stage_id = $_record[0]["stage_id"];
 
-    task_notify_admin_o("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, 0, $uid);
+    task_notify_admin_o("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, 0, $uid, $created_at);
 
 }
 
@@ -136,6 +136,7 @@ function GetTaskDetail($id, $db)
     $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
                 '' `stages_status`, 
                 pt.create_id,
+                pt.created_at,
                 pt.assignee,
                 pt.collaborator,
                 due_date,

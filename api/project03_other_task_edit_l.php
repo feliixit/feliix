@@ -150,7 +150,7 @@ try{
                     break;
             }
             $_record = GetTaskDetail($task_id, $db);
-            task_notify_admin_l("edit", $task_status, $title, "", $_record[0]["create_id"], $assignee, $collaborator, $due_date . " " . $due_time, $detail, $task_id, $uid, 0);
+            task_notify_admin_l("edit", $task_status, $title, "", $_record[0]["create_id"], $assignee, $collaborator, $due_date . " " . $due_time, $detail, $task_id, $uid, 0, $_record[0]["created_at"]);
         }
 
         $returnArray = array('batch_id' => $task_id);
@@ -272,7 +272,7 @@ function SendNotifyMail02($last_id, $old_status_id)
     $stages_status = $_record[0]["stages_status"];
     $stages = $_record[0]["stage"];
     $create_id = $_record[0]["create_id"];
-
+    $created_at = $_record[0]["created_at"];
     $assignee = $_record[0]["assignee"];
     $collaborator = $_record[0]["collaborator"];
 
@@ -292,6 +292,7 @@ function GetTaskDetail($id, $db)
     $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
             '' `stages_status`, 
             pt.create_id,
+            pt.created_at,
             pt.assignee,
             pt.collaborator,
             due_date,

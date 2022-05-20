@@ -2330,7 +2330,7 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
 }
 
 
-function task_notify_admin_d($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+function task_notify_admin_d($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
 {
     $tab = "";
 
@@ -2346,6 +2346,10 @@ function task_notify_admin_d($request_type, $task_status, $task_name, $stages_st
         case "del":
             $tab = "<p>A existing task was deleted. Below is the details:</p>";
             $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
             break;
         default:
             return;
@@ -2440,6 +2444,7 @@ function task_notify_admin_d($request_type, $task_status, $task_name, $stages_st
 
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
@@ -2457,7 +2462,7 @@ function task_notify_admin_d($request_type, $task_status, $task_name, $stages_st
 
 }
 
-function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
 {
     $tab = "";
 
@@ -2473,6 +2478,10 @@ function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_s
         case "del":
             $tab = "<p>A existing task was deleted. Below is the details:</p>";
             $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
             break;
         default:
             return;
@@ -2567,6 +2576,7 @@ function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_s
 
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
@@ -2605,7 +2615,7 @@ function GetSvcMangerLeaveNotifiers()
     return $merged_results;
 }
 
-function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
 {
     $tab = "";
 
@@ -2621,6 +2631,10 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
         case "del":
             $tab = "<p>A existing task was deleted. Below is the details:</p>";
             $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
             break;
         default:
             return;
@@ -2723,6 +2737,7 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
 
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
@@ -2740,7 +2755,7 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
 
 }
 
-function task_notify_admin_o($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+function task_notify_admin_o($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
 {
     $tab = "";
 
@@ -2756,6 +2771,10 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
         case "del":
             $tab = "<p>A existing task was deleted. Below is the details:</p>";
             $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
             break;
         default:
             return;
@@ -2850,6 +2869,7 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
 
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
@@ -2867,7 +2887,7 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
 
 }
 
-function task_notify_admin_l($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+function task_notify_admin_l($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
 {
     $tab = "";
 
@@ -2883,6 +2903,10 @@ function task_notify_admin_l($request_type, $task_status, $task_name, $stages_st
         case "del":
             $tab = "<p>A existing task was deleted. Below is the details:</p>";
             $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
             break;
         default:
             return;
@@ -2977,6 +3001,7 @@ function task_notify_admin_l($request_type, $task_status, $task_name, $stages_st
 
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
@@ -3060,7 +3085,7 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
 }
 
 
-function task_notify_admin($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id)
+function task_notify_admin($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
 {
     $tab = "";
 
@@ -3076,6 +3101,10 @@ function task_notify_admin($request_type, $task_status, $task_name, $stages_stat
         case "del":
             $tab = "<p>A existing task was deleted. Below is the details:</p>";
             $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
             break;
         default:
             return;
@@ -3170,6 +3199,7 @@ function task_notify_admin($request_type, $task_status, $task_name, $stages_stat
 
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
@@ -3187,7 +3217,7 @@ function task_notify_admin($request_type, $task_status, $task_name, $stages_stat
 
 }
 
-function task_notify($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+function task_notify($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at)
 {
     $tab = "";
 
@@ -3200,6 +3230,9 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
             break;
         case "del":
             $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
             break;
         default:
             return;
@@ -3260,6 +3293,9 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    if($request_type == "notify")
+        $title = "[Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
     
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -3270,6 +3306,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $content = $content . "<p>Creator:" . $creators . "</p>";
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
     $content = $content . "<p>Due Date:" . $due_date . "</p>";
     $content = $content . "<p>Description:" . $detail . "</p>";
     $content = $content . "<p> </p>";
