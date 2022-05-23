@@ -37,6 +37,7 @@ var app = new Vue({
     el: '#sc_relevant', 
     data: {
         name: "",
+        department: "",
         today: "",
         items: [],
         agenda: [],
@@ -49,8 +50,6 @@ var app = new Vue({
         filename: [],
 
         attendee:[],
-
-        
 
         users: [],
         users_org: [],
@@ -1403,6 +1402,7 @@ var app = new Vue({
                     _this.al_credit = response.data.annual_leave;
                     _this.sl_credit = response.data.sick_leave;
                     _this.is_viewer = response.data.is_viewer;
+                    _this.department = response.data.department;
                 })
                 .catch(function (response) {
                     //handle error
@@ -1501,6 +1501,9 @@ var initial = () =>  {
 
                     document.getElementById("btn_lock").style.display = "none";
                     document.getElementById("btn_unlock").style.display = "none";
+
+                    document.getElementById("btn_confirm").style.display = "none";
+                    document.getElementById("btn_unconfirm").style.display = "none";
 
                     document.getElementById("sc_product_files").innerHTML = "";
                     document.getElementById("upload_input").style =
@@ -1777,7 +1780,6 @@ var initial = () =>  {
 
     if (
         app.name != "Dennis Lin" &&
-        app.name != "Thalassa Wren Benzon" &&
         app.name != "dereck" &&
         app.name != "Glendon Wendell Co" &&
         app.name != "Mary Jude Jeng Articulo" &&
@@ -1787,6 +1789,16 @@ var initial = () =>  {
     ) {
         document.getElementById("btn_lock").style.visibility = "hidden";
         document.getElementById("btn_unlock").style.visibility = "hidden";
+    }
+
+    if (
+        app.name != "Dennis Lin" &&
+        app.name != "dereck" &&
+        app.name != "Kristel Tan" &&
+        app.department != 'Service'
+    ) {
+        document.getElementById("btn_confirm").style.visibility = "hidden";
+        document.getElementById("btn_unconfirm").style.visibility = "hidden";
     }
 
     /*
@@ -2267,6 +2279,9 @@ $(document).on("click", "#btn_edit", function () {
 
     document.getElementById("btn_lock").style.display = "none";
     document.getElementById("btn_unlock").style.display = "none";
+
+    document.getElementById("btn_confirm").style.display = "none";
+    document.getElementById("btn_unconfirm").style.display = "none";
 
     document.getElementById("last_editor").style.display = "none";
 

@@ -91,7 +91,7 @@ if (!isset($jwt)) {
     if ($action == 1) {
         //select all
         try {
-            $query = "SELECT * from work_calendar_main where is_enabled = true";
+            $query = "SELECT * from work_calendar_main where is_enabled = true and start_time >= '2022/04/01'";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
