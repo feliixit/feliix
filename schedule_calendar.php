@@ -474,7 +474,7 @@ try {
                 <hr><br>
 
 
-                <div class="form-inline row">
+                <div class="form-inline row" id="install">
                     <div class="col-2 align-self-center" style="text-align: center;">
 
                         <label>Installer needed</label>
@@ -520,6 +520,7 @@ try {
 
                         -->
 
+                        <!--
                         <div class="custom-control custom-checkbox" style="display:inline-block;">
                             <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="EO" id="EO">
                             <label class="custom-control-label" for="EO">EO</label>
@@ -544,8 +545,15 @@ try {
                             <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="JS" id="JS">
                             <label class="custom-control-label" for="JS">JS</label>
                         </div>
+                        -->
+                        <template v-for="(username, index) in installer">
+                            <div class="custom-control custom-checkbox" style="display:inline-block;" >
+                                <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" :value="username" :id="username">
+                                <label class="custom-control-label" :for="username">{{username}}</label>
+                            </div>
 
-                        <br>
+                            <br>
+                        </template>
 
                         <div style="display: flex; margin-top: 10px;">
                             <label>Others:</label>
@@ -739,7 +747,7 @@ try {
 
                 <hr>
 
-                <br><input type="hidden" id="lock" value=""/>
+                <br><input type="hidden" id="lock" value=""/><input type="hidden" id="confirm" value=""/>
 
                 <div style="margin-left:6vw;">
 
@@ -782,6 +790,14 @@ try {
 
                     <button class="btn btn-info" style="font-weight:700; margin-left:2vw; width:8vw;"
                             id="btn_unlock">Unlock
+                    </button>
+
+                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw; width:8vw;"
+                            id="btn_confirm">Confirmed
+                    </button>
+
+                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw; width:8vw;"
+                            id="btn_unconfirm">Unconfirmed
                     </button>
 
                 </div>

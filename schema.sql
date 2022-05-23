@@ -2652,3 +2652,7 @@ ADD COLUMN `not_show`  varchar(2) DEFAULT '' after block_name;
 
 ALTER TABLE quotation_page_type
 ADD COLUMN `real_amount` decimal(10,2) DEFAULT 0.0 after not_show;
+
+-- 20220523
+ALTER TABLE work_calendar_main
+ADD COLUMN `confirm` varchar(1) COLLATE utf8mb4_unicode_ci  default '' AFTER `notes`;

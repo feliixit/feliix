@@ -38,6 +38,7 @@ $back_up_driver_other = (isset($_POST['back_up_driver_other']) ?  $_POST['back_u
 $photoshoot_request = (isset($_POST['photoshoot_request']) && $_POST['photoshoot_request'] === "Yes" ? 1 : 0);
 $notes = (isset($_POST['notes']) ?  $_POST['notes'] : '');
 $lock = (isset($_POST['lock']) ?  $_POST['lock'] : '');
+$confirm = (isset($_POST['confirm']) ?  $_POST['confirm'] : '');
 $work_calendar_main_id = (isset($_POST['work_calendar_main_id']) ?  $_POST['work_calendar_main_id'] : 0);
 $location = (isset($_POST['location']) ?  $_POST['location'] : '');
 $agenda = (isset($_POST['agenda']) ?  $_POST['agenda'] : '');
@@ -307,6 +308,27 @@ if (!isset($jwt)) {
             http_response_code(200);
             echo json_encode(array($arr));
             echo json_encode(array("message" => " lock success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        } // if decode fails, it means jwt is invalid
+        catch (Exception $e) {
+
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Access denied."));
+        }
+    } else if ($action == 9) {
+        //update
+        try {
+            // decode jwt
+            //$key = 'myKey';
+            //$decoded = JWT::decode($jwt, $key, array('HS256'));
+            $workCalenderMain->id = $id;
+            $workCalenderMain->confirm = $confirm;
+
+            $arr = $workCalenderMain->updateConfirmStatus();
+
+            http_response_code(200);
+            echo json_encode(array($arr));
+            echo json_encode(array("message" => " confirm success at " . date("Y-m-d") . " " . date("h:i:sa")));
         } // if decode fails, it means jwt is invalid
         catch (Exception $e) {
 
@@ -1127,7 +1149,7 @@ function RefactorInstallerNeeded($merged_results)
     // iterate over each row and filter installer_needed to installer_needed_other
     foreach ($merged_results as $key => $value) {
         // convert installer_needed into array
-        $value['installer_needed'] = str_replace(" ", "", $value['installer_needed']);
+        //$value['installer_needed'] = str_replace(" ", "", $value['installer_needed']);
         $installer_needed_array = explode(",", $value['installer_needed']);
         // if installer_needed_array contains AS,RM,RS,CJ,JO
         if (in_array("AS", $installer_needed_array)) {

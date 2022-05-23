@@ -1,6 +1,37 @@
 Vue.component('v-select', VueSelect.VueSelect)
 
-
+var install = new Vue({
+    el: '#install', 
+    data: {
+        installer:[],
+    },created() {
+    
+        this.getLeadMan();
+    },
+    methods: {
+        getLeadMan() {
+  
+            let _this = this;
+      
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+              .get('api/project02_user_leadman', { headers: { "Authorization": `Bearer ${token}` } })
+              .then(
+                (res) => {
+                    var _users = res.data;
+                    _this.installer = Object.keys(_users).map(function(k){return _users[k].username})
+                    
+                  
+                },
+                (err) => {
+                  alert(err.response);
+                },
+              )
+              .finally(() => {
+      
+              });
+          }, }});
 
 var app = new Vue({
     el: '#sc_relevant', 
@@ -18,6 +49,8 @@ var app = new Vue({
         filename: [],
 
         attendee:[],
+
+        
 
         users: [],
         users_org: [],
@@ -49,6 +82,7 @@ var app = new Vue({
         this.getMonthDay();
         this.getUserName();
         this.getUsers();
+    
     },
     methods: {
         getUsers() {
@@ -74,6 +108,8 @@ var app = new Vue({
       
               });
           },
+
+          
 
         addMain2: function (details, main, du, calendar) {
             if (!main.Allday) {
@@ -606,6 +642,7 @@ var app = new Vue({
                                 Photoshoot_Request: photoshoot,
                                 Notes: UnescapeHTML(response.data[i].notes),
                                 Lock: response.data[i].lock,
+                                Confirm: response.data[i].confirm,
                                 Agenda: agendas,
                                 Lasteditor: Lasteditor,
                             },
@@ -737,12 +774,12 @@ var app = new Vue({
                                 Project_relevant: UnescapeHTML(
                                     response.data[i].project_relevant
                                 ),
-                                Installer_needed: UnescapeHTML(
+                                Installer_needed:  
                                     response.data[i].installer_needed
-                                ),
-                                Installer_needed_other: UnescapeHTML(
+                                 ,
+                                Installer_needed_other: 
                                     response.data[i].installer_needed_other
-                                ),
+                                 ,
                                 Location_Things_to_Bring: UnescapeHTML(
                                     response.data[i].things_to_bring_location
                                 ),
@@ -763,6 +800,7 @@ var app = new Vue({
                                 Photoshoot_Request: photoshoot,
                                 Notes: UnescapeHTML(response.data[i].notes),
                                 Lock: response.data[i].lock,
+                                Confirm: response.data[i].confirm,
                                 Agenda: agendas,
                                 Lasteditor: Lasteditor,
                             },
@@ -855,6 +893,37 @@ var app = new Vue({
                 })
                 .then(function (response) {
                     console.log(details);
+                    console.log(response);
+                    console.log(response.data[0]);
+
+                    //handle success
+                })
+                .catch(function (response) {
+                    //handle error
+                    console.log(response);
+                });
+        },
+
+        updateConfirm: function (vlock) {
+            this.action = 9; //update lock status
+            var token = localStorage.getItem("token");
+            var form_Data = new FormData();
+            let _this = this;
+            form_Data.append("jwt", token);
+            form_Data.append("id", _this.id);
+            form_Data.append("confirm", vlock);
+            form_Data.append("action", _this.action);
+
+            axios({
+                    method: "post",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    url: "api/work_calender_main",
+                    data: form_Data,
+                })
+                .then(function (response) {
+                    //console.log(details);
                     console.log(response);
                     console.log(response.data[0]);
 
@@ -1100,6 +1169,14 @@ var app = new Vue({
                     } else {
                         document.getElementById("btn_lock").style.display = "inline";
                         document.getElementById("btn_unlock").style.display = "none";
+                    }
+
+                    if (document.getElementById("confirm").value == "Y") {
+                        document.getElementById("btn_confirm").style.display = "none";
+                        document.getElementById("btn_unconfirm").style.display = "inline";
+                    } else {
+                        document.getElementById("btn_confirm").style.display = "inline";
+                        document.getElementById("btn_unconfirm").style.display = "none";
                     }
 
                     app.filename = [];
@@ -1516,6 +1593,20 @@ var initial = () =>  {
             
             var installer = sc_content.Installer_needed.split(",");
 
+            var elements = document.getElementsByName("sc_Installer_needed");
+
+            for (var i = 0; i < elements.length; i++)
+                elements[i].checked = false;
+
+            for (var i = 0; i < installer.length; i++) {
+                for (var j = 0; j < elements.length; j++) {
+                    if (elements[j].value == installer[i]) {
+                        elements[j].checked = true;
+                    }
+                }
+            }
+
+            /*
             for (i = 0; i < 5; i++) {
                 document.getElementsByName("sc_Installer_needed")[i].checked = false;
             }
@@ -1537,6 +1628,7 @@ var initial = () =>  {
                     document.getElementsByName("sc_Installer_needed")[4].checked = true;
 
             }
+            */
 
             //加入Agenda內容(先刪除未儲存的)
             var agenda_object = document
@@ -1628,7 +1720,33 @@ var initial = () =>  {
                 document.getElementById("btn_unlock").style.display = "none";
             }
 
+            document.getElementById("confirm").value = sc_content.Confirm;
+            if (sc_content.Confirm != "") {
+                document.getElementById("btn_confirm").style.display = "none";
+                document.getElementById("btn_unconfirm").style.display = "inline";
+            } else {
+                document.getElementById("btn_confirm").style.display = "inline";
+                document.getElementById("btn_unconfirm").style.display = "none";
+            }
+
             $("#exampleModalScrollable").modal("toggle");
+        },
+
+        //載入日曆初始化時，如果 Schedule 的 confirmed 為True，則加上一個checkbox圖示在 日曆上的 Schedule 前方。
+        eventDidMount: function (arg) {
+
+            if( arg.event.extendedProps.description.Confirm == 'Y' ){
+
+                let icon = document.createElement("i");
+                icon.classList.add('fa', 'fa-check-square');
+
+                if( arg.el.querySelector(".fc-event-title-container") ){
+                    arg.el.querySelector(".fc-event-title").prepend(icon);
+                }
+                else {
+                    arg.el.prepend(icon);
+                }
+            }
         },
 
         //eventDrop: function (info) {
@@ -1961,6 +2079,7 @@ $("button[id='btn_add']").click(function () {
         Photoshoot_Request: $("input[name=sc_Photoshoot_request]:checked").val(),
         Notes: document.getElementById("sc_notes").value,
         Lock: "",
+        Confirm:"",
         is_enable: true,
     };
 
@@ -2098,12 +2217,17 @@ function Change_Schedule_State(status, time_status) {
     if(status && document.getElementById("sc_color_other").checked)
         document.getElementById("sc_color").disabled = true;
 
+    /*
     document.getElementsByName("sc_Installer_needed")[0].disabled = status;
     document.getElementsByName("sc_Installer_needed")[1].disabled = status;
     document.getElementsByName("sc_Installer_needed")[2].disabled = status;
     document.getElementsByName("sc_Installer_needed")[3].disabled = status;
     document.getElementsByName("sc_Installer_needed")[4].disabled = status;
+    */
+    var elements = document.getElementsByName("sc_Installer_needed");
 
+    for (var i = 0; i < elements.length; i++)
+        elements[i].disabled = status;
 
     document.getElementById("sc_Installer_needed_other").disabled = status;
 
@@ -2161,6 +2285,7 @@ $(document).on("click", "#btn_delete", function () {
 $(document).on("click", "#btn_duplicate", function () {
     var sc_content = eventObj.extendedProps.description;
     sc_content.Lock = "";
+    sc_content.Confirm = "";
 
     console.log(sc_content);
     if (sc_content.Allday) {
@@ -2220,6 +2345,20 @@ $(document).on("click", "#btn_cancel", function () {
 
     var installer = sc_content.Installer_needed.split(",");
 
+    var elements = document.getElementsByName("sc_Installer_needed");
+
+    for (var i = 0; i < elements.length; i++)
+        elements[i].checked = false;
+
+    for (var i = 0; i < installer.length; i++) {
+        for (var j = 0; j < elements.length; j++) {
+            if (elements[j].value == installer[i]) {
+                elements[j].checked = true;
+            }
+        }
+    }
+
+        /*
     for (i = 0; i < 5; i++) {
         document.getElementsByName("sc_Installer_needed")[i].checked = false;
     }
@@ -2240,7 +2379,7 @@ $(document).on("click", "#btn_cancel", function () {
         if (installer[i] == "JS")
             document.getElementsByName("sc_Installer_needed")[4].checked = true;
 
-    }
+    } */
 
     document.getElementsByName("sc_Installer_needed_other").value = sc_content.Installer_needed_other;
 
@@ -2306,6 +2445,14 @@ $(document).on("click", "#btn_cancel", function () {
         document.getElementById("btn_unlock").style.display = "none";
     }
 
+    if (document.getElementById("confirm").value == "Y") {
+        document.getElementById("btn_confirm").style.display = "none";
+        document.getElementById("btn_unconfirm").style.display = "inline";
+    } else {
+        document.getElementById("btn_confirm").style.display = "inline";
+        document.getElementById("btn_unconfirm").style.display = "none";
+    }
+
     var file_elements = document.getElementsByName("file_elements")
     for(let i = 0;i < file_elements.length; i++)
     {
@@ -2339,6 +2486,33 @@ $(document).on("click", "#btn_unlock", async function () {
 
     document.getElementById("btn_edit").style.display = "inline";
     document.getElementById("btn_delete").style.display = "inline";
+});
+
+$(document).on("click", "#btn_confirm", async function () {
+    document.getElementById("confirm").value = "Y";
+    await app.updateConfirm("Y");
+
+    var sc_content = eventObj.extendedProps.description;
+    sc_content.confirm = "Y";
+
+    document.getElementById("btn_confirm").style.display = "none";
+    document.getElementById("btn_unconfirm").style.display = "inline";
+
+    reload();
+});
+
+$(document).on("click", "#btn_unconfirm", async function () {
+    document.getElementById("confirm").value = "";
+    await app.updateConfirm("");
+
+    var sc_content = eventObj.extendedProps.description;
+    sc_content.confirm = "";
+
+    document.getElementById("btn_confirm").style.display = "inline";
+    document.getElementById("btn_unconfirm").style.display = "none";
+
+    reload();
+
 });
 
 $(document).on("click", "#btn_save", function () {
@@ -2511,6 +2685,7 @@ $(document).on("click", "#btn_save", function () {
         Photoshoot_Request: $("input[name=sc_Photoshoot_request]:checked").val(),
         Notes: document.getElementById("sc_notes").value,
         Lock: document.getElementById("lock").value,
+        Confirm: document.getElementById("confirm").value,
     };
 
     if (sc_content.Allday) {
@@ -2548,6 +2723,29 @@ $("input[id='sc_time']").change(function () {
     } else {
         document.getElementById("sc_stime").disabled = false;
         document.getElementById("sc_etime").disabled = false;
+    }
+});
+
+$("input[id='photoshoot_yes']").change(function () {
+    if (this.checked) {
+        if(!app.attendee.includes('Gian Miguel Osorio'))
+            app.attendee.push('Gian Miguel Osorio')
+        if(!app.attendee.includes('Ronnel B. Balmeo'))
+            app.attendee.push('Ronnel B. Balmeo')
+    } 
+});
+
+$("input[id='photoshoot_no']").change(function () {
+    if (this.checked) {
+        var index = app.attendee.indexOf('Gian Miguel Osorio');
+        if (index > -1) {
+            app.attendee.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        
+        var index = app.attendee.indexOf('Ronnel B. Balmeo');
+        if (index > -1) {
+            app.attendee.splice(index, 1); // 2nd parameter means remove one item only
+        }
     }
 });
 
