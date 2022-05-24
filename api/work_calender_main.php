@@ -1162,6 +1162,10 @@ function RefactorInstallerNeeded($merged_results, $db)
         $installer_needed_array = explode(",", $value['installer_needed']);
         $installer_needed_other_array = explode(",", $value['installer_needed_other']);
 
+        // trim space of array
+        $installer_needed_array = array_map('trim', $installer_needed_array);
+        $installer_needed_other_array = array_map('trim', $installer_needed_other_array);
+
         $installer = array();
         $installer_other = array();
 
