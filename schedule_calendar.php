@@ -137,10 +137,8 @@ try {
         }
 
         .table__item{
-
             padding: 3pt;
             border: 2px solid rgb(222,225,230);
-
         }
 
         .agenda__text{
@@ -154,6 +152,21 @@ try {
 
         .fc-event-title {
             display: inline!important;
+        }
+
+
+        div.fc-event-title.fc-sticky > i.fa-check-square{
+            font-size: 18px;
+            margin: 0 5px 0 2px;
+            color: white;
+            vertical-align: -3px;
+        }
+
+        a.fc-daygrid-event.fc-daygrid-dot-event.fc-event.fc-event-start.fc-event-end.fc-event-past > i.fa-check-square {
+            font-size: 18px;
+            margin: 0 1px 0 2px;
+            color: black;
+            vertical-align: -3px;
         }
 
         @media (min-width: 576px) {
@@ -183,7 +196,7 @@ try {
             background-image: none;
             background-color: #eef1f6;
             border-color: #d1dbe5;   
-            }
+        }
 
     </style>
 
