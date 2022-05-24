@@ -50,7 +50,7 @@ $merged_results = array();
 
 
 
-$query = "SELECT id, username  FROM `user` where status = 1 and title_id in (21, 22)";
+$query = "SELECT id, username  FROM `user` where status = 1 and title_id in (21, 22) order by username";
 
 
 
