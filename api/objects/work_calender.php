@@ -33,6 +33,7 @@ class WorkCalenderMain
     public $photoshoot_request;
     public $notes;
     public $lock;
+    public $confirm;
     public $is_enabled;
     public $created_at;
     public $updated_at;
@@ -60,6 +61,40 @@ class WorkCalenderMain
         // bind the values
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':lock', $this->lock);
+
+    try {
+        // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+                return true;
+            }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                return false;
+            }
+        }
+        catch (Exception $e)
+        {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    function updateConfirmStatus()
+    {
+        $query = "UPDATE " . $this->table_name . " set `confirm` = :confirm where id = :id";
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // bind the values
+        $this->id = (int)$this->id;
+        $this->confirm = htmlspecialchars(strip_tags($this->confirm));
+
+        // bind the values
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':confirm', $this->confirm);
 
     try {
         // execute the query, also check if query was successful

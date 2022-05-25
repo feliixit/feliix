@@ -137,10 +137,8 @@ try {
         }
 
         .table__item{
-
             padding: 3pt;
             border: 2px solid rgb(222,225,230);
-
         }
 
         .agenda__text{
@@ -156,6 +154,29 @@ try {
             display: inline!important;
         }
 
+        div.fc-event-title.fc-sticky > i.fa-check-square{
+            font-size: 18px;
+            margin: 0 5px 0 2px;
+            color: white;
+            vertical-align: -3px;
+        }
+
+        a.fc-daygrid-event.fc-daygrid-dot-event.fc-event.fc-event-start.fc-event-end.fc-event-past > i.fa-check-square {
+            font-size: 18px;
+            margin: 0 1px 0 2px;
+            color: black;
+            vertical-align: -3px;
+        }
+        div.button_box{
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        div.button_box > button{
+            width: 125px;
+            font-weight: 700;
+        }
+
         @media (min-width: 576px) {
 
             .modal-xl {
@@ -167,7 +188,6 @@ try {
             .modal-xl {
                 max-width: 800px;
             }
-
         }
 
         @media (min-width: 1200px){
@@ -183,7 +203,7 @@ try {
             background-image: none;
             background-color: #eef1f6;
             border-color: #d1dbe5;   
-            }
+        }
 
     </style>
 
@@ -474,7 +494,7 @@ try {
                 <hr><br>
 
 
-                <div class="form-inline row">
+                <div class="form-inline row" id="install">
                     <div class="col-2 align-self-center" style="text-align: center;">
 
                         <label>Installer needed</label>
@@ -520,6 +540,7 @@ try {
 
                         -->
 
+                        <!--
                         <div class="custom-control custom-checkbox" style="display:inline-block;">
                             <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="EO" id="EO">
                             <label class="custom-control-label" for="EO">EO</label>
@@ -544,8 +565,15 @@ try {
                             <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" value="JS" id="JS">
                             <label class="custom-control-label" for="JS">JS</label>
                         </div>
+                        -->
+                        <template v-for="(username, index) in installer">
+                            <div class="custom-control custom-checkbox" style="display:inline-block;" >
+                                <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" :value="username" :id="username">
+                                <label class="custom-control-label" :for="username">{{username}}</label>
+                            </div>
 
-                        <br>
+                            <br>
+                        </template>
 
                         <div style="display: flex; margin-top: 10px;">
                             <label>Others:</label>
@@ -739,50 +767,33 @@ try {
 
                 <hr>
 
-                <br><input type="hidden" id="lock" value=""/>
+                <br><input type="hidden" id="lock" value=""/><input type="hidden" id="confirm" value=""/>
 
-                <div style="margin-left:6vw;">
+                <div class="button_box">
 
+                    <button class="btn btn-secondary" style="width: 155px" id="btn_reset">Reset Schedule</button>
 
-                    <button class="btn btn-secondary" style="font-weight:700; margin-left:2vw;"
-                            id="btn_reset">Reset Schedule
-                    </button>
+                    <button class="btn btn-primary" id="btn_add">Add</button>
 
-                    <button class="btn btn-primary" style="width:8vw; font-weight:700; margin-left:2vw;"
-                            id="btn_add">Add
-                    </button>
+                    <button class="btn btn-secondary" id="btn_export">Export</button>
 
-                    <button class="btn btn-secondary" style="width:8vw; font-weight:700; margin-left:2vw;"
-                            id="btn_export">Export
-                    </button>
+                    <button class="btn btn-secondary" style="width: 155px" id="btn_duplicate">Duplicate Schedule</button>
 
-                    <button class="btn btn-secondary" style="font-weight:700; margin-left:2vw;"
-                            id="btn_duplicate">Duplicate Schedule
-                    </button>
+                    <button class="btn btn-danger" id="btn_delete">Delete</button>
 
-                    <button class="btn btn-danger" style="width:8vw; font-weight:700; margin-left:2vw;"
-                            id="btn_delete">Delete
-                    </button>
+                    <button class="btn btn-primary" id="btn_edit">Edit</button>
 
-                    <button class="btn btn-primary" style="width:8vw; font-weight:700; margin-left:2vw;"
-                            id="btn_edit">Edit
-                    </button>
+                    <button class="btn btn-secondary" id="btn_cancel">Cancel</button>
 
-                    <button class="btn btn-secondary" style="width:8vw; font-weight:700; margin-left:2vw;"
-                            id="btn_cancel">Cancel
-                    </button>
-
-                    <button class="btn btn-primary" style="width:8vw; font-weight:700; margin-left:2vw;" id="btn_save">
-                        Save
-                    </button>
+                    <button class="btn btn-primary" id="btn_save">Save</button>
                     
-                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw; width:8vw;"
-                            id="btn_lock">Lock
-                    </button>
+                    <button class="btn btn-info" id="btn_lock">Lock</button>
 
-                    <button class="btn btn-info" style="font-weight:700; margin-left:2vw; width:8vw;"
-                            id="btn_unlock">Unlock
-                    </button>
+                    <button class="btn btn-info" id="btn_unlock">Unlock</button>
+
+                    <button class="btn btn-info" id="btn_confirm">Confirmed</button>
+
+                    <button class="btn btn-info" id="btn_unconfirm">Unconfirmed</button>
 
                 </div>
 
@@ -834,7 +845,7 @@ try {
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script src="js/vue-select.js"></script>
 <script defer src="js/axios.min.js"></script>
-<script defer src="js/schedule_calender.js?v=2020112805"></script>
+<script defer src="js/schedule_calender.js?v=<?php uniqid(); ?>"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
 <script defer src='https://unpkg.com/fullcalendar@5.1.0/main.min.js'></script>
 <script defer src='https://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>

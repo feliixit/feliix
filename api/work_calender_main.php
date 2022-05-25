@@ -38,6 +38,7 @@ $back_up_driver_other = (isset($_POST['back_up_driver_other']) ?  $_POST['back_u
 $photoshoot_request = (isset($_POST['photoshoot_request']) && $_POST['photoshoot_request'] === "Yes" ? 1 : 0);
 $notes = (isset($_POST['notes']) ?  $_POST['notes'] : '');
 $lock = (isset($_POST['lock']) ?  $_POST['lock'] : '');
+$confirm = (isset($_POST['confirm']) ?  $_POST['confirm'] : '');
 $work_calendar_main_id = (isset($_POST['work_calendar_main_id']) ?  $_POST['work_calendar_main_id'] : 0);
 $location = (isset($_POST['location']) ?  $_POST['location'] : '');
 $agenda = (isset($_POST['agenda']) ?  $_POST['agenda'] : '');
@@ -99,7 +100,7 @@ if (!isset($jwt)) {
                 $merged_results[] = $row;
             }
 
-            $merged_results = RefactorInstallerNeeded($merged_results);
+            $merged_results = RefactorInstallerNeeded($merged_results, $db);
     
 
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
@@ -263,7 +264,7 @@ if (!isset($jwt)) {
                 $merged_results[] = $row;
             }
 
-            $merged_results = RefactorInstallerNeeded($merged_results);
+            $merged_results = RefactorInstallerNeeded($merged_results, $db);
             
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
         } catch (Exception $e) {
@@ -307,6 +308,27 @@ if (!isset($jwt)) {
             http_response_code(200);
             echo json_encode(array($arr));
             echo json_encode(array("message" => " lock success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        } // if decode fails, it means jwt is invalid
+        catch (Exception $e) {
+
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Access denied."));
+        }
+    } else if ($action == 9) {
+        //update
+        try {
+            // decode jwt
+            //$key = 'myKey';
+            //$decoded = JWT::decode($jwt, $key, array('HS256'));
+            $workCalenderMain->id = $id;
+            $workCalenderMain->confirm = $confirm;
+
+            $arr = $workCalenderMain->updateConfirmStatus();
+
+            http_response_code(200);
+            echo json_encode(array($arr));
+            echo json_encode(array("message" => " confirm success at " . date("Y-m-d") . " " . date("h:i:sa")));
         } // if decode fails, it means jwt is invalid
         catch (Exception $e) {
 
@@ -1122,60 +1144,50 @@ function grab_image($image_url,$image_file){
     fclose($fp);
 }
 
-function RefactorInstallerNeeded($merged_results)
+function RefactorInstallerNeeded($merged_results, $db)
 {
+    $tech = [];
+    $query = "SELECT username  FROM `user` where status = 1 and title_id in (21, 22)";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $tech[] = $row['username'];
+    }
+
     // iterate over each row and filter installer_needed to installer_needed_other
     foreach ($merged_results as $key => $value) {
         // convert installer_needed into array
-        $value['installer_needed'] = str_replace(" ", "", $value['installer_needed']);
+        //$value['installer_needed'] = str_replace(" ", "", $value['installer_needed']);
         $installer_needed_array = explode(",", $value['installer_needed']);
-        // if installer_needed_array contains AS,RM,RS,CJ,JO
-        if (in_array("AS", $installer_needed_array)) {
-            // set installer_needed_other to AS,RM,RS,CJ,JO
-            $merged_results[$key]['installer_needed_other'] .= ",AS";
+        $installer_needed_other_array = explode(",", $value['installer_needed_other']);
 
-            // remove AS from installer_needed_array
-            $installer_needed_array = array_diff($installer_needed_array, array("AS"));
+        // trim space of array
+        $installer_needed_array = array_map('trim', $installer_needed_array);
+        $installer_needed_other_array = array_map('trim', $installer_needed_other_array);
+
+        $installer = array();
+        $installer_other = array();
+
+        foreach ($installer_needed_other_array as $people) {
+            if (in_array($people, $tech)) 
+                $installer[] = $people;
+            else
+                $installer_other[] = $people;
         }
 
-        if (in_array("RS", $installer_needed_array)) {
-            // set installer_needed_other to AS,RM,RS,CJ,JO
-            $merged_results[$key]['installer_needed_other'] .= ",RS";
-
-            // remove AS from installer_needed_array
-            $installer_needed_array = array_diff($installer_needed_array, array("RS"));
-        }
-
-        if (in_array("RM", $installer_needed_array)) {
-            // set installer_needed_other to AS,RM,RS,CJ,JO
-            $merged_results[$key]['installer_needed_other'] .= ",RM";
-
-            // remove AS from installer_needed_array
-            $installer_needed_array = array_diff($installer_needed_array, array("RM"));
-        }
-
-        if (in_array("CJ", $installer_needed_array)) {
-            $merged_results[$key]['installer_needed_other'] .= ",CJ";
-
-            // remove AS from installer_needed_array
-            $installer_needed_array = array_diff($installer_needed_array, array("CJ"));
-        }
-
-        if (in_array("JO", $installer_needed_array)) {
-            $merged_results[$key]['installer_needed_other'] .= ",JO";
-
-            // remove AS from installer_needed_array
-            $installer_needed_array = array_diff($installer_needed_array, array("JO"));
+        foreach ($installer_needed_array as $people) {
+            if (in_array($people, $tech)) 
+                $installer[] = $people;
+            else
+                $installer_other[] = $people;
+           
         }
 
         // installer_needed_array to string concate by comma
-        $merged_results[$key]['installer_needed'] = trim(implode(",", $installer_needed_array), ",");
+        $merged_results[$key]['installer_needed'] = trim(implode(",", $installer), ",");
 
-        //$merged_results[$key]['installer_needed_other'] = str_replace(" ", "", $merged_results[$key]['installer_needed_other']);
-
-        // remove duplicate installer_needed_other value
-        $merged_results[$key]['installer_needed_other'] = trim(implode(", ", array_unique(explode(",", $merged_results[$key]['installer_needed_other']))), ", ");
-
+        $merged_results[$key]['installer_needed_other'] = trim(implode(", ", array_unique($installer_other)), ", ");
         $merged_results[$key]['installer_needed_other'] = str_replace("  ", " ", $merged_results[$key]['installer_needed_other']);
     }
 

@@ -352,7 +352,7 @@ function SendNotifyMail($bid, $pre_status)
             pp.class_name pp_class, 
             pm.project_name, 
             COALESCE(ps.project_status, '') project_status, 
-            pm.estimate_close_prob, 
+            COALESCE((SELECT prob FROM project_est_prob where project_id = " . $bid . " and status <> -1 order by created_at desc limit 1), '') estimate_close_prob, 
             pm.designer,       
             pm.`type`,       
             pm.scope,       
