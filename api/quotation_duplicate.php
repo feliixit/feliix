@@ -353,6 +353,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             // prepare the query
             $stmt = $db->prepare($query);
 
+            $tt = $total["total"] == '' ? 0 : $total["total"];
             // bind the values
             $stmt->bindParam(':quotation_id', $quotation_id);
             $stmt->bindParam(':page', $total["page"]);
@@ -360,7 +361,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             $stmt->bindParam(':vat', $total["vat"]);
             $stmt->bindParam(':show_vat', $total["show_vat"]);
             $stmt->bindParam(':valid', $total["valid"]);
-            $stmt->bindParam(':total', $total["total"]);
+            $stmt->bindParam(':total', $tt);
 
             $stmt->bindParam(':create_id', $user_id);
         
