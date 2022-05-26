@@ -65,6 +65,7 @@ $od2 = (isset($_GET['od2']) ?  urldecode($_GET['od2']) : '');
 $page = (isset($_GET['page']) ?  urldecode($_GET['page']) : "");
 $size = (isset($_GET['size']) ?  urldecode($_GET['size']) : "");
 
+$kind = (isset($_GET['kind']) ?  urldecode($_GET['kind']) : "");
 
 $type = (isset($_GET['type']) ?  urldecode($_GET['type']) : '');
 
@@ -74,7 +75,14 @@ $query = "SELECT pm.id,
                 pm.title,
                 pm.status, 
                 pm.project_id,
-                COALESCE((SELECT project_name FROM project_main WHERE id = pm.project_id), '') AS project_name,
+                pm.kind,
+                COALESCE((SELECT project_name FROM project_main WHERE id = pm.project_id and pm.kind = ''), '') AS project_name,
+                COALESCE((SELECT title FROM project_other_task_a WHERE id = pm.project_id and pm.kind = 'a'), '') AS project_name_a,
+                COALESCE((SELECT title FROM project_other_task_d WHERE id = pm.project_id and pm.kind = 'd'), '') AS project_name_d,
+                COALESCE((SELECT title FROM project_other_task_l WHERE id = pm.project_id and pm.kind = 'l'), '') AS project_name_l,
+                COALESCE((SELECT title FROM project_other_task_o WHERE id = pm.project_id and pm.kind = 'o'), '') AS project_name_o,
+                COALESCE((SELECT title FROM project_other_task_sl WHERE id = pm.project_id and pm.kind = 'sl'), '') AS project_name_sl,
+                COALESCE((SELECT title FROM project_other_task_sv WHERE id = pm.project_id and pm.kind = 'sv'), '') AS project_name_sv,
                 pm.quotation_no,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
@@ -96,6 +104,12 @@ if($fpc != "")
 {
     $query = $query . " and p.create_id = " . $fpc . " ";
 }
+
+if($kind != "")
+{
+    $query = $query . " and pm.kind = '" . $kind . "' ";
+}
+
 
 if($fc != "")
 {
@@ -203,9 +217,16 @@ $stmt->execute();
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id = $row['id'];
     $title = $row['title'];
+    $kind = $row['kind'];
     $status = $row['status'];
     $project_id = $row['project_id'];
     $project_name = $row['project_name'];
+    $project_name_a = $row['project_name_a'];
+    $project_name_d = $row['project_name_d'];
+    $project_name_l = $row['project_name_l'];
+    $project_name_o = $row['project_name_o'];
+    $project_name_sl = $row['project_name_sl'];
+    $project_name_sv = $row['project_name_sv'];
     $quotation_no = $row['quotation_no'];
     $created_by = $row['created_by'];
     $updated_by = $row['updated_by'];
@@ -218,9 +239,16 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "is_edited" => 1,
         "id" => $id,
         "title" => $title,
+        "kind" => $kind,
         "status" => $status,
         "project_id" => $project_id,
         "project_name" => $project_name,
+        "project_name_a" => $project_name_a,
+        "project_name_d" => $project_name_d,
+        "project_name_l" => $project_name_l,
+        "project_name_o" => $project_name_o,
+        "project_name_sl" => $project_name_sl,
+        "project_name_sv" => $project_name_sv,
         "quotation_no" => $quotation_no,
         "created_by" => $created_by,
         "updated_by" => $updated_by,
@@ -238,6 +266,12 @@ if($key != "")
     foreach ($merged_results as &$value) {
         if(
             preg_match("/{$key}/i", $value['project_name']) ||
+            preg_match("/{$key}/i", $value['project_name_a']) ||
+            preg_match("/{$key}/i", $value['project_name_d']) ||
+            preg_match("/{$key}/i", $value['project_name_l']) ||
+            preg_match("/{$key}/i", $value['project_name_o']) ||
+            preg_match("/{$key}/i", $value['project_name_sl']) ||
+            preg_match("/{$key}/i", $value['project_name_sv']) ||
             preg_match("/{$key}/i", $value['title']) ||
             preg_match("/{$key}/i", $value['quotation_no']))
         {

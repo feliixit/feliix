@@ -28,12 +28,12 @@ $GLOBALS['position'] = $decoded->data->position;
 $GLOBALS['department'] = $decoded->data->department;
 
 if($GLOBALS['department'] == 'Lighting' || $GLOBALS['department'] == 'Office' || $GLOBALS['department'] == 'Sales'){
-  $test_manager = "1";
+$test_manager = "1";
 }
 
 //  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
 if($user_id == 48 || $user_id == 2 || $user_id == 1 || $user_id == 6 || $user_id == 3)
-    $test_manager = "1";
+$test_manager = "1";
 }
 
 catch (Exception $e){
@@ -200,6 +200,31 @@ header( 'location:index' );
             margin: 0 3px;
         }
 
+
+        dd.relate_to > input[type="radio"] {
+            border: none;
+            margin-right: 0;
+            vertical-align: 1px;
+        }
+
+        dd.relate_to > input[type="radio"]::before {
+            color: #00811e;
+        }
+
+        dd.relate_to > span {
+            font-size: 14px;
+            font-family: "M PLUS 1p", Arial, Helvetica, "LiHei Pro", 微軟正黑體, "Microsoft JhengHei", 新細明體, sans-serif;
+            font-weight: 500;
+        }
+
+        dd.relate_to > span:first-of-type {
+            margin-right: 20px;
+        }
+
+        dd.relate_to > select {
+            margin-top: 5px;
+        }
+
     </style>
 </head>
 
@@ -227,12 +252,60 @@ header( 'location:index' );
                                 <dt>Quotation Name</dt>
                                 <dd><input type="text" placeholder="" v-model="ins_title"></dd>
 
-                                <dt>Project Name</dt>
-                                <dd>
-                                    <select v-model="ins_project_id">
-                                        <option v-for="(item, index) in projects" :value="item.id">{{ item.project_name }}</option>
+                                <dt>Relate To</dt>
+                                <dd class="relate_to" style="margin-top: -5px;">
+                                    <input type="radio" class="alone" value="project" v-model="type"> <span>Project</span>
+                                    <input type="radio" class="alone" value="task" v-model="type"> <span>Task Management</span>
+
+                                    <!-- if choose Project -->
+                                    <select v-model="ins_project_id" v-show="type == 'project'">
+                                        <option v-for="(item, index) in projects" :value="item.id">{{ item.project_name
+                                            }}
+                                        </option>
+                                    </select>
+
+                                    <!-- if choose Task Management -->
+                                    <select v-show="type == 'task'" v-model='kind'>
+                                        <option value="a">Admin Department</option>
+                                        <option value="d">Design Department</option>
+                                        <option value="l">Lighting Department</option>
+                                        <option value="o">Office Systems Department</option>
+                                        <option value="sl">Sales Department</option>
+                                        <option value="sv">Service Department</option>
+                                    </select>
+
+                                    <select v-model="ins_project_id" v-show="type == 'task' && kind == 'a' ">
+                                        <option v-for="(item, index) in task_a" :value="item.id">{{ item.project_name
+                                            }}
+                                        </option>
+                                    </select>
+                                    <select v-model="ins_project_id" v-show="type == 'task' && kind == 'd' ">
+                                        <option v-for="(item, index) in task_d" :value="item.id">{{ item.project_name
+                                            }}
+                                        </option>
+                                    </select>
+                                    <select v-model="ins_project_id" v-show="type == 'task' && kind == 'l' ">
+                                        <option v-for="(item, index) in task_l" :value="item.id">{{ item.project_name
+                                            }}
+                                        </option>
+                                    </select>
+                                    <select v-model="ins_project_id" v-show="type == 'task' && kind == 'o' ">
+                                        <option v-for="(item, index) in task_o" :value="item.id">{{ item.project_name
+                                            }}
+                                        </option>
+                                    </select>
+                                    <select v-model="ins_project_id" v-show="type == 'task' && kind == 'sl' ">
+                                        <option v-for="(item, index) in task_sl" :value="item.id">{{ item.project_name
+                                            }}
+                                        </option>
+                                    </select>
+                                    <select v-model="ins_project_id" v-show="type == 'task' && kind == 'sv' ">
+                                        <option v-for="(item, index) in task_sv" :value="item.id">{{ item.project_name
+                                            }}
+                                        </option>
                                     </select>
                                 </dd>
+
                             </dl>
                             <div class="btnbox">
                                 <a class="btn small" @click="clear()">Cancel</a>
@@ -308,8 +381,8 @@ header( 'location:index' );
 
                                 <dt>Project Category</dt>
                                 <dd>
-                                    <select  v-model="fil_project_category">
-                                    <option value=""></option>
+                                    <select v-model="fil_project_category">
+                                        <option value=""></option>
                                         <option value="2">Lighting</option>
                                         <option value="1">Office Systems</option>
                                     </select>
@@ -317,14 +390,27 @@ header( 'location:index' );
 
                                 <dt>Project Creator</dt>
                                 <dd>
-                                    <select  v-model="fil_project_creator">
-                                    <option value=""></option>
-                                    <option v-for="item in users" :value="item.id" :key="item.id">
+                                    <select v-model="fil_project_creator">
+                                        <option value=""></option>
+                                        <option v-for="item in users" :value="item.id" :key="item.id">
                                             {{ item.username }}
                                         </option>
                                     </select>
                                 </dd>
-                                                          
+
+                                <dt>Which Department's Task Management</dt>
+                                <dd>
+                                    <select v-model="fil_kind">
+                                        <option value=""></option>
+                                        <option value="a">Admin Department</option>
+                                        <option value="d">Design Department</option>
+                                        <option value="l">Lighting Department</option>
+                                        <option value="o">Office Systems Department</option>
+                                        <option value="sl">Sales Department</option>
+                                        <option value="sv">Service Department</option>
+                                    </select>
+                                </dd>
+
                                 <dt>Quotation Creator</dt>
                                 <dd>
                                     <select v-model="fil_creator">
@@ -481,7 +567,7 @@ header( 'location:index' );
                 <div class="tablebox lv1">
                     <ul class="head">
                         <li>Quotation Name</li>
-                        <li>Project Name</li>
+                        <li>Related Project / Related Task Mgt.</li>
                         <li>Quotation Number</li>
                         <li>Created Time</li>
                         <li>Last Updated Time</li>
@@ -489,29 +575,106 @@ header( 'location:index' );
                     </ul>
                     <ul v-for='(receive_record, index) in displayedPosts'>
                         <li>
-                            <a v-show = "receive_record.is_edited == 1" v-bind:href="'quotation?id=' + receive_record.id">{{ receive_record.title }}</a>
+                            <a v-show="receive_record.is_edited == 1" v-bind:href="'quotation?id=' + receive_record.id">{{
+                                receive_record.title }}</a>
                             <input name="title" type="text"
-                                   v-show = "receive_record.is_edited == 0" 
-                                   v-model = "title" maxlength="1024"></li>
-                        <li><a v-show = "receive_record.is_edited == 1" v-bind:href="'project02?p='+ receive_record.project_id">{{ receive_record.project_name }}</a>
-                            <select name="project_name" v-show = "receive_record.is_edited == 0" 
-                                    class="limitedNumbChosen" 
-                                   v-model = "receive_record.project_id">
-                                   <option v-for="(item, index) in projects" :value="item.id">{{ item.project_name }}</option>
+                                   v-show="receive_record.is_edited == 0"
+                                   v-model="title" maxlength="1024"></li>
+                        <li>
+                            <a v-show="receive_record.is_edited == 1 && receive_record.kind == ''"
+                               v-bind:href="'project02?p='+ receive_record.project_id">Project: {{ receive_record.project_name }}
+                            </a>
+                            <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'a'"
+                               v-bind:href="'task_management_AD?sid='+ receive_record.project_id">Admin Department Task Management: {{ receive_record.project_name_a }}
+                            </a>
+                            <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'd'"
+                               v-bind:href="'task_management_DS?sid='+ receive_record.project_id">Design Department Task Management: {{ receive_record.project_name_d }}
+                            </a>
+                            <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'l'"
+                               v-bind:href="'task_management_LT?sid='+ receive_record.project_id">Lighting Department Task Management: {{ receive_record.project_name_l }}
+                            </a>
+                            <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'o'"
+                               v-bind:href="'task_management_OS?sid='+ receive_record.project_id">Office Systems Department Task Management: {{ receive_record.project_name_o }}
+                            </a>
+                            <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'sl'"
+                               v-bind:href="'task_management_SLS?sid='+ receive_record.project_id">Sales Task Management: {{ receive_record.project_name_sl }}
+                            </a>
+                            <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'sv'"
+                               v-bind:href="'task_management_SVC?sid='+ receive_record.project_id">Service Task Management: {{ receive_record.project_name_sv }}
+                            </a>
+                            <!--
+                            <select name="project_name" v-show="receive_record.is_edited == 0"
+                                    class="limitedNumbChosen"
+                                    v-model="receive_record.project_id">
+                                <option v-for="(item, index) in projects" :value="item.id">{{ item.project_name }}
+                                </option>
                             </select>
+                            -->
+
+                            <dd class="relate_to" v-show="receive_record.is_edited == 0">
+                                <input type="radio" class="alone" value="project" v-model="type"> <span>Project</span>
+                                <input type="radio" class="alone" value="task" v-model="type"> <span>Task Management</span>
+
+                                <!-- if choose Project -->
+                                <select v-model="project_id" v-if="type == 'project'">
+                                    <option v-for="(item, index) in projects" :value="item.id">{{ item.project_name }}
+                                    </option>
+                                </select>
+
+                                <!-- if choose Task Management -->
+                                <select v-model="kind" v-if="type == 'task'">
+                                    <option :value="'a'">Admin Department</option>
+                                    <option :value="'d'">Design Department</option>
+                                    <option :value="'l'">Lighting Department</option>
+                                    <option :value="'o'">Office Systems Department</option>
+                                    <option :value="'sl'">Sales Department</option>
+                                    <option :value="'sv'">Service Department</option>
+                                </select>
+
+                                <select v-model="task_id" v-if="kind == 'a' && type == 'task'">
+                                    <option v-for="(item, index) in task_a" :value="item.id">{{ item.project_name }}
+                                    </option>
+                                </select>
+                                <select v-model="task_id" v-if="kind == 'd' && type == 'task'">
+                                    <option v-for="(item, index) in task_d" :value="item.id">{{ item.project_name }}
+                                    </option>
+                                </select>
+                                <select v-model="task_id" v-if="kind == 'l' && type == 'task'">
+                                    <option v-for="(item, index) in task_l" :value="item.id">{{ item.project_name }}
+                                    </option>
+                                </select>
+                                <select v-model="task_id" v-if="kind == 'o' && type == 'task'">
+                                    <option v-for="(item, index) in task_o" :value="item.id">{{ item.project_name }}
+                                    </option>
+                                </select>
+                                <select v-model="task_id" v-if="kind == 'sl' && type == 'task'">
+                                    <option v-for="(item, index) in task_sl" :value="item.id">{{ item.project_name }}
+                                    </option>
+                                </select>
+                                <select v-model="task_id" v-if="kind == 'sv' && type == 'task'">
+                                    <option v-for="(item, index) in task_sv" :value="item.id">{{ item.project_name }}
+                                    </option>
+                                </select>
+                            </dd>
+
                         </li>
                         <li>{{ receive_record.quotation_no }}</li>
                         <li>{{receive_record.created_at}}<br>{{receive_record.created_by}}</li>
                         <li>{{receive_record.post[0].updated_at}}<br>{{receive_record.post[0].username}}</li>
                         <li>
-                            <button v-show = "receive_record.is_edited == 1" @click="editRow(receive_record)"><i class="fas fa-edit"></i></button>
-                            <button v-show = "receive_record.is_edited == 1" @click="duplicateRow(receive_record)"><i class="fas fa-copy"></i></button>
-                            <button v-show = "receive_record.is_edited == 1"  @click="deleteRow(receive_record)"><i class="fas fa-trash"></i></button>
-                            <button v-show = "receive_record.is_edited == 0" @click="confirmRow(receive_record)"><i class="fas fa-check"></i></button>
-                            <button v-show = "receive_record.is_edited == 0" @click="cancelRow(receive_record)"><i class="fas fa-times"></i></button>
+                            <button v-show="receive_record.is_edited == 1" @click="editRow(receive_record)"><i
+                                    class="fas fa-edit"></i></button>
+                            <button v-show="receive_record.is_edited == 1" @click="duplicateRow(receive_record)"><i
+                                    class="fas fa-copy"></i></button>
+                            <button v-show="receive_record.is_edited == 1" @click="deleteRow(receive_record)"><i
+                                    class="fas fa-trash"></i></button>
+                            <button v-show="receive_record.is_edited == 0" @click="confirmRow(receive_record)"><i
+                                    class="fas fa-check"></i></button>
+                            <button v-show="receive_record.is_edited == 0" @click="cancelRow(receive_record)"><i
+                                    class="fas fa-times"></i></button>
                         </li>
                     </ul>
-                  
+
                 </div>
             </div>
             <!-- list end -->

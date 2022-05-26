@@ -11,8 +11,20 @@ var app = new Vue({
     special_note: '',
 
     title: '',
+    
+    type: '',
+
     project_id : 0,
+    task_id : 0,
     projects : [],
+
+    kind: '',
+    task_a : [],
+    task_d : [],
+    task_l : [],
+    task_o : [],
+    task_sl : [],
+    task_sv : [],
 
     ins_title : '',
     ins_project_id : 0,
@@ -31,6 +43,7 @@ var app = new Vue({
     fil_keyword : '',
     fil_lower : '',
     fil_upper : '',
+    fil_kind : '',
 
     od_opt1 : '',
     od_ord1 : '',
@@ -52,6 +65,8 @@ var app = new Vue({
     creators : {},
 
     users : {},
+
+    ins_task : [],
 
     submit : false,
     // paging
@@ -94,6 +109,9 @@ var app = new Vue({
             case "key":
               _this.fil_keyword = decodeURI(tmp[1]);
               break;
+            case "kind":
+              _this.fil_kind = decodeURI(tmp[1]);
+              break;
             case "op1":
               _this.od_opt1 = decodeURI(tmp[1]);
               break;
@@ -123,6 +141,13 @@ var app = new Vue({
     this.getProjects();
     this.getCreators();
     this.getUsers();
+
+    this.getTask('a');
+    this.getTask('d');
+    this.getTask('l');
+    this.getTask('o');
+    this.getTask('sv');
+    this.getTask('sl');
   },
 
   computed: {
@@ -144,6 +169,16 @@ var app = new Vue({
   },
 
   watch: {
+
+    type() {
+      this.ins_project_id = 0;
+
+      if(!this.is_modifying)
+        this.kind = '';
+ 
+      //this.project_id = 0;
+      //this.kind = '';
+    },
 
     receive_records () {
         console.log('Vue watch receive_records');
@@ -244,13 +279,25 @@ var app = new Vue({
     editRow:function(item){
         if(this.is_modifying)
             return;
-        else
-            this.is_modifying = true;
+
+        this.is_modifying = true;
 
         item['is_edited'] = 0;
 
-        this.project_id = item['project_id'];
+        this.project_id = 0;
+        this.task_id = 0;
+
         this.title = item['title'];
+
+        this.type = (item['kind'] == '' ? 'project' : 'task');
+        
+        if(item['kind'] == '')
+         this.project_id = item['project_id'];
+
+        if(item['kind'] !== '')
+         this.task_id = item['project_id'];
+
+        this.kind = item['kind'];
 
         console.log(item);
     },
@@ -371,11 +418,17 @@ var app = new Vue({
         form_Data.append('jwt', token);
 
         const title = this.title.trim();
-        const project_id = item['project_id'];
+        var project_id = item['project_id'];
 
         const project_name = this.shallowCopy(
                     this.projects.find(
                       (element) => element.id == project_id));
+
+        if(this.type == 'task') {
+          form_Data.append('kind', this.kind);
+          project_id = this.task_id;
+        }
+                    
 
         form_Data.append('title', title);
         form_Data.append('project_id', project_id);
@@ -394,10 +447,12 @@ var app = new Vue({
                 //handle success
                 console.log(response)
 
-                item['title'] = title;
-                item['project_name'] = project_name.project_name;
+                _this.clear();
                 _this.title = '';
                 _this.project_id = 0;
+                _this.task_id = 0;
+                _this.kind = '';
+                _this.type = '';
 
             })
             .catch(function(response) {
@@ -458,6 +513,7 @@ var app = new Vue({
                 fpt: _this.fil_creator,
        
                 key: _this.fil_keyword,
+                kind: _this.fil_kind,
 
                 op1: _this.od_opt1,
                 od1: _this.od_ord1,
@@ -511,6 +567,50 @@ var app = new Vue({
               });
       },
 
+      getTask(kind) {
+
+        let _this = this;
+  
+        let token = localStorage.getItem('accessToken');
+        const params = {
+          kind : kind,
+        };
+        
+        axios
+            .get('api/project02_get_task_by_keyword', { params, headers: {"Authorization" : `Bearer ${token}`} })
+            .then(
+            (res) => {
+              switch (kind) {
+                case 'a':
+                  _this.task_a = res.data;
+                  break;
+                case 'd':
+                  _this.task_d = res.data;
+                  break;
+                case 'l':
+                  _this.task_l = res.data;
+                  break;
+                case 'o':
+                  _this.task_o = res.data;
+                  break;
+                case 'sv':
+                  _this.task_sv = res.data;
+                  break;
+                case 'sl':
+                  _this.task_sl = res.data;
+                  break;
+                
+              }
+            },
+            (err) => {
+                alert(err.response);
+            },
+            )
+            .finally(() => {
+                
+            });
+    },
+
 
     getUserName: function() {
         var token = localStorage.getItem('token');
@@ -562,7 +662,7 @@ var app = new Vue({
 
             if (this.ins_project_id == 0) {
               Swal.fire({
-                text: 'Please Select Project!',
+                text: 'Please Select Project or Task!',
                 icon: 'warning',
                 confirmButtonText: 'OK'
               })
@@ -580,6 +680,9 @@ var app = new Vue({
             form_Data.append("jwt", token);
             form_Data.append('title', _this.ins_title);
             form_Data.append('project_id', _this.ins_project_id);
+            
+            if(this.type == 'task')
+              form_Data.append('kind', _this.kind);
 
             form_Data.append("first_line", '');
             form_Data.append("second_line", '');
@@ -626,8 +729,6 @@ var app = new Vue({
 
         this.is_modifying = false;
 
-        this.receive_records = [];
-
         this.getRecords();
         
 
@@ -662,6 +763,8 @@ var app = new Vue({
           _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
+          "&kind=" +
+          _this.fil_kind +
           "&op1=" +
           _this.od_opt1 +
           "&od1=" +
@@ -686,6 +789,7 @@ var app = new Vue({
         this.fil_lower = '';
         this.fil_upper = '';
         this.fil_keyword = '';
+        this.fil_kind = '';
 
         let _this = this;
 
@@ -700,6 +804,8 @@ var app = new Vue({
           _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
+          "&kind=" +
+          _this.fil_kind +
           "&op1=" +
           _this.od_opt1 +
           "&od1=" +
@@ -726,6 +832,8 @@ var app = new Vue({
           _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
+          "&kind=" +
+          _this.fil_kind +
           "&op1=" +
           _this.od_opt1 +
           "&od1=" +
@@ -752,6 +860,8 @@ var app = new Vue({
           _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
+          "&kind=" +
+          _this.fil_kind +
           "&op1=" +
           _this.od_opt1 +
           "&od1=" +

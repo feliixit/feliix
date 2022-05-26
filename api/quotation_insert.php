@@ -25,6 +25,7 @@ $footer_second_line = isset($_POST['footer_second_line']) ? $_POST['footer_secon
 $add_term = isset($_POST['add_term']) ? $_POST['add_term'] : '';
 
 $title = isset($_POST['title']) ? $_POST['title'] : '';
+$kind = isset($_POST['kind']) ? $_POST['kind'] : '';
 $project_id = isset($_POST['project_id']) ? $_POST['project_id'] : 0;
 
 $project_id == 0 ? $project_id = 0 : $project_id = $project_id;
@@ -73,6 +74,7 @@ else
         $query = "INSERT INTO quotation
         SET
             `title` = :title,
+            `kind` = :kind,
             `project_id` = :project_id,
             `first_line` = :first_line,
             `second_line` = :second_line,
@@ -96,6 +98,7 @@ else
 
         // bind the values
         $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':kind', $kind);
         $stmt->bindParam(':project_id', $project_id);
         $stmt->bindParam(':first_line', $first_line);
         $stmt->bindParam(':second_line', $second_line);

@@ -74,6 +74,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
     }
 
     $title = $merged_results[0]['title'];
+    $kind = $merged_results[0]['kind'];
     $project_id = $merged_results[0]['project_id'];
     $first_line = $merged_results[0]['first_line'];
     $second_line = $merged_results[0]['second_line'];
@@ -93,6 +94,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
     $query = "INSERT INTO quotation
         SET
             `title` = :title,
+            `kind` = :kind,
             `project_id` = :project_id,
             `first_line` = :first_line,
             `second_line` = :second_line,
@@ -116,6 +118,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
 
         // bind the values
         $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':kind', $kind);
         $stmt->bindParam(':project_id', $project_id);
         $stmt->bindParam(':first_line', $first_line);
         $stmt->bindParam(':second_line', $second_line);
@@ -474,6 +477,7 @@ function GetQuotation($id, $db) {
 
     $query = "SELECT id, 
                     title,
+                    kind,
                     project_id,
                     first_line, 
                     second_line, 
@@ -500,6 +504,7 @@ function GetQuotation($id, $db) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
         $title = $row['title'];
+        $kind = $row['kind'];
         $project_id = $row['project_id'];
         $first_line = $row['first_line'];
         $second_line = $row['second_line'];
@@ -526,6 +531,7 @@ function GetQuotation($id, $db) {
         $merged_results[] = array(
             "id" => $id,
             "title" => $title,
+            "kind" => $kind,
             "project_id" => $project_id,
             "first_line" => $first_line,
             "second_line" => $second_line,
