@@ -12,7 +12,7 @@ var app = new Vue({
 
     title: '',
     
-    type: '',
+    type: 'project',
 
     project_id : 0,
     task_id : 0,
@@ -65,6 +65,12 @@ var app = new Vue({
     creators : {},
 
     users : {},
+
+    pre_data : {
+      title : '',
+      kind : '',
+      project_id : 0,
+    },
 
     ins_task : [],
 
@@ -180,6 +186,11 @@ var app = new Vue({
       //this.kind = '';
     },
 
+    kind(value) {
+      if(this.pre_data.kind !== value && this.pre_data.kind !== '') 
+        this.task_id = 0;
+    },
+
     receive_records () {
         console.log('Vue watch receive_records');
         this.setPages();
@@ -279,6 +290,11 @@ var app = new Vue({
     editRow:function(item){
         if(this.is_modifying)
             return;
+
+        // keep pre data
+        this.pre_data.title = item.title;
+        this.pre_data.kind = item.kind;
+        this.pre_data.project_id = item.project_id; 
 
         this.is_modifying = true;
 
@@ -468,10 +484,14 @@ var app = new Vue({
     cancelRow: function(item){
         this.title = '';
      
-        item['project_id'] = this.project_id;
+        item['project_id'] = this.pre_data.project_id;
+        item['title'] = this.pre_data.title;
+        item['kind'] = this.pre_data.kind;
+
         item['is_edited'] = 1; 
 
-        this.project_id = 0;
+        this.type='project';
+
         this.is_modifying = false;
     },
 
@@ -724,6 +744,7 @@ var app = new Vue({
       clear: function() {
         this.ins_title = '';
         this.ins_project_id = 0;
+        this.type = 'project';
         
         document.getElementById('insert_dialog').classList.remove("show");
 
