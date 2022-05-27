@@ -2689,19 +2689,9 @@ catch (Exception $e) {
                         a. Delivery
                     </li>
                     <li>
-                        <div class="checkbox_label">
-                            <input type="checkbox" class="alone" v-model="delivery_1st" :disabled="!is_Editing">
-                            <span>1st delivery: List of items with stock</span>
-                        </div>
+                        
+                        <textarea class="form-control one_whole" rows="20" style="margin-top: 5px;" v-model="delivery_1st_items" :disabled="!is_Editing"></textarea>
 
-                        <textarea class="form-control one_whole" rows="10" style="margin-top: 5px;" v-model="delivery_1st_items" :disabled="(delivery_1st !== true && delivery_1st !== '1' && delivery_1st !== 't') || !is_Editing"></textarea>
-
-                        <div class="checkbox_label" style="margin-top: 20px;">
-                            <input type="checkbox" class="alone" v-model="delivery_2nd" :disabled="!is_Editing">
-                            <span>2nd delivery onwards: List of indent items</span>
-                        </div>
-
-                        <textarea class="form-control one_whole" rows="10" style="margin-top: 5px;" v-model="delivery_2nd_items" :disabled="(delivery_2nd !== true && delivery_2nd !== '1' && delivery_2nd !== 't') || !is_Editing"></textarea> 
                     </li>
                 </ul>
 
@@ -2969,7 +2959,7 @@ if ($test_manager[2]  == "1") {
     </div>
 </div>
 
-<div id="tasks">
+<div id="tasks" style="visibility: hidden;">
 
     <div style="text-align: right;">
         <button style="border: none;" onclick="hideWindow('#tasks')"><i class="fa fa-times fa-lg"></i></button>
@@ -2979,7 +2969,7 @@ if ($test_manager[2]  == "1") {
 
 </div>
 
-<div id="meeting">
+<div id="meeting" style="visibility: hidden;">
 
     <div style="text-align: right;">
         <button style="border: none;" onclick="hideWindow('#meeting')"><i class="fa fa-times fa-lg"></i></button>
@@ -4555,8 +4545,9 @@ if ($test_manager[2]  == "1") {
 
                 calendar.render();
                 $("#meeting").hide();
-
+                $("#meeting").css({"visibility": "visible"});
                 $("#tasks").hide();
+                $("#tasks").css({"visibility": "visible"});
 
             },
 
