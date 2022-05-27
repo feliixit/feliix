@@ -850,12 +850,12 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     $content = $content . '</td>
                         </tr>
                         <tr>
-                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                            <td style="background-color: #FDB72F44; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
                                 <eng style="font-size: 16px;">
                                     Project Category
                                 </eng>
                             </td>
-                        <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+                        <td style="background-color: #FDB72F44; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
     if($category == '1')
         $content = $content . " " . "Office Systems" . " ";
     else
