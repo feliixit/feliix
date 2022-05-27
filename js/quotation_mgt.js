@@ -175,20 +175,65 @@ var app = new Vue({
   },
 
   watch: {
+  
 
     type() {
       this.ins_project_id = 0;
 
       if(!this.is_modifying)
         this.kind = '';
+
+      if(this.pre_data.kind == '' && this.is_modifying) 
+      {
+        this.kind = "a"
+      }
  
       //this.project_id = 0;
       //this.kind = '';
     },
 
     kind(value) {
+      this.ins_project_id = 0;
       if(this.pre_data.kind !== value && this.pre_data.kind !== '') 
+      {
         this.task_id = 0;
+        
+      }
+
+      if(this.pre_data.kind !== value && this.pre_data.kind == '') 
+      {
+        if(value == 'a')
+        {
+          var firstValue = this.task_a.filter(element => typeof element!==undefined).shift();
+          this.task_id = firstValue !== undefined ? firstValue.id : 0;
+        }
+        if(value == 'd')
+        {
+          var firstValue = this.task_d.filter(element => typeof element!==undefined).shift();
+          this.task_id = firstValue !== undefined ? firstValue.id : 0;
+        }
+        if(value == 'l')
+        {
+          var firstValue = this.task_l.filter(element => typeof element!==undefined).shift();
+          this.task_id = firstValue !== undefined ? firstValue.id : 0;
+        }
+        if(value == 'o')
+        {
+          var firstValue = this.task_o.filter(element => typeof element!==undefined).shift();
+          this.task_id = firstValue !== undefined ? firstValue.id : 0;
+        }
+        if(value == 'sl')
+        {
+          var firstValue = this.task_sl.filter(element => typeof element!==undefined).shift();
+          this.task_id = firstValue !== undefined ? firstValue.id : 0;
+        }
+        if(value == 'sv')
+        {
+          var firstValue = this.task_sv.filter(element => typeof element!==undefined).shift();
+          this.task_id = firstValue !== undefined ? firstValue.id : 0;
+        }
+      }
+        
     },
 
     receive_records () {
@@ -468,7 +513,7 @@ var app = new Vue({
                 _this.project_id = 0;
                 _this.task_id = 0;
                 _this.kind = '';
-                _this.type = '';
+                _this.type = 'project';
 
             })
             .catch(function(response) {
@@ -522,6 +567,7 @@ var app = new Vue({
           let to = (page * perPage);
           return  this.receive_records.slice(from, to);
         },
+
 
     getRecords: function(keyword) {
       let _this = this;
