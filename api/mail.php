@@ -856,7 +856,11 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
                                 </eng>
                             </td>
                         <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
-    $content = $content . " " . $category == '1' ? "Office Systems" : "Lighting" . " ";
+    if($category == '1')
+        $content = $content . " " . "Office Systems" . " ";
+    else
+        $content = $content . " " . "Lighting" . " ";
+    //$content = $content . " " . $category == '1' ? "Office Systems" : "Lighting" . " ";
     $content = $content . '</td>
                         </tr>
                         <tr>
@@ -1262,7 +1266,11 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
                                 </eng>
                             </td>
                         <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
-    $content = $content . " " . $category == '1' ? "Office Systems" : "Lighting" . " ";
+    //$content = $content . " " . $category == '1' ? "Office Systems" : "Lighting" . " ";
+    if($category == '1')
+        $content = $content . " " . "Office Systems" . " ";
+    else
+        $content = $content . " " . "Lighting" . " ";
     $content = $content . '</td>
                         </tr>
                         <tr>
