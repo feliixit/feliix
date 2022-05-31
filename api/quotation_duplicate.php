@@ -74,6 +74,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
     }
 
     $title = $merged_results[0]['title'];
+    $kind = $merged_results[0]['kind'];
     $project_id = $merged_results[0]['project_id'];
     $first_line = $merged_results[0]['first_line'];
     $second_line = $merged_results[0]['second_line'];
@@ -93,6 +94,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
     $query = "INSERT INTO quotation
         SET
             `title` = :title,
+            `kind` = :kind,
             `project_id` = :project_id,
             `first_line` = :first_line,
             `second_line` = :second_line,
@@ -116,6 +118,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
 
         // bind the values
         $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':kind', $kind);
         $stmt->bindParam(':project_id', $project_id);
         $stmt->bindParam(':first_line', $first_line);
         $stmt->bindParam(':second_line', $second_line);
@@ -209,6 +212,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     `page_id` = :page_id,
                     `block_type` = :block_type,
                     `block_name` = :block_name,
+                    `not_show` = :not_show,
+                    `real_amount` = :real_amount,
                     `status` = 0,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -221,6 +226,9 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                 $stmt->bindParam(':page_id', $page_id);
                 $stmt->bindParam(':block_type', $types_array[$j]['type']);
                 $stmt->bindParam(':block_name', $types_array[$j]['name']);
+
+                $stmt->bindParam(':not_show', $types_array[$j]['not_show']);
+                $stmt->bindParam(':real_amount', $types_array[$j]['real_amount']);
               
                 $stmt->bindParam(':create_id', $user_id);
             
@@ -345,6 +353,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             // prepare the query
             $stmt = $db->prepare($query);
 
+            $tt = $total["total"] == '' ? 0 : $total["total"];
             // bind the values
             $stmt->bindParam(':quotation_id', $quotation_id);
             $stmt->bindParam(':page', $total["page"]);
@@ -352,7 +361,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             $stmt->bindParam(':vat', $total["vat"]);
             $stmt->bindParam(':show_vat', $total["show_vat"]);
             $stmt->bindParam(':valid', $total["valid"]);
-            $stmt->bindParam(':total', $total["total"]);
+            $stmt->bindParam(':total', $tt);
 
             $stmt->bindParam(':create_id', $user_id);
         
@@ -469,6 +478,7 @@ function GetQuotation($id, $db) {
 
     $query = "SELECT id, 
                     title,
+                    kind,
                     project_id,
                     first_line, 
                     second_line, 
@@ -495,6 +505,7 @@ function GetQuotation($id, $db) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
         $title = $row['title'];
+        $kind = $row['kind'];
         $project_id = $row['project_id'];
         $first_line = $row['first_line'];
         $second_line = $row['second_line'];
@@ -521,6 +532,7 @@ function GetQuotation($id, $db) {
         $merged_results[] = array(
             "id" => $id,
             "title" => $title,
+            "kind" => $kind,
             "project_id" => $project_id,
             "first_line" => $first_line,
             "second_line" => $second_line,
@@ -578,6 +590,8 @@ function GetBlockNames($qid, $db){
                 qp.page,
                 block_type,
                 block_name,
+                not_show,
+                real_amount,
                 page_id
             FROM   quotation_page_type qpt
             left join quotation_page qp on qpt.page_id = qp.id
@@ -599,6 +613,8 @@ function GetBlockNames($qid, $db){
         $block_type = $row['block_type'];
         $block_name = $row['block_name'];
         $page_id = $row['page_id'];
+        $not_show = $row['not_show'];
+        $real_amount = $row['real_amount'];
 
         $blocks = [];
 
@@ -610,6 +626,8 @@ function GetBlockNames($qid, $db){
             "page" => $page,
             "type" => $block_type,
             "name" => $block_name,
+            "not_show" => $not_show,
+            "real_amount" => $real_amount,
             "blocks" => $blocks,
             "page_id" => $page_id,
             "subtotal" => $subtotal,
@@ -1045,7 +1063,9 @@ function GetTypes($qid, $db){
     $query = "
         SELECT id,
         block_type,
-        block_name
+        block_name,
+        not_show,
+        real_amount
         FROM   quotation_page_type
         WHERE  page_id = " . $qid . "
         AND `status` <> -1 
@@ -1064,6 +1084,9 @@ function GetTypes($qid, $db){
         $block_type = $row['block_type'];
         $block_name = $row['block_name'];
 
+        $not_show = $row['not_show'];
+        $real_amount = $row['real_amount'];
+
         $blocks = [];
 
         $blocks = GetBlocks($id, $db);
@@ -1074,6 +1097,8 @@ function GetTypes($qid, $db){
             "org_id" => $id,
             "type" => $block_type,
             "name" => $block_name,
+            "not_show" => $not_show,
+            "real_amount" => $real_amount,
             "blocks" => $blocks,
             "subtotal" => $subtotal,
         );

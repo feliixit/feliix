@@ -2645,3 +2645,18 @@ ADD COLUMN `address`  varchar(255) DEFAULT '' after pic_url;
 
 ALTER TABLE user
 ADD COLUMN `tel`  varchar(255) DEFAULT '' after pic_url;
+
+-- 20220516 page block
+ALTER TABLE quotation_page_type
+ADD COLUMN `not_show`  varchar(2) DEFAULT '' after block_name;
+
+ALTER TABLE quotation_page_type
+ADD COLUMN `real_amount` decimal(10,2) DEFAULT 0.0 after not_show;
+
+-- 20220523
+ALTER TABLE work_calendar_main
+ADD COLUMN `confirm` varchar(1) COLLATE utf8mb4_unicode_ci  default '' AFTER `notes`;
+
+-- 20220526 quotation by task_id
+ALTER TABLE quotation
+ADD COLUMN `kind` varchar(10)  DEFAULT '' AFTER title;

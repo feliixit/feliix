@@ -32,6 +32,7 @@ $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $id = isset($_POST['id']) ? $_POST['id'] : 0;
 $title = isset($_POST['title']) ? $_POST['title'] : '';
 $project_id = isset($_POST['project_id']) ? $_POST['project_id'] : 0;
+$kind = isset($_POST['kind']) ? $_POST['kind'] : '';
 
 $id == '' ? $id = 0 : $id = $id;
 $project_id == '' ? $project_id = 0 : $project_id = $project_id;
@@ -55,6 +56,7 @@ if($jwt){
         $query = "update quotation
             SET
                 `title` = :title,
+                `kind` = :kind,
                 `project_id` = :project_id,
                 `updated_id` = :updated_id,
                 `updated_at` = now()
@@ -65,6 +67,7 @@ if($jwt){
 
         // bind the values
         $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':kind', $kind);
         $stmt->bindParam(':project_id', $project_id);
         
         $stmt->bindParam(':updated_id', $user_id);
