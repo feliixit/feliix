@@ -5003,6 +5003,163 @@ return false;
 }
 }
 
+function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+    $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
+    $pay = "Full Payment";
+    if($kind == 0)
+        $pay = "Down Payment";
+
+    if($kind == 2)
+        $pay = "2307";
+
+    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    $mail->AddCC($email1, $name);
+    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+    $mail->Subject = "Payment Proof Submitted by " . $leaver . "(" . $projectname . ")";
+
+    $content = '<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+                </head>
+                <body>
+                <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+                    <table style="width: 100%;">
+                        <tbody>
+                        <tr>
+                            <td style="font-size: 20px; padding: 20px 0 20px 5px;">
+                                Dear Glendon,
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 20px; padding: 0 0 20px 5px; text-align: justify;">';
+    $content = $content . " Just a quick reminder that " . $leaver . " has submitted payment proof. Please check details below:";
+    $content = $content . '</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table style="width: 100%">
+                        <tbody>
+                        <tr>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                                <eng style="font-size: 16px;">
+                                    Project Name
+                                </eng>
+                            </td>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    $content = $content . " " . $projectname . " ";
+    $content = $content . '</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                                <eng style="font-size: 16px;">
+                                    Project Category
+                                </eng>
+                            </td>
+                        <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    //$content = $content . " " . $category == '1' ? "Office Systems" : "Lighting" . " ";
+    if($category == '1')
+        $content = $content . " " . "Office Systems" . " ";
+    else
+        $content = $content . " " . "Lighting" . " ";
+    $content = $content . '</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                                <eng style="font-size: 16px;">
+                                    Submission Time
+                                </eng>
+                            </td>
+                        <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    $content = $content . " " . $subtime . " ";
+    $content = $content . '</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                                <eng style="font-size: 16px;">
+                                    Submitter
+                                </eng>
+                            </td>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    $content = $content . " " . $leaver . " ";
+    $content = $content . '</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                                <eng style="font-size: 16px;">
+                                    Type
+                                </eng>
+                            </td>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    $content = $content . " " . $pay . " ";
+    $content = $content . '</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+                                <eng style="font-size: 16px;">
+                                    Remarks
+                                </eng>
+                            </td>
+                            <td style="background-color: #C3F69D99; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    $content = $content . " " . $remark . " ";
+
+    $content = $content . '</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr style="margin-top: 45px;">
+                    <table style="width: 100%;">
+                        <tbody>
+                        <tr>
+                            <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                                Please log on to Feliix >> Admin Section >> Verify and Review to review the downpayment proof.<br>';
+    $content = $content . 'URL:  <a href="' . $conf::$mail_ip . '">' . $conf::$mail_ip . '</a> ';
+    $content = $content . '</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    </body>
+                    </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 
 function GetProject01NotifiersByCatagory($catagory)
 {
