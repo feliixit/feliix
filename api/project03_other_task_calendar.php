@@ -824,8 +824,9 @@ function CombineWithC($db, $my_department, $my_level, $my_id)
                         pm.due_date, 
                         pm.due_time, 
                         pm.`status` task_status, 
+                        pm.stage_id,
                         pm.create_id, 
-                        'SVC' category, 
+                        'C' category, 
                         '' project_name, 
                         pm.collaborator, 
                         pm.assignee,
@@ -848,6 +849,7 @@ function CombineWithC($db, $my_department, $my_level, $my_id)
         $due_time = "";
         $task_status = "";
         $create_id = 0;
+        $stage_id = 0;
         $category = "";
         $project_name = "";
         $assignee = [];
@@ -861,7 +863,7 @@ function CombineWithC($db, $my_department, $my_level, $my_id)
             $priority = GetPriority($row['priority']);
             $title = $row['due_time'] . ' ' .
                     '[' . $priority . ']' . 
-                    '[SVC]' .
+                    '[C]' .
                     
                      $row['title'];
             $due_date = $row['due_date'];
@@ -874,11 +876,12 @@ function CombineWithC($db, $my_department, $my_level, $my_id)
             $collaborator = explode(",", $row['collaborator']);
             $color = GetTaskColor($task_status, $due_date, $due_time);
             $level = GetTitleLevel($row['user_title']);
+            $stage_id = $row['stage_id'];
             
 
             $merged_results[] = array(
                 "id" => $id,
-                "stage_id" => 0,
+                "stage_id" => $stage_id,
                 "title" => $title,
                 "priority" => $priority,
                 "due_date" => $due_date,
