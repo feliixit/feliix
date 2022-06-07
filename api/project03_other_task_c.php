@@ -368,6 +368,7 @@ function SendNotifyMail($last_id)
     $task_name = $_record[0]["task_name"];
     $stages_status = $_record[0]["stages_status"];
     $stages = $_record[0]["stage"];
+    $stage_id = $_record[0]["stage_id"];
     $create_id = $_record[0]["create_id"];
     $created_at = $_record[0]["created_at"];
     $assignee = $_record[0]["assignee"];
@@ -376,13 +377,13 @@ function SendNotifyMail($last_id)
     $due_date = str_replace("-", "/", $_record[0]["due_date"]) . " " . $_record[0]["due_time"];
     $detail = $_record[0]["detail"];
 
-    task_notify_admin("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, 0, 0, $created_at);
+    task_notify_admin_c("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, 0, 0, $created_at);
 
 }
 
 function GetTaskDetail($id, $db)
 {
-    $sql = "SELECT '' project_name, title task_name, 
+    $sql = "SELECT pt.stage_id, '' project_name, title task_name, 
             '' `stages_status`, 
             pt.created_at,
             pt.create_id,
@@ -554,7 +555,7 @@ function GetMessage($task_id, $db, $uid)
         $filename = $row['filename'];
 
         // got it
-        $got_it = GetGotIt($row['message_id'], 'ad', $db);
+        $got_it = GetGotIt($row['message_id'], 'c', $db);
         foreach ($got_it as $g) {
             if ($g['uid'] == $uid) {
                 $i_got_it = true;
@@ -739,7 +740,7 @@ function GetReply($msg_id, $db, $id, $name, $msg, $uid)
         }
 
         // got it
-        $got_it = GetGotItReply($row['replay_id'], 'ad', $db);
+        $got_it = GetGotItReply($row['replay_id'], 'c', $db);
         // look for user_id in got_it
         foreach ($got_it as $g) {
             if ($g['uid'] == $uid) {

@@ -14,9 +14,7 @@ include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
-
 include_once 'mail.php';
-
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
     http_response_code(401);
@@ -50,31 +48,48 @@ $conf = new Conf();
 
 $uid = $user_id;
 
-$task_id_to_del = (isset($_POST['task_id_to_del']) ?  $_POST['task_id_to_del'] : '');
-
+$message_id = (isset($_POST['message_id']) ?  $_POST['message_id'] : '');
+$item_id = (isset($_POST['item_id']) ?  $_POST['item_id'] : '');
 
 try{
-    $query = "update project_other_task_c
-    SET
-        status = -1,
-        updated_id = :updated_id,
-        updated_at = now()
-    where id = :id ";
 
-    // prepare the query
-    $stmt = $db->prepare($query);
+    if($item_id != 0)
+    {
+        $query = "update project_other_task_message_reply_c
+        SET
+            status = -1,
+            updated_id = :updated_id,
+            updated_at = now()
+        where id = :id ";
 
-    $stmt->bindParam(':updated_id', $uid);
-    $stmt->bindParam(':id', $task_id_to_del);
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        $stmt->bindParam(':updated_id', $uid);
+        $stmt->bindParam(':id', $message_id);
+    }
+    else 
+    {
+        $query = "update project_other_task_message_c
+        SET
+            status = -1,
+            updated_id = :updated_id,
+            updated_at = now()
+        where id = :id ";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        $stmt->bindParam(':updated_id', $uid);
+        $stmt->bindParam(':id', $message_id);
+    }
 
     $jsonEncodedReturnArray = "";
     if ($stmt->execute()) {
-
-        // send notify mail
-        SendNotifyMail($task_id_to_del, $uid);
-
-        $returnArray = array('ret' => $task_id_to_del);
+        $returnArray = array('ret' => $message_id);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+        SendNotifyMail($message_id, $uid);
     }
     else
     {
@@ -88,7 +103,6 @@ catch (Exception $e)
 {
     error_log($e->getMessage());
 }
-
 
 
 function SendNotifyMail($last_id, $uid)
@@ -113,38 +127,44 @@ function SendNotifyMail($last_id, $uid)
 
     $_record = GetTaskDetail($last_id, $db);
  
-    $project_name = $_record[0]["project_name"];
     $task_name = $_record[0]["task_name"];
-    $stages_status = $_record[0]["stages_status"];
-    $stages = $_record[0]["stage"];
-    $create_id = $_record[0]["create_id"];
     $created_at = $_record[0]["created_at"];
+    $stages = "";
+    $create_id = $_record[0]["create_id"];
+
     $assignee = $_record[0]["assignee"];
     $collaborator = $_record[0]["collaborator"];
 
-    $due_date = str_replace("-", "/", $_record[0]["due_date"]) . " " . $_record[0]["due_time"];
-    $detail = $_record[0]["detail"];
-
     $stage_id = $_record[0]["stage_id"];
 
-    task_notify_admin_c("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, 0, $uid, $created_at);
+    $msg = $_record[0]["message"];
+
+    //$due_date = str_replace("-", "/", $_record[0]["due_date"]) . " " . $_record[0]["due_time"];
+    $detail = $_record[0]["detail"];
+
+    $username = $_record[0]["username"];
+    $_id = $_record[0]["_id"];
+
+    message_notify_dept("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, "", $detail, $stage_id, $msg, $username, $created_at, $_id, 'C');
 
 }
 
 function GetTaskDetail($id, $db)
 {
-    $sql = "SELECT pt.stage_id, '' project_name, title task_name, 
-                '' `stages_status`, 
-                pt.create_id,
-                pt.created_at,
-                pt.assignee,
-                pt.collaborator,
-                due_date,
-                due_time,
-                '' stage,
-                detail
-            FROM project_other_task_c pt
-            WHERE pt.id  = :id";
+    $sql = "SELECT pt.stage_id, pt.id, title task_name, 
+            pt.create_id,
+            pt.assignee,
+            pt.collaborator,
+            due_date,
+            detail,
+            message,
+            u.username,
+            pmsg.created_at,
+            pmsg.create_id _id
+            FROM project_other_task_message_c pmsg
+            LEFT JOIN project_other_task_c pt ON pmsg.task_id = pt.id
+            LEFT JOIN user u ON u.id = pmsg.create_id
+            WHERE pmsg.id = :id";
 
     $merged_results = array();
 

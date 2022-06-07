@@ -55,12 +55,14 @@ switch ($method) {
     case 'POST':
         // get database connection
         $uid = $user_id;
-        $task_id = (isset($_POST['task_id']) ?  $_POST['task_id'] : 0);
-        $message = (isset($_POST['message']) ?  $_POST['message'] : '');
+        $msg_id = (isset($_POST['msg_id']) ?  $_POST['msg_id'] : 0);
+        $reply_id = (isset($_POST['reply_id']) ?  $_POST['reply_id'] : 0);
+        $message = (isset($_POST['reply']) ?  $_POST['reply'] : '');
     
-        $query = "INSERT INTO project_other_task_message_c
+        $query = "INSERT INTO project_other_task_message_reply_c
         SET
-            `task_id` = :task_id,
+            `message_id` = :msg_id,
+            `reply_id` = :reply_id,
             `message` = :message,
           
             `create_id` = :create_id,
@@ -70,7 +72,8 @@ switch ($method) {
         $stmt = $db->prepare($query);
 
         // bind the values
-        $stmt->bindParam(':task_id', $task_id);
+        $stmt->bindParam(':msg_id', $msg_id);
+        $stmt->bindParam(':reply_id', $reply_id);
         $stmt->bindParam(':message', $message);
        
         $stmt->bindParam(':create_id', $uid);
@@ -99,8 +102,6 @@ switch ($method) {
 
         break;
 }
-
-
 
 function SendNotifyMail($last_id, $uid)
 {
@@ -154,14 +155,15 @@ function GetTaskDetail($id, $db)
             pt.collaborator,
             due_date,
             detail,
-            message,
+            potmr.message,
             u.username,
-            pmsg.created_at,
-            pmsg.create_id _id
-            FROM project_other_task_message_c pmsg
+            potmr.created_at,
+            potmr.create_id _id
+            FROM project_other_task_message_reply_c potmr
+            left join project_other_task_message_c pmsg on potmr.message_id = pmsg.id 
             LEFT JOIN project_other_task_c pt ON pmsg.task_id = pt.id
-            LEFT JOIN user u ON u.id = pmsg.create_id
-            WHERE pmsg.id = :id";
+            LEFT JOIN user u ON u.id = potmr.create_id
+            where potmr.id = :id";
 
     $merged_results = array();
 
