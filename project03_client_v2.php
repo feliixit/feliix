@@ -2209,6 +2209,12 @@ header('location:index');
                 $('.dialog.r-add').removeClass('add').removeClass('dup').addClass(f);
             })
 
+            $('#opType').change(function() {
+                //console.log('Operation Type:'+$("#opType").val());
+                var f = $("#opType").val();
+                $('.dialog.r-edit').removeClass('edit').removeClass('del').addClass(f);
+            })
+
             //dialogshow($('.tablebox a.add.a1'),$('.tablebox .dialog.a1'));
             //dialogshow($('.tablebox a.add.a2'),$('.tablebox .dialog.a2'));
             //dialogshow($('.tablebox a.add.a3'),$('.tablebox .dialog.a3'));
@@ -2587,7 +2593,7 @@ header('location:index');
                 <ul>
                     <li>{{ client }}</li>
                     <li>{{ client_type }}</li>
-                    <li>{{ username }}</li>
+                    <li>{{ creator }}</li>
                     <li>{{ category }}</li>
                 </ul>
             </div>
@@ -4378,6 +4384,8 @@ header('location:index');
                                                 window.open('https://feliix.myvnc.com/task_management_SLS?sid=' + info.event.id, "_blank");
                                             else if(info.event.extendedProps.category == 'SVC')
                                                 window.open('https://feliix.myvnc.com/task_management_SVC?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'C')
+                                                window.open('https://feliix.myvnc.com/project03_client_v2?sid=' + info.event.id, "_blank");
                                             else
                                                 window.open('https://feliix.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
                                         }, 400);
@@ -4554,11 +4562,174 @@ header('location:index');
                     header: {
                         left: 'prev,next addEventButton',
                         center: 'title',
-                        right: 'dayGridMonth,timeGridWeek'
+                        right: 'individual,overall dayGridMonth,timeGridWeek'
                     },
 
                     //Add Meeting被點擊的方法
                     customButtons: {
+                        individual: {
+                            text: 'Individual',
+                            click: function () {
+                                calendar.removeAllEvents();
+                                hideWindow('#editmeeting-form');
+
+                                //從資料庫中取出符合當前條件的任務
+
+                                let temp = [];
+                               
+                                var token = localStorage.getItem('token');
+
+                                localStorage.getItem('token');
+                                var form_Data = new FormData();
+
+                                form_Data.append('jwt', token);
+                                form_Data.append('action', 11);
+               
+
+                                $.ajax({
+                                    url: "api/work_calender_meetings",
+                                    type: "POST",
+                                    contentType: 'multipart/form-data',
+                                    processData: false,
+                                    contentType: false,
+                                    data: form_Data,
+
+                                    success: function(result) {
+                                        //console.log(result);
+                                        var obj = JSON.parse(result);
+                                        if (obj !== undefined) {
+                                            var arrayLength = obj.length;
+                                            for (var i = 0; i < arrayLength; i++) {
+                                                console.log(obj[i]);
+
+                                                var title = "";
+                                                if (obj[i].project_name.trim() === '')
+                                                    title = obj[i].subject.trim();
+                                                else
+                                                    title = '[ ' + obj[i].project_name.trim() + ' ] ' + obj[i].subject.trim();
+
+                                                var attach = "";
+                                                for (var j = 0; j < obj[i].attach.length; j++) {
+                                                    attach += obj[i].attach[j].filename + ",";
+                                                }
+
+                                                if (attach !== "")
+                                                    attach = attach.slice(0, -1);
+
+                                                var obj_description = {
+                                                    title: obj[i].subject.trim(),
+                                                    project_name: obj[i].project_name.trim(),
+                                                    attendee: obj[i].attendee.trim(),
+                                                    items: obj[i].items,
+                                                    attach: attach,
+                                                    location: obj[i].location.trim(),
+                                                    start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                                                    end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                                                    content: obj[i].message.trim(),
+                                                    creator: obj[i].created_by.trim(),
+                                                };
+
+                                                var obj_meeting = {
+                                                    id: obj[i].id,
+                                                    title: title,
+                                                    start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                                                    end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                                                    description: obj_description,
+                                                };
+
+                                                temp.push(obj_meeting);
+                                            }
+                                        }
+
+                                        event_array = temp;
+                                        calendar.addEventSource(temp);
+
+                                    }
+                                });
+                            }
+                        },
+                        
+                        overall: {
+                            text: 'All',
+                            click: function () {
+                                calendar.removeAllEvents();
+                                hideWindow('#editmeeting-form');
+
+                                //從資料庫中取出符合當前條件的任務
+
+                                let temp = [];
+                               
+                                var token = localStorage.getItem('token');
+
+                                localStorage.getItem('token');
+                                var form_Data = new FormData();
+
+                                form_Data.append('jwt', token);
+                                form_Data.append('action', 1);
+
+                                $.ajax({
+                                    url: "api/work_calender_meetings",
+                                    type: "POST",
+                                    contentType: 'multipart/form-data',
+                                    processData: false,
+                                    contentType: false,
+                                    data: form_Data,
+
+                                    success: function(result) {
+                                        //console.log(result);
+                                        var obj = JSON.parse(result);
+                                        if (obj !== undefined) {
+                                            var arrayLength = obj.length;
+                                            for (var i = 0; i < arrayLength; i++) {
+                                                console.log(obj[i]);
+
+                                                var title = "";
+                                                if (obj[i].project_name.trim() === '')
+                                                    title = obj[i].subject.trim();
+                                                else
+                                                    title = '[ ' + obj[i].project_name.trim() + ' ] ' + obj[i].subject.trim();
+
+                                                var attach = "";
+                                                for (var j = 0; j < obj[i].attach.length; j++) {
+                                                    attach += obj[i].attach[j].filename + ",";
+                                                }
+
+                                                if (attach !== "")
+                                                    attach = attach.slice(0, -1);
+
+                                                var obj_description = {
+                                                    title: obj[i].subject.trim(),
+                                                    project_name: obj[i].project_name.trim(),
+                                                    attendee: obj[i].attendee.trim(),
+                                                    items: obj[i].items,
+                                                    attach: attach,
+                                                    location: obj[i].location.trim(),
+                                                    start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                                                    end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                                                    content: obj[i].message.trim(),
+                                                    creator: obj[i].created_by.trim(),
+                                                };
+
+                                                var obj_meeting = {
+                                                    id: obj[i].id,
+                                                    title: title,
+                                                    start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
+                                                    end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
+                                                    description: obj_description,
+                                                };
+
+                                                temp.push(obj_meeting);
+                                            }
+                                        }
+
+                                        event_array = temp;
+                                        calendar.addEventSource(temp);
+
+                                    }
+                                });
+                            }
+                        },
+
                         addEventButton: {
                             text: 'Add Meeting',
                             click: function() {

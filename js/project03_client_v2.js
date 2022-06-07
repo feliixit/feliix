@@ -119,6 +119,7 @@ var app = new Vue({
     my_department: "",
     my_title: "",
     username: "",
+    creator: "",
 
     // TASKS
     title: "",
@@ -1427,7 +1428,7 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.contactor = res.data[0].contactor;
-                  _this.username = res.data[0].username;
+                  _this.creator = res.data[0].username;
                   _this.client_type = res.data[0].client_type;
                   _this.category = res.data[0].category;
                   _this.client = res.data[0].client;
