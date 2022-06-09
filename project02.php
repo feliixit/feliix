@@ -1396,8 +1396,11 @@ if ($access6 == true) {
                 </ul>
                 <ul v-for='(receive_record, index) in displayedStagePosts'>
                     <li>{{ receive_record.sequence }}</li>
-                    <li v-if="receive_record.project_stage_id == 1"><a
+                    <li v-if="receive_record.project_stage_id == 1 && receive_record.id <= 2563"><a
                             v-bind:href="'project03_client?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
+                    <li v-if="receive_record.project_stage_id == 1 && receive_record.id > 2563"><a
+                            v-bind:href="'project03_client_v2?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
+
                     <li v-if="receive_record.project_stage_id == 3 && receive_record.id > 1810"><a
                             v-bind:href="'project03_ameeting?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                     </li>
