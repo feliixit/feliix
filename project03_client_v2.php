@@ -201,6 +201,14 @@ header('location:index');
         .fc-event-title {
             display: inline !important;
         }
+
+        .fc-day-grid-event .fc-content {
+            white-space: inherit;
+        }
+
+        .fc-button-group>.fc-button {
+            font-size: 14px;
+        }
     </style>
 
 
@@ -2154,6 +2162,10 @@ header('location:index');
             font-weight: 700;
         }
 
+        .list_function.main a.calendar.red {
+            background-image: url(images/ui/btn_calendar_red.svg);
+        }
+
         #tasks {
             border: 5px solid #00811e;
             padding: 10px 20px 20px;
@@ -2577,7 +2589,7 @@ header('location:index');
 
                 <div class="namebox">
                     <!-- Stage Name -->
-                    <span class="stage_name">Client Stage</span>
+                    <span class="stage_name">Client</span>
                 </div>
             </div>
         </div>
