@@ -23,6 +23,7 @@ SendNotifyMail($review_start_date, $review_end_date, "_l", $db);
 SendNotifyMail($review_start_date, $review_end_date, "_o", $db);
 SendNotifyMail($review_start_date, $review_end_date, "_sl", $db);
 SendNotifyMail($review_start_date, $review_end_date, "_sv", $db);
+SendNotifyMail($review_start_date, $review_end_date, "_c", $db);
 
 function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
 {
@@ -83,6 +84,9 @@ function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
                 break;
             case "_sv":
                 task_notify_admin_sv("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                break;
+            case "_c":
+                task_notify_admin_c("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
                 break;
         }
     }

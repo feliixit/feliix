@@ -89,7 +89,7 @@ else
 {
 
     // send mail
-    $subquery = "SELECT p.project_name, 
+    $subquery = "SELECT p.special, p.project_name, 
                         pm.remark, 
                         u.username, 
                         u.email, 
@@ -114,6 +114,7 @@ else
     $stmt = $db->prepare( $subquery );
     $stmt->execute();
 
+    $special = "";
     $project_name = "";
     $remark = "";
     $leaver = "";
@@ -134,6 +135,7 @@ else
     $invoice = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $special = $row['special'];
         $project_name = $row['project_name'];
         $remark = $row['remark'];
         $leaver = $row['username'];
@@ -172,7 +174,7 @@ else
                                 $bank_name,
                                 $check_number,
                                 $bank_account,
-                                $invoice);
+                                $invoice, $special);
 }
 
 http_response_code(200);

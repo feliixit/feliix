@@ -11,7 +11,7 @@ date_default_timezone_set('Asia/Taipei');
 $database = new Database();
 $db = $database->getConnection();
 
-$sql = "select u.username, u.email , pm.project_name , pm.catagory_id, ps.remark , ps.created_at , ps.kind  from project_proof ps
+$sql = "select u.username, u.email , pm.project_name , pm.catagory_id, ps.remark , ps.created_at , ps.kind, pm.special  from project_proof ps
             left JOIN project_main pm ON ps.project_id = pm.id 
             left join `user` u on u.id = ps.create_id  
             where ps.`status` = 0
@@ -27,6 +27,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $remark = $row['remark'];
     $created_at = $row['created_at'];
     $kind = $row['kind'];
+    $special = $row['special'];
   
-    send_pay_reminder_mail_new($username, $email,  $username, $project_name, $remark, $created_at, $catagory_id, $kind);
+    send_pay_reminder_mail_new($username, $email,  $username, $project_name, $remark, $created_at, $catagory_id, $kind, $special);
 }

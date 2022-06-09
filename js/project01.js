@@ -9,6 +9,7 @@ var app = new Vue({
     reason : '',
     project_name : '',
     special_note: '',
+    special:'',
 
     fil_project_category : '',
     fil_client_type : '',
@@ -568,6 +569,7 @@ var app = new Vue({
             form_Data.append('reason', this.reason);
             form_Data.append('probability', this.probability);
             form_Data.append('special_note', this.special_note);
+            form_Data.append('special', this.special);
 
             const token = sessionStorage.getItem('token');
 
@@ -600,6 +602,7 @@ var app = new Vue({
         this.reason = '';
         this.probability = '';
         this.special_note = '';
+        this.special = '';
         
         document.getElementById('insert_dialog').classList.remove("show");
 

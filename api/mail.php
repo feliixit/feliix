@@ -759,7 +759,7 @@ function send_review_mail_single($s_date, $adm_id, $emp_id, $dead_date){
     }
 }
 
-function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date, $send_mail, $payment_method, $bank_name, $check_number, $bank_account, $invoice)
+function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date, $send_mail, $payment_method, $bank_name, $check_number, $bank_account, $invoice, $special)
 {
     $conf = new Conf();
 
@@ -832,7 +832,11 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
                         </tr>
                         <tr>
                             <td style="font-size: 20px; padding: 0 0 20px 5px; text-align: justify;">';
-    $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+    if($special == "")
+        $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+    if($special == "s")
+        $content = $content . "Boss has checked " . $payment . " proof, Please check details below:";
+
     $content = $content . '</td>
                         </tr>
                         </tbody>
@@ -1176,7 +1180,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 
 }
 
-function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind)
+function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special)
 {
     $conf = new Conf();
 
@@ -1196,7 +1200,12 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     $mail->Password   = $conf::$mail_password;
 
     $mail->IsHTML(true);
-    $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
+    if($special == "s")
+        $mail->AddAddress('kuan@feliix.com', 'Kuan');
+    if($special == "")
+        $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
 
     if($category == '1')
         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
@@ -1211,7 +1220,11 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     if($kind == 2)
         $pay = "2307";
 
-    $mail->AddCC('kuan@feliix.com', 'Kuan');
+    if($special == "s")
+        $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    if($special == "")
+        $mail->AddCC('kuan@feliix.com', 'Kuan');
+
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC($email1, $name);
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
@@ -1236,8 +1249,14 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
                     <table style="width: 100%;">
                         <tbody>
                         <tr>
-                            <td style="font-size: 20px; padding: 20px 0 20px 5px;">
-                                Dear Glendon,
+                            <td style="font-size: 20px; padding: 20px 0 20px 5px;"> ';
+
+    if($special == "s")
+        $content = $content . ' Dear Boss, ';
+    if($special == "")
+        $content = $content . ' Dear Glendon, ';
+
+    $content = $content . '
                             </td>
                         </tr>
                         <tr>
@@ -2337,6 +2356,137 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
 
 }
 
+function task_notify_admin_c($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    $_revisor = "";
+    if($revise_id != 0)
+    {
+        $revisor = GetNotifiers($revise_id);
+        foreach($revisor as &$list)
+        {
+            $_revisor = $list["username"];
+        }
+    }
+
+    $_erasor = "";
+    if($erase_id != 0)
+    {
+        $erasor = GetNotifiers($erase_id);
+        foreach($erasor as &$list)
+        {
+            $_erasor = $list["username"];
+        }
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Task Status:" . $task_status . "</p>";
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+
+    if($_revisor != "")
+        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+
+    if($_erasor != "")
+        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_client_v2?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
 
 function task_notify_admin_d($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
 {
@@ -3365,6 +3515,10 @@ function message_notify_dept($request_type, $project_name, $task_name, $stages, 
             $department = "Service";
             $uri = "task_management_SVC";
             break;
+        case "C":
+            $department = "Client Stage";
+            $uri = "project03_client_v2";
+            break;
     }
 
     switch ($request_type) {
@@ -3382,6 +3536,26 @@ function message_notify_dept($request_type, $project_name, $task_name, $stages, 
         default:
             return;
             break;
+    }
+
+    if($dept == 'C')
+    {
+        switch ($request_type) {
+            case "create":
+                $tab = '<p>A new message in Task "' . $task_name . '" was created by "' . $username . '". Following are the details:</p>';
+                $title = '[Message Notification] New message in Task "' . $task_name;
+                break;
+            case "edit":
+                $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+                break;
+            case "del":
+                $tab = '<p>A message in Task "' . $task_name . '" was deleted by "' . $username . '". Following are the details:</p>';
+                $title = '[Message Notification] Message was deleted in Task "' . $task_name;
+                break;
+            default:
+                return;
+                break;
+        }
     }
 
     $conf = new Conf();
@@ -3685,6 +3859,8 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
         $content = $content . "<p>https://feliix.myvnc.com/task_management_SLS?sid=" . $stage_id . "</p>";  
     else if($category == 'SV')
         $content = $content . "<p>https://feliix.myvnc.com/task_management_SVC?sid=" . $stage_id . "</p>";  
+    else if($category == 'C')
+        $content = $content . "<p>https://feliix.myvnc.com/project03_client_v2?sid=" . $stage_id . "</p>";  
     else
         $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";  
 
@@ -5003,7 +5179,7 @@ return false;
 }
 }
 
-function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind)
+function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special)
 {
     $conf = new Conf();
 
@@ -5023,7 +5199,10 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
     $mail->Password   = $conf::$mail_password;
 
     $mail->IsHTML(true);
-    $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+    if($special == "")
+        $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+    if($special == "s")
+        $mail->AddAddress('kuan@feliix.com', 'Kuan');
 
     $pay = "Full Payment";
     if($kind == 0)
@@ -5032,9 +5211,12 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
     if($kind == 2)
         $pay = "2307";
 
-    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
-    $mail->AddCC($email1, $name);
-    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+    if($special == "")
+    {
+        $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+        $mail->AddCC($email1, $name);
+        $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+    }
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -5051,9 +5233,12 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
                     <table style="width: 100%;">
                         <tbody>
                         <tr>
-                            <td style="font-size: 20px; padding: 20px 0 20px 5px;">
-                                Dear Glendon,
-                            </td>
+                            <td style="font-size: 20px; padding: 20px 0 20px 5px;">';
+    if($special == "")
+        $content = $content . " Dear Glendon, ";
+    if($special == "s")
+        $content = $content . " Dear Boss, ";
+    $content = $content . ' </td>
                         </tr>
                         <tr>
                             <td style="font-size: 20px; padding: 0 0 20px 5px; text-align: justify;">';

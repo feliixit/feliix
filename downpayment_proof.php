@@ -237,7 +237,7 @@ $(function(){
                        
                         <li>{{ record.created_at }}</li>
                         <li>{{ record.username }}</li>
-                        <li>{{ record.project_name }}</li>
+                        <li :style='{color:record.special==="s" ? "red" : "black"}'>{{ record.project_name }}</li>
                         <li>{{ (record.status == 0) ? "Under Checking" : ((record.status == 1) ? "Checked: True" : ((record.status == -1) ? "Checked: False" : 'Under Checking')) }}</li>
                     </ul>
                 </div>
@@ -246,7 +246,7 @@ $(function(){
                 <div class="tablebox" v-if="view_detail" style="margin-top: 40px;">
                     <ul class="head">
                         <li class="head">Project Name</li>
-                        <li><a :href="'quotation_and_payment_mgt?id=' + record.pid" target="_blank"  class="attch">{{ record.project_name }}</a></li>
+                        <li><a :href="'quotation_and_payment_mgt?id=' + record.pid" target="_blank"  class="attch" >{{ record.project_name }}</a></li>
                     </ul>
                     <ul class="head">
                         <li class="head">Amount</li>
@@ -290,7 +290,7 @@ $(function(){
                     </ul>
                 </div>
 
-                 <form  v-if="view_detail && record.status == 0">
+                 <form  v-if="view_detail && record.status == 0  && who_detail != ''">
                     <ul>
                         <li><b>Date of Receiving Payment</b></li>
                         <li><input type="date" id="receive_date"></li>

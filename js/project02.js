@@ -55,6 +55,8 @@ var app = new Vue({
     client:'',
     edit_reason:'',
 
+    special:'',
+
     // extend
     designer:'',
     type:'',
@@ -90,6 +92,8 @@ var app = new Vue({
     edit_location:'',
     edit_project_reason:'',
     edit_edit_reason:'',
+
+    edit_special:'',
 
     // extend
     edit_project_name:'',
@@ -1058,6 +1062,8 @@ var app = new Vue({
                   _this.client = res.data[0].client;
                   _this.edit_reason = res.data[0].edit_reason;
 
+                  _this.special = res.data[0].special;
+
                   _this.edit_project_name = res.data[0].project_name;
                   _this.edit_group = res.data[0].group_id;
                   _this.edit_category = res.data[0].category_id;
@@ -1068,6 +1074,8 @@ var app = new Vue({
                   _this.edit_contact_number = res.data[0].contact_number;
                   _this.edit_client = res.data[0].client;
                   _this.edit_edit_reason = res.data[0].edit_reason;
+
+                  _this.edit_special = res.data[0].special;
 
                   // extend
                   _this.designer = res.data[0].designer;
@@ -1421,6 +1429,7 @@ var app = new Vue({
         this.reason = '';
         this.probability = '';
         this.special_note = '';
+        this.special = '';
         
         document.getElementById('insert_dialog').classList.remove("show");
 
@@ -1514,6 +1523,7 @@ var app = new Vue({
 
             form_Data.append("footer_first_line", '');
             form_Data.append("footer_second_line", '');
+            form_Data.append("add_term", 'y');
 
             form_Data.append("pages", JSON.stringify([]));
 
@@ -1619,6 +1629,8 @@ var app = new Vue({
             this.edit_location = this.location;
             this.edit_contact_number = this.contact_number;
             this.edit_client = this.client;
+
+            this.edit_special = this.special;
 
             // extend
             this.edit_designer = this.designer;
@@ -2446,6 +2458,7 @@ var app = new Vue({
             form_Data.append('edit_group', this.edit_group);
             form_Data.append('edit_category', this.edit_category);
             form_Data.append('edit_client_type', this.edit_client_type);
+            form_Data.append('edit_special', this.edit_special);
             form_Data.append('edit_priority', this.edit_priority);
             form_Data.append('edit_contactor', this.edit_contactor);
             form_Data.append('creator', this.uid);

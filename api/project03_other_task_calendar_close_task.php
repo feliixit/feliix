@@ -133,6 +133,17 @@ try{
                 where id = :id ";
     }
 
+    if($category == 'C')
+    {
+        $_record = GetTaskDetailOrg_svc($id, $db);
+        $query = "update project_other_task_c
+                SET
+                    `status` = :status,
+                    updated_id = :updated_id,
+                    updated_at = now()
+                where id = :id ";
+    }
+
     $status = 2;
 
     // prepare the query
@@ -205,6 +216,9 @@ function SendNotifyMail01($last_id, $old_status_id, $username, $category)
 
     if($category == 'SVC')
         $_record = GetTaskDetail_svc($last_id, $db);
+
+    if($category == 'C')
+        $_record = GetTaskDetail_c($last_id, $db);
 
     $old_status = "";
     switch ($old_status_id) {
@@ -378,6 +392,7 @@ function GetTaskDetail_o($id, $db)
 
     return $merged_results;
 }
+
 function GetTaskDetail_svc($id, $db)
 {
     $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
@@ -391,6 +406,34 @@ function GetTaskDetail_svc($id, $db)
             (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
             detail
             FROM project_other_task_svc pt
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetTaskDetail_c($id, $db)
+{
+    $sql = "SELECT 0 stage_id, '' project_name, title task_name, 
+            '' `stages_status`, 
+            pt.create_id,
+            pt.assignee,
+            pt.collaborator,
+            due_date,
+            due_time,
+            '' stage,
+            (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
+            detail
+            FROM project_other_task_c pt
             WHERE pt.id = :id";
 
     $merged_results = array();

@@ -54,6 +54,7 @@ $status = (isset($_POST['status']) ?  $_POST['status'] : 0);
 $reason = (isset($_POST['reason']) ?  $_POST['reason'] : '');
 $probability = (isset($_POST['probability']) ?  $_POST['probability'] : 0);
 $special_note = (isset($_POST['special_note']) ?  $_POST['special_note'] : '');
+$special = (isset($_POST['special']) ?  $_POST['special'] : '');
 
 if(trim($project_category) == "")
     $project_category = 0;
@@ -77,6 +78,7 @@ if(trim($probability) == "")
                     project_name = :project_name,
                     close_reason = :close_reason,
                     special_note = :special_note,
+                    special = :special,
                     estimate_close_prob = :probability,
                     create_id = :create_id,
                     created_at = now()";
@@ -92,6 +94,7 @@ if(trim($probability) == "")
             project_name = :project_name,
             close_reason = :close_reason,
             special_note = :special_note,
+            special = :special,
             estimate_close_prob = :probability,
             create_id = :create_id,
             created_at = now(),
@@ -106,6 +109,7 @@ if(trim($probability) == "")
         $project_name=htmlspecialchars(strip_tags($project_name));
         $close_reason=htmlspecialchars(strip_tags($reason));
         $special_note=htmlspecialchars(strip_tags($special_note));
+        $special=htmlspecialchars(strip_tags($special));
        
         // bind the values
         $stmt->bindParam(':catagory_id', $project_category);
@@ -115,6 +119,7 @@ if(trim($probability) == "")
         $stmt->bindParam(':project_name', $project_name);
         $stmt->bindParam(':close_reason', $reason);
         $stmt->bindParam(':special_note', $special_note);
+        $stmt->bindParam(':special', $special);
         $stmt->bindParam(':probability', $probability);
         $stmt->bindParam(':create_id', $user_id);
 
