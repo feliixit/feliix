@@ -203,7 +203,7 @@ header('location:index');
         }
 
         .fc-day-grid-event .fc-content {
-            white-space: inherit;
+            white-space: inherit !important;
         }
 
         .fc-button-group>.fc-button {
