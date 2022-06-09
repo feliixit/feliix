@@ -336,7 +336,7 @@ $(function(){
 
                 </form>
             
-                <div class="info" style="margin-top: 40px;" v-if="view_detail && record.status != 0  && who_detail != ''">
+                <div class="info" style="margin-top: 40px;" v-if="view_detail && record.status != 0">
                     <span>Info After Check</span>
                     <div class="tablebox" v-if="view_detail">
                         <ul>

@@ -2183,10 +2183,10 @@ header('location:index');
         }
     </style>
 
-<link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css'>
-    <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.0/main.min.css'>
-    <script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
-    <script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+<link rel='stylesheet' href='css/fullcalendarcore431.main.min.css'>
+    <link rel='stylesheet' href='css/fullcalendarcore430.main.min.css'>
+    <script src='js/fullcalendarcore431.main.min.js'></script>
+    <script src='js/fullcalendardaygrid430.main.min.js'></script>
     <script defer type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
