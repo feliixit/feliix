@@ -759,7 +759,7 @@ function send_review_mail_single($s_date, $adm_id, $emp_id, $dead_date){
     }
 }
 
-function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date, $send_mail, $payment_method, $bank_name, $check_number, $bank_account, $invoice)
+function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date, $send_mail, $payment_method, $bank_name, $check_number, $bank_account, $invoice, $special)
 {
     $conf = new Conf();
 
@@ -832,7 +832,11 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
                         </tr>
                         <tr>
                             <td style="font-size: 20px; padding: 0 0 20px 5px; text-align: justify;">';
-    $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+    if($special == "")
+        $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+    if($special == "s")
+        $content = $content . "Boss has checked " . $payment . " proof, Please check details below:";
+
     $content = $content . '</td>
                         </tr>
                         </tbody>
@@ -1176,7 +1180,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
 
 }
 
-function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind)
+function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special)
 {
     $conf = new Conf();
 
@@ -1196,7 +1200,12 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     $mail->Password   = $conf::$mail_password;
 
     $mail->IsHTML(true);
-    $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
+    if($special == "s")
+        $mail->AddAddress('kuan@feliix.com', 'Kuan');
+    if($special == "")
+        $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+
 
     if($category == '1')
         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
@@ -1211,7 +1220,11 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     if($kind == 2)
         $pay = "2307";
 
-    $mail->AddCC('kuan@feliix.com', 'Kuan');
+    if($special == "s")
+        $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    if($special == "")
+        $mail->AddCC('kuan@feliix.com', 'Kuan');
+
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC($email1, $name);
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
@@ -1236,8 +1249,14 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
                     <table style="width: 100%;">
                         <tbody>
                         <tr>
-                            <td style="font-size: 20px; padding: 20px 0 20px 5px;">
-                                Dear Glendon,
+                            <td style="font-size: 20px; padding: 20px 0 20px 5px;"> ';
+
+    if($special == "s")
+        $content = $content . ' Dear Boss, ';
+    if($special == "")
+        $content = $content . ' Dear Glendon, ';
+
+    $content = $content . '
                             </td>
                         </tr>
                         <tr>
@@ -5160,7 +5179,7 @@ return false;
 }
 }
 
-function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind)
+function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special)
 {
     $conf = new Conf();
 
@@ -5180,7 +5199,10 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
     $mail->Password   = $conf::$mail_password;
 
     $mail->IsHTML(true);
-    $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+    if($special == "")
+        $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+    if($special == "s")
+        $mail->AddAddress('kuan@feliix.com', 'Kuan');
 
     $pay = "Full Payment";
     if($kind == 0)
@@ -5189,9 +5211,12 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
     if($kind == 2)
         $pay = "2307";
 
-    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
-    $mail->AddCC($email1, $name);
-    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+    if($special == "")
+    {
+        $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+        $mail->AddCC($email1, $name);
+        $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
+    }
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -5208,9 +5233,12 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
                     <table style="width: 100%;">
                         <tbody>
                         <tr>
-                            <td style="font-size: 20px; padding: 20px 0 20px 5px;">
-                                Dear Glendon,
-                            </td>
+                            <td style="font-size: 20px; padding: 20px 0 20px 5px;">';
+    if($special == "")
+        $content = $content . " Dear Glendon, ";
+    if($special == "s")
+        $content = $content . " Dear Boss, ";
+    $content = $content . ' </td>
                         </tr>
                         <tr>
                             <td style="font-size: 20px; padding: 0 0 20px 5px; text-align: justify;">';

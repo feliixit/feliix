@@ -2707,3 +2707,6 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_c` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
+-- 202220608 project special
+ALTER TABLE project_main
+ADD COLUMN `special` varchar(10) DEFAULT '' AFTER contact_number;

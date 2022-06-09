@@ -6,6 +6,7 @@ var app = new Vue({
 
     picked: "A",
     view_detail: false,
+    who_detail : "",
 
     submit: false,
 
@@ -368,6 +369,8 @@ var app = new Vue({
            //$(window).scrollTop(0);
         this.view_detail = false;
 
+        this.who_detail = "";
+
         this.unCheckCheckbox();
 
         return;
@@ -383,6 +386,11 @@ var app = new Vue({
       this.bank_account = '';
 
       this.view_detail = true;
+
+      if(this.record.special == 's' && this.name == 'Kuan')
+        this.who_detail = 's';
+      if(this.record.special == '' && this.name == 'Glendon Wendell Co')
+        this.who_detail = 'g';
     },
 
     approve: function() {
@@ -446,7 +454,7 @@ var app = new Vue({
               return;
             }
 
-            if (invoice === "") {
+            if (invoice === "" && this.record.special == "") {
               Swal.fire({
                 text:
                   "Invoice Number required.",
@@ -614,6 +622,7 @@ var app = new Vue({
     resetForm: function() {
       this.submit = false;
       this.view_detail = false;
+      this.who_detail = false;
 
       this.receive_records = [];
       this.record = {};

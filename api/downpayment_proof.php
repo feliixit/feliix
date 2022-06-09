@@ -78,7 +78,8 @@ $query = "SELECT pm.id pid,
             pp.checked,
             pp.checked_id,
             pp.checked_at,
-            pm.final_amount
+            pm.final_amount,
+            pm.special
           FROM   project_proof pp
           LEFT JOIN project_main pm
                 ON pp.project_id = pm.id
@@ -145,6 +146,7 @@ $checked_at = "";
 $final_amount = "";
 $pid = 0;
 $status_string = "";
+$special = "";
 
 $items = [];
 
@@ -182,6 +184,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 "final_quotation" => $final_quotation,
                                 "final_amount" => $final_amount,
                                 "status_string" => $status_string,
+                                "special" => $special,
         );
 
         $items = [];
@@ -214,6 +217,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $checked_id = $row['checked_id'];
     $checked_at = $row['checked_at'];
     $final_amount = $row['final_amount'];
+    $special = $row['special'];
+
 
     $final_quotation = GetFinalQuote($row['pid'], $db);
 
@@ -255,6 +260,7 @@ if($id != 0)
                                 "final_quotation" => $final_quotation,
                                 "final_amount" => $final_amount,
                                 "status_string" => $status_string,
+                                "special" => $special,
             );
 }
 

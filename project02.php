@@ -480,7 +480,7 @@ header('location:index');
 
 
                 <!-- tag -->
-                <b class="tag focus">PROJECT</b>
+                <b class="tag focus">{{ special == 's' ? 'SPECIAL PROJECT' : 'PROJECT' }}</b>
                 <a v-if="project_status == 'Disapproved' " href="project01_disapproved"><b class="tag">{{ project_name
                     }}</b></a>
                 <a v-if="project_status != 'Disapproved' " href="project01"><b class="tag">{{ project_name }}</b></a>
@@ -543,6 +543,13 @@ header('location:index');
                                                     :key="item.category">
                                                 {{ item.category }}
                                             </option>
+                                        </select>
+                                    </dd>
+                                    <dt class="head">Project Type:</dt>
+                                    <dd style="margin-bottom: 0;">
+                                        <select v-model="edit_special">
+                                            <option value="">Normal</option>
+                                            <option value="s">Special</option>
                                         </select>
                                     </dd>
                                     <div class="half">

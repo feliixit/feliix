@@ -180,6 +180,13 @@ $(function(){
                                       </option>
                                     </select>
                                 </dd>
+                                <dt>Project Type</dt>
+                                <dd>
+                                    <select v-model="special">
+                                      <option value="">Normal</option>
+                                      <option value="s">Speical</option>
+                                    </select>
+                                </dd>
                                 <div class="half">
                                     <dt>Client Type</dt>
                                     <dd>
