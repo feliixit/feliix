@@ -387,6 +387,8 @@ var app = new Vue({
 
       this.view_detail = true;
 
+      this.who_detail = '';
+
       if(this.record.special == 's' && this.name == 'Kuan')
         this.who_detail = 's';
       if(this.record.special == '' && this.name == 'Glendon Wendell Co')
