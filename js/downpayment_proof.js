@@ -21,12 +21,15 @@ var app = new Vue({
 
     // paging
     page: 1,
+    p_page:0,
     //perPage: 10,
     pages: [],
 
     pages_10: [],
 
     perPage: 5,
+
+    total: 0,
 
     fil_keyowrd: "",
 
@@ -96,6 +99,16 @@ var app = new Vue({
     proof_id() {
       this.detail(this.proof_id);
     },
+
+    page() {
+      if(this.page == 0)
+        return;
+
+      if(this.p_page != this.page){
+        this.getLeaveCredit();
+        this.p_page = this.page;
+      }
+    },
   },
 
   methods: {
@@ -104,7 +117,7 @@ var app = new Vue({
       this.pages = [];
       this.pages_10 = [];
 
-      let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+      let numberOfPages = Math.ceil(this.total / this.perPage);
 
       if (numberOfPages == 1) this.page = 1;
       for (let index = 1; index <= numberOfPages; index++) {
@@ -119,7 +132,8 @@ var app = new Vue({
       this.proof_id = 0;
 
       if (this.page < 1) this.page = 1;
-      if (this.page > this.pages.length) this.page = this.pages.length;
+      if ((this.page > this.pages.length) && this.pages.length > 0) 
+        this.page = this.pages.length;
 
       let tenPages = Math.floor((this.page - 1) / 10);
       if(tenPages < 0)
@@ -128,13 +142,13 @@ var app = new Vue({
       let from = tenPages * 10;
       let to = (tenPages + 1) * 10;
       this.pages_10 = this.pages.slice(from, to);
-
+/*
       let page = this.page;
       let perPage = this.perPage;
       from = page * perPage - perPage;
       to = page * perPage;
-
-      return this.receive_records.slice(from, to);
+*/
+      return this.receive_records;
     },
 
     pre_page: function(){
@@ -169,11 +183,18 @@ var app = new Vue({
 
     },
 
-    getLeaveCredit: function() {
+    getLeaveCredit: function(page) {
       let _this = this;
+
+      this.total = 0;
+
+      if(page == 0)
+        this.page = 1;
 
       const params = {
         fk: _this.fil_keyowrd,
+        page: _this.page,
+        size: _this.perPage,
       
       };
 
@@ -187,6 +208,8 @@ var app = new Vue({
         .then(function(response) {
           console.log(response.data);
           _this.receive_records = response.data;
+          if(_this.receive_records.length > 0)
+            _this.total = _this.receive_records[0].cnt;
         })
         .catch(function(error) {
           console.log(error);
