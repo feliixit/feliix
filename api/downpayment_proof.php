@@ -42,8 +42,8 @@ include_once 'config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
-$page = (isset($_GET['page']) ?  $_GET['page'] : "");
-$size = (isset($_GET['size']) ?  $_GET['size'] : "");
+$page = (isset($_GET['page']) ?  $_GET['page'] : 0);
+$size = (isset($_GET['size']) ?  $_GET['size'] : 5);
 
 $pid = (isset($_GET['pid']) ?  $_GET['pid'] : 0);
 $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
@@ -52,6 +52,11 @@ $fk = urldecode($fk);
 
 $merged_results = array();
 $return_result = array();
+
+if($page == 0)
+{
+    $page = 1;
+}
 
 $query = "SELECT pm.id pid,
             pp.id,
@@ -79,7 +84,12 @@ $query = "SELECT pm.id pid,
             pp.checked_id,
             pp.checked_at,
             pm.final_amount,
-            pm.special
+            pm.special,
+            CASE
+			    WHEN pp.status = 1 THEN 'Checked: True'
+			    WHEN pp.status = -1 THEN 'Checked: False'
+			    ELSE 'Under Checking'
+			end status_flg
           FROM   project_proof pp
           LEFT JOIN project_main pm
                 ON pp.project_id = pm.id
@@ -90,9 +100,24 @@ $query = "SELECT pm.id pid,
           AND f.batch_type = 'proof'
           WHERE  pp.`status` <> -2  ";
 
-//if($fk != "") {
-//    $query .= " AND (user.username like '%" . $fk . "%' or  pm.project_name like '%" . $fk . "%' or Date_format(pp.created_at, '%Y-%m-%d') = '" . $fk . "' ) ";
-//}
+if($fk != "") {
+   $query .= " AND (user.username like '%" . $fk . "%' or  pm.project_name like '%" . $fk . "%' or Date_format(pp.created_at, '%Y-%m-%d') = '" . $fk . "' or CASE WHEN pp.status = 1 THEN 'Checked: True' WHEN pp.status = -1 THEN 'Checked: False' ELSE 'Under Checking' end like '%" . $fk . "%' ) ";
+}
+
+$query_cnt = "SELECT count(*) cnt
+FROM   project_proof pp
+LEFT JOIN project_main pm
+    ON pp.project_id = pm.id
+LEFT JOIN user
+    ON pp.create_id = user.id
+LEFT JOIN gcp_storage_file f
+    ON f.batch_id = pp.id
+AND f.batch_type = 'proof'
+WHERE  pp.`status` <> -2  ";
+
+if($fk != "") {
+    $query_cnt .= " AND (user.username like '%" . $fk . "%' or  pm.project_name like '%" . $fk . "%' or Date_format(pp.created_at, '%Y-%m-%d') = '" . $fk . "' or CASE WHEN pp.status = 1 THEN 'Checked: True' WHEN pp.status = -1 THEN 'Checked: False' ELSE 'Under Checking' end like '%" . $fk . "%'  ) ";
+}
 
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -117,6 +142,13 @@ if(!empty($_GET['size'])) {
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
+
+$cnt = 0;
+$stmt_cnt = $db->prepare( $query_cnt );
+$stmt_cnt->execute();
+while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+    $cnt = $row['cnt'];
+}
 
 $is_checked = 0;
 $sid = 0;
@@ -185,6 +217,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 "final_amount" => $final_amount,
                                 "status_string" => $status_string,
                                 "special" => $special,
+                                "cnt" => $cnt,
         );
 
         $items = [];
@@ -261,6 +294,7 @@ if($id != 0)
                                 "final_amount" => $final_amount,
                                 "status_string" => $status_string,
                                 "special" => $special,
+                                "cnt" => $cnt,
             );
 }
 
@@ -268,7 +302,7 @@ if($id != 0)
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $merged_results[] = $row;
 }
-
+/*
 if($fk != "")
 {
     foreach ($merged_results as &$value) {
@@ -283,6 +317,7 @@ if($fk != "")
     }
 }
 else
+*/
     $return_result = $merged_results;
 
 echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
