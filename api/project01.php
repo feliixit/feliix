@@ -148,7 +148,7 @@ if($gp != "")
 if($fpt != "")
 {
     $query = $query . " and user.username = '" . $fpt . "' ";
-    $query_cnt = $query_cnt . " and user.username = " . $fpt . " ";
+    $query_cnt = $query_cnt . " and user.username = '" . $fpt . "' ";
 }
 
 if($flo != "" && $flo != "0")
@@ -311,7 +311,7 @@ if($fcs != "")
                      WHERE     pm.project_status_id <> 6 ";
 
     // for size                 
-    $query_cnt = "SELECT count(*)
+    $query_cnt = "SELECT count(*) cnt
     FROM   (
                      SELECT    pm.id,
                                Coalesce(pc.category, '') category,
