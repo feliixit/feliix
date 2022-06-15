@@ -290,7 +290,7 @@ if($fcs != "")
                      LEFT JOIN user
                      ON        pm.create_id = user.id
                      WHERE     pm.project_status_id = 6 ";
-    $query_cnt = "SELECT count(*)
+    $query_cnt = "SELECT count(*) cnt
     FROM   (
                      SELECT    pm.id,
                                Coalesce(pc.category, '') category,
