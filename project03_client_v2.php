@@ -2582,7 +2582,7 @@ header('location:index');
 
                 <div class="namebox">
                     <!-- Project Name -->
-                    <b class="tag focus">PROJECT</b>
+                    <b class="tag focus">{{ special == 's' ? 'SPECIAL PROJECT' : 'PROJECT' }}</b>
                     <b><a style="font-size:20px; padding-left:20px;" :href="'project02?p=' + project_id">{{project_name
                         }}</a></b>
                 </div>

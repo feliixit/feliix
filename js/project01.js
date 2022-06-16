@@ -21,6 +21,7 @@ var app = new Vue({
     fil_keyword : '',
     fil_lower : '',
     fil_upper : '',
+    fil_type: '',
 
     od_opt1 : '',
     od_ord1 : '',
@@ -86,6 +87,9 @@ var app = new Vue({
               break;
             case "fs":
               _this.fil_status = decodeURI(tmp[1]);
+              break;
+            case "ft":
+              _this.fil_type = decodeURI(tmp[1]);
               break;
             case "fcs":
               _this.fil_stage = decodeURI(tmp[1]);
@@ -246,6 +250,7 @@ var app = new Vue({
                 fp: _this.fil_priority,
                 gp: _this.fil_group,
                 fs: _this.fil_status,
+                ft: _this.fil_type,
                 fcs: _this.fil_stage,
                 fpt: _this.fil_creator,
                 flo: _this.fil_lower,
@@ -641,6 +646,8 @@ var app = new Vue({
           _this.fil_group +
           "&fs=" +
           _this.fil_status +
+          "&ft=" +
+          _this.fil_type +
           "&fcs=" +
           _this.fil_stage +
           "&fpt=" +
@@ -673,6 +680,7 @@ var app = new Vue({
         this.fil_priority = '';
         this.fil_group = '';
         this.fil_status = '';
+        this.fil_type = '';
         this.fil_stage = '';
         this.fil_creator = '';
         this.fil_lower = '';
@@ -695,6 +703,8 @@ var app = new Vue({
           _this.fil_group +
           "&fs=" +
           _this.fil_status +
+          "&ft=" +
+          _this.fil_type +
           "&fcs=" +
           _this.fil_stage +
           "&fpt=" +
@@ -736,6 +746,8 @@ var app = new Vue({
           _this.fil_group +
           "&fs=" +
           _this.fil_status +
+          "&ft=" +
+          _this.fil_type +
           "&fcs=" +
           _this.fil_stage +
           "&fpt=" +
@@ -778,6 +790,8 @@ var app = new Vue({
             _this.fil_group +
             "&fs=" +
             _this.fil_status +
+            "&ft=" +
+            _this.fil_type +
             "&fcs=" +
             _this.fil_stage +
             "&fpt=" +

@@ -2710,3 +2710,8 @@ CREATE TABLE IF NOT EXISTS `project_other_task_message_reply_c` (
 -- 202220608 project special
 ALTER TABLE project_main
 ADD COLUMN `special` varchar(10) DEFAULT '' AFTER contact_number;
+
+-- 20220616 Mock up
+update project_stage set `order` = `order` * 10;
+
+insert into project_stage (stage, status, `order`) values('Proposal - Testing', 0, 35);

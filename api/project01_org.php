@@ -46,6 +46,7 @@ $fpc = (isset($_GET['fpc']) ?  urldecode($_GET['fpc']) : '');
 $fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
 $fp = (isset($_GET['fp']) ?  urldecode($_GET['fp']) : '');
 $fs = (isset($_GET['fs']) ?  urldecode($_GET['fs']) : '');
+$ft = (isset($_GET['ft']) ?  urldecode($_GET['ft']) : '');
 $gp = (isset($_GET['gp']) ?  urldecode($_GET['gp']) : '');
 $fcs = (isset($_GET['fcs']) ?  urldecode($_GET['fcs']) : '');
 $fpt = (isset($_GET['fpt']) ?  $_GET['fpt'] : '');
@@ -118,6 +119,11 @@ if($fp != "")
 if($fs != "")
 {
     $query = $query . " and pm.project_status_id = '" . $fs . "' ";
+}
+
+if($ft == "s")
+{
+    $query = $query . " and pm.special = '" . $ft . "' ";
 }
 
 if($gp != "")
@@ -304,6 +310,11 @@ if($fcs != "")
     if($fs != "")
     {
         $query = $query . " and pm.project_status_id = '" . $fs . "' ";
+    }
+
+    if($ft == "s")
+    {
+        $query = $query . " and pm.special = '" . $ft . "' ";
     }
 
     if($fpt != "")

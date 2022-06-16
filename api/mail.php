@@ -3195,7 +3195,16 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
     $mail->Host       = $conf::$mail_host;
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
-
+/*
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'kay.ferry82@ethereal.email';
+    $mail->Password   = 'J2yWar7STUDtPqXAqG';
+*/
     $mail->IsHTML(true);
 
     $notifior = array();
@@ -3216,6 +3225,20 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
         $mail->AddAddress($list["email"], $list["username"]);
         $cc = $cc . $list["username"] . ", ";
     }
+
+    // 當專案中的Order Stage的狀態變為Close時(function stage_close_notify)，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+     $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+    
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -3405,6 +3428,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
+    
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
     $mail->SMTPSecure = "ssl";
@@ -3413,6 +3437,17 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->Host       = $conf::$mail_host;
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
+
+/*
+$mail->SMTPDebug  = 0;
+$mail->SMTPAuth   = true;
+$mail->SMTPSecure = "tls";
+$mail->Port       = 587;
+$mail->SMTPKeepAlive = true;
+$mail->Host       = 'smtp.ethereal.email';
+$mail->Username   = 'arnoldo.bailey26@ethereal.email';
+$mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
+*/
 
     $mail->IsHTML(true);
 
@@ -3441,6 +3476,23 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     {
         $mail->AddCC($list["email"], $list["username"]);
         $creators = $creators . $list["username"] . ", ";
+    }
+
+    // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+    if($stages_status == "Order")
+    {
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+        
     }
 
     $creators = rtrim($creators, ", ");
@@ -3693,6 +3745,16 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
 
+/*
+$mail->SMTPDebug  = 0;
+$mail->SMTPAuth   = true;
+$mail->SMTPSecure = "tls";
+$mail->Port       = 587;
+$mail->SMTPKeepAlive = true;
+$mail->Host       = 'smtp.ethereal.email';
+$mail->Username   = 'arnoldo.bailey26@ethereal.email';
+$mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
+*/
     $mail->IsHTML(true);
 
     $notifior = array();
@@ -3727,6 +3789,23 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
     {
         $mail->AddCC($list["email"], $list["username"]);
         $creators = $creators . $list["username"] . ", ";
+    }
+
+    // 在Order Stage中，當使用者留言或是回復留言時，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+    if($stages == "Order")
+    {
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+        
     }
 
     $creators = rtrim($creators, ", ");
@@ -4326,6 +4405,18 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
 
+
+/*
+$mail->SMTPDebug  = 0;
+$mail->SMTPAuth   = true;
+$mail->SMTPSecure = "tls";
+$mail->Port       = 587;
+$mail->SMTPKeepAlive = true;
+$mail->Host       = 'smtp.ethereal.email';
+$mail->Username   = 'arnoldo.bailey26@ethereal.email';
+$mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
+ */
+
     $mail->IsHTML(true);
 
     $notifior = array();
@@ -4354,6 +4445,24 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
         $mail->AddCC($list["email"], $list["username"]);
         $creators = $creators . $list["username"] . ", ";
     }
+
+    
+// 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+if($stage == "Order")
+{
+    $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+    
+}
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
@@ -4413,6 +4522,17 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
 
+    /*
+    $mail->SMTPDebug  = 0;
+$mail->SMTPAuth   = true;
+$mail->SMTPSecure = "tls";
+$mail->Port       = 587;
+$mail->SMTPKeepAlive = true;
+$mail->Host       = 'smtp.ethereal.email';
+$mail->Username   = 'arnoldo.bailey26@ethereal.email';
+$mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
+*/
+
     $mail->IsHTML(true);
 
     $notifior = array();
@@ -4440,6 +4560,23 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     {
         $mail->AddCC($list["email"], $list["username"]);
         $creators = $creators . $list["username"] . ", ";
+    }
+
+    // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+    if($stage == "Order")
+    {
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+        
     }
 
     $creators = rtrim($creators, ", ");
@@ -4636,7 +4773,7 @@ function project01_notify_mail($request_type, $project_name, $username, $created
 
 }
 
-function project02_stage_notify_mail($stage_name, $project_name, $username, $created_at, $stage_status, $project_id, $project_creator_id, $category)
+function project02_stage_notify_mail($stage_name, $project_name, $username, $created_at, $stage_status, $project_id, $stage_creator_id, $category, $main_id)
 {
 
     $title = 'Stage "'. $stage_name .'" was created in Project "' . $project_name . '" ';
@@ -4650,6 +4787,7 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
+    
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
     $mail->SMTPSecure = "ssl";
@@ -4659,14 +4797,42 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
 
+/*
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'kay.ferry82@ethereal.email';
+    $mail->Password   = 'J2yWar7STUDtPqXAqG';
+*/
     $mail->IsHTML(true);
 
     $notifior = array();
 
-    $notifior = GetNotifiers($project_creator_id);
+    // 如果是新建立的stage，則需要cc給stage的創建者
+    $notifior = GetNotifiers($stage_creator_id);
     foreach($notifior as &$list)
     {
         $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    // 也需要cc給project的創建者
+    $notifior = GetNotifiers($main_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    // Order Stage被建立時(function project02_stage_notify_mail)，系統發出的通知信中需要額外加入「職位為 Warehouse in charge」的人員
+    if($stage_name == "Order")
+    {
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
     }
 
     $notifior = GetProject01NotifiersByCatagory($category);
@@ -4683,6 +4849,7 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
+
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -5345,6 +5512,32 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
 
 }
 
+function GetChargeNotifiersByTitle($title)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "
+            SELECT username, email, title 
+            FROM user u
+            LEFT JOIN user_title ut
+            ON u.title_id = ut.id 
+            WHERE title IN(
+                '" . $title . "'
+            )  and u.status = 1";
+    
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
 
 function GetProject01NotifiersByCatagory($catagory)
 {
