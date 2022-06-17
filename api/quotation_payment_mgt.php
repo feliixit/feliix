@@ -53,9 +53,12 @@ $fal = (isset($_GET['fal']) ?  $_GET['fal'] : '');
 $fau = (isset($_GET['fau']) ?  $_GET['fau'] : '');
 $fpl = (isset($_GET['fpl']) ?  $_GET['fpl'] : '');
 $fpu = (isset($_GET['fpu']) ?  $_GET['fpu'] : '');
-$fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
 
+$fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
 $fk = urldecode($fk);
+
+$fkp = (isset($_GET['fkp']) ?  $_GET['fkp'] : '');
+$fkp = urldecode($fkp);
 
 $of1 = (isset($_GET['of1']) ?  $_GET['of1'] : '');
 $ofd1 = (isset($_GET['ofd1']) ?  $_GET['ofd1'] : '');
@@ -174,6 +177,12 @@ if($fpu != "" && $fpu != "0")
 {
     $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
     $query_cnt = $query_cnt . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
+}
+
+if($fkp != "")
+{
+    $query = $query . " and pm.project_name like '%" . $fkp . "%' ";
+    $query_cnt = $query_cnt . " and pm.project_name like '%" . $fkp . "%' ";
 }
 
 $sOrder = "";

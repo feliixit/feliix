@@ -101,6 +101,7 @@ var app = new Vue({
     fil_payment_upper: "",
     fil_payment_lower: "",
     fil_keyowrd: "",
+    fil_keyowrd_p: "",
 
     od_factor1: "",
     od_factor1_order: "",
@@ -154,6 +155,9 @@ var app = new Vue({
               break;
             case "fk":
               _this.fil_keyowrd = decodeURI(tmp[1]);
+              break;
+            case "fkp":
+              _this.fil_keyowrd_p = decodeURI(tmp[1]);
               break;
             case "of1":
               _this.od_factor1 = tmp[1];
@@ -510,6 +514,8 @@ var app = new Vue({
         _this.fil_payment_upper +
         "&fk=" +
         _this.fil_keyowrd +
+        "&fkp=" +
+        _this.fil_keyowrd_p +
         "&of1=" +
         _this.od_factor1 +
         "&ofd1=" +
@@ -550,6 +556,8 @@ var app = new Vue({
         _this.fil_payment_upper +
         "&fk=" +
         _this.fil_keyowrd +
+        "&fkp=" +
+        _this.fil_keyowrd_p +
         "&of1=" +
         _this.od_factor1 +
         "&ofd1=" +
@@ -579,6 +587,7 @@ var app = new Vue({
         fpl: _this.fil_payment_lower,
         fpu: _this.fil_payment_upper,
         fk: _this.fil_keyowrd,
+        fkp: _this.fil_keyowrd_p,
         of1: _this.od_factor1,
         ofd1: _this.od_factor1_order,
         of2: _this.od_factor2,
@@ -946,6 +955,7 @@ var app = new Vue({
       this.fil_payment_upper = '';
       this.fil_payment_lower = '';
       this.fil_keyowrd = '';
+      this.fil_keyowrd_p = '';
       
       document.getElementById("dialog_f1").classList.remove("focus");
       document.getElementById("add_f1").classList.remove("show");
