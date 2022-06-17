@@ -125,6 +125,10 @@ if($ft == "s")
 {
     $query = $query . " and pm.special = '" . $ft . "' ";
 }
+else
+{
+    $query = $query . " and pm.special <> 's' ";
+}
 
 if($gp != "")
 {
@@ -315,6 +319,10 @@ if($fcs != "")
     if($ft == "s")
     {
         $query = $query . " and pm.special = '" . $ft . "' ";
+    }
+    else
+    {
+        $query = $query . " and pm.special <> 's' ";
     }
 
     if($fpt != "")

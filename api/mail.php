@@ -3195,6 +3195,7 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
     $mail->Host       = $conf::$mail_host;
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
+    
 /*
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
@@ -3202,8 +3203,8 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
     $mail->Port       = 587;
     $mail->SMTPKeepAlive = true;
     $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'kay.ferry82@ethereal.email';
-    $mail->Password   = 'J2yWar7STUDtPqXAqG';
+    $mail->Username   = 'stanton.hoeger97@ethereal.email';
+    $mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
 */
     $mail->IsHTML(true);
 
@@ -3226,17 +3227,100 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
         $cc = $cc . $list["username"] . ", ";
     }
 
+    
     // 當專案中的Order Stage的狀態變為Close時(function stage_close_notify)，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
-     $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
-    foreach($notifior as &$list)
+    if($stage_name == "Order")
     {
-        $mail->AddAddress($list["email"], $list["username"]);
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . '<p>Stage "' . $stage_name . '" was closed in Project "' . $project_name . '" by ' . $modify_name . '. Following are the details:</p>';
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stage_name . "</p>";
+    $content = $content . "<p>Status of Stage: Close</p>";
+    $content = $content . "<p>Stage Creator:" . $stage_creator_name . " at " . $stage_create_at . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project02?p=" . $project_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+    } else {
+        logMail($creator, $mail->ErrorInfo . $title . $cc .  $content);
+        return false;
     }
 
-    $notifior = GetChargeNotifiersByTitle('Service Manager');
-    foreach($notifior as &$list)
+}
+
+function stage_order_close_notify($project_creator_id, $project_id, $project_name, $stage_name, $modify_name, $stage_creator_name, $stage_create_at, $title, $cc_to)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+/*
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'stanton.hoeger97@ethereal.email';
+    $mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
+    */
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $cc = "";
+    $creator = "";
+
+
+    // 當專案中的Order Stage的狀態變為Close時(function stage_close_notify)，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+    if($stage_name == "Order")
     {
-        $mail->AddAddress($list["email"], $list["username"]);
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
     }
     
 
@@ -3437,17 +3521,17 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->Host       = $conf::$mail_host;
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
-
 /*
+
 $mail->SMTPDebug  = 0;
 $mail->SMTPAuth   = true;
 $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->SMTPKeepAlive = true;
 $mail->Host       = 'smtp.ethereal.email';
-$mail->Username   = 'arnoldo.bailey26@ethereal.email';
-$mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
-*/
+$mail->Username   = 'stanton.hoeger97@ethereal.email';
+$mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
+    */
 
     $mail->IsHTML(true);
 
@@ -3752,8 +3836,8 @@ $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->SMTPKeepAlive = true;
 $mail->Host       = 'smtp.ethereal.email';
-$mail->Username   = 'arnoldo.bailey26@ethereal.email';
-$mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
+$mail->Username   = 'stanton.hoeger97@ethereal.email';
+$mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
 */
     $mail->IsHTML(true);
 
@@ -4405,7 +4489,7 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
 
-
+    
 /*
 $mail->SMTPDebug  = 0;
 $mail->SMTPAuth   = true;
@@ -4413,9 +4497,9 @@ $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->SMTPKeepAlive = true;
 $mail->Host       = 'smtp.ethereal.email';
-$mail->Username   = 'arnoldo.bailey26@ethereal.email';
-$mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
- */
+$mail->Username   = 'stanton.hoeger97@ethereal.email';
+$mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
+*/
 
     $mail->IsHTML(true);
 
@@ -4512,7 +4596,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $mail->Mailer = "smtp";
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
-
+   
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
     $mail->SMTPSecure = "ssl";
@@ -4521,16 +4605,16 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $mail->Host       = $conf::$mail_host;
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
-
-    /*
+    
+ /*
     $mail->SMTPDebug  = 0;
 $mail->SMTPAuth   = true;
 $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->SMTPKeepAlive = true;
 $mail->Host       = 'smtp.ethereal.email';
-$mail->Username   = 'arnoldo.bailey26@ethereal.email';
-$mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
+$mail->Username   = 'stanton.hoeger97@ethereal.email';
+$mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
 */
 
     $mail->IsHTML(true);
@@ -4592,7 +4676,7 @@ $mail->Password   = 'bsUYuJGaMnwRpHuJ7d';
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
     $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stages_status . "</p>";
+    $content = $content . "<p>Stage:" . $stage . "</p>";
     $content = $content . "<p>Task:" . $task_name . "</p>";
 
     if($old_status != $task_status)
@@ -4797,16 +4881,16 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
 
-/*
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "tls";
-    $mail->Port       = 587;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'kay.ferry82@ethereal.email';
-    $mail->Password   = 'J2yWar7STUDtPqXAqG';
-*/
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "tls";
+    // $mail->Port       = 587;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = 'smtp.ethereal.email';
+    // $mail->Username   = 'stanton.hoeger97@ethereal.email';
+    // $mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
+
     $mail->IsHTML(true);
 
     $notifior = array();
