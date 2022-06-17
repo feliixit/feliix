@@ -125,7 +125,8 @@ if($ft == "s")
 {
     $query = $query . " and pm.special = '" . $ft . "' ";
 }
-else
+
+if($ft == "n")
 {
     $query = $query . " and pm.special <> 's' ";
 }
@@ -320,7 +321,8 @@ if($fcs != "")
     {
         $query = $query . " and pm.special = '" . $ft . "' ";
     }
-    else
+    
+    if($ft == "n")
     {
         $query = $query . " and pm.special <> 's' ";
     }

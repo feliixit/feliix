@@ -145,7 +145,8 @@ if($ft == "s")
     $query = $query . " and pm.special = '" . $ft . "' ";
     $query_cnt = $query_cnt . " and pm.special = '" . $ft . "' ";
 }
-else
+
+if($ft == "n")
 {
     $query = $query . " and pm.special <> 's' ";
     $query_cnt = $query_cnt . " and pm.special <> 's' ";
@@ -409,7 +410,8 @@ if($fcs != "")
         $query = $query . " and pm.special = '" . $ft . "' ";
         $query_cnt = $query_cnt . " and pm.special = '" . $ft . "' ";
     }
-    else
+    
+    if($ft == "n")
     {
         $query = $query . " and pm.special <> 's' ";
         $query_cnt = $query_cnt . " and pm.special <> 's' ";
