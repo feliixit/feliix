@@ -416,7 +416,8 @@ var app = new Vue({
         {
           if(item_product.photo != "")
             photo = item_product.photo;
-            price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
+            // price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
+            price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
             if(this.v1 != "")
               list += (item_product.k1 + ': ' + item_product.v1) + "\n";
             if(this.v2 != "")
@@ -549,7 +550,8 @@ var app = new Vue({
         {
           if(item_product.photo != "")
             photo = item_product.photo;
-            price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
+            //price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
+            price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
             if(this.v1 != "")
               list += (item_product.k1 + ': ' + item_product.v1) + "\n";
             if(this.v2 != "")
