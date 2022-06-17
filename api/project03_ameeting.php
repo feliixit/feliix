@@ -141,7 +141,8 @@ switch ($method) {
                         u.username creator, 
                         pm.created_at,
                         uu.username updator,
-                        pm.updated_at
+                        pm.updated_at,
+                        p.special
                 from project_a_meeting pm 
                         LEFT JOIN user u ON u.id = pm.create_id 
                         LEFT JOIN user uu ON uu.id = pm.updated_id 
@@ -249,6 +250,8 @@ switch ($method) {
         $created_at = "";
         $updator = "";
         $updated_at = "";
+
+        $special = "";
                
         $attached_layout_files = [];
         $scope_attached_layout_files = [];
@@ -322,6 +325,8 @@ switch ($method) {
             $created_at = $row['created_at'];
             $updator = $row['updator'];
             $updated_at = $row['updated_at'];
+
+            $special = $row['special'];
 
             if($updator == null){
                 $updator = $creator;
@@ -399,6 +404,7 @@ switch ($method) {
             "updator" => $updator,
             "updated_at" => $updated_at,
             "other_attached_layout_files" => $other_attached_layout_files,
+            "special" => $special,
         );
 
 

@@ -149,6 +149,32 @@ $query = "INSERT INTO project_edit_stage
                                             $result[0]["office_id"]);
                 }
 
+                if($project_stage_id == 4 && $stages_status_id == 3)
+                {
+                    $title = "";
+
+                    $result = GetMailInfo($stage_id, $db);
+
+                    $stage_name = "";
+
+                    
+                    $stage_name = "Order";
+                    $title = 'Stage "Order" was closed in Project ' . $result[0]["project_name"];
+                    
+                
+                    stage_order_close_notify( $result[0]["project_creator"],  // $project_creator_id, 
+                                        $result[0]["project_id"],       // $project_id, 
+                                        $result[0]["project_name"],     // $project_name, 
+                                        $stage_name,                    // $stage_name, 
+                                        $user_name,                     // $modify_name, 
+                                        $result[0]["stage_creator"],         // $stage_creator_name, 
+                                        $result[0]["stage_created_at"],       // $stage_create_at, 
+                                        $title,                         // $title
+                                        $result[0]["light_id"]);        // $cc_to                       
+                
+                    
+                }
+
             }
             else
             {

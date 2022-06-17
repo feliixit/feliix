@@ -103,7 +103,17 @@ if (!isset($jwt)) {
         $sig_info = GetSigInfo($row['id'], $db);
 
         $subtotal_info = GetSubTotalInfo($row['id'], $db);
-        $subtotal_novat = GetSubTotalNoVat($row['id'], $db);
+        $subtotal_novat_a = GetSubTotalNoVatA($row['id'], $db);
+        $subtotal_novat_b = GetSubTotalNoVatB($row['id'], $db);
+
+        $subtotal_info_not_show_a = GetSubTotalInfoNotShowA($row['id'], $db);
+        $subtotal_info_not_show_b = GetSubTotalInfoNotShowB($row['id'], $db);
+
+        $total_info['back_total'] = ($subtotal_info_not_show_a + $subtotal_info_not_show_b) * (100 - $total_info['discount']) / 100;
+        if($total_info['vat'] == 'Y')
+            $total_info['back_total'] += $subtotal_info_not_show_a * (100 - $total_info['discount']) / 100 * 0.12;
+
+        $total_info['back_total'] = number_format($total_info['back_total'], 2, '.', '');
 
         $merged_results[] = array(
             "id" => $id,
@@ -127,7 +137,11 @@ if (!isset($jwt)) {
             "payment_term_info" => $payment_term_info,
             "sig_info" => $sig_info,
             "subtotal_info" => $subtotal_info,
-            "subtotal_novat" => $subtotal_novat
+         
+            "subtotal_novat_a" => $subtotal_novat_a,
+            "subtotal_novat_b" => $subtotal_novat_b,
+            "subtotal_info_not_show_a" => $subtotal_info_not_show_a,
+            "subtotal_info_not_show_b" => $subtotal_info_not_show_b,
         );
     }
 
@@ -141,8 +155,87 @@ function GetSubTotalInfo($qid, $db)
     $total = 0;
 
     $query = "
-            select sum(amount) amt from quotation_page_type_block
-            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . ")
+            select COALESCE(sum(amount), 0) amt from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount = 0)
+            union all
+            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
+        $total += $row['amt'];
+
+    }
+
+    return $total;
+}
+
+function GetSubTotalInfoNotShowA($qid, $db)
+{
+    $total = 0;
+
+    $query = "
+            select COALESCE(sum(amount), 0) amt from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A'  and real_amount = 0)
+            union all
+            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'A' 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
+        $total += $row['amt'];
+
+    }
+
+    return $total;
+}
+
+
+function GetSubTotalInfoNotShowB($qid, $db)
+{
+    $total = 0;
+
+    $query = "
+            select COALESCE(sum(amount), 0) amt from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B'  and real_amount = 0)
+            union all
+            select COALESCE(sum(real_amount), 0) from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and real_amount <> 0 and block_type = 'B' 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
+        $total += $row['amt'];
+
+    }
+
+    return $total;
+}
+
+function GetSubTotalNoVat($qid, $db)
+{
+    $total = 0;
+
+    $query = "
+            select sum(qty * price * (1 - discount / 100)) amt from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' )
     ";
 
     // prepare the query
@@ -161,13 +254,62 @@ function GetSubTotalInfo($qid, $db)
 }
 
 
-function GetSubTotalNoVat($qid, $db)
+function GetSubTotalNoVatA($qid, $db)
 {
     $total = 0;
 
     $query = "
             select sum(qty * price * (1 - discount / 100)) amt from quotation_page_type_block
-            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . ")
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A')
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
+        $total = $row['amt'];
+
+    }
+
+    return $total;
+}
+
+
+function GetSubTotalNoVatB($qid, $db)
+{
+    $total = 0;
+
+    $query = "
+            select sum(qty * price * (1 - discount / 100)) amt from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B')
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
+        $total = $row['amt'];
+
+    }
+
+    return $total;
+}
+
+function GetSubTotalNoVatNotShow($qid, $db)
+{
+    $total = 0;
+
+    $query = "
+            select COALESCE(sum(qty * price * (1 - discount / 100)), 0) amt from quotation_page_type_block
+            WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '')
     ";
 
     // prepare the query
@@ -192,6 +334,8 @@ function GetBlockNames($qid, $db){
                 qp.page,
                 block_type,
                 block_name,
+                not_show,
+                real_amount,
                 page_id
             FROM   quotation_page_type qpt
             left join quotation_page qp on qpt.page_id = qp.id
@@ -214,6 +358,9 @@ function GetBlockNames($qid, $db){
         $block_name = $row['block_name'];
         $page_id = $row['page_id'];
 
+        $not_show = $row['not_show'];
+        $real_amount = $row['real_amount'];
+
         $blocks = [];
 
         $blocks = GetBlocks($id, $db);
@@ -224,6 +371,8 @@ function GetBlockNames($qid, $db){
             "page" => $page,
             "type" => $block_type,
             "name" => $block_name,
+            "not_show" => $not_show,
+            "real_amount" => $real_amount,
             "blocks" => $blocks,
             "page_id" => $page_id,
             "subtotal" => $subtotal,
@@ -737,7 +886,7 @@ function GetTotalInfo($qid, $db){
         $show_vat = $row['show_vat'];
         $valid = $row['valid'];
         $total = $row['total'];
-
+        
         
     }
 
@@ -750,7 +899,9 @@ function GetTotalInfo($qid, $db){
         "valid" => $valid,
         "total" => $total,
         
-        
+        "real_total" => 0,
+
+        "back_total" => 0,
     );
 
     return $merged_results;
@@ -760,7 +911,9 @@ function GetTypes($qid, $db){
     $query = "
         SELECT id,
         block_type,
-        block_name
+        block_name,
+        not_show,
+        real_amount
         FROM   quotation_page_type
         WHERE  page_id = " . $qid . "
         AND `status` <> -1 
@@ -779,6 +932,9 @@ function GetTypes($qid, $db){
         $block_type = $row['block_type'];
         $block_name = $row['block_name'];
 
+        $not_show = $row['not_show'];
+        $real_amount = $row['real_amount'];
+
         $blocks = [];
 
         $blocks = GetBlocks($id, $db);
@@ -789,6 +945,8 @@ function GetTypes($qid, $db){
             "org_id" => $id,
             "type" => $block_type,
             "name" => $block_name,
+            "not_show" => $not_show,
+            "real_amount" => $real_amount,
             "blocks" => $blocks,
             "subtotal" => $subtotal,
         );

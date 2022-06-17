@@ -116,7 +116,8 @@ function SendNotifyMail($bid)
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %T') created_at, 
                 0 replies, 
                 0 post, 
-                '' recent 
+                '' recent,
+                p.create_id main_id
             FROM project_stages pm 
             LEFT JOIN project_main p ON pm.project_id = p.id
             LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
@@ -133,8 +134,9 @@ function SendNotifyMail($bid)
     $stage_name = "";
     $stage_status = "";
     $project_id = "";
-    $create_id = "";
+    $stage_create_id = "";
     $category = "";
+    $main_id = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
@@ -143,10 +145,11 @@ function SendNotifyMail($bid)
         $stage_name = $row['stage'];
         $stage_status = $row['stages_status'];
         $project_id = $row['pid'];
-        $create_id = $row['create_id'];
+        $stage_create_id = $row['create_id'];
         $category = $row['category'];
+        $main_id = $row['main_id'];
     }
 
-    project02_stage_notify_mail($stage_name, $project_name, $username, $created_at, $stage_status, $project_id, $create_id, $category);
+    project02_stage_notify_mail($stage_name, $project_name, $username, $created_at, $stage_status, $project_id, $stage_create_id, $category, $main_id);
 
 }

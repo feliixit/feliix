@@ -119,6 +119,8 @@ var app = new Vue({
     project_id : 0,
     project_name : '',
     stage: '',
+
+    special : '',
   },
 
   created() {
@@ -885,6 +887,7 @@ var app = new Vue({
             _this.project_name = res.data[0].project_name;
             _this.project_id = res.data[0].project_id;
             _this.stage = res.data[0].stage;
+            _this.special = res.data[0].special;
           },
           (err) => {
             alert(err.response);

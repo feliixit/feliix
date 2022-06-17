@@ -217,6 +217,7 @@ $(function(){
                                         </select>
                                     </dd>
                                 </div>
+                                
                                 <div class="half">
                                     <dt></dt>
                                     <dd v-if="showExtra"><input type="text" placeholder="" v-model="special_note"></dd>
@@ -308,6 +309,17 @@ $(function(){
                                     <option v-for="item in statuses" v-if="item.id != 6" :value="item.id" :key="item.project_status">
                                         {{ item.project_status }}
                                     </option>
+                                    </select>
+                                </dd>
+
+                                <dt>Project Type</dt>
+                                <dd>
+                                    <select v-model="fil_type">
+                                        <option value=""></option>
+                                        <option value="n">Normal</option>
+                                        <option value="s">
+                                            Speical
+                                        </option>
                                     </select>
                                 </dd>
 

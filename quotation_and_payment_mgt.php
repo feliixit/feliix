@@ -186,7 +186,7 @@ $(function(){
             color: black;
         }
 
-        .tableframe .tablebox.lv1 a, a:link {
+        .tableframe .tablebox.lv1 a, .tableframe .tablebox.lv1 a:link {
             color: #1e6ba8;
             display: inline-block;
         }
@@ -679,7 +679,10 @@ $(function(){
 
                                 </div>
 
-                                <dt>Keyword (only for project name or final quotation)</dt>
+                                <dt>Keyword (only for project name)</dt>
+                                <dd><input type="text" v-model="fil_keyowrd_p"></dd>
+
+                                <dt>Keyword (only for final quotation)</dt>
                                 <dd><input type="text" v-model="fil_keyowrd"></dd>
 
                             </dl>

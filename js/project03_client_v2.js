@@ -165,6 +165,8 @@ var app = new Vue({
     // statuses: {},
     creators: {},
 
+    special: '',
+
   },
 
   created() {
@@ -1373,6 +1375,7 @@ var app = new Vue({
             (res) => {
               _this.project_name = res.data[0].project_name;
               _this.project_id = res.data[0].project_id;
+              _this.special = res.data[0].special;
             },
             (err) => {
               alert(err.response);
