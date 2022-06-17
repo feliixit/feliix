@@ -574,17 +574,25 @@ header( 'location:index' );
             flex-wrap: wrap;
         }
 
-        .area_terms .terms {
+        .area_terms > div.terms {
             display: inline-block;
-            width: 48%;
-            border: 2px dotted black;
+            width: 48.2%;
+            border: 1px solid #A0A0A0;
             margin: 10px;
+        }
+
+        .area_terms > div.terms:last-of-type {
+            width: 100%;
+        }
+
+        .area_terms > div.terms:nth-of-type(even) {
+            width: 48.2%;
         }
 
         .area_terms .terms .title {
             text-align: center;
             padding: 3px;
-            border-bottom: 2px dotted black;
+            border-bottom: 1px solid #A0A0A0;
             font-size: 18px;
             font-weight: 700;
         }
@@ -592,7 +600,7 @@ header( 'location:index' );
         .area_terms .terms .brief {
             text-align: center;
             padding: 3px;
-            border-bottom: 2px dotted black;
+            border-bottom: 1px solid #A0A0A0;
             font-size: 16px;
         }
 
@@ -722,13 +730,17 @@ header( 'location:index' );
         .tb_total tbody tr td:nth-last-of-type(2), .tb_total tfoot tr td:nth-last-of-type(2) {
             font-weight: 800;
             text-align: center;
-            width: 225px;
+            width: 210px;
         }
 
         .tb_total tbody tr td:nth-last-of-type(1), .tb_total tfoot tr td:nth-last-of-type(1) {
-            width: 225px;
+            width: 210px;
             padding: 5px 15px;
             text-align: right;
+        }
+
+        .tb_total tfoot tr td:nth-last-of-type(1) span.numbers.deleted{
+            text-decoration: line-through;
         }
 
         .qn_body .area_subtotal {
@@ -795,6 +807,8 @@ header( 'location:index' );
             font-weight: 800;
             letter-spacing: 0.5px;
             color: rgb(0, 117, 58);
+            text-align: right;
+            padding-right: 30px;
         }
 
         .tb_format1 tfoot tr td:nth-of-type(3) {
@@ -828,7 +842,7 @@ header( 'location:index' );
 
         .tb_format1 tbody tr td span.numbers {
             font-weight: 800;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .tb_format1 tbody tr td span.numbers.red {
@@ -859,14 +873,14 @@ header( 'location:index' );
             padding: 0px 5px 1px;
             border-radius: 7px;
             top: 10px;
-            left: -75px;
-            font-size: 15px;
+            left: -73px;
+            font-size: 14px;
             font-weight: 500;
         }
 
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-of-type(1), .tb_format1 tbody tr td:nth-of-type(1) {
-            width: 64px;
+            width: 70px;
             text-align: center;
         }
 
@@ -877,24 +891,29 @@ header( 'location:index' );
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(2),
         .tb_format1 tbody tr td:nth-last-of-type(2) {
-            width: 150px;
+            width: 210px;
             text-align: right;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(1),
         .tb_format1 tbody tr td:nth-last-of-type(1) {
-            width: 225px;
-            text-align: right;
-        }
-
-        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1.vat tbody tr td:nth-last-of-type(3) {
-            width: 150px;
+            width: 210px;
             text-align: right;
         }
 
         .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1.vat tbody tr td:nth-last-of-type(4) {
             width: 75px;
-            text-align: center;
+            text-align: right;
+        }
+
+        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1.vat tbody tr td:nth-last-of-type(3) {
+            width: 210px;
+            text-align: right;
+        }
+
+        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(2), .tb_format1.vat tbody tr td:nth-last-of-type(2) {
+            width: 135px;
+            text-align: right;
         }
 
         .area_subtotal .tb_format2 {
@@ -971,7 +990,7 @@ header( 'location:index' );
 
         .tb_format2 tbody tr td span.numbers {
             font-weight: 800;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .tb_format2 tbody tr td span.numbers.red {
@@ -1002,36 +1021,32 @@ header( 'location:index' );
             padding: 0px 5px 1px;
             border-radius: 7px;
             top: 10px;
-            left: -75px;
-            font-size: 15px;
+            left: -73px;
+            font-size: 14px;
             font-weight: 500;
         }
 
         .tb_format2 tbody tr td:nth-of-type(1) {
-            width: 64px;
+            width: 70px;
             text-align: center;
         }
 
         .tb_format2 tbody tr td:nth-last-of-type(1) {
-            width: 225px;
+            width: 210px;
             text-align: right;
         }
 
         .tb_format2 tfoot tr td:nth-last-of-type(1) {
-            width: 225px;
+            width: 210px;
             text-align: right;
             padding: 5px 15px;
         }
 
         .tb_format2 tfoot tr td:nth-last-of-type(2) {
-            width: 160px;
-        }
-
-        .tb_format2.vat tbody tr td:nth-last-of-type(2) {
-            width: 150px;
+            width: 135px;
             text-align: right;
+            padding-right: 30px;
         }
-
 
         .pagebox {
             border: 1px solid black;
@@ -1102,7 +1117,7 @@ header( 'location:index' );
         .pagebox .content_box ul li:nth-of-type(1) {
             width: 75%;
             padding: 3px 3px 10px 10px;
-            line-height: 2;
+            line-height: 2.5;
             border-right: 1px solid black;
         }
 
@@ -1117,15 +1132,12 @@ header( 'location:index' );
             height: 30px;
             border: 1px solid #707070;
             font-size: 14px;
-            width: 50px;
+            width: 272px;
         }
 
         .pagebox .content_box ul li:nth-of-type(1) input[type='checkbox'] {
             display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 1px solid black;
-            margin-left: 50px;
+            margin-left: 20px;
         }
 
         .pagebox .content_box ul li:nth-of-type(2) {
@@ -1245,7 +1257,7 @@ header( 'location:index' );
             height: 30px;
             border: 1px solid #707070;
             font-size: 14px;
-            width: 95px;
+            width: 90px;
             margin: 5px 10px 5px 0;
         }
 
@@ -2135,7 +2147,8 @@ header( 'location:index' );
                                     <ul v-for="(block, block_index) in page.types">
                                         <li>
                                             Type-{{block.type}} Subtotal Block<br>
-                                            Name: <input type="text" v-model="block.name">
+                                            Name: <input type="text" v-model="block.name"><br>
+                                            Subtotal Amount: <input type="number" v-model="block.real_amount"> <input type="checkbox" class="alone" value="1" v-model="block.not_show"> Not Show "Subtotal Amount"
                                         </li>
                                         <li>
                                             <i class="fas fa-arrow-alt-circle-up"
@@ -2384,7 +2397,14 @@ header( 'location:index' );
 
                             <!-- 系統會先自動算出折扣後加稅後的總價，但使用者還是可以針對總價做後續修改(例如取整數等) -->
                             <dl>
-                                <dt class="head">Grand Total:</dt>
+                                <dt class="head">System Computed Grand Total:</dt>
+                                <dd>
+                                    <input type="number" v-model="total.real_total" style="opacity: 0.6;" disabled>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt class="head">Manual Assigned Grand Total:</dt>
                                 <dd>
                                     <input type="number" v-model="total.total">
                                 </dd>
@@ -2748,7 +2768,7 @@ header( 'location:index' );
                         <thead v-if="tp.type == 'B'">
 
                         <tr>
-                            <th class="title" :colspan="product_vat == 'P' ? 5 : 4">{{ tp.name }}</th>
+                            <th class="title" :colspan="product_vat == 'P' ? 4 : 4">{{ tp.name }}</th>
                         </tr>
 
                         </thead>
@@ -2771,15 +2791,20 @@ header( 'location:index' );
                             </td>
                             <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
                             </td>
-                            <td><span class="numbers">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            <td><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                    <span class="numbers deleted" v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                        v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                    v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">
+                                <span class="numbers" v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ bk.price !== undefined ? Number(bk.price - (bk.price * (bk.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                <span class="numbers" v-if="bk.discount != 0 && (bk.discount == 100 || bk.amount == '0.00')">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
                             </td>
-                            <td v-if="product_vat == 'P'"><span class="numbers">₱ {{ bk.price !== undefined ? (Number(bk.price) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            <td v-if="product_vat == 'P'"><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price !== undefined ? (Number(bk.price) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                <span class="numbers" v-if="bk.discount !== 0 && bk.amount != '0.00'">₱ {{ bk.price !== undefined ? (Number(bk.price - (bk.price * (bk.discount / 100))) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                <span class="numbers" v-if="bk.discount !== 0 && bk.amount == '0.00'">₱ {{ bk.price !== undefined ? (Number(bk.price) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
                             </td>
 
                             <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                    v-if="bk.discount != 0">
+                                
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat == 'P'">
@@ -2789,9 +2814,7 @@ header( 'location:index' );
 
 
                             <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                    v-if="bk.discount != 0">
+                               
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
@@ -2810,16 +2833,15 @@ header( 'location:index' );
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td v-if="product_vat == 'P'"><span class="numbers">₱ {{ bk.price !== undefined ? (Number(bk.price)).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                            </td>
+                        
                             <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1.12 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
                                         v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
                                     v-if="bk.discount != 0">
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? (Number(bk.amount)).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1.12 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
 
@@ -2838,24 +2860,32 @@ header( 'location:index' );
 
                         </tbody>
 
-                        <tfoot v-if="tp.type == 'A'">
+                        <tfoot v-if="tp.type == 'A' && tp.not_show != '1'">
                         <tr>
                             <td :colspan="product_vat == 'P' ? 5 : 4"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ?
+                            <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
                                 Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                "$1,") : '0.00' }}
+                            </td>
+                            <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
+                                Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
                                 "$1,") : '0.00' }}
                             </td>
                         </tr>
 
                         </tfoot>
 
-                        <tfoot v-if="tp.type == 'B'">
+                        <tfoot v-if="tp.type == 'B' && tp.not_show != '1'">
                         <tr>
-                            <td :colspan="product_vat == 'P' ? 3 : 2"></td>
+                            <td :colspan="product_vat == 'P' ? 2 : 2"></td>
                             <td>SUBTOTAL</td>
-                            <td>₱ {{ tp.subtotal !== undefined ?
+                            <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
                                 Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                "$1,") : '0.00' }}
+                            </td>
+                            <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
+                                Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
                                 "$1,") : '0.00' }}
                             </td>
                         </tr>
@@ -2895,7 +2925,7 @@ header( 'location:index' );
                             -->
                         <tr class="total_vat" v-if="tt.vat == 'Y'">
                             <td>(12% VAT)</td>
-                            <td><span class="numbers">₱ {{ ((subtotal * (100 - tt.discount) / 100) * 12 / 100) !== undefined ? ((subtotal * (100 - tt.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            <td><span class="numbers">₱ {{ ((subtotal_info_not_show_a * (100 - tt.discount) / 100) * 12 / 100) !== undefined ? ((subtotal_info_not_show_a * (100 - tt.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
                             </td>
                         </tr>
                         </tbody>
@@ -2905,7 +2935,12 @@ header( 'location:index' );
                             <td><span class="total_discount" v-if="tt.show_vat == 'Y'">*price inclusive of VAT</span>
                             </td>
                             <td>GRAND TOTAL</td>
-                            <td><span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            <td v-if="tt.total != '0.00'">
+                                <span class="numbers deleted" v-if="tt.total != total.back_total">₱ {{ total.back_total !== "" ? Number(total.back_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br v-if="tt.total != total.back_total">
+                                <span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
+                            </td>
+                            <td v-if="tt.total == '0.00'">
+                                <span class="numbers">₱ {{ total.back_total !== "" ? Number(total.back_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
                             </td>
                         </tr>
                         </tfoot>
@@ -2915,7 +2950,7 @@ header( 'location:index' );
                 <div class="area_terms">
                     <div class="terms" v-for="(tt, index) in pg.term">
                         <div class="title">{{ tt.title }}</div>
-                        <div class="brief" style="white-space: pre-line;">{{ tt.brief }}</div>
+                        <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">{{ tt.brief }}</div>
                         <div class="listing" style="white-space: pre-line;">{{ tt.list }}</div>
                     </div>
                 </div>
@@ -3729,5 +3764,5 @@ header( 'location:index' );
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/quotation_v2.js"></script>
+<script defer src="js/quotation_v3.js"></script>
 </html>
