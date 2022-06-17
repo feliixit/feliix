@@ -3187,25 +3187,25 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
     
-/*
+
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
     $mail->SMTPSecure = "tls";
     $mail->Port       = 587;
     $mail->SMTPKeepAlive = true;
     $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'stanton.hoeger97@ethereal.email';
-    $mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
-*/
+    $mail->Username   = 'christiana.wuckert46@ethereal.email';
+    $mail->Password   = 'gxGgrQ2Zxdfv6qH7Rd';
+
     $mail->IsHTML(true);
 
     $notifior = array();
@@ -3280,25 +3280,25 @@ function stage_order_close_notify($project_creator_id, $project_id, $project_nam
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
 
-/*
+
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
     $mail->SMTPSecure = "tls";
     $mail->Port       = 587;
     $mail->SMTPKeepAlive = true;
     $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'stanton.hoeger97@ethereal.email';
-    $mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
-    */
+    $mail->Username   = 'christiana.wuckert46@ethereal.email';
+$mail->Password   = 'gxGgrQ2Zxdfv6qH7Rd';
+    
     $mail->IsHTML(true);
 
     $notifior = array();
@@ -3513,15 +3513,15 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->Encoding = 'base64';
 
     
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-/*
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
 
 $mail->SMTPDebug  = 0;
 $mail->SMTPAuth   = true;
@@ -3529,9 +3529,9 @@ $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->SMTPKeepAlive = true;
 $mail->Host       = 'smtp.ethereal.email';
-$mail->Username   = 'stanton.hoeger97@ethereal.email';
-$mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
-    */
+$mail->Username   = 'christiana.wuckert46@ethereal.email';
+$mail->Password   = 'gxGgrQ2Zxdfv6qH7Rd';
+    
 
     $mail->IsHTML(true);
 
@@ -3820,25 +3820,25 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
 
-/*
+
 $mail->SMTPDebug  = 0;
 $mail->SMTPAuth   = true;
 $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->SMTPKeepAlive = true;
 $mail->Host       = 'smtp.ethereal.email';
-$mail->Username   = 'stanton.hoeger97@ethereal.email';
-$mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
-*/
+$mail->Username   = 'christiana.wuckert46@ethereal.email';
+$mail->Password   = 'gxGgrQ2Zxdfv6qH7Rd';
+
     $mail->IsHTML(true);
 
     $notifior = array();
@@ -4480,26 +4480,26 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
 
     
-/*
+
 $mail->SMTPDebug  = 0;
 $mail->SMTPAuth   = true;
 $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->SMTPKeepAlive = true;
 $mail->Host       = 'smtp.ethereal.email';
-$mail->Username   = 'stanton.hoeger97@ethereal.email';
-$mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
-*/
+$mail->Username   = 'christiana.wuckert46@ethereal.email';
+$mail->Password   = 'gxGgrQ2Zxdfv6qH7Rd';
+
 
     $mail->IsHTML(true);
 
@@ -4597,25 +4597,25 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
    
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
     
- /*
+ 
     $mail->SMTPDebug  = 0;
 $mail->SMTPAuth   = true;
 $mail->SMTPSecure = "tls";
 $mail->Port       = 587;
 $mail->SMTPKeepAlive = true;
 $mail->Host       = 'smtp.ethereal.email';
-$mail->Username   = 'stanton.hoeger97@ethereal.email';
-$mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
-*/
+$mail->Username   = 'christiana.wuckert46@ethereal.email';
+$mail->Password   = 'gxGgrQ2Zxdfv6qH7Rd';
+
 
     $mail->IsHTML(true);
 
@@ -4872,24 +4872,24 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
     $mail->Encoding = 'base64';
 
     
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-
-
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
     // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'stanton.hoeger97@ethereal.email';
-    // $mail->Password   = 'Q4hzEFf4FJCAKhqqVJ';
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'christiana.wuckert46@ethereal.email';
+$mail->Password   = 'gxGgrQ2Zxdfv6qH7Rd';
 
     $mail->IsHTML(true);
 
