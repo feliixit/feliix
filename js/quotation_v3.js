@@ -427,7 +427,8 @@ var app = new Vue({
         else
         {
           photo = this.product.photo1;
-          price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+          // price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+          price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
           list = "";
         }
 
@@ -451,7 +452,8 @@ var app = new Vue({
             price = this.product.srp !== null ? this.product.srp : this.product.srp_quoted;
 
           if(price == null)
-            price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+            //price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+            price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
         }
 
         for(var i=0; i<this.specification.length; i++)
@@ -558,7 +560,8 @@ var app = new Vue({
         else
         {
           photo = this.product.photo1;
-          price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+          //price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+          price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
           list = "";
         }
 
@@ -583,7 +586,8 @@ var app = new Vue({
             price = this.product.srp !== null ? this.product.srp : this.product.srp_quoted;
 
           if(price == null)
-            price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+            //price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
+            price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
         }
 
         if(price == null)
