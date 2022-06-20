@@ -142,6 +142,8 @@ else
                 $product = GetProduct($id, $db);
                 $related_product = GetRelatedProduct($row["related_product"], $db);
 
+                $currency = $row['currency'];
+
                 $variation1_value = [];
                 $variation2_value = [];
                 $variation3_value = [];
@@ -222,7 +224,7 @@ else
                 $s_price_ntd = "";
                 if(count($pro_price_ntd) == 1)
                 {
-                    $s_price_ntd = "NTD " . number_format($pro_price_ntd[0]);
+                    $s_price_ntd = $currency . " " . number_format($pro_price_ntd[0]);
                 }
                 if(count($pro_price_ntd) > 1)
                 {
@@ -235,7 +237,7 @@ else
 
                         $e = $pro_price_ntd[$i];
                     }
-                    $s_price_ntd = "NTD " . number_format($b) . " ~ " . "NTD " . number_format($e);
+                    $s_price_ntd = $currency . " " . number_format($b) . " ~ " . $currency . " " . number_format($e);
                 }
 
                 $s_price_quoted = "";
@@ -263,7 +265,7 @@ else
                     $price = $s_price;
 
                 if($s_price_ntd == "")
-                    $price_ntd = "NTD " .  number_format($price_ntd);
+                    $price_ntd = $currency . " " .  number_format($price_ntd);
                 else
                     $price_ntd = $s_price_ntd; 
 

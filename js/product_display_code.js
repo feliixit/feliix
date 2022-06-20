@@ -58,6 +58,7 @@ var app = new Vue({
     quoted_price_org:"",
     quoted_price_change:"",
     moq:"",
+    currency: "",
 
     // accessory
 
@@ -102,6 +103,7 @@ var app = new Vue({
     bulk_url:'',
     status_checked:'',
     bulk_status:'',
+    currency:'',
 
     submit: false,
 
@@ -245,7 +247,7 @@ var app = new Vue({
           this.url = this.baseURL + item_product.photo;
         else
           this.url = "";
-        this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
+        this.price_ntd = item_product.currency + " " + Number(item_product.price_ntd).toLocaleString();
         this.price = "PHP " + Number(item_product.price).toLocaleString();
         this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
       }
@@ -416,6 +418,8 @@ var app = new Vue({
             _this.quoted_price_org = _this.record[0]['quoted_price_org'];
             _this.quoted_price_change = _this.record[0]['quoted_price_change'];
             _this.moq = _this.record[0]['moq'];
+
+            _this.currency = _this.record[0]['currency'];
 
             //var select_items = _this.record[0]['tags'].split(',');
 
