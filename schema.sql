@@ -2715,3 +2715,9 @@ ADD COLUMN `special` varchar(10) DEFAULT '' AFTER contact_number;
 update project_stage set `order` = `order` * 10;
 
 insert into project_stage (stage, status, `order`) values('Proposal - Testing', 0, 35);
+
+-- 20220620 Add currency
+ALTER TABLE product_category
+ADD COLUMN `currency` varchar(3) DEFAULT 'NTD' AFTER code;
+
+update product_category set `currency` = 'NTD';
