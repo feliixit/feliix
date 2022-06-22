@@ -1226,7 +1226,7 @@ var app = new Vue({
             confirmButtonText: "OK",
           });
 
-          _this.reset();
+          // _this.reset();
         });
     },
 
