@@ -398,7 +398,8 @@ else
 4. Above price is subject to change without prior notice due to exchange rate of Dollar to Peso.
 Building freight charges to be charged accordingly to client.
 Any returned deliveries due to unfinished site and/or resulting for items not to be installed, will be billed 30 days after delivery on site and/or acknowledgement of arrival of goods.
-5. Covid related requirements (e.g. Swab Test, etc.) are reimbursable to the client.";
+5. Covid related requirements (e.g. Swab Test, etc.) are reimbursable to the client.
+6. Delivery of items is free of charge within Metro Manila only. Out of town delivery shall be billed accordingly.";
 
                 $query = "INSERT INTO quotation_term
                 SET
