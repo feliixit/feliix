@@ -479,7 +479,8 @@ var app = new Vue({
         form_Data.append('jwt', token);
 
         const title = this.title.trim();
-        var project_id = item['project_id'];
+        //var project_id = item['project_id'];
+        var project_id = this.project_id;
 
         const project_name = this.shallowCopy(
                     this.projects.find(
