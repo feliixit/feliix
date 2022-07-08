@@ -7,7 +7,9 @@ var app = new Vue({
       l_id:0,
       id:0,
 
-      img_url: 'https://storage.cloud.google.com/feliiximg/',
+      //img_url: 'https://storage.cloud.google.com/feliiximg/',
+
+      img_url: 'https://storage.googleapis.com/feliiximg/',
        
       // menu
       show_header: false,
@@ -504,6 +506,9 @@ var app = new Vue({
             list: list,
             num:"",
             pid: this.product.id,
+            v1: all == 'all' ? '' : this.v1,
+            v2: all == 'all' ? '' : this.v2,
+            v3: all == 'all' ? '' : this.v3,
           };
         }
 
@@ -523,6 +528,9 @@ var app = new Vue({
             list: list,
             num:"",
             pid: this.product.id,
+            v1: all == 'all' ? '' : this.v1,
+            v2: all == 'all' ? '' : this.v2,
+            v3: all == 'all' ? '' : this.v3,
           };
         }
 
@@ -642,6 +650,9 @@ var app = new Vue({
             list: list,
             num:"",
             pid: this.product.id,
+            v1: all == 'all' ? '' : this.v1,
+            v2: all == 'all' ? '' : this.v2,
+            v3: all == 'all' ? '' : this.v3,
           };
         }
 
@@ -661,6 +672,9 @@ var app = new Vue({
             list: list,
             num:"",
             pid: this.product.id,
+            v1: all == 'all' ? '' : this.v1,
+            v2: all == 'all' ? '' : this.v2,
+            v3: all == 'all' ? '' : this.v3,
           };
         }
 
@@ -2894,6 +2908,62 @@ var app = new Vue({
           this.quoted_price = this.product['quoted_price'];
         }
   
+      },
+
+      print_me() {
+ 
+        html2canvas(document.querySelector(".company_signature"), { proxy: "html2canvasproxy", useCORS: false, logging: true, allowTaint: true}).then(canvas => {
+          //document.body.appendChild(canvas)
+          return Canvas2Image.saveAsPNG(canvas);
+
+          //const el = this.$refs.printMe;
+          // add option type to get the image version
+          // if not provided the promise will return 
+          // the canvas.
+          // const options = {
+          //   type: 'dataURL'
+          // };
+          // (async () => {
+          //     html2canvas(document.querySelector('.specific'), {
+          //       onrendered: function(canvas) {
+          //         // document.body.appendChild(canvas);
+          //         return Canvas2Image.saveAsPNG(canvas);
+          //       }
+          //     });
+          // })()
+        
+      });
+      
+      /*
+        const options = {
+          type: 'dataURL'
+        };
+        (async () => {
+            html2canvas(document.querySelector('.company_signature'), {
+              useCORS: true,
+              allowTaint : true,
+              onrendered: function(canvas) {
+                //document.body.appendChild(canvas);
+                //return Canvas2Image.saveAsPNG(canvas);
+
+                const context = canvas.getContext('2d');
+                context.mozImageSmoothingEnabled = false;
+                context.webkitImageSmoothingEnabled = false;
+                context.msImageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = false;
+                const src64 = canvas.toDataURL();
+                const newImg = document.createElement('img');
+                newImg.crossOrigin = 'Anonymous';
+                newImg.src = src64;
+                document.body.appendChild(newImg);
+              },
+              logging:true
+            });
+        })()
+
+*/
+
+
       },
 
 

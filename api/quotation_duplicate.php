@@ -269,6 +269,9 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                         `discount` = :discount,
                         `amount` = :amount,
                         `description` = :description,
+                        `v1` = :v1,
+                        `v2` = :v2,
+                        `v3` = :v3,
                         `photo` = :photo,
                         `listing` = :listing,
                         `status` = 0,
@@ -283,6 +286,9 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $discount = isset($block_array[$k]['discount']) ? $block_array[$k]['discount'] : 0;
                     $amount = isset($block_array[$k]['amount']) ? $block_array[$k]['amount'] : 0;
                     $description = isset($block_array[$k]['desc']) ? $block_array[$k]['desc'] : '';
+                    $v1 = isset($block_array[$k]['v1']) ? $block_array[$k]['v1'] : '';
+                    $v2 = isset($block_array[$k]['v2']) ? $block_array[$k]['v2'] : '';
+                    $v3 = isset($block_array[$k]['v3']) ? $block_array[$k]['v3'] : '';
                     $listing = isset($block_array[$k]['list']) ? $block_array[$k]['list'] : '';
 
                     $qty == '' ? $qty = 0 : $qty = $qty;
@@ -300,6 +306,9 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $stmt->bindParam(':discount', $discount);
                     $stmt->bindParam(':amount', $amount);
                     $stmt->bindParam(':description', $description);
+                    $stmt->bindParam(':v1', $v1);
+                    $stmt->bindParam(':v2', $v2);
+                    $stmt->bindParam(':v3', $v3);
                     $stmt->bindParam(':listing', $listing);
                     
                     $stmt->bindParam(':create_id', $user_id);
