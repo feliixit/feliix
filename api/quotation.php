@@ -967,6 +967,9 @@ function GetBlocks($qid, $db){
         discount,
         amount,
         description,
+        v1,
+        v2,
+        v3,
         listing,
         num,
         pid
@@ -995,6 +998,9 @@ function GetBlocks($qid, $db){
         $discount = $row['discount'];
         $amount = $row['amount'];
         $description = $row['description'];
+        $v1 = $row['v1'];
+        $v2 = $row['v2'];
+        $v3 = $row['v3'];
         $listing = $row['listing'];
     
         $type = $photo == "" ? "" : "image";
@@ -1015,6 +1021,9 @@ function GetBlocks($qid, $db){
             "discount" => $discount,
             "amount" => $amount,
             "desc" => $description,
+            "v1" => $v1,
+            "v2" => $v2,
+            "v3" => $v3,
             "list" => $listing,
           
         );

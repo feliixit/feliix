@@ -124,6 +124,9 @@ switch ($method) {
                     `discount` = :discount,
                     `amount` = :amount,
                     `description` = :description,
+                    `v1` = :v1,
+                    `v2` = :v2,
+                    `v3` = :v3,
                     `listing` = :listing,
                     `num` = :num,
                     `pid` = :pid,
@@ -144,6 +147,11 @@ switch ($method) {
                 $discount = isset($block_array[$i]['discount']) ? $block_array[$i]['discount'] : 0;
                 $amount = isset($block_array[$i]['amount']) ? $block_array[$i]['amount'] : 0;
                 $description = isset($block_array[$i]['desc']) ? $block_array[$i]['desc'] : '';
+
+                $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
+                $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
+                $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+
                 $listing = isset($block_array[$i]['list']) ? $block_array[$i]['list'] : '';
                 $num = isset($block_array[$i]['num']) ? $block_array[$i]['num'] : '';
                 $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
@@ -163,6 +171,9 @@ switch ($method) {
                 $stmt->bindParam(':discount', $discount);
                 $stmt->bindParam(':amount', $amount);
                 $stmt->bindParam(':description', $description);
+                $stmt->bindParam(':v1', $v1);
+                $stmt->bindParam(':v2', $v2);
+                $stmt->bindParam(':v3', $v3);
                 $stmt->bindParam(':listing', $listing);
                 $stmt->bindParam(':num', $num);
                 $stmt->bindParam(':pid', $pid);

@@ -2721,3 +2721,8 @@ ALTER TABLE product_category
 ADD COLUMN `currency` varchar(3) DEFAULT 'NTD' AFTER code;
 
 update product_category set `currency` = 'NTD';
+
+-- 20220708
+ALTER TABLE quotation_page_type_block ADD COLUMN v1 VARCHAR(255) DEFAULT '';
+ALTER TABLE quotation_page_type_block ADD COLUMN v2 VARCHAR(255) DEFAULT '';
+ALTER TABLE quotation_page_type_block ADD COLUMN v3 VARCHAR(255) DEFAULT '';
