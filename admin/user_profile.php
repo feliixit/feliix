@@ -1,4 +1,57 @@
-<?php include 'check.php';?>
+<?php
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ( !isset( $jwt ) ) {
+  header( 'location:index' );
+}
+
+include_once '../api/config/core.php';
+include_once '../api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once '../api/libs/php-jwt-master/src/ExpiredException.php';
+include_once '../api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once '../api/libs/php-jwt-master/src/JWT.php';
+
+
+use \Firebase\JWT\JWT;
+
+$access6 = false;
+
+try {
+        // decode jwt
+        try {
+            // decode jwt
+            $decoded = JWT::decode($jwt, $key, array('HS256'));
+            $user_id = $decoded->data->id;
+            $username = $decoded->data->username;
+
+
+            // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
+            if($username == "Dennis Lin" ||  $username == "Kristel Tan" ||  $username == "dereck" || $username == "Kuan" || $username == "Stefanie Mika C. Santos")
+            {
+                $access6 = true;
+            }
+
+            if($access6 == false)
+                header('location:../default');
+
+        }
+        catch (Exception $e){
+
+            header('location:../index');
+        }
+
+
+        //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
+        //    header( 'location:index.php' );
+    }
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+
+        header( 'location:../index' );
+    }
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
