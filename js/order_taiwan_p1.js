@@ -656,6 +656,8 @@ var app = new Vue({
               } else {
                 alert(JSON.stringify(res.data));
               }
+
+              _this.reload_task(task_id);
             })
             .catch(function(err) {
               console.log(err);
@@ -958,26 +960,72 @@ var app = new Vue({
   
       },
 
-      page_up: function(fromIndex, eid) {
+      page_up: async function(fromIndex, eid) {
         var toIndex = fromIndex - 1;
   
         if (toIndex < 0) 
           return;
 
-        var element = this.temp_pages.find(({ id }) => id === eid);
-        this.temp_pages.splice(fromIndex, 1);
-        this.temp_pages.splice(toIndex, 0, element);
+        var element = this.items.find(({ id }) => id === eid);
+        var selement = this.items[toIndex];
+
+        selement.sn = [element.sn, element.sn = selement.sn][0];
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+        form_Data.append("item_id", element.id);
+        form_Data.append("item_sn", element.sn);
+        form_Data.append("sitem_id", selement.id);
+        form_Data.append("sitem_sn", selement.sn);
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/order_taiwan_p1_swap_item',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.items.splice(fromIndex, 1);
+        this.items.splice(toIndex, 0, element);
       },
 
-      page_down: function(fromIndex, eid) {
+      page_down: async function(fromIndex, eid) {
         var toIndex = fromIndex + 1;
 
-        if (toIndex > this.temp_pages.length - 1) 
+        if (toIndex > this.items.length - 1) 
           return;
   
-        var element = this.temp_pages.find(({ id }) => id === eid);
-        this.temp_pages.splice(fromIndex, 1);
-        this.temp_pages.splice(toIndex, 0, element);
+        var element = this.items.find(({ id }) => id === eid);
+        var selement = this.items[toIndex];
+
+        selement.sn = [element.sn, element.sn = selement.sn][0];
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+        form_Data.append("item_id", element.id);
+        form_Data.append("item_sn", element.sn);
+        form_Data.append("sitem_id", selement.id);
+        form_Data.append("sitem_sn", selement.sn);
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/order_taiwan_p1_swap_item',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        
+        this.items.splice(fromIndex, 1);
+        this.items.splice(toIndex, 0, element);
       },
 
 
@@ -1100,62 +1148,35 @@ var app = new Vue({
       },
 
 
-      print_me() {
- 
-        html2canvas(document.querySelector(".company_signature"), { proxy: "html2canvasproxy", useCORS: false, logging: true, allowTaint: true}).then(canvas => {
-          //document.body.appendChild(canvas)
-          return Canvas2Image.saveAsPNG(canvas);
+      print_me(item) {
 
-          //const el = this.$refs.printMe;
-          // add option type to get the image version
-          // if not provided the promise will return 
-          // the canvas.
-          // const options = {
-          //   type: 'dataURL'
-          // };
-          // (async () => {
-          //     html2canvas(document.querySelector('.specific'), {
-          //       onrendered: function(canvas) {
-          //         // document.body.appendChild(canvas);
-          //         return Canvas2Image.saveAsPNG(canvas);
-          //       }
-          //     });
-          // })()
-        
+        var cls = '.print_area_' + item.id;
+        let _this = this;
+        let _item_id = item.id;
+ 
+        html2canvas(document.querySelector(cls), { proxy: "html2canvasproxy", useCORS: false, logging: true, allowTaint: true}).then(canvas => {
+          //document.body.appendChild(canvas)
+          let dataurl = canvas.toDataURL();
+          let data = { image: dataurl, item_id: item.id };
+          this.loading = true;
+
+          axios
+            .post("api/order_taiwan_p1_snapshot", data, {
+              headers: {
+              "Content-Type": "application/json"
+              }
+            }).then(function(response) {
+              console.log(response.data);
+              _this.reload_task(_item_id);
+                 
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+          
       });
       
-      /*
-        const options = {
-          type: 'dataURL'
-        };
-        (async () => {
-            html2canvas(document.querySelector('.company_signature'), {
-              useCORS: true,
-              allowTaint : true,
-              onrendered: function(canvas) {
-                //document.body.appendChild(canvas);
-                //return Canvas2Image.saveAsPNG(canvas);
-
-                const context = canvas.getContext('2d');
-                context.mozImageSmoothingEnabled = false;
-                context.webkitImageSmoothingEnabled = false;
-                context.msImageSmoothingEnabled = false;
-                context.imageSmoothingEnabled = false;
-                const src64 = canvas.toDataURL();
-                const newImg = document.createElement('img');
-                newImg.crossOrigin = 'Anonymous';
-                newImg.src = src64;
-                document.body.appendChild(newImg);
-              },
-              logging:true
-            });
-        })()
-
-*/
-
-
       },
-
 
     }
   

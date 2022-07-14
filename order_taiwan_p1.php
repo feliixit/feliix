@@ -1320,7 +1320,7 @@
                     </thead>
 
                     <tbody>
-                    <tr v-for="(item, index) in items">
+                    <tr v-for="(item, index) in items" :class="['print_area_' + item.id]">
                         <td><input type="checkbox" class="alone" :value="item.index" :true-value="1" v-model:checked="item.is_checked"></td>
                         <td>
                             <div class="read_block" v-if="!item.is_edit">
@@ -1470,11 +1470,11 @@
 
             <td>
                 <div class="btnbox">
-                    <i class="fas fa-arrow-alt-circle-up"  v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-arrow-alt-circle-down"  v-if="item.is_edit !== true"></i>
+                    <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true"></i>
+                    <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-camera" v-if="item.is_edit !== true"></i>
+                    <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-times-circle" v-if="item.is_edit == true" @click="cancelItem(item)"></i>
                     <i class="fas fa-check-circle" v-if="item.is_edit == true" @click="confirmItem(item)"></i>
                 </div>
@@ -2494,4 +2494,6 @@
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script defer src="js/order_taiwan_p1.js"></script>
+<script src="https://superal.github.io/canvas2image/canvas2image.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </html>
