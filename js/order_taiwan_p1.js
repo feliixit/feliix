@@ -373,7 +373,7 @@ var app = new Vue({
               
           });
   },
-  
+
       getUsers () {
 
         let _this = this;
@@ -400,8 +400,8 @@ var app = new Vue({
         var sn = 0;
 
         for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].id > sn) {
-              sn = this.items[i].id;
+            if (this.items[i].id * 1 > sn) {
+              sn = this.items[i].id * 1;
             }
         }
         sn = sn * 1 + 1;
@@ -692,8 +692,8 @@ var app = new Vue({
           var sn = 0;
 
           for (let i = 0; i < this.items.length; i++) {
-              if (this.items[i].id > sn) {
-                sn = this.items[i].id;
+              if (this.items[i].id * 1> sn) {
+                sn = this.items[i].id * 1;
               }
           }
           sn = sn * 1 + 1;
@@ -834,8 +834,8 @@ var app = new Vue({
         var sn = 0;
         
         for (let i = 0; i < this.items.length; i++) {
-          if (this.items[i].id > sn) {
-            sn = this.items[i].id;
+          if (this.items[i].id * 1 > sn) {
+            sn = this.items[i].id * 1;
           }
       }
 
@@ -1560,8 +1560,8 @@ var app = new Vue({
             var sn = 0;
 
             for (let i = 0; i < this.items.length; i++) {
-                if (this.items[i].id > sn) {
-                  sn = this.items[i].id;
+                if (this.items[i].id * 1 > sn) {
+                  sn = this.items[i].id * 1;
                 }
             }
             sn = sn * 1 + 1;
