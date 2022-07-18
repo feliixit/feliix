@@ -62,7 +62,7 @@ if (!isset($jwt)) {
                     WHERE status <> -1 and od_id=$id";
 
 
-    $query = $query . " order by sn ";
+    $query = $query . " order by ABS(sn) ";
 
     $stmt = $db->prepare($query);
     $stmt->execute();

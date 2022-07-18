@@ -1279,13 +1279,13 @@
 
                         <div class="popupblock">
                             <a title="Add Item from Product Database">
-                                <i class="fas fa-list-alt"></i>
+                                <i class="fas fa-list-alt"  @click="product_catalog()"></i>
                             </a>
                         </div>
 
                         <div class="popupblock">
                             <a title="Add Item from Existing Quotation">
-                                <i class="fas fa-file-import"></i>
+                                <i class="fas fa-file-import" @click="quotation_mgt()"></i>
                             </a>
                         </div>
 
@@ -1884,7 +1884,7 @@
                                 <span>QP: {{ item.quoted_price }}<br></span>
                             </td>
                             <td>
-                                <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true"
+                                <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true" 
                                                                                    class="fas fa-caret-right"></i>
                                 </button>
                             </td>
@@ -2349,20 +2349,20 @@
                                placeholder="Input Keyword Here (only for quotation name, project name or quotation no.)">
                     </div>
 
-                    <a class="btn small green" @click="filter_apply_new()">Search</a>
+                    <a class="btn small green" @click="filter_apply_new_quo()">Search</a>
 
                 </div>
 
                 <div class="list_function" style="margin: 7px 0;">
                     <div class="pagenation">
-                        <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev
+                        <a class="prev" :disabled="product_page_quo == 1" @click="pre_page_quo(); ">Prev
                             10</a>
-                        <a class="page" v-for="pg in product_pages_10" @click="product_page=pg; filter_apply(pg);"
-                           v-bind:style="[pg == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{
-                            pg
+                        <a class="page" v-for="pg_quo in product_pages_10_quo" @click="product_page_quo=pg_quo; "
+                           v-bind:style="[pg_quo == product_page_quo ? { 'background':'#707071', 'color': 'white'} : { }]">{{
+                            pg_quo
                             }}</a>
-                        <a class="next" :disabled="product_page == product_pages.length"
-                           @click="nex_page(); filter_apply();">Next
+                        <a class="next" :disabled="product_page_quo == product_pages_quo.length"
+                           @click="nex_page_quo(); ">Next
                             10</a>
                     </div>
                 </div>
@@ -2381,37 +2381,56 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(item, index) in displayedPosts">
+                        <tr v-for="(item, index) in displayedQuoMasterPosts">
 
                             <td>
-                                <a href="'quotation?id=' + receive_record.id" target="_blank">One Sierra - 4F
-                                    Swimming Pool Area - Opt. 2</a>
+                                <a :href="'quotation?id=' + item.id" target="_blank">{{
+                                item.title }}</a>
                             </td>
 
                             <td>
-                                <a href="'project02?p='+ receive_record.project_id" target="_blank">One Sierra - 4F
-                                    Swimming Pool Area</a>
+                                <a v-show="item.kind == ''"
+                                v-bind:href="'project02?p='+ item.project_id">Project: {{ item.project_name }}
+                                </a>
+                                <a v-show="item.kind == 'a'"
+                                v-bind:href="'task_management_AD?sid='+ item.project_id">Admin Department Task Management: {{ item.project_name_a }}
+                                </a>
+                                <a v-show="item.kind == 'd'"
+                                v-bind:href="'task_management_DS?sid='+ item.project_id">Design Department Task Management: {{ item.project_name_d }}
+                                </a>
+                                <a v-show="item.kind == 'l'"
+                                v-bind:href="'task_management_LT?sid='+ item.project_id">Lighting Department Task Management: {{ item.project_name_l }}
+                                </a>
+                                <a v-show="item.kind == 'o'"
+                                v-bind:href="'task_management_OS?sid='+ item.project_id">Office Systems Department Task Management: {{ item.project_name_o }}
+                                </a>
+                                <a v-show="item.kind == 'sl'"
+                                v-bind:href="'task_management_SLS?sid='+ item.project_id">Sales Task Management: {{ item.project_name_sl }}
+                                </a>
+                                <a v-show="item.kind == 'sv'"
+                                v-bind:href="'task_management_SVC?sid='+ item.project_id">Service Task Management: {{ item.project_name_sv }}
+                                </a>
                             </td>
 
                             <td>
-                                LQ-998 C
+                                {{ item.quotation_no }}
                             </td>
 
                             <td>
-                                2022-04-22 11:07:09<br>Kelvin Garcia
+                            {{item.created_at}}<br>{{item.created_by}}
                             </td>
 
                             <td>
-                                2022-04-22 11:08:07<br>Kelvin Garcia
+                            {{item.post[0].updated_at}}<br>{{item.post[0].username}}
                             </td>
 
                             <td>
-                                <a class="btn small yellow" @click="">Import</a>
+                                <a class="btn small yellow" @click="quotation_import(item)">Import</a>
                             </td>
                         </tr>
 
 
-                        <tr v-for='(receive_record, index) in displayedPosts'>
+                        <tr v-for='(receive_record, index) in displayedQuoDetailPosts'>
                             <td>
                                 <a v-show="receive_record.is_edited == 1"
                                    v-bind:href="'quotation?id=' + receive_record.id">{{
