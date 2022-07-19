@@ -2789,3 +2789,18 @@ CREATE TABLE IF NOT EXISTS `od_got_it`
   `updated_at` timestamp NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `od_process`
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `od_id` bigint(20) unsigned NOT NULL,
+  `comment` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `action` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `items` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

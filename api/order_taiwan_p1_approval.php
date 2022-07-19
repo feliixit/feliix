@@ -51,6 +51,10 @@ $uid = $user_id;
 $od_id = (isset($_POST['od_id']) ?  $_POST['od_id'] : 0);
 $items = (isset($_POST['items']) ?  $_POST['items'] : 0);
 
+$comment = (isset($_POST['comment']) ? $_POST['comment'] : '');
+
+$action = 'approval';
+
 $items_array = json_decode($items,true);
 
 try{
@@ -84,6 +88,49 @@ try{
             error_log($arr[2]);
         }
 
+    }
+
+    $query = "INSERT INTO od_process
+    SET
+        `od_id` = :od_id,
+        `comment` = :comment,
+        `action` = :action,
+        `items` = :items,
+        `status` = 0,
+        `create_id` = :create_id,
+        `created_at` =  now() ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':od_id', $od_id);
+    $stmt->bindParam(':comment', $comment);
+    $stmt->bindParam(':action', $action);
+    $stmt->bindParam(':items', $items);
+    $stmt->bindParam(':create_id', $user_id);
+
+
+    $last_id = 0;
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $last_id = $db->lastInsertId();
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
     }
 
     echo $jsonEncodedReturnArray;

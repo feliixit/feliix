@@ -375,7 +375,7 @@ var app = new Vue({
         form_Data.append("jwt", token);
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
-      
+        form_Data.append("comment", this.comment);
 
         let res = await axios({
           method: 'post',
@@ -387,6 +387,13 @@ var app = new Vue({
         });
 
         this.getRecord();
+        this.comment = '';
+
+        Swal.fire({
+          text: "Records Approved",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
       },
 
       sendNotesToTw : async function() {
@@ -407,7 +414,7 @@ var app = new Vue({
         form_Data.append("jwt", token);
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
-      
+        form_Data.append("comment", this.comment);
 
         let res = await axios({
           method: 'post',
@@ -419,6 +426,13 @@ var app = new Vue({
         });
 
         this.getRecord();
+        this.comment = '';
+
+        Swal.fire({
+          text: "Records Send To TW",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
       },
 
       withdrawNotesToTw : async function() {
@@ -439,7 +453,7 @@ var app = new Vue({
         form_Data.append("jwt", token);
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
-        
+        form_Data.append("comment", this.comment);
 
         let res = await axios({
           method: 'post',
@@ -451,6 +465,13 @@ var app = new Vue({
         });
 
         this.getRecord();
+        this.comment = '';
+
+        Swal.fire({
+          text: "Records Withdraw",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
       },
       
     getCreators () {
