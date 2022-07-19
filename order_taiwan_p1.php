@@ -1290,12 +1290,12 @@
                         </div>
 
                         <div class="btn_block">
-                            <a class="btn small green" @click="">Send TW for Notes</a>
-                            <a class="btn small green" @click="">Submit for Approval</a>
-                            <a class="btn small" @click="">Withdraw</a>
+                            <a class="btn small green" @click="sendNotesToTw()">Send TW for Notes</a>
+                            <a class="btn small green" @click="approval()">Submit for Approval</a>
+                            <a class="btn small" @click="withdrawNotesToTw()">Withdraw</a>
                             <a class="btn small green" @click="" style="display: none;">Finish Notes</a>
 
-                            <input type="text" placeholder="Comment">
+                            <input type="text" placeholder="Comment" v-model="comment">
                         </div>
 
                     </div>
@@ -1472,8 +1472,8 @@
                 <div class="btnbox">
                     <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true"></i>
+                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true && item.status == 0"></i>
+                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true && item.status == 0"></i>
                     <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-times-circle" v-if="item.is_edit == true" @click="cancelItem(item)"></i>
                     <i class="fas fa-check-circle" v-if="item.is_edit == true" @click="confirmItem(item)"></i>

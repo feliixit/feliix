@@ -71,6 +71,14 @@ if (!isset($jwt)) {
         $id = $row['id'];
         $sn = $row['sn'];
         $confirm = $row['confirm'];
+
+        // send to tw for note
+        if($row['status'] == 1)
+            $confirm = "W";
+        // for approval
+        if($row['status'] == 2)
+            $confirm = "F";
+        
         $confirm_text = GetConfirmText($confirm, $db);
         $brand = $row['brand'];
         $brand_other = $row['brand_other'];
@@ -86,7 +94,6 @@ if (!isset($jwt)) {
         $status = $row['status'];
         $notes = GetNotes($row['id'], $db);
         
-
         $merged_results[] = array(
             "is_checked" => "",
             "is_edit" => false,
@@ -241,7 +248,7 @@ function GetConfirmText($loc)
             $location = "Waiting Notes from TW";
             break;
         case "F":
-            $location = "For Approva";
+            $location = "For Approval";
             break;
         default:
             $location = "";

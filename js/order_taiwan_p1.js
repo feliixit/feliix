@@ -261,8 +261,7 @@ var app = new Vue({
         pg_quo:0,
         page_quo:0,
         pages_quo : [],
-        
-   
+
         displayedQuoDetailPosts:[],
 
         // paging
@@ -270,8 +269,8 @@ var app = new Vue({
         pg_quo:0,
         //perPage: 10,
         product_pages_quo: [],
-
         product_pages_10_quo: [],
+        comment:'',
     },
   
     created() {
@@ -352,6 +351,107 @@ var app = new Vue({
   
     methods: {
 
+      approval : async function() {
+        let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].is_checked == 1) {
+              if(this.items[i].confirm != "C")
+              {
+                alert("Only confirmed item is allowed to send for approval.");
+                return;
+              }
+              else
+                element.push(this.items[i].id);
+            }
+        }
+
+        if(element.length == 0)
+          return;
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("od_id", this.id);
+        form_Data.append("items", JSON.stringify(element));
+      
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/order_taiwan_p1_approval',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.getRecord();
+      },
+
+      sendNotesToTw : async function() {
+        let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].is_checked == 1) {
+              element.push(this.items[i].id);
+            }
+        }
+
+        if(element.length == 0)
+          return;
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("od_id", this.id);
+        form_Data.append("items", JSON.stringify(element));
+      
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/order_taiwan_p1_send_note_tw',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.getRecord();
+      },
+
+      withdrawNotesToTw : async function() {
+        let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].is_checked == 1) {
+              element.push(this.items[i].id);
+            }
+        }
+
+        if(element.length == 0)
+          return;
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("od_id", this.id);
+        form_Data.append("items", JSON.stringify(element));
+        
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/order_taiwan_p1_withdraw_note_tw',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.getRecord();
+      },
       
     getCreators () {
 
