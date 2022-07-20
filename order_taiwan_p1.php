@@ -1339,7 +1339,7 @@
 
                         <td>
                             <div class="read_block" v-if="!item.is_edit">
-                                {{ item.brand }} {{ item.brand == 'OTHER' ? item.brand_other : '' }}
+                                {{ item.brand == 'OTHER' ? item.brand_other : item.brand }}
                             </div>
                             <div class="write_block" v-if="item.is_edit">
                                 <select v-model="item.brand">
@@ -1435,7 +1435,7 @@
                         <i class="t">({{ note.username }} at {{ note.created_at }})</i>
                         <div class="already_read"><template v-for="(got, index) in note.got_it">{{ got.username }}<span v-if="index + 1 < item.got_it.length">, </span></template></div>
                         <div class="btnbox">
-                            <a class="btn small green"  @click="got_it_message(note.message_id, item.ref_id)" v-if="note.i_got_it == false">Got it</a>
+                            <a class="btn small green"  @click="got_it_message(note.id, item.id)" v-if="note.i_got_it == false">Got it</a>
                             
                             <a class="btn small yellow" v-if="note.create_id == uid" @click="msg_delete(note.id, item.id)">Delete</a>
                         </div>

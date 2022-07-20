@@ -1379,9 +1379,50 @@ var app = new Vue({
         });
       },
 
+      got_it_message(message_id, task_id) {
+        let _this = this;
+  
+        _this.submit = true;
+        var form_Data = new FormData();
+
+  
+        form_Data.append('message_id', message_id);
+        form_Data.append('kind', 'c');
+  
+        const token = sessionStorage.getItem('token');
+  
+        axios({
+          method: 'post',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
+          },
+          url: 'api/order_taiwan_p1_got_it',
+          data: form_Data
+        })
+          .then(function (response) {
+            _this.reload_task(task_id);
+         
+          })
+          .catch(function (response) {
+            //handle error
+            console.log(response)
+          }).finally(function () {  });
+      },
+
       item_delete(item) {
 
         let id = item.id;
+
+        if(item.notes.length > 0)
+        {
+          Swal.fire({
+            text: "User is not allowed to delete the item already with notes.",
+            icon: "Info",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
     
         let _this = this;
         Swal.fire({
@@ -1603,6 +1644,7 @@ var app = new Vue({
 
         confirmItem(item) {
             item.is_edit = false;
+            let _this = this;
 
             items = [];
 

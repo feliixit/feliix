@@ -11,7 +11,7 @@
 ini_set('display_errors', 'Off');
 
 // Setup
-define('H2CP_PATH', 'cache');                   // Relative folder where the images are saved
+define('H2CP_PATH', 'img');                   // Relative folder where the images are saved
 define('H2CP_PERMISSION', 0666);                // use 644 or 666 for remove execution for prevent sploits
 define('H2CP_CACHE', 60 * 5 * 1000);            // Limit access-control and cache, define 0/false/null/-1 to prevent cache
 define('H2CP_TIMEOUT', 20);                     // Timeout from load Socket

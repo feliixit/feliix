@@ -139,6 +139,7 @@ function GetNotes($id, $db){
 
         $attachs = GetAttach($id, $db);
         $got_it = GetGotIt($id, $db);
+        $i_got_it = false;
 
         foreach ($got_it as $g) {
             if ($g['uid'] == $GLOBALS["user_id"]) {

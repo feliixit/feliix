@@ -155,6 +155,7 @@ function GetNotes($id, $db){
       
         $attachs = [];
         $got_it = [];
+        $i_got_it = false;
 
         $attachs = GetAttach($id, $db);
         $got_it = GetGotIt($id, $db);
