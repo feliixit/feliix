@@ -176,7 +176,46 @@ switch ($method) {
 }
 
 
-function GetQuotationItems($qid, $db){
+function GetTypes($qid, $db){
+    $query = "
+        SELECT id,
+        block_type,
+        block_name,
+        not_show,
+        real_amount
+        FROM   quotation_page_type
+        WHERE  page_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+  
+        $blocks = [];
+
+        $blocks = GetBlocks($id, $db);
+
+
+        $merged_results[] = array(
+            "id" => $id,
+
+            "blocks" => $blocks,
+   
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetBlocks($qid, $db){
     $query = "
         SELECT id,
         type_id,
@@ -195,7 +234,7 @@ function GetQuotationItems($qid, $db){
         num,
         pid
         FROM   quotation_page_type_block
-        WHERE  quotation_id = " . $qid . "
+        WHERE  type_id = " . $qid . "
         AND `status` <> -1 
         ORDER BY id
     ";
@@ -248,6 +287,101 @@ function GetQuotationItems($qid, $db){
             "list" => $listing,
           
         );
+    }
+
+    return $merged_results;
+}
+
+
+
+function GetPages($qid, $db){
+    $query = "
+        SELECT id,
+            page
+        FROM   quotation_page
+        WHERE  quotation_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $page = $row['page'];
+        $type = GetTypes($id, $db);
+ 
+        $merged_results[] = array(
+            "id" => $id,
+            "page" => $page,
+            "types" => $type,
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetQuotationItems($qid, $db){
+
+    $pages = GetPages($qid, $db);
+
+    $merged_results = [];
+
+    foreach($pages as $page)
+    {
+        foreach($page['types'] as $type)
+        {
+            foreach($type['blocks'] as $row)
+            {
+            
+                $id = $row['id'];
+                $type_id = $row['type_id'];
+                $type = $row['type'];
+                $code = $row['code'];
+                $photo = $row['photo'];
+                $qty = $row['qty'];
+                $price = $row['price'];
+                $num = $row['num'];
+                $pid = $row['pid'];
+                $discount = $row['discount'];
+                $amount = $row['amount'];
+                $description = $row['desc'];
+                $v1 = $row['v1'];
+                $v2 = $row['v2'];
+                $v3 = $row['v3'];
+                $listing = $row['list'];
+            
+                $type = $photo == "" ? "" : "image";
+                $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+            
+                $merged_results[] = array(
+                    "id" => $id,
+                    "type_id" => $type_id,
+                    "code" => $code,
+                    "type" => $type,
+                    "photo" => $photo,
+                    "type" => $type,
+                    "url" => $url,
+                    "qty" => $qty,
+                    "num" => $num,
+                    "pid" => $pid,
+                    "price" => $price,
+                    "discount" => $discount,
+                    "amount" => $amount,
+                    "desc" => $description,
+                    "v1" => $v1,
+                    "v2" => $v2,
+                    "v3" => $v3,
+                    "list" => $listing,
+                    
+                );
+                
+            }
+        }
     }
 
     return $merged_results;

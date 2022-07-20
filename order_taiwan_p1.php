@@ -1433,7 +1433,7 @@
                         </template>
                         
                         <i class="t">({{ note.username }} at {{ note.created_at }})</i>
-                        <div class="already_read"><template v-for="(got, index) in note.got_it">{{ got.username }}<span v-if="index + 1 < item.got_it.length">, </span></template></div>
+                        <div class="already_read"><template v-if="note.got_it != undefined" v-for="(got, index) in note.got_it">{{ got.username }}<span v-if="index + 1 < note.got_it.length">, </span></template></div>
                         <div class="btnbox">
                             <a class="btn small green"  @click="got_it_message(note.id, item.id)" v-if="note.i_got_it == false">Got it</a>
                             
