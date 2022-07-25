@@ -1149,7 +1149,7 @@ function GetProductItems($pages, $q_id, $db)
         $index = array_search($result['id'], array_column($cache_results, 'id'));
         if($index === false)
         {
-            $return_result[] = $merged_results[$index];
+            $return_result[] = $result;
         }
      
     }
