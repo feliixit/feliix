@@ -170,7 +170,7 @@ else
         {
             $query = "update quotation_page_type_block
                 SET
-                    `amount` = qty * price * 1.12 * (1 - discount / 100)
+                    `amount` = qty * price * 1.12 * (1 - discount / 100) * ratio
              
                     where quotation_id = :id and type in ('image', 'noimage') ";
 
@@ -203,7 +203,7 @@ else
         {
             $query = "update quotation_page_type_block
                 SET
-                    `amount` = qty * price * (1 - discount / 100)
+                    `amount` = qty * price * (1 - discount / 100) * ratio
              
                     where quotation_id = :id";
 

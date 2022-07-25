@@ -2804,3 +2804,22 @@ CREATE TABLE IF NOT EXISTS `od_process`
   `updated_at` timestamp NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 20220721 quotation ratio
+ALTER TABLE quotation_page_type_block
+ADD COLUMN `ratio` decimal(12,2) DEFAULT 1.0 after v3;
+
+CREATE TABLE IF NOT EXISTS quotation_export
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+  `items` JSON,
+  `srp` varchar(10) DEFAULT '',
+  `qp` varchar(10) DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

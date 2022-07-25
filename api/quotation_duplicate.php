@@ -265,6 +265,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                         `code` = :code,
                         `type` = :type,
                         `qty` = :qty,
+                        `ratio` = :ratio,
                         `price` = :price,
                         `discount` = :discount,
                         `amount` = :amount,
@@ -282,6 +283,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $stmt = $db->prepare($query);
 
                     $qty = isset($block_array[$k]['qty']) ? $block_array[$k]['qty'] : 0;
+                    $ratio = isset($block_array[$k]['ratio']) ? $block_array[$k]['ratio'] : 0;
                     $price = isset($block_array[$k]['price']) ? $block_array[$k]['price'] : 0;
                     $discount = isset($block_array[$k]['discount']) ? $block_array[$k]['discount'] : 0;
                     $amount = isset($block_array[$k]['amount']) ? $block_array[$k]['amount'] : 0;
@@ -292,6 +294,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $listing = isset($block_array[$k]['list']) ? $block_array[$k]['list'] : '';
 
                     $qty == '' ? $qty = 0 : $qty = $qty;
+                    $ratio == '' ? $ratio = 0 : $ratio = $ratio;
                     $price == '' ? $price = 0 : $price = $price;
                     $discount == '' ? $discount = 0 : $discount = $discount;
                     $amount == '' ? $amount = 0 : $amount = $amount;
@@ -302,6 +305,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $stmt->bindParam(':code', $block_array[$k]['code']);
                     $stmt->bindParam(':type', $block_array[$k]['type']);
                     $stmt->bindParam(':qty', $qty);
+                    $stmt->bindParam(':ratio', $ratio);
                     $stmt->bindParam(':price', $price);
                     $stmt->bindParam(':discount', $discount);
                     $stmt->bindParam(':amount', $amount);
@@ -1124,6 +1128,7 @@ function GetBlocks($qid, $db){
         code,
         photo,
         qty,
+        ratio,
         price,
         discount,
         amount,
@@ -1148,6 +1153,7 @@ function GetBlocks($qid, $db){
         $code = $row['code'];
         $photo = $row['photo'];
         $qty = $row['qty'];
+        $ratio = $row['ratio'];
         $price = $row['price'];
         $discount = $row['discount'];
         $amount = $row['amount'];
@@ -1166,6 +1172,7 @@ function GetBlocks($qid, $db){
             "type" => $type,
             "url" => $url,
             "qty" => $qty,
+            "ratio" => $ratio,
             "price" => $price,
             "discount" => $discount,
             "amount" => $amount,

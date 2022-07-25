@@ -120,6 +120,7 @@ switch ($method) {
                     `code` = :code,
                     `type` = :type,
                     `qty` = :qty,
+                    `ratio` = :ratio,
                     `price` = :price,
                     `discount` = :discount,
                     `amount` = :amount,
@@ -143,6 +144,7 @@ switch ($method) {
                 $stmt = $db->prepare($query);
 
                 $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : 0;
+                $ratio = isset($block_array[$i]['ratio']) ? $block_array[$i]['ratio'] : 1.0;
                 $price = isset($block_array[$i]['price']) ? $block_array[$i]['price'] : 0;
                 $discount = isset($block_array[$i]['discount']) ? $block_array[$i]['discount'] : 0;
                 $amount = isset($block_array[$i]['amount']) ? $block_array[$i]['amount'] : 0;
@@ -157,6 +159,7 @@ switch ($method) {
                 $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
 
                 $qty == '' ? $qty = 0 : $qty = $qty;
+                $ratio == '' ? $ratio = 1.0 : $ratio = $ratio;
                 $price == '' ? $price = 0 : $price = $price;
                 $discount == '' ? $discount = 0 : $discount = $discount;
                 $amount == '' ? $amount = 0 : $amount = $amount;
@@ -167,6 +170,7 @@ switch ($method) {
                 $stmt->bindParam(':code', $block_array[$i]['code']);
                 $stmt->bindParam(':type', $block_array[$i]['type']);
                 $stmt->bindParam(':qty', $qty);
+                $stmt->bindParam(':ratio', $ratio);
                 $stmt->bindParam(':price', $price);
                 $stmt->bindParam(':discount', $discount);
                 $stmt->bindParam(':amount', $amount);
