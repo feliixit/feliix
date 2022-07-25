@@ -560,7 +560,7 @@
 
                     <div class="carousel-inner">
 
-                        <div v-for='(g, groupIndex) in groupedItems'
+                        <div v-for='(g, groupIndex) in it.groupedItems'
                             :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
                             <div class="row custom">
                                 <div class="col custom" v-for='(item, index) in g'>

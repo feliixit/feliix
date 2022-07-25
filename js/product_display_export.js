@@ -187,12 +187,12 @@ var app = new Vue({
   },
 
   methods: {
-    chunk: function(arr, size) {
+    chunk: function(arr, size, item) {
       var newArr = [];
       for (var i=0; i<arr.length; i+=size) {
         newArr.push(arr.slice(i, i+size));
       }
-      this.groupedItems  = newArr;
+      item.groupedItems  = newArr;
     },
 
     getUserName: function() {
@@ -394,6 +394,8 @@ var app = new Vue({
             for (let i = 0; i < _this.record.products.length; i++) {
               _this.set_up_specification(_this.record.products[i].special_information[0].lv3[0], _this.record.products[i]);
               //_this.set_up_variants(_this.record.products[i]);
+
+              _this.chunk(_this.record.products[i].related_product, 4, _this.record.products[i]);
             }
 
           })
