@@ -424,8 +424,8 @@
         <button class="btn btn-info" @click="print_page()">Print</button>
     </div>
 
-    <div class="mainContent">
-        <template  v-for="(it, index) in record.products">
+    <div class="mainContent" v-for="(it, index) in record.products">
+   
             <div class="upper_section">
 
                 <div class="imagebox">
@@ -608,7 +608,6 @@
                 -->
             </div>
 
-        </template>
 
     </div>
 </div>

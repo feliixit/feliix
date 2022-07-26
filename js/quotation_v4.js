@@ -1832,7 +1832,7 @@ var app = new Vue({
         if(row.discount > 100)
           row.discount = 100;
 
-        let charge = (Number(row.price) * (100 - Math.floor(row.discount)) / 100).toFixed(2);
+        let charge = (Number(row.price) * Number(row.ratio) * (100 - Math.floor(row.discount)) / 100).toFixed(2);
           row.amount = charge;
        
       },
