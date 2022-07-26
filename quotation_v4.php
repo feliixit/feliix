@@ -3936,7 +3936,7 @@ header( 'location:index' );
                         <table id="tb_specification_list" class="table  table-sm table-bordered">
                             <thead>
                             <tr>
-                                <th><i class="micons">view_list</i></th>
+                                <th><i class="micons" @click="selectall()">view_list</i></th>
                                 <th>Image</th>
                                 <th>Description</th>
                                 <th>Action</th>
@@ -3959,10 +3959,7 @@ header( 'location:index' );
                                 <td>
                                     <div class="code">{{ item.code }}</div>
                                     <div class="brief">{{ item.brief }}</div>
-                                    <div class="listing">
-                                    {{ item.desc }} 
-                                        {{ item.list }}
-                                    </div>
+                                    <div class="listing">{{ item.desc }}{{ item.list }}</div>
                                 </td>
 
                                 <td>

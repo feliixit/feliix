@@ -402,6 +402,24 @@ var app = new Vue({
   
     methods: {
 
+      selectall(){
+        let stat = "";
+
+        for(let i = 0; i < this.product_array.length; i++)
+        {
+          if(this.product_array[i].pid !== 0)
+          {
+            stat = this.product_array[i].is_selected;
+            break;
+          }
+        }
+
+        this.product_array.forEach(element => {
+          if(element.pid !== 0)
+            stat == 1 ? element.is_selected = '' : element.is_selected = 1;
+        });
+      },
+
       prod_export : async function() {
  
         var token = localStorage.getItem("token");
