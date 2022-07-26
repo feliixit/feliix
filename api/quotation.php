@@ -1163,7 +1163,7 @@ function GetProductId($code, $db)
 
     $query = "
         SELECT id
-        FROM   product
+        FROM   product_category
         WHERE  code = '" . $code . "'
         AND `status` <> -1 
         ORDER BY id
