@@ -2193,6 +2193,11 @@ header('location:index');
             background-color: #fff;
             height: calc( 100vh - 60px);
         }
+
+        .other .block.left.second .tablebox a.attch_pic>img {
+            width: 200px;
+            vertical-align: bottom;
+        }
     </style>
 
 <link rel='stylesheet' href='css/fullcalendarcore431.main.min.css'>
