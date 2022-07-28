@@ -40,6 +40,8 @@ var app = new Vue({
     e_org_id: 0,
 
     e_editing: false,
+
+    projects: [],
   },
 
   created() {
@@ -68,6 +70,8 @@ var app = new Vue({
           _this.getRequestNo();
       });
     } else _this.getRequestNo();
+
+    this.getProjectNames();
   },
 
   computed: {
@@ -213,6 +217,28 @@ var app = new Vue({
           _this.remark = response.data[0].remark;
 
           _this.petty_list = response.data[0].list;
+        })
+        .catch(function(error) {
+          //handle error
+        });
+    },
+
+    
+    getProjectNames: function() {
+      let _this = this;
+      let token = localStorage.getItem("accessToken");
+
+      const params = {
+        pid: 0,
+      };
+
+      axios
+      .get("api/expense_get_project_names", {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(function(response) {
+          _this.projects = response.data;
         })
         .catch(function(error) {
           //handle error

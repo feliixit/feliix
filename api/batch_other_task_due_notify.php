@@ -36,6 +36,7 @@ function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
         pt.collaborator,
         due_date,
         stage,
+        (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
         detail
     FROM project_other_task" . $kind . " pt
         LEFT JOIN project_stages ps ON pt.stage_id = ps.id
@@ -52,6 +53,7 @@ function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
         $project_name = $row["project_name"];
         $task_name = $row["task_name"];
         $stages_status = $row["stages_status"];
+        $task_status = $row["task_status"];
         $stages = $row["stage"];
         $create_id = $row["create_id"];
         $created_at = $row["created_at"];
@@ -86,7 +88,7 @@ function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
                 task_notify_admin_sv("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
                 break;
             case "_c":
-                task_notify_admin_c("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                task_notify_admin_c("notify", $project_name, $task_name, $task_status, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
                 break;
         }
     }

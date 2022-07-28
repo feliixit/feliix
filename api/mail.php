@@ -2402,7 +2402,7 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
 
 }
 
-function task_notify_admin_c($request_type, $task_status, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
+function task_notify_admin_c($request_type,  $project_name, $task_name, $task_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $revise_id, $erase_id, $created_at)
 {
     $tab = "";
 
@@ -2506,6 +2506,7 @@ function task_notify_admin_c($request_type, $task_status, $task_name, $stages_st
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
     $content = $content . "<p>Task:" . $task_name . "</p>";
     $content = $content . "<p>Task Status:" . $task_status . "</p>";
     $content = $content . "<p>Creator:" . $creators . "</p>";
@@ -3795,6 +3796,10 @@ function message_notify_dept($request_type, $project_name, $task_name, $stages, 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
+
+    if($dept == 'C')
+        $content = $content . "<p>Project Name:" . $project_name . "</p>";
+
     $content = $content . "<p>Task Name:" . $task_name . "</p>";
   
     if($request_type == "create")
@@ -3966,7 +3971,7 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
 }
 
 
-function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $category)
+function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $category, $project_name)
 {
 
     $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
@@ -4031,6 +4036,10 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
+
+    if($category == 'C' || $category == '')
+        $content = $content . "<p>Project Name:" . $project_name . "</p>";
+
     $content = $content . "<p>Task:" . $task_name . "</p>";
     $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
     $content = $content . "<p>Creator:" . $creators . "</p>";
@@ -5808,23 +5817,23 @@ function GetProjectNotifiers()
 
 function SetupMail($mail, $conf)
 {
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
     // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'tqwcfxcfncantitb@ethereal.email';
-    // $mail->Password   = 'BDAHahXVK7Jk1mAFkW';
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'lavinia52@ethereal.email';
+    $mail->Password   = '95HTK4vcvve4R7xAWN';
 
     return $mail;
 

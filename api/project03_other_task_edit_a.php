@@ -221,7 +221,9 @@ function SendNotifyMail01($last_id, $old_status_id, $username)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify01_admin($old_status, $task_status, $username, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, '');
+    $project_name = $_record[0]["project_name"];
+
+    task_notify01_admin($old_status, $task_status, $username, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, '', $project_name);
 
 }
 

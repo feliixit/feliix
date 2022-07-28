@@ -367,6 +367,7 @@ function SendNotifyMail($last_id)
     $project_name = $_record[0]["project_name"];
     $task_name = $_record[0]["task_name"];
     $stages_status = $_record[0]["stages_status"];
+    $task_status = $_record[0]["task_status"];
     $stages = $_record[0]["stage"];
     $stage_id = $_record[0]["stage_id"];
     $create_id = $_record[0]["create_id"];
@@ -377,23 +378,27 @@ function SendNotifyMail($last_id)
     $due_date = str_replace("-", "/", $_record[0]["due_date"]) . " " . $_record[0]["due_time"];
     $detail = $_record[0]["detail"];
 
-    task_notify_admin_c("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, 0, 0, $created_at);
+    task_notify_admin_c("create", $project_name, $task_name, $task_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, 0, 0, $created_at);
 
 }
 
 function GetTaskDetail($id, $db)
 {
-    $sql = "SELECT pt.stage_id, '' project_name, title task_name, 
-            '' `stages_status`, 
+    $sql = "SELECT pt.stage_id,  project_name, title task_name, 
+            (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, 
             pt.created_at,
             pt.create_id,
             pt.assignee,
             pt.collaborator,
             due_date,
             due_time,
-            '' stage,
+            stage,
+            (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
             detail
             FROM project_other_task_c pt
+            LEFT JOIN project_stages ps ON pt.stage_id = ps.id
+            LEFT JOIN project_stage psg ON ps.stage_id = psg.id
+            left JOIN project_main pm ON ps.project_id = pm.id 
             WHERE pt.id = :id";
 
     $merged_results = array();

@@ -150,7 +150,7 @@ try{
                     break;
             }
             $_record = GetTaskDetail($task_id, $db);
-            task_notify_admin_c("edit", $task_status, $title, "", $_record[0]["create_id"], $assignee, $collaborator, $due_date . " " . $due_time, $detail, $task_id, $uid, 0, $_record[0]["created_at"]);
+            task_notify_admin_c("edit", $_record[0]["project_name"], $_record[0]["task_name"], $_record[0]["task_status"], $uid, $assignee, $collaborator, $due_date . " " . $due_time, $detail, $task_id, $uid, 0, $_record[0]["created_at"]);
         }
 
         $returnArray = array('batch_id' => $task_id);
@@ -221,7 +221,9 @@ function SendNotifyMail01($last_id, $old_status_id, $username)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify01_admin($old_status, $task_status, $username, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, '');
+    $project_name = $_record[0]["project_name"];
+
+    task_notify01_admin($old_status, $task_status, $username, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, '', $project_name);
 
 }
 
@@ -286,18 +288,21 @@ function SendNotifyMail02($last_id, $old_status_id)
 
 function GetTaskDetail($id, $db)
 {
-    $sql = "SELECT stage_id, '' project_name, title task_name, 
-            '' `stages_status`, 
+    $sql = "SELECT pt.tage_id,  project_name, title task_name, 
+            (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, 
             pt.create_id,
             pt.created_at,
             pt.assignee,
             pt.collaborator,
             due_date,
             due_time,
-            '' stage,
+            stage,
             (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
             detail
             FROM project_other_task_c pt
+            LEFT JOIN project_stages ps ON pt.stage_id = ps.id
+            LEFT JOIN project_stage psg ON ps.stage_id = psg.id
+            left JOIN project_main pm ON ps.project_id = pm.id 
             WHERE pt.id = :id";
 
     $merged_results = array();
