@@ -288,7 +288,7 @@ function SendNotifyMail02($last_id, $old_status_id)
 
 function GetTaskDetail($id, $db)
 {
-    $sql = "SELECT pt.tage_id,  project_name, title task_name, 
+    $sql = "SELECT pt.stage_id,  project_name, title task_name, 
             (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, 
             pt.create_id,
             pt.created_at,
