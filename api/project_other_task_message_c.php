@@ -141,6 +141,7 @@ function SendNotifyMail($last_id, $uid)
 
     $username = $_record[0]["username"];
     $_id = $_record[0]["_id"];
+    $project_name = $_record[0]["project_name"];
 
     message_notify_dept("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, "", $detail, $stage_id, $msg, $username, $created_at, $_id, 'C');
 
@@ -148,7 +149,7 @@ function SendNotifyMail($last_id, $uid)
 
 function GetTaskDetail($id, $db)
 {
-    $sql = "SELECT pt.stage_id, pt.id, title task_name, 
+    $sql = "SELECT pt.stage_id, pt.id, title task_name,  project_name,
             pt.create_id,
             pt.assignee,
             pt.collaborator,
@@ -161,6 +162,9 @@ function GetTaskDetail($id, $db)
             FROM project_other_task_message_c pmsg
             LEFT JOIN project_other_task_c pt ON pmsg.task_id = pt.id
             LEFT JOIN user u ON u.id = pmsg.create_id
+            LEFT JOIN project_stages ps ON pt.stage_id = ps.id
+            LEFT JOIN project_stage psg ON ps.stage_id = psg.id
+            left JOIN project_main pm ON ps.project_id = pm.id 
             WHERE pmsg.id = :id";
 
     $merged_results = array();
