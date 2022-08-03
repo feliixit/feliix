@@ -539,7 +539,7 @@
             text-align: center;
         }
 
-        .write_block select {
+        .read_block select, .write_block select {
             background-image: url(images/ui/icon_form_select_arrow_gray.svg);
             border: 1px solid #707070;
             padding: 1px 3px;
@@ -549,7 +549,12 @@
             width: 100%;
         }
 
-        .write_block input {
+        .read_block select:disabled{
+            opacity: 1;
+            color: black;
+        }
+
+        .read_block input, .write_block input {
             height: 30px;
             border: 1px solid #707070;
             font-size: 16px;
@@ -557,15 +562,12 @@
             width: 100%;
         }
 
-        .write_block input[type="checkbox"] {
+        .read_block input[type="checkbox"], .write_block input[type="checkbox"] {
             border: none;
+            vertical-align: 0.5px;
         }
 
-        .write_block input[type="checkbox"]:disabled {
-            opacity: 1;
-        }
-
-        .write_block textarea {
+        .read_block textarea, .write_block textarea {
             border: 1px solid #707070;
             font-size: 16px;
             resize: none;
@@ -1257,13 +1259,13 @@
 
 
         <div class="tags">
-            <a class="tag A focus">Preliminary</a>
+            <a class="tag A" @click="p1()">Preliminary</a>
             <a class="tag B" @click="p2()">For Approval</a>
-            <a class="tag C" @click="p3()">Approved</a>
+            <a class="tag C focus">Approved</a>
             <a class="tag D">Overview</a>
         </div>
         <!-- Blocks -->
-        <div class="block A" style="display: block;">
+        <div class="block C" style="display: block;">
 
             <div class="box-content">
 
@@ -1272,31 +1274,32 @@
                     <!-- buttons to add product -->
                     <div class="block">
 
-                        <div class="popupblock">
+                        <div class="popupblock" v-if="access2 == true">
                             <a title="Add Item by Manual Encoding">
-                                <i class="fas fa-plus" @click="addItem()"></i>
+                                <i class="fas fa-plus"></i>
                             </a>
                         </div>
 
-                        <div class="popupblock">
+                        <div class="popupblock" v-if="access2 == true">
                             <a title="Add Item from Product Database">
-                                <i class="fas fa-list-alt"  @click="product_catalog()"></i>
-                            </a>
-                        </div>
-
-                        <div class="popupblock">
-                            <a title="Add Item from Existing Quotation">
-                                <i class="fas fa-file-import" @click="quotation_mgt()"></i>
+                                <i class="fas fa-list-alt"></i>
                             </a>
                         </div>
 
                         <div class="btn_block">
-                       
-                            <a class="btn small green" @click="sendNotesToTw()" v-if="access2 == false">Send TW for Notes</a>
-                            <a class="btn small green" @click="approval()" v-if="access2 == false">Submit for Approval</a>
-                            <a class="btn small" @click="withdrawNotesToTw()" v-if="access2 == false">Withdraw</a>
-                        
-                            <a class="btn small green" @click="finish_notes()" v-if="access2 == true">Finish Notes</a>
+                            <a class="btn small green" @click="approve()" v-if="access2 == true">Mark as Approved</a>
+                            <a class="btn small green" @click="order()" v-if="access2 == true">Mark as Ordered</a>
+                            <a class="btn small" @click="cancel()" v-if="access2 == true">Mark as Canceled</a>
+
+                            <a class="btn small green" @click="edit_shipping_info()" v-if="access2 == true && is_info == false">Edit Shipping Info</a>
+                            <a class="btn small green" @click="" style="display: none;">Edit Warehouse Info</a>
+                            <a class="btn small green" @click="" style="display: none;">Assign Testing</a>
+                            <a class="btn small green" @click="" style="display: none;">Edit Testing Info</a>
+                            <a class="btn small green" @click="" style="display: none;">Assign Delivery</a>
+                            <a class="btn small green" @click="" style="display: none;">Edit Delivery Info</a>
+                            <a class="btn small green" @click="" style="display: none;">Edit Final Info</a>
+                            <a class="btn small" @click="cancel_shipping_info()" v-if="is_info == true">Cancel</a>
+                            <a class="btn small green" @click="save_shipping_info()" v-if="is_info == true">Save</a>
                            
                             <input type="text" placeholder="Comment" v-model="comment">
                         </div>
@@ -1318,6 +1321,14 @@
                         <th>SRP</th>
                         <th>Date Needed by Client</th>
                         <th>Notes</th>
+                        <th>Notes (Only for Approved Stage)</th>
+                        <th>Shipping Way</th>
+                        <th>ETA</th>
+                        <th>Arrival Date</th>
+                        <th>Warehouse In Charge</th>
+                        <th>Testing</th>
+                        <th>Delivery</th>
+                        <th>Final</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -1333,9 +1344,9 @@
 
                             <div class="write_block" v-if="item.is_edit">
                                 <select v-model="item.confirm">
-                                    <option value="N">Not Yet Confirmed</option>
-                                    <option value="C">Confirmed</option>
-                                    <option value="D">Deleted</option>
+                                    <option value="A">Approved</option>
+                                    <option value="C">Ordered</option>
+                                    <option value="D">Canceled</option>
                                 </select>
                             </div>
                         </td>
@@ -1438,9 +1449,29 @@
                         <i class="t">({{ note.username }} at {{ note.created_at }})</i>
                         <div class="already_read"><template v-if="note.got_it != undefined" v-for="(got, index) in note.got_it">{{ got.username }}<span v-if="index + 1 < note.got_it.length">, </span></template></div>
                         <div class="btnbox">
-                            <a class="btn small green"  @click="got_it_message(note.id, item.id)" v-if="note.i_got_it == false">Got it</a>
+                          
+                        </div>
+                    </div>
+
+                </div>
+
+            </td>
+
+            <td>
+                <div class="msg_block">
+                    <div :class="['msgbox', (note.status == -1 ? 'deleted' : '')]" v-for="note in item.notes_a">
+                        • {{ note.message }}
+
+                        <template v-for="file in note.attachs">
+                            <a class="attch" :href="img_url + file.gcp_name" target="_blank">{{file.filename}}</a>
+                        </template>
+                        
+                        <i class="t">({{ note.username }} at {{ note.created_at }})</i>
+                        <div class="already_read"><template v-if="note.got_it != undefined" v-for="(got, index) in note.got_it">{{ got.username }}<span v-if="index + 1 < note.got_it.length">, </span></template></div>
+                        <div class="btnbox">
+                            <a class="btn small green"  @click="got_it_message_a(note.id, item.id)" v-if="note.i_got_it == false">Got it</a>
                             
-                            <a class="btn small yellow" v-if="note.create_id == uid" @click="msg_delete(note.id, item.id)">Delete</a>
+                            <a class="btn small yellow" v-if="note.create_id == uid" @click="msg_delete_a(note.id, item.id)">Delete</a>
                         </div>
                     </div>
 
@@ -1466,17 +1497,129 @@
                     </div>
 
                     <div class="btnbox">
-                        <a class="btn small green" @click="comment_create(item.id)">Create</a>
+                        <a class="btn small green" @click="comment_create_a(item.id)">Create</a>
                     </div>
                 </div>
             </td>
 
             <td>
+                <div class="read_block" v-if="!item.is_info">
+                    <select disabled v-model="item.shipping_way">
+                        <option value=""></option>
+                        <option value="sea">Sea</option>
+                        <option value="air">Air</option>
+                    </select>
+                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+                </div>
+                <div class="write_block" v-if="item.is_info">
+                    <select v-model="item.shipping_way">
+                        <option value=""></option>
+                        <option value="sea">Sea</option>
+                        <option value="air">Air</option>
+                    </select>
+                    
+                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number">
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_info">
+                    <input type="text" v-model="item.eta" readonly>
+                </div>
+                <div class="write_block" v-if="item.is_info">
+                    <input type="text" v-model="item.eta">
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_info">
+                    <input type="text" v-model="item.arrive" readonly>
+                </div>
+                <div class="write_block" v-if="item.is_info">
+                    <input type="text" v-model="item.arrive">
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_info">
+                    Confirm Arrival:  <input type="checkbox" :value="item.charge" :true-value="1" v-model:checked="item.charge" class="alone" disabled>
+                    <textarea rows="3" readonly v-model="item.remark"></textarea>
+                </div>
+
+                <div class="write_block" v-if="item.is_info">
+                    Confirm Arrival:  <input type="checkbox" class="alone" :value="item.charge" :true-value="1" v-model:checked="item.charge" >
+                    <textarea rows="3" placeholder="Remarks" v-model="item.remark"></textarea>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_info">
+                    <select v-model="item.test" disabled>
+                        <option>Choose Assignee for Testing...</option>
+                        <option v-for="item in charge" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
+                    Testing Result is Normal:  <input type="checkbox" :value="item.check_t" :true-value="1" v-model:checked="item.check_t" class="alone" disabled>
+                    <textarea rows="3" v-model="item.remark_t" readonly></textarea>
+                </div>
+
+                <div class="write_block" v-if="item.is_info">
+                    <select v-model="item.test" class="assign_testing">
+                        <option>Choose Assignee for Testing...</option>
+                        <option v-for="item in charge" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
+                    <div class="edit_testing_info">
+                        Testing Result is Normal: <input type="checkbox" :value="item.check_t" :true-value="1" v-model:checked="item.check_t" class="alone">
+                        <textarea rows="3" v-model="item.remark_t" placeholder="Remarks"></textarea>
+                    </div>
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_info">
+                    <select v-model="item.delivery" disabled>
+                        <option>Choose Assignee for Delivery...</option>
+                        <option v-for="item in charge" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
+                    Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
+                    <textarea rows="3" v-model="item.remark_d" readonly></textarea>
+                </div>
+
+                <div class="write_block" v-if="item.is_info">
+                    <select v-model="item.delivery" class="assign_delivery">
+                        <option>Choose Assignee for Delivery...</option>
+                        <option v-for="item in charge" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
+
+                    <div class="edit_delivery_info">
+                        Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone">
+                        <textarea rows="3" v-model="item.remark_d" placeholder="Remarks"></textarea>
+                    </div>
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_info">
+                    <textarea rows="3" v-model="item.final" readonly></textarea>
+                </div>
+                <div class="write_block" v-if="item.is_info">
+                    <textarea rows="3" v-model="item.final" placeholder="Remarks"></textarea>
+                </div>
+
+            </td>
+
+            <td>
                 <div class="btnbox">
-                    <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true"></i>
+                <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true && item.status == 0 && access2 == false"></i>
-                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true && item.status == 0 && access2 == false"></i>
+                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true  && access2 == true"></i>
+                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true  && access2 == true"></i>
                     <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-times-circle" v-if="item.is_edit == true" @click="cancelItem(item)"></i>
                     <i class="fas fa-check-circle" v-if="item.is_edit == true" @click="confirmItem(item)"></i>
@@ -2515,7 +2658,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/order_taiwan_p1.js"></script>
+<script defer src="js/order_taiwan_p3.js"></script>
 <script src="https://superal.github.io/canvas2image/canvas2image.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </html>

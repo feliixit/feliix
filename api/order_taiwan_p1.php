@@ -8,8 +8,12 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
+$type = (isset($_GET['type']) ?  $_GET['type'] : 0);
+$confirm = (isset($_GET['confirm']) ?  $_GET['confirm'] : '');
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $user_id = 0;
+
+$type = ($type == '' ? '0' : $type);
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -57,10 +61,28 @@ if (!isset($jwt)) {
                     qty,
                     srp,
                     date_needed,
+                    shipping_way,
+                    shipping_number,
+                    eta,
+                    arrive,
+                    remark,
+                    remark_t,
+                    remark_d,
+                    check_t,
+                    check_d,
+                    charge,
+                    test,
+                    delivery,
+                    final,
                     `status`
                     FROM od_item
                     WHERE status <> -1 and od_id=$id";
+                    
+    if($type != 0)
+        $query = $query . " and status = $type ";
 
+    if($confirm != '')
+        $query = $query . " and confirm = '$confirm' ";
 
     $query = $query . " order by ABS(sn) ";
 
@@ -91,12 +113,29 @@ if (!isset($jwt)) {
         $qty = $row['qty'];
         $srp = $row['srp'];
         $date_needed = $row['date_needed'];
+        $shipping_way = $row['shipping_way'];
+        $shipping_number = $row['shipping_number'];
+        $eta = $row['eta'];
+        $arrive = $row['arrive'];
+        $remark = $row['remark'];
+        $remark_t = $row['remark_t'];
+        $remark_d = $row['remark_d'];
+        $check_t = $row['check_t'];
+        $check_d = $row['check_d'];
+        $charge = $row['charge'];
+        $test = $row['test'];
+        $delivery = $row['delivery'];
+        $final = $row['final'];
+
         $status = $row['status'];
         $notes = GetNotes($row['id'], $db);
+
+        $notes_a = GetNotesA($row['id'], $db);
         
         $merged_results[] = array(
             "is_checked" => "",
             "is_edit" => false,
+            "is_info" => false,
             "id" => $id,
             "sn" => $sn,
             "confirm" => $confirm,
@@ -111,10 +150,23 @@ if (!isset($jwt)) {
             "qty" => $qty,
             "srp" => $srp,
             "date_needed" => $date_needed,
+            "shipping_way" => $shipping_way,
+            "shipping_number" => $shipping_number,
+            "eta" => $eta,
+            "arrive" => $arrive,
+            "remark" => $remark,
+            "remark_t" => $remark_t,
+            "remark_d" => $remark_d,
+            "check_t" => $check_t,
+            "check_d" => $check_d,
+            "charge" => $charge,
+            "test" => $test,
+            "delivery" => $delivery,
+            "final" => $final,
             "status" => $status,
             "confirm_text" => $confirm_text,
             "notes" => $notes,
-            
+            "notes_a" => $notes_a,
         );
     }
 
@@ -232,6 +284,115 @@ function GetGotIt($msg_id, $db)
     return $got_it;
 }
 
+
+function GetNotesA($id, $db){
+    $query = "
+            SELECT n.id,
+                n.status,
+                n.message,
+                n.create_id,
+                u.username,
+                n.created_at
+            FROM   od_message_a n
+            left join user u on n.create_id = u.id
+            WHERE  n.item_id = " . $id . "
+            ORDER BY n.id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $status = $row['status'];
+        $message = $row['message'];
+        $create_id = $row['create_id'];
+        $username = $row['username'];
+
+        $created_at = $row['created_at'];
+      
+        $attachs = [];
+        $got_it = [];
+        $i_got_it = false;
+
+        $attachs = GetAttachA($id, $db);
+        $got_it = GetGotItA($id, $db);
+
+        foreach ($got_it as $g) {
+            if ($g['uid'] == $GLOBALS["user_id"]) {
+                $i_got_it = true;
+                break;
+            }
+        }
+
+        if($GLOBALS["user_id"] == $row["create_id"])
+            $i_got_it = true;
+    
+        $merged_results[] = array(
+            "id" => $id,
+            "status" => $status,
+            "message" => $message,
+            "create_id" => $create_id,
+            "username" => $username,
+            "created_at" => $created_at,
+            "attachs" => $attachs,
+            "got_it" => $got_it,
+            "i_got_it" => $i_got_it,
+        );
+    }
+
+    return $merged_results;
+}
+
+
+
+function GetAttachA($id, $db)
+{
+    $sql = "select COALESCE(filename, '') filename, COALESCE(gcp_name, '') gcp_name
+            from gcp_storage_file where batch_id = " . $id . " and batch_type = 'od_message_a' 
+            order by created_at ";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $result[] = array(
+            "filename" => $row['filename'],
+            "gcp_name" => $row['gcp_name'],
+        );
+    }
+
+    return $result;
+}
+
+
+function GetGotItA($msg_id, $db)
+{
+    $sql = "select  u.id uid, u.username username
+            from od_got_it_a g
+            LEFT JOIN user u ON u.id = g.create_id
+            where g.message_id = " . $msg_id . " order by g.created_at";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $got_it = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $got_it[] = array(
+            "uid" => $row['uid'],
+            "username" => $row['username'],
+        );
+    }
+
+    return $got_it;
+}
+
 function GetConfirmText($loc)
 {
     $location = "";
@@ -250,6 +411,12 @@ function GetConfirmText($loc)
             break;
         case "F":
             $location = "For Approval";
+            break;
+        case "A":
+            $location = "Approved";
+            break;
+        case "R":
+            $location = "Rejected";
             break;
         default:
             $location = "";

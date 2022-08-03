@@ -76,6 +76,18 @@ switch ($method) {
         try {
             for($i=0; $i<count($block_array); $i++) 
             {
+                // get previous block confirm
+                $query = "select confirm from od_item where id = :id";
+                $stmt = $db->prepare($query);
+                $stmt->bindParam(':id', $block_array[$i]);
+                $stmt->execute();
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $pre_confirm = $row['confirm'];
+
+                // record pre_confirm
+                if($pre_confirm != $confirm && $confirm == 'W')
+                    PreserveConfirm($od_id, $pre_confirm, $user_id, $db);
+
                 // insert quotation_page_type_block
                 $query = "UPDATE od_item
                     SET
@@ -353,6 +365,57 @@ function UpdateImageNameVariation($sn, $upload_name, $batch_id, $db){
     }
     catch (Exception $e)
     {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
+}
+
+
+function PreserveConfirm($od_id, $pre_confirm, $user_id, $db){
+    
+    $comment = $pre_confirm;
+    $action = "change_confirm";
+    $items = '["' . $pre_confirm . '"]';
+
+    $query = "INSERT INTO od_process
+    SET
+        `od_id` = :od_id,
+        `comment` = :comment,
+        `action` = :action,
+        `items` = :items,
+        `status` = 0,
+        `create_id` = :create_id,
+        `created_at` =  now() ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':od_id', $od_id);
+    $stmt->bindParam(':comment', $comment);
+    $stmt->bindParam(':action', $action);
+    $stmt->bindParam(':items', $items);
+    $stmt->bindParam(':create_id', $user_id);
+
+
+    $last_id = 0;
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $last_id = $db->lastInsertId();
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
         error_log($e->getMessage());
         $db->rollback();
         http_response_code(501);

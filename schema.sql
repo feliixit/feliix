@@ -2823,3 +2823,66 @@ CREATE TABLE IF NOT EXISTS quotation_export
   `updated_at` timestamp NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS `od_message_a` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `item_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `message` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `od_got_it_a`
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `message_id` bigint(20) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE od_item
+ADD COLUMN `shipping_way` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `shipping_number` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `eta` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `arrive` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `charge` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `test` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `delivery` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+ALTER TABLE od_item
+ADD COLUMN `final` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `remark_t` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `remark_d` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `check_t` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `check_d` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';

@@ -273,9 +273,9 @@ var app = new Vue({
         comment:'',
 
         // privledge
-        access1 : false,
+        access1 : true,
         access2 : false,
-        access3 : true,
+        access3 : false,
         access4 : false,
         access5 : false,
         access6 : false,
@@ -358,22 +358,22 @@ var app = new Vue({
     },
   
     methods: {
-      p2() {
-        window.location.href = "order_taiwan_p2?id=" + this.id;
-      },
+    p1() {
+        window.location.href = "order_taiwan_p1?id=" + this.id;
+        },
 
-      p3() {
+    p3() {
         window.location.href = "order_taiwan_p3?id=" + this.id;
-      },
+        },
 
-      finish_notes : async function() {
+      approve : async function() {
         let element = [];
 
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i].is_checked == 1) {
-              if(this.items[i].status != "1")
+              if(this.items[i].status != 2)
               {
-                alert("Please only choose the item(s) with the status of “Waiting Notes from TW”.");
+                alert("Please only choose the item(s) with the status of “For Approval”.");
                 return;
               }
               else
@@ -394,52 +394,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_p1_finish_notes',
-          data: form_Data,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        this.getRecord();
-        this.comment = '';
-
-        Swal.fire({
-          text: "Records Finished",
-          icon: "info",
-          confirmButtonText: "OK",
-        });
-      },
-
-      approval : async function() {
-        let element = [];
-
-        for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].is_checked == 1) {
-              if(this.items[i].confirm != "C")
-              {
-                alert("Only confirmed item is allowed to send for approval.");
-                return;
-              }
-              else
-                element.push(this.items[i].id);
-            }
-        }
-
-        if(element.length == 0)
-          return;
-
-        var token = localStorage.getItem("token");
-        var form_Data = new FormData();
-
-        form_Data.append("jwt", token);
-        form_Data.append("od_id", this.id);
-        form_Data.append("items", JSON.stringify(element));
-        form_Data.append("comment", this.comment);
-
-        let res = await axios({
-          method: 'post',
-          url: 'api/order_taiwan_p1_approval',
+          url: 'api/order_taiwan_p1_approve',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -456,12 +411,18 @@ var app = new Vue({
         });
       },
 
-      sendNotesToTw : async function() {
+      reject : async function() {
         let element = [];
 
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i].is_checked == 1) {
-              element.push(this.items[i].id);
+              if(this.items[i].status != 2)
+              {
+                alert("Please only choose the item(s) with the status of “For Approval”.");
+                return;
+              }
+              else
+                element.push(this.items[i].id);
             }
         }
 
@@ -478,7 +439,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_p1_send_note_tw',
+          url: 'api/order_taiwan_p1_reject',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -489,18 +450,25 @@ var app = new Vue({
         this.comment = '';
 
         Swal.fire({
-          text: "Records Send To TW",
+          text: "Records Rejected",
           icon: "info",
           confirmButtonText: "OK",
         });
       },
 
-      withdrawNotesToTw : async function() {
+      
+      withdraw : async function() {
         let element = [];
 
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i].is_checked == 1) {
-              element.push(this.items[i].id);
+              if(this.items[i].status != 2)
+              {
+                alert("Please only choose the item(s) with the status of “For Approval”.");
+                return;
+              }
+              else
+                element.push(this.items[i].id);
             }
         }
 
@@ -517,7 +485,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_p1_withdraw_note_tw',
+          url: 'api/order_taiwan_p1_reject',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -528,7 +496,7 @@ var app = new Vue({
         this.comment = '';
 
         Swal.fire({
-          text: "Records Withdraw",
+          text: "Records Rejected",
           icon: "info",
           confirmButtonText: "OK",
         });
@@ -2066,6 +2034,7 @@ var app = new Vue({
   
         const params = {
           id: _this.id,
+          type: 2
         };
   
         let token = localStorage.getItem("accessToken");
