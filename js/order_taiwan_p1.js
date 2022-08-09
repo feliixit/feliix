@@ -275,7 +275,7 @@ var app = new Vue({
         // privledge
         access1 : false,
         access2 : false,
-        access3 : true,
+        access3 : false,
         access4 : false,
         access5 : false,
         access6 : false,
@@ -299,6 +299,28 @@ var app = new Vue({
                  _this.l_id = _this.id;
 
                 break;
+                case "role":
+                  var role = tmp[1];
+  
+                  if(role == 1)
+                   _this.access1 = true;
+                  
+                   if(role == 2)
+                   _this.access2 = true;
+  
+                   if(role == 3)
+                   _this.access3 = true;
+  
+                   if(role == 4)
+                   _this.access4 = true;
+  
+                   if(role == 5)
+                   _this.access5 = true;
+  
+                   if(role == 6)
+                   _this.access6 = true;
+  
+                  break;
               default:
                 console.log(`Too many args`);
             }
