@@ -64,7 +64,7 @@ switch ($method) {
         $block = (isset($_POST['block']) ?  $_POST['block'] : []);
 
         $block_array = json_decode($block,true);
-
+        $confirm = "";
     
         if ($od_id == 0) {
             http_response_code(401);
@@ -79,10 +79,12 @@ switch ($method) {
                 // get previous block confirm
                 $query = "select confirm from od_item where id = :id";
                 $stmt = $db->prepare($query);
-                $stmt->bindParam(':id', $block_array[$i]);
+                $stmt->bindParam(':id', $block_array[$i]['id']);
                 $stmt->execute();
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 $pre_confirm = $row['confirm'];
+
+                $confirm = (isset($block_array[$i]['confirm']) ?  $block_array[$i]['confirm'] : '');
 
                 // record pre_confirm
                 if($pre_confirm != $confirm && $confirm == 'W')

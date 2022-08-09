@@ -1274,32 +1274,32 @@
                     <!-- buttons to add product -->
                     <div class="block">
 
-                        <div class="popupblock" v-if="access2 == true">
+                        <div class="popupblock" v-if="AddItembyManualEncoding">
                             <a title="Add Item by Manual Encoding">
-                                <i class="fas fa-plus"></i>
+                                <i class="fas fa-plus" @click="addItem()"></i>
                             </a>
                         </div>
 
-                        <div class="popupblock" v-if="access2 == true">
+                        <div class="popupblock" v-if="AddItemfromProductDatabase">
                             <a title="Add Item from Product Database">
-                                <i class="fas fa-list-alt"></i>
+                                <i class="fas fa-list-alt"  @click="product_catalog()"></i>
                             </a>
                         </div>
 
                         <div class="btn_block">
-                            <a class="btn small green" @click="approve()" v-if="access2 == true">Mark as Approved</a>
-                            <a class="btn small green" @click="order()" v-if="access2 == true">Mark as Ordered</a>
-                            <a class="btn small" @click="cancel()" v-if="access2 == true">Mark as Canceled</a>
+                            <a class="btn small green" @click="approve()" v-if="MarkasApproved()">Mark as Approved</a>
+                            <a class="btn small green" @click="order()" v-if="MarkasOrdered()">Mark as Ordered</a>
+                            <a class="btn small green" @click="cancel()" v-if="MarkasCanceled()">Mark as Canceled</a>
 
-                            <a class="btn small green" @click="edit_shipping_info()" v-if="access2 == true && is_info == false">Edit Shipping Info</a>
-                            <a class="btn small green" @click="" style="display: none;">Edit Warehouse Info</a>
-                            <a class="btn small green" @click="" style="display: none;">Assign Testing</a>
-                            <a class="btn small green" @click="" style="display: none;">Edit Testing Info</a>
-                            <a class="btn small green" @click="" style="display: none;">Assign Delivery</a>
-                            <a class="btn small green" @click="" style="display: none;">Edit Delivery Info</a>
-                            <a class="btn small green" @click="" style="display: none;">Edit Final Info</a>
-                            <a class="btn small" @click="cancel_shipping_info()" v-if="is_info == true">Cancel</a>
-                            <a class="btn small green" @click="save_shipping_info()" v-if="is_info == true">Save</a>
+                            <a class="btn small green" @click="edit_shipping_info('ship_info')" v-if="EditShippingInfo()">Edit Shipping Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('ware_info')" v-if="EditWarehouseInfo()">Edit Warehouse Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('assing_test')" v-if="AssignTesting()">Assign Testing</a>
+                            <a class="btn small green" @click="edit_shipping_info('edit_test')" v-if="EditTestingInfo()">Edit Testing Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('assign_delivery')" v-if="AssignDelivery()">Assign Delivery</a>
+                            <a class="btn small green" @click="edit_shipping_info('edit_delivery')" v-if="EditDeliveryInfo()">Edit Delivery Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('edit_final')" v-if="EditFinalInfo()">Edit Final Info</a>
+                            <a class="btn small" @click="cancel_shipping_info()" v-if="Cancel()">Cancel</a>
+                            <a class="btn small green" @click="save_shipping_info()" v-if="Save()">Save</a>
                            
                             <input type="text" placeholder="Comment" v-model="comment">
                         </div>
@@ -1477,7 +1477,7 @@
 
                 </div>
 
-                <div class="write_msg_block">
+                <div class="write_msg_block" v-if="!item.is_info">
 
                     <textarea rows="3" :ref="'comment_task_' + item.id" placeholder="Leave notes here"></textarea>
 
@@ -1503,7 +1503,7 @@
             </td>
 
             <td>
-                <div class="read_block" v-if="!item.is_info">
+                <div class="read_block" v-if="ShipwayRead(item)">
                     <select disabled v-model="item.shipping_way">
                         <option value=""></option>
                         <option value="sea">Sea</option>
@@ -1511,7 +1511,7 @@
                     </select>
                     <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
                 </div>
-                <div class="write_block" v-if="item.is_info">
+                <div class="write_block" v-if="ShipwayWrite(item)">
                     <select v-model="item.shipping_way">
                         <option value=""></option>
                         <option value="sea">Sea</option>
@@ -1523,36 +1523,36 @@
             </td>
 
             <td>
-                <div class="read_block" v-if="!item.is_info">
+                <div class="read_block" v-if="EtaRead(item)">
                     <input type="text" v-model="item.eta" readonly>
                 </div>
-                <div class="write_block" v-if="item.is_info">
+                <div class="write_block" v-if="EtaWrite(item)">
                     <input type="text" v-model="item.eta">
                 </div>
             </td>
 
             <td>
-                <div class="read_block" v-if="!item.is_info">
+                <div class="read_block" v-if="ArriveRead(item)">
                     <input type="text" v-model="item.arrive" readonly>
                 </div>
-                <div class="write_block" v-if="item.is_info">
+                <div class="write_block" v-if="ArriveWrite(item)">
                     <input type="text" v-model="item.arrive">
                 </div>
             </td>
 
             <td>
-                <div class="read_block" v-if="!item.is_info">
+                <div class="read_block" v-if="ArriveRemarkRead(item)">
                     Confirm Arrival:  <input type="checkbox" :value="item.charge" :true-value="1" v-model:checked="item.charge" class="alone" disabled>
                     <textarea rows="3" readonly v-model="item.remark"></textarea>
                 </div>
 
-                <div class="write_block" v-if="item.is_info">
+                <div class="write_block" v-if="ArriveRemarkWrite(item)">
                     Confirm Arrival:  <input type="checkbox" class="alone" :value="item.charge" :true-value="1" v-model:checked="item.charge" >
                     <textarea rows="3" placeholder="Remarks" v-model="item.remark"></textarea>
             </td>
 
             <td>
-                <div class="read_block" v-if="!item.is_info">
+                <div class="read_block" v-if="TestRead(item)">
                     <select v-model="item.test" disabled>
                         <option>Choose Assignee for Testing...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
@@ -1563,14 +1563,14 @@
                     <textarea rows="3" v-model="item.remark_t" readonly></textarea>
                 </div>
 
-                <div class="write_block" v-if="item.is_info">
-                    <select v-model="item.test" class="assign_testing">
+                <div class="write_block" v-if="TestWrite(item)">
+                    <select v-model="item.test" class="assign_testing" v-if="info_type == 'assing_test'">
                         <option>Choose Assignee for Testing...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
                         </option>
                     </select>
-                    <div class="edit_testing_info">
+                    <div class="edit_testing_info" v-if="info_type == 'edit_test' && name == item.test">
                         Testing Result is Normal: <input type="checkbox" :value="item.check_t" :true-value="1" v-model:checked="item.check_t" class="alone">
                         <textarea rows="3" v-model="item.remark_t" placeholder="Remarks"></textarea>
                     </div>
@@ -1578,7 +1578,7 @@
             </td>
 
             <td>
-                <div class="read_block" v-if="!item.is_info">
+                <div class="read_block" v-if="DeliveryRead(item)">
                     <select v-model="item.delivery" disabled>
                         <option>Choose Assignee for Delivery...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
@@ -1589,26 +1589,27 @@
                     <textarea rows="3" v-model="item.remark_d" readonly></textarea>
                 </div>
 
-                <div class="write_block" v-if="item.is_info">
-                    <select v-model="item.delivery" class="assign_delivery">
+                <div class="write_block" v-if="DeliveryWrite(item)">
+                    <select v-model="item.delivery" class="assign_delivery" v-if="info_type == 'assign_delivery'">
                         <option>Choose Assignee for Delivery...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
                         </option>
                     </select>
 
-                    <div class="edit_delivery_info">
+                    <div class="edit_delivery_info" v-if="info_type == 'edit_delivery' && name == item.delivery">
                         Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone">
                         <textarea rows="3" v-model="item.remark_d" placeholder="Remarks"></textarea>
                     </div>
+                    
                 </div>
             </td>
 
             <td>
-                <div class="read_block" v-if="!item.is_info">
+                <div class="read_block" v-if="FinalRead(item)">
                     <textarea rows="3" v-model="item.final" readonly></textarea>
                 </div>
-                <div class="write_block" v-if="item.is_info">
+                <div class="write_block" v-if="FinalWrite(item)">
                     <textarea rows="3" v-model="item.final" placeholder="Remarks"></textarea>
                 </div>
 

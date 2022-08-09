@@ -276,7 +276,7 @@ var app = new Vue({
 
         // privledge
         access1 : false,
-        access2 : true,
+        access2 : false,
         access3 : false,
         access4 : false,
         access5 : false,
@@ -284,6 +284,8 @@ var app = new Vue({
 
         is_info: false,
         ship_item: [],
+
+        info_type : '',
     },
   
     created() {
@@ -302,6 +304,28 @@ var app = new Vue({
 
                 if(_this.id != 0)
                  _this.l_id = _this.id;
+
+                break;
+              case "role":
+                var role = tmp[1];
+
+                if(role == 1)
+                 _this.access1 = true;
+                
+                 if(role == 2)
+                 _this.access2 = true;
+
+                 if(role == 3)
+                 _this.access3 = true;
+
+                 if(role == 4)
+                 _this.access4 = true;
+
+                 if(role == 5)
+                 _this.access5 = true;
+
+                 if(role == 6)
+                 _this.access6 = true;
 
                 break;
               default:
@@ -352,6 +376,7 @@ var app = new Vue({
     },
   
     watch: {
+      
 
       
       department() {
@@ -364,45 +389,271 @@ var app = new Vue({
     },
   
     methods: {
+      AddItembyManualEncoding()
+      {
+        if(this.access2 == true)
+          return true;
+        else
+          return false;
+      },
+
+      AddItemfromProductDatabase()
+      {
+        if(this.access2 == true)
+          return true;
+        else
+          return false;
+      },
+
+      MarkasApproved()
+      {
+        if(this.access2 == true && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      MarkasOrdered()
+      {
+        if(this.access2 == true && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      MarkasCanceled()
+      {
+        if(this.access2 == true && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      EditShippingInfo()
+      {
+        if(this.access2 == true && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      EditWarehouseInfo()
+      {
+        if(this.access4 == true && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      AssignTesting()
+      {
+        if(this.access5 == true && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      EditTestingInfo()
+      {
+        if((this.access5 == true || this.access6 == true) && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      AssignDelivery()
+      {
+        if(this.access5 == true && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      EditDeliveryInfo()
+      {
+        if((this.access5 == true || this.access6 == true) && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      EditFinalInfo()
+      {
+        if(this.access5 == true && this.is_info == false)
+          return true;
+        else
+          return false;
+      },
+
+      Cancel()
+      {
+        if(this.is_info == true)
+          return true;
+        else
+          return false;
+      },
+
+
+      Save()
+      {
+        if(this.is_info == true)
+          return true;
+        else
+          return false;
+      },
+
+      ShipwayRead(item)
+      {
+        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access5 == true))
+          return true;
+        else
+          return false;
+      },
+
+      ShipwayWrite(item)
+      {
+        if(item.is_info && this.access2 == true)
+          return true;
+        else
+          return false;
+      },
+
+      EtaRead(item)
+      {
+        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access6 == true))
+          return true;
+        else
+          return false;
+      },
+
+      EtaWrite(item)
+      {
+        if(item.is_info && this.access2 == true)
+          return true;
+        else
+          return false;
+      },
+
+      ArriveRead(item)
+      {
+        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access6 == true))
+          return true;
+        else
+          return false;
+      },
+
+      ArriveWrite(item)
+      {
+        if(item.is_info && this.access2 == true)
+          return true;
+        else
+          return false;
+      },
+
+      ArriveRemarkRead(item)
+      {
+        if(!item.is_info || (this.access5 == true  || this.access6 == true))
+          return true;
+        else
+          return false;
+      },
+
+      ArriveRemarkWrite(item)
+      {
+        if(item.is_info && (this.access2 == true || this.access4 == true))
+          return true;
+        else
+          return false;
+      },
+
+      TestRead(item)
+      {
+        if(this.info_type == 'edit_delivery')
+         return true;
+
+        if(!item.is_info || (this.access4 == true || this.access5 == true))
+          return true;
+        else
+          return false;
+      },
+
+      TestWrite(item)
+      {
+        if(this.info_type == 'edit_delivery')
+         return false;
+
+        if(item.is_info && (this.access2 == true || this.access5 == true || this.access6 == true))
+          return true;
+        else
+          return false;
+      },
+
+      DeliveryRead(item)
+      {
+        if(this.info_type == 'edit_test')
+         return true;
+
+        if(!item.is_info || (this.access4 == true || this.access5 == true))
+          return true;
+        else
+          return false;
+      },
+
+      DeliveryWrite(item)
+      {
+        if(this.info_type == 'edit_test')
+         return false;
+
+        if(item.is_info && (this.access2 == true || this.access5 == true || this.access6 == true))
+          return true;
+        else
+          return false;
+      },
+
+      FinalRead(item)
+      {
+        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access6 == true))
+          return true;
+        else
+          return false;
+      },
+
+      FinalWrite(item)
+      {
+        if(item.is_info && (this.access2 == true || this.info_type == 'edit_final'))
+          return true;
+        else
+          return false;
+      },
+
       cancel_shipping_info() {
         this.getRecord();
         this.is_info = false;
+        this.info_type = '';
       },
 
-      edit_shipping_info() {
+      edit_shipping_info(type) {
         
         for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].is_checked == 1) {
-                this.items[i].is_info = true;
-                this.ship_item = this.items[i];
-                this.is_info = true;
-                break;
-            }
+          this.items[i].is_info = true;
+          this.is_info = true;
+          this.info_type = type;
         }
 
       },
+
+
 
       save_shipping_info: async function() {
         var token = localStorage.getItem("token");
         var form_Data = new FormData();
 
         form_Data.append("jwt", token);
+        form_Data.append("od_id", this.id);
+        form_Data.append("items", JSON.stringify(this.items));
+        form_Data.append("comment", this.comment);
+        form_Data.append("type", this.info_type);
         
-        form_Data.append("id", this.ship_item.id);
-        form_Data.append("shipping_way", this.ship_item.shipping_way);
-        form_Data.append("shipping_number", this.ship_item.shipping_number);
-        form_Data.append("eta", this.ship_item.eta);
-        form_Data.append("arrive", this.ship_item.arrive);
-        form_Data.append("charge", this.ship_item.charge);
-        form_Data.append("test", this.ship_item.test);
-        form_Data.append("delivery", this.ship_item.delivery);
-        form_Data.append("final", this.ship_item.final);
-        form_Data.append("remark", this.ship_item.remark);
-        form_Data.append("remark_t", this.ship_item.remark_t);
-        form_Data.append("remark_d", this.ship_item.remark_d);
-        form_Data.append("check_t", this.ship_item.check_t);
-        form_Data.append("check_d", this.ship_item.check_d);
-
         let res = await axios({
           method: 'post',
           url: 'api/order_taiwan_p1_shipping',
@@ -413,11 +664,13 @@ var app = new Vue({
         });
 
         this.getRecord();
+        this.comment = '';
 
         this.is_info = false;
+        this.info_type = '';
   
         Swal.fire({
-          text: "Records Edited",
+          text: "Records Edited" + res.data,
           icon: "info",
           confirmButtonText: "OK",
         });
@@ -433,6 +686,12 @@ var app = new Vue({
 
       approve : async function() {
         let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+          if (this.items[i].is_checked == 1) {
+            element.push(this.items[i].id);
+          }
+        }
 
         if(element.length == 0)
           return;
@@ -467,6 +726,12 @@ var app = new Vue({
       order : async function() {
         let element = [];
 
+        for (let i = 0; i < this.items.length; i++) {
+          if (this.items[i].is_checked == 1) {
+            element.push(this.items[i].id);
+          }
+        }
+
         if(element.length == 0)
           return;
 
@@ -499,6 +764,12 @@ var app = new Vue({
 
       cancel : async function() {
         let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+          if (this.items[i].is_checked == 1) {
+            element.push(this.items[i].id);
+          }
+        }
 
         if(element.length == 0)
           return;
@@ -949,8 +1220,8 @@ var app = new Vue({
               is_edit: false,
               id: sn,
               sn: sn,
-              confirm: "N",
-              confirm_text: "Not Yet Confirmed",
+              confirm: "A",
+              confirm_text: "Approved",
               brand:this.product.brand,
               brand_other:"",
               photo1:this.product.photo1 != '' ? this.product.photo1 : '',
@@ -1089,8 +1360,8 @@ var app = new Vue({
               is_edit: false,
               id: sn,
               sn: sn,
-              confirm: "N",
-              confirm_text: "Not Yet Confirmed",
+              confirm: "A",
+              confirm_text: "Approved",
               brand:this.product.brand,
               brand_other:"",
               photo1:this.product.photo1 != '' ? this.product.photo1 : '',
@@ -1232,8 +1503,8 @@ var app = new Vue({
             is_edit: false,
             id: sn,
             sn: sn,
-            confirm: "N",
-            confirm_text: "Not Yet Confirmed",
+            confirm: "A",
+            confirm_text: "Approved",
             brand:this.product.brand,
             brand_other:"",
             photo1:'',
@@ -1999,8 +2270,8 @@ var app = new Vue({
                 is_edit: false,
                 id: sn,
                 sn: sn,
-                confirm: "N",
-                confirm_text: "Not Yet Confirmed",
+                confirm: "A",
+                confirm_text: "Approved",
                 brand:"",
                 brand_other:"",
                 photo1:"",

@@ -2796,7 +2796,7 @@ CREATE TABLE IF NOT EXISTS `od_process`
   `od_id` bigint(20) unsigned NOT NULL,
   `comment` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `action` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `items` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `items` JSON,
   `status` int(11) DEFAULT 0,
   `create_id` int(11) DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
