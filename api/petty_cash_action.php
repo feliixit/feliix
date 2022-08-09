@@ -697,6 +697,10 @@ if (!isset($jwt)) {
             if($_project_name != "")
                 $_details = $_details . 'Reason: ' . $_project_name . '<br>';
 
+            // 費用申請流程的Verify階段調整2022/8/9
+            if($_project_name1 != "")
+                $_details = $_details . 'Project Name: ' . $_project_name1 . '<br>';
+
             $_details = $_details . $_details_list;
 
             foreach($_record_liquidate_attachments as &$list){
