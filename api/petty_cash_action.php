@@ -735,7 +735,8 @@ if (!isset($jwt)) {
             $stmt->bindParam(':sub_category', $_subcategory);
             $stmt->bindParam(':related_account', $_related_account);
 
-            $stmt->bindParam(':project_name', $project_name1);
+            // 費用申請流程的Verify階段調整2022/8/9
+            $stmt->bindParam(':project_name', $_project_name1);
 
             $stmt->bindParam(':details', rtrim($_details, "<br>"));
             $stmt->bindParam(':gcp_url', rtrim($_gcp_url, ","));
