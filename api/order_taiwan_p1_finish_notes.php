@@ -66,29 +66,46 @@ try{
         if($item_id != 0)
         {
             // Get prev confirm flag
+            $pre_status = GerPreStatus($item_id, $db);
             
             $query = "update od_item
             SET
-                `status` = 3,
-                confirm = 'C'
-            where id = :id and confirm = 'C' ";
+                `status` = :status,
+                confirm = :confirm
+            where id = :id";
+
+            if($pre_status != '')
+            {
+                $status_json = json_decode($pre_status,true);
+
+                $confirm = $status_json['confirm'];
+                $status = $status_json['status'];
+            }
+            else
+            {
+                $confirm = '';
+                $status = 0;
+            }
+            
 
             // prepare the query
             $stmt = $db->prepare($query);
 
             $stmt->bindParam(':id', $item_id);
-        }
-    
-        $jsonEncodedReturnArray = "";
-        if ($stmt->execute()) {
-            $returnArray = array('ret' => $item_id);
-            $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+            $stmt->bindParam(':status', $status);
+            $stmt->bindParam(':confirm', $confirm);
 
-        }
-        else
-        {
-            $arr = $stmt->errorInfo();
-            error_log($arr[2]);
+            $jsonEncodedReturnArray = "";
+            if ($stmt->execute()) {
+                $returnArray = array('ret' => $item_id);
+                $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+            }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+            }
         }
 
     }
@@ -141,4 +158,15 @@ try{
 catch (Exception $e)
 {
     error_log($e->getMessage());
+}
+
+
+function GerPreStatus($id, $db)
+{
+    $query = "SELECT items FROM od_process WHERE od_id = :id and action = 'send_note' order by created_at desc limit 1";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['items'];
 }

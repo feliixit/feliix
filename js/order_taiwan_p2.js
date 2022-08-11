@@ -2056,7 +2056,7 @@ var app = new Vue({
   
         const params = {
           id: _this.id,
-          type: 2
+          pg: 2
         };
   
         let token = localStorage.getItem("accessToken");

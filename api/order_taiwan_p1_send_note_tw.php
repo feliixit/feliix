@@ -64,6 +64,10 @@ try{
 
         if($item_id != 0)
         {
+
+            $pre_status = GetCurrentStatus($item_id, $db);
+            $json = json_encode($pre_status);
+
             $query = "update od_item
             SET
                 `status` = 1
@@ -71,70 +75,76 @@ try{
 
             // prepare the query
             $stmt = $db->prepare($query);
-
             $stmt->bindParam(':id', $item_id);
+
+            if($stmt->execute())
+            {
+                $query = "INSERT INTO od_process
+                SET
+                    `od_id` = :od_id,
+                    `comment` = :comment,
+                    `action` = :action,
+                    `items` = :items,
+                    `status` = 0,
+                    `create_id` = :create_id,
+                    `created_at` =  now() ";
+            
+                // prepare the query
+                $stmt = $db->prepare($query);
+            
+                // bind the values
+                $stmt->bindParam(':od_id', $item_id);
+                $stmt->bindParam(':comment', $comment);
+                $stmt->bindParam(':action', $action);
+                $stmt->bindParam(':items', $json);
+                $stmt->bindParam(':create_id', $user_id);
+            
+            
+                $last_id = 0;
+                // execute the query, also check if query was successful
+                try {
+                    // execute the query, also check if query was successful
+                    if ($stmt->execute()) {
+                        $last_id = $db->lastInsertId();
+                    } else {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+            }
         }
     
-        $jsonEncodedReturnArray = "";
-        if ($stmt->execute()) {
-            $returnArray = array('ret' => $item_id);
-            $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
-
-        }
-        else
-        {
-            $arr = $stmt->errorInfo();
-            error_log($arr[2]);
-        }
-
     }
 
-    $query = "INSERT INTO od_process
-    SET
-        `od_id` = :od_id,
-        `comment` = :comment,
-        `action` = :action,
-        `items` = :items,
-        `status` = 0,
-        `create_id` = :create_id,
-        `created_at` =  now() ";
-
-    // prepare the query
-    $stmt = $db->prepare($query);
-
-    // bind the values
-    $stmt->bindParam(':od_id', $od_id);
-    $stmt->bindParam(':comment', $comment);
-    $stmt->bindParam(':action', $action);
-    $stmt->bindParam(':items', $items);
-    $stmt->bindParam(':create_id', $user_id);
-
-
-    $last_id = 0;
-    // execute the query, also check if query was successful
-    try {
-        // execute the query, also check if query was successful
-        if ($stmt->execute()) {
-            $last_id = $db->lastInsertId();
-        } else {
-            $arr = $stmt->errorInfo();
-            error_log($arr[2]);
-            $db->rollback();
-            http_response_code(501);
-            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
-            die();
-        }
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        $db->rollback();
-        http_response_code(501);
-        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-        die();
-    }
+    $returnArray = array('ret' => $item_id);
+    $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
 
     echo $jsonEncodedReturnArray;
 }
 catch (Exception $e)
 {
     error_log($e->getMessage());
+}
+
+function GetCurrentStatus($id, $db)
+{
+    $query = "select confirm, status from od_item where id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $arr = array('confirm' => $row["confirm"], 'status' => $row["status"]);
+    
+    return $arr;
 }

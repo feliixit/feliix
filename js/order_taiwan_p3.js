@@ -1233,7 +1233,7 @@ var app = new Vue({
               qty:"",
               srp:price,
               date_needed:"",
-              status:"",
+              status:"3",
               notes:[]
             };
 
@@ -1373,7 +1373,7 @@ var app = new Vue({
               qty:"",
               srp:price,
               date_needed:"",
-              status:"",
+              status:"3",
               notes:[]
             };
   
@@ -1516,7 +1516,7 @@ var app = new Vue({
             qty:"",
             srp:price,
             date_needed:"",
-            status:"",
+            status:"3",
             notes:[]
           };
 
@@ -2283,7 +2283,7 @@ var app = new Vue({
                 qty:"",
                 srp:"",
                 date_needed:"",
-                status:"",
+                status:"3",
                 notes:[]
               };
 
@@ -2400,7 +2400,7 @@ var app = new Vue({
   
         const params = {
           id: _this.id,
-          confirm: 'A'
+          pg: 3
         };
   
         let token = localStorage.getItem("accessToken");
@@ -2625,7 +2625,7 @@ var app = new Vue({
           this.loading = true;
 
           axios
-            .post("api/order_taiwan_p1_snapshot", data, {
+            .post("api/order_taiwan_p1_snapshot_a", data, {
               headers: {
               "Content-Type": "application/json"
               }

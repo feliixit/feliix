@@ -11,9 +11,9 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $type = (isset($_GET['type']) ?  $_GET['type'] : 0);
 $confirm = (isset($_GET['confirm']) ?  $_GET['confirm'] : '');
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$pg = (isset($_GET['pg']) ?  $_GET['pg'] : 0);
 $user_id = 0;
 
-$type = ($type == '' ? '0' : $type);
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -78,11 +78,21 @@ if (!isset($jwt)) {
                     FROM od_item
                     WHERE status <> -1 and od_id=$id";
                     
-    if($type != 0)
-        $query = $query . " and status = $type ";
 
     if($confirm != '')
         $query = $query . " and confirm = '$confirm' ";
+
+    if($pg != 0)
+    {
+        if($pg == 1)
+            $query = $query . " and status <= $pg ";
+        else if($pg == 2)
+            $query = $query . " and status = $pg ";
+        else if($pg == 3)
+            $query = $query . " and status >= $pg ";
+    }
+        
+
 
     $query = $query . " order by ABS(sn) ";
 
@@ -417,6 +427,12 @@ function GetConfirmText($loc)
             break;
         case "R":
             $location = "Rejected";
+            break;
+        case "O":
+            $location = "Ordered";
+            break;
+        case "E":
+            $location = "Canceled";
             break;
         default:
             $location = "";

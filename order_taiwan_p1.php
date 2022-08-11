@@ -1273,19 +1273,19 @@
                     <div class="block">
 
                         <div class="popupblock">
-                            <a title="Add Item by Manual Encoding">
+                            <a title="Add Item by Manual Encoding" v-if="access1 == true">
                                 <i class="fas fa-plus" @click="addItem()"></i>
                             </a>
                         </div>
 
                         <div class="popupblock">
-                            <a title="Add Item from Product Database">
+                            <a title="Add Item from Product Database" v-if="access1 == true">
                                 <i class="fas fa-list-alt"  @click="product_catalog()"></i>
                             </a>
                         </div>
 
                         <div class="popupblock">
-                            <a title="Add Item from Existing Quotation">
+                            <a title="Add Item from Existing Quotation" v-if="access1 == true">
                                 <i class="fas fa-file-import" @click="quotation_mgt()"></i>
                             </a>
                         </div>

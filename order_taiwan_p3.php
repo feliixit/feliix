@@ -1345,8 +1345,8 @@
                             <div class="write_block" v-if="item.is_edit">
                                 <select v-model="item.confirm">
                                     <option value="A">Approved</option>
-                                    <option value="C">Ordered</option>
-                                    <option value="D">Canceled</option>
+                                    <option value="O">Ordered</option>
+                                    <option value="E">Canceled</option>
                                 </select>
                             </div>
                         </td>

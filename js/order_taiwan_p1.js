@@ -2087,6 +2087,7 @@ var app = new Vue({
           return;
   
         const params = {
+          pg: 1,
           id: _this.id,
         };
   
