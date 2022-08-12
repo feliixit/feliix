@@ -946,6 +946,7 @@ var app = new Vue({
                   //handle success
 
                   _this.getRecord();
+                  alert('Add Successfully');
     
                 })
                 .catch(function(error) {
@@ -953,149 +954,9 @@ var app = new Vue({
     
                 });
 
-        alert('Add Successfully');
+        
       },
 
-      add_with_image(all) {
-
-        var photo = "";
-        var price = "";
-        var list = "";
-
-        let item_product = this.shallowCopy(
-          this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
-        )
-
-        if(this.product.product.length > 0 && item_product.id == undefined && all != 'all') {
-          alert('Please choose an option for each attribute');
-          return;
-        }
-
-        if(item_product.id != undefined)
-        {
-          if(item_product.photo != "")
-            photo = item_product.photo;
-            // price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
-            price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
-            if(this.v1 != "")
-              list += (item_product.k1 + ': ' + item_product.v1) + "\n";
-            if(this.v2 != "")
-              list += (item_product.k2 + ': ' + item_product.v2) + "\n";
-            if(this.v3 != "")
-              list += (item_product.k3 + ': ' + item_product.v3) + "\n";
-        }
-        else
-        {
-          photo = this.product.photo1;
-          // price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
-          price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
-          list = "";
-        }
-
-        if(all == 'all')
-        {
-          list = "";
-          var k1, k2, k3;
-          k1 = this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1;
-          k2 = this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2;
-          k3 = this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3;
-
-          if(k1 !== '')
-            list += this.product.variation1 === "custom" ? this.product.variation1_custom : this.product.variation1 + ': ' + this.product.variation1_value.join(', ') + "\n";
-          if(k2 !== '')
-            list += this.product.variation2 === "custom" ? this.product.variation2_custom : this.product.variation2 + ': ' + this.product.variation2_value.join(', ') + "\n";
-          if(k3 !== '')
-            list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
-
-          photo = this.product.photo1;
-          if(this.product.srp !== null || this.product.srp_quoted !== null)
-            price = this.product.srp_quoted !== null ? this.product.srp_quoted : this.product.srp;
-            //price = this.product.srp !== null ? this.product.srp : this.product.srp_quoted;
-
-          if(price == null)
-            //price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
-            price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
-        }
-
-        for(var i=0; i<this.specification.length; i++)
-        {
-            if(this.specification[i].k1 !== '')
-              list += this.specification[i].k1 + ': ' + this.specification[i].v1 + "\n";
-            if(this.specification[i].k2 !== '')
-              list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
-        }
-
-        if(price == null)
-          price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
-          // price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
-
-          list.replace(/\n+$/, "");
-
-          var sn = 0;
-          
-          for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].id * 1 > sn) {
-              sn = this.items[i].id * 1;
-            }
-        }
-  
-          sn = sn * 1 + 1;
-  
-          items = [];
-  
-          item = {
-              is_checked:false,
-              is_edit: false,
-              id: sn,
-              sn: sn,
-              confirm: "N",
-              confirm_text: "Not Yet Confirmed",
-              brand:this.product.brand,
-              brand_other:"",
-              photo1:this.product.photo1 != '' ? this.product.photo1 : '',
-              photo2:this.product.photo2 != '' ? this.product.photo2 : '',
-              photo3:this.product.photo3 != '' ? this.product.photo3 : '',
-              code:this.product.code,
-              brief:"",
-              listing:list,
-              qty:"",
-              srp:price,
-              date_needed:"",
-              status:"",
-              notes:[]
-            };
-  
-            items.push(item);
-  
-              var token = localStorage.getItem("token");
-                var form_Data = new FormData();
-  
-                form_Data.append("jwt", token);
-                form_Data.append("od_id", this.id);
-                form_Data.append("block", JSON.stringify(items));
-  
-                axios({
-                  method: "post",
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                  },
-                  url: "api/order_taiwan_p1_item_insert",
-                  data: form_Data,
-                })
-                  .then(function(response) {
-                    //handle success
-  
-                    _this.getRecord();
-      
-                  })
-                  .catch(function(error) {
-                
-      
-                  });
-  
-          alert('Add Successfully');
-      },
-      
       add_without_image(all) {
 
         var photo = "";
@@ -1229,6 +1090,7 @@ var app = new Vue({
                   //handle success
 
                   _this.getRecord();
+                  alert('Add Successfully');
     
                 })
                 .catch(function(error) {
@@ -1236,7 +1098,7 @@ var app = new Vue({
     
                 });
 
-        alert('Add Successfully');
+        
       },
 
       close_single: function() {
