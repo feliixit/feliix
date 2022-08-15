@@ -1822,7 +1822,7 @@ var app = new Vue({
         || item.check_t != '' 
         || item.remark_t != ''
         || item.delivery != '' 
-        || item.check_d != '1 
+        || item.check_d != '' 
         || item.remark_d != '' 
         || item.final != '') 
         {
