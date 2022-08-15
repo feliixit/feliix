@@ -1816,13 +1816,13 @@ var app = new Vue({
         || item.shipping_number != '' 
         || item.eta != '' 
         || item.arrive != '' 
-        || item.charge != '1' 
+        || item.charge != '' 
         || item.remark != '' 
         || item.test != '' 
-        || item.check_t != '1' 
+        || item.check_t != '' 
         || item.remark_t != ''
         || item.delivery != '' 
-        || item.check_d != '1' 
+        || item.check_d != '1 
         || item.remark_d != '' 
         || item.final != '') 
         {
