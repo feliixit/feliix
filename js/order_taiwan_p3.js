@@ -479,7 +479,7 @@ var app = new Vue({
 
       EditFinalInfo()
       {
-        if(this.access5 == true && this.is_info == false)
+        if(false == true && this.is_info == false)
           return true;
         else
           return false;
@@ -552,15 +552,12 @@ var app = new Vue({
 
       ArriveRemarkRead(item)
       {
-        if(!item.is_info || (this.access5 == true  || this.access6 == true))
-          return true;
-        else
-          return false;
+        return !this.ArriveRemarkWrite(item);
       },
 
       ArriveRemarkWrite(item)
       {
-        if(item.is_info && (this.access2 == true || this.access4 == true))
+        if(item.is_info && this.info_type == 'ware_info' && (this.access2 == true || this.access4 == true))
           return true;
         else
           return false;
@@ -568,13 +565,7 @@ var app = new Vue({
 
       TestRead(item)
       {
-        if(this.info_type == 'edit_delivery')
-         return true;
-
-        if(!item.is_info || (this.access4 == true || this.access5 == true))
-          return true;
-        else
-          return false;
+        return !this.TestWrite(item);
       },
 
       TestWrite(item)
@@ -582,7 +573,7 @@ var app = new Vue({
         if(this.info_type == 'edit_delivery')
          return false;
 
-        if(item.is_info && (this.access2 == true || this.access5 == true || this.access6 == true))
+        if(item.is_info && (this.info_type == 'assing_test' || this.info_type == 'edit_test')&& (this.access2 == true || this.access5 == true || this.access6 == true))
           return true;
         else
           return false;
@@ -590,13 +581,7 @@ var app = new Vue({
 
       DeliveryRead(item)
       {
-        if(this.info_type == 'edit_test')
-         return true;
-
-        if(!item.is_info || (this.access4 == true || this.access5 == true))
-          return true;
-        else
-          return false;
+        return !this.DeliveryWrite(item);
       },
 
       DeliveryWrite(item)
@@ -604,7 +589,7 @@ var app = new Vue({
         if(this.info_type == 'edit_test')
          return false;
 
-        if(item.is_info && (this.access2 == true || this.access5 == true || this.access6 == true))
+        if(item.is_info && (this.info_type == 'assign_delivery' || this.info_type == 'edit_delivery') && (this.access2 == true || this.access5 == true || this.access6 == true))
           return true;
         else
           return false;
@@ -612,15 +597,12 @@ var app = new Vue({
 
       FinalRead(item)
       {
-        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access6 == true))
-          return true;
-        else
-          return false;
+        return !this.FinalWrite(item);
       },
 
       FinalWrite(item)
       {
-        if(item.is_info && (this.access2 == true || this.info_type == 'edit_final'))
+        if(item.is_info && this.info_type == 'edit_final' &&  (this.access2 == true || this.info_type == 'edit_final'))
           return true;
         else
           return false;
@@ -1814,7 +1796,39 @@ var app = new Vue({
         {
           Swal.fire({
             text: "User is not allowed to delete the item already with notes.",
-            icon: "Info",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        if(item.notes_a.length > 0)
+        {
+          Swal.fire({
+            text: "User is not allowed to delete the item already with notes.",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          return;
+        }
+
+        if(item.shipping_way != '' 
+        || item.shipping_number != '' 
+        || item.eta != '' 
+        || item.arrive != '' 
+        || item.charge != '1' 
+        || item.remark != '' 
+        || item.test != '' 
+        || item.check_t != '1' 
+        || item.remark_t != ''
+        || item.delivery != '' 
+        || item.check_d != '1' 
+        || item.remark_d != '' 
+        || item.final != '') 
+        {
+          Swal.fire({
+            text: "This item already has notes or additional info, so it is not allowed to delete.",
+            icon: "info",
             confirmButtonText: "OK",
           });
           return;

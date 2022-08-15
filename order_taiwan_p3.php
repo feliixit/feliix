@@ -1274,13 +1274,13 @@
                     <!-- buttons to add product -->
                     <div class="block">
 
-                        <div class="popupblock" v-if="AddItembyManualEncoding">
+                        <div class="popupblock" v-if="info_type == '' && access2 == true">
                             <a title="Add Item by Manual Encoding">
                                 <i class="fas fa-plus" @click="addItem()"></i>
                             </a>
                         </div>
 
-                        <div class="popupblock" v-if="AddItemfromProductDatabase">
+                        <div class="popupblock" v-if="info_type == '' && access2 == true">
                             <a title="Add Item from Product Database">
                                 <i class="fas fa-list-alt"  @click="product_catalog()"></i>
                             </a>
@@ -1617,11 +1617,11 @@
 
             <td>
                 <div class="btnbox">
-                <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true  && access2 == true"></i>
-                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true  && access2 == true"></i>
-                    <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true"></i>
+                <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true && info_type == ''"></i>
+                    <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true && info_type == ''"></i>
+                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true  && access2 == true && info_type == ''"></i>
+                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true  && access2 == true && info_type == ''"></i>
+                    <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true && info_type == ''"></i>
                     <i class="fas fa-times-circle" v-if="item.is_edit == true" @click="cancelItem(item)"></i>
                     <i class="fas fa-check-circle" v-if="item.is_edit == true" @click="confirmItem(item)"></i>
                 </div>

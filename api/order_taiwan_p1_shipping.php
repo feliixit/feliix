@@ -234,8 +234,8 @@ function GetShipping($id, $db){
         $delivery = $row['delivery'];
         $final = $row['final'];
         $remark = $row['remark'];
-        $remart_t = $row['remark_t'];
-        $remart_d = $row['remark_d'];
+        $remark_t = $row['remark_t'];
+        $remark_d = $row['remark_d'];
         $check_t = $row['check_t'];
         $check_d = $row['check_d'];
         $create_id = $row['create_id'];
@@ -254,8 +254,8 @@ function GetShipping($id, $db){
             "delivery" => $delivery,
             "final" => $final,
             "remark" => $remark,
-            "remart_t" => $remart_t,
-            "remart_d" => $remart_d,
+            "remark_t" => $remark_t,
+            "remark_d" => $remark_d,
             "check_t" => $check_t,
             "check_d" => $check_d,
             "create_id" => $create_id,
