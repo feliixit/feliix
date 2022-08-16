@@ -1250,7 +1250,7 @@
 
 
                 <a title="Export into Excel" style="color: #4882C3; font-size: 25px; float: right;">
-                    <i class="fas fa-file-export"></i>
+                    <i class="fas fa-file-export" @click="export_petty()"></i>
                 </a>
 
             </div>

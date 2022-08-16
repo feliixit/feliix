@@ -2487,6 +2487,37 @@ var app = new Vue({
         return this.product_records;
       },
 
+      export_petty() {
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+  
+  
+        axios({
+          method: "post",
+          url: "api/order_taiwan_p1_print",
+          data: form_Data,
+          responseType: "blob",
+        })
+            .then(function(response) {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                 
+                    link.setAttribute('download', 'Order Taiwan Report.xlsx');
+                 
+                  document.body.appendChild(link);
+                  link.click();
+  
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+      },
+
 
       print_me(item) {
 
