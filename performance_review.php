@@ -361,7 +361,6 @@ try {
 
         .modal {
             display: none;
-            position: absolute;
             top: 20px;
             left: 0;
             right: 0;
@@ -375,8 +374,6 @@ try {
             border: 3px solid #2F9A57;
             padding: 20px 0 0;
             background-color: white;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
         }
 
         .modal .modal-content .modal-header {
@@ -565,7 +562,7 @@ try {
 <body class="green">
 
 <div class="bodybox">
-    <div class="mask" :ref="'mask'" style="display:none"></div>
+    
     <!-- header -->
     <header>header</header>
     <!-- header end -->
