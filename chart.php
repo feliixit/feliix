@@ -90,7 +90,7 @@ catch (Exception $e) {
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="js/moment.js"></script>
 
     <!-- Chart js載入 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

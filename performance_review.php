@@ -148,7 +148,7 @@ try {
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
     <script type="text/javascript" src="js/main.js" defer></script>
-    <script src="https://cdn.bootcss.com/moment.js/2.21.0/moment.js"></script>
+    <script src="js/moment.js"></script>
 
     <!-- import CSS -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
