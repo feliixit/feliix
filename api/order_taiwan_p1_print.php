@@ -213,7 +213,7 @@ if($jwt){
             $i = 2;
             foreach($merged_results as $row)
             {
-                $sheet->setCellValue('A' . $i, $row['sn']);
+                $sheet->setCellValue('A' . $i, $i-1);
                 $sheet->setCellValue('B' . $i, $row['status'] <= 1 ? '●' : '');
                 $sheet->getStyle('B'. $i)->applyFromArray($center_style);
                 $sheet->setCellValue('C' . $i, $row['status'] == 2 ? '●' : '');
