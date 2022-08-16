@@ -68,7 +68,7 @@ try {
 
 
     <script type="text/javascript" src="https://unpkg.com/fullcalendar@5.1.0/main.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="js/moment.js"></script>
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
