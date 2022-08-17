@@ -438,35 +438,14 @@ function grab_image($image_url,$image_file){
 
     $ext = pathinfo($image_file, PATHINFO_EXTENSION);
 
-    createResizedImage($image_file, $image_file,100,100, strtolower($ext));
+    createResizedImage($image_file, $image_file,strtolower($ext));
 }
 
-function createResized($imagePath, $newPath){
-    $fn = $imagePath;
-    $size = getimagesize($fn);
-    $ratio = $size[0]/$size[1]; // width/height
-    if( $ratio > 1) {
-        $width = 100;
-        $height = 100/$ratio;
-    }
-    else {
-        $width = 100*$ratio;
-        $height = 100;
-    }
-    $src = imagecreatefromstring(file_get_contents($fn));
-    $dst = imagecreatetruecolor($width,$height);
-    imagecopyresampled($dst,$src,0,0,0,0,$width,$height,$size[0],$size[1]);
-    imagedestroy($src);
-    
-    imagepng($dst,$newPath); // adjust format as needed
-    imagedestroy($dst);
-}
 
 function createResizedImage(
     string $imagePath = '',
     string $newPath = '',
-    int $newWidth = 0,
-    int $newHeight = 0,
+
     string $outExt = 'DEFAULT'
 ) : ?string
 {
@@ -482,6 +461,16 @@ function createResizedImage(
     }
 
     list ($width, $height) = getimagesize ($imagePath);
+
+    $ratio = $width/$height; // width/height
+    if( $ratio > 1) {
+        $newWidth = 100;
+        $newHeight = 100/$ratio;
+    }
+    else {
+        $newWidth = 100*$ratio;
+        $newHeight = 100;
+    }
 
 
     $outBool = in_array ($outExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'JPG', 'JPEG', 'PNG', 'GIF', 'BMP', 'WEBP']);
