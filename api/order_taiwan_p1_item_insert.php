@@ -119,7 +119,7 @@ switch ($method) {
                 $date_needed = isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
 
                 $status = isset($block_array[$i]['status']) ? $block_array[$i]['status'] : 0;
-
+                $status = $status == '' ? 0 : $status;
        
 
                 // bind the values
