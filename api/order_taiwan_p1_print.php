@@ -436,7 +436,9 @@ function grab_image($image_url,$image_file){
     curl_close ($ch);
     fclose($fp);
 
-    createResized($image_file, $image_file);
+    $ext = pathinfo($image_file, PATHINFO_EXTENSION);
+
+    createResizedImage($image_file, $image_file,100,100, strtolower($ext));
 }
 
 function createResized($imagePath, $newPath){

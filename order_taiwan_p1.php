@@ -1475,8 +1475,8 @@
                 <div class="btnbox">
                     <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true && item.status == 0 && access2 == false"></i>
-                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true && item.status == 0 && access2 == false"></i>
+                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true && item.status <= 1 && access2 == false"></i>
+                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true && item.status <= 1 && access2 == false"></i>
                     <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-times-circle" v-if="item.is_edit == true" @click="cancelItem(item)"></i>
                     <i class="fas fa-check-circle" v-if="item.is_edit == true" @click="confirmItem(item)"></i>
