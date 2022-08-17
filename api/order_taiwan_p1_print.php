@@ -436,7 +436,28 @@ function grab_image($image_url,$image_file){
     curl_close ($ch);
     fclose($fp);
 
-    createResizedImage($image_file, $image_file,100,100);
+    createResized($image_file, $image_file);
+}
+
+function createResized($imagePath, $newPath){
+    $fn = $imagePath;
+    $size = getimagesize($fn);
+    $ratio = $size[0]/$size[1]; // width/height
+    if( $ratio > 1) {
+        $width = 100;
+        $height = 100/$ratio;
+    }
+    else {
+        $width = 100*$ratio;
+        $height = 100;
+    }
+    $src = imagecreatefromstring(file_get_contents($fn));
+    $dst = imagecreatetruecolor($width,$height);
+    imagecopyresampled($dst,$src,0,0,0,0,$width,$height,$size[0],$size[1]);
+    imagedestroy($src);
+    
+    imagepng($dst,$newPath); // adjust format as needed
+    imagedestroy($dst);
 }
 
 function createResizedImage(
@@ -460,7 +481,8 @@ function createResizedImage(
 
     list ($width, $height) = getimagesize ($imagePath);
 
-    $outBool = in_array ($outExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']);
+
+    $outBool = in_array ($outExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'JPG', 'JPEG', 'PNG', 'GIF', 'BMP', 'WEBP']);
 
     switch ($type) {
         case IMAGETYPE_JPEG:
@@ -486,8 +508,14 @@ function createResizedImage(
 
     $newImage = imagecreatetruecolor ($newWidth, $newHeight);
 
+    //TRANSPARENT BACKGROUND
+    $color = imagecolorallocatealpha ($newImage, 0, 0, 0, 127); //fill transparent back
+    imagefill ($newImage, 0, 0, $color);
+    imagesavealpha ($newImage, true);
+
     //ROUTINE
     imagecopyresampled ($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
 
     switch (true) {
         case in_array ($outExt, ['jpg', 'jpeg']): $success = imagejpeg ($newImage, $newPath);
