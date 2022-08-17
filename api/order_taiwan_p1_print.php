@@ -486,14 +486,8 @@ function createResizedImage(
 
     $newImage = imagecreatetruecolor ($newWidth, $newHeight);
 
-    //TRANSPARENT BACKGROUND
-    $color = imagecolorallocatealpha ($newImage, 0, 0, 0, 127); //fill transparent back
-    imagefill ($newImage, 0, 0, $color);
-    imagesavealpha ($newImage, true);
-
     //ROUTINE
     imagecopyresampled ($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
 
     switch (true) {
         case in_array ($outExt, ['jpg', 'jpeg']): $success = imagejpeg ($newImage, $newPath);
