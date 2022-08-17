@@ -93,6 +93,12 @@ if($jwt){
         $sn = $row['sn'];
         $confirm = $row['confirm'];
 
+        if($row['status'] == 1)
+            $confirm = "W";
+        // for approval
+        if($row['status'] == 2)
+            $confirm = "F";
+
         $confirm_text = GetConfirmText($confirm, $db);
         $brand = $row['brand'];
         $brand_other = $row['brand_other'];
@@ -220,9 +226,13 @@ if($jwt){
                 $sheet->getStyle('C'. $i)->applyFromArray($center_style);
                 $sheet->setCellValue('D' . $i, $row['status'] >= 3 ? '●' : '');
                 $sheet->getStyle('D'. $i)->applyFromArray($center_style);
+
+                
+                    
                 $sheet->setCellValue('E' . $i, $row['confirm_text']);
                 $sheet->getStyle('E'. $i)->applyFromArray($center_style);
-                if($row['brand_other'] == '')
+
+                if($row['brand_other'] != 'OTHER')
                     $sheet->setCellValue('F' . $i, $row['brand']);
                 else
                     $sheet->setCellValue('F' . $i, $row['brand_other']);
@@ -230,12 +240,12 @@ if($jwt){
 
                 if($row['photo1'] != '')
                 {
-                    grab_image($row['photo1'], $conf::$upload_path . $row['photo1']);
+                    grab_image(str_replace(' ', '_', $row['photo1']), $conf::$upload_path . str_replace(' ', '_', $row['photo1']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
-                    $objDrawing->setPath($conf::$upload_path  . $row['photo1']);
+                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '_', $row['photo1']));
                     $objDrawing->setCoordinates('G' . $i);
                     $objDrawing->setWorksheet($sheet);
 
@@ -247,12 +257,12 @@ if($jwt){
 
                 if($row['photo2'] != '')
                 {
-                    grab_image($row['photo2'], $conf::$upload_path . $row['photo2']);
+                    grab_image(str_replace(' ', '_', $row['photo2']), $conf::$upload_path . str_replace(' ', '_', $row['photo2']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo2');
                     $objDrawing->setDescription('photo2');
-                    $objDrawing->setPath($conf::$upload_path  . $row['photo2']);
+                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '_', $row['photo2']));
                     $objDrawing->setCoordinates('H' . $i);
                     $objDrawing->setWorksheet($sheet);
 
@@ -264,12 +274,12 @@ if($jwt){
 
                 if($row['photo3'] != '')
                 {
-                    grab_image($row['photo3'], $conf::$upload_path . $row['photo3']);
+                    grab_image(str_replace(' ', '_', $row['photo3']), $conf::$upload_path . str_replace(' ', '_', $row['photo3']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo3');
                     $objDrawing->setDescription('photo3');
-                    $objDrawing->setPath($conf::$upload_path  . $row['photo3']);
+                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '_', $row['photo3']));
                     $objDrawing->setCoordinates('I' . $i);
                     $objDrawing->setWorksheet($sheet);
 
