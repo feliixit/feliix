@@ -299,28 +299,28 @@ var app = new Vue({
                  _this.l_id = _this.id;
 
                 break;
-              case "role":
-                  var role = tmp[1];
+              // case "role":
+              //     var role = tmp[1];
   
-                  if(role == 1)
-                   _this.access1 = true;
+              //     if(role == 1)
+              //      _this.access1 = true;
                   
-                   if(role == 2)
-                   _this.access2 = true;
+              //      if(role == 2)
+              //      _this.access2 = true;
   
-                   if(role == 3)
-                   _this.access3 = true;
+              //      if(role == 3)
+              //      _this.access3 = true;
   
-                   if(role == 4)
-                   _this.access4 = true;
+              //      if(role == 4)
+              //      _this.access4 = true;
   
-                   if(role == 5)
-                   _this.access5 = true;
+              //      if(role == 5)
+              //      _this.access5 = true;
   
-                   if(role == 6)
-                   _this.access6 = true;
+              //      if(role == 6)
+              //      _this.access6 = true;
   
-                  break;
+              //     break;
               default:
                 console.log(`Too many args`);
             }
@@ -335,7 +335,7 @@ var app = new Vue({
       this.get_brands();
       this.getUsers();
       this.getCreators();
-
+      this.getAccess();
     },
   
     computed: {
@@ -380,6 +380,50 @@ var app = new Vue({
     },
   
     methods: {
+      
+      getAccess: function() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append('jwt', token);
+  
+        axios({
+            method: 'get',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/order_taiwan_p1_access_control',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            _this.access1 = response.data.access1;
+            _this.access2 = response.data.access2;
+            _this.access3 = response.data.access3;
+            _this.access4 = response.data.access4;
+            _this.access5 = response.data.access5;
+            _this.access6 = response.data.access6;
+  
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
+      },
+
+
+      no_privlege() {
+        if(this.access1 == false && this.access2 == false && this.access3 == false && this.access4 == false && this.access5 == false && this.access6 == false)
+          return true;
+        else
+          return false;
+      },
+
     p1() {
         window.location.href = "order_taiwan_p1?id=" + this.id;
         },

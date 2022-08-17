@@ -1236,7 +1236,7 @@ var app = new Vue({
 
       if(this.department.trim().toUpperCase() == 'SERVICE')
       { 
-        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER')
+        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER' || this.title.trim().toUpperCase() == 'SERVICE MANAGER')
           can_save = true;
       }
 
@@ -1314,7 +1314,7 @@ var app = new Vue({
 
       if(this.department.trim().toUpperCase() == 'SERVICE')
       { 
-        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER')
+        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER' || this.title.trim().toUpperCase() == 'SERVICE MANAGER')
           can_save = true;
       }
 

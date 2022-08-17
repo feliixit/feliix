@@ -335,7 +335,7 @@ var app = new Vue({
       this.get_brands();
       this.getUsers();
       this.getCreators();
-
+      this.getAccess();
     },
   
     computed: {
@@ -380,6 +380,13 @@ var app = new Vue({
     },
   
     methods: {
+      no_privlege() {
+        if(this.access1 == false && this.access2 == false && this.access3 == false && this.access4 == false && this.access5 == false && this.access6 == false)
+          return true;
+        else
+          return false;
+      },
+
       p2() {
         window.location.href = "order_taiwan_p2?id=" + this.id;
       },
@@ -1866,6 +1873,41 @@ var app = new Vue({
                 });
         },
     
+        
+      getAccess: function() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append('jwt', token);
+  
+        axios({
+            method: 'get',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/order_taiwan_p1_access_control',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            _this.access1 = response.data.access1;
+            _this.access2 = response.data.access2;
+            _this.access3 = response.data.access3;
+            _this.access4 = response.data.access4;
+            _this.access5 = response.data.access5;
+            _this.access6 = response.data.access6;
+  
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
+      },
 
       getUserName: function() {
         var token = localStorage.getItem('token');

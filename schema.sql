@@ -2886,3 +2886,22 @@ ADD COLUMN `check_t` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
 ALTER TABLE od_item
 ADD COLUMN `check_d` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20220817 access control
+ALTER TABLE access_control
+ADD COLUMN `access1` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access2` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access3` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access4` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access5` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access6` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';

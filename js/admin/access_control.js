@@ -15,6 +15,13 @@ var app = new Vue({
     payess7: [],
     payess8: [],
 
+    access1: [],
+    access2: [],
+    access3: [],
+    access4: [],
+    access5: [],
+    access6: [],
+
     payees: [],
   },
 
@@ -75,6 +82,32 @@ var app = new Vue({
               _this.payess8 = res.data[0]["payess8"].split(",").filter(function (el) {
                 return el != "";
               });
+
+            if (kind === 9 || kind === undefined)
+              _this.access1 = res.data[0]["access1"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 10 || kind === undefined)
+              _this.access2 = res.data[0]["access2"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 11 || kind === undefined)
+              _this.access3 = res.data[0]["access3"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 12 || kind === undefined)
+              _this.access4 = res.data[0]["access4"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 13 || kind === undefined)
+              _this.access5 = res.data[0]["access5"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 14 || kind === undefined)
+              _this.access6 = res.data[0]["access6"].split(",").filter(function (el) {
+                return el != "";
+              });
+
           },
           (err) => {
             alert(err.response);
@@ -127,6 +160,12 @@ var app = new Vue({
       form_Data.append("payess6", this.payess6.toString());
       form_Data.append("payess7", this.payess7.toString());
       form_Data.append("payess8", this.payess8.toString());
+      form_Data.append("access1", this.access1.toString());
+      form_Data.append("access2", this.access2.toString());
+      form_Data.append("access3", this.access3.toString());
+      form_Data.append("access4", this.access4.toString());
+      form_Data.append("access5", this.access5.toString());
+      form_Data.append("access6", this.access6.toString());
 
       axios({
         method: "post",

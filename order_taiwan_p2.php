@@ -1275,11 +1275,11 @@
 
                         <div class="btn_block">
                 
-                            <a class="btn small green" @click="approve()" v-if="access3 == true">Approve</a>
-                            <a class="btn small" @click="reject()" v-if="access3 == true">Reject</a>
-                            <a class="btn small" @click="withdraw()" v-if="access1 == true">Withdraw</a>
+                            <a class="btn small green" @click="approve()" v-if="access3 == true && no_privlege() != true">Approve</a>
+                            <a class="btn small" @click="reject()" v-if="access3 == true && no_privlege() != true">Reject</a>
+                            <a class="btn small" @click="withdraw()" v-if="access1 == true && no_privlege() != true">Withdraw</a>
                            
-                            <input type="text" placeholder="Comment" v-model="comment">
+                            <input type="text" placeholder="Comment" v-model="comment" v-if="(access1 == true || access3 == true) && no_privlege() != true">
                         </div>
 
                     </div>

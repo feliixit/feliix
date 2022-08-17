@@ -1291,17 +1291,17 @@
                             <a class="btn small green" @click="order()" v-if="MarkasOrdered()">Mark as Ordered</a>
                             <a class="btn small green" @click="cancel()" v-if="MarkasCanceled()">Mark as Canceled</a>
 
-                            <a class="btn small green" @click="edit_shipping_info('ship_info')" v-if="EditShippingInfo()">Edit Shipping Info</a>
-                            <a class="btn small green" @click="edit_shipping_info('ware_info')" v-if="EditWarehouseInfo()">Edit Warehouse Info</a>
-                            <a class="btn small green" @click="edit_shipping_info('assing_test')" v-if="AssignTesting()">Assign Testing</a>
-                            <a class="btn small green" @click="edit_shipping_info('edit_test')" v-if="EditTestingInfo()">Edit Testing Info</a>
-                            <a class="btn small green" @click="edit_shipping_info('assign_delivery')" v-if="AssignDelivery()">Assign Delivery</a>
-                            <a class="btn small green" @click="edit_shipping_info('edit_delivery')" v-if="EditDeliveryInfo()">Edit Delivery Info</a>
-                            <a class="btn small green" @click="edit_shipping_info('edit_final')" v-if="EditFinalInfo()">Edit Final Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('ship_info')" v-if="EditShippingInfo() && no_privlege() != true">Edit Shipping Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('ware_info')" v-if="EditWarehouseInfo() && no_privlege() != true">Edit Warehouse Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('assing_test')" v-if="AssignTesting() && no_privlege() != true">Assign Testing</a>
+                            <a class="btn small green" @click="edit_shipping_info('edit_test')" v-if="EditTestingInfo() && no_privlege() != true">Edit Testing Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('assign_delivery')" v-if="AssignDelivery() && no_privlege() != true">Assign Delivery</a>
+                            <a class="btn small green" @click="edit_shipping_info('edit_delivery')" v-if="EditDeliveryInfo() && no_privlege() != true">Edit Delivery Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('edit_final')" v-if="EditFinalInfo() && no_privlege() != true">Edit Final Info</a>
                             <a class="btn small" @click="cancel_shipping_info()" v-if="Cancel()">Cancel</a>
                             <a class="btn small green" @click="save_shipping_info()" v-if="Save()">Save</a>
                            
-                            <input type="text" placeholder="Comment" v-model="comment">
+                            <input type="text" placeholder="Comment" v-model="comment" v-if="(access2 == true || access4 == true || access5 == true || access6 == true) && no_privlege() != true">
                         </div>
 
                     </div>
@@ -1619,8 +1619,8 @@
                 <div class="btnbox">
                 <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true && info_type == ''"></i>
                     <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true && info_type == ''"></i>
-                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true  && access2 == true && info_type == ''"></i>
-                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true  && access2 == true && info_type == ''"></i>
+                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true  && access2 == true && info_type == '' && no_privlege() != true"></i>
+                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true  && access2 == true && info_type == '' && no_privlege() != true"></i>
                     <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true && info_type == ''"></i>
                     <i class="fas fa-times-circle" v-if="item.is_edit == true" @click="cancelItem(item)"></i>
                     <i class="fas fa-check-circle" v-if="item.is_edit == true" @click="confirmItem(item)"></i>
