@@ -231,7 +231,7 @@ if($jwt){
             $sheet->getColumnDimension('A')->setWidth(4.71);
             $sheet->getColumnDimension('B')->setWidth(12.71);
             $sheet->getColumnDimension('C')->setWidth(12.71);
-            $sheet->getColumnDimension('D')->setWidth(12.71;
+            $sheet->getColumnDimension('D')->setWidth(12.71);
             $sheet->getColumnDimension('E')->setWidth(22.71);
             $sheet->getColumnDimension('F')->setWidth(13.71);
             $sheet->getColumnDimension('G')->setWidth(18.71);
