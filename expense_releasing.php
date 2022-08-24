@@ -249,7 +249,7 @@ $(function(){
                         </ul>
                     </div>
 
-                    <form v-if="!record.request_type == 'Petty Cash Replenishment'">
+                    <form v-if="record.request_type != 'Petty Cash Replenishment'">
                         <ul>
                             <li><b>Change Releasing Account</b></li>
                             <li>
