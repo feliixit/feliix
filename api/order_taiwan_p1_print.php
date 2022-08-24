@@ -195,17 +195,17 @@ if($jwt){
             $sheet = $spreadsheet->getActiveSheet();
             $sheet->setTitle("Overview");
 
-            $sheet->getStyle("A1:I".$rows_count."")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle("A1:I".$rows_count."")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 
-            $sheet->getStyle("J1:J1")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle("J1:J1")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-            $sheet->getStyle("J2:J".$rows_count."")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-            $sheet->getStyle("J2:J".$rows_count."")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+            $sheet->getStyle('A1:I300')->getAlignment()->setHorizontal('center');
+            $sheet->getStyle('A1:I300')->getAlignment()->setVertical('center');
 
-            $sheet->getStyle("K1:S".$rows_count."")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle("K1:S".$rows_count."")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+            $sheet->getStyle('J1:J1')->getAlignment()->setHorizontal('center');
+            $sheet->getStyle('J1:J1')->getAlignment()->setVertical('center');
+            $sheet->getStyle('J2:J300')->getAlignment()->setHorizontal('left');
+            $sheet->getStyle('J2:J300')->getAlignment()->setVertical('top');
 
+            $sheet->getStyle('K1:S300')->getAlignment()->setHorizontal('center');
+            $sheet->getStyle('K1:S300')->getAlignment()->setVertical('center');
 
 
             $sheet->setCellValue('A1', '#');
@@ -228,26 +228,25 @@ if($jwt){
             $sheet->setCellValue('R1', 'Testing');
             $sheet->setCellValue('S1', 'Delivery');
 
-            $sheet->getColumnDimension('A')->setWidth(4.71);
-            $sheet->getColumnDimension('B')->setWidth(12.71);
-            $sheet->getColumnDimension('C')->setWidth(12.71);
-            $sheet->getColumnDimension('D')->setWidth(12.71);
-            $sheet->getColumnDimension('E')->setWidth(22.71);
-            $sheet->getColumnDimension('F')->setWidth(13.71);
-            $sheet->getColumnDimension('G')->setWidth(18.71);
-            $sheet->getColumnDimension('H')->setWidth(18.71);
-            $sheet->getColumnDimension('I')->setWidth(18.71);
-            $sheet->getColumnDimension('J')->setWidth(40.71);
-            $sheet->getColumnDimension('K')->setWidth(15.71);
-            $sheet->getColumnDimension('L')->setWidth(15.71);
-            $sheet->getColumnDimension('M')->setWidth(20.71);
-            $sheet->getColumnDimension('N')->setWidth(22.71);
-            $sheet->getColumnDimension('O')->setWidth(13.71);
-            $sheet->getColumnDimension('P')->setWidth(13.71);
-            $sheet->getColumnDimension('Q')->setWidth(30.71);
-            $sheet->getColumnDimension('R')->setWidth(30.71);
-            $sheet->getColumnDimension('S')->setWidth(30.71);
-
+            $sheet->getColumnDimension('A')->setWidth(4.82);
+            $sheet->getColumnDimension('B')->setWidth(12.82);
+            $sheet->getColumnDimension('C')->setWidth(12.82);
+            $sheet->getColumnDimension('D')->setWidth(12.82);
+            $sheet->getColumnDimension('E')->setWidth(22.82);
+            $sheet->getColumnDimension('F')->setWidth(13.82);
+            $sheet->getColumnDimension('G')->setWidth(18.82);
+            $sheet->getColumnDimension('H')->setWidth(18.82);
+            $sheet->getColumnDimension('I')->setWidth(18.82);
+            $sheet->getColumnDimension('J')->setWidth(40.82);
+            $sheet->getColumnDimension('K')->setWidth(15.82);
+            $sheet->getColumnDimension('L')->setWidth(15.82);
+            $sheet->getColumnDimension('M')->setWidth(20.82);
+            $sheet->getColumnDimension('N')->setWidth(22.82);
+            $sheet->getColumnDimension('O')->setWidth(13.82);
+            $sheet->getColumnDimension('P')->setWidth(13.82);
+            $sheet->getColumnDimension('Q')->setWidth(30.82);
+            $sheet->getColumnDimension('R')->setWidth(30.82);
+            $sheet->getColumnDimension('S')->setWidth(30.82);
 
             $i = 2;
             foreach($merged_results as $row)
@@ -280,14 +279,13 @@ if($jwt){
                     $objDrawing->setDescription('photo1');
                     $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo1']));
                     $objDrawing->setCoordinates('G' . $i);
-                    $objDrawing->setWidthAndHeight(16, 100);
+                    $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
-                    $objDrawing->setOffsetX(1);
-                    $objDrawing->setOffsetY(10);
+                    $objDrawing->setOffsetX(15);
+                    $objDrawing->setOffsetY(30);
                     $objDrawing->setWorksheet($sheet);
 
                     $sheet->getRowDimension($i)->setRowHeight(120);
-
 
                     $sheet->getStyle('G'. $i)->applyFromArray($center_style);
                 }
@@ -301,14 +299,13 @@ if($jwt){
                     $objDrawing->setDescription('photo2');
                     $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo2']));
                     $objDrawing->setCoordinates('H' . $i);
-                    $objDrawing->setWidthAndHeight(16, 100);
+                    $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
-                    $objDrawing->setOffsetX(1);
-                    $objDrawing->setOffsetY(10);
+                    $objDrawing->setOffsetX(15);
+                    $objDrawing->setOffsetY(30);
                     $objDrawing->setWorksheet($sheet);
 
                     $sheet->getRowDimension($i)->setRowHeight(120);
-
 
                     $sheet->getStyle('H'. $i)->applyFromArray($center_style);
                 }
@@ -322,14 +319,13 @@ if($jwt){
                     $objDrawing->setDescription('photo3');
                     $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo3']));
                     $objDrawing->setCoordinates('I' . $i);
-                    $objDrawing->setWidthAndHeight(16, 100);
+                    $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
-                    $objDrawing->setOffsetX(1);
-                    $objDrawing->setOffsetY(10);
+                    $objDrawing->setOffsetX(15);
+                    $objDrawing->setOffsetY(30);
                     $objDrawing->setWorksheet($sheet);
 
                     $sheet->getRowDimension($i)->setRowHeight(120);
-
 
                     $sheet->getStyle('I'. $i)->applyFromArray($center_style);
                 }
