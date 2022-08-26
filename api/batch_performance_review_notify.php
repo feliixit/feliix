@@ -30,7 +30,7 @@ $sql = "SELECT user.id,
                     'OFFICE SYSTEMS MANAGER',
                     'ASSISTANT BRAND MANAGER',
                     'BRAND MANAGER',
-                    'ENGINERING MANAGER',
+                    'SERVICE MANAGER',
                     'OPERATIONS MANAGER', 
                     'MANAGING DIRECTOR') ";
 
