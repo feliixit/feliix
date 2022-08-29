@@ -1323,7 +1323,7 @@
                         <th>SRP</th>
                         <th>Date Needed by Client</th>
                         <th>Notes</th>
-                        <th>Ship Way</th>
+                        <th>Shipping Way</th>
                         <th>Action</th>
                     </tr>
                     </thead>

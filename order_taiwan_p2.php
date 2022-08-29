@@ -1299,6 +1299,7 @@
                         <th>SRP</th>
                         <th>Date Needed by Client</th>
                         <th>Notes</th>
+                        <th>Shipping Way</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -1450,6 +1451,18 @@
                         <a class="btn small green" @click="comment_create(item.id)">Create</a>
                     </div>
                 </div>
+            </td>
+
+            <td>
+                <div class="read_block">
+                    <select disabled v-model="item.shipping_way">
+                        <option value=""></option>
+                        <option value="sea">Sea</option>
+                        <option value="air">Air</option>
+                    </select>
+                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+                </div>
+         
             </td>
 
             <td>
