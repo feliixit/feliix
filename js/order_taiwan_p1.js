@@ -929,6 +929,8 @@ var app = new Vue({
               srp:price,
               date_needed:"",
               status:"",
+              shipping_way:"",
+              shipping_number:"",
               notes:[]
             };
 
@@ -1072,6 +1074,8 @@ var app = new Vue({
             qty:"",
             srp:price,
             date_needed:"",
+            shipping_way:"",
+              shipping_number:"",
             status:"",
             notes:[]
           };
@@ -1756,7 +1760,9 @@ var app = new Vue({
                 srp:item.srp,
                 date_needed:item.date_needed,
                 status:item.status,
-                notes:[]
+                notes:[],
+                shipping_way:item.shipping_way,
+                shipping_number:item.shipping_number,
               };
 
               items.push(item);
@@ -1840,6 +1846,8 @@ var app = new Vue({
                 qty:"",
                 srp:"",
                 date_needed:"",
+                shipping_way:"",
+              shipping_number:"",
                 status:"",
                 notes:[]
               };
@@ -1873,6 +1881,21 @@ var app = new Vue({
                 });
         },
     
+        ShipwayRead(item)
+        {
+          if(!item.is_edit)
+            return true;
+          else
+            return false;
+        },
+  
+        ShipwayWrite(item)
+        {
+          if(item.is_edit && this.access1 == true)
+            return true;
+          else
+            return false;
+        },
         
       getAccess: function() {
         var token = localStorage.getItem('token');

@@ -121,6 +121,8 @@ if($block_array[$i]['photo3'] == '')
                     `qty` = :qty,
                     `srp` = :srp,
                     `date_needed` = :date_needed,
+                    `shipping_way` = :shipping_way,
+                    `shipping_number` = :shipping_number,
                     updated_id = :updated_id,
                     updated_at = now()
                     where id = :id
@@ -145,7 +147,8 @@ if($block_array[$i]['photo3'] == '')
                 $srp = isset($block_array[$i]['srp']) ? $block_array[$i]['srp'] : '';
                 $date_needed = isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
 
-       
+                $shipping_way = isset($block_array[$i]['shipping_way']) ? $block_array[$i]['shipping_way'] : '';
+                $shipping_number = isset($block_array[$i]['shipping_number']) ? $block_array[$i]['shipping_number'] : '';
 
                 // bind the values
                 $stmt->bindParam(':id', $id);
@@ -160,6 +163,9 @@ if($block_array[$i]['photo3'] == '')
                 $stmt->bindParam(':qty', $qty);
                 $stmt->bindParam(':srp', $srp);
                 $stmt->bindParam(':date_needed', $date_needed);
+
+                $stmt->bindParam(':shipping_way', $shipping_way);
+                $stmt->bindParam(':shipping_number', $shipping_number);
               
                 $stmt->bindParam(':updated_id', $user_id);
                
