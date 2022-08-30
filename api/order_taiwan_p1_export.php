@@ -362,7 +362,12 @@ if($jwt){
 
                 $sheet->setCellValue('J' . $i, '');
 
-                $sheet->setCellValue('K' . $i, $row['shipping_vendor']);
+                $vendor = "";
+                if($row['shipping_vendor'] == 'ssit')
+                    $vendor = "盛盛";
+                if($row['shipping_vendor'] == 'cfs')
+                    $vendor = "卡菲斯";
+                $sheet->setCellValue('K' . $i, $vendor);
                 $sheet->getStyle('K'. $i)->applyFromArray($center_style);
 
                 $sheet->setCellValue('L' . $i, $row['shipping_way']);

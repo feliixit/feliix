@@ -1502,16 +1502,11 @@
                         <a class="attch" v-for="(fs,index) in taskItems(item.id)" :key="index" @click="deleteTaskFile(item.id, index)">{{fs.name}}</a>
                     </div>
 
-                    <div class="btnbox" v-if="!item.is_edit"> 
+                    <div class="btnbox"> 
                         <a class="btn small green" @click="comment_create_a(item.id)">Create</a>
                     </div>
                 </div>
 
-                <div class="write_msg_block" v-if="!item.is_info">
-                    <div class="btnbox">
-                        <a class="btn small green" @click="comment_create_a(item.id)">Create</a>
-                    </div>
-                </div>
             </td>
 
             <td>
