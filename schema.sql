@@ -2905,3 +2905,10 @@ ADD COLUMN `access5` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
 ALTER TABLE access_control
 ADD COLUMN `access6` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20220829 shipping vendor
+ALTER TABLE od_item
+ADD COLUMN `shipping_vendor` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `pid` bigint(20) DEFAULT 0;

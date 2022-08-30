@@ -63,6 +63,8 @@ if (!isset($jwt)) {
                     date_needed,
                     shipping_way,
                     shipping_number,
+                    shipping_vendor,
+                    pid,
                     eta,
                     arrive,
                     remark,
@@ -125,6 +127,7 @@ if (!isset($jwt)) {
         $date_needed = $row['date_needed'];
         $shipping_way = $row['shipping_way'];
         $shipping_number = $row['shipping_number'];
+        $shipping_vendor = $row['shipping_vendor'];
         $eta = $row['eta'];
         $arrive = $row['arrive'];
         $remark = $row['remark'];
@@ -136,6 +139,8 @@ if (!isset($jwt)) {
         $test = $row['test'];
         $delivery = $row['delivery'];
         $final = $row['final'];
+
+        $pid = $row['pid'];
 
         $status = $row['status'];
         $notes = GetNotes($row['id'], $db);
@@ -162,6 +167,8 @@ if (!isset($jwt)) {
             "date_needed" => $date_needed,
             "shipping_way" => $shipping_way,
             "shipping_number" => $shipping_number,
+            "shipping_vendor" => $shipping_vendor,
+            "pid" => $pid,
             "eta" => $eta,
             "arrive" => $arrive,
             "remark" => $remark,

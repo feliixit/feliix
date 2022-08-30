@@ -933,6 +933,7 @@ var app = new Vue({
               qty:"",
               srp:price,
               date_needed:"",
+              pid:this.product.id,
               status:"",
               notes:[]
             };
@@ -1078,6 +1079,7 @@ var app = new Vue({
             qty:"",
             srp:price,
             date_needed:"",
+            pid:this.product.id,
             status:"",
             notes:[]
           };
@@ -1846,6 +1848,7 @@ var app = new Vue({
                 qty:"",
                 srp:"",
                 date_needed:"",
+                pid:0,
                 status:"",
                 notes:[]
               };

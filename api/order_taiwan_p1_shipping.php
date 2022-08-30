@@ -89,6 +89,7 @@ switch ($method) {
 
             $shipping_way = $items[$i]['shipping_way'];
             $shipping_number = $items[$i]['shipping_number'];
+            $shipping_vendor = $items[$i]['shipping_vendor'];
             $eta = $items[$i]['eta'];
             $arrive = $items[$i]['arrive'];
             $charge = $items[$i]['charge'];
@@ -109,6 +110,7 @@ switch ($method) {
                 SET
                 `shipping_way` = :shipping_way,
                 `shipping_number` = :shipping_number,
+                `shipping_vendor` = :shipping_vendor,
                 `eta` = :eta,
                 `arrive` = :arrive,
                 `charge` = :charge,
@@ -132,6 +134,7 @@ switch ($method) {
         // bind the values
         $stmt->bindParam(':shipping_way', $shipping_way);
         $stmt->bindParam(':shipping_number', $shipping_number);
+        $stmt->bindParam(':shipping_vendor', $shipping_vendor);
         $stmt->bindParam(':eta', $eta);
         $stmt->bindParam(':arrive', $arrive);
         $stmt->bindParam(':charge', $charge);
@@ -197,6 +200,7 @@ function GetShipping($id, $db){
             SELECT n.id,
             n.shipping_way,
             n.shipping_number,
+            n.shipping_vendor,
             n.eta,
             n.arrive,
             n.charge,
@@ -227,6 +231,7 @@ function GetShipping($id, $db){
         $id = $row['id'];
         $shipping_way = $row['shipping_way'];
         $shipping_number = $row['shipping_number'];
+        $shipping_vendor = $row['shipping_vendor'];
         $eta = $row['eta'];
         $arrive = $row['arrive'];
         $charge = $row['charge'];
@@ -247,6 +252,7 @@ function GetShipping($id, $db){
             "id" => $id,
             "shipping_way" => $shipping_way,
             "shipping_number" => $shipping_number,
+            "shipping_vendor" => $shipping_vendor,
             "eta" => $eta,
             "arrive" => $arrive,
             "charge" => $charge,

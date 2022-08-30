@@ -93,6 +93,7 @@ switch ($method) {
                     `qty` = :qty,
                     `srp` = :srp,
                     `date_needed` = :date_needed,
+                    `pid` = :pid,
                     `status` = 0,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -115,7 +116,7 @@ switch ($method) {
                 $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : '';
                 $srp = isset($block_array[$i]['amount']) ? $block_array[$i]['amount'] : '';
                 $date_needed =  '';
-
+                $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
        
 
                 // bind the values
@@ -133,6 +134,7 @@ switch ($method) {
                 $stmt->bindParam(':qty', $qty);
                 $stmt->bindParam(':srp', $srp);
                 $stmt->bindParam(':date_needed', $date_needed);
+                $stmt->bindParam(':pid', $pid);
               
                 $stmt->bindParam(':create_id', $user_id);
                

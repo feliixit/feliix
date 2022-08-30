@@ -1286,6 +1286,12 @@
                             </a>
                         </div>
 
+                        <div class="popupblock" v-if="info_type == '' && access2 == true"> 
+                            <a title="Export Supplier's Document">
+                                <i class="fas fa-file-excel" @click="export_excel()"></i>
+                            </a>
+                        </div>
+
                         <div class="btn_block">
                             <a class="btn small green" @click="approve()" v-if="MarkasApproved()">Mark as Approved</a>
                             <a class="btn small green" @click="order()" v-if="MarkasOrdered()">Mark as Ordered</a>
@@ -1496,6 +1502,12 @@
                         <a class="attch" v-for="(fs,index) in taskItems(item.id)" :key="index" @click="deleteTaskFile(item.id, index)">{{fs.name}}</a>
                     </div>
 
+                    <div class="btnbox" v-if="!item.is_edit"> 
+                        <a class="btn small green" @click="comment_create_a(item.id)">Create</a>
+                    </div>
+                </div>
+
+                <div class="write_msg_block" v-if="!item.is_info">
                     <div class="btnbox">
                         <a class="btn small green" @click="comment_create_a(item.id)">Create</a>
                     </div>
@@ -1510,6 +1522,12 @@
                         <option value="air">Air</option>
                     </select>
                     <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+
+                    <select disabled v-model="item.shipping_vendor">
+                        <option value=""></option>
+                        <option value="ssit">盛盛</option>
+                        <option value="cfs">卡菲斯</option>
+                    </select>
                 </div>
                 <div class="write_block" v-if="ShipwayWrite(item)">
                     <select v-model="item.shipping_way">
@@ -1519,6 +1537,12 @@
                     </select>
                     
                     <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number">
+
+                    <select v-model="item.shipping_vendor">
+                        <option value=""></option>
+                        <option value="ssit">盛盛</option>
+                        <option value="cfs">卡菲斯</option>
+                    </select>
                 </div>
             </td>
 

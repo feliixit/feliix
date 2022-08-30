@@ -93,6 +93,7 @@ switch ($method) {
                     `qty` = :qty,
                     `srp` = :srp,
                     `date_needed` = :date_needed,
+                    `pid` = :pid,
                     `status` = :status,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -117,6 +118,7 @@ switch ($method) {
                 $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : '';
                 $srp = isset($block_array[$i]['srp']) ? $block_array[$i]['srp'] : '';
                 $date_needed = isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
+                $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : '';
 
                 $status = isset($block_array[$i]['status']) ? $block_array[$i]['status'] : 0;
                 $status = $status == '' ? 0 : $status;
@@ -137,6 +139,7 @@ switch ($method) {
                 $stmt->bindParam(':qty', $qty);
                 $stmt->bindParam(':srp', $srp);
                 $stmt->bindParam(':date_needed', $date_needed);
+                $stmt->bindParam(':pid', $pid);
 
                 $stmt->bindParam(':status', $status);
               

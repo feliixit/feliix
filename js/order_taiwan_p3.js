@@ -667,7 +667,60 @@ var app = new Vue({
 
       },
 
+      export_excel() {
+        // if selected, check if they with same brand
+        let brands = [];
+        let ids = [];
+        for(let i = 0; i < this.items.length; i++) {
+          if(this.items[i].is_checked == 1) {
+            if(brands.indexOf(this.items[i].brand) == -1) 
+              brands.push(this.items[i].brand);
 
+            ids.push(this.items[i].id);
+          }
+        }
+
+        if(brands.length > 1) {
+          alert('Please select the item(s) with the same brand.');
+          return
+        }
+
+        if(ids.length == 0) {
+          return;
+        }
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+        form_Data.append("ids", ids);
+        form_Data.append("brand", brands[0]);
+  
+  
+        axios({
+          method: "post",
+          url: "api/order_taiwan_p1_export",
+          data: form_Data,
+          responseType: "blob",
+        })
+            .then(function(response) {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                 
+                    link.setAttribute('download', 'Orders.xlsx');
+                 
+                  document.body.appendChild(link);
+                  link.click();
+  
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+
+      },
 
       save_shipping_info: async function() {
         var token = localStorage.getItem("token");
@@ -1258,6 +1311,7 @@ var app = new Vue({
               qty:"",
               srp:price,
               date_needed:"",
+              pid:0,
               status:"3",
               notes:[]
             };
@@ -1402,6 +1456,7 @@ var app = new Vue({
             qty:"",
             srp:price,
             date_needed:"",
+            pid:this.product.id,
             status:"3",
             notes:[]
           };
@@ -2117,6 +2172,7 @@ var app = new Vue({
                 qty:item.qty,
                 srp:item.srp,
                 date_needed:item.date_needed,
+                pid:item.pid,
                 status:item.status,
                 notes:[]
               };
@@ -2202,6 +2258,7 @@ var app = new Vue({
                 qty:"",
                 srp:"",
                 date_needed:"",
+                pid:0,
                 status:"3",
                 notes:[]
               };
