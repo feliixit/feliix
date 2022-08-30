@@ -275,6 +275,8 @@ var app = new Vue({
       let OrgRemark = this.record.info_remark;
       let OrgRemarkOther = this.record.info_remark_other;
 
+      
+
       if(OrgAccount !== this.new_info_account || OrgCategory !== this.new_info_category || OrgSubCategory !== this.new_info_sub_category || OrgRemark !== this.new_info_remark || OrgRemarkOther !== this.new_info_remark_other)
       {
         Swal.fire({
@@ -299,6 +301,12 @@ var app = new Vue({
       targetId = this.record.id;
 
       var form_Data = new FormData();
+
+      if(this.new_info_remark != 'Other')
+        this.new_info_remark_other = '';
+
+        if(this.new_info_category !== 'Marketing' && this.new_info_category !== 'Office Needs' && this.new_info_category !== 'Others' && this.new_info_category !== 'Projects' && this.new_info_category !== 'Store')  
+        this.new_info_sub_category = '';
 
       var token = localStorage.getItem("token");
       form_Data.append("jwt", token);
