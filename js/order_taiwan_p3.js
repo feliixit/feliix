@@ -1311,7 +1311,7 @@ var app = new Vue({
               qty:"",
               srp:price,
               date_needed:"",
-              pid:0,
+              pid:this.product.id,
               status:"3",
               notes:[]
             };
