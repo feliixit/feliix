@@ -1484,7 +1484,7 @@
                         <option value="sea">Sea</option>
                         <option value="air">Air</option>
                     </select>
-                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+                    <!-- <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly> -->
                 </div>
                 <div class="write_block" v-if="ShipwayWrite(item)">
                     <select v-model="item.shipping_way">
@@ -1493,7 +1493,7 @@
                         <option value="air">Air</option>
                     </select>
                     
-                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number">
+                    <!-- <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number"> -->
                 </div>
             </td>
 

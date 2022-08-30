@@ -619,7 +619,7 @@ var app = new Vue({
 
       this.new_info_account = this.record.info_account;
       this.new_info_category = this.record.info_category;
-      this.new_info_sub_category = (this.record.info_sub_category == undefined ? '' : this.record.info_sub_category);
+      this.new_info_sub_category = (this.record.sub_category == undefined ? '' : this.record.sub_category);
       this.new_info_remark = this.record.info_remark;
       this.new_info_remark_other = this.record.info_remark_other;
       
