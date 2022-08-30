@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
 <!-- SEO -->
-<title>FELIIX template</title>
+<title>Expense Release</title>
 <meta name="keywords" content="FELIIX">
 <meta name="Description" content="FELIIX">
 <meta name="robots" content="all" />
@@ -82,6 +82,14 @@ $(function(){
             margin-top: 40px;
             padding: 15px 15px 0;
             box-sizing: border-box;
+        }
+
+        div.box-content form > span {
+            font-size: x-large;
+            font-weight: 700;
+            color: var(--black01);
+            display: block;
+            margin-bottom: 5px;
         }
 
         div.details>span {
@@ -250,8 +258,11 @@ $(function(){
                     </div>
 
                     <form v-if="record.request_type != 'Petty Cash Replenishment'">
+
+                        <span>Additional Info</span>
+
                         <ul>
-                            <li><b>Change Releasing Account</b></li>
+                            <li><b>Account</b></li>
                             <li>
                                 <select style="width:100%" v-model="new_info_account">
                                     <option value="Office Petty Cash">Office Petty Cash</option>
@@ -259,6 +270,65 @@ $(function(){
                                     <option value="Security Bank">Security Bank</option>
                                 </select>
                             </li>
+
+                            <li><b>Category</b></li>
+                            <li>
+                                <select style="width:100%" v-model="new_info_category">
+                                    <option value=""></option>
+                                    <option value="Accounting and govt payments">Accounting and govt payments</option>
+                                    <option value="Bills">Bills</option>
+                                    <option value="Client Refunds">Client Refunds</option>
+                                    <option value="Consignment">Consignment</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="Incentives">Incentives</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Misc">Misc</option>
+                                    <option value="Office Needs">Office Needs</option>
+                                    <option value="Others">Others</option>
+                                    <option value="Projects">Projects</option>
+                                    <option value="Rental">Rental</option>
+                                    <option value="Salary">Salary</option>
+                                    <option value="Sales Petty Cash">Sales Petty Cash</option>
+                                    <option value="Store">Store</option>
+                                    <option value="Transportation Petty Cash">Transportation Petty Cash</option>
+                                </select>
+                            </li>
+                            <li v-if="new_info_category == 'Marketing' || new_info_category == 'Office Needs' || new_info_category == 'Others' || new_info_category == 'Projects' || new_info_category == 'Store'"  ><b>Sub Category</b></li>
+                            <li v-if="new_info_category == 'Marketing' || new_info_category == 'Office Needs' || new_info_category == 'Others' || new_info_category == 'Projects' || new_info_category == 'Store'" >
+                                <select style="width:100%" v-model="new_info_sub_category">
+                                    <option value=""></option>
+
+                                    <option value="Allowance">Allowance</option>
+                                    <option value="Commission">Commission</option>
+                                    <option value="Delivery">Delivery</option>
+                                    <option value="Delivery and Installation">Delivery and Installation</option>
+                                    <option value="Installation">Installation</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                    <option value="Meals">Meals</option>
+                                    <option value="Misc">Misc</option>
+                                    <option value="Mock-up">Mock-up</option>
+                                    <option value="Others">Others</option>
+                                    <option value="Outsource">Outsource</option>
+                                    <option value="Petty cash">Petty cash</option>
+                                    <option value="Products">Products</option>
+                                    <option value="Site Visit">Site Visit</option>
+                                    <option value="Supplies">Supplies</option>
+                                    <option value="Tools and Materials">Tools and Materials</option>
+                                    <option value="Transportation">Transportation</option>
+                                </select>
+                            </li>
+
+                            <li><b>Remarks or Payment Instructions</b></li>
+                            <li>
+                                <select style="width:100%" v-model="new_info_remark">
+                                    <option value=""></option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Check">Check</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <input v-if="new_info_remark == 'Other'" type="text" id="specific_payableto" ref="specific_payableto" v-model="new_info_remark_other" style="width:100%; margin-top: 5px;" placeholder="Please Specify ...">
+                            </li>
+
                         </ul>
 
                         <div class="btnbox">

@@ -10,6 +10,11 @@ var app = new Vue({
     submit: false,
 
     new_info_account:'',
+    new_info_category:'',
+    new_info_sub_category:'',
+
+    new_info_remark:'',
+    new_info_remark_other:'',
 
     receive_records: [],
     record: {},
@@ -262,12 +267,21 @@ var app = new Vue({
     confirm_change_account: function() {
       let _this = this;
 
-      OrgAccount = this.record.info_account;
-      if(OrgAccount !== this.new_info_account)
+      let OrgAccount = this.record.info_account;
+      
+      let OrgCategory = this.record.info_category;
+      let OrgSubCategory = this.record.sub_category;
+
+      let OrgRemark = this.record.info_remark;
+      let OrgRemarkOther = this.record.info_remark_other;
+
+      
+
+      if(OrgAccount !== this.new_info_account || OrgCategory !== this.new_info_category || OrgSubCategory !== this.new_info_sub_category || OrgRemark !== this.new_info_remark || OrgRemarkOther !== this.new_info_remark_other)
       {
         Swal.fire({
           title: "Are you sure?",
-          text: "You are changing the payement account",
+          text: "You are changing the additional info?",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
@@ -275,12 +289,70 @@ var app = new Vue({
           confirmButtonText: "Yes",
         }).then((result) => {
           if (result.value) {
-            _this.change_account();
+            _this.change_additional_info(OrgAccount, OrgCategory, OrgSubCategory, OrgRemark, OrgRemarkOther);
           }
         });
       }
       
     },
+
+    change_additional_info: function(OrgAccount, OrgCategory, OrgSubCategory, OrgRemark, OrgRemarkOther) {
+      let _this = this;
+      targetId = this.record.id;
+
+      var form_Data = new FormData();
+
+      if(this.new_info_remark != 'Other')
+        this.new_info_remark_other = '';
+
+        if(this.new_info_category !== 'Marketing' && this.new_info_category !== 'Office Needs' && this.new_info_category !== 'Others' && this.new_info_category !== 'Projects' && this.new_info_category !== 'Store')  
+        this.new_info_sub_category = '';
+
+      var token = localStorage.getItem("token");
+      form_Data.append("jwt", token);
+
+      form_Data.append("id", targetId);
+      form_Data.append("org_info_account", OrgAccount);
+      form_Data.append("new_info_account", this.new_info_account);
+
+      form_Data.append("org_info_category", OrgCategory);
+      form_Data.append("new_info_category", this.new_info_category);
+      form_Data.append("org_sub_category", OrgSubCategory);
+      form_Data.append("new_sub_category", this.new_info_sub_category);
+
+      form_Data.append("org_info_remark", OrgRemark);
+      form_Data.append("new_info_remark", this.new_info_remark);
+      form_Data.append("org_info_remark_other", OrgRemarkOther);
+      form_Data.append("new_info_remark_other", this.new_info_remark_other);
+      
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        url: "api/petty_change_category",
+        data: form_Data,
+      })
+        .then(function(response) {
+          Swal.fire({
+            text: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+          _this.resetForm();
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: response.data,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+          _this.resetForm();
+        });
+      },
 
     change_account: function() {
       let _this = this;
@@ -554,6 +626,10 @@ var app = new Vue({
       );
 
       this.new_info_account = this.record.info_account;
+      this.new_info_category = this.record.info_category;
+      this.new_info_sub_category = (this.record.sub_category == undefined ? '' : this.record.sub_category);
+      this.new_info_remark = this.record.info_remark;
+      this.new_info_remark_other = this.record.info_remark_other;
       
       this.reject_reason = "";
       this.view_detail = true;
