@@ -110,7 +110,7 @@ if($jwt){
 
             $confirm_text = GetConfirmText($confirm, $db);
             
-            $product = [];
+            $product = "";
             $product = GetProductMain($row['pid'], $row['v1'], $row['v2'], $row['v3'], $db);
 
             $brand = $row['brand'];
@@ -343,9 +343,8 @@ if($jwt){
                 $sheet->getStyle('G'. $i)->applyFromArray($center_style);
 
                 $price = "";
-                if($row['product'] != false) {
-                    if($row['product']['price_ntd'])
-                        $price = $row['product']['price_ntd'];
+                if($row['product'] != "") {
+                    $price = $row['product'];
 
                     if($row['qty'] != '' && $price != '') {
                         $total_price_ntd = $total_price_ntd + $price * $row['qty'];
