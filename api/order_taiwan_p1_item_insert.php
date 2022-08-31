@@ -94,6 +94,9 @@ switch ($method) {
                     `srp` = :srp,
                     `date_needed` = :date_needed,
                     `pid` = :pid,
+                    `v1` = :v1,
+                    `v2` = :v2,
+                    `v3` = :v3,
                     `status` = :status,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -120,6 +123,10 @@ switch ($method) {
                 $date_needed = isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
                 $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : '';
 
+                $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
+                $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
+                $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+
                 $status = isset($block_array[$i]['status']) ? $block_array[$i]['status'] : 0;
                 $status = $status == '' ? 0 : $status;
        
@@ -140,6 +147,10 @@ switch ($method) {
                 $stmt->bindParam(':srp', $srp);
                 $stmt->bindParam(':date_needed', $date_needed);
                 $stmt->bindParam(':pid', $pid);
+
+                $stmt->bindParam(':v1', $v1);
+                $stmt->bindParam(':v2', $v2);
+                $stmt->bindParam(':v3', $v3);
 
                 $stmt->bindParam(':status', $status);
               

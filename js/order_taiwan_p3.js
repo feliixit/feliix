@@ -1312,6 +1312,9 @@ var app = new Vue({
               srp:price,
               date_needed:"",
               pid:this.product.id,
+              v1:this.v1,
+              v2:this.v2,
+              v3:this.v3,
               status:"3",
               notes:[]
             };
@@ -1457,6 +1460,9 @@ var app = new Vue({
             srp:price,
             date_needed:"",
             pid:this.product.id,
+            v1:this.v1,
+            v2:this.v2,
+            v3:this.v3,
             status:"3",
             notes:[]
           };
@@ -2173,6 +2179,9 @@ var app = new Vue({
                 srp:item.srp,
                 date_needed:item.date_needed,
                 pid:item.pid,
+                v1:item.v1,
+                v2:item.v2,
+                v3:item.v3,
                 status:item.status,
                 notes:[]
               };
@@ -2259,6 +2268,9 @@ var app = new Vue({
                 srp:"",
                 date_needed:"",
                 pid:0,
+                v1:"",
+                v2:"",
+                v3:"",
                 status:"3",
                 notes:[]
               };

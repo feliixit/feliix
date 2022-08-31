@@ -932,7 +932,10 @@ var app = new Vue({
               status:"",
               shipping_way:"",
               shipping_number:"",
-              notes:[]
+              notes:[],
+              v1:this.v1,
+              v2:this.v2,
+              v3:this.v3,
             };
 
             items.push(item);
@@ -1076,6 +1079,9 @@ var app = new Vue({
             srp:price,
             date_needed:"",
             pid: this.product.id,
+            v1: this.v1,
+            v2: this.v2,
+            v3: this.v3,
             shipping_way:"",
               shipping_number:"",
             status:"",
@@ -1762,6 +1768,9 @@ var app = new Vue({
                 srp:item.srp,
                 date_needed:item.date_needed,
                 pid:item.pid,
+                v1:item.v1,
+                v2:item.v2,
+                v3:item.v3,
                 status:item.status,
                 notes:[],
                 shipping_way:item.shipping_way,
@@ -1850,6 +1859,9 @@ var app = new Vue({
                 srp:"",
                 date_needed:"",
                 pid:0,
+                v1:"",
+                v2:"",
+                v3:"",
                 shipping_way:"",
               shipping_number:"",
                 status:"",

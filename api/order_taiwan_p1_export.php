@@ -68,6 +68,9 @@ if($jwt){
             srp,
             date_needed,
             pid,
+            v1,
+            v2,
+            v3,
             shipping_way,
             shipping_number,
             shipping_vendor,
@@ -108,7 +111,7 @@ if($jwt){
             $confirm_text = GetConfirmText($confirm, $db);
             
             $product = [];
-            $product = GetProduct($row['pid'], $db);
+            $product = GetProductMain($row['pid'], $row['v1'], $row['v2'], $row['v3'], $db);
 
             $brand = $row['brand'];
             $brand_other = $row['brand_other'];
@@ -659,13 +662,122 @@ function createResizedImage(
     return $newPath;
 }
 
-function GetProduct($id, $db){
-    $query = "SELECT * FROM product_category WHERE id = :id";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $id);
+
+function GetKey($str)
+{
+    if(trim($str) == '')
+        return "";
+    
+    $obj = explode('=>', $str);
+
+    return isset($obj[0]) ? $obj[0] : "";
+}
+
+function GetValue($str)
+{
+    if(trim($str) == '')
+        return "";
+    
+    $obj = explode('=>', $str);
+
+    return isset($obj[1]) ? $obj[1] : "";
+}
+
+function GetProductMain($id, $v1, $v2, $v3, $db)
+{
+    $sql = "SELECT * FROM product_category WHERE id = ". $id . " and STATUS <> -1";
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
     $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row;
+
+    $price_ntd = '';
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        if($row['price_ntd'] != '')
+            $price_ntd = $row['price_ntd'];
+       
+        $product = GetProduct($id, $v1, $v2, $v3, $db);
+        if($product != '')
+            $price_ntd = $product;
+    }
+
+    return $price_ntd;
+}
+
+function GetProduct($id, $v1, $v2, $v3, $db){
+    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $k1 = GetKey($row['1st_variation']);
+        $k2 = GetKey($row['2rd_variation']);
+        $k3 = GetKey($row['3th_variation']);
+        $v1 = GetValue($row['1st_variation']);
+        $v2 = GetValue($row['2rd_variation']);
+        $v3 = GetValue($row['3th_variation']);
+        $checked = '';
+        $code = $row['code'];
+        $price = $row['price'];
+        $price_ntd = $row['price_ntd'];
+        $price_org = $row['price'];
+        $price_ntd_org = $row['price_ntd'];
+        $price_change = $row['price_change'];
+        $price_ntd_change = $row['price_ntd_change'];
+        $status = $row['enabled'];
+        $photo = trim($row['photo']);
+        if($photo != '')
+            $url = $row['url'];
+        else
+            $url = '';
+
+        $quoted_price = $row['quoted_price'];
+        $quoted_price_change = $row['quoted_price_change'];
+
+        $merged_results[] = array(  "id" => $id, 
+                                    "k1" => $k1, 
+                                    "k2" => $k2, 
+                                    "k3" => $k3, 
+                                    "v1" => $v1, 
+                                    "v2" => $v2, 
+                                    "v3" => $v3, 
+                                    "checked" => $checked, 
+                                    "code" => $code, 
+                                    "price" => $price, 
+                                    "price_ntd" => $price_ntd, 
+                                    "price_org" => $price_org, 
+                                    "price_ntd_org" => $price_ntd_org, 
+                                    "price_change" => $price_change, 
+                                    "price_ntd_change" => $price_ntd_change, 
+                                    "status" => $status, 
+                                    "url" => $url, 
+                                    "photo" => $photo, 
+
+                                    "quoted_price" => $quoted_price, 
+                                    "quoted_price_org" => $quoted_price, 
+                                    "quoted_price_change" => substr($quoted_price_change, 0, 10), 
+                                   
+                                    "file" => array( "value" => ''),
+                                   
+            );
+    }
+
+    // find in merged_results with v1, v2 and v3
+    $price_ntd = "";
+    foreach($merged_results as $item) {
+        if($item['v1'] == $v1 && $item['v2'] == $v2 && $item['v3'] == $v3) {
+            if($item['price_ntd'] != '')
+                $price_ntd = $item['price_ntd'];
+        }
+    }
+    
+    return $price_ntd;
 }
 
 ?>
