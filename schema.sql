@@ -2916,3 +2916,20 @@ ADD COLUMN `pid` bigint(20) DEFAULT 0;
 ALTER TABLE od_item ADD COLUMN v1 VARCHAR(255) DEFAULT '';
 ALTER TABLE od_item ADD COLUMN v2 VARCHAR(255) DEFAULT '';
 ALTER TABLE od_item ADD COLUMN v3 VARCHAR(255) DEFAULT '';
+
+-- 20220901 other task add order
+drop TABLE od_main;
+
+CREATE TABLE IF NOT EXISTS `od_main` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `od_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `task_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `order_type` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `serial_name` varchar(64) COLLATE utf8mb4_unicode_ci default '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
