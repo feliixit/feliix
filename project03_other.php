@@ -2780,7 +2780,7 @@ catch (Exception $e) {
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="tablebox s2 del">
+                                <div class="tablebox s2 del" v-if="1==0">
                                     <ul>
                                         <li class="head">Target Order Task:</li>
                                         <li class="mix">
@@ -2812,7 +2812,7 @@ catch (Exception $e) {
                                     <dl>
                                         <dt>Order Type:</dt>
                                         <dd>
-                                            <select v-model="record.od_type">
+                                            <select v-model="record.od_type" disabled>
                                                 <option value="taiwan">Order – Taiwan</option>
                                                 <option disabled>Order – Warehouse</option>
                                                 <option disabled>Order – 3rd Party</option>

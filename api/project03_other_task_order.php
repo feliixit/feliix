@@ -117,9 +117,10 @@ switch ($method) {
         }
 
         $serial = 0;
-        $query = "select count(*) + 1 from od_main where order_type = :order_type";
+        $query = "select count(*) + 1 from od_main where order_type = :order_type and SUBSTRING(serial_name, 1, 1) = :category";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':order_type', $order_type);
+        $stmt->bindParam(':category', substr($category, 0, 1));
         $stmt->execute();
         $serial = $stmt->fetchColumn();
         $serial = str_pad($serial, 4, '0', STR_PAD_LEFT);

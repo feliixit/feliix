@@ -333,9 +333,9 @@ header( 'location:index' );
                                     <select v-model="fil_kind">
                                         <option value=""></option>
                                         <option value="taiwan">Order – Taiwan</option>
-                                        <option value="">Order – Caloocan</option>
+                                        <option value="">Order – Warehouse</option>
                                         <option value="">Order – 3rd Party</option>
-                                        <option value="">Order – Mock-up</option>
+                                        <option value="">Order – Mockup</option>
                                         <option value="">Order – Stocks</option>
                                     </select>
                                 </dd>
@@ -513,7 +513,7 @@ header( 'location:index' );
                                    v-show="receive_record.is_edited == 0"
                                    v-model="title" maxlength="1024"></li>
 
-                        <li> {{ receive_record.order_type == 'taiwan' ? 'Taiwan' : '' }} </li>
+                        <li> {{ receive_record.order_type == 'taiwan' ? 'Order – Taiwan' : '' }} </li>
 
                         <li>
                             <a v-show="receive_record.is_edited == 1"
