@@ -2790,7 +2790,7 @@ catch (Exception $e) {
                                                     {{ it.title }}
                                                 </option>
                                             </select>
-                                            <a class="btn small" @click="task_del">Delete</a>
+                                            <a class="btn small" @click="task_del_o">Delete</a>
                                         </li>
                                     </ul>
                                 </div>

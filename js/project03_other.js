@@ -1043,6 +1043,83 @@ var app = new Vue({
       }
     },
 
+    
+
+    task_del_o() {
+      if(this.task_id_to_del != 0)
+      {
+        let _this = this;
+
+        let order_id = this.project03_other_task.find(element => element.task_id == this.task_id_to_del).order[0].id;
+
+        Swal.fire({
+            title: "Delete",
+            text: "Are you sure to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              
+                _this.do_task_delete_o(_this.task_id_to_del, order_id); // <--- submit form programmatically
+              
+            } else {
+              // swal("Cancelled", "Your imaginary file is safe :)", "error");
+            }
+          });
+      }
+    },
+
+    
+    do_task_delete_o(task_id_to_del, order_id) {
+      var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+
+        form_Data.append('jwt', token);
+        form_Data.append('task_id_to_del', task_id_to_del);
+        form_Data.append('order_id', order_id);
+
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/project03_other_task_del_order',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            if(response.data['ret'] != 0)
+            {
+              _this.org_uid = _this.uid;
+              
+                Swal.fire({
+                  text: "Deleted",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                })
+
+                _this.getProjectOtherTask(_this.stage_id);
+            }
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+
+            _this.getProjectOtherTask(_this.stage_id);
+        });
+
+        _this.task_clear_o();
+    },
+
+
     do_task_delete(task_id_to_del) {
       var token = localStorage.getItem('token');
         var form_Data = new FormData();
