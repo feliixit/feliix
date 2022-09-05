@@ -5043,7 +5043,7 @@ function task_notify02_order($old_status, $task_status, $project_name, $task_nam
     //如果是普通任務，執行下一行
     //$tab = '<p>A task was revised and needs you to follow. Below is the details:</p>';
     //如果是訂單任務，執行下一行
-    $tab = '<p>A Order task was revised and needs you to follow. Below is the details:</p>';
+    $tab = '<p>A order task was revised and needs you to follow. Below is the details:</p>';
 
     $conf = new Conf();
 
