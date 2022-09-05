@@ -66,7 +66,7 @@ $order_type = (isset($_POST['order_type']) ?  $_POST['order_type'] : '');
 
 $_record = GetTaskDetailOrg($task_id, $db);
 
-$mail_type = 1;
+$mail_type = 2;
 
 if($_record[0]["status"] != $status)
     $mail_type = 1;
