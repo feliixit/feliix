@@ -3656,6 +3656,142 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
 }
 
 
+function task_notify_order($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, $order_type, $order_name)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new order task was created and needs you to follow. Below is the details:</p>";
+            break;
+        case "edit":
+            $tab = "<p>A order task was revised and needs you to follow. Below is the details:</p>";
+            break;
+        case "del":
+            $tab = "<p>A existing order task was deleted. Below is the details:</p>";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Order Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+    
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+    if($stages_status == "Order")
+    {
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+        
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    //如果是訂單任務，執行下一行
+    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    //如果是訂單任務，執行下兩行
+    if($request_type == "notify")
+        $title = "[Order Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stages_status . "</p>";
+
+    //如果是訂單任務，執行下三行
+    $content = $content . "<p>Order Task:" . $task_name . "</p>";
+    $content = $content . "<p>Order Type:" . $order_type . "</p>";
+    $content = $content . "<p>Order Name:" . $order_name . "</p>";
+
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Created at:" . $created_at . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+
 
 function message_notify_dept($request_type, $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $msg, $username, $created_at, $c_id, $dept)
 {
@@ -4521,7 +4657,10 @@ function task_notify01_admin_l($old_status, $task_status, $revisor, $task_name, 
 function task_notify01($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
 
+    //如果是普通任務，執行下一行
     $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+    //如果是訂單任務，執行下一行
+    //$tab = '<p>Status of order task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
 
     $conf = new Conf();
 
@@ -4596,15 +4735,154 @@ if($stage == "Order")
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
+    //如果是普通任務，執行下一行
     $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //如果是訂單任務，執行下一行
+    //$title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
     
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
     $content = $content . "<p>Project Name:" . $project_name . "</p>";
     $content = $content . "<p>Stage:" . $stage . "</p>";
+
+    //如果是普通任務，執行下一行
     $content = $content . "<p>Task:" . $task_name . "</p>";
+    //如果是訂單任務，執行下一行
+    $content = $content . "<p>Order Task:" . $task_name . "</p>";
+    
+
     $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+
+    //如果是訂單任務，執行下兩行
+    //$content = $content . "<p>Order Type:" . $order_type . "</p>";
+    //$content = $content . "<p>Order Name:" . $order_name . "</p>";
+
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+
+function task_notify01_order($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name)
+{
+
+    //如果是普通任務，執行下一行
+    //$tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+    //如果是訂單任務，執行下一行
+    $tab = '<p>Status of order task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    
+// 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+if($stage == "Order")
+{
+    $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+    
+}
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    //如果是普通任務，執行下一行
+    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //如果是訂單任務，執行下一行
+    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stage . "</p>";
+
+    //如果是普通任務，執行下一行
+    //$content = $content . "<p>Task:" . $task_name . "</p>";
+    //如果是訂單任務，執行下一行
+    $content = $content . "<p>Order Task:" . $task_name . "</p>";
+    
+
+    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+
+    //如果是訂單任務，執行下兩行
+    $content = $content . "<p>Order Type:" . $order_type . "</p>";
+    $content = $content . "<p>Order Name:" . $order_name . "</p>";
+
     $content = $content . "<p>Creator:" . $creators . "</p>";
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
     $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
@@ -4628,7 +4906,12 @@ if($stage == "Order")
 function task_notify02($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
 
-    $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+    //$tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+
+    //如果是普通任務，執行下一行
+    $tab = '<p>A task was revised and needs you to follow. Below is the details:</p>';
+    //如果是訂單任務，執行下一行
+    //$tab = '<p>A Order task was revised and needs you to follow. Below is the details:</p>';
 
     $conf = new Conf();
 
@@ -4703,7 +4986,13 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
+    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    //如果是普通任務，執行下一行
     $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //如果是訂單任務，執行下一行
+    //$title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
     
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -4712,10 +5001,151 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $content = $content . "<p>Stage:" . $stage . "</p>";
     $content = $content . "<p>Task:" . $task_name . "</p>";
 
+    //如果是普通任務，執行下一行
+    $content = $content . "<p>Task:" . $task_name . "</p>";
+    //如果是訂單任務，執行下一行
+    //$content = $content . "<p>Order Task:" . $task_name . "</p>";
+
     if($old_status != $task_status)
         $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
     else
         $content = $content . "<p>Task Status:" . $task_status . "</p>";
+
+    //如果是訂單任務，執行下兩行
+    //$content = $content . "<p>Order Type:" . $order_type . "</p>";
+    //$content = $content . "<p>Order Name:" . $order_name . "</p>";
+
+    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Assignee:" . $assignees . "</p>";
+    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
+    $content = $content . "<p>Due Date:" . $due_date . "</p>";
+    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+function task_notify02_order($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name)
+{
+
+    //$tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+
+    //如果是普通任務，執行下一行
+    //$tab = '<p>A task was revised and needs you to follow. Below is the details:</p>';
+    //如果是訂單任務，執行下一行
+    $tab = '<p>A Order task was revised and needs you to follow. Below is the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+   
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+    
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+    if($stage == "Order")
+    {
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+        
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    //如果是普通任務，執行下一行
+    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //如果是訂單任務，執行下一行
+    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name:" . $project_name . "</p>";
+    $content = $content . "<p>Stage:" . $stage . "</p>";
+    //$content = $content . "<p>Task:" . $task_name . "</p>";
+
+    //如果是普通任務，執行下一行
+    //$content = $content . "<p>Task:" . $task_name . "</p>";
+    //如果是訂單任務，執行下一行
+    $content = $content . "<p>Order Task:" . $task_name . "</p>";
+
+    if($old_status != $task_status)
+        $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+    else
+        $content = $content . "<p>Task Status:" . $task_status . "</p>";
+
+    //如果是訂單任務，執行下兩行
+    $content = $content . "<p>Order Type:" . $order_type . "</p>";
+    $content = $content . "<p>Order Name:" . $order_name . "</p>";
 
     $content = $content . "<p>Creator:" . $creators . "</p>";
     $content = $content . "<p>Assignee:" . $assignees . "</p>";
@@ -5832,8 +6262,8 @@ function SetupMail($mail, $conf)
     // $mail->Port       = 587;
     // $mail->SMTPKeepAlive = true;
     // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'marquis.kihn@ethereal.email';
-    // $mail->Password   = 'v8Pc7cHdcmM2scf6ZW';
+    // $mail->Username   = 'flossie.reilly85@ethereal.email';
+    // $mail->Password   = 'MrtAbS6kx7G6uX4e2V';
 
     return $mail;
 

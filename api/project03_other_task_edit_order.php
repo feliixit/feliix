@@ -129,10 +129,10 @@ try{
 
         // send notify mail
         if($mail_type == 1)
-            SendNotifyMail01($task_id, $_record[0]["status"]);
+            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
 
         if($mail_type == 2)
-            SendNotifyMail02($task_id, $_record[0]["status"]);
+            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
 
         $returnArray = array('batch_id' => $task_id);
        
@@ -176,8 +176,21 @@ catch (Exception $e)
     error_log($e->getMessage());
 }
 
+function GetOrderType($order_type)
+{
+    $order_type_name = "";
 
-function SendNotifyMail01($last_id, $old_status_id)
+    switch ($order_type) {
+        case 'taiwan':
+            $order_type_name = "Order - Taiwan";
+            break;
+ 
+    }
+
+    return $order_type_name;
+}
+
+function SendNotifyMail01($last_id, $old_status_id, $order_type, $order_name)
 {
     $project_name = "";
     $task_name = "";
@@ -230,12 +243,12 @@ function SendNotifyMail01($last_id, $old_status_id)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify01($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id);
+    task_notify01_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
 
 }
 
 
-function SendNotifyMail02($last_id, $old_status_id)
+function SendNotifyMail02($last_id, $old_status_id, $order_type, $order_name)
 {
     $project_name = "";
     $task_name = "";
@@ -288,7 +301,7 @@ function SendNotifyMail02($last_id, $old_status_id)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify02($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id);
+    task_notify02_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
 
 }
 

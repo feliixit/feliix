@@ -131,6 +131,8 @@ function SendNotifyMail($last_id)
     $db = $database->getConnection();
 
     $_record = GetTaskDetail($last_id, $db);
+
+    $_od_main = GetOdMain($last_id, $db);
  
     $project_name = $_record[0]["project_name"];
     $task_name = $_record[0]["task_name"];
@@ -145,9 +147,12 @@ function SendNotifyMail($last_id)
     $detail = $_record[0]["detail"];
 
     $stage_id = $_record[0]["stage_id"];
+
+    $order_type = $_od_main[0]["order_type"];
+    $order_name = $_od_main[0]["order_name"];
   
 
-    task_notify("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at);
+    task_notify_order("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, GetOrderType($order_type), $order_name);
 
 }
 
@@ -179,4 +184,38 @@ function GetTaskDetail($id, $db)
     }
 
     return $merged_results;
+}
+
+
+
+function GetOdMain($id, $db)
+{
+    $sql = "select * from od_main
+            WHERE task_id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetOrderType($order_type)
+{
+    $order_type_name = "";
+
+    switch ($order_type) {
+        case 'taiwan':
+            $order_type_name = "Order - Taiwan";
+            break;
+ 
+    }
+
+    return $order_type_name;
 }
