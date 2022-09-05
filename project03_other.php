@@ -2458,7 +2458,7 @@ catch (Exception $e) {
                                         <li class="mix">
                                             <select v-model="task_id_to_del">
                                                 <option v-for="(it, index) in project03_other_task" :value="it.task_id"
-                                                        v-if="it.task_status != '-1'">
+                                                        v-if="it.task_status != '-1' && it.order.length == 0">
                                                     {{ it.title }}
                                                 </option>
                                             </select>
@@ -2472,7 +2472,7 @@ catch (Exception $e) {
                                         <li class="mix">
                                             <select v-model="task_id_to_load">
                                                 <option v-for="(it, index) in project03_other_task" :value="it.task_id"
-                                                        v-if="it.task_status != '-1'">
+                                                        v-if="it.task_status != '-1' && it.order.length == 0">
                                                     {{ it.title }}
                                                 </option>
                                             </select>
