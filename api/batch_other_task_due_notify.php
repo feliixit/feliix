@@ -25,6 +25,45 @@ SendNotifyMail($review_start_date, $review_end_date, "_sl", $db);
 SendNotifyMail($review_start_date, $review_end_date, "_sv", $db);
 SendNotifyMail($review_start_date, $review_end_date, "_c", $db);
 
+
+function GetOrderInfo($task_id, $db)
+{
+    $sql = "select id, od_name, order_type, serial_name
+            from od_main
+            where task_id = " . $task_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "od_name" => $row['od_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
+
+function GetOrderType($order_type)
+{
+    $order_type_name = "";
+
+    switch ($order_type) {
+        case 'taiwan':
+            $order_type_name = "Order - Taiwan";
+            break;
+ 
+    }
+
+    return $order_type_name;
+}
+
 function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
 {
 
@@ -60,36 +99,43 @@ function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
         $assignee = $row["assignee"];
         $collaborator = $row["collaborator"];
 
+        $order = GetOrderInfo($id, $db);
+
         $due_date = str_replace("-", "/", $row["due_date"]);
         $detail = $row["detail"];
 
         $stage_id = $row["stage_id"];
 
-        switch ($kind) {
-            case "":
-                task_notify("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at);
-                break;
-            case "_a":
-                task_notify_admin("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
-                break;
-            case "_d":
-                task_notify_admin_d("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
-                break;
-            case "_l":
-                task_notify_admin_l("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
-                break;
-            case "_o":
-                task_notify_admin_o("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
-                break;
-            case "_sl":
-                task_notify_admin_sl("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
-                break;
-            case "_sv":
-                task_notify_admin_sv("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
-                break;
-            case "_c":
-                task_notify_admin_c("notify", $project_name, $task_name, $task_status, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
-                break;
+        if(count($order) > 0)
+            task_notify_order("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, GetOrderType($order[0]["order_type"]), $order[0]["od_name"]);
+        else
+        {
+            switch ($kind) {
+                case "":
+                    task_notify("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at);
+                    break;
+                case "_a":
+                    task_notify_admin("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                    break;
+                case "_d":
+                    task_notify_admin_d("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                    break;
+                case "_l":
+                    task_notify_admin_l("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                    break;
+                case "_o":
+                    task_notify_admin_o("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                    break;
+                case "_sl":
+                    task_notify_admin_sl("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                    break;
+                case "_sv":
+                    task_notify_admin_sv("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                    break;
+                case "_c":
+                    task_notify_admin_c("notify", $project_name, $task_name, $task_status, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                    break;
+            }
         }
     }
 }

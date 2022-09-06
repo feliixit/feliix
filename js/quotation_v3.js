@@ -1829,6 +1829,18 @@ var app = new Vue({
         var sn = 0;
         var items = this.temp_block_a;
 
+        var _list = `Beam Angle:
+Lumens:
+CRI / RA:
+CCT:
+Wattage:
+IP Rating:
+Life Hours:
+Color Finish:
+Installation:`;
+
+        if(this.project_category != 'Lighting')
+          _list = "";
 
         for (let i = 0; i < items.length; i++) {
           if (items[i].id > sn) {
@@ -1852,7 +1864,7 @@ var app = new Vue({
           discount: "0",
           amount: "",
           desc: "",
-          list: "",
+          list: _list,
           num:"",
           pid:0,
         };
@@ -1873,6 +1885,19 @@ var app = new Vue({
           }
         }
 
+        var _list = `Beam Angle:
+Lumens:
+CRI / RA:
+CCT:
+Wattage:
+IP Rating:
+Life Hours:
+Color Finish:
+Installation:`;
+
+        if(this.project_category != 'Lighting')
+          _list = "";
+
         sn = sn + 1;
 
         item = {
@@ -1886,7 +1911,7 @@ var app = new Vue({
           discount: "0",
           amount: "",
           desc: "",
-          list: "",
+          list: _list,
           num:"",
           pid:0,
         };
