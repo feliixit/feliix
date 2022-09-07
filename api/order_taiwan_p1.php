@@ -47,7 +47,7 @@ if (!isset($jwt)) {
     $merged_results = array();
     
 
-    $query = "SELECT id, 
+    $query = "SELECT od_item.id, b.serial_number,
                     sn, 
                     confirm, 
                     brand, 
@@ -77,8 +77,10 @@ if (!isset($jwt)) {
                     delivery,
                     final,
                     `status`
-                    FROM od_item
-                    WHERE status <> -1 and od_id=$id";
+                    FROM od_item, 
+                    (SELECT @a:=@a+1 serial_number, id FROM od_item, (SELECT @a:= 0) AS a WHERE status <> -1 and od_id=$id order by ABS(sn)) b
+                    WHERE status <> -1 and od_id=$id and od_item.id = b.id
+                    ";
                     
 
     if($confirm != '')
@@ -142,6 +144,8 @@ if (!isset($jwt)) {
 
         $pid = $row['pid'];
 
+        $serial_number = $row['serial_number'];
+
         $status = $row['status'];
         $notes = GetNotes($row['id'], $db);
 
@@ -184,6 +188,7 @@ if (!isset($jwt)) {
             "confirm_text" => $confirm_text,
             "notes" => $notes,
             "notes_a" => $notes_a,
+            "serial_number" => $serial_number,
         );
     }
 

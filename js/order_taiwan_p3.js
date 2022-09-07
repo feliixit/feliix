@@ -2446,8 +2446,7 @@ var app = new Vue({
           },
         });
 
-        this.items.splice(fromIndex, 1);
-        this.items.splice(toIndex, 0, element);
+        this.getRecord();
       },
 
       page_down: async function(fromIndex, eid) {
@@ -2480,8 +2479,7 @@ var app = new Vue({
           },
         });
         
-        this.items.splice(fromIndex, 1);
-        this.items.splice(toIndex, 0, element);
+        this.getRecord();
       },
 
 

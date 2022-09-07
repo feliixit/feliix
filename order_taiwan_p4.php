@@ -1312,7 +1312,7 @@
                     <tbody>
                     <tr v-for="(item, index) in items" :class="['print_area_' + item.id]">
                         <td><input type="checkbox" class="alone" :value="item.index" :true-value="1" v-model:checked="item.is_checked"></td>
-                        <td> {{item.sn}} </td>
+                        <td> {{item.serial_number}} </td>
                         <td>{{item.status <= 1 ? '●' : ''}}</td>
                         <td>{{item.status == 2 ? '●' : ''}}</td>
                         <td>{{item.status >= 3 ? '●' : ''}}</td>

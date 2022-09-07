@@ -1292,6 +1292,7 @@
                     <thead>
                     <tr>
                         <th><i class="micons">view_list</i></th>
+                        <th>#</th>
                         <th>Status</th>
                         <th>Brand</th>
                         <th colspan="2">Description</th>
@@ -1307,6 +1308,7 @@
                     <tbody>
                     <tr v-for="(item, index) in items" :class="['print_area_' + item.id]">
                         <td><input type="checkbox" class="alone" :value="item.index" :true-value="1" v-model:checked="item.is_checked"></td>
+                        <td> {{item.serial_number}} </td>
                         <td>
                             <div class="read_block" v-if="!item.is_edit">
                             {{ item.confirm_text }}<br>
