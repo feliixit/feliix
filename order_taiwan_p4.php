@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Details of Order</title>
+    <title>Overview of Order – Taiwan</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -438,64 +438,77 @@
             cursor: pointer;
         }
 
-        .tb_order thead tr th:nth-of-type(2), .tb_order tbody tr td:nth-of-type(2) {
+        .block.D .tb_order thead tr th:nth-of-type(2), .block.D .tb_order tbody tr td:nth-of-type(2) {
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .block.D .tb_order thead tr th:nth-of-type(3), .block.D .tb_order tbody tr td:nth-of-type(3),
+        .block.D .tb_order thead tr th:nth-of-type(4), .block.D .tb_order tbody tr td:nth-of-type(4),
+        .block.D .tb_order thead tr th:nth-of-type(5), .block.D .tb_order tbody tr td:nth-of-type(5)
+        {
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .block.D .tb_order thead tr th:nth-of-type(6), .block.D .tb_order tbody tr td:nth-of-type(6) {
             min-width: 230px;
             text-align: center;
         }
 
-        .tb_order thead tr th:nth-of-type(3), .tb_order tbody tr td:nth-of-type(3) {
+        .block.D .tb_order thead tr th:nth-of-type(7), .block.D .tb_order tbody tr td:nth-of-type(7) {
             min-width: 210px;
         }
 
-        .tb_order thead tr th:nth-of-type(4) {
+        .block.D .tb_order thead tr th:nth-of-type(8) {
             min-width: 930px;
         }
 
-        .tb_order tbody tr td:nth-of-type(4) {
+        .block.D .tb_order tbody tr td:nth-of-type(8) {
             width: 530px;
         }
 
-        .tb_order tbody tr td:nth-of-type(5) {
+        .block.D .tb_order tbody tr td:nth-of-type(9) {
             min-width: 400px;
         }
 
-        .tb_order thead tr th:nth-of-type(5), .tb_order tbody tr td:nth-of-type(6) {
+        .block.D .tb_order thead tr th:nth-of-type(9), .block.D .tb_order tbody tr td:nth-of-type(10) {
             min-width: 130px;
         }
 
-        .tb_order thead tr th:nth-of-type(6), .tb_order tbody tr td:nth-of-type(7) {
+        .block.D .tb_order thead tr th:nth-of-type(10), .block.D .tb_order tbody tr td:nth-of-type(11) {
             min-width: 180px;
         }
 
-        .tb_order thead tr th:nth-of-type(7), .tb_order tbody tr td:nth-of-type(8) {
+        .block.D .tb_order thead tr th:nth-of-type(11), .block.D .tb_order tbody tr td:nth-of-type(12) {
             min-width: 200px;
         }
 
-        .tb_order thead tr th:nth-of-type(8), .tb_order tbody tr td:nth-of-type(9) {
+        .block.D .tb_order thead tr th:nth-of-type(12), .block.D .tb_order tbody tr td:nth-of-type(13) {
             min-width: 450px;
         }
 
-        .tb_order thead tr th:last-of-type, .tb_order tbody tr td:last-of-type {
+        .block.D .tb_order thead tr th:last-of-type, .block.D .tb_order tbody tr td:last-of-type {
             min-width: 120px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(10) {
+        .block.D .tb_order tbody tr td:nth-of-type(14) {
             min-width: 450px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(11) {
+        .block.D .tb_order tbody tr td:nth-of-type(15) {
             min-width: 220px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(12),
-        .block.C .tb_order tbody tr td:nth-of-type(13) {
+        .block.D .tb_order tbody tr td:nth-of-type(16),
+        .block.D .tb_order tbody tr td:nth-of-type(17) {
             min-width: 180px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(14),
-        .block.C .tb_order tbody tr td:nth-of-type(15),
-        .block.C .tb_order tbody tr td:nth-of-type(16),
-        .block.C .tb_order tbody tr td:nth-of-type(17) {
+        .block.D .tb_order tbody tr td:nth-of-type(18),
+        .block.D .tb_order tbody tr td:nth-of-type(19),
+        .block.D .tb_order tbody tr td:nth-of-type(20),
+        .block.D .tb_order tbody tr td:nth-of-type(21) {
             min-width: 400px;
         }
 
@@ -528,11 +541,6 @@
             text-align: left;
         }
 
-        .read_block input {
-            border: 1px solid #707070;
-            color: #707070;
-        }
-
         .read_block img {
             height: 150px;
             width: 150px;
@@ -544,7 +552,7 @@
             text-align: center;
         }
 
-        .write_block select {
+        .read_block select, .write_block select {
             background-image: url(images/ui/icon_form_select_arrow_gray.svg);
             border: 1px solid #707070;
             padding: 1px 3px;
@@ -554,7 +562,12 @@
             width: 100%;
         }
 
-        .write_block input {
+        .read_block select:disabled{
+            opacity: 1;
+            color: black;
+        }
+
+        .read_block input, .write_block input {
             height: 30px;
             border: 1px solid #707070;
             font-size: 16px;
@@ -562,15 +575,12 @@
             width: 100%;
         }
 
-        .write_block input[type="checkbox"] {
+        .read_block input[type="checkbox"], .write_block input[type="checkbox"] {
             border: none;
+            vertical-align: 0.5px;
         }
 
-        .write_block input[type="checkbox"]:disabled {
-            opacity: 1;
-        }
-
-        .write_block textarea {
+        .read_block textarea, .write_block textarea {
             border: 1px solid #707070;
             font-size: 16px;
             resize: none;
@@ -1262,60 +1272,24 @@
 
 
         <div class="tags">
-            <a class="tag A focus">Preliminary</a>
+            <a class="tag A" @click="p1()">Preliminary</a>
             <a class="tag B" @click="p2()">For Approval</a>
             <a class="tag C" @click="p3()">Approved</a>
-            <a class="tag D" @click="p4()">Overview</a>
+            <a class="tag D focus">Overview</a>
         </div>
         <!-- Blocks -->
-        <div class="block A" style="display: block;">
+        <div class="block D" style="display: block;">
 
             <div class="box-content">
-
-                <div class="list_function main">
-
-                    <!-- buttons to add product -->
-                    <div class="block">
-
-                        <div class="popupblock">
-                            <a title="Add Item by Manual Encoding" v-if="access1 == true">
-                                <i class="fas fa-plus" @click="addItem()"></i>
-                            </a>
-                        </div>
-
-                        <div class="popupblock">
-                            <a title="Add Item from Product Database" v-if="access1 == true">
-                                <i class="fas fa-list-alt"  @click="product_catalog()"></i>
-                            </a>
-                        </div>
-
-                        <div class="popupblock">
-                            <a title="Add Item from Existing Quotation" v-if="access1 == true">
-                                <i class="fas fa-file-import" @click="quotation_mgt()"></i>
-                            </a>
-                        </div>
-
-                        <div class="btn_block">
-                       
-                            <a class="btn small green" @click="sendNotesToTw()" v-if="access1 == true && no_privlege() != true">Send TW for Notes</a>
-                            <a class="btn small green" @click="approval()" v-if="access1 == true && no_privlege() != true">Submit for Approval</a>
-                            <a class="btn small" @click="withdrawNotesToTw()" v-if="access1 == true && no_privlege() != true">Withdraw</a>
-                        
-                            <a class="btn small green" @click="finish_notes()" v-if="access2 == true">Finish Notes</a>
-                           
-                            <input type="text" placeholder="Comment" v-model="comment" v-if="(access1 == true || access2 == true) && no_privlege() != true">
-                        </div>
-
-                    </div>
-
-
-                </div>
-
 
                 <table class="tb_order">
                     <thead>
                     <tr>
                         <th><i class="micons">view_list</i></th>
+                        <th>#</th>
+                        <th>Preliminary</th>
+                        <th>For Approval</th>
+                        <th>Approved</th>
                         <th>Status</th>
                         <th>Brand</th>
                         <th colspan="2">Description</th>
@@ -1323,7 +1297,14 @@
                         <th>SRP</th>
                         <th>Date Needed by Client</th>
                         <th>Notes</th>
+                        <th>Notes (Only for Approved Stage)</th>
                         <th>Shipping Way</th>
+                        <th>ETA</th>
+                        <th>Arrival Date</th>
+                        <th>Warehouse In Charge</th>
+                        <th>Testing</th>
+                        <th>Delivery</th>
+                        <th>Final</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -1331,6 +1312,10 @@
                     <tbody>
                     <tr v-for="(item, index) in items" :class="['print_area_' + item.id]">
                         <td><input type="checkbox" class="alone" :value="item.index" :true-value="1" v-model:checked="item.is_checked"></td>
+                        <td> {{item.sn}} </td>
+                        <td>{{item.status <= 1 ? '●' : ''}}</td>
+                        <td>{{item.status == 2 ? '●' : ''}}</td>
+                        <td>{{item.status >= 3 ? '●' : ''}}</td>
                         <td>
                             <div class="read_block" v-if="!item.is_edit">
                             {{ item.confirm_text }}<br>
@@ -1339,9 +1324,9 @@
 
                             <div class="write_block" v-if="item.is_edit">
                                 <select v-model="item.confirm">
-                                    <option value="N">Not Yet Confirmed</option>
-                                    <option value="C">Confirmed</option>
-                                    <option value="D">Deleted</option>
+                                    <option value="A">Approved</option>
+                                    <option value="O">Ordered</option>
+                                    <option value="E">Canceled</option>
                                 </select>
                             </div>
                         </td>
@@ -1444,37 +1429,32 @@
                         <i class="t">({{ note.username }} at {{ note.created_at }})</i>
                         <div class="already_read"><template v-if="note.got_it != undefined" v-for="(got, index) in note.got_it">{{ got.username }}<span v-if="index + 1 < note.got_it.length">, </span></template></div>
                         <div class="btnbox">
-                            <a class="btn small green"  @click="got_it_message(note.id, item.id)" v-if="note.i_got_it == false">Got it</a>
-                            
-                            <a class="btn small yellow" v-if="note.create_id == uid" @click="msg_delete(note.id, item.id)">Delete</a>
+                          
                         </div>
                     </div>
 
                 </div>
 
-                <div class="write_msg_block">
+            </td>
 
-                    <textarea rows="3" :ref="'comment_task_' + item.id" placeholder="Leave notes here"></textarea>
+            <td>
+                <div class="msg_block">
+                    <div :class="['msgbox', (note.status == -1 ? 'deleted' : '')]" v-for="note in item.notes_a">
+                        • {{ note.message }}
 
-                    <div class="file_block">
-                        <span>Files: </span>
-                        <div class="pub-con">
-                            <div class="input-zone">
-                                <span class="upload-des">choose file</span>
+                        <template v-for="file in note.attachs">
+                            <a class="attch" :href="img_url + file.gcp_name" target="_blank">{{file.filename}}</a>
+                        </template>
+                        
+                        <i class="t">({{ note.username }} at {{ note.created_at }})</i>
+                        <div class="already_read"><template v-if="note.got_it != undefined" v-for="(got, index) in note.got_it">{{ got.username }}<span v-if="index + 1 < note.got_it.length">, </span></template></div>
+                        <div class="btnbox">
 
-                                    
-                                <input class="input" type="file" :ref="'file_task_' + item.id" placeholder="choose file" @change="changeTaskFile(item.id)" multiple />
-                                    </div>
                         </div>
                     </div>
-                    <div class="file-list">
-                        <a class="attch" v-for="(fs,index) in taskItems(item.id)" :key="index" @click="deleteTaskFile(item.id, index)">{{fs.name}}</a>
-                    </div>
 
-                    <div class="btnbox">
-                        <a class="btn small green" @click="comment_create(item.id)">Create</a>
-                    </div>
                 </div>
+
             </td>
 
             <td>
@@ -1484,28 +1464,73 @@
                         <option value="sea">Sea</option>
                         <option value="air">Air</option>
                     </select>
-                    <!-- <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly> -->
-                </div>
-                <div class="write_block" v-if="ShipwayWrite(item)">
-                    <select v-model="item.shipping_way">
+                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+
+                    <select disabled v-model="item.shipping_vendor">
                         <option value=""></option>
-                        <option value="sea">Sea</option>
-                        <option value="air">Air</option>
+                        <option value="ssit">盛盛</option>
+                        <option value="cfs">卡菲斯</option>
+                        <option value="dy">東渝</option>
                     </select>
-                    
-                    <!-- <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number"> -->
+                </div>
+
+            </td>
+
+            <td>
+                <div class="read_block" v-if="EtaRead(item)">
+                    <input type="text" v-model="item.eta" readonly>
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="ArriveRead(item)">
+                    <input type="text" v-model="item.arrive" readonly>
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="ArriveRemarkRead(item)">
+                    Confirm Arrival:  <input type="checkbox" :value="item.charge" :true-value="1" v-model:checked="item.charge" class="alone" disabled>
+                    <textarea rows="3" readonly v-model="item.remark"></textarea>
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="TestRead(item)">
+                    <select v-model="item.test" disabled>
+                        <option>Choose Assignee for Testing...</option>
+                        <option v-for="item in charge" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
+                    Testing Result is Normal:  <input type="checkbox" :value="item.check_t" :true-value="1" v-model:checked="item.check_t" class="alone" disabled>
+                    <textarea rows="3" v-model="item.remark_t" readonly></textarea>
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="DeliveryRead(item)">
+                    <select v-model="item.delivery" disabled>
+                        <option>Choose Assignee for Delivery...</option>
+                        <option v-for="item in charge" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
+                    Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
+                    <textarea rows="3" v-model="item.remark_d" readonly></textarea>
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="FinalRead(item)">
+                    <textarea rows="3" v-model="item.final" readonly></textarea>
                 </div>
             </td>
 
             <td>
                 <div class="btnbox">
-                    <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true && item.status <= 1 && access1 == true && no_privlege() != true"></i>
-                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true && item.status <= 1 && access1 == true && no_privlege() != true"></i>
-                    <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-times-circle" v-if="item.is_edit == true" @click="cancelItem(item)"></i>
-                    <i class="fas fa-check-circle" v-if="item.is_edit == true" @click="confirmItem(item)"></i>
+                    <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true && info_type == ''"></i>
+                    <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true && info_type == ''"></i>
                 </div>
             </td>
             </tr>
@@ -2541,7 +2566,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/order_taiwan_p1.js"></script>
+<script defer src="js/order_taiwan_p4.js"></script>
 <script src="https://superal.github.io/canvas2image/canvas2image.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </html>

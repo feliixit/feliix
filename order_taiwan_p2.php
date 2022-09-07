@@ -1260,7 +1260,7 @@
             <a class="tag A" @click="p1()">Preliminary</a>
             <a class="tag B focus">For Approval</a>
             <a class="tag C" @click="p3()">Approved</a>
-            <a class="tag D">Overview</a>
+            <a class="tag D" @click="p4()">Overview</a>
         </div>
         <!-- Blocks -->
         <div class="block A" style="display: block;">

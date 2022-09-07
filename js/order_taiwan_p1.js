@@ -395,6 +395,10 @@ var app = new Vue({
         window.location.href = "order_taiwan_p3?id=" + this.id;
       },
 
+      p4() {
+        window.location.href = "order_taiwan_p4?id=" + this.id;
+      },
+
       finish_notes : async function() {
         let element = [];
 
