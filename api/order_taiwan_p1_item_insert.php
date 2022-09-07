@@ -74,8 +74,11 @@ switch ($method) {
 
 
         try {
+            $sn = GetMaxSn($od_id, $db);
+
             for($i=0; $i<count($block_array); $i++) 
             {
+                $sn++;
                 // insert quotation_page_type_block
                 $query = "INSERT INTO od_item
                     SET
@@ -104,7 +107,7 @@ switch ($method) {
                 // prepare the query
                 $stmt = $db->prepare($query);
 
-                $sn = isset($block_array[$i]['sn']) ? $block_array[$i]['sn'] : 0;
+                //$sn = isset($block_array[$i]['sn']) ? $block_array[$i]['sn'] : 0;
 
                 $confirm = isset($block_array[$i]['confirm']) ? $block_array[$i]['confirm'] : '';
                 $brand = isset($block_array[$i]['brand']) ? $block_array[$i]['brand'] : '';
@@ -194,3 +197,36 @@ switch ($method) {
         break;
 }
 
+function GetMaxSn($od_id, $db)
+{
+    $max_sn = 0;
+    $query = "SELECT max(sn*1) as max_sn FROM `od_item` WHERE od_id = :od_id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':od_id', $od_id);
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $max_sn = $row['max_sn'];
+            return $max_sn;
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
+}
