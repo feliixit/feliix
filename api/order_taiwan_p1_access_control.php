@@ -66,6 +66,8 @@ switch ($method) {
         $access["access5"] = $ret;
         $ret = GetAccess("access6", $GLOBALS["user_name"], $db);
         $access["access6"] = $ret;
+        $ret = GetAccess("access7", $GLOBALS["user_name"], $db);
+        $access["access7"] = $ret;
 
 
         $jsonEncodedReturnArray = json_encode($access, JSON_PRETTY_PRINT);

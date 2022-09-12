@@ -71,6 +71,8 @@ $kind = (isset($_GET['kind']) ?  urldecode($_GET['kind']) : "");
 
 $type = (isset($_GET['type']) ?  urldecode($_GET['type']) : '');
 
+$id = (isset($_GET['id']) ?  $_GET['id'] : 0);
+
 $merged_results = array();
 
 $query = "SELECT pm.id, 
@@ -93,6 +95,10 @@ $query = "SELECT pm.id,
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
                 left join project_main p on ps.project_id = p.id
                 where pm.status <> -1 ";
+
+if($id != 0){
+    $query .= " and pm.id = $id ";
+}
 
 
 if($fpt != "")

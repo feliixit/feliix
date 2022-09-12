@@ -204,7 +204,7 @@
             width: 34px;
             height: 34px;
             box-sizing: border-box;
-            padding: 6px;
+            padding: 3px 6px 6px 6px;
         }
 
         #tb_product_list tbody tr td:nth-of-type(3) ul:last-of-type {
@@ -271,7 +271,7 @@
         }
 
         #tb_quotation_list tbody tr td:nth-of-type(4) {
-            width: 60px;
+            width: 200px;
         }
 
         #tb_quotation_list tbody tr td:nth-of-type(5) {
@@ -279,11 +279,7 @@
         }
 
         #tb_quotation_list tbody tr td:nth-of-type(6) {
-            width: 200px;
-        }
-
-        #tb_quotation_list tbody tr td:nth-of-type(7) {
-            width: 80px;
+            width: 110px;
         }
 
         #tb_quotation_list tbody tr td:nth-of-type(1) a, #tb_quotation_list tbody tr td:nth-of-type(2) a {
@@ -371,12 +367,13 @@
         }
 
         .list_function .pagenation a {
-            border-color: #dee2e6;
+            color: #707071;
+            border-color: #707071;
         }
 
         .list_function .pagenation a:hover {
-            border-color: #dee2e6;
-            background-color: #E0E0E0;
+            color: #FFF;
+            background-color: #707071;
         }
 
         .tb_order {
@@ -438,65 +435,50 @@
             cursor: pointer;
         }
 
-        .tb_order thead tr th:nth-of-type(2), .tb_order tbody tr td:nth-of-type(2) {
+        .block.A .tb_order thead tr th:nth-of-type(2), .block.A .tb_order tbody tr td:nth-of-type(2) {
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .block.A .tb_order thead tr th:nth-of-type(3), .block.A .tb_order tbody tr td:nth-of-type(3) {
             min-width: 230px;
             text-align: center;
         }
 
-        .tb_order thead tr th:nth-of-type(3), .tb_order tbody tr td:nth-of-type(3) {
+        .block.A .tb_order thead tr th:nth-of-type(4), .block.A .tb_order tbody tr td:nth-of-type(4) {
             min-width: 210px;
         }
 
-        .tb_order thead tr th:nth-of-type(4) {
+        .block.A .tb_order thead tr th:nth-of-type(5) {
             min-width: 930px;
         }
 
-        .tb_order tbody tr td:nth-of-type(4) {
+        .block.A .tb_order tbody tr td:nth-of-type(5) {
             width: 530px;
         }
 
-        .tb_order tbody tr td:nth-of-type(5) {
+        .block.A .tb_order tbody tr td:nth-of-type(6) {
             min-width: 400px;
         }
 
-        .tb_order thead tr th:nth-of-type(5), .tb_order tbody tr td:nth-of-type(6) {
+        .block.A .tb_order thead tr th:nth-of-type(6), .block.A .tb_order tbody tr td:nth-of-type(7) {
             min-width: 130px;
         }
 
-        .tb_order thead tr th:nth-of-type(6), .tb_order tbody tr td:nth-of-type(7) {
+        .block.A .tb_order thead tr th:nth-of-type(7), .block.A .tb_order tbody tr td:nth-of-type(8) {
             min-width: 180px;
         }
 
-        .tb_order thead tr th:nth-of-type(7), .tb_order tbody tr td:nth-of-type(8) {
+        .block.A .tb_order thead tr th:nth-of-type(8), .block.A .tb_order tbody tr td:nth-of-type(9) {
             min-width: 200px;
         }
 
-        .tb_order thead tr th:nth-of-type(8), .tb_order tbody tr td:nth-of-type(9) {
+        .block.A .tb_order thead tr th:nth-of-type(9), .block.A .tb_order tbody tr td:nth-of-type(10) {
             min-width: 450px;
         }
 
-        .tb_order thead tr th:last-of-type, .tb_order tbody tr td:last-of-type {
+        .block.A .tb_order thead tr th:last-of-type, .block.A .tb_order tbody tr td:last-of-type {
             min-width: 120px;
-        }
-
-        .block.C .tb_order tbody tr td:nth-of-type(10) {
-            min-width: 450px;
-        }
-
-        .block.C .tb_order tbody tr td:nth-of-type(11) {
-            min-width: 220px;
-        }
-
-        .block.C .tb_order tbody tr td:nth-of-type(12),
-        .block.C .tb_order tbody tr td:nth-of-type(13) {
-            min-width: 180px;
-        }
-
-        .block.C .tb_order tbody tr td:nth-of-type(14),
-        .block.C .tb_order tbody tr td:nth-of-type(15),
-        .block.C .tb_order tbody tr td:nth-of-type(16),
-        .block.C .tb_order tbody tr td:nth-of-type(17) {
-            min-width: 400px;
         }
 
         .hide {
@@ -739,6 +721,10 @@
 
         .btnbox i.fa-times-circle {
             color: indianred !important;
+        }
+
+        .modal{
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
         }
 
         .modal .modal_function .left_function {
@@ -1245,10 +1231,10 @@
             <div class="block" style="display: flex; justify-content: space-between;">
                 <!-- tag -->
                 <div>
-                    <b class="tag focus">OFFICIAL ORDER</b>
-                    <b class="tag" style="margin-right: 30px;">ORDER NAME</b>
+                    <b class="tag focus">ORDER TAIWAN</b>
+                    <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + od_name }}</b>
                     <b class="tag focus">PROJECT</b>
-                    <a href="project02?p=???"><b class="tag">OMTPI- Surface Mounted</b></a>
+                    <a :href="'project03_other?sid=' + stage_id"><b class="tag">{{ project_name }}</b></a>
                 </div>
 
 
@@ -1278,19 +1264,19 @@
                     <div class="block">
 
                         <div class="popupblock">
-                            <a title="Add Item by Manual Encoding" v-if="access1 == true">
+                            <a title="Add Item by Manual Encoding" v-if="access1 == true || access7 == true">
                                 <i class="fas fa-plus" @click="addItem()"></i>
                             </a>
                         </div>
 
                         <div class="popupblock">
-                            <a title="Add Item from Product Database" v-if="access1 == true">
+                            <a title="Add Item from Product Database" v-if="access1 == true || access7 == true">
                                 <i class="fas fa-list-alt"  @click="product_catalog()"></i>
                             </a>
                         </div>
 
                         <div class="popupblock">
-                            <a title="Add Item from Existing Quotation" v-if="access1 == true">
+                            <a title="Add Item from Existing Quotation" v-if="access1 == true || access7 == true">
                                 <i class="fas fa-file-import" @click="quotation_mgt()"></i>
                             </a>
                         </div>
@@ -1503,8 +1489,8 @@
                 <div class="btnbox">
                     <i class="fas fa-arrow-alt-circle-up" @click="page_up(index, item.id)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-arrow-alt-circle-down" @click="page_down(index, item.id)" v-if="item.is_edit !== true"></i>
-                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true && item.status <= 1 && access1 == true && no_privlege() != true"></i>
-                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true && item.status <= 1 && access1 == true && no_privlege() != true"></i>
+                    <i class="fas fa-edit" @click="editItem(item)" v-if="item.is_edit !== true && item.status <= 1 && (access1 == true || access7 == true) && no_privlege() != true"></i>
+                    <i class="fas fa-trash" @click="item_delete(item)" v-if="item.is_edit !== true && item.status <= 1 && (access1 == true || access7 == true) && no_privlege() != true"></i>
                     <i class="fas fa-camera" @click="print_me(item)" v-if="item.is_edit !== true"></i>
                     <i class="fas fa-times-circle" v-if="item.is_edit == true" @click="cancelItem(item)"></i>
                     <i class="fas fa-check-circle" v-if="item.is_edit == true" @click="confirmItem(item)"></i>

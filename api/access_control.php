@@ -25,6 +25,7 @@ $access3 = (isset($_POST['access3']) ?  $_POST['access3'] : '');
 $access4 = (isset($_POST['access4']) ?  $_POST['access4'] : '');
 $access5 = (isset($_POST['access5']) ?  $_POST['access5'] : '');
 $access6 = (isset($_POST['access6']) ?  $_POST['access6'] : '');
+$access7 = (isset($_POST['access7']) ?  $_POST['access7'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -50,7 +51,7 @@ if (!isset($jwt)) {
     if ($action == 1) {
         //select all
         try {
-            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8, access1, access2, access3, access4, access5, access6 from access_control where id = 1";
+            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8, access1, access2, access3, access4, access5, access6, access7 from access_control where id = 1";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
@@ -81,7 +82,8 @@ if (!isset($jwt)) {
                             access3 = :access3,
                             access4 = :access4,
                             access5 = :access5,
-                            access6 = :access6
+                            access6 = :access6,
+                            access7 = :access7
                         where id = :id";
 
             // prepare the query
@@ -104,6 +106,7 @@ if (!isset($jwt)) {
             $access4 = htmlspecialchars(strip_tags($access4));
             $access5 = htmlspecialchars(strip_tags($access5));
             $access6 = htmlspecialchars(strip_tags($access6));
+            $access7 = htmlspecialchars(strip_tags($access7));
 
 
             // bind the values
@@ -122,6 +125,7 @@ if (!isset($jwt)) {
             $stmt->bindParam(':access4', $access4);
             $stmt->bindParam(':access5', $access5);
             $stmt->bindParam(':access6', $access6);
+            $stmt->bindParam(':access7', $access7);
 
             try {
                 // execute the query, also check if query was successful

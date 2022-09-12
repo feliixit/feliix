@@ -279,6 +279,12 @@ var app = new Vue({
         access4 : false,
         access5 : false,
         access6 : false,
+        access7 : false,
+
+        od_name : '',
+        stage_id : 0,
+        project_name : '',
+        serial_name : '',
     },
   
     created() {
@@ -319,6 +325,9 @@ var app = new Vue({
   
                    if(role == 6)
                    _this.access6 = true;
+
+                    if(role == 7)
+                    _this.access7 = true;
   
                   break;
               default:
@@ -336,6 +345,7 @@ var app = new Vue({
       this.getUsers();
       this.getCreators();
       this.getAccess();
+      this.getOdMain();
     },
   
     computed: {
@@ -380,8 +390,52 @@ var app = new Vue({
     },
   
     methods: {
+
+      getOdMain: function() {
+        let _this = this;
+  
+        const params = {
+  
+                  fc : '',
+                  fpc: '',
+                  fpt: '',
+                  fg: '',
+                  key: '',
+                  kind: '',
+  
+                  op1: '',
+                  od1: '',
+                  op2: '',
+                  od2: '',
+                  id : _this.id,
+              };
+  
+        
+      
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+                .get('api/order_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.od_name = res.data[0].od_name;
+                    _this.stage_id = res.data[0].stage_id;
+                    _this.project_name = res.data[0].project_name;
+                    _this.serial_name = res.data[0].serial_name;
+  
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
+
+
       no_privlege() {
-        if(this.access1 == false && this.access2 == false && this.access3 == false && this.access4 == false && this.access5 == false && this.access6 == false)
+        if(this.access1 == false && this.access2 == false && this.access3 == false && this.access4 == false && this.access5 == false && this.access6 == false && this.access7 == false)
           return true;
         else
           return false;
@@ -1940,6 +1994,7 @@ var app = new Vue({
             _this.access4 = response.data.access4;
             _this.access5 = response.data.access5;
             _this.access6 = response.data.access6;
+            _this.access7 = response.data.access7;
   
         })
         .catch(function(response) {
@@ -2244,17 +2299,16 @@ var app = new Vue({
         return this.product_records;
       },
 
-
-      print_me(item) {
-
-        var cls = '.print_area_' + item.id;
+      do_print_me(item, text){
         let _this = this;
+        var cls = '.print_area_' + item.id;
+
         let _item_id = item.id;
  
         html2canvas(document.querySelector(cls), { proxy: "html2canvasproxy", useCORS: false, logging: true, allowTaint: true}).then(canvas => {
           //document.body.appendChild(canvas)
           let dataurl = canvas.toDataURL();
-          let data = { image: dataurl, item_id: item.id };
+          let data = { image: dataurl, item_id: item.id, text: text };
           this.loading = true;
 
           axios
@@ -2270,8 +2324,26 @@ var app = new Vue({
             .catch(function(error) {
               console.log(error);
             });
-          
-      });
+          });
+        },
+
+      print_me(item) {
+        let _this = this;
+        // sweet alert with input
+        Swal.fire({
+          title: "Take Snapshot of Product",
+          text: 'Input description for the snapshot:',
+          input: "text",
+          inputAttributes: {
+            autocapitalize: "off",
+          },
+          showCancelButton: true,
+          confirmButtonText: "OK",
+          showLoaderOnConfirm: true,
+          preConfirm: (login) => {
+            _this.do_print_me(item, login);
+          },
+        });
       
       },
 

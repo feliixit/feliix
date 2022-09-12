@@ -37,6 +37,8 @@ $ids = (isset($_POST['ids']) ?  $_POST['ids'] : '');
 $ids_str = $ids;
 $brand = (isset($_POST['brand']) ?  $_POST['brand'] : '');
 
+$od_id = $id;
+
 $conf = new Conf();
 
 // if jwt is not empty
@@ -186,6 +188,50 @@ if($jwt){
             "confirm_text" => $confirm_text,
     
             );
+        }
+
+        $od_name = "";
+        $stage_id = 0;
+        $serial_name = "";
+        $project_name = "";
+
+        $query = "SELECT pm.id, 
+                pm.od_name,
+                pm.status, 
+                pm.task_id,
+                pm.order_type,
+                p.project_name,
+                p.id as project_id,
+                ps.id as stage_id,
+                pm.serial_name,
+                c_user.username AS created_by, 
+                u_user.username AS updated_by,
+                DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
+                DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at
+                FROM od_main pm 
+                left join project_other_task pot on pm.task_id = pot.id
+                left join project_stages ps on pot.stage_id = ps.id
+                LEFT JOIN user c_user ON pm.create_id = c_user.id 
+                LEFT JOIN user u_user ON pm.updated_id = u_user.id 
+                left join project_main p on ps.project_id = p.id
+                where pm.status <> -1 ";
+
+        if($id != 0){
+            $query .= " and pm.id = $od_id ";
+        }
+
+        $query = $query . " order by pm.created_at desc ";
+
+
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $od_name = $row['od_name'];
+            $stage_id = $row['stage_id'];
+            $project_name = $row['project_name'];
+            $serial_name = $row['serial_name'];
+
         }
 
         // order and unique array
@@ -380,9 +426,9 @@ if($jwt){
             $sheet->getRowDimension(8)->setRowHeight(28.2);
 
 
-            $sheet->setCellValue('C5', 'LPO 093');
+            $sheet->setCellValue('C5', $serial_name);
             $sheet->mergeCells('C5:D5');
-            $sheet->setCellValue('C6', 'FELIIX SB SAMPLE (PULL-OUT PINLIGHT)');
+            $sheet->setCellValue('C6', $project_name);
             $sheet->mergeCells('C6:E6');
             $sheet->setCellValue('C7', date("Y/m/d"));
             $sheet->mergeCells('C7:D7');
@@ -407,7 +453,7 @@ if($jwt){
             $sheet->getStyle('B10:J10')->getFont()->setSize(20);
             $sheet->getStyle('B10:J10')->getFont()->setName('M+ 1c regular');
             $sheet->getStyle('B10:I10')->applyFromArray($boldandthin_border_style);
-            $sheet->getStyle('L10:J10')->applyFromArray($bold_border_style);
+            $sheet->getStyle('J10:J10')->applyFromArray($bold_border_style);
 
 
 
@@ -596,7 +642,7 @@ if($jwt){
             $payable->getFont()->setName('M+ 1c regular');
             $payable = $richText->createTextRun('盛盛國際 SSIT');
             $payable->getFont()->setBold(true);
-            $payable->getFont()->setSize(22);
+            $payable->getFont()->setSize(18);
             $payable->getFont()->setName('M+ 1c regular');
             $sheet->getCell('B' . $i)->setValue($richText);
             $sheet->mergeCells('B' . $i . ':C' . $i);
