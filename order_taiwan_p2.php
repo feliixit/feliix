@@ -1249,7 +1249,7 @@
             <a class="tag D" @click="p4()">Overview</a>
         </div>
         <!-- Blocks -->
-        <div class="block A" style="display: block;">
+        <div class="block B" style="display: block;">
 
             <div class="box-content">
 

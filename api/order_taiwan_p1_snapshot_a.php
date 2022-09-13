@@ -72,6 +72,11 @@ switch ($method) {
         
         $item_id = $data['item_id'];
         $img = $data['image'];
+        $text = $data['text'];
+
+        if($text != "")
+            $message = $text;
+            
         $img = str_replace('data:image/png;base64,', '', $img);
         $img = str_replace('data:image/jpeg;base64,', '', $img);
         $img = str_replace(' ', '+', $img);

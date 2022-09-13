@@ -2697,7 +2697,7 @@ var app = new Vue({
           this.loading = true;
 
           axios
-            .post("api/order_taiwan_p1_snapshot", data, {
+            .post("api/order_taiwan_p1_snapshot_a", data, {
               headers: {
               "Content-Type": "application/json"
               }

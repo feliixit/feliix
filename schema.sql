@@ -2937,3 +2937,35 @@ CREATE TABLE IF NOT EXISTS `od_main` (
 -- 202209012
 ALTER TABLE access_control
 ADD COLUMN `access7` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 202209013
+CREATE INDEX gcp_storage_file_batch_type_idx ON gcp_storage_file (batch_type);
+
+CREATE INDEX on_duty_duty_date_idx ON on_duty (duty_date);
+
+CREATE TABLE `on_duty_archive` (
+  `id` bigint(20) unsigned,
+  `uid` bigint(20) unsigned NOT NULL,
+  `duty_date` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `duty_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `location` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `remark` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `duty_time` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `explain` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pos_lat` decimal(24,12) DEFAULT 0.000000000000,
+  `pos_lng` decimal(24,12) DEFAULT 0.000000000000,
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_time` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_lat` decimal(24,12) DEFAULT 0.000000000000,
+  `pic_lng` decimal(24,12) DEFAULT 0.000000000000,
+  `pic_server_time` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_server_lat` decimal(24,12) DEFAULT 0.000000000000,
+  `pic_server_lng` decimal(24,12) DEFAULT 0.000000000000,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `status` int(11) DEFAULT 0
+);
+
+insert into on_duty_archive select * from on_duty where duty_date < '2022/01/01';
+
+delete from on_duty where duty_date < '2022/01/01';
