@@ -497,7 +497,7 @@ var app = new Vue({
                 return;
               }
               else
-                element.push(this.items[i].id);
+                element.push(this.items[i]);
             }
         }
 
@@ -511,6 +511,9 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
 
         let res = await axios({
           method: 'post',
@@ -542,7 +545,7 @@ var app = new Vue({
                 return;
               }
               else
-                element.push(this.items[i].id);
+                element.push(this.items[i]);
             }
         }
 
@@ -556,6 +559,9 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
 
         let res = await axios({
           method: 'post',
@@ -588,7 +594,7 @@ var app = new Vue({
                 return;
               }
               else
-                element.push(this.items[i].id);
+                element.push(this.items[i]);
             }
         }
 
@@ -602,10 +608,13 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_p1_reject',
+          url: 'api/order_taiwan_p1_withdraw',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -616,7 +625,7 @@ var app = new Vue({
         this.comment = '';
 
         Swal.fire({
-          text: "Records Rejected",
+          text: "Records Withdrawn",
           icon: "info",
           confirmButtonText: "OK",
         });
