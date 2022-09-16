@@ -312,28 +312,28 @@ var app = new Vue({
                  _this.l_id = _this.id;
 
                 break;
-              // case "role":
-              //   var role = tmp[1];
+              case "role":
+                var role = tmp[1];
 
-              //   if(role == 1)
-              //    _this.access1 = true;
+                if(role == 1)
+                 _this.access1 = true;
                 
-              //    if(role == 2)
-              //    _this.access2 = true;
+                 if(role == 2)
+                 _this.access2 = true;
 
-              //    if(role == 3)
-              //    _this.access3 = true;
+                 if(role == 3)
+                 _this.access3 = true;
 
-              //    if(role == 4)
-              //    _this.access4 = true;
+                 if(role == 4)
+                 _this.access4 = true;
 
-              //    if(role == 5)
-              //    _this.access5 = true;
+                 if(role == 5)
+                 _this.access5 = true;
 
-              //    if(role == 6)
-              //    _this.access6 = true;
+                 if(role == 6)
+                 _this.access6 = true;
 
-              //   break;
+                break;
               default:
                 console.log(`Too many args`);
             }
@@ -349,7 +349,7 @@ var app = new Vue({
       this.getUsers();
       this.getCharge();
       this.getCreators();
-      this.getAccess();
+      //this.getAccess();
       this.getOdMain();
     },
   
@@ -782,6 +782,10 @@ var app = new Vue({
         form_Data.append("items", JSON.stringify(this.items));
         form_Data.append("comment", this.comment);
         form_Data.append("type", this.info_type);
+
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
         
         let res = await axios({
           method: 'post',
@@ -861,7 +865,7 @@ var app = new Vue({
 
         for (let i = 0; i < this.items.length; i++) {
           if (this.items[i].is_checked == 1) {
-            element.push(this.items[i].id);
+            element.push(this.items[i]);
           }
         }
 
@@ -875,6 +879,10 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
+
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
 
         let res = await axios({
           method: 'post',
@@ -900,7 +908,7 @@ var app = new Vue({
 
         for (let i = 0; i < this.items.length; i++) {
           if (this.items[i].is_checked == 1) {
-            element.push(this.items[i].id);
+            element.push(this.items[i]);
           }
         }
 
@@ -914,6 +922,10 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
+
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
 
         let res = await axios({
           method: 'post',
@@ -1872,6 +1884,14 @@ var app = new Vue({
       form_Data.append("jwt", token);
       form_Data.append("message_id", message_id);
 
+      var element = this.items.find((element) => element.id == task_id);
+      form_Data.append("item", JSON.stringify(element));
+
+      form_Data.append("od_id", this.id);
+      form_Data.append("od_name", this.od_name);
+      form_Data.append("project_name", this.project_name);
+      form_Data.append("serial_name", this.serial_name);
+
       axios({
         method: "post",
         headers: {
@@ -2097,6 +2117,16 @@ var app = new Vue({
   
         form_Data.append("task_id", task_id);
         form_Data.append("message", comment.value.trim());
+
+        var element = this.items.find((element) => element.id == task_id);
+        form_Data.append("item", JSON.stringify(element));
+
+        form_Data.append("od_id", this.id);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
+
+        form_Data.append("page", 3);
   
         const token = sessionStorage.getItem("token");
   
@@ -2270,6 +2300,9 @@ var app = new Vue({
               if(typeof f !== 'undefined') 
                 form_Data.append('photo_3', f);
             }
+
+            form_Data.append("page", 3);
+            form_Data.append("access2", this.access2);
 
             axios({
               method: "post",

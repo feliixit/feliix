@@ -4,11 +4,12 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 include_once 'config/core.php';
+include_once 'config/conf.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
-
+include_once 'mail.php';
 use \Firebase\JWT\JWT;
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -24,6 +25,8 @@ if (!isset($jwt)) {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $GLOBALS["user_id"] = $decoded->data->id;
+
+        $user_name = $decoded->data->username;
         //if(!$decoded->data->is_admin)
         //{
         //  http_response_code(401);
@@ -67,6 +70,10 @@ switch ($method) {
         $type = (isset($_POST['type']) ? $_POST['type'] : '');
 
         $items = json_decode($item_str, true);
+
+        $od_name = (isset($_POST['od_name']) ? $_POST['od_name'] : '');
+        $serial_name = (isset($_POST['serial_name']) ?  $_POST['serial_name'] : '');
+        $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
 
         $diff = [];
        
@@ -168,6 +175,49 @@ switch ($method) {
 
         $jsonEncodedReturnArray = json_encode($diff, JSON_PRETTY_PRINT);
 
+        $items_array = [];
+
+        foreach ($items as $item) {
+            foreach ($diff as $di)
+            {
+                // find id with value in strings
+                $temp = explode(",", $di);
+                $sets = array();
+                foreach ($temp as $value) {
+                    $array = explode(': ', $value);
+                    $array[0] = str_replace(' ', '', $array[0]);
+                    $array[0] = str_replace("'", '', $array[0]);
+                    $array[1] = trim($array[1], "'");
+                    $sets[$array[0]] = $array[1];
+                }
+
+                if($item['id'] == $sets["id"])
+                {
+                    $items_array[] = $item;
+                    break;
+                }
+            }
+        }
+
+        if(count($items_array) == 0)
+        {
+            echo $jsonEncodedReturnArray;
+            break;
+        }
+
+        if($type == 'ship_info')
+            order_notification($user_name, 'access4', 'access2,access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $type, $items_array, $o_id);
+        if($type == 'ware_info')
+            order_notification($user_name, 'access5', 'access2,access1,access3,access4', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $type, $items_array, $o_id);
+        if($type == 'assing_test')
+            order_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $type, $items_array, $o_id);
+        if($type == 'edit_test')
+            order_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $type, $items_array, $o_id);
+        if($type == 'assign_delivery')
+            order_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $type, $items_array, $o_id);
+        if($type == 'edit_delivery')
+            order_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $type, $items_array, $o_id);
+        
         echo $jsonEncodedReturnArray;
 
         break;

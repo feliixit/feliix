@@ -63,6 +63,9 @@ switch ($method) {
         $od_id = (isset($_POST['od_id']) ?  $_POST['od_id'] : 0);
         $block = (isset($_POST['block']) ?  $_POST['block'] : []);
 
+        $page = (isset($_POST['page']) ?  $_POST['page'] : 0);
+        $access2 = (isset($_POST['access2']) ? $_POST['access2'] : false);
+
         $block_array = json_decode($block,true);
         $confirm = "";
     
@@ -234,10 +237,14 @@ if($block_array[$i]['photo3'] == '')
                         UpdateImageNameVariation("3", $update_name, $batch_id, $db);
                 }
 
+                if($page == 3 && $access2 == true)
+                    order_notification04($user_name, 'access1,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_23', $block_array[$i], $od_id);
+
             }
 
             $db->commit();
 
+            
             http_response_code(200);
             echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
         } catch (Exception $e) {

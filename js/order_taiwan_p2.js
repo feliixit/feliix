@@ -1503,6 +1503,14 @@ var app = new Vue({
       form_Data.append("jwt", token);
       form_Data.append("message_id", message_id);
 
+      var element = this.items.find((element) => element.id == task_id);
+      form_Data.append("item", JSON.stringify(element));
+
+      form_Data.append("od_id", this.id);
+      form_Data.append("od_name", this.od_name);
+      form_Data.append("project_name", this.project_name);
+      form_Data.append("serial_name", this.serial_name);
+
       axios({
         method: "post",
         headers: {
@@ -1696,6 +1704,16 @@ var app = new Vue({
   
         form_Data.append("task_id", task_id);
         form_Data.append("message", comment.value.trim());
+
+        var element = this.items.find((element) => element.id == task_id);
+        form_Data.append("item", JSON.stringify(element));
+
+        form_Data.append("od_id", this.id);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
+
+        form_Data.append("page", 2);
   
         const token = sessionStorage.getItem("token");
   

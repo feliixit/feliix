@@ -29,6 +29,7 @@ else
         $decoded = JWT::decode($jwt, $key, array('HS256'));
 
         $user_id = $decoded->data->id;
+        $user_name = $decoded->data->username;
 
     }
         // if decode fails, it means jwt is invalid
@@ -49,6 +50,16 @@ $conf = new Conf();
 $uid = $user_id;
 
 $message_id = (isset($_POST['message_id']) ?  $_POST['message_id'] : 0);
+
+$item = (isset($_POST['item']) ?  $_POST['item'] : []);
+$items = json_decode($item, true);
+
+$od_id = (isset($_POST['od_id']) ?  $_POST['od_id'] : 0);
+$od_name = (isset($_POST['od_name']) ? $_POST['od_name'] : '');
+$serial_name = (isset($_POST['serial_name']) ?  $_POST['serial_name'] : '');
+$project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
+
+$page = (isset($_POST['page']) ? $_POST['page'] : 1);
 
 try{
 
@@ -81,6 +92,12 @@ try{
         error_log($arr[2]);
     }
 
+    if($page == 1)
+        order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_18', $items, $od_id);
+
+    if($page == 2)
+        order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_20', $items, $od_id);
+    
     echo $jsonEncodedReturnArray;
 }
 catch (Exception $e)

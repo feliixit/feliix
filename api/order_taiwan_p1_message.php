@@ -24,6 +24,8 @@ if (!isset($jwt)) {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $GLOBALS["user_id"] = $decoded->data->id;
+
+        $user_name = $decoded->data->username;
         //if(!$decoded->data->is_admin)
         //{
         //  http_response_code(401);
@@ -63,6 +65,24 @@ switch ($method) {
         $uid = $user_id;
         $task_id = (isset($_POST['task_id']) ?  $_POST['task_id'] : 0);
         $message = (isset($_POST['message']) ?  $_POST['message'] : '');
+
+        $item = (isset($_POST['item']) ?  $_POST['item'] : []);
+        $items = json_decode($item, true);
+
+        $od_id = (isset($_POST['od_id']) ?  $_POST['od_id'] : 0);
+        $od_name = (isset($_POST['od_name']) ? $_POST['od_name'] : '');
+        $serial_name = (isset($_POST['serial_name']) ?  $_POST['serial_name'] : '');
+        $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
+
+        $page = (isset($_POST['page']) ?  $_POST['page'] : 1);
+
+        $access1 = (isset($_POST['access1']) ?  $_POST['access1'] : false);
+        $access2 = (isset($_POST['access2']) ?  $_POST['access2'] : false);
+        $access3 = (isset($_POST['access3']) ?  $_POST['access3'] : false);
+        $access4 = (isset($_POST['access4']) ?  $_POST['access4'] : false);
+        $access5 = (isset($_POST['access5']) ?  $_POST['access5'] : false);
+        $access6 = (isset($_POST['access6']) ?  $_POST['access6'] : false);
+        $access7 = (isset($_POST['access7']) ?  $_POST['access7'] : false);
     
         $query = "INSERT INTO od_message
         SET
@@ -98,6 +118,37 @@ switch ($method) {
         $returnArray = array('batch_id' => $last_id);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
 
+        $send17 = false;
+
+        if($page == 1) {
+            if($item['status'] != 1)
+            {
+                if($access2 == true && ($items['confirm'] != 'D' || $items['confirm'] != 'C' || $items['confirm'] != 'N'))
+                    $send17 = true;
+            }
+    
+            if($item['status'] == 1)
+            {
+                if($access1 == true && $items['confirm'] != 'D' && $items['confirm'] != 'C' && $items['confirm'] != 'N')
+                    $send17 = true;
+            }
+    
+            if($item['status'] == 1)
+            {
+                if($access7 == true && $items['confirm'] != 'D' && $items['confirm'] != 'C' && $items['confirm'] != 'N')
+                    $send17 = true;
+            }
+    
+            if($access3 == true && $access4 == true && $access5 == true && $access6 == true)
+                $send17 = true;
+    
+            if($send17==true)
+                order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_17', $items, $od_id);
+        }
+
+        if($page == 2)
+        order_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_19', $items, $od_id);
+        
         echo $jsonEncodedReturnArray;
 
         break;

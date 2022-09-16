@@ -24,6 +24,8 @@ if (!isset($jwt)) {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $GLOBALS["user_id"] = $decoded->data->id;
+
+        $user_name = $decoded->data->username;
         //if(!$decoded->data->is_admin)
         //{
         //  http_response_code(401);
@@ -63,6 +65,14 @@ switch ($method) {
         $uid = $user_id;
         $task_id = (isset($_POST['task_id']) ?  $_POST['task_id'] : 0);
         $message = (isset($_POST['message']) ?  $_POST['message'] : '');
+
+        $item = (isset($_POST['item']) ?  $_POST['item'] : []);
+        $items = json_decode($item, true);
+
+        $od_id = (isset($_POST['od_id']) ?  $_POST['od_id'] : 0);
+        $od_name = (isset($_POST['od_name']) ? $_POST['od_name'] : '');
+        $serial_name = (isset($_POST['serial_name']) ?  $_POST['serial_name'] : '');
+        $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
     
         $query = "INSERT INTO od_message_a
         SET
@@ -97,6 +107,8 @@ switch ($method) {
 
         $returnArray = array('batch_id' => $last_id);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
+
+        order_notification03($user_name, 'access1,access2,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_21', $items, $od_id);
 
         echo $jsonEncodedReturnArray;
 
