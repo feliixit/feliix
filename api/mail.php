@@ -6277,7 +6277,7 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
                 <tr>
                     <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
                         ';
-                        $content = $content . $items[$i]['sn'] . '';
+                        $content = $content . $items[$i]['serial_number'] . '';
                         $content = $content . '
                     </td>
                     <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
@@ -6294,7 +6294,7 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
             <tr>
                 <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
                     ';
-                    $content = $content . $items[$i]['sn']  . '';
+                    $content = $content . $items[$i]['serial_number']  . '';
                     $content = $content . '
                 </td>
                 <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
@@ -6551,7 +6551,7 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
                 <tr>
                     <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 160px;">
                         ';
-                        $content = $content . $items[$i]['sn'] . '';
+                        $content = $content . $items[$i]['serial_number'] . '';
                         $content = $content . '
                     </td>
                     <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
@@ -6573,7 +6573,7 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             <tr>
                 <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 160px; border-bottom-left-radius: 9px;">
                     ';
-                    $content = $content . $items[$i]['sn'] . '';
+                    $content = $content . $items[$i]['serial_number'] . '';
                     $content = $content . '
                 </td>
                 <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
@@ -6684,7 +6684,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 
     if($action == 'new_message_17')
     {
-        $item_sn = $items['sn'];
+        $item_sn = $items['serial_number'];
 
         $notifior = GetAccessNotifiersByName($name);
         foreach($notifior as &$list)
@@ -6701,7 +6701,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 
     if($action == 'new_message_18')
     {
-        $item_sn = $items['sn'];
+        $item_sn = $items['serial_number'];
 
         $notifior = GetAccessNotifiersByName($name);
         foreach($notifior as &$list)
@@ -6718,7 +6718,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 
     if($action == 'new_message_19')
     {
-        $item_sn = $items['sn'];
+        $item_sn = $items['serial_number'];
 
         $notifior = GetAccessNotifiersByName($name);
         foreach($notifior as &$list)
@@ -6735,7 +6735,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 
     if($action == 'new_message_20')
     {
-        $item_sn = $items['sn'];
+        $item_sn = $items['serial_number'];
 
         $notifior = GetAccessNotifiersByName($name);
         foreach($notifior as &$list)
@@ -6752,7 +6752,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 
     if($action == 'new_message_21')
     {
-        $item_sn = $items['sn'];
+        $item_sn = $items['serial_number'];
 
         $notifior = GetAccessNotifiersByName($name);
         foreach($notifior as &$list)
@@ -6769,7 +6769,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 
     if($action == 'new_message_22')
     {
-        $item_sn = $items['sn'];
+        $item_sn = $items['serial_number'];
 
         $notifior = GetAccessNotifiersByName($name);
         foreach($notifior as &$list)
@@ -6849,7 +6849,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
             <tr>
                 <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 160px; border-bottom-left-radius: 9px;">
                     ';
-                    $content = $content . $items['sn'] . '';
+                    $content = $content . $items['serial_number'] . '';
                     $content = $content . '
                 </td>
                 <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 220px;" >
@@ -6960,7 +6960,7 @@ function order_notification04($name, $access,  $access_cc, $project_name, $seria
 
     if($action == 'new_message_23')
     {
-        $item_sn = $items['sn'];
+        $item_sn = $items['serial_number'];
 
         $notifior = GetAccessNotifiersByName($name);
         foreach($notifior as &$list)
@@ -7037,7 +7037,7 @@ function order_notification04($name, $access,  $access_cc, $project_name, $seria
             <tr>
                 <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
                     ';
-                    $content = $content . $items['sn'] . '';
+                    $content = $content . $items['serial_number'] . '';
                     $content = $content . '
                 </td>
                 <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
