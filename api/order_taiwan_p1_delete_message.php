@@ -92,6 +92,15 @@ try{
         error_log($arr[2]);
     }
 
+    // find message in array of $items[0]['notes'] by message_id
+    $message = "";
+    $index = array_search($message_id, array_column($items['notes'], 'id'));
+    if($index !== false)
+    {
+        $message = $items['notes'][$index]['message'];
+    }
+
+
     if($page == 1)
         order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_18', $items, $od_id);
 

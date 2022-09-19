@@ -312,28 +312,28 @@ var app = new Vue({
                  _this.l_id = _this.id;
 
                 break;
-              case "role":
-                var role = tmp[1];
+              // case "role":
+              //   var role = tmp[1];
 
-                if(role == 1)
-                 _this.access1 = true;
+              //   if(role == 1)
+              //    _this.access1 = true;
                 
-                 if(role == 2)
-                 _this.access2 = true;
+              //    if(role == 2)
+              //    _this.access2 = true;
 
-                 if(role == 3)
-                 _this.access3 = true;
+              //    if(role == 3)
+              //    _this.access3 = true;
 
-                 if(role == 4)
-                 _this.access4 = true;
+              //    if(role == 4)
+              //    _this.access4 = true;
 
-                 if(role == 5)
-                 _this.access5 = true;
+              //    if(role == 5)
+              //    _this.access5 = true;
 
-                 if(role == 6)
-                 _this.access6 = true;
+              //    if(role == 6)
+              //    _this.access6 = true;
 
-                break;
+              //   break;
               default:
                 console.log(`Too many args`);
             }
@@ -349,7 +349,7 @@ var app = new Vue({
       this.getUsers();
       this.getCharge();
       this.getCreators();
-      //this.getAccess();
+      this.getAccess();
       this.getOdMain();
     },
   
@@ -826,7 +826,7 @@ var app = new Vue({
 
         for (let i = 0; i < this.items.length; i++) {
           if (this.items[i].is_checked == 1) {
-            element.push(this.items[i].id);
+            element.push(this.items[i]);
           }
         }
 

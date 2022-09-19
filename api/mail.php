@@ -6183,6 +6183,15 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
     if($action == 'ordered')
     {
         $receiver = "All";
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" are ordered';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" are ordered. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+    }
+
+    // Canceled
+    if($action == 'canceled')
+    {
+        $receiver = "All";
         $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" are canceled';
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" are canceled. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
@@ -6567,7 +6576,7 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
                     $content = $content . $items[$i]['sn'] . '';
                     $content = $content . '
                 </td>
-                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-right-radius: 9px;">
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
                     ';
                     $content = $content . $items[$i]['code'] . '';
                     $content = $content . '
@@ -6843,7 +6852,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
                     $content = $content . $items['sn'] . '';
                     $content = $content . '
                 </td>
-                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 220px; border-bottom-right-radius: 9px;">
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 220px;" >
                     ';
                     $content = $content . $items['code'] . '';
                     $content = $content . '
@@ -7331,8 +7340,8 @@ function SetupMail($mail, $conf)
     $mail->Port       = 587;
     $mail->SMTPKeepAlive = true;
     $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'rosendo.mcclure89@ethereal.email';
-    $mail->Password   = 'R4GY1AVkwTsKkbhggu';
+    $mail->Username   = 'sylvia99@ethereal.email';
+    $mail->Password   = '3YEXARcxXFhjT2k5RQ';
 
     return $mail;
 

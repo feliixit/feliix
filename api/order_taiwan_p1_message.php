@@ -8,7 +8,7 @@ include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
-
+include_once 'mail.php';
 use \Firebase\JWT\JWT;
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -121,19 +121,19 @@ switch ($method) {
         $send17 = false;
 
         if($page == 1) {
-            if($item['status'] != 1)
+            if($items['status'] != 1)
             {
                 if($access2 == true && ($items['confirm'] != 'D' || $items['confirm'] != 'C' || $items['confirm'] != 'N'))
                     $send17 = true;
             }
     
-            if($item['status'] == 1)
+            if($items['status'] == 1)
             {
                 if($access1 == true && $items['confirm'] != 'D' && $items['confirm'] != 'C' && $items['confirm'] != 'N')
                     $send17 = true;
             }
     
-            if($item['status'] == 1)
+            if($items['status'] == 1)
             {
                 if($access7 == true && $items['confirm'] != 'D' && $items['confirm'] != 'C' && $items['confirm'] != 'N')
                     $send17 = true;

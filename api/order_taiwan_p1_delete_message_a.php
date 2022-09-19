@@ -90,6 +90,14 @@ try{
         error_log($arr[2]);
     }
 
+    // find message in array of $items[0]['notes'] by message_id
+    $message = "";
+    $index = array_search($message_id, array_column($items['notes_a'], 'id'));
+    if($index !== false)
+    {
+        $message = $items['notes_a'][$index]['message'];
+    }
+
     order_notification03($user_name, 'access1,access2,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_22', $items, $od_id);
 
     echo $jsonEncodedReturnArray;
