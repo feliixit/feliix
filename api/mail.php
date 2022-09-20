@@ -6213,6 +6213,15 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
     }
 
+    if($action == 'batch')
+    {
+        $name = "System";
+        $mail->Subject = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
     $content = '<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -6482,6 +6491,8 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
         
     }
+
+
 
     $content = '<!DOCTYPE html>
     <html lang="en">
