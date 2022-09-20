@@ -718,6 +718,7 @@
         <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
         <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
         <option value="STAGE LIGHT">STAGE LIGHT</option>
+        <option value="TRACK BAR">TRACK BAR</option>
         <option value="TRACK LIGHT">TRACK LIGHT</option>
         <option value="TROFFER LIGHT">TROFFER LIGHT</option>
         <option value="UV LED">UV LED</option>
