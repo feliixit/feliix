@@ -6101,10 +6101,12 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver = $list["username"];
+            $receiver .= $list["username"] . ", ";
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
+
+    $receiver = rtrim($receiver, ", ");
 
     // explore cc into array
     $cc_list = explode(",", $access_cc);
@@ -6383,11 +6385,13 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver = $list["username"];
+            $receiver .= $list["username"] . ", ";
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
     
+    $receiver = rtrim($receiver, ", ");
+
     // explore cc into array
     $cc_list = explode(",", $access_cc);
     foreach($cc_list as &$c_list)
@@ -6445,6 +6449,7 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             $mail->AddCC($list["email"], $list["username"]);
         }
 
+        $receiver = "";
         // access5
         $_list = explode(",", $access);
         foreach($_list as &$c_list)
@@ -6452,10 +6457,11 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             $notifior = GetAccessNotifiers($c_list, $serial_name);
             foreach($notifior as &$list)
             {
-                $receiver = $list["username"];
+                $receiver .= $list["username"] . ", ";
             }
         }
         
+        $receiver = rtrim($receiver, ", ");
 
         $mail->Subject = 'Testing info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the testing info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -6501,6 +6507,8 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             $mail->AddCC($list["email"], $list["username"]);
         }
 
+        $receiver = "";
+
         // access5
         $_list = explode(",", $access);
         foreach($_list as &$c_list)
@@ -6508,9 +6516,11 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             $notifior = GetAccessNotifiers($c_list, $serial_name);
             foreach($notifior as &$list)
             {
-                $receiver = $list["username"];
+                $receiver .= $list["username"] . ", ";
             }
         }
+
+        $receiver = rtrim($receiver, ", ");
 
         $mail->Subject = 'Delivery info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = $name . ' updated the delivery info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
@@ -6694,10 +6704,12 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver = $list["username"];
+            $receiver .= $list["username"] . ", ";
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
+
+    $receiver = rtrim($receiver, ", ");
     
     // explore cc into array
     $cc_list = explode(",", $access_cc);
@@ -6982,10 +6994,12 @@ function order_notification04($name, $access,  $access_cc, $project_name, $seria
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver = $list["username"];
+            $receiver .= $list["username"] . ", ";
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
+
+    $receiver = rtrim($receiver, ", ");
     
     // explore cc into array
     $cc_list = explode(",", $access_cc);
@@ -7323,20 +7337,7 @@ function GetAccessNotifiersByName($title, $order_type)
             WHERE username IN(
                 '" . $title . "'
             )  and user.status = 1";
-
-    $department = substr($order_type, 0, 1);
-
-    if($department == 'O')
-    {
-        $sql = $sql . " and department = 'Office'";
-    }
-
-    if($department == 'L')
-    {
-        $sql = $sql . " and department = 'Lighting'";
-    }
     
-
     $merged_results = array();
 
     $stmt = $db->prepare($sql);
@@ -7378,14 +7379,17 @@ function GetAccessNotifiers($field, $order_type){
     // get first character from order type
     $department = substr($order_type, 0, 1);
 
-    if($department == 'O')
+    if($field == 'access1')
     {
-        $sql = $sql . " and department = 'Office'";
-    }
+        if($department == 'O')
+        {
+            $sql = $sql . " and department = 'Office'";
+        }
 
-    if($department == 'L')
-    {
-        $sql = $sql . " and department = 'Lighting'";
+        if($department == 'L')
+        {
+            $sql = $sql . " and department = 'Lighting'";
+        }
     }
 
     $merged_results = array();
