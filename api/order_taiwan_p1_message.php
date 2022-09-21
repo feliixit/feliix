@@ -76,13 +76,13 @@ switch ($method) {
 
         $page = (isset($_POST['page']) ?  $_POST['page'] : 1);
 
-        $access1 = (isset($_POST['access1']) ?  $_POST['access1'] : false);
-        $access2 = (isset($_POST['access2']) ?  $_POST['access2'] : false);
-        $access3 = (isset($_POST['access3']) ?  $_POST['access3'] : false);
-        $access4 = (isset($_POST['access4']) ?  $_POST['access4'] : false);
-        $access5 = (isset($_POST['access5']) ?  $_POST['access5'] : false);
-        $access6 = (isset($_POST['access6']) ?  $_POST['access6'] : false);
-        $access7 = (isset($_POST['access7']) ?  $_POST['access7'] : false);
+        $access1 = (isset($_POST['access1']) ?  $_POST['access1'] : "false");
+        $access2 = (isset($_POST['access2']) ?  $_POST['access2'] : "false");
+        $access3 = (isset($_POST['access3']) ?  $_POST['access3'] : "false");
+        $access4 = (isset($_POST['access4']) ?  $_POST['access4'] : "false");
+        $access5 = (isset($_POST['access5']) ?  $_POST['access5'] : "false");
+        $access6 = (isset($_POST['access6']) ?  $_POST['access6'] : "false");
+        $access7 = (isset($_POST['access7']) ?  $_POST['access7'] : "false");
     
         $query = "INSERT INTO od_message
         SET
@@ -123,23 +123,23 @@ switch ($method) {
         if($page == 1) {
             if($items['status'] != 1)
             {
-                if($access2 == true && ($items['confirm'] != 'D' || $items['confirm'] != 'C' || $items['confirm'] != 'N'))
+                if($access2 == "true" && ($items['confirm'] != 'D' || $items['confirm'] != 'C' || $items['confirm'] != 'N'))
                     $send17 = true;
             }
     
             if($items['status'] == 1)
             {
-                if($access1 == true && $items['confirm'] != 'D' && $items['confirm'] != 'C' && $items['confirm'] != 'N')
+                if($access1 == "true" && $items['confirm'] != 'D' && $items['confirm'] != 'C' && $items['confirm'] != 'N')
                     $send17 = true;
             }
     
             if($items['status'] == 1)
             {
-                if($access7 == true && $items['confirm'] != 'D' && $items['confirm'] != 'C' && $items['confirm'] != 'N')
+                if($access7 == "true" && $items['confirm'] != 'D' && $items['confirm'] != 'C' && $items['confirm'] != 'N')
                     $send17 = true;
             }
     
-            if($access3 == true && $access4 == true && $access5 == true && $access6 == true)
+            if($access3 == "true" && $access4 == "true" && $access5 == "true" && $access6 == "true")
                 $send17 = true;
     
             if($send17==true)

@@ -57,6 +57,7 @@ $comment = (isset($_POST['comment']) ? $_POST['comment'] : '');
 $od_name = (isset($_POST['od_name']) ? $_POST['od_name'] : '');
 $serial_name = (isset($_POST['serial_name']) ?  $_POST['serial_name'] : '');
 $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
+$page = (isset($_POST['page']) ?  $_POST['page'] : 0);
 
 $action = 'approved';
 
@@ -139,7 +140,8 @@ try{
         die();
     }
 
-    order_notification($user_name, 'access2', 'access1, access3', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $action, $items_array, $od_id);
+    if($page != 3)
+        order_notification($user_name, 'access2', 'access1, access3', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $action, $items_array, $od_id);
 
     echo $jsonEncodedReturnArray;
 }

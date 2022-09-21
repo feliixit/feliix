@@ -803,7 +803,8 @@ var app = new Vue({
         this.info_type = '';
   
         Swal.fire({
-          text: "Records Edited" + res.data,
+          //text: "Records Edited" + res.data,
+          text: "Action completed successfully",
           icon: "info",
           confirmButtonText: "OK",
         });
@@ -840,6 +841,7 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
+        form_Data.append("page", 3);
 
         let res = await axios({
           method: 'post',
@@ -2247,7 +2249,7 @@ var app = new Vue({
 
             items = [];
 
-            item = {
+            item_new = {
                 id: item.id,
                 sn: item.sn,
                 confirm: item.confirm,
@@ -2271,7 +2273,7 @@ var app = new Vue({
                 notes:[]
               };
 
-              items.push(item);
+              items.push(item_new);
 
             var token = localStorage.getItem("token");
             var form_Data = new FormData();
@@ -2279,6 +2281,10 @@ var app = new Vue({
             form_Data.append("jwt", token);
             form_Data.append("od_id", this.id);
             form_Data.append("block", JSON.stringify(items));
+
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
 
             var file = document.getElementById('photo_' + item.id + '_1');
             if(file) {
@@ -2303,6 +2309,7 @@ var app = new Vue({
 
             form_Data.append("page", 3);
             form_Data.append("access2", this.access2);
+            form_Data.append("item", JSON.stringify(item));
 
             axios({
               method: "post",

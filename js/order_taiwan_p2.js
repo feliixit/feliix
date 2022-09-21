@@ -1510,6 +1510,7 @@ var app = new Vue({
       form_Data.append("od_name", this.od_name);
       form_Data.append("project_name", this.project_name);
       form_Data.append("serial_name", this.serial_name);
+      form_Data.append("page", 2);
 
       axios({
         method: "post",

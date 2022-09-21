@@ -63,10 +63,18 @@ switch ($method) {
         $od_id = (isset($_POST['od_id']) ?  $_POST['od_id'] : 0);
         $block = (isset($_POST['block']) ?  $_POST['block'] : []);
 
+        $item = (isset($_POST['item']) ?  $_POST['item'] : []);
+
         $page = (isset($_POST['page']) ?  $_POST['page'] : 0);
         $access2 = (isset($_POST['access2']) ? $_POST['access2'] : false);
 
         $block_array = json_decode($block,true);
+        $item_array = json_decode($item,true);
+
+        $od_name = (isset($_POST['od_name']) ? $_POST['od_name'] : '');
+        $serial_name = (isset($_POST['serial_name']) ?  $_POST['serial_name'] : '');
+        $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
+
         $confirm = "";
     
         if ($od_id == 0) {
@@ -237,8 +245,8 @@ if($block_array[$i]['photo3'] == '')
                         UpdateImageNameVariation("3", $update_name, $batch_id, $db);
                 }
 
-                if($page == 3 && $access2 == true)
-                    order_notification04($user_name, 'access1,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_23', $block_array[$i], $od_id);
+                if($page == 3 && $access2 == 'true')
+                    order_notification04($user_name, 'access1,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', '', 'new_message_23', $item_array, $od_id);
 
             }
 

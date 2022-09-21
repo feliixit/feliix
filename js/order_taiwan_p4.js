@@ -799,7 +799,8 @@ var app = new Vue({
         this.info_type = '';
   
         Swal.fire({
-          text: "Records Edited" + res.data,
+          // text: "Records Edited" + res.data,
+          text: "Action completed successfully",
           icon: "info",
           confirmButtonText: "OK",
         });

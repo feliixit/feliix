@@ -1530,6 +1530,7 @@
                         <option value=""></option>
                         <option value="ssit">盛盛</option>
                         <option value="cfs">卡菲斯</option>
+                        <option value="dy">東渝</option>
                     </select>
                 </div>
                 <div class="write_block" v-if="ShipwayWrite(item)">
@@ -1545,6 +1546,7 @@
                         <option value=""></option>
                         <option value="ssit">盛盛</option>
                         <option value="cfs">卡菲斯</option>
+                        <option value="dy">東渝</option>
                     </select>
                 </div>
             </td>
