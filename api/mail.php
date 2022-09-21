@@ -6420,11 +6420,18 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             $assignee[] = $item['test'];
         }
 
+        $receiver = implode("','", $assignee);
+
         $notifior = GetAccessNotifiersByName($receiver, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver = $list["username"];
             $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetAccessNotifiersByName($access_cc, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $mail->AddCC($list["email"], $list["username"]);
         }
 
         $receiver = "All";
@@ -6484,6 +6491,13 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             $receiver = $list["username"];
             $mail->AddAddress($list["email"], $list["username"]);
         }
+
+        $notifior = GetAccessNotifiersByName($access_cc, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
 
         $receiver = "All";
 
