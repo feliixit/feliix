@@ -105,7 +105,7 @@ try{
         order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_18', $items, $od_id);
 
     if($page == 2)
-        order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_20', $items, $od_id);
+        order_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_20', $items, $od_id);
     
     echo $jsonEncodedReturnArray;
 }
