@@ -321,8 +321,75 @@ header( 'location:index' );
             margin: 0 2px;
         }
 
-        #tb_product_list ul li.code{
+        #tb_product_list ul li.code {
             word-break: break-all;
+        }
+
+        #tb_specification_list {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        #tb_specification_list thead th, #tb_specification_list tbody td {
+            text-align: center;
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+        #tb_specification_list thead th {
+            background-color: #E0E0E0;
+            border: 1px solid #C9C9C9;
+        }
+
+        #tb_specification_list tbody tr:nth-of-type(even) {
+            background-color: #F6F6F6;
+        }
+
+        #tb_specification_list tbody tr td:nth-of-type(1) {
+            width: 130px;
+        }
+
+        #tb_specification_list tbody tr td:nth-of-type(2) {
+            width: 130px;
+        }
+
+        #tb_specification_list tbody tr td:nth-of-type(2) img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        #tb_specification_list tbody tr td:nth-of-type(3) {
+            width: 460px;
+            text-align: left;
+        }
+
+         #tb_specification_list tbody tr td:nth-of-type(3) div.code {
+            font-size: 16px;
+            font-weight: 800;
+            word-break: break-all;
+        }
+
+        #tb_specification_list tbody tr td:nth-of-type(3) div.brief {
+            font-size: 16px;
+            font-weight: 400;
+            white-space: pre-line;
+        }
+
+        #tb_specification_list tbody tr td:nth-of-type(3) div.listing {
+            font-size: 14px;
+            font-weight: 400;
+            margin-top: 3px;
+            white-space: pre-line;
+        }
+
+        #tb_specification_list tbody tr td:nth-of-type(4) {
+            width: 130px;
+        }
+
+        #tb_specification_list tbody tr td:nth-of-type(4) i {
+            font-size: 22px;
+            cursor: pointer;
+            margin: 0 5px;
         }
 
         .NTD_price {
@@ -611,7 +678,7 @@ header( 'location:index' );
         }
 
         .area_payment .tb_payment {
-            width: calc( 100% - 20px);
+            width: calc(100% - 20px);
             margin: 10px;
         }
 
@@ -641,7 +708,7 @@ header( 'location:index' );
             padding: 5px 100px 5px 30px;
         }
 
-        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) > div{
+        .tb_payment tbody tr:nth-of-type(1) td:nth-of-type(2) > div {
             display: flex;
             justify-content: space-between;
         }
@@ -739,7 +806,7 @@ header( 'location:index' );
             text-align: right;
         }
 
-        .tb_total tfoot tr td:nth-last-of-type(1) span.numbers.deleted{
+        .tb_total tfoot tr td:nth-last-of-type(1) span.numbers.deleted {
             text-decoration: line-through;
         }
 
@@ -1181,7 +1248,7 @@ header( 'location:index' );
             border-bottom: none;
         }
 
-        #page_dialog .page_form, #subtotal_dialog .subtotalbox, #terms_dialog .termsbox{
+        #page_dialog .page_form, #subtotal_dialog .subtotalbox, #terms_dialog .termsbox {
             max-height: 400px;
             overflow-y: auto;
         }
@@ -1257,7 +1324,7 @@ header( 'location:index' );
             height: 30px;
             border: 1px solid #707070;
             font-size: 14px;
-            width: 90px;
+            width: 105px;
             margin: 5px 10px 5px 0;
         }
 
@@ -1633,7 +1700,7 @@ header( 'location:index' );
             border-bottom-color: rgb(230, 230, 230);
         }
 
-        .list_function.main a.print {
+        .list_function.main a.print, .list_function.main a.specification {
             width: 30px;
             height: 30px;
             background-color: #00811e;
@@ -1651,11 +1718,23 @@ header( 'location:index' );
             left: -7px;
         }
 
-        .list_function.main a.print:hover {
+        .list_function.main a.specification::after {
+            content: " ";
+            background: url(images/ui/btn_specification.svg);
+            background-size: 22px 22px;
+            background-repeat: no-repeat;
+            width: 45px;
+            height: 45px;
+            position: absolute;
+            top: 3px;
+            left: 4px;
+        }
+
+        .list_function.main a.print:hover, .list_function.main a.specification:hover {
             background-color: #707071;
         }
 
-        .modal .modal_function .left_function{
+        .modal .modal_function .left_function {
             width: 90%;
             margin-right: 20px;
         }
@@ -1679,6 +1758,10 @@ header( 'location:index' );
 
         .modal .modal_function select:nth-of-type(2) {
             width: 350px;
+        }
+
+        .modal .modal_function .left_function > input[type='checkbox']:last-of-type{
+            margin-left: 30px;
         }
 
         .modal .modal_function > a.btn {
@@ -1954,8 +2037,6 @@ header( 'location:index' );
         }
 
 
-
-
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -2004,6 +2085,10 @@ header( 'location:index' );
                 <!-- print -->
                 <div class="popupblock">
                     <a id="" class="print" @click="print_page()"></a>
+                </div>
+
+                <div class="popupblock">
+                    <a id="" class="specification" @click="specification_sheet()"></a>
                 </div>
             </div>
 
@@ -2148,7 +2233,9 @@ header( 'location:index' );
                                         <li>
                                             Type-{{block.type}} Subtotal Block<br>
                                             Name: <input type="text" v-model="block.name"><br>
-                                            Subtotal Amount: <input type="number" v-model="block.real_amount"> <input type="checkbox" class="alone" value="1" v-model="block.not_show"> Not Show "Subtotal Amount"
+                                            Subtotal Amount: <input type="number" v-model="block.real_amount"> <input
+                                                type="checkbox" class="alone" value="1" v-model="block.not_show"> Not
+                                            Show "Subtotal Amount"
                                         </li>
                                         <li>
                                             <i class="fas fa-arrow-alt-circle-up"
@@ -2237,7 +2324,8 @@ header( 'location:index' );
 
                                 <ul v-for="(block, index) in temp_block_a">
                                     <li>
-                                        <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num"> <input type="text" v-model="block.pid" hidden><br>
+                                        <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num">
+                                        <input type="text" v-model="block.pid" hidden><br>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
                                         <span v-if="block.type == 'image' ">Image:</span>
                                         <div v-if="block.type == 'image' "
@@ -2257,7 +2345,11 @@ header( 'location:index' );
                                                                  @change="chang_amount(block)" oninput="this.value|=0">
                                         Product Price: <input type="number" v-model="block.price"
                                                               @change="chang_amount(block)">
-                                        Discount: <input type="number" v-model="block.discount" min="0" max="100"
+
+                                        Ratio: <input type="number" v-model="block.ratio"
+                                                              @change="chang_amount(block)">
+                                        <br>
+                                        <span>Discount: </span> <input type="number" v-model="block.discount" min="0" max="100"
                                                          @change="chang_amount(block)" oninput="this.value|=0"> Amount:
                                         <input type="number" v-model="block.amount"><br>
                                         <span>Description:</span> <textarea rows="2"
@@ -2292,10 +2384,14 @@ header( 'location:index' );
 
                                 <ul v-for="(block, index) in temp_block_b">
                                     <li>
-                                        <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num"> <input type="text" v-model="block.pid" hidden><br>
+                                        <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num">
+                                        <input type="text" v-model="block.pid" hidden><br>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
                                         <span>Price:</span> <input type="number" v-model="block.price"
-                                                                   @change="chang_discount(block)"> Discount: <input
+                                                                   @change="chang_discount(block)">
+                                        Ratio: <input
+                                            type="number" v-model="block.ratio" @change="chang_discount(block)">
+                                        Discount: <input
                                             type="number" v-model="block.discount" @change="chang_discount(block)"
                                             min="0" max="100" oninput="this.value|=0"> Amount: <input type="number"
                                                                                                       v-model="block.amount"><br>
@@ -2494,7 +2590,8 @@ header( 'location:index' );
                     if ($test_manager[0]  == "1")
                     {
                     ?>
-                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_payment_term = !show_payment_term">Payment Terms</a>
+                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_payment_term = !show_payment_term">Payment
+                        Terms</a>
                     <?php
                     } else {
                     ?>
@@ -2547,13 +2644,14 @@ header( 'location:index' );
                                         <span>Third Line:</span> <input type="text" v-model="item.third_line"><br>
                                     </li>
                                     <li>
-                                        <i class="fas fa-arrow-alt-circle-up" @click="payment_term_item_up(index, item.id)"></i>
+                                        <i class="fas fa-arrow-alt-circle-up"
+                                           @click="payment_term_item_up(index, item.id)"></i>
                                         <i class="fas fa-arrow-alt-circle-down"
                                            @click="payment_term_item_down(index, item.id)"></i>
                                         <i class="fas fa-trash-alt" @click="payment_term_item_del(index)"></i>
                                     </li>
                                 </ul>
-                                
+
                             </div>
                         </div>
 
@@ -2747,7 +2845,8 @@ header( 'location:index' );
 
                 <div class="area_subtotal">
 
-                    <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']" v-for="(tp, index) in pg.types">
+                    <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']"
+                           v-for="(tp, index) in pg.types">
                         <thead v-if="tp.type == 'A'">
 
                         <tr>
@@ -2791,34 +2890,37 @@ header( 'location:index' );
                             </td>
                             <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
                             </td>
-                            <td><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                    <span class="numbers deleted" v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                            <td><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                <span class="numbers deleted"
+                                      v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ (bk.price * bk.ratio  !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
                                         v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                    v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">
-                                <span class="numbers" v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ bk.price !== undefined ? Number(bk.price - (bk.price * (bk.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                <span class="numbers" v-if="bk.discount != 0 && (bk.discount == 100 || bk.amount == '0.00')">₱ {{ bk.price !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                        v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">
+                                <span class="numbers"
+                                      v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio - (bk.price * bk.ratio * (bk.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                <span class="numbers"
+                                      v-if="bk.discount != 0 && (bk.discount == 100 || bk.amount == '0.00')">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
                             </td>
-                            <td v-if="product_vat == 'P'"><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price !== undefined ? (Number(bk.price) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                <span class="numbers" v-if="bk.discount != 0 && bk.amount != '0.00'">₱ {{ bk.price !== undefined ? (Number(bk.price - (bk.price * (bk.discount / 100))) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                <span class="numbers" v-if="bk.discount != 0 && bk.amount == '0.00'">₱ {{ bk.price !== undefined ? (Number(bk.price) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                            <td v-if="product_vat == 'P'"><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                <span class="numbers" v-if="bk.discount != 0 && bk.amount != '0.00'">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio - (bk.price * bk.ratio * (bk.discount / 100))) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                <span class="numbers" v-if="bk.discount != 0 && bk.amount == '0.00'">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
                             </td>
 
                             <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                
+
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers deleted">₱ {{ (bk.qty * bk.ratio * bk.price  !== undefined ? Number(bk.qty * bk.ratio * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
 
 
                             <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
-                               
+
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.qty * bk.price  !== undefined ? Number(bk.qty * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers deleted">₱ {{ (bk.qty * bk.ratio * bk.price  !== undefined ? Number(bk.qty * bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
                         </tr>
@@ -2833,27 +2935,27 @@ header( 'location:index' );
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                        
+
                             <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.ratio * bk.price  !== undefined ? (Number(bk.ratio * bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
                                         v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
                                     v-if="bk.discount != 0">
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? (Number(bk.amount)).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? (Number(bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers deleted">₱ {{ (bk.ratio * bk.price  !== undefined ? (Number(bk.ratio * bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
 
 
                             <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.ratio * bk.price  !== undefined ? Number(bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
                                         v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
                                     v-if="bk.discount != 0">
                                 <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
                             </td>
                             <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.price  !== undefined ? Number(bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                <span class="numbers deleted">₱ {{ (bk.ratio * bk.price  !== undefined ? Number(bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
                         </tr>
@@ -2889,8 +2991,11 @@ header( 'location:index' );
                                 "$1,") : '0.00' }}
                             </td>
                         </tr>
+
                         </tfoot>
+
                     </table>
+
                 </div>
 
                 <div class="area_total">
@@ -2933,7 +3038,8 @@ header( 'location:index' );
                             </td>
                             <td>GRAND TOTAL</td>
                             <td v-if="tt.total != '0.00'">
-                                <span class="numbers deleted" v-if="tt.total != total.back_total">₱ {{ total.back_total !== "" ? Number(total.back_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br v-if="tt.total != total.back_total">
+                                <span class="numbers deleted" v-if="tt.total != total.back_total">₱ {{ total.back_total !== "" ? Number(total.back_total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br
+                                    v-if="tt.total != total.back_total">
                                 <span class="numbers">₱ {{ tt.total !== "" ? Number(tt.total).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span>
                             </td>
                             <td v-if="tt.total == '0.00'">
@@ -2947,7 +3053,10 @@ header( 'location:index' );
                 <div class="area_terms">
                     <div class="terms" v-for="(tt, index) in pg.term">
                         <div class="title">{{ tt.title }}</div>
-                        <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">{{ tt.brief }}</div>
+                        <div class="brief"
+                             :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">
+                            {{ tt.brief }}
+                        </div>
                         <div class="listing" style="white-space: pre-line;">{{ tt.list }}</div>
                     </div>
                 </div>
@@ -2961,12 +3070,12 @@ header( 'location:index' );
                                 <div>
                                     <span v-for="(tt, index) in pg.payment_term.payment_method">{{ tt }}</span>
                                 </div>
-                               
+
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3">
-                            {{ pg.payment_term.brief }}
+                                {{ pg.payment_term.brief }}
                             </td>
                         </tr>
                         <tr>
@@ -2983,13 +3092,13 @@ header( 'location:index' );
                                     <span class="account_name">{{ tt.bank_name }}</span>
                                     <span>: </span>
                                     <div class="first_line">
-                                    {{ tt.first_line }}
+                                        {{ tt.first_line }}
                                     </div>
                                     <div class="second_line">{{ tt.second_line }}</div>
                                     <div class="third_line">{{ tt.third_line }}</div>
                                 </div>
 
-                           
+
                             </td>
                         </tr>
                         </tbody>
@@ -3065,7 +3174,7 @@ header( 'location:index' );
 
                     <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
 
-                        <div class="left_function" style="width: 90%;">
+                        <div class="left_function">
 
                             <input type="text" placeholder="ID" v-model="fil_id">
 
@@ -3119,6 +3228,7 @@ header( 'location:index' );
                                     <option value="LINEAR LIGHT">LINEAR LIGHT</option>
                                     <option value="PANEL LIGHT">PANEL LIGHT</option>
                                     <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
+                                    <option value="TRACK BAR">TRACK BAR</option>
                                     <option value="TRACK LIGHT">TRACK LIGHT</option>
                                     <option value="TROFFER LIGHT">TROFFER LIGHT</option>
                                     <option value="LINEAR LIGHT">LINEAR LIGHT</option>
@@ -3148,11 +3258,14 @@ header( 'location:index' );
 
                     <div class="list_function" style="margin: 7px 0;">
                         <div class="pagenation">
-                            <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
+                            <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev
+                                10</a>
                             <a class="page" v-for="pg in product_pages_10" @click="product_page=pg; filter_apply(pg);"
-                               v-bind:style="[pg == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg
+                               v-bind:style="[pg == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{
+                                pg
                                 }}</a>
-                            <a class="next" :disabled="product_page == product_pages.length" @click="nex_page(); filter_apply();">Next
+                            <a class="next" :disabled="product_page == product_pages.length"
+                               @click="nex_page(); filter_apply();">Next
                                 10</a>
                         </div>
                     </div>
@@ -3173,12 +3286,12 @@ header( 'location:index' );
                             <tr v-for="(item, index) in displayedPosts">
 
                                 <td><img
-                                    :src="img_url + item.photo1" v-if="item.photo1 !== ''">
+                                        :src="img_url + item.photo1" v-if="item.photo1 !== ''">
                                 </td>
                                 <td>
                                     <ul v-if="item.out == 'Y'">
                                         <li>
-                                                <span class="phasedout">Phased Out</span>
+                                            <span class="phasedout">Phased Out</span>
                                         </li>
                                         <li></li>
                                     </ul>
@@ -3187,7 +3300,7 @@ header( 'location:index' );
                                             ID:
                                         </li>
                                         <li>
-                                        {{ item.id }}
+                                            {{ item.id }}
                                         </li>
                                     </ul>
                                     <ul>
@@ -3210,114 +3323,8 @@ header( 'location:index' );
                                         <li>
                                             Tags:
                                         </li>
-                                        <li><span v-for="(it, index) in item.tags" v-if="item.tags !== undefined ? item.tags[0] !== '' : false">{{ it }}</span></li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Brand:
-                                        </li>
-                                        <li>
-                                        {{ item.brand }}
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Created:
-                                        </li>
-                                        <li>
-                                        {{ item.created_at }}
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Updated:
-                                        </li>
-                                        <li>
-                                        {{ item.updated_at }}
-                                        </li>
-                                    </ul>
-                                </td>
-                                <td>
-                                    <ul v-for="(att, index) in item.attribute_list">
-                                        <li>
-                                            {{ att.category }}:
-                                        </li>
-                                        <li v-if="att.value.length > 1">
-                                            <span v-for="(att_value, index) in att.value">{{att_value}}</span>
-                                        </li>
-                                        <li v-if="att.value.length == 1">
-                                            <template v-for="(att_value, index) in att.value">{{att_value}}</template>
-                                        </li>
-
-                                    </ul>
-                                </td>
-                                <td>
-                                    <span v-show="show_ntd === true">CP: {{ item.price_ntd }}<br></span>
-                                    <span>SRP: {{ item.price }}<br></span>
-                                    <span>QP: {{ item.quoted_price }}<br></span>
-                                </td>
-                                <td>
-                                    <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true" class="fas fa-caret-right"></i></button>
-                                </td>
-                            </tr>
-                            
-
-                            </tbody>
-                        </table>
-
-                    </div>
-
-<!--
-                    <div>
-                        <table id="tb_product_list" class="table  table-sm table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Information</th>
-                                <th>Specification</th>
-                                <th>Price</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(item, index) in displayedPosts">
-                                <td>
-                                    <img :src="baseURL + item.photo1" v-if="item.photo1">
-                                </td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            ID:
-                                        </li>
-                                        <li>
-                                            {{ item.id }}
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Code:
-                                        </li>
-                                        <li>
-                                            {{ item.code }}
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Category:
-                                        </li>
-                                        <li v-if="item.category == 'Lighting'">
-                                            {{ item.category}}
-                                        </li>
-                                        <li v-if="item.category != 'Lighting'">
-                                            {{ item.category}} >> {{ item.sub_category_name}}
-                                        </li>
-                                    </ul>
-                                    <ul>
-                                        <li>
-                                            Tags:
-                                        </li>
-                                        <li>
-                                            <span v-for="(it, index) in item.tags">{{ it }}</span>
+                                        <li><span v-for="(it, index) in item.tags"
+                                                  v-if="item.tags !== undefined ? item.tags[0] !== '' : false">{{ it }}</span>
                                         </li>
                                     </ul>
                                     <ul>
@@ -3356,23 +3363,133 @@ header( 'location:index' );
                                         <li v-if="att.value.length == 1">
                                             <template v-for="(att_value, index) in att.value">{{att_value}}</template>
                                         </li>
+
                                     </ul>
                                 </td>
                                 <td>
+                                    <span v-show="show_ntd === true">CP: {{ item.price_ntd }}<br></span>
                                     <span>SRP: {{ item.price }}<br></span>
                                     <span>QP: {{ item.quoted_price }}<br></span>
                                 </td>
                                 <td>
-                                    <button id="edit01"><i
-                                            class="fas fa-caret-right"></i></i>
+                                    <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true"
+                                                                                       class="fas fa-caret-right"></i>
                                     </button>
-
                                 </td>
                             </tr>
+
+
                             </tbody>
                         </table>
+
                     </div>
-                            -->
+
+                    <!--
+                                        <div>
+                                            <table id="tb_product_list" class="table  table-sm table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>Image</th>
+                                                    <th>Information</th>
+                                                    <th>Specification</th>
+                                                    <th>Price</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr v-for="(item, index) in displayedPosts">
+                                                    <td>
+                                                        <img :src="baseURL + item.photo1" v-if="item.photo1">
+                                                    </td>
+                                                    <td>
+                                                        <ul>
+                                                            <li>
+                                                                ID:
+                                                            </li>
+                                                            <li>
+                                                                {{ item.id }}
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li>
+                                                                Code:
+                                                            </li>
+                                                            <li>
+                                                                {{ item.code }}
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li>
+                                                                Category:
+                                                            </li>
+                                                            <li v-if="item.category == 'Lighting'">
+                                                                {{ item.category}}
+                                                            </li>
+                                                            <li v-if="item.category != 'Lighting'">
+                                                                {{ item.category}} >> {{ item.sub_category_name}}
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li>
+                                                                Tags:
+                                                            </li>
+                                                            <li>
+                                                                <span v-for="(it, index) in item.tags">{{ it }}</span>
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li>
+                                                                Brand:
+                                                            </li>
+                                                            <li>
+                                                                {{ item.brand }}
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li>
+                                                                Created:
+                                                            </li>
+                                                            <li>
+                                                                {{ item.created_at }}
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li>
+                                                                Updated:
+                                                            </li>
+                                                            <li>
+                                                                {{ item.updated_at }}
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        <ul v-for="(att, index) in item.attribute_list">
+                                                            <li>
+                                                                {{ att.category }}:
+                                                            </li>
+                                                            <li v-if="att.value.length > 1">
+                                                                <span v-for="(att_value, index) in att.value">{{att_value}}</span>
+                                                            </li>
+                                                            <li v-if="att.value.length == 1">
+                                                                <template v-for="(att_value, index) in att.value">{{att_value}}</template>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        <span>SRP: {{ item.price }}<br></span>
+                                                        <span>QP: {{ item.quoted_price }}<br></span>
+                                                    </td>
+                                                    <td>
+                                                        <button id="edit01"><i
+                                                                class="fas fa-caret-right"></i></i>
+                                                        </button>
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                                -->
 
                 </div>
 
@@ -3389,84 +3506,95 @@ header( 'location:index' );
 
         <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
 
-            <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
-                
-            <template v-if="product.variation_mode != 1">
-            <div class="upper_section">
-                    <div class="imagebox">
-                        <div class="selected_image">
-                        <img :src="url" v-if="url !== ''">
-                    </div>
-                    <div class="image_list">
-                        <img v-if="product.photo1" :src="img_url + product.photo1" @click="change_url(product.photo1)"/>
-                        <img v-if="product.photo2" :src="img_url + product.photo2" @click="change_url(product.photo2)"/>
-                        <img v-if="product.photo3" :src="img_url + product.photo3" @click="change_url(product.photo3)"/>
-                        <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
-                    </div>
-                    </div>
-                    <div class="infobox">
-                        <div class="basic_info"><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>{{product.brand}}</h6>
-                        <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
-                        <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{ product.sub_category_name}}</h6>
-                            <!---->
-                            <div class="tags"><span v-for="(it, index) in product.tags">{{ it }}</span></div>
+            <div class="modal-content"
+                 style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
+
+                <template v-if="product.variation_mode != 1">
+                    <div class="upper_section">
+                        <div class="imagebox">
+                            <div class="selected_image">
+                                <img :src="url" v-if="url !== ''">
+                            </div>
+                            <div class="image_list">
+                                <img v-if="product.photo1" :src="img_url + product.photo1"
+                                     @click="change_url(product.photo1)"/>
+                                <img v-if="product.photo2" :src="img_url + product.photo2"
+                                     @click="change_url(product.photo2)"/>
+                                <img v-if="product.photo3" :src="img_url + product.photo3"
+                                     @click="change_url(product.photo3)"/>
+                                <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                            </div>
                         </div>
-                        <ul class="price_stock">
-                            <li>
-                                Suggested Retail Price: <span>{{price}}</span><span></span></li>
-                            <li>
-                                Quoted Price: <span>{{quoted_price}}</span><span></span></li>
-                        </ul>
-                        
-                        <ul class="variants" style="display: none;">
-                            <li>
-                                Select:
-                            </li>
-                            <li>Beam Angle</li><!---->
-                            <li><select class="form-control">
-                                <option value=""></option>
-                            </select></li>
-                             <li>CCT</li><!---->
-                            <li style="display: none;"><select class="form-control">
-                                <option value=""></option>
-                            </select></li> <!---->
-                            <li>Color Finish</li>
-                            <li style="display: none;"><select class="form-control">
-                                <option value=""></option>
-                            </select></li> <!----><!----><!----></ul>
-
-
-                        <div class="btnbox">
-                            <ul>
-                                <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
-                                </li>
+                        <div class="infobox">
+                            <div class="basic_info"><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
+                                {{product.brand}}</h6>
+                                <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
+                                <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
+                                    product.sub_category_name}}</h6>
+                                <!---->
+                                <div class="tags"><span v-for="(it, index) in product.tags">{{ it }}</span></div>
+                            </div>
+                            <ul class="price_stock">
                                 <li>
-                                    <button class="btn btn-info" @click="add_without_image()">Add without Image</button>
-                                </li>
+                                    Suggested Retail Price: <span>{{price}}</span><span></span></li>
+                                <li>
+                                    Quoted Price: <span>{{quoted_price}}</span><span></span></li>
                             </ul>
 
-                            <ul v-if="product.variation_mode == 1">
-                                <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with Image</button>
-                                </li>
+                            <ul class="variants" style="display: none;">
                                 <li>
-                                    <button class="btn btn-info" @click="add_without_image('all')">Add all spec. without Image</button>
+                                    Select:
                                 </li>
-                            </ul>
+                                <li>Beam Angle</li><!---->
+                                <li><select class="form-control">
+                                    <option value=""></option>
+                                </select></li>
+                                <li>CCT</li><!---->
+                                <li style="display: none;"><select class="form-control">
+                                    <option value=""></option>
+                                </select></li> <!---->
+                                <li>Color Finish</li>
+                                <li style="display: none;"><select class="form-control">
+                                    <option value=""></option>
+                                </select></li> <!----><!----><!----></ul>
 
-                            <ul>
-                                <li>
-                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
-                                </li>
 
-                            </ul>
+                            <div class="btnbox">
+                                <ul>
+                                    <li v-if="toggle_type == 'A'">
+                                        <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-info" @click="add_without_image()">Add without Image
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <ul v-if="product.variation_mode == 1">
+                                    <li v-if="toggle_type == 'A'">
+                                        <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with
+                                            Image
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-info" @click="add_without_image('all')">Add all spec.
+                                            without Image
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <ul>
+                                    <li>
+                                        <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                    </li>
+
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="middle_section" v-if="specification.length > 0"><h5>Specification</h5>
-                    <table>
-                        <tbody>
+                    <div class="middle_section" v-if="specification.length > 0"><h5>Specification</h5>
+                        <table>
+                            <tbody>
                             <template v-for="(item, index) in specification">
                                 <tr>
                                     <td>
@@ -3481,258 +3609,378 @@ header( 'location:index' );
                                     <td> {{item.v2}}</td>
                                 </tr>
                             </template>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="middle_section" v-if="product.related_product !== undefined ? product.related_product.length !== 0 : false">
-                    <h5>Related Products</h5>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="middle_section"
+                         v-if="product.related_product !== undefined ? product.related_product.length !== 0 : false">
+                        <h5>Related Products</h5>
 
-                    <div id="carouselExampleControls" class="carousel slide">
+                        <div id="carouselExampleControls" class="carousel slide">
 
-                        <div class="carousel-inner">
+                            <div class="carousel-inner">
 
-                            <div v-for='(g, groupIndex) in groupedItems'
-                                 :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
-                                <div class="row custom">
-                                    <div class="col custom" v-for='(item, index) in g'>
-                                        <img :src="img_url + item.photo1" :alt="'No Product Picture'">
-                                        <div>
-                                            <a @click="getSingleProduct(item.id)">
-                                                {{ item.code }}
-                                            </a>
+                                <div v-for='(g, groupIndex) in groupedItems'
+                                     :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                    <div class="row custom">
+                                        <div class="col custom" v-for='(item, index) in g'>
+                                            <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                            <div>
+                                                <a @click="getSingleProduct(item.id)">
+                                                    {{ item.code }}
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
 
+                                    </div>
+                                </div>
+
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                               data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                               data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="lower_section"
+                         v-if="(product.notes != null && product.notes != '') || product.description != ''"><h5>
+                        Description</h5>
+                        <p>
+                            {{ product.description }}
+                        </p>
+                        <p v-if="product.notes != null && product.notes != ''">
+                            Notes: {{ product.notes }}
+                        </p>
+                    </div>
+                </template>
+                <template v-if="product.variation_mode == 1">
+                    <div class="upper_section">
+
+                        <div class="imagebox">
+                            <div class="selected_image">
+                                <img :src="url" v-if="url !== ''">
+                            </div>
+                            <div class="image_list">
+                                <img v-if="product.photo1" :src="img_url + product.photo1"
+                                     @click="change_url(product.photo1)"/>
+                                <img v-if="product.photo2" :src="img_url + product.photo2"
+                                     @click="change_url(product.photo2)"/>
+                                <img v-if="product.photo3" :src="img_url + product.photo3"
+                                     @click="change_url(product.photo3)"/>
+                                <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                            </div>
+
+                        </div>
+
+
+                        <div class="infobox">
+                            <div class="basic_info">
+                                <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6>
+                                <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
+                                <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
+                                    product.sub_category_name}}</h6>
+                                <div class="tags" v-if="product.tags !== undefined ? product.tags[0] !== '' : false">
+                                    <span v-for="(it, index) in product.tags">{{ it }}</span>
                                 </div>
                             </div>
 
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
-                           data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
-                           data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="lower_section"  v-if="(product.notes != null && product.notes != '') || product.description != ''"><h5>Description</h5>
-                    <p>
-                    {{ product.description }}
-                    </p>
-                    <p v-if="product.notes != null && product.notes != ''">
-                        Notes: {{ product.notes }}
-                    </p>
-                </div>
-                </template>
-<template v-if="product.variation_mode == 1">
-                <div class="upper_section">
+                            <ul class="price_stock">
 
-                    <div class="imagebox">
-                        <div class="selected_image">
-                            <img :src="url" v-if="url !== ''">
-                        </div>
-                        <div class="image_list">
-                        <img v-if="product.photo1" :src="img_url + product.photo1" @click="change_url(product.photo1)"/>
-                        <img v-if="product.photo2" :src="img_url + product.photo2" @click="change_url(product.photo2)"/>
-                        <img v-if="product.photo3" :src="img_url + product.photo3" @click="change_url(product.photo3)"/>
-                            <!-- <img v-for="(item, index) in variation_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
-                        </div>
-
-                    </div>
-
-
-                    <div class="infobox">
-                        <div class="basic_info">
-                        <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6> 
-                            <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
-                            <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{ product.sub_category_name}}</h6>
-                            <div class="tags" v-if="product.tags !== undefined ? product.tags[0] !== '' : false">
-                                <span v-for="(it, index) in product.tags">{{ it }}</span>
-                            </div>
-                        </div>
-
-                        <ul class="price_stock">
-
-                            <li>
-                                Suggested Retail Price: <span>{{price}}</span><span></span>
-                            </li>
-
-                            <li>
-                                Quoted Price: <span>{{quoted_price}}</span><span></span>
-                            </li>
-
-                        </ul>
-
-                        <ul class="variants">
-                            <li>
-                                Select:
-                            </li>
-                            <li v-if="product.variation1_value[0] !== '' && product.variation1_value[0] !== undefined">
-                                {{ product.variation1 !== 'custom' ? product.variation1 : product.variation1_custom}}
-                            </li>
-                            <li v-show="product.variation1_value[0] !== '' && product.variation1_value[0] !== undefined">
-                                <select class="form-control" v-model="v1" @change="change_v()">
-                                    <option value=""></option>
-                                    <option v-for="(item, index) in product.variation1_value" :value="item" :key="item">{{item}}
-                                    </option>
-                                </select>
-                            </li>
-                            <li v-if="product.variation2_value[0] !== '' && product.variation2_value[0] !== undefined">
-                                {{ product.variation2 !== 'custom' ? product.variation2 : product.variation2_custom }}
-                            </li>
-                            <li v-show="product.variation2_value[0] !== '' && product.variation2_value[0] !== undefined">
-                                <select class="form-control" v-model="v2" @change="change_v()">
-                                    <option value=""></option>
-                                    <option v-for="(item, index) in product.variation2_value" :value="item" :key="item">{{item}}
-                                    </option>
-                                </select>
-                            </li>
-                            <li v-if="product.variation3_value[0] !== '' && product.variation3_value[0] !== undefined">
-                                {{ product.variation3 !== 'custom' ? product.variation3 : product.variation3_custom }}
-                            </li>
-                            <li v-show="product.variation3_value[0] !== '' && product.variation3_value[0] !== undefined">
-                                <select class="form-control" v-model="v3" @change="change_v()">
-                                    <option value=""></option>
-                                    <option v-for="(item, index) in product.variation3_value" :value="item" :key="item">{{item}}
-                                    </option>
-                                </select>
-                            </li>
-
-                            <template v-for="(item, index) in product.accessory_infomation" v-if="show_accessory">
-                                <li>{{ item.category }}</li>
                                 <li>
-                                    <select class="selectpicker" data-width="100%" :id="'tag'+index">
-                                        <option :data-thumbnail="detail.url" v-for="(detail, index) in item.detail[0]">
-                                            {{detail.code}}
+                                    Suggested Retail Price: <span>{{price}}</span><span></span>
+                                </li>
+
+                                <li>
+                                    Quoted Price: <span>{{quoted_price}}</span><span></span>
+                                </li>
+
+                            </ul>
+
+                            <ul class="variants">
+                                <li>
+                                    Select:
+                                </li>
+                                <li v-if="product.variation1_value[0] !== '' && product.variation1_value[0] !== undefined">
+                                    {{ product.variation1 !== 'custom' ? product.variation1 :
+                                    product.variation1_custom}}
+                                </li>
+                                <li v-show="product.variation1_value[0] !== '' && product.variation1_value[0] !== undefined">
+                                    <select class="form-control" v-model="v1" @change="change_v()">
+                                        <option value=""></option>
+                                        <option v-for="(item, index) in product.variation1_value" :value="item"
+                                                :key="item">{{item}}
                                         </option>
                                     </select>
                                 </li>
-                            </template>
-
-                        </ul>
-
-                        <div class="btnbox">
-                            <ul>
-                                <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
+                                <li v-if="product.variation2_value[0] !== '' && product.variation2_value[0] !== undefined">
+                                    {{ product.variation2 !== 'custom' ? product.variation2 : product.variation2_custom
+                                    }}
                                 </li>
-                                <li>
-                                    <button class="btn btn-info" @click="add_without_image()">Add without Image</button>
+                                <li v-show="product.variation2_value[0] !== '' && product.variation2_value[0] !== undefined">
+                                    <select class="form-control" v-model="v2" @change="change_v()">
+                                        <option value=""></option>
+                                        <option v-for="(item, index) in product.variation2_value" :value="item"
+                                                :key="item">{{item}}
+                                        </option>
+                                    </select>
                                 </li>
+                                <li v-if="product.variation3_value[0] !== '' && product.variation3_value[0] !== undefined">
+                                    {{ product.variation3 !== 'custom' ? product.variation3 : product.variation3_custom
+                                    }}
+                                </li>
+                                <li v-show="product.variation3_value[0] !== '' && product.variation3_value[0] !== undefined">
+                                    <select class="form-control" v-model="v3" @change="change_v()">
+                                        <option value=""></option>
+                                        <option v-for="(item, index) in product.variation3_value" :value="item"
+                                                :key="item">{{item}}
+                                        </option>
+                                    </select>
+                                </li>
+
+                                <template v-for="(item, index) in product.accessory_infomation" v-if="show_accessory">
+                                    <li>{{ item.category }}</li>
+                                    <li>
+                                        <select class="selectpicker" data-width="100%" :id="'tag'+index">
+                                            <option :data-thumbnail="detail.url"
+                                                    v-for="(detail, index) in item.detail[0]">
+                                                {{detail.code}}
+                                            </option>
+                                        </select>
+                                    </li>
+                                </template>
+
                             </ul>
 
-                            <ul>
-                                <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with Image</button>
-                                </li>
-                                <li>
-                                    <button class="btn btn-info" @click="add_without_image('all')">Add all spec. without Image</button>
-                                </li>
-                            </ul>
+                            <div class="btnbox">
+                                <ul>
+                                    <li v-if="toggle_type == 'A'">
+                                        <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-info" @click="add_without_image()">Add without Image
+                                        </button>
+                                    </li>
+                                </ul>
 
-                            <ul>
-                                <li>
-                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
-                                </li>
+                                <ul>
+                                    <li v-if="toggle_type == 'A'">
+                                        <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with
+                                            Image
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-info" @click="add_without_image('all')">Add all spec.
+                                            without Image
+                                        </button>
+                                    </li>
+                                </ul>
 
-                            </ul>
-                        </div>
+                                <ul>
+                                    <li>
+                                        <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                    </li>
 
-                    </div>
-
-                </div>
-
-
-                <div class="middle_section" v-if="specification.length > 0">
-                    <h5>Specification</h5>
-
-                    <table>
-                        <tbody>
-                        <template v-for="(item, index) in specification">
-                            <tr>
-                                <td>
-                                    {{item.k1}}
-                                </td>
-                                <td>
-                                    {{item.v1}}
-                                </td>
-                                <td>
-                                    {{item.k2}}
-                                </td>
-                                <td> {{item.v2}}</td>
-                            </tr>
-                        </template>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-                <div class="middle_section" v-if="product.related_product !== undefined ? product.related_product.length !== 0 : false">
-                    <h5>Related Products</h5>
-
-                    <div id="carouselExampleControls" class="carousel slide">
-
-                        <div class="carousel-inner">
-
-                            <div v-for='(g, groupIndex) in groupedItems'
-                                 :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
-                                <div class="row custom">
-                                    <div class="col custom" v-for='(item, index) in g'>
-                                        <img :src="img_url + item.photo1" :alt="'No Product Picture'">
-                                        <div>
-                                            <a @click="getSingleProduct(item.id)">
-                                                {{ item.code }}
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </div>
+                                </ul>
                             </div>
 
                         </div>
-                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
-                           data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
-                           data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+
                     </div>
-                </div>
 
 
-                <div class="lower_section" v-if="(product.notes != null && product.notes != '') || product.description != ''">
-                    <h5>Description</h5>
-                    <p>
-                        {{ product.description }}
-                    </p>
-                    <p v-if="product.notes != null && product.notes != ''">
-                        Notes: {{ product.notes }}
-                    </p>
-                    <!--
-                    <div class="desc_imgbox">
-                        <img src="images/realwork.png">
-                        <img src="images/realwork.png">
-                        <img src="images/wash_hands.png">
-                        <img src="images/realwork.png">
+                    <div class="middle_section" v-if="specification.length > 0">
+                        <h5>Specification</h5>
+
+                        <table>
+                            <tbody>
+                            <template v-for="(item, index) in specification">
+                                <tr>
+                                    <td>
+                                        {{item.k1}}
+                                    </td>
+                                    <td>
+                                        {{item.v1}}
+                                    </td>
+                                    <td>
+                                        {{item.k2}}
+                                    </td>
+                                    <td> {{item.v2}}</td>
+                                </tr>
+                            </template>
+
+                            </tbody>
+
+                        </table>
+
                     </div>
-                    -->
-                </div>
+
+                    <div class="middle_section"
+                         v-if="product.related_product !== undefined ? product.related_product.length !== 0 : false">
+                        <h5>Related Products</h5>
+
+                        <div id="carouselExampleControls" class="carousel slide">
+
+                            <div class="carousel-inner">
+
+                                <div v-for='(g, groupIndex) in groupedItems'
+                                     :class="['carousel-item', (groupIndex == 0 ? 'active' : '')]">
+                                    <div class="row custom">
+                                        <div class="col custom" v-for='(item, index) in g'>
+                                            <img :src="img_url + item.photo1" :alt="'No Product Picture'">
+                                            <div>
+                                                <a @click="getSingleProduct(item.id)">
+                                                    {{ item.code }}
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                               data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                               data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div class="lower_section"
+                         v-if="(product.notes != null && product.notes != '') || product.description != ''">
+                        <h5>Description</h5>
+                        <p>
+                            {{ product.description }}
+                        </p>
+                        <p v-if="product.notes != null && product.notes != ''">
+                            Notes: {{ product.notes }}
+                        </p>
+                        <!--
+                        <div class="desc_imgbox">
+                            <img src="images/realwork.png">
+                            <img src="images/realwork.png">
+                            <img src="images/wash_hands.png">
+                            <img src="images/realwork.png">
+                        </div>
+                        -->
+                    </div>
                 </template>
 
             </div>
-            
+
         </div>
 
+
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true" id="modal_specification_sheet">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+
+            <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
+
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myLargeModalLabel">Export Specification Sheet</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn_close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
+
+                        <div class="left_function">
+                            <input type="checkbox" class="alone" v-model="srp"> Show SRP on Specification Sheet
+                            <input type="checkbox" class="alone" v-model="qp"> Show QP on Specification Sheet
+                        </div>
+
+                        <a class="btn small green" @click="prod_export()">Export</a>
+
+                    </div>
+
+                    <!--
+                    <div class="list_function" style="margin: 7px 0;">
+                        <div class="pagenation">
+                            <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev
+                                10</a>
+                            <a class="page" v-for="pg in product_pages_10" @click="product_page=pg; filter_apply(pg);"
+                               v-bind:style="[pg == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{
+                                pg
+                                }}</a>
+                            <a class="next" :disabled="product_page == product_pages.length"
+                               @click="nex_page(); filter_apply();">Next
+                                10</a>
+                        </div>
+                    </div>
+                    -->
+
+
+                    <div>
+                        <table id="tb_specification_list" class="table  table-sm table-bordered">
+                            <thead>
+                            <tr>
+                                <th><i class="micons" @click="selectall()">view_list</i></th>
+                                <th>Image</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr v-for="(item, index) in product_array">
+                                <td v-if="item.pid != 0">
+                                    <input type="checkbox" class="alone" :true-value="1" v-model:checked="item.is_selected" >
+                                </td>
+                                <td  v-if="item.pid == 0">
+                                    No Match in Product Database
+                                </td>
+
+                                <td>
+                                    <img v-if="item.url != ''" :src="item.url">
+                                </td>
+
+                                <td>
+                                    <div class="code">{{ item.code }}</div>
+                                    <div class="brief">{{ item.brief }}</div>
+                                    <div class="listing">{{ item.desc }}{{ item.list }}</div>
+                                </td>
+
+                                <td>
+                                    <i class="fas fa-arrow-alt-circle-up" @click="item_up(index, item.id)"></i>
+                                    <i class="fas fa-arrow-alt-circle-down" @click="item_down(index, item.id)"></i>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
 
     </div>
 
@@ -3741,9 +3989,6 @@ header( 'location:index' );
 
 
 </body>
-
-<script src="https://superal.github.io/canvas2image/canvas2image.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
     $(".btn").click(function () {
@@ -3760,15 +4005,9 @@ header( 'location:index' );
     };
 
 
-    
-
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/quotation_v3.js"></script>
-
-
-
-
+<script defer src="js/quotation_v4.js"></script>
 </html>
