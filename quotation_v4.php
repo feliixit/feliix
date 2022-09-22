@@ -3228,6 +3228,7 @@ header( 'location:index' );
                                     <option value="LINEAR LIGHT">LINEAR LIGHT</option>
                                     <option value="PANEL LIGHT">PANEL LIGHT</option>
                                     <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
+                                    <option value="TRACK BAR">TRACK BAR</option>
                                     <option value="TRACK LIGHT">TRACK LIGHT</option>
                                     <option value="TROFFER LIGHT">TROFFER LIGHT</option>
                                     <option value="LINEAR LIGHT">LINEAR LIGHT</option>
