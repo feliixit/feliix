@@ -748,6 +748,19 @@
             color: indianred !important;
         }
 
+        button.quick_move{
+            position: fixed;
+            top: calc(50vh + 30px);
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            border: 1px solid rgb(153,153,153);
+            font-size: 23px;
+            font-weight: 500;
+            background-color: rgba(7, 220, 237, 0.5);
+            z-index: 999;
+        }
+
         .modal{
             font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
         }
@@ -1242,6 +1255,10 @@
 <body class="gray">
 
 <div class="bodybox" id="app">
+
+    <!-- move-left/right shortcut -->
+    <button class="quick_move" style="left: 5px;" onclick="move_left();">←</button>
+    <button class="quick_move" style="right: 5px;" onclick="move_right();">→</button>
 
     <div class="mask" :ref="'mask'"></div>
 
@@ -2549,6 +2566,15 @@
 </body>
 
 <script>
+
+    function move_left() {
+        document.getElementsByClassName('block D')[0].scrollLeft -= 400;
+    };
+
+    function move_right() {
+        document.getElementsByClassName('block D')[0].scrollLeft += 400;
+    };
+
     $(".btn").click(function () {
 
         if ($("#collapseme").hasClass("show")) {

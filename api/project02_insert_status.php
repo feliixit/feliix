@@ -249,7 +249,7 @@ $query = "INSERT INTO project_statuses
         }
 
         if($last_id != 0)
-            SendNotifyMail($pid, $pre_status, $_reason);
+            SendNotifyMail($pid, $pre_status, $project_status_edit, $project_status_reason);
 
         return $last_id;
 
@@ -336,7 +336,7 @@ function RestoreProjectPreProb($db, $project_id)
     return $status;
 }
 
-function SendNotifyMail($bid, $pre_status, $reason)
+function SendNotifyMail($bid, $pre_status, $project_status_edit, $reason)
 {
     $database = new Database();
     $db = $database->getConnection();
@@ -406,6 +406,6 @@ function SendNotifyMail($bid, $pre_status, $reason)
     }
 
     if($project_status != 'Pending Review' && $project_status != 'On Progress')
-        project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id, $create_id, $reason);
+        project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id, $create_id, $project_status_edit, $reason);
 
 }

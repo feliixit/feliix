@@ -5482,7 +5482,7 @@ function project03_stage_client_task_notify_mail($project_name, $username, $crea
     }
 }
 
-function project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id, $create_id, $reason)
+function project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id, $create_id, $project_status_edit, $reason)
 {
 
     $title = 'Status of project "' . $project_name . '" changed to "' . $project_status . '" ';
