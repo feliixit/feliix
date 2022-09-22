@@ -268,6 +268,160 @@ $(function(){
                 </div>
             </div>
 
+            <div class="box-content">
+                <ul>
+                    <li><b>Order for Taiwan (Role 1)</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="access1"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(9)">Cancel</a>
+                    <a class="btn" @click="save(9)">Save</a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Order for Taiwan (Role 2)</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="access2"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(10)">Cancel</a>
+                    <a class="btn" @click="save(10)">Save</a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Order for Taiwan (Role 3)</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="access3"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(11)">Cancel</a>
+                    <a class="btn" @click="save(11)">Save</a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Order for Taiwan (Role 4)</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="access4"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(12)">Cancel</a>
+                    <a class="btn" @click="save(12)">Save</a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Order for Taiwan (Role 5)</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="access5"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(13)">Cancel</a>
+                    <a class="btn" @click="save(13)">Save</a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Order for Taiwan (Role 6)</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="access6"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(14)">Cancel</a>
+                    <a class="btn" @click="save(14)">Save</a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Order for Taiwan (Role 7)</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="access7"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="payeeName"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(15)">Cancel</a>
+                    <a class="btn" @click="save(15)">Save</a>
+                </div>
+            </div>
+
 
         </div>
     </div>

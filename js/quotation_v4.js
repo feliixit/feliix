@@ -236,6 +236,10 @@ var app = new Vue({
         toggle_type:'',
 
         groupedItems : [],
+
+        product_array: [],
+        qp:'',
+        srp:'',
     },
   
     created() {
@@ -397,6 +401,53 @@ var app = new Vue({
     },
   
     methods: {
+
+      selectall(){
+        let stat = "";
+
+        for(let i = 0; i < this.product_array.length; i++)
+        {
+          if(this.product_array[i].pid !== 0)
+          {
+            stat = this.product_array[i].is_selected;
+            break;
+          }
+        }
+
+        this.product_array.forEach(element => {
+          if(element.pid !== 0)
+            stat == 1 ? element.is_selected = '' : element.is_selected = 1;
+        });
+      },
+
+      prod_export : async function() {
+ 
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("q_id", this.id);
+        form_Data.append("items", JSON.stringify(this.product_array));
+        form_Data.append("qp", this.qp);
+        form_Data.append("srp", this.srp);
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/quotation_export',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        window.open("product_display_export?id=" + this.id, '_blank');
+
+      },
+
+        specification_sheet() {
+            $('#modal_specification_sheet').modal('toggle');
+        },
+
       add_with_image(all) {
 
         var photo = "";
@@ -505,6 +556,7 @@ var app = new Vue({
             desc: "",
             list: list,
             num:"",
+            ratio:1.0,
             pid: this.product.id,
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
@@ -521,7 +573,7 @@ var app = new Vue({
             photo: photo,
             qty: "1",
             price: price,
-
+            ratio:1.0,
             discount: "0",
             amount: "",
             desc: "",
@@ -649,6 +701,7 @@ var app = new Vue({
             desc: "",
             list: list,
             num:"",
+            ratio:1.0,
             pid: this.product.id,
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
@@ -665,7 +718,7 @@ var app = new Vue({
             photo: "",
             qty: "1",
             price: price,
-
+            ratio:1.0,
             discount: "0",
             amount: "",
             desc: "",
@@ -1797,7 +1850,7 @@ var app = new Vue({
         if(row.discount > 100)
           row.discount = 100;
 
-        let charge = (Number(row.price) * (100 - Math.floor(row.discount)) / 100).toFixed(2);
+        let charge = (Number(row.price) * Number(row.ratio) * (100 - Math.floor(row.discount)) / 100).toFixed(2);
           row.amount = charge;
        
       },
@@ -1816,7 +1869,7 @@ var app = new Vue({
 
         
         // let charge = this.payment_record.charge;
-        let charge = (Number(row.qty)) * Number(row.price) * ((100 - Math.floor(row.discount)) / 100);
+        let charge = (Number(row.qty)) * Number(row.price) * Number(row.ratio)  * ((100 - Math.floor(row.discount)) / 100);
 
         if(this.product_vat == 'P')
           charge = charge * 1.12;
@@ -1841,6 +1894,7 @@ Installation:`;
 
         if(this.project_category != 'Lighting')
           _list = "";
+
 
         for (let i = 0; i < items.length; i++) {
           if (items[i].id > sn) {
@@ -1867,6 +1921,7 @@ Installation:`;
           list: _list,
           num:"",
           pid:0,
+          ratio:1.0,
         };
 
         items.push(item);
@@ -1877,13 +1932,6 @@ Installation:`;
       
         var sn = 0;
         var items = this.temp_block_b;
-
-
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].id > sn) {
-            sn = items[i].id;
-          }
-        }
 
         var _list = `Beam Angle:
 Lumens:
@@ -1897,6 +1945,12 @@ Installation:`;
 
         if(this.project_category != 'Lighting')
           _list = "";
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].id > sn) {
+            sn = items[i].id;
+          }
+        }
 
         sn = sn + 1;
 
@@ -1914,6 +1968,7 @@ Installation:`;
           list: _list,
           num:"",
           pid:0,
+          ratio:1.0,
         };
 
         items.push(item);
@@ -2172,6 +2227,9 @@ Installation:`;
               // footer
               _this.temp_footer_first_line = _this.receive_records[0].footer_first_line;
               _this.temp_footer_second_line = _this.receive_records[0].footer_second_line;
+
+              // product array
+              _this.product_array = _this.receive_records[0].product_array;
               
             }
           })
@@ -2246,6 +2304,28 @@ Installation:`;
         }, 
 
         element.types.push(obj);
+      },
+
+      item_up: function(fromIndex, eid) {
+        var toIndex = fromIndex - 1;
+  
+        if (toIndex < 0) 
+          return;
+
+        var element = this.product_array.find(({ id }) => id === eid);
+        this.product_array.splice(fromIndex, 1);
+        this.product_array.splice(toIndex, 0, element);
+      },
+
+      item_down: function(fromIndex, eid) {
+        var toIndex = fromIndex + 1;
+
+        if (toIndex > this.product_array.length - 1) 
+          return;
+  
+        var element = this.product_array.find(({ id }) => id === eid);
+        this.product_array.splice(fromIndex, 1);
+        this.product_array.splice(toIndex, 0, element);
       },
 
       page_up: function(fromIndex, eid) {

@@ -127,7 +127,11 @@ switch ($method) {
         $gcp_name = "";
         $filename = "";
         
+        $order = [];
 
+        $od_name = "";
+        $od_type = "";
+       
         $items = [];
         $message = [];
 
@@ -153,6 +157,11 @@ switch ($method) {
                     "task_date" => $task_date,
                     "message" => $message,
                     "items" => $items,
+
+                    "order" => $order,
+
+                    "od_type" => $od_type,
+                    "od_name" => $od_name,
                     
                 );
 
@@ -160,6 +169,8 @@ switch ($method) {
                 $items = [];
                 $collaborator = [];
                 $assignee = [];
+
+                $order = [];
             }
 
             $task_id = $row['task_id'];
@@ -185,7 +196,13 @@ switch ($method) {
             $detail = $row['detail'];
             $task_date = $row['task_date'];
 
-            
+            $order = GetOrderInfo($task_id, $db);
+
+            if(count($order) > 0)
+            {
+                $od_name = $order[0]['od_name'];
+                $od_type = $order[0]['order_type'];
+            }
 
             if ($filename != "")
                 $items[] = array(
@@ -215,6 +232,11 @@ switch ($method) {
                 "task_date" => $task_date,
                 "message" => $message,
                 "items" => $items,
+
+                "order" => $order,
+
+                "od_type" => $od_type,
+                "od_name" => $od_name,
 
             );
         }
@@ -551,6 +573,31 @@ function GetMessage($task_id, $db, $uid)
 
     return $merged_results;
 }
+
+
+function GetOrderInfo($task_id, $db)
+{
+    $sql = "select id, od_name, order_type, serial_name
+            from od_main
+            where task_id = " . $task_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "od_name" => $row['od_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
 
 function GetGotIt($msg_id, $kind, $db)
 {

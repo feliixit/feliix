@@ -115,6 +115,9 @@ if (!isset($jwt)) {
 
         $total_info['back_total'] = number_format($total_info['back_total'], 2, '.', '');
 
+        // print
+        $product_array = GetProductItems($pages, $row['id'], $db);
+
         $merged_results[] = array(
             "id" => $id,
             "first_line" => $first_line,
@@ -142,6 +145,8 @@ if (!isset($jwt)) {
             "subtotal_novat_b" => $subtotal_novat_b,
             "subtotal_info_not_show_a" => $subtotal_info_not_show_a,
             "subtotal_info_not_show_b" => $subtotal_info_not_show_b,
+
+            "product_array" => $product_array,
         );
     }
 
@@ -234,7 +239,7 @@ function GetSubTotalNoVat($qid, $db)
     $total = 0;
 
     $query = "
-            select sum(qty * price * (1 - discount / 100)) amt from quotation_page_type_block
+            select sum(qty * price * (1 - discount / 100) * ratio) amt from quotation_page_type_block
             WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' )
     ";
 
@@ -259,7 +264,7 @@ function GetSubTotalNoVatA($qid, $db)
     $total = 0;
 
     $query = "
-            select sum(qty * price * (1 - discount / 100)) amt from quotation_page_type_block
+            select sum(qty * price * (1 - discount / 100) * ratio) amt from quotation_page_type_block
             WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'A')
     ";
 
@@ -284,7 +289,7 @@ function GetSubTotalNoVatB($qid, $db)
     $total = 0;
 
     $query = "
-            select sum(qty * price * (1 - discount / 100)) amt from quotation_page_type_block
+            select sum(qty * price * (1 - discount / 100) * ratio) amt from quotation_page_type_block
             WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '' and block_type = 'B')
     ";
 
@@ -308,7 +313,7 @@ function GetSubTotalNoVatNotShow($qid, $db)
     $total = 0;
 
     $query = "
-            select COALESCE(sum(qty * price * (1 - discount / 100)), 0) amt from quotation_page_type_block
+            select COALESCE(sum(qty * ratio * price * (1 - discount / 100)), 0) amt from quotation_page_type_block
             WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . " and not_show = '')
     ";
 
@@ -963,6 +968,7 @@ function GetBlocks($qid, $db){
         code,
         photo,
         qty,
+        ratio,
         price,
         discount,
         amount,
@@ -992,6 +998,7 @@ function GetBlocks($qid, $db){
         $code = $row['code'];
         $photo = $row['photo'];
         $qty = $row['qty'];
+        $ratio = $row['ratio'];
         $price = $row['price'];
         $num = $row['num'];
         $pid = $row['pid'];
@@ -1015,6 +1022,7 @@ function GetBlocks($qid, $db){
             "type" => $type,
             "url" => $url,
             "qty" => $qty,
+            "ratio" => $ratio,
             "num" => $num,
             "pid" => $pid,
             "price" => $price,
@@ -1030,4 +1038,146 @@ function GetBlocks($qid, $db){
     }
 
     return $merged_results;
+}
+
+
+function GetQuotationExport($q_id, $db)
+{
+    $items = "[]";
+
+    $query = "
+        SELECT items
+        FROM   quotation_export
+        WHERE  quotation_id = " . $q_id . "
+        AND `status` <> -1 
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($row !== false)
+    {
+        $items = $row['items'];
+    }
+
+    // json to php array
+    $items = json_decode($items, true);
+
+    return $items;
+
+}
+
+function GetProductItems($pages, $q_id, $db)
+{
+    $merged_results = [];
+
+    $cache_results = GetQuotationExport($q_id, $db);
+
+    foreach($pages as $page)
+    {
+        foreach($page['types'] as $type)
+        {
+            foreach($type['blocks'] as $row)
+            {
+            
+                $id = $row['id'];
+                $type_id = $row['type_id'];
+                $type = $row['type'];
+                $code = $row['code'];
+                $photo = $row['photo'];
+                $qty = $row['qty'];
+                $price = $row['price'];
+                $num = $row['num'];
+                $pid = $row['pid'];
+                if($pid == 0)
+                {
+                   // search project_category for product_id 
+                     $pid = GetProductId($code, $db);
+                }
+                $discount = $row['discount'];
+                $amount = $row['amount'];
+                $description = $row['desc'];
+                $v1 = $row['v1'];
+                $v2 = $row['v2'];
+                $v3 = $row['v3'];
+                $listing = $row['list'];
+            
+                $type = $photo == "" ? "" : "image";
+                $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+            
+                $merged_results[] = array(
+                    "id" => $id,
+                    "is_selected" => "",
+                    "type_id" => $type_id,
+                    "code" => $code,
+                    "type" => $type,
+                    "photo" => $photo,
+                    "type" => $type,
+                    "url" => $url,
+                    "qty" => $qty,
+                    "num" => $num,
+                    "pid" => $pid,
+                    "price" => $price,
+                    "discount" => $discount,
+                    "amount" => $amount,
+                    "desc" => $description,
+                    "v1" => $v1,
+                    "v2" => $v2,
+                    "v3" => $v3,
+                    "list" => $listing,
+                );
+                
+            }
+        }
+    }
+
+    $return_result = array();
+    foreach ($cache_results as $result)
+    {
+        // if result[id] is in merged_results, then remove it from merged_results
+        $index = array_search($result['id'], array_column($merged_results, 'id'));
+        if($index !== false)
+        {
+            $return_result[] = $merged_results[$index];
+        }
+    }
+
+    foreach ($merged_results as $result)
+    {
+        $index = array_search($result['id'], array_column($cache_results, 'id'));
+        if($index === false)
+        {
+            $return_result[] = $result;
+        }
+     
+    }
+
+    return $return_result;
+}
+
+function GetProductId($code, $db)
+{
+    $pid = 0;
+
+    $query = "
+        SELECT id
+        FROM   product_category
+        WHERE  code = '" . $code . "'
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($row !== false)
+    {
+        $pid = $row['id'];
+    }
+
+    return $pid;
 }

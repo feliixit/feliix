@@ -48,6 +48,9 @@ var app = new Vue({
     due_time: '',
     detail: '',
 
+    // order task list
+    order: '',
+    order_type: '',
 
     fileArray: [],
 
@@ -121,6 +124,8 @@ var app = new Vue({
     stage: '',
 
     special : '',
+
+    order_stage: false,
   },
 
   created() {
@@ -888,6 +893,11 @@ var app = new Vue({
             _this.project_id = res.data[0].project_id;
             _this.stage = res.data[0].stage;
             _this.special = res.data[0].special;
+            _this.category = res.data[0].category;
+
+            if(_this.stage == 'Order') {
+              _this.order_stage = true;
+            }
           },
           (err) => {
             alert(err.response);
@@ -1033,6 +1043,83 @@ var app = new Vue({
       }
     },
 
+    
+
+    task_del_o() {
+      if(this.task_id_to_del != 0)
+      {
+        let _this = this;
+
+        let order_id = this.project03_other_task.find(element => element.task_id == this.task_id_to_del).order[0].id;
+
+        Swal.fire({
+            title: "Delete",
+            text: "Are you sure to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+          }).then((result) => {
+            if (result.value) {
+              
+                _this.do_task_delete_o(_this.task_id_to_del, order_id); // <--- submit form programmatically
+              
+            } else {
+              // swal("Cancelled", "Your imaginary file is safe :)", "error");
+            }
+          });
+      }
+    },
+
+    
+    do_task_delete_o(task_id_to_del, order_id) {
+      var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+
+        form_Data.append('jwt', token);
+        form_Data.append('task_id_to_del', task_id_to_del);
+        form_Data.append('order_id', order_id);
+
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/project03_other_task_del_order',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            if(response.data['ret'] != 0)
+            {
+              _this.org_uid = _this.uid;
+              
+                Swal.fire({
+                  text: "Deleted",
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                })
+
+                _this.getProjectOtherTask(_this.stage_id);
+            }
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+
+            _this.getProjectOtherTask(_this.stage_id);
+        });
+
+        _this.task_clear_o();
+    },
+
+
     do_task_delete(task_id_to_del) {
       var token = localStorage.getItem('token');
         var form_Data = new FormData();
@@ -1146,6 +1233,22 @@ var app = new Vue({
         });
 
         _this.task_clear_r();
+    },
+
+    task_clear_o() {
+
+      this.detail = "";
+      this.order = "";
+      this.order_type = "";
+
+      document.getElementById('dialog_a1_o').classList.remove("focus");
+      document.getElementById('add_a1_o').classList.remove("show");
+    },
+
+    task_edit_clear_o() {
+
+      document.getElementById('dialog_red_edit_o').classList.remove("show");
+      document.getElementById('edit_red_o').classList.remove("focus");
     },
 
     task_clear() {
@@ -1347,6 +1450,90 @@ var app = new Vue({
       this.$refs['comment_task_r_' + task_id][0].value = "";
     },
 
+    task_create_o() {
+      let _this = this;
+
+      if (this.title.trim() == '') {
+        Swal.fire({
+          text: 'Please enter title!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.order.trim() == '') {
+        Swal.fire({
+          text: 'Please enter order name!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      if (this.due_date.trim() == '' && this.due_time.trim() != '') {
+        Swal.fire({
+          text: 'Please enter due date!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      form_Data.append('stage_id', this.stage_id);
+      form_Data.append('order', this.order.trim());
+      form_Data.append('order_type', this.order_type.trim());
+      form_Data.append('title', this.title.trim());
+      form_Data.append('priority', this.priority);
+      form_Data.append('assignee', Array.prototype.map.call(this.assignee, function(item) { return item.id; }).join(","));
+      form_Data.append('collaborator', Array.prototype.map.call(this.collaborator, function(item) { return item.id; }).join(",") );
+      form_Data.append('due_date', this.due_date.trim());
+      form_Data.append('due_time', this.due_time.trim());
+      form_Data.append('detail', this.detail.trim());
+      form_Data.append('category', this.category.trim());
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project03_other_task_order',
+        data: form_Data
+      })
+        .then(function (response) {
+          if (response.data['batch_id'] != 0) {
+            _this.task_upload(response.data['batch_id']);
+          }
+          else {
+            _this.task_clear_o();
+
+          }
+
+          if (_this.fileArray.length == 0) {
+            _this.getProjectOtherTask(_this.stage_id);
+            _this.task_clear_o();
+          }
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () { _this.task_clear_o() });
+    },
+
     task_create() {
       let _this = this;
 
@@ -1470,6 +1657,79 @@ var app = new Vue({
 
     },
 
+
+    task_edit_create_o() {
+      let _this = this;
+
+      if (this.task_id_to_load == 0) {
+        Swal.fire({
+          text: 'Please select a task to edit',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.record.due_date.trim() == '' && this.record.due_time.trim() != '') {
+        Swal.fire({
+          text: 'Please enter due date!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      form_Data.append('task_id', this.record.task_id);
+      form_Data.append('title', this.record.title.trim());
+      form_Data.append('priority', this.record.priority_id);
+      form_Data.append('status', this.record.task_status);
+      form_Data.append('assignee', Array.prototype.map.call(this.record.assignee, function(item) { return item.id; }).join(","));
+      form_Data.append('collaborator', Array.prototype.map.call(this.record.collaborator, function(item) { return item.id; }).join(","));
+      form_Data.append('due_date', this.record.due_date.trim());
+      form_Data.append('due_time', this.record.due_time.trim());
+      form_Data.append('detail', this.record.detail.trim());
+
+      form_Data.append('order', this.record.od_name.trim());
+      form_Data.append('order_type', this.record.od_type.trim());
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project03_other_task_edit_order',
+        data: form_Data
+      })
+        .then(function (response) {
+          if (response.data['batch_id'] != 0) {
+            _this.task_edit_upload(response.data['batch_id']);
+          }
+          else {
+            _this.task_edit_clear_o();
+
+          }
+
+          if (_this.editfileArray.length == 0) {
+            _this.getProjectOtherTask(_this.stage_id);
+            _this.task_edit_clear_o();
+          }
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () { _this.task_edit_clear_o() });
+    },
 
     task_edit_create() {
       let _this = this;

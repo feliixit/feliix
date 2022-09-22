@@ -9,7 +9,7 @@ include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 require_once '../vendor/autoload.php';
-
+include_once 'mail.php';
 
 use \Firebase\JWT\JWT;
 use Google\Cloud\Storage\StorageClient;
@@ -60,136 +60,142 @@ switch ($method) {
         $conf = new Conf();
 
         $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
-        $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
+        $od_id = (isset($_POST['od_id']) ?  $_POST['od_id'] : 0);
+        $block = (isset($_POST['block']) ?  $_POST['block'] : []);
 
-        $type_id = (isset($_POST['type_id']) ? $_POST['type_id'] : 0);
-        $block = (isset($_POST['block']) ? $_POST['block'] : []);
+        $item = (isset($_POST['item']) ?  $_POST['item'] : []);
+
+        $page = (isset($_POST['page']) ?  $_POST['page'] : 0);
+        $access2 = (isset($_POST['access2']) ? $_POST['access2'] : false);
 
         $block_array = json_decode($block,true);
+        $item_array = json_decode($item,true);
 
-        
+        $od_name = (isset($_POST['od_name']) ? $_POST['od_name'] : '');
+        $serial_name = (isset($_POST['serial_name']) ?  $_POST['serial_name'] : '');
+        $project_name = (isset($_POST['project_name']) ?  $_POST['project_name'] : '');
 
-        if ($id == 0) {
+        $confirm = "";
+    
+        if ($od_id == 0) {
             http_response_code(401);
             echo json_encode(array("message" => "Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Access denied."));
             die();
         }
 
-        $last_id = $id;
-    
-        // quotation_page
-        $query = "DELETE FROM quotation_page_type_block
-                    WHERE
-                    `quotation_id` = :quotation_id
-                    AND 
-                    `type_id` = :type_id";
-
-        // prepare the query
-        $stmt = $db->prepare($query);
-
-        // bind the values
-        $stmt->bindParam(':quotation_id', $last_id);
-        $stmt->bindParam(':type_id', $type_id);
 
         try {
-            // execute the query, also check if query was successful
-            if (!$stmt->execute()) {
-                $arr = $stmt->errorInfo();
-                error_log($arr[2]);
-                $db->rollback();
-                http_response_code(501);
-                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
-                die();
-            }
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            $db->rollback();
-            http_response_code(501);
-            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-            die();
-        }
-
-        try {
-            for($i=0 ; $i < count($block_array) ; $i++)
+            for($i=0; $i<count($block_array); $i++) 
             {
+                // get previous block confirm
+                $query = "select confirm from od_item where id = :id";
+                $stmt = $db->prepare($query);
+                $stmt->bindParam(':id', $block_array[$i]['id']);
+                $stmt->execute();
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $pre_confirm = $row['confirm'];
+
+                $confirm = (isset($block_array[$i]['confirm']) ?  $block_array[$i]['confirm'] : '');
+
+                // record pre_confirm
+                if($pre_confirm != $confirm && $confirm == 'W')
+                    PreserveConfirm($od_id, $pre_confirm, $user_id, $db);
+
                 // insert quotation_page_type_block
-                $query = "INSERT INTO quotation_page_type_block
-                SET
-                    `quotation_id` = :quotation_id,
-                    `type_id` = :type_id,
+                $query = "UPDATE od_item
+                    SET
+                    `sn` = :sn,
+                    `confirm` = :confirm,
+                    `brand` = :brand,
+                    `brand_other` = :brand_other, ";
+
+if($block_array[$i]['photo1'] == '')
+{
+    $query .= " `photo1` = '', ";
+}
+
+if($block_array[$i]['photo2'] == '')
+{
+    $query .= " `photo2` = '', ";
+}
+
+if($block_array[$i]['photo3'] == '')
+{
+    $query .= " `photo3` = '', ";
+}
+
+
+                $query .= "         
                     `code` = :code,
-                    `type` = :type,
+                    `brief` = :brief,
+                    `listing` = :listing,
                     `qty` = :qty,
-                    `ratio` = :ratio,
-                    `price` = :price,
-                    `discount` = :discount,
-                    `amount` = :amount,
-                    `description` = :description,
+                    `srp` = :srp,
+                    `date_needed` = :date_needed,
+                    `shipping_way` = :shipping_way,
+                    `shipping_number` = :shipping_number,
+                    `pid` = :pid,
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
-                    `listing` = :listing,
-                    `num` = :num,
-                    `pid` = :pid,
-                    `status` = 0,
-                    `create_id` = :create_id,
-                    `created_at` = now()";
+                    updated_id = :updated_id,
+                    updated_at = now()
+                    where id = :id
+                    ";
 
-                if($block_array[$i]['photo'] !== '')
-                {
-                    $query .= ", `photo` = :photo";
-                }
 
                 // prepare the query
                 $stmt = $db->prepare($query);
 
-                $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : 0;
-                $ratio = isset($block_array[$i]['ratio']) ? $block_array[$i]['ratio'] : 1.0;
-                $price = isset($block_array[$i]['price']) ? $block_array[$i]['price'] : 0;
-                $discount = isset($block_array[$i]['discount']) ? $block_array[$i]['discount'] : 0;
-                $amount = isset($block_array[$i]['amount']) ? $block_array[$i]['amount'] : 0;
-                $description = isset($block_array[$i]['desc']) ? $block_array[$i]['desc'] : '';
+                $id = isset($block_array[$i]['id']) ? $block_array[$i]['id'] : 0;
+                $sn = isset($block_array[$i]['sn']) ? $block_array[$i]['sn'] : 0;
+
+                $confirm = isset($block_array[$i]['confirm']) ? $block_array[$i]['confirm'] : '';
+                $brand = isset($block_array[$i]['brand']) ? $block_array[$i]['brand'] : '';
+                $brand_other = isset($block_array[$i]['brand_other']) ? $block_array[$i]['brand_other'] : '';
+                
+                $code = isset($block_array[$i]['code']) ? $block_array[$i]['code'] : '';
+                $brief = isset($block_array[$i]['brief']) ? $block_array[$i]['brief'] : '';
+                $listing = isset($block_array[$i]['listing']) ? $block_array[$i]['listing'] : '';
+
+                $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : '';
+                $srp = isset($block_array[$i]['srp']) ? $block_array[$i]['srp'] : '';
+                $date_needed = isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
+
+                $shipping_way = isset($block_array[$i]['shipping_way']) ? $block_array[$i]['shipping_way'] : '';
+                $shipping_number = isset($block_array[$i]['shipping_number']) ? $block_array[$i]['shipping_number'] : '';
+
+                $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : '';
 
                 $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
                 $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
                 $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
 
-                $listing = isset($block_array[$i]['list']) ? $block_array[$i]['list'] : '';
-                $num = isset($block_array[$i]['num']) ? $block_array[$i]['num'] : '';
-                $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
-
-                $qty == '' ? $qty = 0 : $qty = $qty;
-                $ratio == '' ? $ratio = 1.0 : $ratio = $ratio;
-                $price == '' ? $price = 0 : $price = $price;
-                $discount == '' ? $discount = 0 : $discount = $discount;
-                $amount == '' ? $amount = 0 : $amount = $amount;
-
                 // bind the values
-                $stmt->bindParam(':quotation_id', $last_id);
-                $stmt->bindParam(':type_id', $type_id);
-                $stmt->bindParam(':code', $block_array[$i]['code']);
-                $stmt->bindParam(':type', $block_array[$i]['type']);
+                $stmt->bindParam(':id', $id);
+                $stmt->bindParam(':sn', $sn);
+                $stmt->bindParam(':confirm', $confirm);
+                $stmt->bindParam(':brand', $brand);
+                $stmt->bindParam(':brand_other', $brand_other);
+    
+                $stmt->bindParam(':code', $code);
+                $stmt->bindParam(':brief', $brief);
+                $stmt->bindParam(':listing', $listing);
                 $stmt->bindParam(':qty', $qty);
-                $stmt->bindParam(':ratio', $ratio);
-                $stmt->bindParam(':price', $price);
-                $stmt->bindParam(':discount', $discount);
-                $stmt->bindParam(':amount', $amount);
-                $stmt->bindParam(':description', $description);
+                $stmt->bindParam(':srp', $srp);
+                $stmt->bindParam(':date_needed', $date_needed);
+
+                $stmt->bindParam(':shipping_way', $shipping_way);
+                $stmt->bindParam(':shipping_number', $shipping_number);
+
+                $stmt->bindParam(':pid', $pid);
+
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
-                $stmt->bindParam(':listing', $listing);
-                $stmt->bindParam(':num', $num);
-                $stmt->bindParam(':pid', $pid);
-                
-                $stmt->bindParam(':create_id', $user_id);
-                
-                if($block_array[$i]['photo'] !== '')
-                {
-                    $stmt->bindParam(':photo', $block_array[$i]['photo']);
-                }
-            
-                $block_id = 0;
+              
+                $stmt->bindParam(':updated_id', $user_id);
+               
                 try {
                     // execute the query, also check if query was successful
                     if ($stmt->execute()) {
@@ -212,53 +218,41 @@ switch ($method) {
 
                 $_id = $block_array[$i]['id'];
 
-                $batch_id = $block_id;
-                $batch_type = "block_image";
+                $batch_type = "od_item";
+                $batch_id = $_id;
 
-                $key = "block_image_" . $_id;
+                $key = "photo_1";
                 if (array_key_exists($key, $_FILES))
                 {
                     $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
                     if($update_name != "")
-                        UpdateImageNameVariation($update_name, $batch_id, $db);
+                        UpdateImageNameVariation("1", $update_name, $batch_id, $db);
                 }
 
-            }
+                $key = "photo_2";
+                if (array_key_exists($key, $_FILES))
+                {
+                    $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
+                    if($update_name != "")
+                        UpdateImageNameVariation("2", $update_name, $batch_id, $db);
+                }
 
-            // update quotation_page_type.real_amount
-            $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block GROUP BY type_id) as s
-                    SET p.real_amount = s.mysum
-                    WHERE p.id = s.type_id
-                    and p.quotation_id = :id
-                    and p.id = :type_id";
+                $key = "photo_3";
+                if (array_key_exists($key, $_FILES))
+                {
+                    $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
+                    if($update_name != "")
+                        UpdateImageNameVariation("3", $update_name, $batch_id, $db);
+                }
 
-            // prepare the query
-            $stmt = $db->prepare($query);
+                if($page == 3 && $access2 == 'true')
+                    order_notification04($user_name, 'access1,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', '', 'new_message_23', $item_array, $od_id);
 
-            $stmt->bindParam(':id', $last_id, PDO::PARAM_INT);
-            $stmt->bindParam(':type_id', $type_id, PDO::PARAM_INT);
-
-            // execute the query, also check if query was successful
-            try {
-            // execute the query, also check if query was successful
-            if (!$stmt->execute()) {
-                $arr = $stmt->errorInfo();
-                error_log($arr[2]);
-                $db->rollback();
-                http_response_code(501);
-                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
-                die();
-            }
-            } catch (Exception $e) {
-                error_log($e->getMessage());
-                $db->rollback();
-                http_response_code(501);
-                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-                die();
             }
 
             $db->commit();
 
+            
             http_response_code(200);
             echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
         } catch (Exception $e) {
@@ -271,7 +265,6 @@ switch ($method) {
         }
         break;
 }
-
 
 
 function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
@@ -384,10 +377,10 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
 }
 
 
-function UpdateImageNameVariation($upload_name, $batch_id, $db){
+function UpdateImageNameVariation($sn, $upload_name, $batch_id, $db){
     
-    $query = "update quotation_page_type_block
-    SET photo = :gcp_name where id=:id";
+    $query = "update od_item
+    SET photo" . $sn . " = :gcp_name where id=:id";
 
     // prepare the query
     $stmt = $db->prepare($query);
@@ -411,6 +404,57 @@ function UpdateImageNameVariation($upload_name, $batch_id, $db){
     }
     catch (Exception $e)
     {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
+}
+
+
+function PreserveConfirm($od_id, $pre_confirm, $user_id, $db){
+    
+    $comment = $pre_confirm;
+    $action = "change_confirm";
+    $items = '["' . $pre_confirm . '"]';
+
+    $query = "INSERT INTO od_process
+    SET
+        `od_id` = :od_id,
+        `comment` = :comment,
+        `action` = :action,
+        `items` = :items,
+        `status` = 0,
+        `create_id` = :create_id,
+        `created_at` =  now() ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':od_id', $od_id);
+    $stmt->bindParam(':comment', $comment);
+    $stmt->bindParam(':action', $action);
+    $stmt->bindParam(':items', $items);
+    $stmt->bindParam(':create_id', $user_id);
+
+
+    $last_id = 0;
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $last_id = $db->lastInsertId();
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
         error_log($e->getMessage());
         $db->rollback();
         http_response_code(501);

@@ -19,6 +19,14 @@ $payess6 = (isset($_POST['payess6']) ?  $_POST['payess6'] : '');
 $payess7 = (isset($_POST['payess7']) ?  $_POST['payess7'] : '');
 $payess8 = (isset($_POST['payess8']) ?  $_POST['payess8'] : '');
 
+$access1 = (isset($_POST['access1']) ?  $_POST['access1'] : '');
+$access2 = (isset($_POST['access2']) ?  $_POST['access2'] : '');
+$access3 = (isset($_POST['access3']) ?  $_POST['access3'] : '');
+$access4 = (isset($_POST['access4']) ?  $_POST['access4'] : '');
+$access5 = (isset($_POST['access5']) ?  $_POST['access5'] : '');
+$access6 = (isset($_POST['access6']) ?  $_POST['access6'] : '');
+$access7 = (isset($_POST['access7']) ?  $_POST['access7'] : '');
+
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -43,7 +51,7 @@ if (!isset($jwt)) {
     if ($action == 1) {
         //select all
         try {
-            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8 from access_control where id = 1";
+            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8, access1, access2, access3, access4, access5, access6, access7 from access_control where id = 1";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
@@ -68,7 +76,14 @@ if (!isset($jwt)) {
                             salary_mgt = :salary_mgt,
                             salary_slip_mgt = :salary_slip_mgt,
                             payess7 = :payess7,
-                            payess8 = :payess8
+                            payess8 = :payess8,
+                            access1 = :access1,
+                            access2 = :access2,
+                            access3 = :access3,
+                            access4 = :access4,
+                            access5 = :access5,
+                            access6 = :access6,
+                            access7 = :access7
                         where id = :id";
 
             // prepare the query
@@ -85,6 +100,14 @@ if (!isset($jwt)) {
             $payess6 = htmlspecialchars(strip_tags($payess6));
             $payess7 = htmlspecialchars(strip_tags($payess7));
             $payess8 = htmlspecialchars(strip_tags($payess8));
+            $access1 = htmlspecialchars(strip_tags($access1));
+            $access2 = htmlspecialchars(strip_tags($access2));
+            $access3 = htmlspecialchars(strip_tags($access3));
+            $access4 = htmlspecialchars(strip_tags($access4));
+            $access5 = htmlspecialchars(strip_tags($access5));
+            $access6 = htmlspecialchars(strip_tags($access6));
+            $access7 = htmlspecialchars(strip_tags($access7));
+
 
             // bind the values
             $stmt->bindParam(':id', $id);
@@ -96,6 +119,13 @@ if (!isset($jwt)) {
             $stmt->bindParam(':salary_slip_mgt', $payess6);
             $stmt->bindParam(':payess7', $payess7);
             $stmt->bindParam(':payess8', $payess8);
+            $stmt->bindParam(':access1', $access1);
+            $stmt->bindParam(':access2', $access2);
+            $stmt->bindParam(':access3', $access3);
+            $stmt->bindParam(':access4', $access4);
+            $stmt->bindParam(':access5', $access5);
+            $stmt->bindParam(':access6', $access6);
+            $stmt->bindParam(':access7', $access7);
 
             try {
                 // execute the query, also check if query was successful

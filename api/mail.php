@@ -146,11 +146,11 @@ function batch_performance_evaluate_adm_notify_mail($s_date, $e_date, $dead_date
     $mail->Subject = $title;
     $content =  "<p>Dear " . $admin_name . ",</p>";
     $content = $content . "<p>Deadline of the below performance review item was " . $dead_date . ". Please fill out your performance review form as soon as possible. Following are the details:</p>";
-    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
-    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
-    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
-    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
-    $content = $content . "<p>Review Period:" . $s_date . " ~ " . $e_date . "</p>";
+    $content = $content . "<p>Employee Name: " . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position: " . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department: " . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor: " . $admin_name . "</p>";
+    $content = $content . "<p>Review Period: " . $s_date . " ~ " . $e_date . "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -227,11 +227,11 @@ function batch_performance_evaluate_adm_notify_mail_single($s_date, $dead_date, 
     $mail->Subject = $title;
     $content =  "<p>Dear " . $admin_name . ",</p>";
     $content = $content . "<p>Deadline of the below performance review item was " . $dead_date . ". Please fill out your performance review form as soon as possible. Following are the details:</p>";
-    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
-    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
-    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
-    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
-    $content = $content . "<p>Review Period:" . $s_date . "</p>";
+    $content = $content . "<p>Employee Name: " . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position: " . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department: " . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor: " . $admin_name . "</p>";
+    $content = $content . "<p>Review Period: " . $s_date . "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -308,11 +308,11 @@ function batch_performance_evaluate_emp_notify_mail($s_date, $e_date, $dead_date
     $mail->Subject = $title;
     $content =  "<p>Dear " . $emp_name . ",</p>";
     $content = $content . "<p>Deadline of the below performance review item was " . $dead_date . ". Please fill out your performance review form as soon as possible. Following are the details:</p>";
-    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
-    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
-    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
-    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
-    $content = $content . "<p>Review Period:" . $s_date . " ~ " . $e_date . "</p>";
+    $content = $content . "<p>Employee Name: " . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position: " . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department: " . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor: " . $admin_name . "</p>";
+    $content = $content . "<p>Review Period: " . $s_date . " ~ " . $e_date . "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -389,11 +389,11 @@ function batch_performance_evaluate_emp_notify_mail_single($s_date, $dead_date, 
     $mail->Subject = $title;
     $content =  "<p>Dear " . $emp_name . ",</p>";
     $content = $content . "<p>Deadline of the below performance review item was " . $dead_date . ". Please fill out your performance review form as soon as possible. Following are the details:</p>";
-    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
-    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
-    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
-    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
-    $content = $content . "<p>Review Period:" . $s_date  . "</p>";
+    $content = $content . "<p>Employee Name: " . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position: " . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department: " . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor: " . $admin_name . "</p>";
+    $content = $content . "<p>Review Period: " . $s_date  . "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -516,11 +516,11 @@ function send_review_mail_adm($s_date, $e_date, $adm_id, $emp_id, $dead_date){
     $content = $content . "<p> </p>";
     $content = $content . "<p>Following are the details:</p>";
     $content = $content . "<p> </p>";
-    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
-    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
-    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
-    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
-    $content = $content . "<p>Review Period:" . $s_date . " ~ " . $e_date . "</p>";
+    $content = $content . "<p>Employee Name: " . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position: " . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department: " . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor: " . $admin_name . "</p>";
+    $content = $content . "<p>Review Period: " . $s_date . " ~ " . $e_date . "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -593,11 +593,11 @@ function send_review_mail_adm_single($s_date, $adm_id, $emp_id, $dead_date){
     $content = $content . "<p> </p>";
     $content = $content . "<p>Following are the details:</p>";
     $content = $content . "<p> </p>";
-    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
-    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
-    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
-    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
-    $content = $content . "<p>Review Period:" . $s_date .  "</p>";
+    $content = $content . "<p>Employee Name: " . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position: " . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department: " . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor: " . $admin_name . "</p>";
+    $content = $content . "<p>Review Period: " . $s_date .  "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -671,11 +671,11 @@ function send_review_mail($s_date, $e_date, $adm_id, $emp_id, $dead_date){
     $content = $content . "<p> </p>";
     $content = $content . "<p>Following are the details:</p>";
     $content = $content . "<p> </p>";
-    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
-    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
-    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
-    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
-    $content = $content . "<p>Review Period:" . $s_date . " ~ " . $e_date . "</p>";
+    $content = $content . "<p>Employee Name: " . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position: " . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department: " . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor: " . $admin_name . "</p>";
+    $content = $content . "<p>Review Period: " . $s_date . " ~ " . $e_date . "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -749,11 +749,11 @@ function send_review_mail_single($s_date, $adm_id, $emp_id, $dead_date){
     $content = $content . "<p> </p>";
     $content = $content . "<p>Following are the details:</p>";
     $content = $content . "<p> </p>";
-    $content = $content . "<p>Employee Name:" . $emp_name . "</p>";
-    $content = $content . "<p>Employee Position:" . $emp_title . "</p>";
-    $content = $content . "<p>Employee Department:" . $emp_department . "</p>";
-    $content = $content . "<p>Supervisor:" . $admin_name . "</p>";
-    $content = $content . "<p>Review Period:" . $s_date  . "</p>";
+    $content = $content . "<p>Employee Name: " . $emp_name . "</p>";
+    $content = $content . "<p>Employee Position: " . $emp_title . "</p>";
+    $content = $content . "<p>Employee Department: " . $emp_department . "</p>";
+    $content = $content . "<p>Supervisor: " . $admin_name . "</p>";
+    $content = $content . "<p>Review Period: " . $s_date  . "</p>";
     
     $content = $content . "<p> </p>";
 
@@ -930,7 +930,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
                                 </eng>
                             </td>
                             <td style="background-color: #FDB72F44; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
-    $content = $content . " Checked:" . $status . " ";
+    $content = $content . " Checked: " . $status . " ";
 
     $content = $content . '</td>
                         </tr>
@@ -1074,7 +1074,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
                     </body>
                     </html>';
 /*
-    $content = $content . "<p>Remark:" . $remark . "</p>";
+    $content = $content . "<p>Remark: " . $remark . "</p>";
 
 
     $content = $content . "<p>Status: Checked: " . $status . "</p>";
@@ -1083,15 +1083,15 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
     $content = $content . "<p>Amount of Receiving Payment: " . number_format($amount) . "</p>";
     
-    $content = $content . "<p>Project Name:" . $projectname . "</p>";
-    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
-    $content = $content . "<p>Submitter:" . $leaver . "</p>";
-    $content = $content . "<p>Checked:" . $status . "</p>";
-    $content = $content . "<p>Remark:" . $remark . "</p>";
+    $content = $content . "<p>Project Name: " . $projectname . "</p>";
+    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+    $content = $content . "<p>Submitter: " . $leaver . "</p>";
+    $content = $content . "<p>Checked: " . $status . "</p>";
+    $content = $content . "<p>Remark: " . $remark . "</p>";
     
 
     if($reason != "")
-        $content = $content . "<p>Additional Remark:" . $reason . "</p>";
+        $content = $content . "<p>Additional Remark: " . $reason . "</p>";
 
     $content = $content . "<p> </p>";
 
@@ -1158,23 +1158,23 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $content =  "<p>Dear " . $name . ",</p>";
     $content = $content . "<p>Glen has checked downpayment proof, Following are the details:</p>";
 
-    $content = $content . "<p>Project Name:" . $projectname . "</p>";
-    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
-    $content = $content . "<p>Submitter:" . $name . "</p>";
-    $content = $content . "<p>Remark:" . $remark . "</p>";
+    $content = $content . "<p>Project Name: " . $projectname . "</p>";
+    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+    $content = $content . "<p>Submitter: " . $name . "</p>";
+    $content = $content . "<p>Remark: " . $remark . "</p>";
 
 
     $content = $content . "<p>Status: Checked: " . $status . "</p>";
     /*
-    $content = $content . "<p>Project Name:" . $projectname . "</p>";
-    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
-    $content = $content . "<p>Submitter:" . $leaver . "</p>";
-    $content = $content . "<p>Checked:" . $status . "</p>";
-    $content = $content . "<p>Remark:" . $remark . "</p>";
+    $content = $content . "<p>Project Name: " . $projectname . "</p>";
+    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+    $content = $content . "<p>Submitter: " . $leaver . "</p>";
+    $content = $content . "<p>Checked: " . $status . "</p>";
+    $content = $content . "<p>Remark: " . $remark . "</p>";
     */
 
     if($reason != "")
-        $content = $content . "<p>Additional Remark:" . $reason . "</p>";
+        $content = $content . "<p>Additional Remark: " . $reason . "</p>";
 
     $content = $content . "<p> </p>";
 
@@ -1428,10 +1428,10 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $content = $content . "<p>" . $leaver . " has applied for downpayment proof, Following are the details:</p>";
     $content = $content . "<p> </p>";
 
-    $content = $content . "<p>Project Name:" . $projectname . "</p>";
-    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
-    $content = $content . "<p>Submitter:" . $leaver . "</p>";
-    $content = $content . "<p>Remark:" . $remark . "</p>";
+    $content = $content . "<p>Project Name: " . $projectname . "</p>";
+    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+    $content = $content . "<p>Submitter: " . $leaver . "</p>";
+    $content = $content . "<p>Remark: " . $remark . "</p>";
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to review the downpayment proof.</p>";
@@ -1481,14 +1481,14 @@ function sendMail($name, $email1, $appove_hash, $reject_hash, $leave_info, $leav
     $content =  "<p>Dear " . $name . ",</p>";
     $content = $content . "<p>" . $leaver . " has applied for Leave, Following are the details:</p>";
     $content = $content . "<p> </p>";
-    $content = $content . "<p>Applicant:" . $leaver . "</p>";
-    $content = $content . "<p>Department:" . $department . "</p>";
-    $content = $content . "<p>Applying Time:" . $app_time . "</p>";
-    $content = $content . "<p>Leave Type:" . $leave_type . "</p>";
-    $content = $content . "<p>Starting Time:" . $start_time . "</p>";
-    $content = $content . "<p>Ending Time:" . $end_time . "</p>";
-    $content = $content . "<p>Leave Length:" . $leave_length . "</p>";
-    $content = $content . "<p>Reason:" . $reason . "</p>";
+    $content = $content . "<p>Applicant: " . $leaver . "</p>";
+    $content = $content . "<p>Department: " . $department . "</p>";
+    $content = $content . "<p>Applying Time: " . $app_time . "</p>";
+    $content = $content . "<p>Leave Type: " . $leave_type . "</p>";
+    $content = $content . "<p>Starting Time: " . $start_time . "</p>";
+    $content = $content . "<p>Ending Time: " . $end_time . "</p>";
+    $content = $content . "<p>Leave Length: " . $leave_length . "</p>";
+    $content = $content . "<p>Reason: " . $reason . "</p>";
     if($imgurl != "")
         $content = $content . "<a href='" . $conf::$mail_ip . "/img/" . $imgurl . "'>Certificate of Diagnosis</a>";
     $content = $content . "<p> </p>";
@@ -1552,13 +1552,13 @@ function send_schedule_notify_mail($last_id, $project, $creator, $_date, $_time,
     $mail->Subject = "[Schedule Notification] " . $project . " was created";
     $content =  "<p>Dear all,</p>";
     $content = $content . "<p>A new schedule was created and needs you to follow. Below is the details:</p>";
-    $content = $content . "<p>Project:" . $project . "</p>";
-    $content = $content . "<p>Creator:" . $creator . "</p>";
-    $content = $content . "<p>Date:" . $_date . "</p>";
-    $content = $content . "<p>Time:" . $_time .  "</p>";
-    $content = $content . "<p>Sales Executive:" . $sales_executive . "</p>";
-    $content = $content . "<p>Project-in-charge:" . $project_in_charge . "</p>";
-    $content = $content . "<p>Relevant Persons:" . $relevants . "</p>";
+    $content = $content . "<p>Project: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date: " . $_date . "</p>";
+    $content = $content . "<p>Time: " . $_time .  "</p>";
+    $content = $content . "<p>Sales Executive: " . $sales_executive . "</p>";
+    $content = $content . "<p>Project-in-charge: " . $project_in_charge . "</p>";
+    $content = $content . "<p>Relevant Persons: " . $relevants . "</p>";
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
@@ -1628,14 +1628,14 @@ function send_schedule_edit_mail($last_id, $project, $creator, $_date, $_time, $
     $mail->Subject = "[Schedule Notification] " . $project . " was revised";
     $content =  "<p>Dear all,</p>";
     $content = $content . "<p>A schedule was revised and needs you to follow. Below is the details:</p>";
-    $content = $content . "<p>Project:" . $project . "</p>";
-    $content = $content . "<p>Creator:" . $creator . "</p>";
-    $content = $content . "<p>Reviser:" . $updated_by . "</p>";
-    $content = $content . "<p>Date:" . $_date . "</p>";
-    $content = $content . "<p>Time:" . $_time .  "</p>";
-    $content = $content . "<p>Sales Executive:" . $sales_executive . "</p>";
-    $content = $content . "<p>Project-in-charge:" . $project_in_charge . "</p>";
-    $content = $content . "<p>Relevant Persons:" . $relevants . "</p>";
+    $content = $content . "<p>Project: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Reviser: " . $updated_by . "</p>";
+    $content = $content . "<p>Date: " . $_date . "</p>";
+    $content = $content . "<p>Time: " . $_time .  "</p>";
+    $content = $content . "<p>Sales Executive: " . $sales_executive . "</p>";
+    $content = $content . "<p>Project-in-charge: " . $project_in_charge . "</p>";
+    $content = $content . "<p>Relevant Persons: " . $relevants . "</p>";
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
@@ -1693,14 +1693,14 @@ function send_schedule_edit_goodby_mail($last_id, $project, $creator, $_date, $_
     $mail->Subject = "[Schedule Notification] " . $project . " was revised";
     $content =  "<p>Dear all,</p>";
     $content = $content . "<p>You were removed from relevant persons of Schedule " . $project . ". Below is the details of Schedule " . $project . ":</p>";
-    $content = $content . "<p>Project:" . $project . "</p>";
-    $content = $content . "<p>Creator:" . $creator . "</p>";
-    $content = $content . "<p>Reviser:" . $updated_by . "</p>";
-    $content = $content . "<p>Date:" . $_date . "</p>";
-    $content = $content . "<p>Time:" . $_time .  "</p>";
-    $content = $content . "<p>Sales Executive:" . $sales_executive . "</p>";
-    $content = $content . "<p>Project-in-charge:" . $project_in_charge . "</p>";
-    $content = $content . "<p>Relevant Persons:" . $relevants . "</p>";
+    $content = $content . "<p>Project: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Reviser: " . $updated_by . "</p>";
+    $content = $content . "<p>Date: " . $_date . "</p>";
+    $content = $content . "<p>Time: " . $_time .  "</p>";
+    $content = $content . "<p>Sales Executive: " . $sales_executive . "</p>";
+    $content = $content . "<p>Project-in-charge: " . $project_in_charge . "</p>";
+    $content = $content . "<p>Relevant Persons: " . $relevants . "</p>";
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
@@ -1770,14 +1770,14 @@ function send_schedule_del_mail($last_id, $project, $creator, $_date, $_time, $s
     $mail->Subject = "[Schedule Notification] " . $project . " was deleted";
     $content =  "<p>Dear all,</p>";
     $content = $content . "<p>A existing task was deleted. Below is the details:</p>";
-    $content = $content . "<p>Project:" . $project . "</p>";
-    $content = $content . "<p>Creator:" . $creator . "</p>";
-    $content = $content . "<p>Eraser:" . $updated_by . "</p>";
-    $content = $content . "<p>Date:" . $_date . "</p>";
-    $content = $content . "<p>Time:" . $_time .  "</p>";
-    $content = $content . "<p>Sales Executive:" . $sales_executive . "</p>";
-    $content = $content . "<p>Project-in-charge:" . $project_in_charge . "</p>";
-    $content = $content . "<p>Relevant Persons:" . $relevants . "</p>";
+    $content = $content . "<p>Project: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Eraser: " . $updated_by . "</p>";
+    $content = $content . "<p>Date: " . $_date . "</p>";
+    $content = $content . "<p>Time: " . $_time .  "</p>";
+    $content = $content . "<p>Sales Executive: " . $sales_executive . "</p>";
+    $content = $content . "<p>Project-in-charge: " . $project_in_charge . "</p>";
+    $content = $content . "<p>Relevant Persons: " . $relevants . "</p>";
 
     $content = $content . "<p></p>";
 
@@ -1825,18 +1825,18 @@ function send_meeting_notify_mail($name, $email1, $subject, $creator, $attendee,
     $mail->Subject = "Notification: New Meeting from " . $creator;
     $content =  "<p>Dear " . $name . ",</p>";
     $content = $content . "<p>" . $creator . " created a meeting. Following are the details:</p>";
-    $content = $content . "<p>Subject:" . $subject . "</p>";
-    $content = $content . "<p>Creator:" . $creator . "</p>";
-    $content = $content . "<p>Attendee:" . $attendee . "</p>";
-    $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
-    $content = $content . "<p>Location:" . $location . "</p>";
-    $content = $content . "<p>Content:" . $detail . "</p>";
+    $content = $content . "<p>Subject: " . $subject . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Attendee: " . $attendee . "</p>";
+    $content = $content . "<p>Time: " . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Location: " . $location . "</p>";
+    $content = $content . "<p>Content: " . $detail . "</p>";
     /*
-    $content = $content . "<p>Project Name:" . $projectname . "</p>";
-    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
-    $content = $content . "<p>Submitter:" . $leaver . "</p>";
-    $content = $content . "<p>Checked:" . $status . "</p>";
-    $content = $content . "<p>Remark:" . $remark . "</p>";
+    $content = $content . "<p>Project Name: " . $projectname . "</p>";
+    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+    $content = $content . "<p>Submitter: " . $leaver . "</p>";
+    $content = $content . "<p>Checked: " . $status . "</p>";
+    $content = $content . "<p>Remark: " . $remark . "</p>";
     */
 
     $content = $content . "<p> </p>";
@@ -1887,18 +1887,18 @@ function send_meeting_modified_mail($name, $email1, $subject, $creator, $attende
     $mail->Subject = "Notification: Meeting Info Changed by " . $creator;
     $content =  "<p>Dear " . $name . ",</p>";
     $content = $content . "<p>" . $creator . " changed the original info of the meeting. Following are the details after change:</p>";
-    $content = $content . "<p>Subject:" . $subject . "</p>";
-    $content = $content . "<p>Creator:" . $creator . "</p>";
-    $content = $content . "<p>Attendee:" . $attendee . "</p>";
-    $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
-    $content = $content . "<p>Location:" . $location . "</p>";
-    $content = $content . "<p>Content:" . $detail . "</p>";
+    $content = $content . "<p>Subject: " . $subject . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Attendee: " . $attendee . "</p>";
+    $content = $content . "<p>Time: " . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Location: " . $location . "</p>";
+    $content = $content . "<p>Content: " . $detail . "</p>";
     /*
-    $content = $content . "<p>Project Name:" . $projectname . "</p>";
-    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
-    $content = $content . "<p>Submitter:" . $leaver . "</p>";
-    $content = $content . "<p>Checked:" . $status . "</p>";
-    $content = $content . "<p>Remark:" . $remark . "</p>";
+    $content = $content . "<p>Project Name: " . $projectname . "</p>";
+    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+    $content = $content . "<p>Submitter: " . $leaver . "</p>";
+    $content = $content . "<p>Checked: " . $status . "</p>";
+    $content = $content . "<p>Remark: " . $remark . "</p>";
     */
 
     $content = $content . "<p> </p>";
@@ -1949,18 +1949,18 @@ function send_meeting_delete_mail($name, $email1, $subject, $creator, $attendee,
     $mail->Subject = "Notification: Meeting Deleted by " . $creator;
     $content =  "<p>Dear " . $name . ",</p>";
     $content = $content . "<p>" . $creator . " deleted the meeting. Following are the details before deletion:</p>";
-    $content = $content . "<p>Subject:" . $subject . "</p>";
-    $content = $content . "<p>Creator:" . $creator . "</p>";
-    $content = $content . "<p>Attendee:" . $attendee . "</p>";
-    $content = $content . "<p>Time:" . $start_time . " - " . $end_time . "</p>";
-    $content = $content . "<p>Location:" . $location . "</p>";
-    $content = $content . "<p>Content:" . $detail . "</p>";
+    $content = $content . "<p>Subject: " . $subject . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Attendee: " . $attendee . "</p>";
+    $content = $content . "<p>Time: " . $start_time . " - " . $end_time . "</p>";
+    $content = $content . "<p>Location: " . $location . "</p>";
+    $content = $content . "<p>Content: " . $detail . "</p>";
     /*
-    $content = $content . "<p>Project Name:" . $projectname . "</p>";
-    $content = $content . "<p>Submission Time:" . $subtime . "</p>";
-    $content = $content . "<p>Submitter:" . $leaver . "</p>";
-    $content = $content . "<p>Checked:" . $status . "</p>";
-    $content = $content . "<p>Remark:" . $remark . "</p>";
+    $content = $content . "<p>Project Name: " . $projectname . "</p>";
+    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+    $content = $content . "<p>Submitter: " . $leaver . "</p>";
+    $content = $content . "<p>Checked: " . $status . "</p>";
+    $content = $content . "<p>Remark: " . $remark . "</p>";
     */
 
     $content = $content . "<p> </p>";
@@ -2037,15 +2037,15 @@ function void_expense_mail($request_no, $applicant, $user_name, $user_email, $de
     $mail->Subject = $title;
     $content =  "<p>Dear " . $user_name . ",</p>";
     $content = $content . $conten1;
-    $content = $content . "<p>Request No.:" . $request_no . "</p>";
-    $content = $content . "<p>Applicant:" . $applicant . "</p>";
-    $content = $content . "<p>Department:" . $department . "</p>";
-    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
-    $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
-    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
-    $content = $content . "<p>Voiding Reason:" . $reason . "</p>";
+    $content = $content . "<p>Request No.: " . $request_no . "</p>";
+    $content = $content . "<p>Applicant: " . $applicant . "</p>";
+    $content = $content . "<p>Department: " . $department . "</p>";
+    $content = $content . "<p>Application Time: " . $ap_time . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name1 . "</p>";
+    $content = $content . "<p>Reason: " . $project_name . "</p>";
+    $content = $content . "<p>Date Needed: " . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested: " . $total_amount . "</p>";
+    $content = $content . "<p>Voiding Reason: " . $reason . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . $tab;
     $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
@@ -2133,15 +2133,15 @@ function reject_expense_mail($request_no, $user_name, $requestor, $requestor_ema
     $mail->Subject = $title;
     $content =  "<p>Dear " . $requestor . ",</p>";
     $content = $content . $conten1;
-    $content = $content . "<p>Request No.:" . $request_no . "</p>";
-    $content = $content . "<p>Applicant:" . $user_name . "</p>";
-    $content = $content . "<p>Department:" . $department . "</p>";
-    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
-    $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
-    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
-    $content = $content . "<p>Rejection Reason:" . $reason . "</p>";
+    $content = $content . "<p>Request No.: " . $request_no . "</p>";
+    $content = $content . "<p>Applicant: " . $user_name . "</p>";
+    $content = $content . "<p>Department: " . $department . "</p>";
+    $content = $content . "<p>Application Time: " . $ap_time . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name1 . "</p>";
+    $content = $content . "<p>Reason: " . $project_name . "</p>";
+    $content = $content . "<p>Date Needed: " . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested: " . $total_amount . "</p>";
+    $content = $content . "<p>Rejection Reason: " . $reason . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . $tab;
     $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
@@ -2218,18 +2218,18 @@ function send_liquidate_mail($request_no,
     $mail->Subject = $title;
     $content =  "<p>Dear " . $requestor . ",</p>";
     $content = $content . "<p>An expense application is waiting for you to " . $action . ". Following are the details:</p>";
-    $content = $content . "<p>Request No.:" . $request_no . "</p>";
-    $content = $content . "<p>Applicant:" . $applicant . "</p>";
-    $content = $content . "<p>Department:" . $department . "</p>";
-    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
-    $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
-    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
-    $content = $content . "<p>Date Released:" . $date_release . "</p>";
-    $content = $content . "<p>Date Liquidated:" . $date_liquidate . "</p>";
-    $content = $content . "<p>Amount Liquidated:" . $liquidate_amount . "</p>";
-    $content = $content . "<p>Remarks:" . $remarks . "</p>";
+    $content = $content . "<p>Request No.: " . $request_no . "</p>";
+    $content = $content . "<p>Applicant: " . $applicant . "</p>";
+    $content = $content . "<p>Department: " . $department . "</p>";
+    $content = $content . "<p>Application Time: " . $ap_time . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name1 . "</p>";
+    $content = $content . "<p>Reason: " . $project_name . "</p>";
+    $content = $content . "<p>Date Needed: " . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested: " . $total_amount . "</p>";
+    $content = $content . "<p>Date Released: " . $date_release . "</p>";
+    $content = $content . "<p>Date Liquidated: " . $date_liquidate . "</p>";
+    $content = $content . "<p>Amount Liquidated: " . $liquidate_amount . "</p>";
+    $content = $content . "<p>Remarks: " . $remarks . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please log on to Feliix >> Admin Section >> Expense Review >> Tab " . $tab . " to view the expense application.</p>";
     $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
@@ -2315,14 +2315,14 @@ function send_expense_mail($request_no,  $applicant, $requestor, $requestor_emai
     $mail->Subject = $title;
     $content =  "<p>Dear " . $requestor . ",</p>";
     $content = $content . "<p>An expense application is waiting for you to " . $action . ". Following are the details:</p>";
-    $content = $content . "<p>Request No.:" . $request_no . "</p>";
-    $content = $content . "<p>Applicant:" . $applicant . "</p>";
-    $content = $content . "<p>Department:" . $department . "</p>";
-    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
-    $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
-    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
+    $content = $content . "<p>Request No.: " . $request_no . "</p>";
+    $content = $content . "<p>Applicant: " . $applicant . "</p>";
+    $content = $content . "<p>Department: " . $department . "</p>";
+    $content = $content . "<p>Application Time: " . $ap_time . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name1 . "</p>";
+    $content = $content . "<p>Reason: " . $project_name . "</p>";
+    $content = $content . "<p>Date Needed: " . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested: " . $total_amount . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please log on to Feliix >> Admin Section >> Expense Review >> Tab " . $tab . " to view the expense application.</p>";
     $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
@@ -2378,15 +2378,15 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
     $mail->Subject = $title;
     $content =  "<p>Dear " . $user_name . ",</p>";
     $content = $content . "<p>An expense application is waiting for you to liquidate. Following are the details:</p>";
-    $content = $content . "<p>Request No.:" . $request_no . "</p>";
-    $content = $content . "<p>Applicant:" . $user_name . "</p>";
-    $content = $content . "<p>Department:" . $department . "</p>";
-    $content = $content . "<p>Application Time:" . $ap_time . "</p>";
-    $content = $content . "<p>Project Name:" . $project_name1 . "</p>";
-    $content = $content . "<p>Reason:" . $project_name . "</p>";
-    $content = $content . "<p>Date Needed:" . $date_request . "</p>";
-    $content = $content . "<p>Total Amount Requested:" . $total_amount . "</p>";
-    $content = $content . "<p>Date Released:" . $date_release . "</p>";
+    $content = $content . "<p>Request No.: " . $request_no . "</p>";
+    $content = $content . "<p>Applicant: " . $user_name . "</p>";
+    $content = $content . "<p>Department: " . $department . "</p>";
+    $content = $content . "<p>Application Time: " . $ap_time . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name1 . "</p>";
+    $content = $content . "<p>Reason: " . $project_name . "</p>";
+    $content = $content . "<p>Date Needed: " . $date_request . "</p>";
+    $content = $content . "<p>Total Amount Requested: " . $total_amount . "</p>";
+    $content = $content . "<p>Date Released: " . $date_release . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please log on to Feliix >> Payment Request/Claim >> Expense Apply/Liquidate >> Tab Liquidate to view the expense application.</p>";
     $content = $content . "<p>URL: https://feliix.myvnc.com/</p>";
@@ -2506,22 +2506,22 @@ function task_notify_admin_c($request_type,  $project_name, $task_name, $task_st
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
 
     if($_revisor != "")
-        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+        $content = $content . "<p>Reviser: " . $_revisor . "</p>";
 
     if($_erasor != "")
-        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+        $content = $content . "<p>Eraser: " . $_erasor . "</p>";
 
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Created at:" . $created_at . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project03_client_v2?sid=" . $stage_id . "</p>";
@@ -2641,21 +2641,21 @@ function task_notify_admin_d($request_type, $task_status, $task_name, $stages_st
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
 
     if($_revisor != "")
-        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+        $content = $content . "<p>Reviser: " . $_revisor . "</p>";
 
     if($_erasor != "")
-        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+        $content = $content . "<p>Eraser: " . $_erasor . "</p>";
 
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Created at:" . $created_at . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_DS?sid=" . $stage_id . "</p>";
@@ -2775,21 +2775,21 @@ function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_s
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
 
     if($_revisor != "")
-        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+        $content = $content . "<p>Reviser: " . $_revisor . "</p>";
 
     if($_erasor != "")
-        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+        $content = $content . "<p>Eraser: " . $_erasor . "</p>";
 
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Created at:" . $created_at . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_SLS?sid=" . $stage_id . "</p>";
@@ -2938,21 +2938,21 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
 
     if($_revisor != "")
-        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+        $content = $content . "<p>Reviser: " . $_revisor . "</p>";
 
     if($_erasor != "")
-        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+        $content = $content . "<p>Eraser: " . $_erasor . "</p>";
 
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Created at:" . $created_at . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_SVC?sid=" . $stage_id . "</p>";
@@ -3072,21 +3072,21 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
 
     if($_revisor != "")
-        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+        $content = $content . "<p>Reviser: " . $_revisor . "</p>";
 
     if($_erasor != "")
-        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+        $content = $content . "<p>Eraser: " . $_erasor . "</p>";
 
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Created at:" . $created_at . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_OS?sid=" . $stage_id . "</p>";
@@ -3206,21 +3206,21 @@ function task_notify_admin_l($request_type, $task_status, $task_name, $stages_st
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
 
     if($_revisor != "")
-        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+        $content = $content . "<p>Reviser: " . $_revisor . "</p>";
 
     if($_erasor != "")
-        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+        $content = $content . "<p>Eraser: " . $_erasor . "</p>";
 
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Created at:" . $created_at . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_LT?sid=" . $stage_id . "</p>";
@@ -3302,10 +3302,10 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . '<p>Stage "' . $stage_name . '" was closed in Project "' . $project_name . '" by ' . $modify_name . '. Following are the details:</p>';
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stage_name . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stage_name . "</p>";
     $content = $content . "<p>Status of Stage: Close</p>";
-    $content = $content . "<p>Stage Creator:" . $stage_creator_name . " at " . $stage_create_at . "</p>";
+    $content = $content . "<p>Stage Creator: " . $stage_creator_name . " at " . $stage_create_at . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project02?p=" . $project_id . "</p>";
@@ -3373,10 +3373,10 @@ function stage_order_close_notify($project_creator_id, $project_id, $project_nam
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . '<p>Stage "' . $stage_name . '" was closed in Project "' . $project_name . '" by ' . $modify_name . '. Following are the details:</p>';
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stage_name . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stage_name . "</p>";
     $content = $content . "<p>Status of Stage: Close</p>";
-    $content = $content . "<p>Stage Creator:" . $stage_creator_name . " at " . $stage_create_at . "</p>";
+    $content = $content . "<p>Stage Creator: " . $stage_creator_name . " at " . $stage_create_at . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project02?p=" . $project_id . "</p>";
@@ -3497,21 +3497,21 @@ function task_notify_admin($request_type, $task_status, $task_name, $stages_stat
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
 
     if($_revisor != "")
-        $content = $content . "<p>Reviser:" . $_revisor . "</p>";
+        $content = $content . "<p>Reviser: " . $_revisor . "</p>";
 
     if($_erasor != "")
-        $content = $content . "<p>Eraser:" . $_erasor . "</p>";
+        $content = $content . "<p>Eraser: " . $_erasor . "</p>";
 
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Created at:" . $created_at . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_AD?sid=" . $stage_id . "</p>";
@@ -3631,15 +3631,151 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stages_status . "</p>";
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Created at:" . $created_at . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stages_status . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+
+function task_notify_order($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, $order_type, $order_name)
+{
+    $tab = "";
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new order task was created and needs you to follow. Below is the details:</p>";
+            break;
+        case "edit":
+            $tab = "<p>A order task was revised and needs you to follow. Below is the details:</p>";
+            break;
+        case "del":
+            $tab = "<p>A existing order task was deleted. Below is the details:</p>";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Order Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+    
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+    if($stages_status == "Order")
+    {
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+        
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    //如果是訂單任務，執行下一行
+    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    //如果是訂單任務，執行下兩行
+    if($request_type == "notify")
+        $title = "[Order Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stages_status . "</p>";
+
+    //如果是訂單任務，執行下三行
+    $content = $content . "<p>Order Task: " . $task_name . "</p>";
+    $content = $content . "<p>Order Type: " . $order_type . "</p>";
+    $content = $content . "<p>Order Name: " . $order_name . "</p>";
+
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
@@ -3798,25 +3934,25 @@ function message_notify_dept($request_type, $project_name, $task_name, $stages, 
     $content = $content . $tab;
 
     if($dept == 'C')
-        $content = $content . "<p>Project Name:" . $project_name . "</p>";
+        $content = $content . "<p>Project Name: " . $project_name . "</p>";
 
-    $content = $content . "<p>Task Name:" . $task_name . "</p>";
+    $content = $content . "<p>Task Name: " . $task_name . "</p>";
   
     if($request_type == "create")
     {
-        $content = $content . "<p>Message Creator:" . $username . " at " . $created_at . "</p>";
-        $content = $content . "<p>Content:" . $msg . "</p>";
+        $content = $content . "<p>Message Creator: " . $username . " at " . $created_at . "</p>";
+        $content = $content . "<p>Content: " . $msg . "</p>";
     }
 
     if($request_type == "del")
     {
-        $content = $content . "<p>Message Eraser:" . $username . " at " . $created_at . "</p>";
-        $content = $content . "<p>Content:" . $msg . "</p>";
+        $content = $content . "<p>Message Eraser: " . $username . " at " . $created_at . "</p>";
+        $content = $content . "<p>Content: " . $msg . "</p>";
     }
-    // $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    // $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    // $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    // $content = $content . "<p>Description:" . $detail . "</p>";
+    // $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    // $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    // $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    // $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/" . $uri . "?sid=" . $stage_id . "</p>";
@@ -3937,24 +4073,24 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stages . "</p>";
-    $content = $content . "<p>Task Name:" . $task_name . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stages . "</p>";
+    $content = $content . "<p>Task Name: " . $task_name . "</p>";
     if($request_type == "create")
     {
-        $content = $content . "<p>Creator:" . $username . " at " . $created_at . "</p>";
-        $content = $content . "<p>Content:" . $msg . "</p>";
+        $content = $content . "<p>Creator: " . $username . " at " . $created_at . "</p>";
+        $content = $content . "<p>Content: " . $msg . "</p>";
     }
 
     if($request_type == "del")
     {
-        $content = $content . "<p>Message Eraser:" . $username . " at " . $created_at . "</p>";
-        $content = $content . "<p>Content:" . $msg . "</p>";
+        $content = $content . "<p>Message Eraser: " . $username . " at " . $created_at . "</p>";
+        $content = $content . "<p>Content: " . $msg . "</p>";
     }
-    // $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    // $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    // $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    // $content = $content . "<p>Description:" . $detail . "</p>";
+    // $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    // $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    // $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    // $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
@@ -4038,16 +4174,16 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
     $content = $content . $tab;
 
     if($category == 'C' || $category == '')
-        $content = $content . "<p>Project Name:" . $project_name . "</p>";
+        $content = $content . "<p>Project Name: " . $project_name . "</p>";
 
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Reviser:" . $revisor . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Reviser: " . $revisor . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
 
@@ -4144,14 +4280,14 @@ function task_notify01_admin_sl($old_status, $task_status, $revisor, $task_name,
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Reviser:" . $revisor . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Reviser: " . $revisor . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_SLS?sid=" . $stage_id . "</p>";
@@ -4231,14 +4367,14 @@ function task_notify01_admin_sv($old_status, $task_status, $revisor, $task_name,
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Reviser:" . $revisor . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Reviser: " . $revisor . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_SVC?sid=" . $stage_id . "</p>";
@@ -4319,14 +4455,14 @@ function task_notify01_admin_d($old_status, $task_status, $revisor, $task_name, 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Reviser:" . $revisor . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Reviser: " . $revisor . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_DS?sid=" . $stage_id . "</p>";
@@ -4407,14 +4543,14 @@ function task_notify01_admin_o($old_status, $task_status, $revisor, $task_name, 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Reviser:" . $revisor . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Reviser: " . $revisor . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_OS?sid=" . $stage_id . "</p>";
@@ -4495,14 +4631,14 @@ function task_notify01_admin_l($old_status, $task_status, $revisor, $task_name, 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Reviser:" . $revisor . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Reviser: " . $revisor . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/task_management_LT?sid=" . $stage_id . "</p>";
@@ -4521,7 +4657,10 @@ function task_notify01_admin_l($old_status, $task_status, $revisor, $task_name, 
 function task_notify01($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
 
+    //如果是普通任務，執行下一行
     $tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+    //如果是訂單任務，執行下一行
+    //$tab = '<p>Status of order task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
 
     $conf = new Conf();
 
@@ -4596,20 +4735,159 @@ if($stage == "Order")
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
+    //如果是普通任務，執行下一行
     $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //如果是訂單任務，執行下一行
+    //$title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
     
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stage . "</p>";
-    $content = $content . "<p>Task:" . $task_name . "</p>";
-    $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stage . "</p>";
+
+    //如果是普通任務，執行下一行
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    //如果是訂單任務，執行下一行
+    $content = $content . "<p>Order Task: " . $task_name . "</p>";
+    
+
+    $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+
+    //如果是訂單任務，執行下兩行
+    //$content = $content . "<p>Order Type: " . $order_type . "</p>";
+    //$content = $content . "<p>Order Name: " . $order_name . "</p>";
+
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+
+function task_notify01_order($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name)
+{
+
+    //如果是普通任務，執行下一行
+    //$tab = '<p>Status of task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+    //如果是訂單任務，執行下一行
+    $tab = '<p>Status of order task "' . $task_name . '" changed from ' . $old_status . ' to ' . $task_status . '. Following are the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    
+// 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+if($stage == "Order")
+{
+    $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+    
+}
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    //如果是普通任務，執行下一行
+    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //如果是訂單任務，執行下一行
+    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stage . "</p>";
+
+    //如果是普通任務，執行下一行
+    //$content = $content . "<p>Task: " . $task_name . "</p>";
+    //如果是訂單任務，執行下一行
+    $content = $content . "<p>Order Task: " . $task_name . "</p>";
+    
+
+    $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+
+    //如果是訂單任務，執行下兩行
+    $content = $content . "<p>Order Type: " . $order_type . "</p>";
+    $content = $content . "<p>Order Name: " . $order_name . "</p>";
+
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
@@ -4628,7 +4906,12 @@ if($stage == "Order")
 function task_notify02($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
 
-    $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+    //$tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+
+    //如果是普通任務，執行下一行
+    $tab = '<p>A task was revised and needs you to follow. Below is the details:</p>';
+    //如果是訂單任務，執行下一行
+    //$tab = '<p>A Order task was revised and needs you to follow. Below is the details:</p>';
 
     $conf = new Conf();
 
@@ -4703,25 +4986,172 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
+    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    //如果是普通任務，執行下一行
     $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //如果是訂單任務，執行下一行
+    //$title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
     
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stage . "</p>";
-    $content = $content . "<p>Task:" . $task_name . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stage . "</p>";
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+
+    //如果是普通任務，執行下一行
+    $content = $content . "<p>Task: " . $task_name . "</p>";
+    //如果是訂單任務，執行下一行
+    //$content = $content . "<p>Order Task: " . $task_name . "</p>";
 
     if($old_status != $task_status)
-        $content = $content . "<p>Task Status:" . $old_status . ' => ' . $task_status . "</p>";
+        $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
     else
-        $content = $content . "<p>Task Status:" . $task_status . "</p>";
+        $content = $content . "<p>Task Status: " . $task_status . "</p>";
 
-    $content = $content . "<p>Creator:" . $creators . "</p>";
-    $content = $content . "<p>Assignee:" . $assignees . "</p>";
-    $content = $content . "<p>Collaborator:" . $collaborators . "</p>";
-    $content = $content . "<p>Due Date:" . $due_date . "</p>";
-    $content = $content . "<p>Description:" . $detail . "</p>";
+    //如果是訂單任務，執行下兩行
+    //$content = $content . "<p>Order Type: " . $order_type . "</p>";
+    //$content = $content . "<p>Order Name: " . $order_name . "</p>";
+
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
+    $content = $content . "<p> </p>";
+    $content = $content . "<p>Please click this link to view the target webpage: </p>";
+    $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creators, $content);
+        return true;
+    } else {
+        logMail($creators, $mail->ErrorInfo . $content);
+        return false;
+    }
+
+}
+
+function task_notify02_order($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name)
+{
+
+    //$tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+
+    //如果是普通任務，執行下一行
+    //$tab = '<p>A task was revised and needs you to follow. Below is the details:</p>';
+    //如果是訂單任務，執行下一行
+    $tab = '<p>A order task was revised and needs you to follow. Below is the details:</p>';
+
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+   
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+    
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+
+    $notifior = array();
+
+    $creators = "";
+    $collaborators = "";
+    $assignees = "";
+
+    $notifior = GetNotifiers($assignee);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $assignees = $assignees . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($collaborator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $collaborators = $collaborators . $list["username"] . ", ";
+    }
+
+    $notifior = GetNotifiers($create_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+        $creators = $creators . $list["username"] . ", ";
+    }
+
+    // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
+    if($stage == "Order")
+    {
+        $notifior = GetChargeNotifiersByTitle('Warehouse in charge');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+        
+    }
+
+    $creators = rtrim($creators, ", ");
+    $assignees = rtrim($assignees, ", ");
+    $collaborators = rtrim($collaborators, ", ");
+    
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    //如果是普通任務，執行下一行
+    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //如果是訂單任務，執行下一行
+    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
+    
+    $mail->Subject = $title;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stage . "</p>";
+    //$content = $content . "<p>Task: " . $task_name . "</p>";
+
+    //如果是普通任務，執行下一行
+    //$content = $content . "<p>Task: " . $task_name . "</p>";
+    //如果是訂單任務，執行下一行
+    $content = $content . "<p>Order Task: " . $task_name . "</p>";
+
+    if($old_status != $task_status)
+        $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
+    else
+        $content = $content . "<p>Task Status: " . $task_status . "</p>";
+
+    //如果是訂單任務，執行下兩行
+    $content = $content . "<p>Order Type: " . $order_type . "</p>";
+    $content = $content . "<p>Order Name: " . $order_name . "</p>";
+
+    $content = $content . "<p>Creator: " . $creators . "</p>";
+    $content = $content . "<p>Assignee: " . $assignees . "</p>";
+    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
     $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
@@ -4869,13 +5299,13 @@ function project01_notify_mail($request_type, $project_name, $username, $created
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Project Category:" . $category . "</p>";
-    $content = $content . "<p>Client Type:" . $client_type . "</p>";
-    $content = $content . "<p>Priority:" . $priority . "</p>";
-    $content = $content . "<p>Project Status:" . $project_status . "</p>";
-    $content = $content . "<p>Estimated Closing Prob.:" . $estimate_close_prob . "</p>";
-    $content = $content . "<p>Project Creator:" . $username . " at " . $created_at . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Project Category: " . $category . "</p>";
+    $content = $content . "<p>Client Type: " . $client_type . "</p>";
+    $content = $content . "<p>Priority: " . $priority . "</p>";
+    $content = $content . "<p>Project Status: " . $project_status . "</p>";
+    $content = $content . "<p>Estimated Closing Prob.: " . $estimate_close_prob . "</p>";
+    $content = $content . "<p>Project Creator: " . $username . " at " . $created_at . "</p>";
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
@@ -4968,10 +5398,10 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Stage:" . $stage_name . "</p>";
-    $content = $content . "<p>Status of Stage:" . $stage_status . "</p>";
-    $content = $content . "<p>Stage Creator:" . $username . " at " . $created_at . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Stage: " . $stage_name . "</p>";
+    $content = $content . "<p>Status of Stage: " . $stage_status . "</p>";
+    $content = $content . "<p>Stage Creator: " . $username . " at " . $created_at . "</p>";
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
@@ -5034,9 +5464,9 @@ function project03_stage_client_task_notify_mail($project_name, $username, $crea
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Message Creator:" . $username . " at " . $created_at . "</p>";
-    $content = $content . "<p>Content:" . $message . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Message Creator: " . $username . " at " . $created_at . "</p>";
+    $content = $content . "<p>Content: " . $message . "</p>";
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
@@ -5052,7 +5482,7 @@ function project03_stage_client_task_notify_mail($project_name, $username, $crea
     }
 }
 
-function project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id, $create_id)
+function project02_status_change_notify_mail($project_name, $project_category, $username, $created_at, $client_type, $priority, $estimate_close_prob, $project_status, $pre_status, $project_id, $create_id, $project_status_edit, $reason)
 {
 
     $title = 'Status of project "' . $project_name . '" changed to "' . $project_status . '" ';
@@ -5108,13 +5538,20 @@ function project02_status_change_notify_mail($project_name, $project_category, $
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name:" . $project_name . "</p>";
-    $content = $content . "<p>Project Category:" . $project_category . "</p>";
-    $content = $content . "<p>Client Type:" . $client_type . "</p>";
-    $content = $content . "<p>Priority:" . $priority . "</p>";
-    $content = $content . "<p>Project Status:" . $pre_status . " => " . $project_status.  "</p>";
-    $content = $content . "<p>Estimated Closing Prob.:" . $estimate_close_prob . "</p>";
-    $content = $content . "<p>Project Creator:" . $username . " at " . $created_at . "</p>";
+    $content = $content . "<p>Project Name: " . $project_name . "</p>";
+    $content = $content . "<p>Project Category: " . $project_category . "</p>";
+    $content = $content . "<p>Client Type: " . $client_type . "</p>";
+    $content = $content . "<p>Priority: " . $priority . "</p>";
+    $content = $content . "<p>Project Status: " . $pre_status . " => " . $project_status.  "</p>";
+
+    // 當專案的狀態(status) 變成是 Disapproved 時，系統寄發的通知信內容中，需要新增一個 理由 欄位，欄位裡面會抓 使用者在project02.php中變更狀態時填寫的理由
+    if($project_status == "Disapproved")
+    {
+        $content = $content . "<p>Reason: " . $reason . "</p>";
+    }
+
+    $content = $content . "<p>Estimated Closing Prob.: " . $estimate_close_prob . "</p>";
+    $content = $content . "<p>Project Creator: " . $username . " at " . $created_at . "</p>";
 
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
@@ -5318,7 +5755,7 @@ function send_salary_slip_confirm(
     $content = $content . "<p>" . $emp_name . "'s salary slip for " . $start_date . " to " . $end_date . " was confirmed.</p>";
     $content = $content . "<p> </p>";
   
-        $content = $content . "<p>Remarks from Employee:" . $remark . "</p>";
+        $content = $content . "<p>Remarks from Employee: " . $remark . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please log on to Feliix >> Payment Request/Claim and Salary Slip >> Salary Slip Management to view the salary slip.</p>";
     $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
@@ -5391,7 +5828,7 @@ $content =  "<p>Dear " . $sumitor . ",</p>";
 $content = $content . "<p>" . $emp_name . "'s salary slip for " . $start_date . " to " . $end_date . " was rejected.</p>";
 $content = $content . "<p> </p>";
 
-    $content = $content . "<p>Remarks from Employee:" . $remark . "</p>";
+    $content = $content . "<p>Remarks from Employee: " . $remark . "</p>";
 $content = $content . "<p> </p>";
 $content = $content . "<p>Please log on to Feliix >> Payment Request/Claim and Salary Slip >> Salary Slip Management to view the salary slip.</p>";
 $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
@@ -5638,6 +6075,1099 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
 
 }
 
+function order_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $url = "";
+
+    // preliminary
+    if($action == 'send_note')
+    {
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" need your feedback';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" need your feedback. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+    }
+        
+    if($action == 'withdraw_note_tw')
+    {
+        $mail->Subject = 'Request for feedback was withdrawn on items of "' . $order_type . ': ' . $serial_name . '" ';
+        $header = 'The request for your feedback was withdrawn on items of  "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+    }
+
+    if($action == 'approval')
+    {
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" need your approval';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" need your approval. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
+    }
+
+    if($action == 'finish_notes')
+    {
+        $mail->Subject = 'Taiwan office already provided feedback for items of "' . $order_type . ': ' . $serial_name . '"';
+        $header = 'Taiwan office already provided feedback for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+    }
+
+    // for approve
+    if($action == 'approved')
+    {
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" were approved';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" were already approved and need you to follow. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+    }
+
+    if($action == 'reject')
+    {
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" were rejected';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" were already rejected and need you to follow. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+    }
+    
+    if($action == 'withdraw')
+    {
+        $mail->Subject = 'Request for approval was withdrawn on items of "' . $order_type . ': ' . $serial_name . '" ';
+        $header = 'The request for your approval was withdrawn on items of  "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+    }
+
+    // APPROVED
+    if($action == 'ordered')
+    {
+        $receiver = "All";
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" are ordered';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" are ordered. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+    }
+
+    // Canceled
+    if($action == 'canceled')
+    {
+        $receiver = "All";
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" are canceled';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" are canceled. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+    }
+
+    if($action == 'ship_info')
+    {
+        // $receiver = "All";
+        $mail->Subject = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+    }
+
+    if($action == 'ware_info')
+    {
+        // $receiver = "All";
+        $mail->Subject = 'Warehouse info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = 'Warehouse info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+    }
+
+    if($action == 'batch')
+    {
+        $name = "System";
+        $mail->Subject = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Order Type: ' . $order_type . '<br>';
+                    $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . 'Comment: ' . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Items
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 440px;">
+                    Product Code
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個產品的其他產品 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                        ';
+                        $content = $content . $items[$i]['serial_number'] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
+                        ';
+                        $content = $content . $items[$i]['code'] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            /* 最後一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['serial_number']  . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['code'] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+function order_notification02($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+    $assignee = [];
+
+    
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+    
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = 'You are assigned to test items of  "' . $order_type . ': ' . $serial_name . '". Please check details';
+    $url = "";
+
+    if($action == 'assing_test')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['test'];
+        }
+
+        $receiver = implode("','", $assignee);
+
+        $notifior = GetAccessNotifiersByName($receiver, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetAccessNotifiersByName($access_cc, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "All";
+
+        $mail->Subject = 'You are assigned to test items of "' . $order_type . ': ' . $serial_name . '" ';
+        $header = 'You are assigned to test items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+    if($action == 'edit_test')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['test'];
+        }
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "";
+        // access5
+        $_list = explode(",", $access);
+        foreach($_list as &$c_list)
+        {
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver .= $list["username"] . ", ";
+            }
+        }
+        
+        $receiver = rtrim($receiver, ", ");
+
+        $mail->Subject = 'Testing info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = $name . ' updated the testing info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+    if($action == 'assign_delivery')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['delivery'];
+        }
+
+        $receiver = implode("','", $assignee);
+
+        $notifior = GetAccessNotifiersByName($receiver, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetAccessNotifiersByName($access_cc, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+
+        $receiver = "All";
+
+        $mail->Subject = 'You are assigned to deliver items of "' . $order_type . ': ' . $serial_name . '" ';
+        $header = 'You are assigned to deliver items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+    if($action == 'edit_delivery')
+    {
+        foreach($items as &$item)
+        {
+            $assignee[] = $item['delivery'];
+        }
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "";
+
+        // access5
+        $_list = explode(",", $access);
+        foreach($_list as &$c_list)
+        {
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
+            foreach($notifior as &$list)
+            {
+                $receiver .= $list["username"] . ", ";
+            }
+        }
+
+        $receiver = rtrim($receiver, ", ");
+
+        $mail->Subject = 'Delivery info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = $name . ' updated the delivery info for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Order Type: ' . $order_type . '<br>';
+                    $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . 'Comment: ' . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="3"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Items
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 160px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    Product Code
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    Assignee
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個產品的其他產品 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 160px;">
+                        ';
+                        $content = $content . $items[$i]['serial_number'] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                        ';
+                        $content = $content . $items[$i]['code'] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                    ';
+                        $content = $content . $assignee[$i] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            /* 最後一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 160px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['serial_number'] . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                    ';
+                    $content = $content . $items[$i]['code'] . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $assignee[$i] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+function order_notification03($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+    $assignee = [];
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+    
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $url = "";
+
+    if($action == 'new_message_17')
+    {
+        $item_sn = $items['serial_number'];
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "All";
+
+        $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
+        $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+        
+    }
+
+    if($action == 'new_message_18')
+    {
+        $item_sn = $items['serial_number'];
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "All";
+
+        $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
+        $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
+        
+    }
+
+    if($action == 'new_message_19')
+    {
+        $item_sn = $items['serial_number'];
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "All";
+
+        $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
+        $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
+        
+    }
+
+    if($action == 'new_message_20')
+    {
+        $item_sn = $items['serial_number'];
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "All";
+
+        $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
+        $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
+        
+    }
+
+    if($action == 'new_message_21')
+    {
+        $item_sn = $items['serial_number'];
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "All";
+
+        $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
+        $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+    if($action == 'new_message_22')
+    {
+        $item_sn = $items['serial_number'];
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "All";
+
+        $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
+        $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Order Type: ' . $order_type . '<br>';
+                    $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="3"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Item
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 160px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 220px;">
+                    Product Code
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 340px;">
+                    Message
+                </td>
+            </tr>
+            ';
+
+           /* 表格裡面只會有一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 160px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items['serial_number'] . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 220px;" >
+                    ';
+                    $content = $content . $items['code'] . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 340px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+function order_notification04($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+    $assignee = [];
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+    
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $url = "";
+
+    if($action == 'new_message_23')
+    {
+        $item_sn = $items['serial_number'];
+
+        $notifior = GetAccessNotifiersByName($name, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        $receiver = "All";
+
+        $mail->Subject = 'Item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" was revised';
+        $header = $name . ' revised the item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
+        
+    }
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Order Type: ' . $order_type . '<br>';
+                    $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Item
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 440px;">
+                    Product Code
+                </td>
+
+            </tr>
+            ';
+
+           /* 只會有一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items['serial_number'] . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $items['code'] . '';
+                    $content = $content . '
+                </td>
+                
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 function GetChargeNotifiersByTitle($title)
 {
     $database = new Database();
@@ -5815,16 +7345,106 @@ function GetProjectNotifiers()
     return $merged_results;
 }
 
+function GetAccessNotifiersByName($title, $order_type)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "
+            SELECT username, email, department 
+            FROM user
+            left join user_department ud on user.apartment_id = ud.id
+            WHERE username IN(
+                '" . $title . "'
+            )  and user.status = 1";
+    
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetAccessNotifiers($field, $order_type){
+    $field = trim($field);
+    $username = "";
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $query = "SELECT ". $field . " FROM access_control ";
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $username = $row[$field];
+    }
+
+    // splite usernames and implode with quotes
+    $usernames = explode(",", $username);
+    $username = implode("','", $usernames);
+
+    if($username == '')
+     return [];
+    
+    $sql = "
+        SELECT username, email, department 
+        FROM user
+        left join user_department ud on user.apartment_id = ud.id
+        WHERE username IN('" . $username . "') and user.status = 1";
+
+    // get first character from order type
+    $department = substr($order_type, 0, 1);
+
+    if($field == 'access1')
+    {
+        if($department == 'O')
+        {
+            $sql = $sql . " and department = 'Office'";
+        }
+
+        if($department == 'L')
+        {
+            $sql = $sql . " and department = 'Lighting'";
+        }
+    }
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+
+}
+
+
 function SetupMail($mail, $conf)
 {
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
     $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'sylvia99@ethereal.email';
+    $mail->Password   = '3YEXARcxXFhjT2k5RQ';
 
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
@@ -5832,10 +7452,10 @@ function SetupMail($mail, $conf)
     // $mail->Port       = 587;
     // $mail->SMTPKeepAlive = true;
     // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'marquis.kihn@ethereal.email';
-    // $mail->Password   = 'v8Pc7cHdcmM2scf6ZW';
+    // $mail->Username   = 'shirley32@ethereal.email';
+    // $mail->Password   = '7uAyEy66YcXzpJZGZJ';
 
-    return $mail;
+     return $mail;
 
 }
 

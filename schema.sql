@@ -2726,3 +2726,246 @@ update product_category set `currency` = 'NTD';
 ALTER TABLE quotation_page_type_block ADD COLUMN v1 VARCHAR(255) DEFAULT '';
 ALTER TABLE quotation_page_type_block ADD COLUMN v2 VARCHAR(255) DEFAULT '';
 ALTER TABLE quotation_page_type_block ADD COLUMN v3 VARCHAR(255) DEFAULT '';
+
+-- 20220711 order system
+CREATE TABLE IF NOT EXISTS `od_main` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `od_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `project_type` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+CREATE TABLE IF NOT EXISTS `od_item` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `od_id` bigint(20) unsigned NOT NULL,
+  `sn` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `confirm` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brand` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brand_other` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo1` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo2` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo3` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `code` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brief` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `listing` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `qty` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `srp` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `date_needed` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `od_message` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `item_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `message` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `od_got_it`
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `message_id` bigint(20) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `od_process`
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `od_id` bigint(20) unsigned NOT NULL,
+  `comment` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `action` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `items` JSON,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 20220721 quotation ratio
+ALTER TABLE quotation_page_type_block
+ADD COLUMN `ratio` decimal(12,2) DEFAULT 1.0 after v3;
+
+CREATE TABLE IF NOT EXISTS quotation_export
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20) unsigned NOT NULL,
+  `items` JSON,
+  `srp` varchar(10) DEFAULT '',
+  `qp` varchar(10) DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS `od_message_a` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `item_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `message` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `od_got_it_a`
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `message_id` bigint(20) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE od_item
+ADD COLUMN `shipping_way` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `shipping_number` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `eta` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `arrive` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `charge` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `test` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `delivery` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+ALTER TABLE od_item
+ADD COLUMN `final` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `remark_t` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `remark_d` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `check_t` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `check_d` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20220817 access control
+ALTER TABLE access_control
+ADD COLUMN `access1` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access2` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access3` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access4` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access5` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `access6` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20220829 shipping vendor
+ALTER TABLE od_item
+ADD COLUMN `shipping_vendor` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE od_item
+ADD COLUMN `pid` bigint(20) DEFAULT 0;
+
+ALTER TABLE od_item ADD COLUMN v1 VARCHAR(255) DEFAULT '';
+ALTER TABLE od_item ADD COLUMN v2 VARCHAR(255) DEFAULT '';
+ALTER TABLE od_item ADD COLUMN v3 VARCHAR(255) DEFAULT '';
+
+-- 20220901 other task add order
+drop TABLE od_main;
+
+CREATE TABLE IF NOT EXISTS `od_main` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `od_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `task_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `order_type` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `serial_name` varchar(64) COLLATE utf8mb4_unicode_ci default '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 202209012
+ALTER TABLE access_control
+ADD COLUMN `access7` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 202209013
+CREATE INDEX gcp_storage_file_batch_type_idx ON gcp_storage_file (batch_type);
+
+CREATE INDEX on_duty_duty_date_idx ON on_duty (duty_date);
+
+CREATE TABLE `on_duty_archive` (
+  `id` bigint(20) unsigned,
+  `uid` bigint(20) unsigned NOT NULL,
+  `duty_date` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `duty_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `location` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `remark` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `duty_time` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `explain` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pos_lat` decimal(24,12) DEFAULT 0.000000000000,
+  `pos_lng` decimal(24,12) DEFAULT 0.000000000000,
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_time` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_lat` decimal(24,12) DEFAULT 0.000000000000,
+  `pic_lng` decimal(24,12) DEFAULT 0.000000000000,
+  `pic_server_time` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pic_server_lat` decimal(24,12) DEFAULT 0.000000000000,
+  `pic_server_lng` decimal(24,12) DEFAULT 0.000000000000,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `status` int(11) DEFAULT 0
+);
+
+insert into on_duty_archive select * from on_duty where duty_date < '2022/01/01';
+
+delete from on_duty where duty_date < '2022/01/01';
