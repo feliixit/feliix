@@ -55,6 +55,9 @@ $conf = new Conf();
 
 $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 
+$_id = isset($_POST['note']) ?  $_POST['note'] : 0;
+$act = isset($_POST['act']) ?  $_POST['act'] : 0;
+
 $sales_date = (isset($_POST['sales_date']) ?  $_POST['sales_date'] : '');
 $company = (isset($_POST['company']) ?  $_POST['company'] : '');
 $client = (isset($_POST['client']) ?  $_POST['client'] : '');
@@ -68,6 +71,47 @@ $payment = (isset($_POST['payment']) ?  $_POST['payment'] : '[]');
 $payment_array = json_decode($payment, true);
 
 $total_amount == '' ? $total_amount = 0 : $total_amount = $total_amount;
+
+if($act == 1 && $_id != 0) {
+    $sql = "UPDATE store_sales_recorder SET sales_date = :sales_date, company = :company, client = :client, sales_name = :sales_name, total_amount = :total_amount, po = :po, dr = :dr, note = :note WHERE id = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id', $_id);
+    $stmt->bindParam(':sales_date', $sales_date);
+    $stmt->bindParam(':company', $company);
+    $stmt->bindParam(':client', $client);
+    $stmt->bindParam(':sales_name', $sales_name);
+    $stmt->bindParam(':total_amount', $total_amount);
+    $stmt->bindParam(':po', $po);
+    $stmt->bindParam(':dr', $dr);
+    $stmt->bindParam(':note', $note);
+    $stmt->execute();
+    $stmt->closeCursor();
+
+    $stmt = null;
+    $sql = "DELETE FROM store_sales_recorder_payment WHERE sales_id = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id', $_id);
+    $stmt->execute();
+    $stmt->closeCursor();
+    $stmt = null;
+
+    $sql = "INSERT INTO store_sales_recorder_payment (sales_id, payment_date, payment_amount, payment_note) VALUES (:sales_id, :payment_date, :payment_amount, :payment_note)";
+    $stmt = $db->prepare($sql);
+    foreach($payment_array as $payment) {
+        $stmt->bindParam(':sales_id', $_id);
+        $stmt->bindParam(':payment_date', $payment['payment_date']);
+        $stmt->bindParam(':payment_amount', $payment['payment_amount']);
+        $stmt->bindParam(':payment_note', $payment['payment_note']);
+        $stmt->execute();
+    }
+    $stmt->closeCursor();
+    $stmt = null;
+
+    $db->commit();
+    echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Sales Recorder Updated."));
+
+    die();
+} 
 
 try {
     // now you can apply

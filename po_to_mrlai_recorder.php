@@ -292,7 +292,7 @@ header( 'location:index' );
 
         <button :class="[is_viewer == '1'? 'hide' : '']"
                 style="border: none; margin-left:0.5vw; font-weight:700; font-size:x-large; background-color: rgb(7,220,237); color: white; padding: 0.5rem 0.5rem 0.5rem 0.5rem; float:right; margin-right:1rem; "
-                data-toggle="collapse" data-parent="#accordion" href="#collapseOne" @click="reset()"
+                data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
                 aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-plus-square fa-lg"></i>
         </button>
     </div>
@@ -373,11 +373,11 @@ header( 'location:index' );
                                         </td>
 
                                         <td>
-                                            <i class="fas fa-plus-circle" v-if="!editing" id="add_item"
+                                            <i class="fas fa-plus-circle" v-if="!item_editing" id="add_item"
                                                @click="add_plus_detail()"></i>
-                                            <i class="fas fa-times-circle" v-if="editing" style="color: indianred;"
+                                            <i class="fas fa-times-circle" v-if="item_editing" style="color: indianred;"
                                                @click="clear_item()"></i>
-                                            <i class="fas fa-check-circle" v-if="editing" @click="save_item()"></i>
+                                            <i class="fas fa-check-circle" v-if="item_editing" @click="save_item()"></i>
                                         </td>
                                     </tr>
 
@@ -620,8 +620,13 @@ header( 'location:index' );
 
                         <td v-if="j == 0" :rowspan="row.payment.length">
                             <button v-if="row.status != -1" @click="deleteRecord(row.id)"><i aria-hidden="true"
-                                                                                             class="fas fa-times"></i>
+                                                                                             class="fas fa-times">
+                                                                                            </i>
                             </button>
+
+                            <button data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" v-on:click="edit(row.id)">
+	<i class="fas fa-edit"></i>
+</button>
                         </td>
                     </tr>
                 </template>
