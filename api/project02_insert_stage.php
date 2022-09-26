@@ -59,7 +59,7 @@ $query = "INSERT INTO project_stages
                     sequence = :sequence,
                     stage_id = :stage_id,
                     stages_status_id = :stages_status_id,
-                    title = :title,
+                    stage_title = :title,
                    
                     create_id = :create_id,
                     created_at = now()";

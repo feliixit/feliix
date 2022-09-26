@@ -83,7 +83,7 @@ $query = "INSERT INTO project_edit_stage
                     sequence = :sequence,
                     stage_id = :stage_id,
                     stages_status_id = :stages_status_id,
-                    title = :title,
+                    stage_title = :title,
                     updated_id = :create_id,
                     updated_at = now()
                 
