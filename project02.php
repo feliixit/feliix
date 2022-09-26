@@ -311,6 +311,12 @@ header('location:index');
             color: var(--fth04);
             font-size: 22px;
         }
+
+        div.subtitle {
+            background-color: lightgreen;
+            font-size: 11px;
+            margin-top: 1px;
+        }
     </style>
 
 </head>
@@ -349,6 +355,10 @@ header('location:index');
                                         <option value="2">Pending</option>
                                         <option value="3">Close</option>
                                     </select>
+                                </dd>
+                                <dt>Sub Title:</dt>
+                                <dd>
+                                    <input type="text" placeholder="" v-model="title">
                                 </dd>
                             </dl>
                             <div class="btnbox">
@@ -421,6 +431,12 @@ header('location:index');
                                         <option value="2">Pending</option>
                                         <option value="3">Close</option>
                                     </select>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li class="head">Sub Title:</li>
+                                <li>
+                                    <input type="text" placeholder="" v-model="stage_edit_title">
                                 </li>
                             </ul>
                             <ul>
@@ -1396,18 +1412,25 @@ if ($access6 == true) {
                 </ul>
                 <ul v-for='(receive_record, index) in displayedStagePosts'>
                     <li>{{ receive_record.sequence }}</li>
-                    <li v-if="receive_record.project_stage_id == 1 && receive_record.id <= 2570"><a
-                            v-bind:href="'project03_client?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
+                    <li v-if="receive_record.project_stage_id == 1 && receive_record.id <= 2570">
+                        <a v-bind:href="'project03_client?sid='+ receive_record.id">{{ receive_record.stage }}</a>
+                        <div class="subtitle">{{receive_record.title}}</div>
+                    </li>
                     <li v-if="receive_record.project_stage_id == 1 && receive_record.id > 2570"><a
-                            v-bind:href="'project03_client_v2?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
+                            v-bind:href="'project03_client_v2?sid='+ receive_record.id">{{ receive_record.stage }}</a>
+                            <div class="subtitle">{{receive_record.title}}</div>
+                    </li>
 
                     <li v-if="receive_record.project_stage_id == 3 && receive_record.id > 1810"><a
                             v-bind:href="'project03_ameeting?sid='+ receive_record.id">{{ receive_record.stage }}</a>
+                            <div class="subtitle">{{receive_record.title}}</div>
                     </li>
                     <li v-if="receive_record.project_stage_id == 3 && receive_record.id <= 1810"><a
-                            v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
+                            v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a>
+                            <div class="subtitle">{{receive_record.title}}</div></li>
                     <li v-if="receive_record.project_stage_id != 1 && receive_record.project_stage_id != 3"><a
-                            v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a></li>
+                            v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a>
+                            <div class="subtitle">{{receive_record.title}}</div></li>
                     <li>{{ receive_record.stages_status }}</li>
                     <li>{{ receive_record.start }} ~</li>
                     <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>

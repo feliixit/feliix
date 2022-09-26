@@ -64,7 +64,8 @@ switch ($method) {
         $qid = (isset($_POST['qid']) ?  $_POST['qid'] : 0);
         $sn = (isset($_POST['sn']) ?  $_POST['sn'] : 0);
 
-    
+        $access7 = (isset($_POST['access7']) ?  $_POST['access7'] : false);
+
         if ($od_id == 0) {
             http_response_code(401);
             echo json_encode(array("message" => "Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Access denied."));
@@ -177,6 +178,10 @@ switch ($method) {
 
             }
 
+            // update access7 users
+            if($access7 == "true")
+                AddAcces7($od_id, $user_name, $db);
+
             $db->commit();
 
             http_response_code(200);
@@ -190,6 +195,63 @@ switch ($method) {
             die();
         }
         break;
+}
+
+
+function AddAcces7($od_id, $username, $db)
+{
+    $access7 = "";
+    $query = "SELECT access7 FROM `od_main` WHERE id = :od_id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':od_id', $od_id);
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $access7 = $row['access7'];
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+
+    // seperate by comma and check if username is already in the list
+    $access7_array = explode(",", $access7);
+    if (!in_array($username, $access7_array)) {
+        array_push($access7_array, $username);
+    }
+    // implode by comma and update to access7
+    $access7 = implode(",", $access7_array);
+
+    $query = "UPDATE `od_main` SET access7 = :access7 WHERE id = :od_id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':access7', $access7);
+    $stmt->bindParam(':od_id', $od_id);
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            return false;
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        return false;
+    }
 }
 
 

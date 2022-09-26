@@ -50,7 +50,7 @@ $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
 $stage_sequence = (isset($_POST['stage_sequence']) ?  $_POST['stage_sequence'] : 0);
 $project_stage = (isset($_POST['project_stage']) ?  $_POST['project_stage'] : 0);
 $stage_status = (isset($_POST['stage_status']) ?  $_POST['stage_status'] : 0);
-
+$title = (isset($_POST['title']) ?  $_POST['title'] : '')
 
 
 $query = "INSERT INTO project_stages
@@ -59,6 +59,7 @@ $query = "INSERT INTO project_stages
                     sequence = :sequence,
                     stage_id = :stage_id,
                     stages_status_id = :stages_status_id,
+                    title = :title,
                    
                     create_id = :create_id,
                     created_at = now()";
@@ -71,6 +72,7 @@ $query = "INSERT INTO project_stages
         $stmt->bindParam(':sequence', $stage_sequence);
         $stmt->bindParam(':stage_id', $project_stage);
         $stmt->bindParam(':stages_status_id', $stage_status);
+        $stmt->bindParam(':title', $title);
         $stmt->bindParam(':create_id', $user_id);
 
         $last_id = 0;

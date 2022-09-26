@@ -102,7 +102,8 @@ try{
 
 
     if($page == 1)
-        order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_18', $items, $od_id);
+        order_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_18', $items, $od_id, GetAccess7($od_id, $db));
+        //order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_18', $items, $od_id);
 
     if($page == 2)
         order_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_20', $items, $od_id);
@@ -112,4 +113,22 @@ try{
 catch (Exception $e)
 {
     error_log($e->getMessage());
+}
+
+function GetAccess7($od_id, $db)
+{
+    $access7 = "";
+    $query = "select a.access7 from od_main a where a.id = :od_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':od_id', $od_id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $access7 = $row['access7'];
+
+    $access7 = ltrim($access7, ',');
+
+    $access7_array = explode(',', $access7);
+    $access7 = implode("','", $access7_array);
+
+    return $access7;
 }

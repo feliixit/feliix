@@ -694,6 +694,8 @@ var app = new Vue({
         form_Data.append("qid", item.id);
         form_Data.append("sn", sn);
 
+        form_Data.append("access7", this.access7)
+
         let res = await axios({
           method: 'post',
           url: 'api/order_taiwan_p1_quotation_import',
@@ -1017,6 +1019,8 @@ var app = new Vue({
               form_Data.append("od_id", this.id);
               form_Data.append("block", JSON.stringify(items));
 
+              form_Data.append("access7", this.access7);
+
               axios({
                 method: "post",
                 headers: {
@@ -1166,6 +1170,8 @@ var app = new Vue({
               form_Data.append("jwt", token);
               form_Data.append("od_id", this.id);
               form_Data.append("block", JSON.stringify(items));
+
+              form_Data.append("access7", this.access7);
 
               axios({
                 method: "post",
@@ -1630,6 +1636,9 @@ var app = new Vue({
   
         form_Data.append("jwt", token);
         form_Data.append("item_id", id);
+
+        form_Data.append("access7", this.access7);
+        form_Data.append("od_id", this.id);
   
         axios({
           method: "post",
@@ -1882,6 +1891,8 @@ var app = new Vue({
             form_Data.append("od_id", this.id);
             form_Data.append("block", JSON.stringify(items));
 
+            form_Data.append("access7", this.access7);
+
             var file = document.getElementById('photo_' + item.id + '_1');
             if(file) {
               let f = file.files[0];
@@ -1972,6 +1983,7 @@ var app = new Vue({
               form_Data.append("jwt", token);
               form_Data.append("od_id", this.id);
               form_Data.append("block", JSON.stringify(items));
+              form_Data.append("access7", this.access7);
 
               axios({
                 method: "post",

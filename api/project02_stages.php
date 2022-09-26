@@ -50,7 +50,7 @@ $merged_results = array();
 
 
 
-$query = "SELECT pm.id, `sequence`, pst.id project_stage_id, pst.`stage`, (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, `stages_status_id`, DATE_FORMAT(pm.created_at, '%Y-%m-%d') start, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d %T') created_at, 0 replies, 0 post, '' recent FROM project_stages pm LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where pm.status <> -1 ";
+$query = "SELECT pm.id, `sequence`, pst.id project_stage_id, pst.`stage`, pm.title, (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, `stages_status_id`, DATE_FORMAT(pm.created_at, '%Y-%m-%d') start, user.username, DATE_FORMAT(pm.created_at, '%Y-%m-%d %T') created_at, 0 replies, 0 post, '' recent FROM project_stages pm LEFT JOIN project_stage pst ON pm.stage_id = pst.id LEFT JOIN user ON pm.create_id = user.id where pm.status <> -1 ";
 
 if($pid != 0)
 {
@@ -101,6 +101,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $created_at = $row['created_at'];
     $replies = $row['replies'];
 
+    $title = $row['title'];
+
     $post = $row['post'];
     $recent = GetRecentPost($row['id'], $db);
 
@@ -109,6 +111,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "sequence" => $sequence,
         "project_stage_id" => $project_stage_id,
         "stage" => $stage,
+        "title" => $title,
         "stages_status" => $stages_status,
         "stages_status_id" => $stages_status_id,
         "start" => $start,
