@@ -2975,6 +2975,6 @@ ALTER TABLE od_main
 ADD COLUMN `access7` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
 ALTER TABLE project_stages
-  DROP COLUMN title;
-ALTER TABLE project_stages
 ADD COLUMN `stage_title` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+

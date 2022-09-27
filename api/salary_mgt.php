@@ -41,13 +41,13 @@ if (!isset($jwt)) {
     $merged_results = array();
     $return_result = array();
 
-    $query = "SELECT u.id uid, u.username, ut.title, ud.department, sm.id sid, salary, sm.updated_at, uu.username updated_name
-                FROM user u
+    $query = "SELECT u.id uid, u.username, ut.title, ud.department, sm.id sid, salary, sm.updated_at, uu.username updated_name, u.status
+                FROM salary_mgt sm
+                LEFT JOIN user u ON sm.uid = u.id
                 LEFT JOIN user_title ut ON u.title_id = ut.id
                 LEFT JOIN user_department ud ON u.apartment_id = ud.id
-                LEFT JOIN salary_mgt sm ON sm.uid = u.id
                 LEFT JOIN user uu on uu.id = sm.updated_id
-                WHERE u.`status` <> -1 " . ($id != 0 ? " and u.id=$id" : ' ');
+                WHERE 1 = 1 " . ($id != 0 ? " and u.id=$id" : ' ');
 
     if($dp != '') {
         $query = $query . " and u.apartment_id = $dp ";
