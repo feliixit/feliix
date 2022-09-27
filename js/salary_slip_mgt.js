@@ -949,9 +949,11 @@ var app = new Vue({
           console.log(response.data);
           _this.salary_records = response.data;
 
-          _this.users = _this.shallowCopy(
-            _this.salary_records.find((element) => element.status == 1)
-          );
+          // add to users as salary_records status = 1
+          _this.users = response.data.filter(function (el) {
+            return el.status == 1;
+          });
+       
    
         })
         .catch(function(error) {
