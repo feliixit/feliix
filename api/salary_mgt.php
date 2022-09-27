@@ -85,6 +85,8 @@ if (!isset($jwt)) {
         $salary = $row['salary'];
         $updated_at = $row['updated_at'];
         $updated_name = $row['updated_name'];
+
+        $status = $row['status'];
        
         $merged_results[] = array(
             "is_checked" => 0,
@@ -96,6 +98,7 @@ if (!isset($jwt)) {
             "salary" => $salary,
             "updated_at" => $updated_at,
             "updated_name" => $updated_name,
+            "status" => $status,
         );
     }
 
