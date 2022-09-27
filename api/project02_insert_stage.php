@@ -50,7 +50,7 @@ $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
 $stage_sequence = (isset($_POST['stage_sequence']) ?  $_POST['stage_sequence'] : 0);
 $project_stage = (isset($_POST['project_stage']) ?  $_POST['project_stage'] : 0);
 $stage_status = (isset($_POST['stage_status']) ?  $_POST['stage_status'] : 0);
-$title = (isset($_POST['title']) ?  $_POST['title'] : '')
+$title = (isset($_POST['title']) ?  $_POST['title'] : '');
 
 
 $query = "INSERT INTO project_stages
