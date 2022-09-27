@@ -805,7 +805,7 @@ var app = new Vue({
       let token = localStorage.getItem('accessToken');
 
       axios
-        .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
+        .get('api/project02_user_online', { headers: { "Authorization": `Bearer ${token}` } })
         .then(
           (res) => {
             _this.users = res.data;
@@ -831,7 +831,7 @@ var app = new Vue({
       };
 
       axios
-        .get('api/project03_user_other_deleted', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .get('api/project02_user_online', { params, headers: { "Authorization": `Bearer ${token}` } })
         .then(
           (res) => {
             _this.users_del = res.data;
@@ -857,7 +857,7 @@ var app = new Vue({
       };
 
       axios
-        .get('api/project03_user_other_deleted_r', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .get('api/project02_user_online', { params, headers: { "Authorization": `Bearer ${token}` } })
         .then(
           (res) => {
             _this.users_del_r = res.data;

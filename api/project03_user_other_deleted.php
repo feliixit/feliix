@@ -56,7 +56,7 @@ $query = "
         username, 
         pic_url  
     FROM `user` 
-    where status <> -1 
+    where status = 1
     UNION
     SELECT 
         u.id, 

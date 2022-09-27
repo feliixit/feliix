@@ -1457,7 +1457,7 @@ var app = new Vue({
         let token = localStorage.getItem('accessToken');
   
         axios
-            .get('api/project02_user', { headers: {"Authorization" : `Bearer ${token}`} })
+            .get('api/project02_user_online', { headers: {"Authorization" : `Bearer ${token}`} })
             .then(
             (res) => {
                 _this.users = res.data;
@@ -2756,7 +2756,7 @@ var app1 = new Vue({
       let token = localStorage.getItem('accessToken');
 
       axios
-        .get('api/project02_user', { headers: { "Authorization": `Bearer ${token}` } })
+        .get('api/project02_user_online', { headers: { "Authorization": `Bearer ${token}` } })
         .then(
           (res) => {
             _this.users = res.data;

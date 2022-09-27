@@ -139,11 +139,14 @@ switch ($method) {
                     $send17 = true;
             }
     
-            if($access3 == "true" && $access4 == "true" && $access5 == "true" && $access6 == "true")
+            if($access3 == "true" || $access4 == "true" || $access5 == "true" || $access6 == "true")
+                $send17 = true;
+
+            if($access1 == "false" && $access2 == "false" && $access3 == "false" && $access4 == "false" && $access5 == "false" && $access6 == "false" && $access7 == "false")
                 $send17 = true;
     
             if($send17==true)
-                order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_17', $items, $od_id);
+                order_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_17', $items, $od_id, GetAccess7($od_id, $db));
         }
 
         if($page == 2)
@@ -154,6 +157,24 @@ switch ($method) {
         break;
 }
 
+
+function GetAccess7($od_id, $db)
+{
+    $access7 = "";
+    $query = "select a.access7 from od_main a where a.id = :od_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':od_id', $od_id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $access7 = $row['access7'];
+
+    $access7 = ltrim($access7, ',');
+
+    $access7_array = explode(',', $access7);
+    $access7 = implode("','", $access7_array);
+
+    return $access7;
+}
 
 function GetNotes($id, $db){
 

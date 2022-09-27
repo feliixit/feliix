@@ -175,6 +175,7 @@ var app = new Vue({
       const params = {
         kw: _this.keyword,
         dp: _this.department,
+        kind: '1',
       };
 
       let token = localStorage.getItem("accessToken");

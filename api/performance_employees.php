@@ -66,7 +66,7 @@ else
                                 FROM user 
                                 LEFT JOIN user_department ON user.apartment_id = user_department.id 
                                 LEFT JOIN user_title ON user.title_id = user_title.id 
-                                where user.status <> -1 ". ($id ? " and id=$id" : '') . ($apartment_id ? " and user.apartment_id=$apartment_id" : '');
+                                where user.status = 1 ". ($id ? " and id=$id" : '') . ($apartment_id ? " and user.apartment_id=$apartment_id" : '');
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);

@@ -13,6 +13,8 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $dp = (isset($_GET['dp']) ?  $_GET['dp'] : '');
 $kw = urldecode($kw);
 
+$kind = (isset($_GET['kind']) ? $_GET['kind'] : '');
+
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -41,13 +43,28 @@ if (!isset($jwt)) {
     $merged_results = array();
     $return_result = array();
 
-    $query = "SELECT u.id uid, u.username, ut.title, ud.department, sm.id sid, salary, sm.updated_at, uu.username updated_name
-                FROM user u
-                LEFT JOIN user_title ut ON u.title_id = ut.id
-                LEFT JOIN user_department ud ON u.apartment_id = ud.id
-                LEFT JOIN salary_mgt sm ON sm.uid = u.id
-                LEFT JOIN user uu on uu.id = sm.updated_id
-                WHERE u.`status` <> -1 " . ($id != 0 ? " and u.id=$id" : ' ');
+    $query = "";
+
+    if($kind == '')
+    {
+        $query = "SELECT u.id uid, u.username, ut.title, ud.department, sm.id sid, salary, sm.updated_at, uu.username updated_name, u.status
+                    FROM salary_mgt sm
+                    LEFT JOIN user u ON sm.uid = u.id
+                    LEFT JOIN user_title ut ON u.title_id = ut.id
+                    LEFT JOIN user_department ud ON u.apartment_id = ud.id
+                    LEFT JOIN user uu on uu.id = sm.updated_id
+                    WHERE 1 = 1 " . ($id != 0 ? " and u.id=$id" : ' ');
+    }
+    else
+    {
+        $query = "SELECT u.id uid, u.username, ut.title, ud.department, sm.id sid, salary, sm.updated_at, uu.username updated_name, u.status
+                    FROM salary_mgt sm
+                    LEFT JOIN user u ON sm.uid = u.id
+                    LEFT JOIN user_title ut ON u.title_id = ut.id
+                    LEFT JOIN user_department ud ON u.apartment_id = ud.id
+                    LEFT JOIN user uu on uu.id = sm.updated_id
+                    WHERE u.status = 1 " . ($id != 0 ? " and u.id=$id" : ' ');
+    }
 
     if($dp != '') {
         $query = $query . " and u.apartment_id = $dp ";
@@ -85,6 +102,8 @@ if (!isset($jwt)) {
         $salary = $row['salary'];
         $updated_at = $row['updated_at'];
         $updated_name = $row['updated_name'];
+
+        $status = $row['status'];
        
         $merged_results[] = array(
             "is_checked" => 0,
@@ -96,6 +115,7 @@ if (!isset($jwt)) {
             "salary" => $salary,
             "updated_at" => $updated_at,
             "updated_name" => $updated_name,
+            "status" => $status,
         );
     }
 

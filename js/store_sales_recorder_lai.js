@@ -64,6 +64,9 @@ var app = new Vue({
     pages: [],
     perPage: 10000,
 
+    item_editing : false,
+    item_id : 0,
+
     editing: false,
     e_id : 0,
 
@@ -100,7 +103,7 @@ var app = new Vue({
     },
 
     save_item: function() {
-      var element = this.payments.find(({ id }) => id === this.e_id);
+      var element = this.payments.find(({ id }) => id === this.item_id);
 
       element.product_name = this.product_name;
       element.qty = this.qty;
@@ -109,8 +112,8 @@ var app = new Vue({
 
       this.clear_payment()
 
-      this.editing = false;
-      this.e_id = 0;
+      this.item_editing = false;
+      this.item_id = 0;
     },
 
     clear_item: function() {
@@ -119,8 +122,8 @@ var app = new Vue({
       this.price = '';
       this.free = '';
 
-      this.editing = false;
-      this.e_id = 0;
+      this.item_editing = false;
+      this.item_id = 0;
     },
 
     del_plus_detail : function(id) {
@@ -132,6 +135,25 @@ var app = new Vue({
       this.calculate_total();
     },
 
+
+
+    edit : function(eid) {
+      var element = this.items.find(({ id }) => id === eid);
+
+      this.sales_date = element.sales_date;
+      this.company = element.company;
+      this.client = element.client;
+      this.payments = element.payment;
+      this.total_amount = element.total_amount;
+      this.sales_name = element.sales_name;
+      this.po = element.po;
+      this.dr = element.dr;
+      this.note = element.note;
+
+      this.editing = true;
+      this.e_id = eid;
+    },
+
     edit_plus_detail : function(eid) {
       var element = this.payments.find(({ id }) => id === eid);
 
@@ -140,8 +162,8 @@ var app = new Vue({
       this.price = element.price;
       this.free = element.free;
 
-      this.editing = true;
-      this.e_id = eid;
+      this.item_editing = true;
+      this.item_id = eid;
     },
 
     add_plus_detail: function() {
@@ -200,6 +222,13 @@ var app = new Vue({
       form_Data.append("po", this.po);
       form_Data.append("dr", this.dr);
       form_Data.append("note", this.note);
+
+      if(this.editing == true)
+      {
+        form_Data.append("id", this.e_id);
+        form_Data.append("act", 1);
+      }
+
  
       form_Data.append("payment", JSON.stringify(this.payments));
 
@@ -270,6 +299,7 @@ var app = new Vue({
           });
         });
     },
+
     getPayees: function() {
       var form_Data = new FormData();
       let _this = this;
@@ -570,6 +600,11 @@ var app = new Vue({
       this.free = "";
       this.client = "";
       this.items = [];
+
+      this.e_id = 0;
+      this.editing = false;
+
+      this.getRecords();
    
       this.get_today();
     },

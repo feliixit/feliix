@@ -55,6 +55,7 @@ var app = new Vue({
     client:'',
     edit_reason:'',
 
+
     special:'',
 
     // extend
@@ -74,7 +75,7 @@ var app = new Vue({
     stage_sequence:'',
     project_stage:'',
     stage_status:'',
-
+    stage_title: '',
 
     // Change Project Status
     project_status:'',
@@ -136,6 +137,7 @@ var app = new Vue({
     // Edit/Delete Stage
     record : {},
     stage_edit_reason:'',
+    stage_edit_title:'',
 
     // Downpayment Proof
     prof_remark:'',
@@ -1159,6 +1161,8 @@ var app = new Vue({
         {
           this.record = {};
           this.record = this.shallowCopy(this.receive_stage_records.find(element => element.id == this.stage_id_to_edit));
+
+          this.stage_edit_title = this.record.title;
         }
       },
 
@@ -1654,7 +1658,7 @@ var app = new Vue({
             this.stage_sequence = '';
             this.project_stage = '';
             this.stage_status = '';
-            
+            this.stage_title = '';
             
             document.getElementById('stage_dialog').classList.remove("show");
             document.getElementById('stage_fn1').classList.remove("focus");
@@ -1668,6 +1672,7 @@ var app = new Vue({
 
             this.record = {};
             this.stage_edit_reason = '';
+            this.stage_edit_title = '';
             document.getElementById('edit_stage_dialog').classList.remove("show");
             document.getElementById('edit_stage_fn1').classList.remove("focus");
 
@@ -2389,6 +2394,7 @@ var app = new Vue({
             form_Data.append('project_stage_id', this.record.project_stage_id);
             form_Data.append('stages_status_id', this.record.stages_status_id);
             form_Data.append('stage_edit_reason', this.stage_edit_reason);
+            form_Data.append('stage_edit_title', this.stage_edit_title);
            
             const token = sessionStorage.getItem('token');
 
@@ -2610,6 +2616,7 @@ var app = new Vue({
             form_Data.append('stage_sequence', this.stage_sequence);
             form_Data.append('project_stage', this.project_stage);
             form_Data.append('stage_status', this.stage_status);
+            form_Data.append('title', this.stage_title);
 
             const token = sessionStorage.getItem('token');
 

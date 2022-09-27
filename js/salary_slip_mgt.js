@@ -45,6 +45,8 @@ var app = new Vue({
     date_start:"",
     date_end:"",
 
+    users:[],
+
     salary_per_month:"",
     salary_per_day:"",
     salary_per_minute:"",
@@ -946,6 +948,12 @@ var app = new Vue({
         .then(function(response) {
           console.log(response.data);
           _this.salary_records = response.data;
+
+          // add to users as salary_records status = 1
+          _this.users = response.data.filter(function (el) {
+            return el.status == 1;
+          });
+       
    
         })
         .catch(function(error) {

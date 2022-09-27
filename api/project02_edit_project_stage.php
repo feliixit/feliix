@@ -52,6 +52,7 @@ $project_stage_id = (isset($_POST['project_stage_id']) ?  $_POST['project_stage_
 $stages_status_id = (isset($_POST['stages_status_id']) ?  $_POST['stages_status_id'] : 0);
 $sequence = (isset($_POST['sequence']) ?  $_POST['sequence'] : '');
 $stage_edit_reason = (isset($_POST['stage_edit_reason']) ?  $_POST['stage_edit_reason'] : '');
+$stage_edit_title = (isset($_POST['stage_edit_title']) ?  $_POST['stage_edit_title'] : '');
 
 
 $query = "INSERT INTO project_edit_stage
@@ -82,6 +83,7 @@ $query = "INSERT INTO project_edit_stage
                     sequence = :sequence,
                     stage_id = :stage_id,
                     stages_status_id = :stages_status_id,
+                    stage_title = :title,
                     updated_id = :create_id,
                     updated_at = now()
                 
@@ -93,6 +95,7 @@ $query = "INSERT INTO project_edit_stage
                 $stmt1->bindParam(':sequence', $sequence);
                 $stmt1->bindParam(':stage_id', $project_stage_id);
                 $stmt1->bindParam(':stages_status_id', $stages_status_id);
+                $stmt1->bindParam(':title', $stage_edit_title);
                 $stmt1->bindParam(':create_id', $uid);
                 $stmt1->bindParam(':id', $stage_id);
 

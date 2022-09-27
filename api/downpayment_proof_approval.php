@@ -104,7 +104,7 @@ else
 {
 
     // send mail
-    $subquery = "SELECT p.special, p.project_name, 
+    $subquery = "SELECT p.id, p.special, p.project_name, 
                         pm.remark, 
                         u.username, 
                         u.email, 
@@ -129,6 +129,8 @@ else
     $stmt = $db->prepare( $subquery );
     $stmt->execute();
 
+    $pid = 0;
+
     $special = "";
     $project_name = "";
     $remark = "";
@@ -150,6 +152,9 @@ else
     $invoice = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $p_id = $row['id'];
+
         $special = $row['special'];
         $project_name = $row['project_name'];
         $remark = $row['remark'];
@@ -170,6 +175,16 @@ else
         $bank_account = $row['bank_account'];
 
         $invoice = $row['invoice'];
+
+        // if kind = 2 then update project_main's tax_withheld
+        if($kind == 2)
+        {
+            $query = "update project_main set tax_withheld = COALESCE(tax_withheld, 0) + :tax_withheld where id = :id";
+            $stmt = $db->prepare( $query );
+            $stmt->bindParam(':tax_withheld', $amount);
+            $stmt->bindParam(':id', $p_id);
+            $stmt->execute();
+        }
     }
 
     send_check_notify_mail_new($leaver, 

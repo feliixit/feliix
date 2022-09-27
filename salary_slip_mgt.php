@@ -644,7 +644,7 @@ try {
                                     <li>
                                         <select v-model="employee">
                                             <option></option>
-                                            <option v-for="(item, index) in salary_records" :value="item.uid" :key="item.username">{{ item.username }}</option>
+                                            <option v-for="(item, index) in users" :value="item.uid" :key="item.username">{{ item.username }}</option>
                                         </select>
                                     </li>
 
