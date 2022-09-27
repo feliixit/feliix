@@ -313,7 +313,6 @@ header('location:index');
         }
 
         div.subtitle {
-            background-color: lightgreen;
             font-size: 11px;
             margin-top: 1px;
         }
