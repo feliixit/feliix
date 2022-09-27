@@ -509,6 +509,12 @@
             text-align: center;
         }
 
+        .read_block .id {
+            font-size: 16px;
+            font-weight: 800;
+            text-align: left;
+        }
+
         .read_block .code {
             font-size: 16px;
             font-weight: 800;
@@ -1429,6 +1435,7 @@
 
             <td>
                 <div class="read_block" v-if="!item.is_edit">
+                    <div class="id">ID: {{ item.pid != 0 ? item.pid : ''}}</div>
                     <div class="code">{{ item.code }}</div>
                     <div class="brief">{{ item.brief }}</div>
                     <div class="listing">{{ item.listing }}

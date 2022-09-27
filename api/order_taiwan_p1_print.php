@@ -78,7 +78,8 @@ if($jwt){
             test,
             delivery,
             final,
-            `status`
+            `status`,
+            pid
             FROM od_item
             WHERE status <> -1 and od_id=$id";
             
@@ -126,6 +127,8 @@ if($jwt){
         $final = $row['final'];
 
         $status = $row['status'];
+
+        $pid = $row['pid'];
     
 
         $merged_results[] = array(
@@ -161,7 +164,8 @@ if($jwt){
         "final" => $final,
         "status" => $status,
         "confirm_text" => $confirm_text,
-   
+        "pid" => $pid
+            
         );
         }
           
@@ -330,7 +334,7 @@ if($jwt){
                     $sheet->getStyle('I'. $i)->applyFromArray($center_style);
                 }
                 
-                $sheet->setCellValue('J'. $i, $row['code'] . "\n" . $row['brief'] . "\n" . $row['listing']);
+                $sheet->setCellValue('J'. $i, "ID: ". ($row['pid'] == 0 ? "" : $row['pid']) . "\n" . $row['code'] . "\n" . $row['brief'] . "\n" . $row['listing']);
                 $sheet->getStyle('J'. $i)->getAlignment()->setWrapText(true);
 
                 $sheet->setCellValue('K' . $i, $row['qty']);
