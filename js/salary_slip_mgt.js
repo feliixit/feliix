@@ -45,6 +45,8 @@ var app = new Vue({
     date_start:"",
     date_end:"",
 
+    users:[],
+
     salary_per_month:"",
     salary_per_day:"",
     salary_per_minute:"",
@@ -946,6 +948,10 @@ var app = new Vue({
         .then(function(response) {
           console.log(response.data);
           _this.salary_records = response.data;
+
+          _this.users = this.shallowCopy(
+            _this.salary_records.find((element) => element.status == 1)
+          );
    
         })
         .catch(function(error) {
