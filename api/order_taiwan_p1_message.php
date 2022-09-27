@@ -141,6 +141,9 @@ switch ($method) {
     
             if($access3 == "true" || $access4 == "true" || $access5 == "true" || $access6 == "true")
                 $send17 = true;
+
+            if($access1 == "false" && $access2 == "false" && $access3 == "false" && $access4 == "false" && $access5 == "false" && $access6 == "false" && $access7 == "false")
+                $send17 = true;
     
             if($send17==true)
                 order_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_17', $items, $od_id, GetAccess7($od_id, $db));
