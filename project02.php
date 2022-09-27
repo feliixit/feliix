@@ -358,7 +358,7 @@ header('location:index');
                                 </dd>
                                 <dt>Sub Title:</dt>
                                 <dd>
-                                    <input type="text" placeholder="" v-model="title">
+                                    <input type="text" placeholder="" v-model="stage_title">
                                 </dd>
                             </dl>
                             <div class="btnbox">

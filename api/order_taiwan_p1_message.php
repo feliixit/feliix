@@ -139,7 +139,7 @@ switch ($method) {
                     $send17 = true;
             }
     
-            if($access3 == "true" && $access4 == "true" && $access5 == "true" && $access6 == "true")
+            if($access3 == "true" || $access4 == "true" || $access5 == "true" || $access6 == "true")
                 $send17 = true;
     
             if($send17==true)

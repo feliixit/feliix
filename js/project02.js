@@ -55,6 +55,7 @@ var app = new Vue({
     client:'',
     edit_reason:'',
 
+
     special:'',
 
     // extend
@@ -74,7 +75,7 @@ var app = new Vue({
     stage_sequence:'',
     project_stage:'',
     stage_status:'',
-    title: '',
+    stage_title: '',
 
     // Change Project Status
     project_status:'',
@@ -1657,7 +1658,7 @@ var app = new Vue({
             this.stage_sequence = '';
             this.project_stage = '';
             this.stage_status = '';
-            this.title = '';
+            this.stage_title = '';
             
             document.getElementById('stage_dialog').classList.remove("show");
             document.getElementById('stage_fn1').classList.remove("focus");
@@ -2615,7 +2616,7 @@ var app = new Vue({
             form_Data.append('stage_sequence', this.stage_sequence);
             form_Data.append('project_stage', this.project_stage);
             form_Data.append('stage_status', this.stage_status);
-            form_Data.append('title', this.title);
+            form_Data.append('title', this.stage_title);
 
             const token = sessionStorage.getItem('token');
 
