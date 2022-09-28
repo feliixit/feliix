@@ -1,4 +1,5 @@
 <?php
+ob_start();
 // required headers
  error_reporting(0);
  
@@ -230,6 +231,7 @@ if($jwt){
             $sheet->getStyle('A1:' . 'L1')->getFont()->setBold(true);
             $sheet->getStyle('A1:' . 'L' . --$i)->applyFromArray($styleArray);
             
+            ob_end_clean();
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="file.xlsx"');
