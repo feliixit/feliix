@@ -1,4 +1,5 @@
 <?php
+ob_start();
 //error_reporting(0);
 error_reporting(E_ALL);
 ini_set('log_errors', true);
@@ -1033,6 +1034,7 @@ function get_schedule_file($id)
     // $myTextElement = $section->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
     //$myTextElement->setFontStyle($fontStyle);
     
+    ob_end_clean();
     // Saving the document as OOXML file...
     $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007', $download = true);
     
