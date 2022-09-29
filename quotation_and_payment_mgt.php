@@ -415,7 +415,17 @@ $(function(){
         }
 
 
-
+        .list_function .new_function a.exporting {
+            width: 46px;
+            height: 46px;
+            background-color: #00811e;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url(images/ui/btn_export_white.svg);
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+        }
 
         .pub-con {
             box-sizing: border-box;
@@ -786,6 +796,8 @@ $(function(){
                         </div>
                     </div>
                 </div>
+
+                <div class="new_function"><a id="btn_export" class="exporting" @click="order_export()"></a></div>
 
 
                 <!-- 分頁 -->

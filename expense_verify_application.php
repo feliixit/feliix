@@ -1,4 +1,5 @@
 <?php
+ob_start();
 error_reporting(E_ALL);
 
 include_once 'api/config/database.php';
@@ -397,6 +398,7 @@ $fontStyle->setSize(13);
 // $myTextElement = $section->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
 //$myTextElement->setFontStyle($fontStyle);
 
+ob_end_clean();
 // Saving the document as OOXML file...
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007', $download = true);
 

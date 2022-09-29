@@ -1,6 +1,7 @@
 <?php
+ob_start();
 // required headers
- error_reporting(0);
+error_reporting(0);
  
  require '../vendor/autoload.php';
 // required to encode json web token
@@ -357,7 +358,7 @@ if($jwt){
             $sheet->getStyle('A1:' . 'K' . --$i)->applyFromArray($styleArray);
 
 
-           
+            ob_end_clean();
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="file.xlsx"');

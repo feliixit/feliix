@@ -1486,5 +1486,51 @@ var app = new Vue({
           });
         });
     },
+
+    order_export: function() {
+      var token = localStorage.getItem("token");
+
+      let _this = this;
+    
+      const params = {
+        id: _this.id,
+        fc: _this.fil_category,
+        fs: _this.fil_status,
+        ft: _this.fil_creator,
+        fal: _this.fil_amount_lower,
+        fau: _this.fil_amount_upper,
+        fpl: _this.fil_payment_lower,
+        fpu: _this.fil_payment_upper,
+        fk: _this.fil_keyowrd,
+        fkp: _this.fil_keyowrd_p,
+        of1: _this.od_factor1,
+        ofd1: _this.od_factor1_order,
+        of2: _this.od_factor2,
+        ofd2: _this.od_factor2_order,
+        page: _this.page,
+        size: _this.perPage,
+      };
+
+      axios({
+        method: "post",
+        url: "api/quotation_payment_mgt_export",
+        params,
+        responseType: "blob",
+      })
+        .then(function(response) {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+
+          link.setAttribute("download", "quotation_payment_mgt_export.xlsx");
+
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch(function(response) {
+          console.log(response);
+        });
+    },
+
   },
 });
