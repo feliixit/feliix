@@ -491,11 +491,11 @@ foreach($return_result as $row)
     $sheet->setCellValue('C' . $i, $row['project_status']);
     $sheet->setCellValue('D' . $i, $row['username']);
     $sheet->setCellValue('E' . $i, $row['created_at'] . " ~ " . $row['updated_at']);
-    $sheet->setCellValue('F' . $i, number_format((float)$row['final_amount'], 2, '.', ''));
-    $sheet->setCellValue('G' . $i, number_format((float)$row['tax_withheld'], 2, '.', ''));
-    $sheet->setCellValue('H' . $i, number_format((float)$row['down_payment_amount'], 2, '.', ''));
-    $sheet->setCellValue('I' . $i, number_format((float)$row['payment_amount'], 2, '.', ''));
-    $sheet->setCellValue('J' . $i, number_format((float)$row['ar'], 2, '.', ''));
+    $sheet->setCellValue('F' . $i, $row['final_amount'] == 0 ? '' : number_format((float)$row['final_amount'], 2, '.', ''));
+    $sheet->setCellValue('G' . $i, $row['tax_withheld'] == 0 ? '' : number_format((float)$row['tax_withheld'], 2, '.', ''));
+    $sheet->setCellValue('H' . $i, $row['down_payment_amount'] == 0 ? '' : number_format((float)$row['down_payment_amount'], 2, '.', ''));
+    $sheet->setCellValue('I' . $i, $row['payment_amount'] == 0 ? '' : number_format((float)$row['payment_amount'], 2, '.', ''));
+    $sheet->setCellValue('J' . $i, $row['ar'] == 0 ? '' : number_format((float)$row['ar'], 2, '.', ''));
 
     $files = $row['payment'];
 
