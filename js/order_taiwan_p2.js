@@ -967,6 +967,9 @@ var app = new Vue({
           price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
           // price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
 
+          // 20221004 price only srp
+          price = this.product.srp !== 0 ?  this.product.srp : 0;
+
           var sn = 0;
 
           for (let i = 0; i < this.items.length; i++) {
@@ -1104,6 +1107,9 @@ var app = new Vue({
         if(price == null)
           price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
           //price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
+
+          // 20221004 price only srp
+          price = this.product.srp !== 0 ?  this.product.srp : 0;
 
         for(var i=0; i<this.specification.length; i++)
         {
