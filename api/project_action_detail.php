@@ -226,6 +226,21 @@ function GetDetailType($loc)
         case "9":
             $location = "Quotation Deadline";
             break;
+        case "10":
+            $location = "Confirmation - Specific Products (like key spec attribute, price of specific item)";
+            break;
+        case "11":
+            $location = "Confirmation - Installation";
+            break;
+        case "12":
+            $location = "Confirmation - Warranty";
+            break;
+        case "13":
+            $location = "Confirmation - Lead-time";
+            break;
+        case "14":
+            $location = "Confirmation - Budget";
+            break;
         
     }
 

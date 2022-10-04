@@ -832,6 +832,11 @@ header('location:index');
                                 <dt class="head">Detail Type:</dt>
                                 <dd>
                                     <select v-model="detail_type">
+                                        <option value="10">Confirmation - Specific Products (like key spec attribute, price of specific item)</option>
+                                        <option value="11">Confirmation - Installation</option>
+                                        <option value="12">Confirmation - Warranty</option>
+                                        <option value="13">Confirmation - Lead-time</option>
+                                        <option value="14">Confirmation - Budget</option>
                                         <option value="4">Client Details</option>
                                         <option value="5">Competitors</option>
                                         <option value="3">Discount</option>
