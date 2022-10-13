@@ -140,6 +140,9 @@ switch ($method) {
                 $status = isset($block_array[$i]['status']) ? $block_array[$i]['status'] : 0;
                 $status = $status == '' ? 0 : $status;
        
+                $ratio = $ratio == '' ? 0 : $ratio;
+                $amount = $amount == '' ? 0 : $amount;
+                $discount = $discount == '' ? 0 : $discount;
 
                 // bind the values
                 $stmt->bindParam(':od_id', $od_id);
