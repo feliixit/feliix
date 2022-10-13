@@ -2977,4 +2977,177 @@ ADD COLUMN `access7` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
 ALTER TABLE project_stages
 ADD COLUMN `stage_title` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
+-- 20220930
+CREATE TABLE `price_comparison` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `kind` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `amount` int(11) DEFAULT 0,
+  `first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `project_category` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `quotation_no` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `quotation_date` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_third_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_by_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_by_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `footer_first_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `footer_second_line` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
+CREATE TABLE `price_comparison_option` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `p_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `title` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sn` int(11) DEFAULT 0,
+  `color` varchar(24) default '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE `price_comparison_group` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `p_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `title` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sn` int(11) DEFAULT 0,
+  `color` varchar(24) default '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE `price_comparison_legend` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `group_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `title` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sn` int(11) DEFAULT 0,
+  `color` varchar(24) default '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `price_comparison_item` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `od_id` bigint(20) unsigned NOT NULL,
+  `option_id` bigint(20) unsigned NOT NULL,
+  `legend_id` bigint(20) unsigned NOT NULL,
+  `sn` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo1` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo2` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo3` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `code` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brief` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `list` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `qty` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `price` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `ratio` decimal(10,2) DEFAULT 0.0,
+  `discount` decimal(10,2) DEFAULT 0.0,
+  `amount` decimal(10,2) DEFAULT 0.0,
+  `desc` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pid` bigint(20) DEFAULT 0,
+  `v1` VARCHAR(255) DEFAULT '',
+  `v2` VARCHAR(255) DEFAULT '',
+  `v3` VARCHAR(255) DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20221004
+insert into project_stage(stage, `status`, `order`) values('Proposal - Site Visit', 0, 25);
+
+insert into project_stage(stage, `status`, `order`) values('Order - Site Visit', 2, 75);
+
+
+CREATE TABLE `price_comparison_total` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `price_id` bigint(20) unsigned NOT NULL,
+  `page` int(11) DEFAULT 0,
+  `discount` int(11) DEFAULT 0,
+  `vat` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `show_vat` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `valid` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `total1` decimal(12,2) DEFAULT 0.00,
+  `total2` decimal(12,2) DEFAULT 0.00,
+  `total3` decimal(12,2) DEFAULT 0.00,
+  `status` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS price_comparison_term
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `price_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+  `title` varchar(512) DEFAULT '',
+  `brief` varchar(1024) DEFAULT '',
+  `list` varchar(4096) DEFAULT '',
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS price_comparison_signature
+(
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `price_id` bigint(20) unsigned NOT NULL,
+  `page` int(11) DEFAULT 0,
+  `type` varchar(2) DEFAULT '',
+  `photo` varchar(128) DEFAULT '',
+  `name` varchar(128) DEFAULT '',
+  `position` varchar(128) DEFAULT '',
+  `phone` varchar(128) DEFAULT '',
+  `email` varchar(128) DEFAULT '',
+  `status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS price_comparison_payment_term
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `price_id` bigint(20) unsigned NOT NULL,
+	`page` int(11) DEFAULT 0,
+  `payment_method` varchar(512) DEFAULT '',
+  `brief` varchar(512) DEFAULT '',
+  `list` JSON,
+	`status` varchar(2) DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

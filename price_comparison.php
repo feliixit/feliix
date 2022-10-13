@@ -24,16 +24,34 @@ try {
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
 
-$GLOBALS['position'] = $decoded->data->position;
-$GLOBALS['department'] = $decoded->data->department;
+            $GLOBALS['position'] = $decoded->data->position;
+            $GLOBALS['department'] = $decoded->data->department;
 
-if($GLOBALS['department'] == 'Lighting' || $GLOBALS['department'] == 'Office' || $GLOBALS['department'] == 'Sales'){
-$test_manager = "1";
-}
+            if($GLOBALS['department'] == 'Lighting' || $GLOBALS['department'] == 'Office' || $GLOBALS['department'] == 'Sales'){
+            $test_manager = "1";
+            }
 
-//  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
-if($user_id == 48 || $user_id == 2 || $user_id == 11 || $user_id == 6 ||  $user_id == 1 || $user_id == 3)
-$test_manager = "1";
+            //  ('Kuan', 'Dennis Lin', 'dereck', 'Ariel Lin', 'Kristel Tan');
+            if($user_id == 48 || $user_id == 2 || $user_id == 11 || $user_id == 6 ||  $user_id == 1 || $user_id == 3)
+            $test_manager = "1";
+
+            $page = 2;
+            $id = $_GET["id"];
+            $database = new Database();
+            $db = $database->getConnection();
+
+            $query = "SELECT count(*) cnt from price_comparison_option pco where p_id = " . $id;
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $page = $row['cnt'];
+            }
+            if($page < 3)
+                $page = 2;
+            else
+                $page = 3;
+
 }
 
 
@@ -463,8 +481,11 @@ header( 'location:index' );
 
         .qn_page {
             /*   2個option, width=2420, 3個option width=3560 */
+            <?php if ($page == 2) { ?>
+            width: 2420px;
+            <?php } else { ?>
             width: 3560px;
-
+            <?php } ?>
             background-color: white;
             position: relative;
             overflow-x: auto;
@@ -1977,7 +1998,12 @@ header( 'location:index' );
 
             .qn_page {
                 /*   2個option, zoom=65.5%, 3個option zoom=44.5% */
+
+                <?php if ($page == 2) { ?>
+                zoom: 65.5%;
+                <?php } else { ?>
                 zoom: 44.5%;
+                <?php } ?>
             }
 
             .qn_page .qn_header, .qn_page .qn_footer {
@@ -1986,7 +2012,11 @@ header( 'location:index' );
 
             .qn_page .area_terms, .qn_page .area_payment, .qn_page .area_conforme {
                 /*   2個option, zoom=120%, 3個option zoom=170% */
+                <?php if ($page == 2) { ?>
+                zoom: 120%;
+                <?php } else { ?>
                 zoom: 170%;
+                <?php } ?>
                 page-break-inside: avoid;
             }
 
