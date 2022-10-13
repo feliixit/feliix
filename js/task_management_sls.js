@@ -348,7 +348,8 @@ var app = new Vue({
 
       if (
         this.my_title == "MANAGING DIRECTOR" ||
-        this.my_title == "CHIEF ADVISOR"
+        this.my_title == "CHIEF ADVISOR" || 
+        this.my_title == "SUPPLY CHAIN MANAGER"
       )
         can_save = true;
 
