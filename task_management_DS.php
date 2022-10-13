@@ -38,6 +38,11 @@ try {
         }
     }
 
+    if(trim(strtoupper($position)) == 'SUPPLY CHAIN MANAGER')
+    {
+        $access6 = true;
+    }  
+
 
     if(trim($department) == '')
     {
