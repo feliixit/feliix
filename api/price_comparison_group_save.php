@@ -48,34 +48,34 @@ else
         // now you can apply
         $uid = $user_id;
 
-        // price_comparison_option
-        $query = "DELETE FROM price_comparison_legend
-                WHERE
-                `group_id` in (select id from price_comparison_group where p_id = :p_id)";
+        // // price_comparison_option
+        // $query = "DELETE FROM price_comparison_legend
+        //         WHERE
+        //         `group_id` in (select id from price_comparison_group where p_id = :p_id)";
 
-        // prepare the query
-        $stmt = $db->prepare($query);
+        // // prepare the query
+        // $stmt = $db->prepare($query);
 
-        // bind the values
-        $stmt->bindParam(':p_id', $_id);
+        // // bind the values
+        // $stmt->bindParam(':p_id', $_id);
 
-        try {
-        // execute the query, also check if query was successful
-        if (!$stmt->execute()) {
-            $arr = $stmt->errorInfo();
-            error_log($arr[2]);
-            $db->rollback();
-            http_response_code(501);
-            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
-            die();
-        }
-        } catch (Exception $e) {
-        error_log($e->getMessage());
-        $db->rollback();
-        http_response_code(501);
-        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-        die();
-        }
+        // try {
+        // // execute the query, also check if query was successful
+        // if (!$stmt->execute()) {
+        //     $arr = $stmt->errorInfo();
+        //     error_log($arr[2]);
+        //     $db->rollback();
+        //     http_response_code(501);
+        //     echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+        //     die();
+        // }
+        // } catch (Exception $e) {
+        // error_log($e->getMessage());
+        // $db->rollback();
+        // http_response_code(501);
+        // echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        // die();
+        // }
 
         // delete price_comparison_group
         $query = "DELETE FROM price_comparison_group
@@ -110,7 +110,7 @@ else
         $j = 0;
 
         foreach($group_array as &$group) {
-            
+
             $query = "INSERT INTO price_comparison_group
             SET
                 `p_id` = :p_id,
@@ -160,51 +160,96 @@ else
             $legend_array = $group['legend'];
 
             foreach($legend_array as &$legend) {
-                $query = "INSERT INTO price_comparison_legend
-                SET
-                    `group_id` = :group_id,
-                    `title` = :title,
-                    `sn` = :sn,
-                    `color` = :color,
-                                    
-                    `status` = 0,
-                    `create_id` = :create_id,
-                    `created_at` =  now() ";
-    
-                // prepare the query
-                $stmt = $db->prepare($query);
-    
-                $j = $j + 1;
-                // bind the values
-                $stmt->bindParam(':group_id', $last_id);
-                $stmt->bindParam(':title', $legend['title']);
-                $stmt->bindParam(':sn', $j);
-                $stmt->bindParam(':color', $legend['color']);
-             
+
+                if($legend['sn'] == 0)
+                {
+                    $query = "INSERT INTO price_comparison_legend
+                    SET
+                        `group_id` = :group_id,
+                        `title` = :title,
+                        `sn` = :sn,
+                        `color` = :color,
+                                        
+                        `status` = 0,
+                        `create_id` = :create_id,
+                        `created_at` =  now() ";
+        
+                    // prepare the query
+                    $stmt = $db->prepare($query);
+        
+                    $j = $j + 1;
+                    // bind the values
+                    $stmt->bindParam(':group_id', $last_id);
+                    $stmt->bindParam(':title', $legend['title']);
+                    $stmt->bindParam(':sn', $j);
+                    $stmt->bindParam(':color', $legend['color']);
+                 
+                    
+                    $stmt->bindParam(':create_id', $user_id);
                 
-                $stmt->bindParam(':create_id', $user_id);
-            
-                $last_legend_id = 0;
-                // execute the query, also check if query was successful
-                try {
+                    $last_legend_id = 0;
                     // execute the query, also check if query was successful
-                    if ($stmt->execute()) {
-                        $last_legend_id = $db->lastInsertId();
-                    } else {
-                        $arr = $stmt->errorInfo();
-                        error_log($arr[2]);
+                    try {
+                        // execute the query, also check if query was successful
+                        if ($stmt->execute()) {
+                            $last_legend_id = $db->lastInsertId();
+                        } else {
+                            $arr = $stmt->errorInfo();
+                            error_log($arr[2]);
+                            $db->rollback();
+                            http_response_code(501);
+                            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                            die();
+                        }
+                    } catch (Exception $e) {
+                        error_log($e->getMessage());
                         $db->rollback();
                         http_response_code(501);
-                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                         die();
                     }
-                } catch (Exception $e) {
-                    error_log($e->getMessage());
-                    $db->rollback();
-                    http_response_code(501);
-                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-                    die();
                 }
+                else
+                {
+                    $query = "update price_comparison_legend
+                    SET
+                        `group_id` = :group_id
+                    WHERE
+                        `id` = :id
+                         ";
+        
+                    // prepare the query
+                    $stmt = $db->prepare($query);
+        
+                    $j = $j + 1;
+                    // bind the values
+                    $stmt->bindParam(':group_id', $last_id);
+                    $stmt->bindParam(':id', $legend['id']);
+                
+                    $last_legend_id = 0;
+                    // execute the query, also check if query was successful
+                    try {
+                        // execute the query, also check if query was successful
+                        if ($stmt->execute()) {
+                            $last_legend_id = $db->lastInsertId();
+                        } else {
+                            $arr = $stmt->errorInfo();
+                            error_log($arr[2]);
+                            $db->rollback();
+                            http_response_code(501);
+                            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                            die();
+                        }
+                    } catch (Exception $e) {
+                        error_log($e->getMessage());
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                        die();
+                    }
+                }
+
+                
     
             }
 

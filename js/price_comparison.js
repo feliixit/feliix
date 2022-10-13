@@ -2473,7 +2473,7 @@ Installation:`;
 
         obj = {
           "id" : order + 1,
-          "sn" : order + 1,
+          "sn" : 0,
           "title" : '',
           "color" : '#000000',
         }, 
