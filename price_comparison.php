@@ -3003,7 +3003,7 @@ header( 'location:index' );
                                     <tr class="tfoot1">
                                         <!-- 如果有 DISCOUNT 和 12%VAT，則rowspan=3：有 DISCOUNT 或 12%VAT，則rowspan=2；沒有 DISCOUNT 和 12%VAT ，則rowspan=1-->
                                         <td colspan="3" :rowspan="total_disp.vat != '' && total_disp.discount != 0 ? 3 : (total_disp.vat != '' || total_disp.discount != 0 ? 2 : 1)">
-                                            <div>Remarks: Quotation valid for <span class="valid_for">1 month</span></div>
+                                            <div>Remarks: Quotation valid for <span class="valid_for">{{ total_disp.valid }}</span></div>
                                         </td>
 
                                         <!-- 第一個option -->
