@@ -3069,17 +3069,17 @@ header( 'location:index' );
                                         <!-- 第一個option -->
                                         <td colspan="2">Proposed Grand Total</td> <!---->
                                         <td v-if="total_disp.total1 == 0"><span class="numbers">₱ {{ ((subtotal_a * (100 - total_disp.discount) / 100) * 112 / 100) !== undefined ? ((subtotal_a * (100 - total_disp.discount) / 100) * 112 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
-                                        <td v-if="total_disp.total1 != 0"><span class="numbers">₱ {{ Number(total_disp.total1).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                        <td v-if="total_disp.total1 != 0"><span class="numbers">₱ {{ Number(total_disp.total1).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
 
                                         <!-- 第二個option -->
                                         <td colspan="2">Alternative Grand Total</td> <!---->
                                         <td><span class="numbers">₱ {{ ((subtotal_b * (100 - total_disp.discount) / 100) * 112 / 100) !== undefined ? ((subtotal_b * (100 - total_disp.discount) / 100) * 112 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
-                                        <td v-if="total_disp.total2 != 0"><span class="numbers">₱ {{ Number(total_disp.total2).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                        <td v-if="total_disp.total2 != 0"><span class="numbers">₱ {{ Number(total_disp.total2).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
 
                                         <!-- 第三個option -->
                                         <td colspan="2"  v-if="temp_options.length == 3">Alternative 2 Grand Total</td> <!---->
                                         <td  v-if="temp_options.length == 3 && total_disp.total3 != 0"><span class="numbers">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * 112 / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * 112 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
-                                        <td v-if="temp_options.length == 3 && total_disp.total3 != 0"><span class="numbers">₱ {{ Number(total_disp.total3).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                        <td v-if="temp_options.length == 3 && total_disp.total3 != 0"><span class="numbers">₱ {{ Number(total_disp.total3).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
                                     </tr>
 
                                     
