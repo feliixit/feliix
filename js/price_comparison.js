@@ -143,6 +143,24 @@ var app = new Vue({
       },
 
       
+      total_disp: {
+        id:0,
+        page: 0,
+        discount:'0',
+        vat : '',
+        show_vat : '',
+        valid : '',
+        total1 : '',
+        total2 : '',
+        total3 : '',
+        real_total1 : '',
+        back_total1 : '',
+        real_total2 : '',
+        back_total2 : '',
+        real_total3 : '',
+        back_total3 : '',
+      },
+      
       term:
       {
         page: 0,
@@ -2367,8 +2385,10 @@ Installation:`;
 
               // total
               _this.total = _this.receive_records[0].total_info;
+              _this.total_disp = JSON.parse(JSON.stringify(_this.total));
               // get product_vat from total.vat
               _this.total.vat !== undefined ? _this.product_vat = _this.total.vat : _this.product_vat = '';
+              _this.total_disp.vat !== undefined ? _this.product_vat = _this.total_disp.vat : _this.product_vat = '';
 
               // term
               _this.term = _this.receive_records[0].term_info;
