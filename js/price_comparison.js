@@ -629,8 +629,11 @@ var app = new Vue({
           legend_id : this.legend.id,
        
           photo1:this.product.photo1 != '' ? this.product.photo1 : '',
+          url1: this.product.photo1 != '' ? this.img_url + this.product.photo1 : '',
           photo2:this.product.photo2 != '' ? this.product.photo2 : '',
+          url2: this.product.photo2 != '' ? this.img_url + this.product.photo2 : '',
           photo3:this.product.photo3 != '' ? this.product.photo3 : '',
+          url3: this.product.photo3 != '' ? this.img_url + this.product.photo3 : '',
           code:this.product.code,
           brief:"",
           list:list,

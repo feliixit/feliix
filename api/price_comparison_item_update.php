@@ -73,6 +73,7 @@ switch ($method) {
             die();
         }
 
+        $legend_id = $block_array['id'];
         // delete 
         for($i=0 ; $i < count($block_array['options']) ; $i++)
         {
@@ -81,6 +82,7 @@ switch ($method) {
             // delete previous item
             $query = "DELETE FROM price_comparison_item
             WHERE od_id = :od_id 
+            AND legend_id = :legend_id
             and option_id = :option_id";
 
             // prepare the query
@@ -89,6 +91,7 @@ switch ($method) {
             // bind the values
             $stmt->bindParam(':od_id', $id);
             $stmt->bindParam(':option_id', $option['id']);
+            $stmt->bindParam(':legend_id', $legend_id);
     
         
             try {
