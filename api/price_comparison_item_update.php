@@ -66,11 +66,52 @@ switch ($method) {
 
         $block_array = json_decode($block,true);
 
+      
         if ($id == 0) {
             http_response_code(401);
             echo json_encode(array("message" => "Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Access denied."));
             die();
         }
+
+        // delete 
+        for($i=0 ; $i < count($block_array['options']) ; $i++)
+        {
+            $option = $block_array['options'][$i];
+
+            // delete previous item
+            $query = "DELETE FROM price_comparison_item
+            WHERE od_id = :od_id 
+            and option_id = :option_id";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            // bind the values
+            $stmt->bindParam(':od_id', $id);
+            $stmt->bindParam(':option_id', $option['id']);
+    
+        
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+
+        
+        } 
+        
 
         $last_id = $id;
 
@@ -87,35 +128,6 @@ switch ($method) {
                 $temp_block_a = $option['temp_block_a'][$j];
 
                 $_id = $temp_block_a['id'];
-
-                // delete previous item
-                $query = "DELETE FROM price_comparison_item
-                WHERE
-                `id` = :item_id";
-
-                // prepare the query
-                $stmt = $db->prepare($query);
-
-                // bind the values
-                $stmt->bindParam(':item_id', $_id);
-           
-                try {
-                // execute the query, also check if query was successful
-                if (!$stmt->execute()) {
-                    $arr = $stmt->errorInfo();
-                    error_log($arr[2]);
-                    $db->rollback();
-                    http_response_code(501);
-                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
-                    die();
-                }
-                } catch (Exception $e) {
-                error_log($e->getMessage());
-                $db->rollback();
-                http_response_code(501);
-                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-                die();
-                }
 
                 // insert quotation_page_type_block
                 $query = "INSERT INTO price_comparison_item

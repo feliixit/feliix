@@ -618,14 +618,13 @@ var app = new Vue({
         list.replace(/\n+$/, "");
         sn = sn * 1 + 1;
 
-        items = [];
 
         item = {
           is_checked:false,
           is_edit: false,
           type: block_a_image,
           id: sn,
-          sn: sn,
+          sn: 0,
           option_id : this.option_id,
           legend_id : this.legend.id,
        
@@ -637,10 +636,11 @@ var app = new Vue({
           list:list,
           qty:"",
           price:price,
-          ratio:"",
+          ratio:"1",
           amount:"",
           desc: "",
           pid: this.product.id,
+          discount : 0,
           
           v1:this.v1,
           v2:this.v2,
@@ -648,33 +648,34 @@ var app = new Vue({
         };
 
         items.push(item);
+        alert('Add Successfully');
 
-        var token = localStorage.getItem("token");
-          var form_Data = new FormData();
+        // var token = localStorage.getItem("token");
+        //   var form_Data = new FormData();
 
-          form_Data.append("jwt", token);
-          form_Data.append("od_id", this.id);
-          form_Data.append("block", JSON.stringify(items));
+        //   form_Data.append("jwt", token);
+        //   form_Data.append("od_id", this.id);
+        //   form_Data.append("block", JSON.stringify(items));
 
-          axios({
-            method: "post",
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            url: "api/price_comparison_item_insert",
-            data: form_Data,
-          })
-            .then(function(response) {
-              //handle success
+        //   axios({
+        //     method: "post",
+        //     headers: {
+        //       "Content-Type": "multipart/form-data",
+        //     },
+        //     url: "api/price_comparison_item_insert",
+        //     data: form_Data,
+        //   })
+        //     .then(function(response) {
+        //       //handle success
 
-              _this.getRecord();
-              alert('Add Successfully');
+        //       _this.getRecord();
+        //       alert('Add Successfully');
 
-            })
-            .catch(function(error) {
+        //     })
+        //     .catch(function(error) {
           
 
-            });
+        //     });
       },
 
       add_without_image(all) {
@@ -769,14 +770,13 @@ var app = new Vue({
 
         sn = sn * 1 + 1;
 
-        items = [];
 
         item = {
           is_checked:false,
           is_edit: false,
           type: block_a_image,
           id: sn,
-          sn: sn,
+          sn: 0,
           option_id : this.option_id,
           legend_id : this.legend.id,
     
@@ -789,44 +789,47 @@ var app = new Vue({
             list:list,
             qty:"",
             price:price,
-            ratio:"",
+            ratio:"1",
             amount:"",
             desc: "",
             pid: this.product.id,
             v1: this.v1,
             v2: this.v2,
             v3: this.v3,
+
+            discount : 0,
            
           };
 
           items.push(item);
+          alert('Add Successfully');
 
-            var token = localStorage.getItem("token");
-              var form_Data = new FormData();
+            // var token = localStorage.getItem("token");
+            //   var form_Data = new FormData();
 
-              form_Data.append("jwt", token);
-              form_Data.append("od_id", this.id);
-              form_Data.append("block", JSON.stringify(items));
+            //   form_Data.append("jwt", token);
+            //   form_Data.append("od_id", this.id);
+            //   form_Data.append("block", JSON.stringify(items));
 
-              axios({
-                method: "post",
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-                url: "api/price_comparison_item_insert",
-                data: form_Data,
-              })
-                .then(function(response) {
-                  //handle success
+            //   axios({
+            //     method: "post",
+            //     headers: {
+            //       "Content-Type": "multipart/form-data",
+            //     },
+            //     url: "api/price_comparison_item_insert",
+            //     data: form_Data,
+            //   })
+            //     .then(function(response) {
+            //       //handle success
 
-                  _this.getRecord();
-                  alert('Add Successfully');
+            //       _this.getRecord();
+            //       alert('Add Successfully');
     
-                })
-                .catch(function(error) {
+            //     })
+            //     .catch(function(error) {
               
     
-                });
+            //     });
 
       },
       
@@ -1788,6 +1791,9 @@ var app = new Vue({
             //_this.block_value = [];
             _this.submit = false;
 
+            _this.legend = [];
+            _this.temp_block_a = [];
+
             Swal.fire({
               html: res.data.message,
               icon: "info",
@@ -1916,7 +1922,10 @@ var app = new Vue({
         }
       },
 
-      block_a_up: function(fromIndex, eid) {
+      block_a_up: function(fromIndex, eid, option) {
+ 
+        this.temp_block_a = option['temp_block_a'];
+
         var toIndex = fromIndex - 1;
   
         if (toIndex < 0) 
@@ -1927,7 +1936,10 @@ var app = new Vue({
         this.temp_block_a.splice(toIndex, 0, element);
       },
 
-      block_a_down: function(fromIndex, eid) {
+      block_a_down: function(fromIndex, eid, option) {
+
+        this.temp_block_a = option['temp_block_a'];
+
         var toIndex = fromIndex + 1;
 
         if (toIndex > this.temp_block_a.length - 1) 
@@ -1938,12 +1950,14 @@ var app = new Vue({
         this.temp_block_a.splice(toIndex, 0, element);
       },
 
-      block_a_del: function(eid) {
+      block_a_del: function(eid, option) {
 
-        var index = this.temp_block_a.findIndex(({ id }) => id === eid);
-        if (index > -1) {
-          this.temp_block_a.splice(index, 1);
-        }
+        this.temp_block_a = option['temp_block_a'];
+
+        //var index = this.temp_block_a.findIndex(({ id }) => id === eid);
+        //if (index > -1) {
+          this.temp_block_a.splice(eid, 1);
+        //}
       },
 
       clear_photo(item, num) {
@@ -2047,14 +2061,13 @@ Installation:`;
 
         sn = sn + 1;
 
-        items = [];
 
         item = {
           is_checked:false,
           is_edit: false,
           type: block_a_image,
           id: sn,
-          sn: sn,
+          sn: 0,
           option_id : this.option_id,
           legend_id : this.legend.id,
         
@@ -2066,8 +2079,8 @@ Installation:`;
                 list:"",
                 qty:"",
                 price:"",
-                ratio:"",
-              
+                ratio:"1",
+               discount : "0",
                 amount:"",
                 desc: "",
                 pid:0,
@@ -2079,33 +2092,33 @@ Installation:`;
 
         items.push(item);
 
-        var token = localStorage.getItem("token");
-              var form_Data = new FormData();
+        // var token = localStorage.getItem("token");
+        //       var form_Data = new FormData();
 
-              form_Data.append("jwt", token);
-              form_Data.append("od_id", this.id);
-              form_Data.append("block", JSON.stringify(items));
+        //       form_Data.append("jwt", token);
+        //       form_Data.append("od_id", this.id);
+        //       form_Data.append("block", JSON.stringify(items));
 
-              axios({
-                method: "post",
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-                url: "api/price_comparison_item_insert",
-                data: form_Data,
-              })
-                .then(function(response) {
-                  //handle success
+        //       axios({
+        //         method: "post",
+        //         headers: {
+        //           "Content-Type": "multipart/form-data",
+        //         },
+        //         url: "api/price_comparison_item_insert",
+        //         data: form_Data,
+        //       })
+        //         .then(function(response) {
+        //           //handle success
 
-                  _this.getRecord();
+        //           _this.getRecord();
          
-                  //alert('Add Successfully');
+        //           //alert('Add Successfully');
     
-                })
-                .catch(function(error) {
+        //         })
+        //         .catch(function(error) {
               
     
-                });
+        //         });
 
       },
 

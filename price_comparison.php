@@ -2391,10 +2391,10 @@ header( 'location:index' );
                                         </li>
                                         <li>
                                             <i class="fas fa-arrow-alt-circle-up"
-                                               @click="block_a_up(index, block.id)"></i>
+                                               @click="block_a_up(index, block.id, option)"></i>
                                             <i class="fas fa-arrow-alt-circle-down"
-                                               @click="block_a_down(index, block.id)"></i>
-                                            <i class="fas fa-trash-alt" @click="block_a_del(block.id)"></i>
+                                               @click="block_a_down(index, block.id, option)"></i>
+                                            <i class="fas fa-trash-alt" @click="block_a_del(index, option)"></i>
                                         </li>
                                     </ul>
 
@@ -2930,8 +2930,8 @@ header( 'location:index' );
                                                 <td class="qty"><span class="numbers">{{ row.gp1.qty }}</span></td>
                                                 <td class="price"><!----> <span v-if="row.gp1.discount != 0"
                                                         class="numbers deleted">₱ {{ Number(row.gp1.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span>{{ row.gp1.discount !== undefined ? Math.floor(row.gp1.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br>
-                                                    <span class="numbers">₱ {{ Number(row.gp1.price - (row.gp1.price * (row.gp1.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
-                                                <td class="amount"><span class="numbers">₱ {{ row.gp1.amount }} </span></td> <!---->
+                                                    <span class="numbers" v-if="row.gp1.id != 0">₱ {{ Number(row.gp1.price - (row.gp1.price * (row.gp1.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
+                                                <td class="amount"><span class="numbers" v-if="row.gp1.id != 0">₱ {{ row.gp1.amount }} </span></td> <!---->
 
                                                 <td rowspan="2" class="option_space"></td>
 
@@ -2949,8 +2949,8 @@ header( 'location:index' );
                                                 <td class="qty"><span class="numbers">{{ row.gp2.qty }}</span></td>
                                                 <td class="price"><!----> <span v-if="row.gp2.discount != 0"
                                                         class="numbers deleted">₱ {{ Number(row.gp2.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span>{{ row.gp2.discount !== undefined ? Math.floor(row.gp2.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br>
-                                                    <span class="numbers">₱ {{ Number(row.gp2.price - (row.gp2.price * (row.gp2.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
-                                                <td class="amount"><span class="numbers">₱ {{ row.gp2.amount }}</span></td> <!---->
+                                                    <span class="numbers" v-if="row.gp2.id != 0">₱ {{ Number(row.gp2.price - (row.gp2.price * (row.gp2.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
+                                                <td class="amount"><span class="numbers" v-if="row.gp2.id != 0">₱ {{ row.gp2.amount }}</span></td> <!---->
 
                                                 <td rowspan="2" class="option_space" v-if="temp_options.length > 2"></td>
 
@@ -2968,8 +2968,8 @@ header( 'location:index' );
                                                 <td class="qty" v-if="temp_options.length == 3"><span class="numbers" v-if="temp_options.length == 3">{{ row.gp3.qty }}</span></td>
                                                 <td class="price" v-if="temp_options.length == 3"><!----> <span v-if="temp_options.length == 3 && row.gp3.discount != 0"
                                                         class="numbers deleted">₱ {{ Number(row.gp3.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span v-if="temp_options.length == 3 && row.gp3.discount !== 0">{{ row.gp3.discount !== undefined ? Math.floor(row.gp3.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br>
-                                                    <span class="numbers" v-if="temp_options.length == 3">₱ {{ Number(row.gp3.price - (row.gp3.price * (row.gp3.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
-                                                <td class="amount" v-if="temp_options.length == 3"><span class="numbers" v-if="temp_options.length == 3">₱ {{ row.gp3.amount }}</span></td> <!---->
+                                                    <span class="numbers" v-if="temp_options.length == 3 && row.gp3.id != 0">₱ {{ Number(row.gp3.price - (row.gp3.price * (row.gp3.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
+                                                <td class="amount" v-if="temp_options.length == 3 && row.gp3.id != 0"><span class="numbers" v-if="temp_options.length == 3">₱ {{ row.gp3.amount }}</span></td> <!---->
 
                                             </tr>
 
