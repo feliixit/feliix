@@ -848,9 +848,9 @@ function GetTotalInfo($qid, $db){
         vat,
         show_vat,
         valid,
-        total1,
-        total2,
-        total3
+        coalesce(total1, '') total1,
+        coalesce(total2, '') total2,
+        coalesce(total3, '') total3
         FROM  price_comparison_total
         WHERE  price_id = " . $qid . "
         AND `status` <> -1 

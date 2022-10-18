@@ -15,14 +15,11 @@ $discount = isset($_POST['discount']) ? $_POST['discount'] : 0;
 $vat = isset($_POST['vat']) ? $_POST['vat'] : '';
 $show_vat = isset($_POST['show_vat']) ? $_POST['show_vat'] : '';
 $valid = isset($_POST['valid']) ? $_POST['valid'] : '';
-$total1 = isset($_POST['total1']) ? $_POST['total1'] : 0;
-$total2 = isset($_POST['total2']) ? $_POST['total2'] : 0;
-$total3 = isset($_POST['total3']) ? $_POST['total3'] : 0;
+$total1 = isset($_POST['total1']) ? $_POST['total1'] : '';
+$total2 = isset($_POST['total2']) ? $_POST['total2'] : '';
+$total3 = isset($_POST['total3']) ? $_POST['total3'] : '';
 
 
-$total1 == '' ? $total1 = 0 : $total1 = $total1;
-$total2 == '' ? $total2 = 0 : $total2 = $total2;
-$total3 == '' ? $total3 = 0 : $total3 = $total3;
 $discount == '' ? $discount = 0 : $discount = $discount;
 $page == '' ? $page = 1 : $page = $page;
 
@@ -74,12 +71,22 @@ else
                 `discount` = :discount,
                 `vat` = :vat,
                 `show_vat` = :show_vat,
-                `valid` = :valid,
-                `total1` = :total1,
-                `total2` = :total2,
-                `total3` = :total3,
+                `valid` = :valid, ";
+if($total1 != '')
+{
+    $query .= " `total1` = :total1, ";
+}
+if($total2 != '')
+{
+    $query .= " `total2` = :total2, ";
+}
+if($total3 != '')
+{
+    $query .= " `total3` = :total3, ";
+}
+                
             
-                `status` = 0,
+            $query .= " `status` = 0,
                 `create_id` = :create_id,
                 `created_at` =  now() ";
 
@@ -93,10 +100,19 @@ else
             $stmt->bindParam(':vat', $vat);
             $stmt->bindParam(':show_vat', $show_vat);
             $stmt->bindParam(':valid', $valid);
-            $stmt->bindParam(':total1', $total1);
-
-            $stmt->bindParam(':total2', $total2);
-            $stmt->bindParam(':total3', $total3);
+            if($total1 != '')
+            {
+                $stmt->bindParam(':total1', $total1);
+            }
+            if($total2 != '')
+            {
+                $stmt->bindParam(':total2', $total2);
+            }
+            if($total3 != '')
+            {
+                $stmt->bindParam(':total3', $total3);
+            }
+           
 
             $stmt->bindParam(':create_id', $user_id);
         
@@ -130,11 +146,32 @@ else
                     `discount` = :discount,
                     `vat` = :vat,
                     `show_vat` = :show_vat,
-                    `valid` = :valid,
-                    `total1` = :total1,
-                    `total2` = :total2,
-                    `total3` = :total3,
-     
+                    `valid` = :valid,";
+                    if($total1 != '')
+                    {
+                        $query .= " `total1` = :total1, ";
+                    }
+                    elseif($total1 == '')
+                    {
+                        $query .= " `total1` = null, ";
+                    }
+                    if($total2 != '')
+                    {
+                        $query .= " `total2` = :total2, ";
+                    }
+                    elseif($total2 == '')
+                    {
+                        $query .= " `total2` = null, ";
+                    }
+                    if($total3 != '')
+                    {
+                        $query .= " `total3` = :total3, ";
+                    }
+                    elseif($total3 == '')
+                    {
+                        $query .= " `total3` = null, ";
+                    }
+            $query .= "
                     `updated_id` = :updated_id,
                     `updated_at` = now()
                     where id = :id";
@@ -148,9 +185,19 @@ else
             $stmt->bindParam(':vat', $vat);
             $stmt->bindParam(':show_vat', $show_vat);
             $stmt->bindParam(':valid', $valid);
-            $stmt->bindParam(':total1', $total1);
-            $stmt->bindParam(':total2', $total2);
-            $stmt->bindParam(':total3', $total3);
+            
+            if($total1 != '')
+            {
+                $stmt->bindParam(':total1', $total1);
+            }
+            if($total2 != '')
+            {
+                $stmt->bindParam(':total2', $total2);
+            }
+            if($total3 != '')
+            {
+                $stmt->bindParam(':total3', $total3);
+            }
      
             
             $stmt->bindParam(':updated_id', $user_id);

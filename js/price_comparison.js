@@ -167,6 +167,8 @@ var app = new Vue({
         item: [],
       },
 
+      term_disp: [],
+
       payment_term_display: [],
 
       payment_term:
@@ -189,6 +191,8 @@ var app = new Vue({
         item_client: [],
         item_company: [],
       },
+
+      sig_disp: [],
 
       subtotal_a:0,
       subtotal_b:0,
@@ -2390,8 +2394,12 @@ Installation:`;
               _this.total.vat !== undefined ? _this.product_vat = _this.total.vat : _this.product_vat = '';
               _this.total_disp.vat !== undefined ? _this.product_vat = _this.total_disp.vat : _this.product_vat = '';
 
+              
+
               // term
               _this.term = _this.receive_records[0].term_info;
+
+              _this.term_disp = JSON.parse(JSON.stringify(_this.term));
 
               // term
               _this.payment_term = _this.receive_records[0].payment_term_info;
@@ -2401,6 +2409,7 @@ Installation:`;
 
               // sig
               _this.sig = _this.receive_records[0].sig_info;
+              _this.sig_disp = JSON.parse(JSON.stringify(_this.sig));
 
               // temp
               _this.id = _this.receive_records[0].id;
@@ -2433,7 +2442,7 @@ Installation:`;
               _this.subtotal_b = _this.receive_records[0].subtotal_b;
               _this.subtotal_c = _this.receive_records[0].subtotal_c;
 
-              _this.count_subtotal();
+              _this.change_total_amount(_this.total);
 
               _this.load_block();
               

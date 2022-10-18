@@ -28,6 +28,8 @@ $db = $database->getConnection();
 $db->beginTransaction();
 $conf = new Conf();
 
+$last_id = 0;
+
 use \Firebase\JWT\JWT;
 use Google\Cloud\Storage\StorageClient;
 

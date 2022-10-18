@@ -2543,13 +2543,11 @@ header( 'location:index' );
 
                         <div class="formbox">
                             <dl>
-                                <dt class="head">Choose where the block of terms and condition locates at:</dt>
+                                <dt class="head">Choose whether to show the block of terms and condition in this document:</dt>
                                 <dd>
                                     <select v-model="term.page">
-                                        <option value="0"></option>
-                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
-                                            }}
-                                        </option>
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -2611,13 +2609,11 @@ header( 'location:index' );
 
                         <div class="formbox">
                             <dl>
-                                <dt class="head">Choose where the block of payment terms locates at:</dt>
+                                <dt class="head">Choose whether to show the block of payment terms in this document:</dt>
                                 <dd>
                                     <select v-model="payment_term.page">
-                                        <option value="0"></option>
-                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
-                                            }}
-                                        </option>
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -2693,13 +2689,11 @@ header( 'location:index' );
 
                         <div class="formbox">
                             <dl>
-                                <dt class="head">Choose where the block of signature locates at:</dt>
+                                <dt class="head">Choose whether to show the block of signature in this document:</dt>
                                 <dd>
                                     <select v-model="sig.page">
-                                        <option value="0"></option>
-                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
-                                            }}
-                                        </option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -3068,18 +3062,18 @@ header( 'location:index' );
 
                                         <!-- 第一個option -->
                                         <td colspan="2">Proposed Grand Total</td> <!---->
-                                        <td v-if="total_disp.total1 == 0"><span class="numbers">₱ {{ ((subtotal_a * (100 - total_disp.discount) / 100) * 112 / 100) !== undefined ? ((subtotal_a * (100 - total_disp.discount) / 100) * 112 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
-                                        <td v-if="total_disp.total1 != 0"><span class="numbers">₱ {{ Number(total_disp.total1).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
+                                        <td v-if="total_disp.total1 == ''"><span class="numbers">₱ {{ ((subtotal_a * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_a * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                        <td v-if="total_disp.total1 != ''"><span class="numbers deleted">₱ {{ ((subtotal_a * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_a * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br><span class="numbers">₱ {{ Number(total_disp.total1).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
 
                                         <!-- 第二個option -->
                                         <td colspan="2">Alternative Grand Total</td> <!---->
-                                        <td><span class="numbers">₱ {{ ((subtotal_b * (100 - total_disp.discount) / 100) * 112 / 100) !== undefined ? ((subtotal_b * (100 - total_disp.discount) / 100) * 112 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
-                                        <td v-if="total_disp.total2 != 0"><span class="numbers">₱ {{ Number(total_disp.total2).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
+                                        <td  v-if="total_disp.total2 == ''"><span class="numbers">₱ {{ ((subtotal_b * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_b * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                        <td v-if="total_disp.total2 != ''"><span class="numbers deleted">₱ {{ ((subtotal_b * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_b * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br><span class="numbers">₱ {{ Number(total_disp.total2).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
 
                                         <!-- 第三個option -->
                                         <td colspan="2"  v-if="temp_options.length == 3">Alternative 2 Grand Total</td> <!---->
-                                        <td  v-if="temp_options.length == 3 && total_disp.total3 != 0"><span class="numbers">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * 112 / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * 112 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
-                                        <td v-if="temp_options.length == 3 && total_disp.total3 != 0"><span class="numbers">₱ {{ Number(total_disp.total3).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
+                                        <td  v-if="temp_options.length == 3 && total_disp.total3 == ''"><span class="numbers">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                        <td v-if="temp_options.length == 3 && total_disp.total3 != ''"><span class="numbers deleted">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br><span class="numbers">₱ {{ Number(total_disp.total3).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
                                     </tr>
 
                                     
@@ -3246,8 +3240,8 @@ header( 'location:index' );
                         </div>
                         -->
 
-                        <div class="area_terms">
-                            <div class="terms" v-for="(tt, index) in term.item">
+                        <div class="area_terms" v-if="term_disp.page == 1">
+                            <div class="terms" v-for="(tt, index) in term_disp.item">
                                 <div class="title">{{ tt.title }}</div>
                                 <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">
                             {{ tt.brief }}</div>
@@ -3258,7 +3252,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_payment" v-if="payment_term_display.page !== undefined">
+                        <div class="area_payment" v-if="payment_term_display.page == 1">
                             <table class="tb_payment">
                                 <tbody>
                                 <tr>
@@ -3303,16 +3297,16 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_conforme" style="margin-top: 60px; ">
+                        <div class="area_conforme" style="margin-top: 60px;" v-if="sig_disp != undefined ? sig_disp.page == 1 : false">
                             <div class="conforme"
-                                 v-if="(sig != undefined ? sig.item_client.length : 0)  + (sig != undefined ?  sig.item_company.length : 0) > 0">
+                                 v-if="(sig_disp != undefined ? sig_disp.item_client.length : 0)  + (sig_disp != undefined ?  sig_disp.item_company.length : 0) > 0">
                                 CONFORME
                             </div>
 
                             <div class="client_signature"
-                                 v-if="(sig != undefined ? sig.item_client.length : 0) > 0">
+                                 v-if="(sig_disp != undefined ? sig_disp.item_client.length : 0) > 0">
 
-                                <div class="signature" v-for="(tt, index) in sig.item_client">
+                                <div class="signature" v-for="(tt, index) in sig_disp.item_client">
                                     <div class="pic"></div>
                                     <div class="name">{{ tt.name }}</div>
                                     <div class="line1">{{ tt.position }}</div>
@@ -3323,9 +3317,9 @@ header( 'location:index' );
                             </div>
 
                             <div class="company_signature"
-                                 v-if="(sig != undefined ? sig.item_company.length : 0) > 0">
+                                 v-if="(sig_disp != undefined ? sig_disp.item_company.length : 0) > 0">
 
-                                <div class="signature" v-for="(tt, index) in sig.item_company">
+                                <div class="signature" v-for="(tt, index) in sig_disp.item_company">
                                     <div class="pic"><img :src="img_url + tt.photo" v-if="tt.photo != ''"></div>
                                     <div class="name">{{ tt.name }}</div>
                                     <div class="line1">{{ tt.position }}</div>
