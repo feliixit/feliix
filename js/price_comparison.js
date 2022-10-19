@@ -2443,6 +2443,7 @@ Installation:`;
               _this.subtotal_c = _this.receive_records[0].subtotal_c;
 
               _this.change_total_amount(_this.total);
+              _this.change_total_amount(_this.total_disp);
 
               _this.load_block();
               
