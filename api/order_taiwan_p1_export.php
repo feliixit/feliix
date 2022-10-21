@@ -552,7 +552,8 @@ if($jwt){
                 $sheet->setCellValue('J' . $i, $shipway);
                 $sheet->getStyle('J'. $i)->applyFromArray($center_style);
 
-                $sheet->getStyle('F' . $i . ':H' . $i)->getAlignment()->setHorizontal('right');
+                $sheet->getStyle('D' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
+                $sheet->getStyle('F' . $i . ':G' . $i)->getAlignment()->setHorizontal('right');
                 $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setSize(18);
                 $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setName('M+ 1c regular');
                 $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($boldandthin_border_style1);
@@ -566,13 +567,12 @@ if($jwt){
             $sheet->getStyle('B'. $i)->applyFromArray($center_style);
             $sheet->mergeCells('C' . $i . ':E' . $i);
 
-            if($total_price_ntd != '')
-                $sheet->setCellValue('C' . $i, $total_price_ntd * 0.05);
-     
             $sheet->setCellValue('F' . $i, '5%');
             $sheet->getStyle('F'. $i)->applyFromArray($center_style);
             $sheet->mergeCells('G' . $i . ':I' . $i);
 
+            if($total_price_ntd != '')
+                $sheet->setCellValue('G' . $i, $total_price_ntd * 0.05);
 
             $sheet->getRowDimension($i)->setRowHeight(28.2);
             $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setSize(20);
@@ -585,12 +585,12 @@ if($jwt){
             $sheet->getStyle('B'. $i)->applyFromArray($center_style);
             $sheet->mergeCells('C' . $i . ':E' . $i);
 
-            if($total_price_ntd != '')
-                $sheet->setCellValue('C' . $i, $total_price_ntd * 1.05);
-
             $sheet->setCellValue('F' . $i, '含稅');
             $sheet->getStyle('F'. $i)->applyFromArray($center_style);
             $sheet->mergeCells('G' . $i . ':I' . $i);
+
+            if($total_price_ntd != '')
+                $sheet->setCellValue('G' . $i, $total_price_ntd * 1.05);
 
             $sheet->getRowDimension($i)->setRowHeight(28.2);
             $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setSize(20);
@@ -638,7 +638,7 @@ if($jwt){
             $payable->getFont()->setBold(true);
             $payable->getFont()->setSize(22);
             $payable->getFont()->setName('M+ 1c regular');
-            $payable = $richText->createTextRun("\n" . '訂單號碼  專案名稱' . "\n" . 'C/NO. ' . $short_brand . "\n" . '寄件人: ');
+            $payable = $richText->createTextRun("\n" . $serial_name . " " . $project_name . "\n" . 'C/NO. ' . $short_brand . "1 (2, 3, …)\n" . '寄件人: ');
             $payable->getFont()->setSize(18);
             $payable->getFont()->setName('M+ 1c regular');
             $payable = $richText->createTextRun('盛盛國際 SSIT');
