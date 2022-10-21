@@ -73,10 +73,16 @@ if (!isset($jwt)) {
                     check_t,
                     check_d,
                     charge,
+                    photo4,
+                    photo5,
                     test,
                     delivery,
                     final,
-                    `status`
+                    `status`,
+                    test_updated_name,
+                    test_updated_at,
+                    delivery_updated_name,
+                    delivery_updated_at
                     FROM od_item, 
                     (SELECT @a:=@a+1 serial_number, id FROM od_item, (SELECT @a:= 0) AS a WHERE status <> -1 and od_id=$id order by ABS(sn)) b
                     WHERE status <> -1 and od_id=$id and od_item.id = b.id
@@ -138,6 +144,8 @@ if (!isset($jwt)) {
         $check_t = $row['check_t'];
         $check_d = $row['check_d'];
         $charge = $row['charge'];
+        $photo4 = ($row['photo4'] != '') ? 'https://storage.googleapis.com/feliiximg/' . $row['photo4'] : '';
+        $photo5 = ($row['photo5'] != '') ? 'https://storage.googleapis.com/feliiximg/' . $row['photo5'] : '';
         $test = $row['test'];
         $delivery = $row['delivery'];
         $final = $row['final'];
@@ -145,6 +153,11 @@ if (!isset($jwt)) {
         $pid = $row['pid'];
 
         $serial_number = $row['serial_number'];
+
+        $test_updated_name = $row['test_updated_name'];
+        $test_updated_at = $row['test_updated_at'];
+        $delivery_updated_name = $row['delivery_updated_name'];
+        $delivery_updated_at = $row['delivery_updated_at'];
 
         $status = $row['status'];
         $notes = GetNotes($row['id'], $db);
@@ -181,10 +194,16 @@ if (!isset($jwt)) {
             "check_t" => $check_t,
             "check_d" => $check_d,
             "charge" => $charge,
+            "photo4" => $photo4,
+            "photo5" => $photo5,
             "test" => $test,
             "delivery" => $delivery,
             "final" => $final,
             "status" => $status,
+            "test_updated_name" => $test_updated_name,
+            "test_updated_at" => $test_updated_at,
+            "delivery_updated_name" => $delivery_updated_name,
+            "delivery_updated_at" => $delivery_updated_at,
             "confirm_text" => $confirm_text,
             "notes" => $notes,
             "notes_a" => $notes_a,

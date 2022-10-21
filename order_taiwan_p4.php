@@ -1,4 +1,36 @@
-<?php include 'check.php';?>
+<?php
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ($jwt === NULL || $jwt === '') {
+    setcookie("userurl", $_SERVER['REQUEST_URI']);
+    header('location:index');
+}
+
+include_once 'api/config/core.php';
+include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
+include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once 'api/libs/php-jwt-master/src/JWT.php';
+use \Firebase\JWT\JWT;
+
+try {
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+        $GLOBALS['username'] = $decoded->data->username;
+        $GLOBALS['position'] = $decoded->data->position;
+        $GLOBALS['department'] = $decoded->data->department;
+
+        //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
+        //    header( 'location:index.php' );
+    }
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+    
+        header( 'location:index' );
+    }
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -1516,13 +1548,19 @@
             <td>
                 <div class="read_block" v-if="ArriveRemarkRead(item)">
                     Confirm Arrival:  <input type="checkbox" :value="item.charge" :true-value="1" v-model:checked="item.charge" class="alone" disabled>
+
+                    <div class="photobox">
+	                    <img v-if="item.photo4" :src="item.photo4">
+	                    <img v-if="item.photo5" :src="item.photo5">
+                    </div>
+
                     <textarea rows="3" readonly v-model="item.remark"></textarea>
                 </div>
             </td>
 
             <td>
                 <div class="read_block" v-if="TestRead(item)">
-                    <select v-model="item.test" disabled>
+                    <select v-model="item.test" disabled v-if="1==0">
                         <option>Choose Assignee for Testing...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
@@ -1530,12 +1568,15 @@
                     </select>
                     Testing Result is Normal:  <input type="checkbox" :value="item.check_t" :true-value="1" v-model:checked="item.check_t" class="alone" disabled>
                     <textarea rows="3" v-model="item.remark_t" readonly></textarea>
+                    <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
+                    <i v-if="item.test_updated_name != ''">({{ item.test_updated_name }} at {{ item.test_updated_at }})</i>
+
                 </div>
             </td>
 
             <td>
                 <div class="read_block" v-if="DeliveryRead(item)">
-                    <select v-model="item.delivery" disabled>
+                    <select v-model="item.delivery" disabled v-if="1==0">
                         <option>Choose Assignee for Delivery...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
@@ -1543,6 +1584,8 @@
                     </select>
                     Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
                     <textarea rows="3" v-model="item.remark_d" readonly></textarea>
+                    <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
+                    <i v-if="item.delivery_updated_name != ''">({{ item.delivery_updated_name }} at {{ item.delivery_updated_at }})</i>
                 </div>
             </td>
 

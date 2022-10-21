@@ -3151,3 +3151,14 @@ CREATE TABLE IF NOT EXISTS price_comparison_payment_term
   `updated_at` timestamp NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- 20221020 add photo and updated time
+ALTER TABLE od_item ADD COLUMN `photo4` VARCHAR(128) DEFAULT '';
+ALTER TABLE od_item ADD COLUMN `photo5` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE od_item ADD COLUMN `test_updated_name` varchar(255) DEFAULT '';
+ALTER TABLE od_item ADD COLUMN `test_updated_at` timestamp NULL;
+
+ALTER TABLE od_item ADD COLUMN `delivery_updated_name` varchar(255) DEFAULT '';
+ALTER TABLE od_item ADD COLUMN `delivery_updated_at` timestamp NULL;

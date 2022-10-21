@@ -786,6 +786,27 @@ var app = new Vue({
         form_Data.append("od_name", this.od_name);
         form_Data.append("project_name", this.project_name);
         form_Data.append("serial_name", this.serial_name);
+
+        // get earch item in items
+        for (let i = 0; i < this.items.length; i++) {
+          var item = this.items[i];
+
+          var file = document.getElementById('photo_' + item.id + '_4');
+
+          if(file) {
+            let f = file.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('photo_' + item.id + '_4', f);
+          }
+
+          var file = document.getElementById('photo_' + item.id + '_5');
+
+          if(file) {
+            let f = file.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('photo_' + item.id + '_5', f);
+          }
+        }
         
         let res = await axios({
           method: 'post',
@@ -2461,6 +2482,14 @@ var app = new Vue({
           item.photo3 = "";
           document.getElementById('photo_' + item.id + '_3').value = "";
         }
+        if (num === 4) {
+          item.photo4 = "";
+          document.getElementById('photo_' + item.id + '_4').value = "";
+        }
+        if (num === 5) {
+          item.photo5 = "";
+          document.getElementById('photo_' + item.id + '_5').value = "";
+        }
   
         
       },
@@ -2478,7 +2507,12 @@ var app = new Vue({
         if (num === 3) {
           item.photo3 = URL.createObjectURL(file);
         }
-    
+        if (num === 4) {
+          item.photo4 = URL.createObjectURL(file);
+        }
+        if (num === 5) {
+          item.photo5 = URL.createObjectURL(file);
+        }
           
       },
 
