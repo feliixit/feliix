@@ -7744,8 +7744,8 @@ function SetupMail($mail, $conf)
     $mail->Port       = 587;
     $mail->SMTPKeepAlive = true;
     $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'sylvia99@ethereal.email';
-    $mail->Password   = '3YEXARcxXFhjT2k5RQ';
+    $mail->Username   = 'iva.brekke@ethereal.email';
+    $mail->Password   = 'Mr8Fmqx9xh1jbdDpht';
 
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
