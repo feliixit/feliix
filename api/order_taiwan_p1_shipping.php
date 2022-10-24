@@ -228,7 +228,12 @@ switch ($method) {
             {
                 $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
                 if($update_name != "")
+                {
                     UpdateImageNameVariation("4", $update_name, $batch_id, $db);
+                    UpdateImageRealNameVariation("4", substr($update_name, strpos($update_name, '_') + 1), $batch_id, $db);
+
+                    $items[$i]['photot4_name'] = substr($update_name, strpos($update_name, '_') + 1);
+                }
             }
 
             $key = "photo_" . $_id . "_5";
@@ -236,7 +241,12 @@ switch ($method) {
             {
                 $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
                 if($update_name != "")
+                {
                     UpdateImageNameVariation("5", $update_name, $batch_id, $db);
+                    UpdateImageRealNameVariation("5", substr($update_name, strpos($update_name, '_') + 1), $batch_id, $db);
+
+                    $items[$i]['photot5_name'] = substr($update_name, strpos($update_name, '_') + 1);
+                }
             }
 
         }
@@ -333,7 +343,9 @@ function GetShipping($id, $db){
             n.create_id,
             n.created_at,
             n.updated_id,
-            n.updated_at
+            n.updated_at,
+            n.photo4_name,
+            n.photo5_name
                 FROM   od_item n
             WHERE  n.id = " . $id . "
             ORDER BY n.id
@@ -363,6 +375,8 @@ function GetShipping($id, $db){
         $check_d = $row['check_d'];
         $create_id = $row['create_id'];
 
+        $photo4_name = $row['photo4_name'];
+        $photo5_name = $row['photo5_name'];
 
         $created_at = $row['created_at'];
       
@@ -385,6 +399,9 @@ function GetShipping($id, $db){
             "create_id" => $create_id,
  
             "created_at" => $created_at,
+
+            "photo4_name" => $photo4_name,
+            "photo5_name" => $photo5_name,
 
         );
     }
@@ -557,6 +574,43 @@ function UpdateImageNameVariation($sn, $upload_name, $batch_id, $db){
     
     $query = "update od_item
     SET photo" . $sn . " = :gcp_name where id=:id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $batch_id);
+
+    $stmt->bindParam(':gcp_name', $upload_name);
+
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $last_id = $db->lastInsertId();
+        }
+        else
+        {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+        }
+    }
+    catch (Exception $e)
+    {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
+}
+
+
+
+function UpdateImageRealNameVariation($sn, $upload_name, $batch_id, $db){
+    
+    $query = "update od_item
+    SET photo" . $sn . "_name = :gcp_name where id=:id";
 
     // prepare the query
     $stmt = $db->prepare($query);

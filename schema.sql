@@ -3162,3 +3162,6 @@ ALTER TABLE od_item ADD COLUMN `test_updated_at` timestamp NULL;
 
 ALTER TABLE od_item ADD COLUMN `delivery_updated_name` varchar(255) DEFAULT '';
 ALTER TABLE od_item ADD COLUMN `delivery_updated_at` timestamp NULL;
+
+ALTER TABLE od_item ADD COLUMN `photo4_name` VARCHAR(128) DEFAULT '';
+ALTER TABLE od_item ADD COLUMN `photo5_name` VARCHAR(128) DEFAULT '';

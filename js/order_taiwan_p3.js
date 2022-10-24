@@ -2484,10 +2484,12 @@ var app = new Vue({
         }
         if (num === 4) {
           item.photo4 = "";
+          item.photo4_name = "";
           document.getElementById('photo_' + item.id + '_4').value = "";
         }
         if (num === 5) {
           item.photo5 = "";
+          item.photo5_name = "";
           document.getElementById('photo_' + item.id + '_5').value = "";
         }
   
@@ -2509,9 +2511,11 @@ var app = new Vue({
         }
         if (num === 4) {
           item.photo4 = URL.createObjectURL(file);
+          item.photo4_name = file.name;
         }
         if (num === 5) {
           item.photo5 = URL.createObjectURL(file);
+          item.photo5_name = file.name;
         }
           
       },

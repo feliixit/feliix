@@ -75,6 +75,8 @@ if (!isset($jwt)) {
                     charge,
                     photo4,
                     photo5,
+                    photo4_name,
+                    photo5_name,
                     test,
                     delivery,
                     final,
@@ -146,6 +148,8 @@ if (!isset($jwt)) {
         $charge = $row['charge'];
         $photo4 = ($row['photo4'] != '') ? 'https://storage.googleapis.com/feliiximg/' . $row['photo4'] : '';
         $photo5 = ($row['photo5'] != '') ? 'https://storage.googleapis.com/feliiximg/' . $row['photo5'] : '';
+        $photo4_name = $row['photo4_name'];
+        $photo5_name = $row['photo5_name'];
         $test = $row['test'];
         $delivery = $row['delivery'];
         $final = $row['final'];
@@ -196,6 +200,8 @@ if (!isset($jwt)) {
             "charge" => $charge,
             "photo4" => $photo4,
             "photo5" => $photo5,
+            "photo4_name" => $photo4_name,
+            "photo5_name" => $photo5_name,
             "test" => $test,
             "delivery" => $delivery,
             "final" => $final,
