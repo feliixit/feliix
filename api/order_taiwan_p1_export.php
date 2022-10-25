@@ -916,7 +916,7 @@ function grab_image($image_url,$image_file){
     //$image_file = urlencode($image_file);
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://storage.googleapis.com/feliiximg/' . $image_url);
+    curl_setopt($ch, CURLOPT_URL, 'https://storage.googleapis.com/feliiximg/' . urlencode($image_url));
     //Create a new file where you want to save
     $fp = fopen($image_file, 'w');
     curl_setopt($ch, CURLOPT_FILE, $fp);
