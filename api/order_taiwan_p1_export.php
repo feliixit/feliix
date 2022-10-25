@@ -478,12 +478,16 @@ if($jwt){
             {
                 if($row['photo1'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo1']), $conf::$upload_path . str_replace(' ', '%20', $row['photo1']));
+
+                    $row['photo1'] = urlencode($row['photo1']);
+                    $row['photo1'] = str_replace('+', '%20', $row['photo1']);
+
+                    grab_image($row['photo1'], $conf::$upload_path . $row['photo1']);
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo1']));
+                    $objDrawing->setPath($conf::$upload_path  . $row['photo1']);
                     $objDrawing->setCoordinates('B' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -916,7 +920,7 @@ function grab_image($image_url,$image_file){
     //$image_file = urlencode($image_file);
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://storage.googleapis.com/feliiximg/' . urlencode($image_url));
+    curl_setopt($ch, CURLOPT_URL, 'https://storage.googleapis.com/feliiximg/' . $image_url);
     //Create a new file where you want to save
     $fp = fopen($image_file, 'w');
     curl_setopt($ch, CURLOPT_FILE, $fp);
