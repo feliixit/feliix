@@ -478,7 +478,7 @@ if($jwt){
             {
                 if($row['photo1'] != '')
                 {
-                    grab_image($row['photo1'], $conf::$upload_path . $row['photo1']);
+                    grab_image(urlencode($row['photo1']), $conf::$upload_path . urlencode($row['photo1']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
@@ -913,10 +913,10 @@ function grab_image($image_url,$image_file){
     $object->downloadToFile($image_file);
     */
 
-    $image_file = urlencode($image_file);
+    //$image_file = urlencode($image_file);
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://storage.googleapis.com/feliiximg/' . urlencode($image_url));
+    curl_setopt($ch, CURLOPT_URL, 'https://storage.googleapis.com/feliiximg/' . $image_url);
     //Create a new file where you want to save
     $fp = fopen($image_file, 'w');
     curl_setopt($ch, CURLOPT_FILE, $fp);
