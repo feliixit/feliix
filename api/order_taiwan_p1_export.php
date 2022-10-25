@@ -477,6 +477,8 @@ if($jwt){
             foreach($merged_results as $row)
             {
                 if($row['photo1'] != '')
+
+                $row['photo1'] = str_replace(' ', '%20', $row['photo1']);
                 {
                     grab_image(urlencode($row['photo1']), $conf::$upload_path . urlencode($row['photo1']));
 
