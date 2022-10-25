@@ -478,13 +478,12 @@ if($jwt){
             {
                 if($row['photo1'] != '')
                 {
-                    $row['photo1'] = str_replace(' ', '%20', $row['photo1']);
-                    grab_image(urlencode($row['photo1']), $conf::$upload_path . urlencode($row['photo1']));
+                    grab_image(str_replace(' ', '%20', $row['photo1']), $conf::$upload_path . str_replace(' ', '%20', $row['photo1'])));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
-                    $objDrawing->setPath($conf::$upload_path  . urlencode($row['photo1']));
+                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo1'])));
                     $objDrawing->setCoordinates('B' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
