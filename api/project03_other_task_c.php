@@ -70,7 +70,7 @@ switch ($method) {
         $size = (isset($_GET["size"]) ?  $_GET["size"] : "");
 
         $sql = "SELECT pm.id task_id, pm.title, pm.priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
-        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, ut.title creator_title, pp.class_name pp_class
+        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, ut.title creator_title, pp.class_name pp_class, related_order, related_tab
         from project_other_task_c pm 
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN user_title ut ON u.title_id = ut.id
@@ -132,10 +132,14 @@ switch ($method) {
         $task_date = "";
         $gcp_name = "";
         $filename = "";
-        
 
+        $related_order = "";
+        $related_tab = "";
+        
         $items = [];
         $message = [];
+
+        $related_order_name = "";
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -164,6 +168,11 @@ switch ($method) {
                     "nearest_msg" => $_nearest_msg,
                     "creator_title" => $creator_title,
                     "pp_class" => $pp_class,
+
+                    "related_order" => $related_order,
+                    "related_tab" => $related_tab,
+
+                    "related_order_name" => $related_order_name,
                 );
 
                 $message = [];
@@ -211,6 +220,17 @@ switch ($method) {
                 }
             }
 
+            $related_order = $row['related_order'];
+            $related_tab = $row['related_tab'];
+
+            if($related_order != '')
+                $related_order_data = GetRelatedOrderInfo($related_order, $db);
+
+            if(count($related_order_data) > 0)
+            {
+                $related_order_name = $related_order_data[0]['od_name'];
+            }
+
             if ($filename != "")
                 $items[] = array(
                     'filename' => $filename,
@@ -243,6 +263,11 @@ switch ($method) {
                 "nearest_msg" => $_nearest_msg,
                 "creator_title" => $creator_title,
                 "pp_class" => $pp_class,
+
+                "related_order" => $related_order,
+                "related_tab" => $related_tab,
+
+                "related_order_name" => $related_order_name,
             );
         }
 
@@ -285,6 +310,9 @@ switch ($method) {
         $due_time = (isset($_POST['due_time']) ?  $_POST['due_time'] : '');
         $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 
+        $related_order = (isset($_POST['related_order']) ?  $_POST['related_order'] : '');
+        $related_tab = (isset($_POST['related_tab']) ?  $_POST['related_tab'] : '');
+
 
         $query = "INSERT INTO project_other_task_c
         SET
@@ -297,6 +325,9 @@ switch ($method) {
             `due_date` = :due_date,
             `due_time` = :due_time,
             `detail` = :detail,
+
+            `related_order` = :related_order,
+            `related_tab` = :related_tab,
             
             `create_id` = :create_id,
             `created_at` = now()";
@@ -314,6 +345,9 @@ switch ($method) {
         $stmt->bindParam(':due_date', $due_date);
         $stmt->bindParam(':due_time', $due_time);
         $stmt->bindParam(':detail', $detail);
+
+        $stmt->bindParam(':related_order', $related_order);
+        $stmt->bindParam(':related_tab', $related_tab);
 
         $stmt->bindParam(':create_id', $uid);
 
@@ -608,6 +642,30 @@ function GetMessage($task_id, $db, $uid)
     }
 
     return $merged_results;
+}
+
+
+function GetRelatedOrderInfo($_id, $db)
+{
+    $sql = "select id, od_name, order_type, serial_name
+            from od_main
+            where id = " . $_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "od_name" => $row['od_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
 }
 
 

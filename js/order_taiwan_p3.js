@@ -525,7 +525,7 @@ var app = new Vue({
 
       EditShippingInfo()
       {
-        if(this.access2 == true && this.is_info == false)
+        if((this.access2 == true || this.access4 || this.access5) && this.is_info == false)
           return true;
         else
           return false;
@@ -598,7 +598,7 @@ var app = new Vue({
 
       ShipwayRead(item)
       {
-        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access5 == true))
+        if(!item.is_info && (this.access4 == true || this.access2 == true || this.access5 == true))
           return true;
         else
           return false;
@@ -606,7 +606,7 @@ var app = new Vue({
 
       ShipwayWrite(item)
       {
-        if(item.is_info && this.access2 == true)
+        if(item.is_info && (this.access2 == true || this.access4 == true || this.access5 == true))
           return true;
         else
           return false;

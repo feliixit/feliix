@@ -126,6 +126,11 @@ var app = new Vue({
     special : '',
 
     order_stage: false,
+
+    related_order: "",
+    related_tab: "1",
+
+    related_orders: [],
   },
 
   created() {
@@ -143,6 +148,7 @@ var app = new Vue({
         _this.getProjectOtherTask_r(_this.stage_id);
         _this.getDueDate(_this.stage_id);
         _this.getProjectInfo(_this.stage_id);
+        
         _this.getUsersDeleted(_this.stage_id);
       });
     }
@@ -818,6 +824,33 @@ var app = new Vue({
 
         });
     },
+    
+
+    getRelatedOrders(id) {
+
+      let _this = this;
+
+      let token = localStorage.getItem('accessToken');
+
+      const params = {
+        pid : id,
+       
+      };
+
+      axios
+        .get('api/project03_other_get_related_orders', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.related_orders = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
+    },
 
     getUsersDeleted(id) {
 
@@ -894,6 +927,8 @@ var app = new Vue({
             _this.stage = res.data[0].stage;
             _this.special = res.data[0].special;
             _this.category = res.data[0].category;
+
+            _this.getRelatedOrders(_this.project_id);
 
             if(_this.stage == 'Order') {
               _this.order_stage = true;
@@ -1502,6 +1537,8 @@ var app = new Vue({
       form_Data.append('due_time', this.due_time.trim());
       form_Data.append('detail', this.detail.trim());
       form_Data.append('category', this.category.trim());
+ 
+
 
       const token = sessionStorage.getItem('token');
 
@@ -1572,6 +1609,9 @@ var app = new Vue({
       form_Data.append('due_date', this.due_date.trim());
       form_Data.append('due_time', this.due_time.trim());
       form_Data.append('detail', this.detail.trim());
+
+      form_Data.append('related_order', this.related_order);
+      form_Data.append('related_tab', this.related_tab);
 
       const token = sessionStorage.getItem('token');
 
@@ -1769,6 +1809,9 @@ var app = new Vue({
       form_Data.append('due_date', this.record.due_date.trim());
       form_Data.append('due_time', this.record.due_time.trim());
       form_Data.append('detail', this.record.detail.trim());
+
+      form_Data.append('related_order', this.record.related_order);
+      form_Data.append('related_tab', this.record.related_tab);
 
       const token = sessionStorage.getItem('token');
 

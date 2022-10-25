@@ -167,6 +167,11 @@ var app = new Vue({
 
     special: '',
 
+    related_order: "",
+    related_tab: "1",
+
+    related_orders: [],
+
   },
 
   created() {
@@ -822,6 +827,9 @@ var app = new Vue({
         form_Data.append("due_date", this.record.due_date.trim());
         form_Data.append("due_time", this.record.due_time.trim());
         form_Data.append("detail", this.record.detail.trim());
+
+        form_Data.append('related_order', this.record.related_order);
+      form_Data.append('related_tab', this.record.related_tab);
   
         const token = sessionStorage.getItem("token");
   
@@ -1376,6 +1384,8 @@ var app = new Vue({
               _this.project_name = res.data[0].project_name;
               _this.project_id = res.data[0].project_id;
               _this.special = res.data[0].special;
+
+              _this.getRelatedOrders(_this.project_id);
             },
             (err) => {
               alert(err.response);
@@ -1385,6 +1395,33 @@ var app = new Vue({
   
           });
       },
+
+      
+    getRelatedOrders(id) {
+
+      let _this = this;
+
+      let token = localStorage.getItem('accessToken');
+
+      const params = {
+        pid : id,
+       
+      };
+
+      axios
+        .get('api/project03_other_get_related_orders', { params, headers: { "Authorization": `Bearer ${token}` } })
+        .then(
+          (res) => {
+            _this.related_orders = res.data;
+          },
+          (err) => {
+            alert(err.response);
+          },
+        )
+        .finally(() => {
+
+        });
+    },
 
       get_stage_client_task: function(stage_id) {
       let _this = this;
@@ -2359,6 +2396,9 @@ var app = new Vue({
                 form_Data.append("due_date", this.due_date.trim());
                 form_Data.append("due_time", this.due_time.trim());
                 form_Data.append("detail", this.detail.trim());
+
+                form_Data.append('related_order', this.related_order);
+                form_Data.append('related_tab', this.related_tab);
           
                 const token = sessionStorage.getItem("token");
           

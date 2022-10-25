@@ -1593,7 +1593,7 @@ try {
                         <option value="sea">Sea</option>
                         <option value="air">Air</option>
                     </select>
-                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" readonly>
 
                     <select disabled v-model="item.shipping_vendor">
                         <option value=""></option>
@@ -1609,7 +1609,8 @@ try {
                         <option value="air">Air</option>
                     </select>
                     
-                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number">
+                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" v-if="item.shipping_way == 'sea'">
+                    <input type="text" placeholder="Air Record No."  v-model="item.shipping_number" v-if="item.shipping_way == 'air'">
 
                     <select v-model="item.shipping_vendor">
                         <option value=""></option>

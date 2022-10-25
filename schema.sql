@@ -3165,3 +3165,17 @@ ALTER TABLE od_item ADD COLUMN `delivery_updated_at` timestamp NULL;
 
 ALTER TABLE od_item ADD COLUMN `photo4_name` VARCHAR(128) DEFAULT '';
 ALTER TABLE od_item ADD COLUMN `photo5_name` VARCHAR(128) DEFAULT '';
+
+-- 20221025
+ALTER TABLE project_other_task
+ADD COLUMN `related_order` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE project_other_task
+ADD COLUMN `related_tab` VARCHAR(64) DEFAULT '';
+
+
+ALTER TABLE project_other_task_c
+ADD COLUMN `related_order` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE project_other_task_c
+ADD COLUMN `related_tab` VARCHAR(64) DEFAULT '';

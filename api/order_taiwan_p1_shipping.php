@@ -131,8 +131,8 @@ switch ($method) {
             $photo4 = $items[$i]['photo4'];
             $photo5 = $items[$i]['photo5'];
 
-            if($shipping_way == 'air')
-                $shipping_number = "";
+            //if($shipping_way == 'air')
+            //    $shipping_number = "";
 
         
             $query = "update od_item

@@ -2323,6 +2323,27 @@ header('location:index');
                                     </dd>
                                 </dl>
                                 <dl>
+                                        <dt>Related Order:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                
+
+                                                    <select v-model="related_order">
+                                                        <option v-for="option in related_orders" :value="option.id">{{ option.od_name }}</option>
+                                                       
+                                                    </select>
+
+                                                    <select v-model="related_tab" v-if="related_order != ''">
+                                                        <option value="1" selected>Preliminary Tab</option>
+                                                        <option value="2">For Approval Tab</option>
+                                                        <option value="3">Approved Tab</option>
+                                                        <option value="4">Overview Tab</option>
+                                                    </select>
+
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                <dl>
                                     <dt>Due Date:</dt>
                                     <dd>
                                         <div class="browser_group">
@@ -2499,7 +2520,27 @@ header('location:index');
                                         </div>
                                     </dd>
                                 </dl>
+                                <dl>
+                                        <dt>Related Order:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                
 
+                                                    <select v-model="record.related_order">
+                                                        <option v-for="option in related_orders" :value="option.id">{{ option.od_name }}</option>
+                                                       
+                                                    </select>
+
+                                                    <select v-model="record.related_tab" v-if="record.related_order != ''">
+                                                        <option value="1">Preliminary Tab</option>
+                                                        <option value="2">For Approval Tab</option>
+                                                        <option value="3">Approved Tab</option>
+                                                        <option value="4">Overview Tab</option>
+                                                    </select>
+
+                                            </div>
+                                        </dd>
+                                    </dl>
                                 <dl>
                                     <dt>Due Date:</dt>
                                     <dd>
@@ -3013,6 +3054,10 @@ header('location:index');
                             <li><b>Created at</b></li>
                             <li>{{ receive_record.task_date }}</li>
                         </ul>
+                        <ul>
+                                <li><b>Related Order</b></li>
+                                <li><a style="color: #25a2b8" :href="'order_taiwan_p' + receive_record.related_tab + '?id=' + receive_record.related_order" v-if="receive_record.related_order_name != ''">{{ receive_record.related_order_name }}</a></li>
+                            </ul>
                         <ul>
                             <li><b>Due Date</b></li>
                             <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
