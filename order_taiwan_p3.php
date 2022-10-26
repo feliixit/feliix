@@ -617,7 +617,6 @@ try {
         }
 
         .read_block .photobox{
-            height: 165px;
             display: flex;
             justify-content: center;
         }
@@ -701,6 +700,8 @@ try {
 
         .write_block .photobox{
             height: 210px;
+            display: flex;
+            justify-content: center;
         }
 
         .msg_block .msgbox {
@@ -1593,7 +1594,8 @@ try {
                         <option value="sea">Sea</option>
                         <option value="air">Air</option>
                     </select>
-                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" readonly>
+                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" v-if="item.shipping_way == 'sea'" readonly>
+                    <input type="text" placeholder="Air Record No."  v-model="item.shipping_number" v-if="item.shipping_way == 'air'" readonly>
 
                     <select disabled v-model="item.shipping_vendor">
                         <option value=""></option>
@@ -1609,7 +1611,7 @@ try {
                         <option value="air">Air</option>
                     </select>
                     
-                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" v-if="item.shipping_way == 'sea'">
+                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" v-if="item.shipping_way == 'sea'" >
                     <input type="text" placeholder="Air Record No."  v-model="item.shipping_number" v-if="item.shipping_way == 'air'">
 
                     <select v-model="item.shipping_vendor">
