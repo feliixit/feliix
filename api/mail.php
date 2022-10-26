@@ -6590,22 +6590,18 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
         <table style="margin-left: 15px; width: 96%;">
             <tbody>
             <tr>
-                <td colspan="3"
+                <td colspan="2"
                     style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
                     Affected Items
                 </td>
             </tr>
             <tr>
-                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 160px;">
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
                     #
                 </td>
 
-                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 440px;">
                     Product Code
-                </td>
-
-                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
-                    Assignee
                 </td>
             </tr>
             ';
@@ -6616,19 +6612,14 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             {
                 $content = $content . '
                 <tr>
-                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 160px;">
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
                         ';
                         $content = $content . $items[$i]['serial_number'] . '';
                         $content = $content . '
                     </td>
-                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
                         ';
                         $content = $content . $items[$i]['code'] . '';
-                        $content = $content . '
-                    </td>
-                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
-                    ';
-                        $content = $content . $assignee[$i] . '';
                         $content = $content . '
                     </td>
                 </tr>
@@ -6638,19 +6629,14 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
             /* 最後一個產品 */
             $content = $content . '
             <tr>
-                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 160px; border-bottom-left-radius: 9px;">
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
                     ';
                     $content = $content . $items[$i]['serial_number'] . '';
                     $content = $content . '
                 </td>
-                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
                     ';
                     $content = $content . $items[$i]['code'] . '';
-                    $content = $content . '
-                </td>
-                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-right-radius: 9px;">
-                    ';
-                    $content = $content . $assignee[$i] . '';
                     $content = $content . '
                 </td>
             </tr>

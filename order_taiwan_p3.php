@@ -608,6 +608,10 @@ try {
             vertical-align: 0.5px;
         }
 
+        .read_block input[type="checkbox"]:disabled {
+            opacity: 0.8;
+        }
+
         .read_block textarea, .write_block textarea {
             border: 1px solid #707070;
             font-size: 16px;
