@@ -139,6 +139,7 @@ switch ($method) {
         $message = [];
 
         $related_order_name = "";
+        $related_serial_name = "";
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ($task_id != $row['task_id'] && $task_id != 0) {
@@ -172,6 +173,7 @@ switch ($method) {
                     "related_tab" => $related_tab,
 
                     "related_order_name" => $related_order_name,
+                    "related_serial_name" => $related_serial_name,
                     
                 );
 
@@ -208,6 +210,7 @@ switch ($method) {
 
             $related_order = $row['related_order'];
             $related_tab = $row['related_tab'];
+            
 
             $order = GetOrderInfo($task_id, $db);
 
@@ -224,6 +227,7 @@ switch ($method) {
             if(count($related_order_data) > 0)
             {
                 $related_order_name = $related_order_data[0]['od_name'];
+                $related_serial_name = $related_order_data[0]['serial_name'];
             }
 
             if ($filename != "")
@@ -264,6 +268,7 @@ switch ($method) {
                 "related_tab" => $related_tab,
 
                 "related_order_name" => $related_order_name,
+                "related_serial_name" => $related_serial_name,
 
             );
         }

@@ -615,6 +615,10 @@ try {
             vertical-align: 0.5px;
         }
 
+        .read_block input[type="checkbox"]:disabled {
+            opacity: 0.8;
+        }
+
         .read_block textarea, .write_block textarea {
             border: 1px solid #707070;
             font-size: 16px;
@@ -1521,7 +1525,8 @@ try {
                         <option value="sea">Sea</option>
                         <option value="air">Air</option>
                     </select>
-                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" v-if="item.shipping_way == 'sea'" readonly>
+                    <input type="text" placeholder="Air Record No."  v-model="item.shipping_number" v-if="item.shipping_way == 'air'" readonly>
 
                     <select disabled v-model="item.shipping_vendor">
                         <option value=""></option>

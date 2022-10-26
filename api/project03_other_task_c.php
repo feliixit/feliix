@@ -140,6 +140,7 @@ switch ($method) {
         $message = [];
 
         $related_order_name = "";
+        related_serial_name = "";
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -173,6 +174,7 @@ switch ($method) {
                     "related_tab" => $related_tab,
 
                     "related_order_name" => $related_order_name,
+                    "related_serial_name" => $related_serial_name,
                 );
 
                 $message = [];
@@ -229,6 +231,7 @@ switch ($method) {
             if(count($related_order_data) > 0)
             {
                 $related_order_name = $related_order_data[0]['od_name'];
+                $related_serial_name = $related_order_data[0]['serial_name'];
             }
 
             if ($filename != "")
@@ -268,6 +271,7 @@ switch ($method) {
                 "related_tab" => $related_tab,
 
                 "related_order_name" => $related_order_name,
+                "related_serial_name" => $related_serial_name,
             );
         }
 
