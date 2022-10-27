@@ -36,6 +36,8 @@ try {
 
     $is_creator = IsCreator($sid, $user_id);
 
+    $order_menu = 0;
+
     if (($test_manager[2] == "0" && $is_creator == "1") 
             || $GLOBALS['position'] == 'Warehouse in charge' 
             || $GLOBALS['position'] == 'Sr. Project Architect'
@@ -45,6 +47,16 @@ try {
             || $GLOBALS['position'] == 'Project Engineer'
             || $GLOBALS['position'] == 'Jr. Project Engineer') 
         $test_manager[2] = "1";
+
+    if ($is_creator == "1"
+        || $GLOBALS['position'] == 'Managing Director' 
+        || $GLOBALS['position'] == 'Chief Advisor'
+        || $GLOBALS['position'] == 'Supply Chain Manager'
+        || $GLOBALS['position'] == 'Lighting Manager'
+        || $GLOBALS['position'] == 'Assistant Lighting Manager'
+        || $GLOBALS['position'] == 'Office Systems Manager'
+        || $GLOBALS['position'] == 'Assistant Office Systems Manager') 
+        $order_menu = "1";
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -119,9 +131,14 @@ catch (Exception $e) {
             dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
             dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
 
-            dialogshow($('.list_function a.add.yellow'), $('.list_function .dialog.r-add_o'));
-            dialogshow($('.list_function a.edit.yellow'), $('.list_function .dialog.r-edit_o'));
-
+            <?php
+            if ($order_menu  == "1") {
+            ?>
+                dialogshow($('.list_function a.add.yellow'), $('.list_function .dialog.r-add_o'));
+                dialogshow($('.list_function a.edit.yellow'), $('.list_function .dialog.r-edit_o'));
+            <?php
+            }
+            ?>
             // left block Reply
             dialogshow($('.btnbox a.reply.r1'), $('.btnbox .dialog.r1'));
             dialogshow($('.btnbox a.reply.r2'), $('.btnbox .dialog.r2'));
