@@ -140,7 +140,7 @@ switch ($method) {
         $message = [];
 
         $related_order_name = "";
-        related_serial_name = "";
+        $related_serial_name = "";
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
