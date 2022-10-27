@@ -2471,43 +2471,43 @@ header( 'location:index' );
 
 
                             <!-- 系統會先自動算出折扣後加稅後的總價，但使用者還是可以針對總價做後續修改(例如取整數等) -->
-                            <dl v-if="temp_options.length > 0">
-                                <dt class="head">System Computed Grand Total for Option {{ temp_options[0].title }}:</dt>
+                            <dl v-if="org_options.length > 0">
+                                <dt class="head">System Computed Grand Total for Option {{ org_options[0].title }}:</dt>
                                 <dd>
                                     <input type="number" v-model="total.real_total1" style="opacity: 0.6;" disabled>
                                 </dd>
                             </dl>
 
-                            <dl v-if="temp_options.length > 0">
-                                <dt class="head">Manual Assigned Grand Total for Option {{ temp_options[0].title }}:</dt>
+                            <dl v-if="org_options.length > 0">
+                                <dt class="head">Manual Assigned Grand Total for Option {{ org_options[0].title }}:</dt>
                                 <dd>
                                     <input type="number" v-model="total.total1">
                                 </dd>
                             </dl>
 
-                            <dl v-if="temp_options.length > 1">
-                                <dt class="head">System Computed Grand Total for Option {{ temp_options[1].title }}:</dt>
+                            <dl v-if="org_options.length > 1">
+                                <dt class="head">System Computed Grand Total for Option {{ org_options[1].title }}:</dt>
                                 <dd>
                                     <input type="number" v-model="total.real_total2" style="opacity: 0.6;" disabled>
                                 </dd>
                             </dl>
 
-                            <dl v-if="temp_options.length > 1">
-                                <dt class="head">Manual Assigned Grand Total for Option {{ temp_options[1].title }}:</dt>
+                            <dl v-if="org_options.length > 1">
+                                <dt class="head">Manual Assigned Grand Total for Option {{ org_options[1].title }}:</dt>
                                 <dd>
                                     <input type="number" v-model="total.total2">
                                 </dd>
                             </dl>
 
-                            <dl v-if="temp_options.length > 2">
-                                <dt class="head">System Computed Grand Total for Option {{ temp_options[2].title }}:</dt>
+                            <dl v-if="org_options.length > 2">
+                                <dt class="head">System Computed Grand Total for Option {{ org_options[2].title }}:</dt>
                                 <dd>
                                     <input type="number" v-model="total.real_total3" style="opacity: 0.6;" disabled>
                                 </dd>
                             </dl>
 
-                            <dl v-if="temp_options.length > 2">
-                                <dt class="head">Manual Assigned Grand Total for Option {{ temp_options[2].title }}:</dt>
+                            <dl v-if="org_options.length > 2">
+                                <dt class="head">Manual Assigned Grand Total for Option {{ org_options[2].title }}:</dt>
                                 <dd>
                                     <input type="number" v-model="total.total3">
                                 </dd>
@@ -2867,17 +2867,17 @@ header( 'location:index' );
                                     <!-- 迴圈輸出每一個Group的內容，第一個Group範例 -->
                                     <tr class="thead1">
                                         <!-- 兩個方案 colspan=12, 三個方案則是18 -->
-                                        <td :colspan="temp_options.length == 3 ? 18 : 12" class="title">{{ group.title }}</td>
+                                        <td :colspan="org_options.length == 3 ? 18 : 12" class="title">{{ group.title }}</td>
                                     </tr>
 
                                     <tr class="thead2">
                                             <td rowspan="2">Legend</td>
 
-                                            <template v-for="(option, option_index) in temp_options">
+                                            <template v-for="(option, option_index) in org_options">
                                                 
                                                 <td colspan="5">{{ option.title }}</td>
 
-                                                <td rowspan="2" class="option_space" v-if="option_index < temp_options.length -1"></td>
+                                                <td rowspan="2" class="option_space" v-if="option_index < org_options.length -1"></td>
                                             </template>
                                         
                                         </tr>
@@ -2896,10 +2896,10 @@ header( 'location:index' );
                                             <td>Amount</td>
 
                                             <!-- 第三個option -->
-                                            <td colspan="2" v-if="temp_options.length == 3">Description</td>
-                                            <td v-if="temp_options.length == 3">Qty.</td>
-                                            <td v-if="temp_options.length == 3">Product Price</td> <!---->
-                                            <td v-if="temp_options.length == 3">Amount</td>
+                                            <td colspan="2" v-if="org_options.length == 3">Description</td>
+                                            <td v-if="org_options.length == 3">Qty.</td>
+                                            <td v-if="org_options.length == 3">Product Price</td> <!---->
+                                            <td v-if="org_options.length == 3">Amount</td>
 
                                         </tr>
 
@@ -2946,24 +2946,24 @@ header( 'location:index' );
                                                     <span class="numbers" v-if="row.gp2.id != 0">₱ {{ Number(row.gp2.price - (row.gp2.price * (row.gp2.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
                                                 <td class="amount"><span class="numbers" v-if="row.gp2.id != 0">₱ {{ row.gp2.amount }}</span></td> <!---->
 
-                                                <td rowspan="2" class="option_space" v-if="temp_options.length > 2"></td>
+                                                <td rowspan="2" class="option_space" v-if="org_options.length > 2"></td>
 
                                                 <!-- 第三個option -->
-                                                <td class="pic" rowspan="2" v-if="temp_options.length == 3">
-                                                    <img v-if="temp_options.length == 3 && row.gp3.url1 !==''" :src="row.gp3.url1">
+                                                <td class="pic" rowspan="2" v-if="org_options.length == 3">
+                                                    <img v-if="org_options.length == 3 && row.gp3.url1 !==''" :src="row.gp3.url1">
                                                 </td>
-                                                <td rowspan="2" class="spec" v-if="temp_options.length == 3">
-                                                    <div class="code" v-if="temp_options.length == 3">{{ row.gp3.code }}</div>
-                                                    <div class="brief" style="white-space: pre-line;" v-if="temp_options.length == 3">{{ row.gp3.desc }}
+                                                <td rowspan="2" class="spec" v-if="org_options.length == 3">
+                                                    <div class="code" v-if="org_options.length == 3">{{ row.gp3.code }}</div>
+                                                    <div class="brief" style="white-space: pre-line;" v-if="org_options.length == 3">{{ row.gp3.desc }}
                                                     </div>
-                                                    <div class="listing" style="white-space: pre-line;" v-if="temp_options.length == 3">{{ row.gp3.list }}
+                                                    <div class="listing" style="white-space: pre-line;" v-if="org_options.length == 3">{{ row.gp3.list }}
                                                     </div>
                                                 </td> <!---->
-                                                <td class="qty" v-if="temp_options.length == 3"><span class="numbers" v-if="temp_options.length == 3">{{ row.gp3.qty }}</span></td>
-                                                <td class="price" v-if="temp_options.length == 3"><!----> <span v-if="temp_options.length == 3 && row.gp3.discount != 0"
-                                                        class="numbers deleted">₱ {{ Number(row.gp3.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span v-if="temp_options.length == 3 && row.gp3.discount !== 0">{{ row.gp3.discount !== undefined ? Math.floor(row.gp3.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="temp_options.length == 3 && row.gp3.discount !== 0">
-                                                    <span class="numbers" v-if="temp_options.length == 3 && row.gp3.id != 0">₱ {{ Number(row.gp3.price - (row.gp3.price * (row.gp3.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
-                                                <td class="amount" v-if="temp_options.length == 3"><span class="numbers" v-if="temp_options.length == 3 && row.gp3.id != 0">₱ {{ row.gp3.amount }}</span></td> <!---->
+                                                <td class="qty" v-if="org_options.length == 3"><span class="numbers" v-if="org_options.length == 3">{{ row.gp3.qty }}</span></td>
+                                                <td class="price" v-if="org_options.length == 3"><!----> <span v-if="org_options.length == 3 && row.gp3.discount != 0"
+                                                        class="numbers deleted">₱ {{ Number(row.gp3.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span v-if="org_options.length == 3 && row.gp3.discount !== 0">{{ row.gp3.discount !== undefined ? Math.floor(row.gp3.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="org_options.length == 3 && row.gp3.discount !== 0">
+                                                    <span class="numbers" v-if="org_options.length == 3 && row.gp3.id != 0">₱ {{ Number(row.gp3.price - (row.gp3.price * (row.gp3.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
+                                                <td class="amount" v-if="org_options.length == 3"><span class="numbers" v-if="org_options.length == 3 && row.gp3.id != 0">₱ {{ row.gp3.amount }}</span></td> <!---->
 
                                             </tr>
 
@@ -2982,9 +2982,9 @@ header( 'location:index' );
                                                 </td>
 
                                                 <!-- 第三個option -->
-                                                <td class="pic" colspan="3" v-if="temp_options.length == 3 && temp_options.length == 3">
-                                                    <img v-if="row.gp3.url2 !=='' && temp_options.length == 3" :src="row.gp3.url2">
-                                                    <img v-if="row.gp3.url3 !=='' && temp_options.length == 3" :src="row.gp3.url3">
+                                                <td class="pic" colspan="3" v-if="org_options.length == 3 && org_options.length == 3">
+                                                    <img v-if="row.gp3.url2 !=='' && org_options.length == 3" :src="row.gp3.url2">
+                                                    <img v-if="row.gp3.url3 !=='' && org_options.length == 3" :src="row.gp3.url3">
                                                 </td>
                                             </tr>
                                         </template>
@@ -3015,14 +3015,14 @@ header( 'location:index' );
                                         <td><span class="numbers">₱ {{ Number(subtotal_b).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
 
                                         <!-- 如果有 DISCOUNT 和 12%VAT，則rowspan=4：有 DISCOUNT 或 12%VAT，則rowspan=3；沒有 DISCOUNT 和 12%VAT ，則rowspan=2-->
-                                        <td :rowspan="total_disp.vat != '' && total_disp.discount != 0 ? 4 : (total_disp.vat != '' || total_disp.discount != 0 ? 3 : 2)" class="option_space"  v-if="temp_options.length == 3"></td>
+                                        <td :rowspan="total_disp.vat != '' && total_disp.discount != 0 ? 4 : (total_disp.vat != '' || total_disp.discount != 0 ? 3 : 2)" class="option_space"  v-if="org_options.length == 3"></td>
 
                                         <!-- 如果有 DISCOUNT 和 12%VAT，則rowspan=4：有 DISCOUNT 或 12%VAT，則rowspan=3；沒有 DISCOUNT 和 12%VAT ，則rowspan=2-->
-                                        <td colspan="2" :rowspan="total_disp.vat != '' && total_disp.discount != 0 ? 4 : (total_disp.vat != '' || total_disp.discount != 0 ? 3 : 2)"  v-if="temp_options.length == 3"></td>
+                                        <td colspan="2" :rowspan="total_disp.vat != '' && total_disp.discount != 0 ? 4 : (total_disp.vat != '' || total_disp.discount != 0 ? 3 : 2)"  v-if="org_options.length == 3"></td>
 
                                         <!-- 第三個option -->
-                                        <td colspan="2"  v-if="temp_options.length == 3">SUBTOTAL</td> <!---->
-                                        <td  v-if="temp_options.length == 3"><span class="numbers">₱ {{ Number(subtotal_c).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
+                                        <td colspan="2"  v-if="org_options.length == 3">SUBTOTAL</td> <!---->
+                                        <td  v-if="org_options.length == 3"><span class="numbers">₱ {{ Number(subtotal_c).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
                                     </tr>
 
                                     <tr class="tfoot2" v-if="total_disp.discount != 0">
@@ -3036,8 +3036,8 @@ header( 'location:index' );
                                         <td><span class="numbers">₱ {{ Number(subtotal_b * (total_disp.discount / 100)).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
 
                                         <!-- 第三個option -->
-                                        <td colspan="2"  v-if="temp_options.length == 3">{{ total_disp.discount }}% DISCOUNT</td> <!---->
-                                        <td  v-if="temp_options.length == 3"><span class="numbers">₱ {{ Number(subtotal_c * (total_disp.discount / 100)).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
+                                        <td colspan="2"  v-if="org_options.length == 3">{{ total_disp.discount }}% DISCOUNT</td> <!---->
+                                        <td  v-if="org_options.length == 3"><span class="numbers">₱ {{ Number(subtotal_c * (total_disp.discount / 100)).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
                                     </tr>
 
                                     <tr class="tfoot3" v-if="total_disp.vat != '' ">
@@ -3051,8 +3051,8 @@ header( 'location:index' );
                                         <td><span class="numbers">₱ {{ ((subtotal_b * (100 - total_disp.discount) / 100) * 12 / 100) !== undefined ? ((subtotal_b * (100 - total_disp.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
 
                                         <!-- 第三個option -->
-                                        <td colspan="2"  v-if="temp_options.length == 3">(12% VAT)</td> <!---->
-                                        <td  v-if="temp_options.length == 3"><span class="numbers">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * 12 / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                        <td colspan="2"  v-if="org_options.length == 3">(12% VAT)</td> <!---->
+                                        <td  v-if="org_options.length == 3"><span class="numbers">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * 12 / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                                     </tr>
 
                                     <tr class="tfoot4">
@@ -3061,19 +3061,19 @@ header( 'location:index' );
                                         </td>
 
                                         <!-- 第一個option -->
-                                        <td colspan="2">Proposed Grand Total</td> <!---->
+                                        <td colspan="2">{{ org_options[0] != undefined ? org_options[0].title : ''}} Grand Total</td> <!---->
                                         <td v-if="total_disp.total1 == '' || total_disp.total1 == total_disp.real_total1"><span class="numbers">₱ {{ ((subtotal_a * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_a * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                                         <td v-if="total_disp.total1 != '' && total_disp.total1 != total_disp.real_total1"><span class="numbers deleted">₱ {{ ((subtotal_a * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_a * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br><span class="numbers">₱ {{ Number(total_disp.total1).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
 
                                         <!-- 第二個option -->
-                                        <td colspan="2">Alternative Grand Total</td> <!---->
+                                        <td colspan="2">{{ org_options[1] != undefined ? org_options[1].title : ''}} Grand Total</td> <!---->
                                         <td  v-if="total_disp.total2 == '' || total_disp.total2 == total_disp.real_total2"><span class="numbers">₱ {{ ((subtotal_b * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_b * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                                         <td v-if="total_disp.total2 != '' && total_disp.total2 != total_disp.real_total2"><span class="numbers deleted">₱ {{ ((subtotal_b * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_b * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br><span class="numbers">₱ {{ Number(total_disp.total2).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
 
                                         <!-- 第三個option -->
-                                        <td colspan="2"  v-if="temp_options.length == 3">Alternative 2 Grand Total</td> <!---->
-                                        <td  v-if="temp_options.length == 3 && (total_disp.total3 == '' || total_disp.total3 == total_disp.real_total3)"><span class="numbers">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
-                                        <td v-if="temp_options.length == 3 && (total_disp.total3 != '' && total_disp.total3 != total_disp.real_total3)"><span class="numbers deleted">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br><span class="numbers">₱ {{ Number(total_disp.total3).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
+                                        <td colspan="2"  v-if="org_options.length == 3">{{ org_options[2] != undefined ? org_options[2].title : '' }} Grand Total</td> <!---->
+                                        <td  v-if="org_options.length == 3 && (total_disp.total3 == '' || total_disp.total3 == total_disp.real_total3)"><span class="numbers">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
+                                        <td v-if="org_options.length == 3 && (total_disp.total3 != '' && total_disp.total3 != total_disp.real_total3)"><span class="numbers deleted">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * (total_disp.vat == '' ? 100 : 112) / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span><br><span class="numbers">₱ {{ Number(total_disp.total3).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  }}</span></td>
                                     </tr>
 
                                     
