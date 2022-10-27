@@ -13,6 +13,9 @@ $_id = isset($_POST['id']) ? $_POST['id'] : 0;
 $option = isset($_POST['option']) ? $_POST['option'] : [];
 $option_array = json_decode($option, true);
 
+$org_option = isset($_POST['org_option']) ? $_POST['org_option'] : [];
+$org_option_array = json_decode($org_option, true);
+
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -48,94 +51,79 @@ else
         // now you can apply
         $uid = $user_id;
 
-        // price_comparison_option
-        $query = "DELETE FROM price_comparison_option
-                WHERE
-                `p_id` = :p_id";
-
-        // prepare the query
-        $stmt = $db->prepare($query);
-
-        // bind the values
-        $stmt->bindParam(':p_id', $_id);
-
-        try {
-        // execute the query, also check if query was successful
-        if (!$stmt->execute()) {
-            $arr = $stmt->errorInfo();
-            error_log($arr[2]);
-            $db->rollback();
-            http_response_code(501);
-            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
-            die();
-        }
-        } catch (Exception $e) {
-        error_log($e->getMessage());
-        $db->rollback();
-        http_response_code(501);
-        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-        die();
-        }
-
-        $i = 0;
-        foreach($option_array as &$option) {
-            $query = "INSERT INTO price_comparison_option
-            SET
-                `p_id` = :p_id,
-                `title` = :title,
-                `sn` = :sn,
-                `color` = :color,
-                                
-                `status` = 0,
-                `create_id` = :create_id,
-                `created_at` =  now() ";
-
-            $i = $i + 1;
-            // prepare the query
-            $stmt = $db->prepare($query);
-
-            // bind the values
-            $stmt->bindParam(':p_id', $_id);
-            $stmt->bindParam(':title', $option['title']);
-            $stmt->bindParam(':sn', $i);
-            $stmt->bindParam(':color', $option['color']);
-         
-            
-            $stmt->bindParam(':create_id', $user_id);
-        
-            $last_id = 0;
-            // execute the query, also check if query was successful
-            try {
-                // execute the query, also check if query was successful
-                if ($stmt->execute()) {
-                    $last_id = $db->lastInsertId();
-                } else {
-                    $arr = $stmt->errorInfo();
-                    error_log($arr[2]);
-                    $db->rollback();
-                    http_response_code(501);
-                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
-                    die();
+        // compare option_array and org_option_array, if different, update
+        $sn = 1;
+        foreach ( $option_array as $option )
+        {
+            // if $option['id'] not in $org_option_array, insert it, else update it
+            $found = false;
+            foreach ( $org_option_array as $org_option )
+            {
+                if ( $option['id'] == $org_option['id'] )
+                {
+                    $found = true;
+                    break;
                 }
-            } catch (Exception $e) {
-                error_log($e->getMessage());
-                $db->rollback();
-                http_response_code(501);
-                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-                die();
             }
-        
 
+            if($found)
+            {
+                $sql = "UPDATE price_comparison_option SET title = :title, sn = :sn, color = :color, updated_id = :updated_id, updated_at = now() WHERE id = :id";
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(':title', $option['title']);
+                $stmt->bindParam(':sn', $sn);
+                $stmt->bindParam(':color', $option['color']);
+                $stmt->bindParam(':updated_id', $uid);
+                $stmt->bindParam(':id', $option['id']);
+                $stmt->execute();
+            }
+            else
+            {
+                $sql = "INSERT INTO price_comparison_option (title, sn, color, p_id, create_id) VALUES (:title, :sn, :color, :p_id, :create_id)";
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(':title', $option['title']);
+                $stmt->bindParam(':sn', $sn);
+                $stmt->bindParam(':color', $option['color']);
+                $stmt->bindParam(':p_id', $option['p_id']);
+                $stmt->bindParam(':create_id', $uid);
+                $stmt->execute();
+            }
+
+
+            $sn++;
+        }
+
+        foreach ( $org_option_array as $org_option )
+        {
+          
+            $found = false;
+            foreach ( $option_array as $option )
+            {
+                if ( $option['id'] == $org_option['id'] )
+                {
+                    $found = true;
+                    break;
+                }
+            }
+
+            // delete if not found
+            if(!$found)
+            {
+                $sql = "UPDATE price_comparison_option SET `status` = -1 WHERE id = :id";
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(':id', $org_option['id']);
+                $stmt->execute();
+            }
+            
         }
 
         
-    
 
         $db->commit();
 
         
         http_response_code(200);
-        echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa"), "id" => $last_id));
+        echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
         
     }
     catch (Exception $e){

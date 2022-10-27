@@ -66,6 +66,7 @@ var app = new Vue({
 
       // options
       temp_options : [],
+      org_options : [],
       option_title : '',
       option_color : '',
       option_sn : 0,
@@ -2438,6 +2439,8 @@ Installation:`;
               _this.legends = _this.receive_records[0].legends;
               _this.temp_options = _this.receive_records[0].options;
 
+              _this.org_options = JSON.parse(JSON.stringify(_this.temp_options));
+
               _this.subtotal_a = _this.receive_records[0].subtotal_a;
               _this.subtotal_b = _this.receive_records[0].subtotal_b;
               _this.subtotal_c = _this.receive_records[0].subtotal_c;
@@ -2721,7 +2724,7 @@ Installation:`;
       add_option() {
         let order = 0;
 
-        if(this.temp_options.length > 3)
+        if(this.temp_options.length >= 3)
           return;
         
         if(this.temp_options.length != 0)
@@ -2731,6 +2734,7 @@ Installation:`;
           "id" : order + 1,
           "sn" : order + 1,
           "title" : '',
+          "p_id"  : this.id,
           "color" : '#000000',
         }, 
   
@@ -2789,6 +2793,8 @@ Installation:`;
         form_Data.append("jwt", token);
         form_Data.append("id", this.id);
         form_Data.append("option", JSON.stringify(this.temp_options));
+
+        form_Data.append("org_option", JSON.stringify(this.org_options));
        
         axios({
           method: "post",
