@@ -26,6 +26,8 @@ try {
     $test_manager = $decoded->data->test_manager;
     $user_id = $decoded->data->id;
 
+    $position = trim($GLOBALS['position']);
+
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 
@@ -36,8 +38,27 @@ try {
 
     $is_creator = IsCreator($sid, $user_id);
 
-    if ($test_manager[2] == "0" && $is_creator == "1")
+    $order_menu = 0;
+
+    if (($test_manager[2] == "0" && $is_creator == "1") 
+            || $position == 'Warehouse in charge' 
+            || $position == 'Sr. Project Architect'
+            || $position == 'Project Architect'
+            || $position == 'Jr. Project Architect'
+            || $position == 'Sr. Project Engineer'
+            || $position == 'Project Engineer'
+            || $position == 'Jr. Project Engineer') 
         $test_manager[2] = "1";
+
+    if ($position == 'Owner' 
+        || $position == 'Managing Director' 
+        || $position == 'Chief Advisor'
+        || $position == 'Supply Chain Manager'
+        || $position == 'Lighting Manager'
+        || $position == 'Assistant Lighting Manager'
+        || $position == 'Office Systems Manager'
+        || $position == 'Assistant Office Systems Manager') 
+        $order_menu = "1";
 }
 // if decode fails, it means jwt is invalid
 catch (Exception $e) {
@@ -112,9 +133,14 @@ catch (Exception $e) {
             dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
             dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
 
-            dialogshow($('.list_function a.add.yellow'), $('.list_function .dialog.r-add_o'));
-            dialogshow($('.list_function a.edit.yellow'), $('.list_function .dialog.r-edit_o'));
-
+            <?php
+            if ($order_menu  == "1") {
+            ?>
+                dialogshow($('.list_function a.add.yellow'), $('.list_function .dialog.r-add_o'));
+                dialogshow($('.list_function a.edit.yellow'), $('.list_function .dialog.r-edit_o'));
+            <?php
+            }
+            ?>
             // left block Reply
             dialogshow($('.btnbox a.reply.r1'), $('.btnbox .dialog.r1'));
             dialogshow($('.btnbox a.reply.r2'), $('.btnbox .dialog.r2'));
@@ -2355,6 +2381,29 @@ catch (Exception $e) {
                                         </dd>
                                     </dl>
                                     <dl>
+                                        <dt>Related Order:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                
+
+                                                    <select v-model="related_order">
+                                                        <option value="0"></option>
+                                                        <option v-for="option in related_orders" :value="option.id">{{ option.serial_name }} {{ option.od_name }}</option>
+                                                       
+                                                    </select>
+
+                                                    <select v-model="related_tab" v-if="related_order != '' && related_order != 0">
+                                                        <option value="1" selected>Preliminary Tab</option>
+                                                        <option value="2">For Approval Tab</option>
+                                                        <option value="3">Approved Tab</option>
+                                                        <option value="4">Overview Tab</option>
+                                                    </select>
+
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    
+                                    <dl>
                                         <dt>Due Date:</dt>
                                         <dd>
                                             <div class="browser_group">
@@ -2531,7 +2580,28 @@ catch (Exception $e) {
                                             </div>
                                         </dd>
                                     </dl>
-                                    
+                                    <dl>
+                                        <dt>Related Order:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                
+
+                                                    <select v-model="record.related_order">
+                                                        <option value="0"></option>
+                                                        <option v-for="option in related_orders" :value="option.id">{{ option.serial_name }} {{ option.od_name }}</option>
+                                                       
+                                                    </select>
+
+                                                    <select v-model="record.related_tab" v-if="record.related_order != '' && record.related_order != 0 && record.related_order != undefined">
+                                                        <option value="1">Preliminary Tab</option>
+                                                        <option value="2">For Approval Tab</option>
+                                                        <option value="3">Approved Tab</option>
+                                                        <option value="4">Overview Tab</option>
+                                                    </select>
+
+                                            </div>
+                                        </dd>
+                                    </dl>
                                     <dl>
                                         <dt>Due Date:</dt>
                                         <dd>
@@ -3251,6 +3321,10 @@ catch (Exception $e) {
                             <ul>
                                 <li><b>Created at</b></li>
                                 <li>{{ receive_record.task_date }}</li>
+                            </ul>
+                            <ul v-if="receive_record.related_order_name != ''">
+                                <li><b>Related Order</b></li>
+                                <li><a style="color: #25a2b8" :href="'order_taiwan_p' + receive_record.related_tab + '?id=' + receive_record.related_order">{{ receive_record.related_serial_name }} {{ receive_record.related_order_name }}</a></li>
                             </ul>
                             <ul>
                                 <li><b>Due Date</b></li>

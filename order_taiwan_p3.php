@@ -608,6 +608,10 @@ try {
             vertical-align: 0.5px;
         }
 
+        .read_block input[type="checkbox"]:disabled {
+            opacity: 0.8;
+        }
+
         .read_block textarea, .write_block textarea {
             border: 1px solid #707070;
             font-size: 16px;
@@ -616,9 +620,16 @@ try {
             width: 100%;
         }
 
+        .read_block .photobox{
+            display: flex;
+            justify-content: center;
+        }
+
         .write_block .itembox {
             display: inline-block;
             margin: 5px;
+            display: flex;
+            justify-content: center;
         }
 
         .write_block .itembox .photo {
@@ -689,6 +700,12 @@ try {
             position: absolute;
             bottom: -50px;
             left: 57px;
+        }
+
+        .write_block .photobox{
+            height: 210px;
+            display: flex;
+            justify-content: center;
         }
 
         .msg_block .msgbox {
@@ -1361,9 +1378,9 @@ try {
 
                             <a class="btn small green" @click="edit_shipping_info('ship_info')" v-if="EditShippingInfo() && no_privlege() != true">Edit Shipping Info</a>
                             <a class="btn small green" @click="edit_shipping_info('ware_info')" v-if="EditWarehouseInfo() && no_privlege() != true">Edit Warehouse Info</a>
-                            <a class="btn small green" @click="edit_shipping_info('assing_test')" v-if="AssignTesting() && no_privlege() != true">Assign Testing</a>
+                            <a class="btn small green" @click="edit_shipping_info('assing_test')" v-if="AssignTesting() && no_privlege() != true && 1==0">Assign Testing</a>
                             <a class="btn small green" @click="edit_shipping_info('edit_test')" v-if="EditTestingInfo() && no_privlege() != true">Edit Testing Info</a>
-                            <a class="btn small green" @click="edit_shipping_info('assign_delivery')" v-if="AssignDelivery() && no_privlege() != true">Assign Delivery</a>
+                            <a class="btn small green" @click="edit_shipping_info('assign_delivery')" v-if="AssignDelivery() && no_privlege() != true && 1==0">Assign Delivery</a>
                             <a class="btn small green" @click="edit_shipping_info('edit_delivery')" v-if="EditDeliveryInfo() && no_privlege() != true">Edit Delivery Info</a>
                             <a class="btn small green" @click="edit_shipping_info('edit_final')" v-if="EditFinalInfo() && no_privlege() != true">Edit Final Info</a>
                             <a class="btn small" @click="cancel_shipping_info()" v-if="Cancel()">Cancel</a>
@@ -1581,7 +1598,8 @@ try {
                         <option value="sea">Sea</option>
                         <option value="air">Air</option>
                     </select>
-                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" v-if="item.shipping_way == 'sea'" readonly>
+                    <input type="text" placeholder="Air Record No."  v-model="item.shipping_number" v-if="item.shipping_way == 'air'" readonly>
 
                     <select disabled v-model="item.shipping_vendor">
                         <option value=""></option>
@@ -1597,7 +1615,8 @@ try {
                         <option value="air">Air</option>
                     </select>
                     
-                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number">
+                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" v-if="item.shipping_way == 'sea'" >
+                    <input type="text" placeholder="Air Record No."  v-model="item.shipping_number" v-if="item.shipping_way == 'air'">
 
                     <select v-model="item.shipping_vendor">
                         <option value=""></option>
@@ -1629,17 +1648,49 @@ try {
             <td>
                 <div class="read_block" v-if="ArriveRemarkRead(item)">
                     Confirm Arrival:  <input type="checkbox" :value="item.charge" :true-value="1" v-model:checked="item.charge" class="alone" disabled>
+
+                    <div class="photobox">
+	                    <img v-if="item.photo4" :src="item.photo4">
+	                    <img v-if="item.photo5" :src="item.photo5">
+                    </div>
+
                     <textarea rows="3" readonly v-model="item.remark"></textarea>
                 </div>
 
+
+
                 <div class="write_block" v-if="ArriveRemarkWrite(item)">
                     Confirm Arrival:  <input type="checkbox" class="alone" :value="item.charge" :true-value="1" v-model:checked="item.charge" >
+
+                    <div class="photobox">
+
+                        <div :class="['itembox', (item.photo4 !== null ? 'chosen' : '')]">
+                            <div class="photo">
+                                <input type="file" :id="'photo_' + item.id + '_4'"  @change="onFileChangeImage($event, item, 4)">
+                                <img v-if="item.photo4" :src="item.photo4"/>
+                                <div @click="clear_photo(item, 4)">x</div>
+                            </div>
+                        </div>
+
+                        <div :class="['itembox', (item.photo5 !== null ? 'chosen' : '')]">
+                            <div class="photo">
+                                <input type="file" :id="'photo_' + item.id + '_5'"  @change="onFileChangeImage($event, item, 5)">
+                                <img v-if="item.photo5" :src="item.photo5"/>
+                                <div @click="clear_photo(item, 5)">x</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
                     <textarea rows="3" placeholder="Remarks" v-model="item.remark"></textarea>
             </td>
 
             <td>
                 <div class="read_block" v-if="TestRead(item)">
-                    <select v-model="item.test" disabled>
+                    <select v-model="item.test" disabled v-if="1==0">
                         <option>Choose Assignee for Testing...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
@@ -1647,16 +1698,19 @@ try {
                     </select>
                     Testing Result is Normal:  <input type="checkbox" :value="item.check_t" :true-value="1" v-model:checked="item.check_t" class="alone" disabled>
                     <textarea rows="3" v-model="item.remark_t" readonly></textarea>
+                    <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
+                    <i v-if="item.test_updated_name != ''">({{ item.test_updated_name }} at {{ item.test_updated_at }})</i>
+
                 </div>
 
                 <div class="write_block" v-if="TestWrite(item)">
-                    <select v-model="item.test" class="assign_testing" v-if="info_type == 'assing_test'">
+                    <select v-model="item.test" class="assign_testing" v-if="info_type == 'assing_test' && 1==0">
                         <option>Choose Assignee for Testing...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
                         </option>
                     </select>
-                    <div class="edit_testing_info" v-if="info_type == 'edit_test' && name == item.test">
+                    <div class="edit_testing_info" v-if="info_type == 'edit_test'">
                         Testing Result is Normal: <input type="checkbox" :value="item.check_t" :true-value="1" v-model:checked="item.check_t" class="alone">
                         <textarea rows="3" v-model="item.remark_t" placeholder="Remarks"></textarea>
                     </div>
@@ -1665,7 +1719,7 @@ try {
 
             <td>
                 <div class="read_block" v-if="DeliveryRead(item)">
-                    <select v-model="item.delivery" disabled>
+                    <select v-model="item.delivery" disabled v-if="1==0">
                         <option>Choose Assignee for Delivery...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
@@ -1673,17 +1727,19 @@ try {
                     </select>
                     Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
                     <textarea rows="3" v-model="item.remark_d" readonly></textarea>
+                    <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
+                    <i v-if="item.delivery_updated_name != ''">({{ item.delivery_updated_name }} at {{ item.delivery_updated_at }})</i>
                 </div>
 
                 <div class="write_block" v-if="DeliveryWrite(item)">
-                    <select v-model="item.delivery" class="assign_delivery" v-if="info_type == 'assign_delivery'">
+                    <select v-model="item.delivery" class="assign_delivery" v-if="info_type == 'assign_delivery' && 1==0">
                         <option>Choose Assignee for Delivery...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
                         </option>
                     </select>
 
-                    <div class="edit_delivery_info" v-if="info_type == 'edit_delivery' && name == item.delivery">
+                    <div class="edit_delivery_info" v-if="info_type == 'edit_delivery'">
                         Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone">
                         <textarea rows="3" v-model="item.remark_d" placeholder="Remarks"></textarea>
                     </div>

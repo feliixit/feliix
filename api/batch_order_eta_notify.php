@@ -15,6 +15,7 @@ $database_sea = new Database_Sea();
 $db_sea = $database_sea->getConnection();
 
 $cached_loading = get_all_container_eta_arrived($db_sea);
+$cached_air = get_all_air_eta_arrived($db_sea);
 
 $sql = "SELECT pm.id, 
             pm.od_name,
@@ -56,23 +57,47 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $eta = $item['eta'];
         $arrived = $item['arrive'];
 
+        $shipping_way = $item['shipping_way'];
+
         if($shipping_number == '')
             continue;
 
         // search cached_loading by container_number
-        foreach ($cached_loading as $loading) {
-            
-            if (strpos($loading['container_number'], $shipping_number) !== false)
-            {
-                if($eta != $loading['eta_date'] || $arrived != $loading['date_arrive'])
+        if($shipping_way == 'sea')
+        {
+            foreach ($cached_loading as $loading) {
+                
+                if (strpos($loading['container_number'], $shipping_number) !== false)
                 {
-                    update_item($item, $loading['eta_date'], $loading['date_arrive'], $db);
+                    if($eta != $loading['eta_date'] || $arrived != $loading['date_arrive'])
+                    {
+                        update_item($item, $loading['eta_date'], $loading['date_arrive'], $db);
 
-                    // if not contain changes then added
-                    if(!in_array($item, $changes))
-                        $changes[] = $item;
+                        // if not contain changes then added
+                        if(!in_array($item, $changes))
+                            $changes[] = $item;
+                    }
+                
                 }
-              
+            }
+        }
+
+        if($shipping_way == 'air')
+        {
+            foreach ($cached_air as $loading) {
+                
+                if ($loading['id'] == $shipping_number)
+                {
+                    if($eta != $loading['eta_date'] || $arrived != $loading['date_arrive'])
+                    {
+                        update_item($item, $loading['eta_date'], $loading['date_arrive'], $db);
+
+                        // if not contain changes then added
+                        if(!in_array($item, $changes))
+                            $changes[] = $item;
+                    }
+                
+                }
             }
         }
 
@@ -238,6 +263,15 @@ function get_all_container_eta_arrived($db) {
                 COALESCE(lo.date_arrive, '') date_arrive
             FROM loading lo 
             WHERE lo.status = '' order by lo.id ";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
+}
+
+function get_all_air_eta_arrived($db) {
+    $sql = "select id, flight_date eta_date, SUBSTRING(date_arrive, 1, 10) date_arrive from airship_records";
 
     $stmt = $db->prepare($sql);
     $stmt->execute();

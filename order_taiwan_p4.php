@@ -615,6 +615,10 @@ try {
             vertical-align: 0.5px;
         }
 
+        .read_block input[type="checkbox"]:disabled {
+            opacity: 0.8;
+        }
+
         .read_block textarea, .write_block textarea {
             border: 1px solid #707070;
             font-size: 16px;
@@ -1521,7 +1525,8 @@ try {
                         <option value="sea">Sea</option>
                         <option value="air">Air</option>
                     </select>
-                    <input type="text" placeholder="Container No." v-if="item.shipping_way == 'sea'" v-model="item.shipping_number" readonly>
+                    <input type="text" placeholder="Container No."  v-model="item.shipping_number" v-if="item.shipping_way == 'sea'" readonly>
+                    <input type="text" placeholder="Air Record No."  v-model="item.shipping_number" v-if="item.shipping_way == 'air'" readonly>
 
                     <select disabled v-model="item.shipping_vendor">
                         <option value=""></option>
@@ -1548,13 +1553,19 @@ try {
             <td>
                 <div class="read_block" v-if="ArriveRemarkRead(item)">
                     Confirm Arrival:  <input type="checkbox" :value="item.charge" :true-value="1" v-model:checked="item.charge" class="alone" disabled>
+
+                    <div class="photobox">
+	                    <img v-if="item.photo4" :src="item.photo4">
+	                    <img v-if="item.photo5" :src="item.photo5">
+                    </div>
+
                     <textarea rows="3" readonly v-model="item.remark"></textarea>
                 </div>
             </td>
 
             <td>
                 <div class="read_block" v-if="TestRead(item)">
-                    <select v-model="item.test" disabled>
+                    <select v-model="item.test" disabled v-if="1==0">
                         <option>Choose Assignee for Testing...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
@@ -1562,12 +1573,15 @@ try {
                     </select>
                     Testing Result is Normal:  <input type="checkbox" :value="item.check_t" :true-value="1" v-model:checked="item.check_t" class="alone" disabled>
                     <textarea rows="3" v-model="item.remark_t" readonly></textarea>
+                    <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
+                    <i v-if="item.test_updated_name != ''">({{ item.test_updated_name }} at {{ item.test_updated_at }})</i>
+
                 </div>
             </td>
 
             <td>
                 <div class="read_block" v-if="DeliveryRead(item)">
-                    <select v-model="item.delivery" disabled>
+                    <select v-model="item.delivery" disabled v-if="1==0">
                         <option>Choose Assignee for Delivery...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
@@ -1575,6 +1589,8 @@ try {
                     </select>
                     Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
                     <textarea rows="3" v-model="item.remark_d" readonly></textarea>
+                    <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
+                    <i v-if="item.delivery_updated_name != ''">({{ item.delivery_updated_name }} at {{ item.delivery_updated_at }})</i>
                 </div>
             </td>
 

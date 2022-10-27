@@ -62,6 +62,9 @@ $due_date = (isset($_POST['due_date']) ?  $_POST['due_date'] : '');
 $due_time = (isset($_POST['due_time']) ?  $_POST['due_time'] : '');
 $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 
+$related_order = (isset($_POST['related_order']) ?  $_POST['related_order'] : '');
+$related_tab = (isset($_POST['related_tab']) ?  $_POST['related_tab'] : '');
+
 $_record = GetTaskDetailOrg($task_id, $db);
 
 $mail_type = 0;
@@ -102,6 +105,8 @@ try{
         `due_date` = :due_date,
         `due_time` = :due_time,
         `detail` = :detail,
+        `related_order` = :related_order,
+        `related_tab` = :related_tab,
         updated_id = :updated_id,
         updated_at = now()
     where id = :id ";
@@ -118,6 +123,9 @@ try{
     $stmt->bindParam(':due_date', $due_date);
     $stmt->bindParam(':due_time', $due_time);
     $stmt->bindParam(':detail', $detail);
+
+    $stmt->bindParam(':related_order', $related_order);
+    $stmt->bindParam(':related_tab', $related_tab);
 
     $stmt->bindParam(':updated_id', $uid);
 
