@@ -213,7 +213,10 @@ else
                 {
                     $query = "update price_comparison_legend
                     SET
-                        `group_id` = :group_id
+                        `group_id` = :group_id,
+                        `title` = :title,
+                        `sn` = :sn,
+                        `color` = :color
                     WHERE
                         `id` = :id
                          ";
@@ -225,6 +228,9 @@ else
                     // bind the values
                     $stmt->bindParam(':group_id', $last_id);
                     $stmt->bindParam(':id', $legend['id']);
+                    $stmt->bindParam(':title', $legend['title']);
+                    $stmt->bindParam(':sn', $j);
+                    $stmt->bindParam(':color', $legend['color']);
                 
                     $last_legend_id = 0;
                     // execute the query, also check if query was successful
