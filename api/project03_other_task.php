@@ -229,6 +229,11 @@ switch ($method) {
                 $related_order_name = $related_order_data[0]['od_name'];
                 $related_serial_name = $related_order_data[0]['serial_name'];
             }
+            else
+            {
+                $related_order_name = "";
+                $related_serial_name = "";
+            }
 
             if ($filename != "")
                 $items[] = array(
