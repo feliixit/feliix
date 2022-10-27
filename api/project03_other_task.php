@@ -221,6 +221,7 @@ switch ($method) {
                 $od_type = $order[0]['order_type'];
             }
 
+            $related_order_data = [];
             if($related_order != '')
                 $related_order_data = GetRelatedOrderInfo($related_order, $db);
 

@@ -225,6 +225,7 @@ switch ($method) {
             $related_order = $row['related_order'];
             $related_tab = $row['related_tab'];
 
+            $related_order_data = [];
             if($related_order != '')
                 $related_order_data = GetRelatedOrderInfo($related_order, $db);
 
