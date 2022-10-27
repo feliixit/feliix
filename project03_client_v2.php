@@ -2334,7 +2334,7 @@ header('location:index');
                                                        
                                                     </select>
 
-                                                    <select v-model="related_tab" v-if="related_order != '' && record.related_order != 0">
+                                                    <select v-model="related_tab" v-if="related_order != '' && related_order != 0">
                                                         <option value="1" selected>Preliminary Tab</option>
                                                         <option value="2">For Approval Tab</option>
                                                         <option value="3">Approved Tab</option>
@@ -2533,7 +2533,7 @@ header('location:index');
                                                        
                                                     </select>
 
-                                                    <select v-model="record.related_tab" v-if="record.related_order != '' && record.related_order != 0">
+                                                    <select v-model="record.related_tab" v-if="record.related_order != '' && record.related_order != 0 && record.related_order != undefined">
                                                         <option value="1">Preliminary Tab</option>
                                                         <option value="2">For Approval Tab</option>
                                                         <option value="3">Approved Tab</option>
