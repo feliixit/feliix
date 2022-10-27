@@ -41,23 +41,23 @@ try {
     $order_menu = 0;
 
     if (($test_manager[2] == "0" && $is_creator == "1") 
-            || $GLOBALS['position'] == 'Warehouse in charge' 
-            || $GLOBALS['position'] == 'Sr. Project Architect'
-            || $GLOBALS['position'] == 'Project Architect'
-            || $GLOBALS['position'] == 'Jr. Project Architect'
-            || $GLOBALS['position'] == 'Sr. Project Engineer'
-            || $GLOBALS['position'] == 'Project Engineer'
-            || $GLOBALS['position'] == 'Jr. Project Engineer') 
+            || $position == 'Warehouse in charge' 
+            || $position == 'Sr. Project Architect'
+            || $position == 'Project Architect'
+            || $position == 'Jr. Project Architect'
+            || $position == 'Sr. Project Engineer'
+            || $position == 'Project Engineer'
+            || $position == 'Jr. Project Engineer') 
         $test_manager[2] = "1";
 
-    if ($GLOBALS['position'] == 'Owner' 
-        || $GLOBALS['position'] == 'Managing Director' 
-        || $GLOBALS['position'] == 'Chief Advisor'
-        || $GLOBALS['position'] == 'Supply Chain Manager'
-        || $GLOBALS['position'] == 'Lighting Manager'
-        || $GLOBALS['position'] == 'Assistant Lighting Manager'
-        || $GLOBALS['position'] == 'Office Systems Manager'
-        || $GLOBALS['position'] == 'Assistant Office Systems Manager') 
+    if ($position == 'Owner' 
+        || $position == 'Managing Director' 
+        || $position == 'Chief Advisor'
+        || $position == 'Supply Chain Manager'
+        || $position == 'Lighting Manager'
+        || $position == 'Assistant Lighting Manager'
+        || $position == 'Office Systems Manager'
+        || $position == 'Assistant Office Systems Manager') 
         $order_menu = "1";
 }
 // if decode fails, it means jwt is invalid
