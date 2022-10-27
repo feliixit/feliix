@@ -2162,6 +2162,10 @@ header('location:index');
             font-weight: 700;
         }
 
+        div.block.left.second div.tablebox.m01 > ul > li:first-of-type{
+            white-space: nowrap;
+        }
+
         .list_function.main a.calendar.red {
             background-image: url(images/ui/btn_calendar_red.svg);
         }
