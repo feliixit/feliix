@@ -26,6 +26,8 @@ try {
     $test_manager = $decoded->data->test_manager;
     $user_id = $decoded->data->id;
 
+    $position = trim($GLOBALS['position']);
+
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 
@@ -48,7 +50,7 @@ try {
             || $GLOBALS['position'] == 'Jr. Project Engineer') 
         $test_manager[2] = "1";
 
-    if ($is_creator == "1"
+    if ($GLOBALS['position'] == 'Owner' 
         || $GLOBALS['position'] == 'Managing Director' 
         || $GLOBALS['position'] == 'Chief Advisor'
         || $GLOBALS['position'] == 'Supply Chain Manager'
