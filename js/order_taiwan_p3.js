@@ -598,7 +598,7 @@ var app = new Vue({
 
       ShipwayRead(item)
       {
-        if(!item.is_info && (this.access4 == true || this.access2 == true || this.access5 == true))
+        if(!item.is_info )
           return true;
         else
           return false;
