@@ -614,7 +614,7 @@ var app = new Vue({
 
       EtaRead(item)
       {
-        if(!item.is_info && (this.access4 == true || this.access5 == true || this.access6 == true))
+        if(!item.is_info )
           return true;
         else
           return false;
@@ -630,7 +630,7 @@ var app = new Vue({
 
       ArriveRead(item)
       {
-        if(!item.is_info && (this.access4 == true || this.access5 == true || this.access6 == true))
+        if(!item.is_info )
           return true;
         else
           return false;
