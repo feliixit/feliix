@@ -481,11 +481,7 @@ header( 'location:index' );
 
         .qn_page {
             /*   2個option, width=2420, 3個option width=3560 */
-            <?php if ($page == 2) { ?>
-            width: 2420px;
-            <?php } else { ?>
-            width: 3560px;
-            <?php } ?>
+            
             background-color: white;
             position: relative;
             overflow-x: auto;
@@ -2798,7 +2794,7 @@ header( 'location:index' );
         </div>
 
 
-        <table class="qn_page">
+        <table class="qn_page" :style="org_options.length == 2 ? 'width: 2420px;' : 'width: 3560px;'">
 
             <thead>
             <tr>
