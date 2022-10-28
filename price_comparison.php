@@ -2915,10 +2915,10 @@ header( 'location:index' );
                                                     <img v-if="row.gp1.url1 !==''" :src="row.gp1.url1">
                                                 </td>
                                                 <td rowspan="2" class="spec">
-                                                    <div class="code">{{ row.gp1.code }}</div>
-                                                    <div class="brief" style="white-space: pre-line;">{{ row.gp1.desc }}
+                                                    <div class="code" v-if="row.gp1.code != ''">{{ row.gp1.code }}</div>
+                                                    <div class="brief" style="white-space: pre-line;" v-if="row.gp1.desc != ''">{{ row.gp1.desc }}
                                                     </div>
-                                                    <div class="listing" style="white-space: pre-line;">{{ row.gp1.list }}
+                                                    <div class="listing" style="white-space: pre-line;" v-if="row.gp1.list != ''">{{ row.gp1.list }}
                                                     </div>
                                                 </td> <!---->
                                                 <td class="qty"><span class="numbers">{{ row.gp1.qty }}</span></td>
@@ -2934,10 +2934,10 @@ header( 'location:index' );
                                                     <img v-if="row.gp2.url1 !==''" :src="row.gp2.url1">
                                                 </td>
                                                 <td rowspan="2" class="spec">
-                                                    <div class="code">{{ row.gp2.code }}</div>
-                                                    <div class="brief" style="white-space: pre-line;">{{ row.gp2.desc }}
+                                                    <div class="code" v-if="row.gp2.code != ''">{{ row.gp2.code }}</div>
+                                                    <div class="brief" style="white-space: pre-line;" v-if="row.gp2.desc != ''">{{ row.gp2.desc }}
                                                     </div>
-                                                    <div class="listing" style="white-space: pre-line;">{{ row.gp2.list }}
+                                                    <div class="listing" style="white-space: pre-line;" v-if="row.gp2.list != ''">{{ row.gp2.list }}
                                                     </div>
                                                 </td> <!---->
                                                 <td class="qty"><span class="numbers">{{ row.gp2.qty }}</span></td>
@@ -2953,15 +2953,15 @@ header( 'location:index' );
                                                     <img v-if="org_options.length == 3 && row.gp3.url1 !==''" :src="row.gp3.url1">
                                                 </td>
                                                 <td rowspan="2" class="spec" v-if="org_options.length == 3">
-                                                    <div class="code" v-if="org_options.length == 3">{{ row.gp3.code }}</div>
-                                                    <div class="brief" style="white-space: pre-line;" v-if="org_options.length == 3">{{ row.gp3.desc }}
+                                                    <div class="code" v-if="org_options.length == 3 && row.gp3.code != ''">{{ row.gp3.code }}</div>
+                                                    <div class="brief" style="white-space: pre-line;" v-if="org_options.length == 3 && row.gp3.desc != ''">{{ row.gp3.desc }}
                                                     </div>
-                                                    <div class="listing" style="white-space: pre-line;" v-if="org_options.length == 3">{{ row.gp3.list }}
+                                                    <div class="listing" style="white-space: pre-line;" v-if="org_options.length == 3 && row.gp3.list != ''">{{ row.gp3.list }}
                                                     </div>
                                                 </td> <!---->
                                                 <td class="qty" v-if="org_options.length == 3"><span class="numbers" v-if="org_options.length == 3">{{ row.gp3.qty }}</span></td>
                                                 <td class="price" v-if="org_options.length == 3"><!----> <span v-if="org_options.length == 3 && row.gp3.discount != 0"
-                                                        class="numbers deleted">₱ {{ Number(row.gp3.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span v-if="org_options.length == 3 && row.gp3.discount !== 0">{{ row.gp3.discount !== undefined ? Math.floor(row.gp3.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="org_options.length == 3 && row.gp3.discount !== 0">
+                                                        class="numbers deleted">₱ {{ Number(row.gp3.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span v-if="org_options.length == 3 && row.gp3.discount !== 0">{{ row.gp3.discount !== undefined ? Math.floor(row.gp3.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="org_options.length == 3 && row.gp3.discount != 0">
                                                     <span class="numbers" v-if="org_options.length == 3 && row.gp3.id != 0">₱ {{ Number(row.gp3.price - (row.gp3.price * (row.gp3.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
                                                 <td class="amount" v-if="org_options.length == 3"><span class="numbers" v-if="org_options.length == 3 && row.gp3.id != 0">₱ {{ row.gp3.amount }}</span></td> <!---->
 
