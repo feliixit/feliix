@@ -2867,7 +2867,7 @@ header( 'location:index' );
                                     <!-- 迴圈輸出每一個Group的內容，第一個Group範例 -->
                                     <tr class="thead1">
                                         <!-- 兩個方案 colspan=12, 三個方案則是18 -->
-                                        <td :colspan="org_options.length == 3 ? 18 : 12" class="title">{{ group.title }}</td>
+                                        <td :colspan="org_options.length == 3 ? 18 : 12" class="title" :style="group.color == '#000000' ? 'color : #00753a' : 'color : ' + group.color">{{ group.title }}</td>
                                     </tr>
 
                                     <tr class="thead2">
@@ -2875,7 +2875,7 @@ header( 'location:index' );
 
                                             <template v-for="(option, option_index) in org_options">
                                                 
-                                                <td colspan="5">{{ option.title }}</td>
+                                                <td colspan="5" :style="option.color == '#000000' ? 'color : #000000' : 'color : ' + option.color">{{ option.title }}</td>
 
                                                 <td rowspan="2" class="option_space" v-if="option_index < org_options.length -1"></td>
                                             </template>
