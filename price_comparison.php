@@ -40,7 +40,7 @@ try {
             $database = new Database();
             $db = $database->getConnection();
 
-            $query = "SELECT count(*) cnt from price_comparison_option pco where p_id = " . $id;
+            $query = "SELECT count(*) cnt from price_comparison_option pco where p_id = " . $id . " and status <> -1";
 
             $stmt = $db->prepare( $query );
             $stmt->execute();
