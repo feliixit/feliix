@@ -3179,3 +3179,11 @@ ADD COLUMN `related_order` VARCHAR(128) DEFAULT '';
 
 ALTER TABLE project_other_task_c
 ADD COLUMN `related_tab` VARCHAR(64) DEFAULT '';
+
+-- 20221031 performance review new comment
+ALTER TABLE performance_review
+ADD COLUMN `mag_comment_6` varchar(2048)  COLLATE utf8mb4_unicode_ci default '' AFTER `mag_comment_5`;
+ALTER TABLE performance_review
+ADD COLUMN `comment_done_id` int(11) DEFAULT 0;
+ALTER TABLE performance_review
+ADD COLUMN `comment_done_at` timestamp null;

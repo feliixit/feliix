@@ -47,6 +47,7 @@ var app = new Vue({
     comment3:"",
     comment4:"",
     comment5:"",
+    comment6:"",
 
     // I&AM
     department:'',
@@ -382,9 +383,95 @@ var app = new Vue({
         checked = this.comment4.length;
       if(this.comment5.length > max_length)
         checked = this.comment5.length;
+      if(this.comment6.length > max_length)
+        checked = this.comment6.length;
 
         return checked;
 
+    },
+
+    review_comment_submit() {
+
+      let _this = this;
+
+      var max_length = 512;
+      if(_this.record[0].user_id == _this.user_id)
+        max_length = 512;
+      if(_this.record[0].create_id == _this.user_id)
+        max_length = 2048;
+
+      if(this.comment6.length > max_length)
+      {
+        Swal.fire({
+          text: "Text length cannot exceed " + max_length + " characters.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      Swal.fire({
+        title: "Submit",
+        text: "Are you sure to submit? Once submitted, you cannot revise the evaluation result anymore.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.value) {
+          if (_this.submit == true) return;
+
+          _this.submit = true;
+
+
+          var token = localStorage.getItem("token");
+          var form_Data = new FormData();
+          form_Data.append("jwt", token);
+          form_Data.append("pid", _this.proof_id);
+
+          form_Data.append("commet6", _this.comment6);
+
+          axios({
+            method: "post",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            url: "api/performance_review_update_comment",
+            data: form_Data,
+          })
+            .then(function(response) {
+              //handle success
+              Swal.fire({
+                html: response.data.message,
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+
+              _this.reset();
+
+              window.jQuery(".mask").toggle();
+              window.jQuery("#Modal_4").toggle();
+
+            })
+            .catch(function(error) {
+              //handle error
+              Swal.fire({
+                text: JSON.stringify(error),
+                icon: "info",
+                confirmButtonText: "OK",
+              });
+
+              _this.submit = false;
+
+              //_this.reset();
+            });
+
+            
+        } else {
+          return;
+        }
+      });
     },
 
     review_submit() {
@@ -725,8 +812,31 @@ var app = new Vue({
       if(record.user_id == this.user_id && record.user_complete_at != "")
         return;
 
-      if(record.create_id == this.user_id && record.manager_complete_at != "")
+      if(record.create_id == this.user_id && record.status == "Done" && record.comment_done_at != "")
+      {
+        Swal.fire({
+          html: 'You already submitted "Comments after communication".',
+          icon: "info",
+          confirmButtonText: "OK",
+        });
         return;
+      }
+
+      if(record.create_id == this.user_id && record.status != "Done" && record.manager_complete_at != "")
+      {
+        return;
+      }
+
+      if(record.create_id == this.user_id && record.manager_complete_at != "" && record.comment_done_at != "")
+      {
+        Swal.fire({
+          html: 'You already submitted "Comments after communication".',
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+        
 
       if(record.create_id != this.user_id && record.user_id != this.user_id)
         return;
@@ -751,6 +861,10 @@ var app = new Vue({
           if (_this.record.length > 0) {
             _this.evals = _this.record[0];
             _window.jQuery(".mask").toggle();
+
+            if(record.create_id == _this.user_id && record.status == "Done")
+            _window.jQuery("#Modal_4").toggle();
+            else
             _window.jQuery("#Modal_2").toggle();
 
             _this.reset_evaluate();
@@ -1012,6 +1126,7 @@ var app = new Vue({
       this.comment3 = "";
       this.comment5 = "";
       this.comment4 = "";
+      this.comment6 = "";
 
       var opt = this.$refs.opt;
       for (i = 0; i < opt.length; i++) {
@@ -1060,6 +1175,7 @@ var app = new Vue({
       this.comment3 = "";
       this.comment5 = "";
       this.comment4 = "";
+      this.comment6 = "";
 
       this.employee = "";
       this.review_month = "";
