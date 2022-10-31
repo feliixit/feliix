@@ -881,6 +881,7 @@ header( 'location:index' );
             font-weight: 800;
             text-align: center;
             width: 100px;
+            vertical-align: middle;
         }
 
         .tb_format1 tbody tr.desc1 td.spec {
@@ -912,8 +913,8 @@ header( 'location:index' );
 
         .tb_format1 tbody tr.desc2 td img {
             max-height: 120px;
-            max-width: 210px;
-            margin: 0 30px;
+            max-width: 220px;
+            margin: 0 5px;
         }
 
         .tb_format1 tbody tr.thead1 td.title {
@@ -1367,6 +1368,16 @@ header( 'location:index' );
             position: absolute;
             top: 18px;
             right: -50px;
+        }
+
+        .subtotalbox .legend_image{
+            display: flex;
+            align-items: center;
+            margin: 3px 0;
+        }
+
+        .subtotalbox .legend_image > span{
+            margin-right: 5px;
         }
 
         #terms_dialog .formbox dl {
@@ -2335,38 +2346,43 @@ header( 'location:index' );
                                     <a class="btn small green" @click="product_catalog_a(option)">Product Catalog</a>
                                 </div>
 
+
+
                                 <div class="content_box">
 
                                     <ul v-for="(block, index) in option.temp_block_a">
                                         <li>
                                             <input type="text" v-model="block.pid" hidden><br>
-                                            <span>Code:</span> <input type="text" v-model="block.code"><br>
-                                            <span>Image:</span>
-                                            <div :class="['itembox', (block.photo1 !== '' ? 'chosen' : '')]">
-                                                <div class="photo">
-                                                    <input type="file" :id="'photo_' + block.id + '_1'"  @change="onFileChangeImage($event, block, 1)">
-                                                    <img v-if="block.photo1" :src="block.url1"/>
-                                                    <div @click="clear_photo(block, 1)">x</div>
+                                            <span>Code:</span> <input type="text" v-model="block.code">
+
+                                            <div class="legend_image">
+                                                <span>Image:</span>
+                                                <div :class="['itembox', (block.photo1 !== '' ? 'chosen' : '')]">
+                                                    <div class="photo">
+                                                       <input type="file" :id="'photo_' + block.id + '_1'"  @change="onFileChangeImage($event, block, 1)">
+                                                      <img v-if="block.photo1" :src="block.url1"/>
+                                                      <div @click="clear_photo(block, 1)">x</div>
+                                                   </div>
+                                                </div>
+
+                                                <div :class="['itembox', (block.photo2 !== '' ? 'chosen' : '')]">
+                                                    <div class="photo">
+                                                        <input type="file" :id="'photo_' + block.id + '_2'"  @change="onFileChangeImage($event, block, 2)">
+                                                        <img v-if="block.photo2" :src="block.url2"/>
+                                                        <div @click="clear_photo(block, 2)">x</div>
+                                                    </div>
+                                                </div>
+
+                                                <div :class="['itembox', (block.photo3 !== '' ? 'chosen' : '')]">
+                                                    <div class="photo">
+                                                        <input type="file" :id="'photo_' + block.id + '_3'"  @change="onFileChangeImage($event, block, 3)">
+                                                        <img v-if="block.photo3" :src="block.url3"/>
+                                                        <div @click="clear_photo(block, 3)">x</div>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div :class="['itembox', (block.photo2 !== '' ? 'chosen' : '')]">
-                                                <div class="photo">
-                                                    <input type="file" :id="'photo_' + block.id + '_2'"  @change="onFileChangeImage($event, block, 2)">
-                                                    <img v-if="block.photo2" :src="block.url2"/>
-                                                    <div @click="clear_photo(block, 2)">x</div>
-                                                </div>
-                                            </div>
 
-                                            <div :class="['itembox', (block.photo3 !== '' ? 'chosen' : '')]">
-                                                <div class="photo">
-                                                    <input type="file" :id="'photo_' + block.id + '_3'"  @change="onFileChangeImage($event, block, 3)">
-                                                    <img v-if="block.photo3" :src="block.url3"/>
-                                                    <div @click="clear_photo(block, 3)">x</div>
-                                                </div>
-                                            </div>
-
-                                            <br>
                                             <span>Qty:</span> <input type="number" min="1" step="1" v-model="block.qty"
                                                                      @change="chang_amount(block)"
                                                                      oninput="this.value|=0">
