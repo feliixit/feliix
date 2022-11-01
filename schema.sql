@@ -3187,3 +3187,7 @@ ALTER TABLE performance_review
 ADD COLUMN `comment_done_id` int(11) DEFAULT 0;
 ALTER TABLE performance_review
 ADD COLUMN `comment_done_at` timestamp null;
+
+-- 20221031 price comparison mgt
+ALTER TABLE price_comparison
+ADD COLUMN `project_id` bigint(20)  DEFAULT 0 AFTER title;
