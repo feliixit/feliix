@@ -1578,7 +1578,7 @@ function GetPaymentTerm($qid, $db){
         $list = $row['list'];
     
 
-        $merged_results = array(
+        $merged_results[] = array(
             "page" => $page,
             "payment_method" => $payment_method,
             "brief" => $brief,
