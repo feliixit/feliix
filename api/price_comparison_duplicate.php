@@ -96,6 +96,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
     $total_info = $merged_results[0]['total_info'];
     $term_info = $merged_results[0]['term_info'];
     $sig_info = $merged_results[0]['sig_info'];
+    $payment_method = $merged_results[0]['payment_method'];
     
     $query = "INSERT INTO price_comparison
     SET
@@ -156,6 +157,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             
             insert_total_info($price_id, $user_id, $total_info, $db);
             insert_term_info($price_id, $user_id, $term_info, $db);
+            insert_payment_term($price_id, $user_id, $payment_method, $db);
             insert_sig_info($price_id, $user_id, $sig_info, $db);
             
             
@@ -214,7 +216,7 @@ function insert_sig_info($price_id, $user_id, $sigs, $db) {
         try {
             // execute the query, also check if query was successful
             if ($stmt->execute()) {
-                return $db->lastInsertId();
+                
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);
@@ -266,7 +268,7 @@ function insert_term_info($price_id, $user_id, $terms, $db) {
         try {
             // execute the query, also check if query was successful
             if ($stmt->execute()) {
-                return $db->lastInsertId();
+                 
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);
@@ -298,6 +300,7 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     `total1` = 0,
     `total2` = 0,
     `total3` = 0,
+    `status` = 0,
     `create_id` = :create_id,
     `created_at` =  now() ";
     
@@ -317,7 +320,7 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     try {
         // execute the query, also check if query was successful
         if ($stmt->execute()) {
-            return $db->lastInsertId();
+             
         } else {
             $arr = $stmt->errorInfo();
             error_log($arr[2]);
@@ -393,6 +396,60 @@ function insert_options($price_id,  $user_id, $options, $db)
     return $result;
 }
 
+
+function insert_payment_term($price_id, $user_id, $terms, $db)
+{
+    if(count($terms) == 0) {
+        return;
+    }
+    
+    $sn = 0;
+    foreach($terms as $term)
+    {
+        $sn += 1;
+        $query = "INSERT INTO price_comparison_payment_term
+        SET
+        `price_id` = :price_id,
+        `page` = 1,
+        `payment_method` = :payment_method,
+        `brief` = :brief,
+        `list` = :list,
+        `status` = 0,
+        `create_id` = :create_id,
+        `created_at` =  now() ";
+        
+        // prepare the query
+        $stmt = $db->prepare($query);
+        
+        // bind the values
+        $stmt->bindParam(':price_id', $price_id);
+        $stmt->bindParam(':payment_method', $term['payment_method']);
+        $stmt->bindParam(':brief', $term['brief']);
+        $stmt->bindParam(':list', $term['list']);
+        $stmt->bindParam(':create_id', $user_id);
+        
+        // execute the query, also check if query was successful
+        try {
+            if ($stmt->execute()) {
+       
+            } 
+            else {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                die();
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
+        }
+    }
+}
 
 function insert_groups($price_id, $options_id, $user_id, $groups, $db)
 {
@@ -678,6 +735,7 @@ function GetQuotation($id, $db) {
         $ng = GetGroupsDis($id, $db, $options);
         
         $total_info = GetTotalInfo($row['id'], $db);
+        $payment_method = GetPaymentTerm($row['id'], $db);
         $term_info = GetTermInfo($row['id'], $db);
         $sig_info = GetSigInfo($row['id'], $db);
         
@@ -705,6 +763,7 @@ function GetQuotation($id, $db) {
             "total_info" => $total_info,
             "term_info" => $term_info,
             "sig_info" => $sig_info,
+            "payment_method" => $payment_method
             
         );
     }
@@ -1490,6 +1549,47 @@ function GetSig($qid, $page, $db)
     
     return $merged_results;
 }
+
+
+function GetPaymentTerm($qid, $db){
+    $query = "
+        SELECT 
+        `page`,
+        payment_method,
+        brief,
+        list 
+        FROM   price_comparison_payment_term
+        WHERE  price_id = " . $qid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+    
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $page = $row['page'];
+        $payment_method = $row['payment_method'];
+        $brief = $row['brief'];
+        $list = $row['list'];
+    
+
+        $merged_results = array(
+            "page" => $page,
+            "payment_method" => $payment_method,
+            "brief" => $brief,
+            "list" => $list,
+          
+        );
+    }
+
+    return $merged_results;
+}
+
 
 function GetTermInfo($qid, $db)
 {

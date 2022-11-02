@@ -658,7 +658,7 @@ header( 'location:index' );
                             </dd>
 
                         </li>
-                        <li>{{ receive_record.id }}</li>
+                        <li>{{ receive_record.quotation_no }}</li>
                         <li>{{receive_record.created_at}}<br>{{receive_record.created_by}}</li>
                         <li>{{receive_record.updated_at}}<br>{{receive_record.updated_by}}</li>
                         <li>

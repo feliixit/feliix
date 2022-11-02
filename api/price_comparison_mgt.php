@@ -233,7 +233,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
    
-    $post = GetRecentPost($row['id'], $db);
+    // $post = GetRecentPost($row['id'], $db);
 
     $merged_results[] = array(
         "is_edited" => 1,
@@ -254,7 +254,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_by" => $updated_by,
         "created_at" => $created_at,
         "updated_at" => $updated_at,
-        "post" => $post,
+        "post" => '',
      
     );
 }
