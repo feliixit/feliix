@@ -55,7 +55,10 @@ $status = (isset($_POST['status']) ?  $_POST['status'] : 0);
 try{
     $query = "update od_main
     SET
-    `status` = :status
+    `status` = :status,
+    `updated_id` = :updated_id,
+    `updated_at` = now()
+
     where id = :id  ";
     
     // prepare the query
@@ -63,6 +66,7 @@ try{
     
     $stmt->bindParam(':id', $id);
     $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':updated_id', $uid);
     
     if ($stmt->execute()) {
         $returnArray = array('ret' => $id);
