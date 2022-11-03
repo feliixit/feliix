@@ -270,7 +270,7 @@ header( 'location:index' );
                                 <dt>Target Order</dt>
                                 <dd>
                                     <select v-model="temp_order" style="width: calc( 100% - 100px);">
-                                        <option v-for="od in orders" :value="od">{{ od.serial_name }}</option>
+                                        <option v-for="od in orders" :value="od">{{ od.serial_name }} {{ od.od_name }}</option>
                                     </select>
 
                                     <a class="btn small green" @click="edit_load()">Load</a>
