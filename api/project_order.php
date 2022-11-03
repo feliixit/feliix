@@ -54,7 +54,7 @@ else
           case 'GET':
             $pid = (isset($_GET['pid']) ?  $_GET['pid'] : "");
     
-            $sql = "SELECT  pm.id, pm.od_name , pm.serial_name, pm.order_type, u2.username , pm.created_at , p.id
+            $sql = "SELECT  pm.id, pm.od_name , pm.serial_name, pm.order_type, u2.username , pm.created_at 
                         FROM od_main pm 
                         left join project_other_task pot on pm.task_id = pot.id
                         left join project_stages ps on pot.stage_id = ps.id
