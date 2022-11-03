@@ -296,6 +296,25 @@ else
             echo json_encode(array("message" => "Access denied."));
         }
     }
+    else if($action == 9){
+        //
+        try{
+            $query = "SELECT cash_out, cash_in from price_record  where project_name = '$project_name' and is_enabled = 1 order by created_at ";
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $merged_results[] = $row;
+            }
+            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+        }
+        catch(Exception $e){
+            http_response_code(401);
+
+            echo json_encode(array("message" => ".$e."));
+        }
+    }
 }
 
 function GetPicArray($pic_url){

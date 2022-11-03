@@ -48,6 +48,29 @@ else
         // now you can apply
         $uid = $user_id;
 
+        // update main table
+        $query = "UPDATE price_comparison SET `updated_id` = :updated_id,  `updated_at` = now() WHERE id = :id";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':updated_id', $uid);
+        $stmt->bindParam(':id', $price_id);
+        try {
+            // execute the query, also check if query was successful
+            if (!$stmt->execute()) {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                die();
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
+        }
+
         // quotation_page
         $query = "DELETE FROM price_comparison_payment_term
                 WHERE
@@ -91,7 +114,9 @@ else
                             
             `status` = 0,
             `create_id` = :create_id,
-            `created_at` =  now() ";
+            `created_at` =  now(),
+            `updated_id` = :update_id,
+            `updated_at` =  now()";
 
         // prepare the query
         $stmt = $db->prepare($query);
@@ -106,6 +131,7 @@ else
         $stmt->bindParam(':list', $list);
         
         $stmt->bindParam(':create_id', $user_id);
+        $stmt->bindParam(':update_id', $user_id);
     
         $last_id = 0;
         // execute the query, also check if query was successful

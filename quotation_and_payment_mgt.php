@@ -825,6 +825,7 @@ $(function(){
                      <li>Down Payment</li>
                      <li>Payment</li>
                      <li>A/R</li>
+                     <li>Expense</li>
                      <li>Final Quotation</li>
 
                  </ul>
@@ -840,6 +841,7 @@ $(function(){
                       <li>{{ isNaN(parseInt(receive_record.down_payment_amount)) ? "" : Number(receive_record.down_payment_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.ar)) ? "" : Number(receive_record.ar).toLocaleString() }}</li>
+                      <li>{{ isNaN(parseInt(receive_record.expense)) ? "" : Number(receive_record.expense).toLocaleString() }}</li>
                       <li class="display_file">
                         <span v-for="item in receive_record.final_quotation">
                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>

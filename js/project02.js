@@ -187,6 +187,11 @@ var app = new Vue({
     // 20220407
     quotation_type:'n',
 
+    price_record: [],
+    price_record_total: -1,
+
+    project_orders: [],
+
   },
 
   created () {
@@ -216,7 +221,8 @@ var app = new Vue({
         _this.getKeyPerson(_this.project_id);
         _this.getPartyContactor(_this.project_id);
         _this.getExpenseRecord(_this.project_id);
-       
+        
+        _this.getOrderRecord(_this.project_id);
       });
     }
 
@@ -631,6 +637,33 @@ var app = new Vue({
               });
       },
 
+      getOrderRecord: function(keyword) {
+        let _this = this;
+  
+        if(keyword == 0)
+          return;
+  
+        const params = {
+                pid : keyword,
+              };
+  
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+                .get('api/project_order', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.project_orders = res.data;
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
+
       export_petty: function(id) {
    
         let _this = this;
@@ -664,6 +697,48 @@ var app = new Vue({
                 console.log(response)
             });
     },
+
+    getPriceRecord: function(keyword) {
+      let _this = this;
+
+       var form_Data = new FormData();
+
+       form_Data.append('action', 9);
+        form_Data.append('project_name', keyword);
+      
+        const token = sessionStorage.getItem('token');
+
+        axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                },
+                url: 'api/add_or_edit_price_record',
+                data: form_Data
+            })
+            .then(function(response) {
+                //handle success
+                //this.$forceUpdate();
+                _this.price_record = response.data;
+                // sum price_record cash_out - cash_in
+                var price_record_cash_out = 0;
+                var price_record_cash_in = 0;
+                var price_record_cash_balance = 0;
+                for (let index = 0; index < _this.price_record.length; index++) {
+                    price_record_cash_out += parseFloat(_this.price_record[index].cash_out);
+                    price_record_cash_in += parseFloat(_this.price_record[index].cash_in);
+                }
+                price_record_cash_balance = price_record_cash_out - price_record_cash_in;
+                _this.price_record_total = price_record_cash_out;
+            
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+      },
+
 
       getExpenseRecord: function(keyword) {
         let _this = this;
@@ -933,6 +1008,8 @@ var app = new Vue({
           .then(
             (res) => {
               _this.projectname = res.data;
+
+             _this.getPriceRecord(_this.projectname);
             },
             (err) => {
               alert(err.response);

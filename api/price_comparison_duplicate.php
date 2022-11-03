@@ -297,9 +297,6 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     `vat` = :vat,
     `show_vat` = :show_vat,
     `valid` = :valid,
-    `total1` = 0,
-    `total2` = 0,
-    `total3` = 0,
     `status` = 0,
     `create_id` = :create_id,
     `created_at` =  now() ";

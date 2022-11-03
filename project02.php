@@ -1228,7 +1228,11 @@ if ($access5 == true) {
                                 Number(exp.amount_applied).toLocaleString() }}<br/>({{exp.username}} at {{
                                 exp.created_at }})
                             </div>
+
+                            <!-- 如果這個專案沒有任何的費用記錄，則下面這行<div>也不用顯示。如果這個專案有費用記錄，則下面這行<div>才需要顯示 -->
+                            <div style="color: rgb(243, 112, 88);" v-if="price_record.length > 0">Total Expense Amount in this Project is {{ price_record_total.toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</div>
                         </li>
+
                     </ul>
                 </div>
                 <?php
@@ -1274,6 +1278,23 @@ if ($access6 == true) {
                                         <a :href="'quotation?id=' + receive_record.id" target="_blank" class="attch">https://feliix.myvnc.com/quotation?id={{receive_record.id}}</a>
                                     </span>
                                 <br>({{ receive_record.username }} at {{ receive_record.created_at }})
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a" v-if="title != 'technician'">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Orders</li>
+                    </ul>
+                    <ul>
+                        <li class="morespace">
+                            <div v-for='(receive_record, index) in project_orders'>
+                                • {{ receive_record.order_type == 'taiwan' ? 'Order – Taiwan' : '' }} <br>
+                                <span>
+                                        <a :href="'order_taiwan_p4?id==' + receive_record.id" target="_blank" class="attch">{{ receive_record.od_name + ' ' + receive_record.serial_name }}</a>
+                                </span>
+                                <br>({{ receive_record.username  }} at {{ receive_record.created_at  }})
                             </div>
                         </li>
                     </ul>
