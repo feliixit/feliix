@@ -51,11 +51,13 @@ $uid = $user_id;
 
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $status = (isset($_POST['status']) ?  $_POST['status'] : 0);
+$od_name = (isset($_POST['od_name']) ?  $_POST['od_name'] : '');
 
 try{
     $query = "update od_main
     SET
     `status` = :status,
+    `od_name` = :od_name,
     `updated_id` = :updated_id,
     `updated_at` = now()
 
@@ -65,6 +67,7 @@ try{
     $stmt = $db->prepare($query);
     
     $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':od_name', $od_name);
     $stmt->bindParam(':status', $status);
     $stmt->bindParam(':updated_id', $uid);
     

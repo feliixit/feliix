@@ -616,6 +616,7 @@ var app = new Vue({
 
       form_Data.append("jwt", token);
       form_Data.append('status', _this.order.status);
+      form_Data.append('od_name', _this.order.od_name);
       form_Data.append('id', _this.order.id);
       
 
