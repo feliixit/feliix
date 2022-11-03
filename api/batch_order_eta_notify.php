@@ -37,7 +37,7 @@ $sql = "SELECT pm.id,
             LEFT JOIN user c_user ON pm.create_id = c_user.id 
             LEFT JOIN user u_user ON pm.updated_id = u_user.id 
             left join project_main p on ps.project_id = p.id
-            where pm.status <> -1 AND pot.status = 0 ";
+            where pm.status = 0 ";
 
 
 $stmt = $db->prepare($sql);

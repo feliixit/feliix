@@ -90,6 +90,10 @@ var app = new Vue({
     ],
     perPage: 20,
 
+    orders: [],
+    order: {},
+    temp_order: {},
+
   },
 
   created () {
@@ -147,6 +151,7 @@ var app = new Vue({
     }
 
     this.getRecords();
+    this.getAllRecords();
     this.getProjects();
     this.getCreators();
     this.getUsers();
@@ -589,6 +594,76 @@ var app = new Vue({
           return  this.receive_records.slice(from, to);
         },
 
+        edit_load:function(){
+          this.order = this.temp_order;
+        },
+
+        edit_clear:function(){
+
+          this.order = {};
+        },
+
+        edit_save: function(){
+
+          
+      let _this = this;
+
+      
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      var token = localStorage.getItem("token");
+
+      form_Data.append("jwt", token);
+      form_Data.append('status', _this.order.status);
+      form_Data.append('id', _this.order.id);
+      
+
+      axios({
+              method: 'post',
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${token}`
+              },
+              url: 'api/order_mgt_edit',
+              data: form_Data
+          })
+          .then(function(response) {
+              //handle success
+              //this.$forceUpdate();
+              _this.getRecords();
+              _this.getAllRecords();
+             _this.cancel_edit();
+          })
+          .catch(function(response) {
+              //handle error
+              console.log(response)
+          });
+
+        },
+
+        getAllRecords: function() {
+          let _this = this;
+    
+          const params = {};
+        
+              let token = localStorage.getItem('accessToken');
+        
+              axios
+                  .get('api/order_mgt_all', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                  .then(
+                  (res) => {
+                      _this.orders = res.data;
+    
+                  },
+                  (err) => {
+                      alert(err.response);
+                  },
+                  )
+                  .finally(() => {
+                      
+                  });
+          },
 
     getRecords: function(keyword) {
       let _this = this;
@@ -820,6 +895,12 @@ var app = new Vue({
         this.getRecords();
         
 
+      },
+
+      cancel_edit:function() {
+        document.getElementById('edit_dialog').classList.remove("show");
+        this.order = {};
+        this.temp_order = {};
       },
 
       cancel_filters:function() {

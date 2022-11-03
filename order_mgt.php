@@ -109,6 +109,7 @@ header( 'location:index' );
             dialogshow($('.list_function .new_project a.add'), $('.list_function .dialog.d-add'));
             dialogshow($('.list_function .new_project a.filter'), $('.list_function .dialog.d-filter'));
             dialogshow($('.list_function .new_project a.sort'), $('.list_function .dialog.d-sort'));
+            dialogshow($('.list_function .new_project a.edit'), $('.list_function .dialog.d-edit'));
 
             $('.tablebox').click(function () {
                 $('.list_function .dialog').removeClass('show');
@@ -127,6 +128,20 @@ header( 'location:index' );
 
         body.fourth .bodybox {
             min-height: 120vh;
+        }
+
+        .list_function .new_project a.edit {
+            font-size: 0;
+            background-color: #00811e;
+            background-image: url(images/ui/btn_edit_green.svg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 46px;
+            height: 46px;
+            line-height: 36px;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
         }
 
         .list_function .new_project a.filter {
@@ -166,15 +181,20 @@ header( 'location:index' );
             width: 130px;
         }
 
-        .tablebox.lv1 ul li:nth-of-type(2), .tablebox.lv1 ul li:nth-of-type(4) {
-            width: 400px;
+        .tablebox.lv1 ul li:nth-of-type(2), .tablebox.lv1 ul li:nth-of-type(5) {
+            width: 350px;
         }
 
         .tablebox.lv1 ul li:nth-of-type(3) {
             min-width: 170px;
         }
 
-        .tablebox.lv1 ul li:nth-of-type(5), .tablebox.lv1 ul li:nth-of-type(6) {
+        .tablebox.lv1 ul li:nth-of-type(4) {
+            min-width: 100px;
+            color: #000;
+        }
+
+        .tablebox.lv1 ul li:nth-of-type(6), .tablebox.lv1 ul li:nth-of-type(7) {
             color: #000;
             min-width: 200px;
         }
@@ -238,6 +258,45 @@ header( 'location:index' );
         <!-- mainContent為動態內容包覆的內容區塊 -->
         <div class="block">
             <div class="list_function">
+
+                <!-- 修改 -->
+                <div class="new_project">
+                    <a class="edit"></a>
+
+                    <div id="edit_dialog" class="dialog d-edit">
+                        <h6>Edit Order:</h6>
+                        <div class="formbox">
+                            <dl>
+                                <dt>Target Order</dt>
+                                <dd>
+                                    <select v-model="temp_order" style="width: calc( 100% - 100px);">
+                                        <option v-for="od in orders" :value="od">{{ od.serial_name }}</option>
+                                    </select>
+
+                                    <a class="btn small green" @click="edit_load()">Load</a>
+                                </dd>
+
+                                <dt>Order Name</dt>
+                                <dd><input type="text" placeholder="" v-model="order.od_name"></dd>
+                                <dt>Order Status</dt>
+                                <dd>
+                                    <select v-model="order.status">
+                                        <option value="0">Ongoing</option>
+                                        <option value="1">Pending</option>
+                                        <option value="2">Completed</option>
+                                    </select>
+                                </dd>
+
+                            </dl>
+                            <div class="btnbox">
+                                <a class="btn small" @click="cancel_edit">Cancel</a>
+                                <a class="btn small green" @click="edit_save">Save</a>
+                            </div>
+                        </div>
+                      </div>
+
+                </div>
+
 
                 <!-- 篩選 -->
                 <div class="new_project">
@@ -498,6 +557,7 @@ header( 'location:index' );
                         <li>Order Number</li>
                         <li>Order Name</li>
                         <li>Order Type</li>
+                        <li>Status</li>
                         <li>Related Project</li>
                         <li>Created Time</li>
                         <li>Last Updated Time</li>
@@ -514,6 +574,8 @@ header( 'location:index' );
                                    v-model="title" maxlength="1024"></li>
 
                         <li> {{ receive_record.order_type == 'taiwan' ? 'Order – Taiwan' : '' }} </li>
+
+                        <li>{{ receive_record.status == 0 ? 'Ongoing' : (receive_record.status == 1 ? 'Pending' : 'Completed') }}</li>
 
                         <li>
                             <a v-show="receive_record.is_edited == 1"
