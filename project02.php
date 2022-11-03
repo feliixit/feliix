@@ -1292,7 +1292,7 @@ if ($access6 == true) {
                             <div v-for='(receive_record, index) in project_orders'>
                                 • {{ receive_record.order_type == 'taiwan' ? 'Order – Taiwan' : '' }} <br>
                                 <span>
-                                        <a :href="'order_taiwan_p4?id==' + receive_record.id" target="_blank" class="attch">{{ receive_record.od_name + ' ' + receive_record.serial_name }}</a>
+                                        <a :href="'order_taiwan_p4?id=' + receive_record.id" target="_blank" class="attch">{{ receive_record.serial_name + ' ' + receive_record.od_name }}</a>
                                 </span>
                                 <br>({{ receive_record.username  }} at {{ receive_record.created_at  }})
                             </div>
