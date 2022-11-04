@@ -693,6 +693,12 @@ var app = new Vue({
       if (this.page < 1) this.page = 1;
       if (this.page > this.pages.length) this.page = this.pages.length;
 
+      let page = this.page;
+          let perPage = this.perPage;
+          let from_d = (page * perPage) - perPage;
+          let to_d = (page * perPage);
+
+
       let tenPages = Math.floor((this.page - 1) / 10);
       if(tenPages < 0)
         tenPages = 0;
@@ -702,7 +708,7 @@ var app = new Vue({
       this.pages_10 = this.pages.slice(from, to);
 
 
-      return this.project03_other_task.slice(from, to);
+      return this.project03_other_task.slice(from_d, to_d);
     },
 
     
