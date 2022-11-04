@@ -2698,12 +2698,12 @@ catch (Exception $e) {
             <div class="block">
                 <div class="list_function" style="margin: 10px 0px 5px;">
                     <div class="pagenation">
-                        <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; filter_apply()">Previous</a>
+                        <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
 
-                        <a class="page" v-for="pg in pages" @click="page=pg; filter_apply()"
+                        <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply()"
                            v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
 
-                        <a class="next" :disabled="page == pages.length" @click="page++; filter_apply()">Next</a>
+                        <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply();">Next 10</a>
                     </div>
                 </div>
 

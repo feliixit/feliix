@@ -489,9 +489,9 @@ try {
                         </div>
 
                         <div class="pagenation">
-                            <a class="prev" :disabled="page == 1"  @click="page < 1 ? page = 1 : page--; filter_apply();" >Previous</a>
-                            <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" v-on:click="filter_apply();">{{ pg }}</a>
-                            <a class="next" :disabled="page == pages.length" @click="page++; filter_apply();" >Next</a>
+                            <a class="prev" :disabled="page == 1"  @click="pre_page(); filter_apply();">Prev 10</a>
+                            <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply();" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" >{{ pg }}</a>
+                            <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply();">Next 10</a>
                         </div>
                     </div>
                 </div>

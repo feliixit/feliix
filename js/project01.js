@@ -49,6 +49,8 @@ var app = new Vue({
     //perPage: 10,
     pages: [],
 
+    pages_10: [],
+
     inventory: [
       {name: '10', id: 10},
       {name: '25', id: 25},
@@ -151,6 +153,7 @@ var app = new Vue({
     displayedPosts () {
       //if(this.pg == 0)
       //  this.apply_filters();
+      console.log('displayedPosts');
 
       this.setPages();
         return this.paginate(this.receive_records);
@@ -170,7 +173,7 @@ var app = new Vue({
 
     receive_records () {
         console.log('Vue watch receive_records');
-        this.setPages();
+        //this.setPages();
       },
 
       status (value) {
@@ -221,6 +224,8 @@ var app = new Vue({
           for (let index = 1; index <= numberOfPages; index++) {
             this.pages.push(index);
           }
+
+          this.paginate(this.receive_records);
         },
 
         paginate: function (posts) {
@@ -230,15 +235,51 @@ var app = new Vue({
           if(this.page > this.pages.length)
             this.page = this.pages.length;
 
-          let page = this.page;
-          let perPage = this.perPage;
-          let from = (page * perPage) - perPage;
-          let to = (page * perPage);
+            let tenPages = Math.floor((this.page - 1) / 10);
+            if(tenPages < 0)
+              tenPages = 0;
+            this.pages_10 = [];
+            let from = tenPages * 10;
+            let to = (tenPages + 1) * 10;
+
+            this.pages_10 = this.pages.slice(from, to);
 
           if(this.fil_keyword != '')
             return this.receive_records.slice(from, to);
           else
             return  this.receive_records;
+        },
+
+        pre_page: function(){
+          let tenPages = Math.floor((this.page - 1) / 10) + 1;
+    
+            this.page = parseInt(this.page) - 10;
+            if(this.page < 1)
+              this.page = 1;
+     
+            this.pages_10 = [];
+    
+            let from = tenPages * 10;
+            let to = (tenPages + 1) * 10;
+    
+            this.pages_10 = this.pages.slice(from, to);
+          
+        },
+    
+        nex_page: function(){
+          let tenPages = Math.floor((this.page - 1) / 10) + 1;
+    
+          this.page = parseInt(this.page) + 10;
+          if(this.page > this.pages.length)
+            this.page = this.pages.length;
+    
+          let from = tenPages * 10;
+          let to = (tenPages + 1) * 10;
+          let pages_10 = this.pages.slice(from, to);
+    
+          if(pages_10.length > 0)
+            this.pages_10 = pages_10;
+    
         },
 
     getRecords: function(keyword) {
