@@ -173,7 +173,7 @@ var app = new Vue({
 
     receive_records () {
         console.log('Vue watch receive_records');
-        //this.setPages();
+        this.setPages();
       },
 
       status (value) {
@@ -322,6 +322,11 @@ var app = new Vue({
                   if(_this.pg !== 0)
                   { 
                     _this.page = _this.pg;
+                    _this.setPages();
+                  }
+                  else
+                  {
+                    _this.page = 1;
                     _this.setPages();
                   }
               },
