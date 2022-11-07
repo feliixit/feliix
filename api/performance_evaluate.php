@@ -84,6 +84,7 @@ if (!isset($jwt)) {
                 COALESCE(pr.mag_comment_3, '') mag_comment_3,
                 COALESCE(pr.mag_comment_4, '') mag_comment_4,
                 COALESCE(pr.mag_comment_5, '') mag_comment_5,
+                COALESCE(pr.mag_comment_6, '') mag_comment_6,
                 COALESCE(pr.emp_comment_1, '') emp_comment_1,
                 COALESCE(pr.emp_comment_2, '') emp_comment_2,
                 COALESCE(pr.emp_comment_3, '') emp_comment_3,
@@ -142,6 +143,7 @@ if (!isset($jwt)) {
         $mag_comment_3 = $row['mag_comment_3'];
         $mag_comment_4 = $row['mag_comment_4'];
         $mag_comment_5 = $row['mag_comment_5'];
+        $mag_comment_6 = $row['mag_comment_6'];
 
         $emp_comment_1 = $row['emp_comment_1'];
         $emp_comment_2 = $row['emp_comment_2'];
@@ -198,6 +200,7 @@ if (!isset($jwt)) {
                     $mag_comment_3 = "";
                     $mag_comment_4 = "";
                     $mag_comment_5 = "";
+                    $mag_comment_6 = "";
                 }
             }
             elseif($user_complete_at != "" && $manager_complete_at == "")
@@ -271,6 +274,7 @@ if (!isset($jwt)) {
             "mag_comment_3" => $mag_comment_3,
             "mag_comment_4" => $mag_comment_4,
             "mag_comment_5" => $mag_comment_5,
+            "mag_comment_6" => $mag_comment_6,
 
             "emp_comment_1" => $emp_comment_1,
             "emp_comment_2" => $emp_comment_2,

@@ -169,6 +169,8 @@ try {
                 $("#Modal_2").toggle();
             } else if (target == 3) {
                 $("#Modal_3").toggle();
+            } else if (target == 4) {
+                $("#Modal_4").toggle();
             }
         }
     </script>
@@ -598,9 +600,9 @@ try {
                         </div>
 
                         <div class="pagenation">
-                            <a class="prev" :disabled="page == 1"  @click="page < 1 ? page = 1 : page--; filter_apply();" >Previous</a>
-                            <a class="page" v-for="pg in pages" @click="page=pg" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" v-on:click="filter_apply">{{ pg }}</a>
-                            <a class="next" :disabled="page == pages.length" @click="page++; filter_apply();" >Next</a>
+                            <a class="prev" :disabled="page == 1"  @click="pre_page(); filter_apply();">Prev 10</a>
+                            <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply();" v-bind:style="[page==pg ? { 'background':'#2F9A57', 'color': 'white'} : { }]" >{{ pg }}</a>
+                            <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply();">Next 10</a>
                         </div>
                     </div>
                 </div>
@@ -1290,6 +1292,11 @@ try {
                                     <span v-if="views.mag_comment_5" v-html="views.mag_comment_5.split('\n').join('<br />')" class="supervisor"></span>
                                 </li>
 
+                                <li><b>Comments after communication</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.mag_comment_6" v-html="views.mag_comment_6.split('\n').join('<br />')" class="supervisor"></span>
+                                </li>
+
                             </ul>
 
 
@@ -1302,6 +1309,345 @@ try {
 
 
             </div>
+
+
+            <div id="Modal_4" class="modal">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h6>Performance Review</h6>
+                            <a href="javascript: void(0)" onclick="ToggleModal(4)"><i class="fa fa-times fa-lg"
+                                                                                     aria-hidden="true"></i></a>
+                        </div>
+
+
+                        <!-- General description -->
+                        <div class="box-content">
+
+                            <ul>
+                                <li><b>Employee Name:</b></li>
+                                <li class="content">{{ views.employee }}</li>
+
+                                <li><b>Employee Position:</b></li>
+                                <li class="content">{{ views.title }}</li>
+
+                                <li><b>Employee Department:</b></li>
+                                <li class="content">{{ views.department }}</li>
+
+                                <li><b>Supervisor:</b></li>
+                                <li class="content">{{ views.manager }}</li>
+
+                                <li><b>Review Period:</b></li>
+                                <li class="content" v-if="views.period == 0">{{ views.review_month }} ~ {{ views.review_next_month }}</li>
+                                <li class="content" v-if="views.period == 1">{{ views.review_month }}</li>
+
+                                <li><b>Version of Template:</b></li>
+                                <li class="content">{{ views.version }}</li>
+
+                                <li><b>Date of Evaluation:</b></li>
+                                <li class="content" style="color:#999; height:27px;"><template v-if="views.user_complete_at != ''">{{ views.user_complete_at }} ({{ views.employee }})</template><b>&ensp;</b></li>
+                                <li class="content" style="height:27px;"><template v-if="views.manager_complete_at != ''">{{ views.manager_complete_at }} ({{ views.manager }})</template><b>&ensp;</b></li>
+                            </ul>
+
+                        </div>
+
+
+                        <!-- Evaluation form start -->
+                        <div class="box-content" style="border-bottom: none;">
+
+                            <table class="rating_table">
+                                <thead>
+                                <tr>
+                                    <th colspan="4">Rating Scale</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+                                    <td>10</td>
+                                    <td>Meets Expectation</td>
+                                    <td>5</td>
+                                    <td>Below Average</td>
+                                </tr>
+
+                                <tr>
+                                    <td>9</td>
+                                    <td>Very good</td>
+                                    <td>4</td>
+                                    <td>Needs Improvement</td>
+                                </tr>
+
+                                <tr>
+                                    <td>8</td>
+                                    <td>Good</td>
+                                    <td>3</td>
+                                    <td>Poor</td>
+                                </tr>
+
+                                <tr>
+                                    <td>7</td>
+                                    <td>Above Average</td>
+                                    <td>2</td>
+                                    <td>Unacceptable</td>
+                                </tr>
+
+                                <tr>
+                                    <td>6</td>
+                                    <td>OK</td>
+                                    <td>1</td>
+                                    <td>Very Unacceptable</td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                             <table class="list_table" style="margin-top:30px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="2">PART I: SELF-IMPROVEMENT SKILLS</th>
+                                    <th colspan="2">Feedback</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <template v-for='(record, index) in views.agenda'>
+                                    <tr style="height: 45px;">
+                                        <td rowspan="2">
+                                            {{ record.category }}
+                                        </td>
+                                        <td rowspan="2">
+                                            {{ record.criterion }}
+                                        </td>
+                                        <td>
+                                            {{ record.emp_score == -1 ? "N/A" : record.emp_score }}
+                                        </td>
+                                        <td>
+                                            {{ record.emp_opt }}
+                                        </td>
+                                    </tr>
+                                    <tr class="supervisor" style="height: 45px;">
+                                        <td>
+                                            {{ record.mag_score == -1 ? "N/A" : record.mag_score }}
+                                        </td>
+                                        <td>
+                                            {{ record.mag_opt }}
+                                        </td>
+                                    </tr>
+                                </template>
+
+                                </tbody>
+
+                                 <tfoot>
+                                 <tr>
+                                     <th colspan="2">AVERAGE</th>
+                                     <th>
+                                         <span>{{ emp_avg == 0 ? "N/A" : (emp_avg / 1).toFixed(1) }}</span>
+                                         <br>
+                                         <span>{{ mag_avg == 0 ? "N/A" : (mag_avg / 1).toFixed(1) }}</span>
+                                     </th>
+                                     <th></th>
+                                 </tr>
+                                 <tr>
+                                     <th colspan="2">SUBTOTAL (60%)</th>
+                                     <th>
+                                         <span>{{ emp_avg == 0 ? "N/A" : ( emp_avg * 0.6 ).toFixed(1) }}</span>
+                                         <br>
+                                         <span>{{ mag_avg == 0 ? "N/A" : ( mag_avg * 0.6 ).toFixed(1) }}</span>
+                                     </th>
+                                     <th></th>
+                                 </tr>
+                                 </tfoot>
+                            </table>
+
+                            <table class="list_table" style="margin-top: 40px;">
+                                <thead>
+                                <tr>
+                                    <th colspan="2">PART II: BASIC SKILLS</th>
+                                    <th colspan="2">Feedback</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <template v-for='(record, index) in views.agenda1'>
+                                    <tr style="height: 45px;">
+                                        <td rowspan="2">
+                                            {{ record.category }}
+                                        </td>
+                                        <td rowspan="2">
+                                            {{ record.criterion }}
+                                        </td>
+                                        <td>
+                                            {{ record.emp_score == -1 ? "N/A" : record.emp_score }}
+                                        </td>
+                                        <td>
+                                            {{ record.emp_opt }}
+                                        </td>
+                                    </tr>
+                                    <tr class="supervisor" style="height: 45px;">
+                                        <td>
+                                            {{ record.mag_score == -1 ? "N/A" : record.mag_score }}
+                                        </td>
+                                        <td>
+                                            {{ record.mag_opt }}
+                                        </td>
+                                    </tr>
+                                </template>
+
+                                </tbody>
+
+                                <tfoot>
+                                 <tr>
+                                     <th colspan="2">AVERAGE</th>
+                                     <th>
+                                         <span>{{ emp_avg1 == 0 ? "N/A" : (emp_avg1 / 1).toFixed(1) }}</span>
+                                         <br>
+                                         <span>{{ mag_avg1 == 0 ? "N/A" : (mag_avg1 / 1).toFixed(1) }}</span>
+                                     </th>
+                                     <th></th>
+                                 </tr>
+                                 <tr>
+                                     <th colspan="2">SUBTOTAL (40%)</th>
+                                     <th>
+                                         <span>{{ emp_avg1 == 0 ? "N/A" : ( emp_avg1 * 0.4 ).toFixed(1) }}</span>
+                                         <br>
+                                         <span>{{ mag_avg1 == 0 ? "N/A" : ( mag_avg1 * 0.4 ).toFixed(1) }}</span>
+                                     </th>
+                                     <th></th>
+                                 </tr>
+                                 </tfoot>
+                            </table>
+
+                            <table class="list_table" style="margin-top: 40px;" v-if="views.agenda2 === undefined ? false : views.agenda2.length > 0">
+                                <thead>
+                                <tr>
+                                    <th colspan="2">PART III: BONUS</th>
+                                    <th colspan="2">Feedback</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <template v-for='(record, index) in views.agenda2'>
+                                    <tr style="height: 45px;">
+                                        <td rowspan="2">
+                                            {{ record.category }}
+                                        </td>
+                                        <td rowspan="2">
+                                            {{ record.criterion }}
+                                        </td>
+                                        <td>
+                                            {{ record.emp_score == -1 ? "N/A" : record.emp_score }}
+                                        </td>
+                                        <td>
+                                            {{ record.emp_opt }}
+                                        </td>
+                                    </tr>
+                                    <tr class="supervisor" style="height: 45px;">
+                                        <td>
+                                            {{ record.mag_score == -1 ? "N/A" : record.mag_score }}
+                                        </td>
+                                        <td>
+                                            {{ record.mag_opt }}
+                                        </td>
+                                    </tr>
+                                </template>
+
+                                </tbody>
+
+                                <tfoot>
+                                 <tr>
+                                     <th colspan="2">AVERAGE</th>
+                                     <th>
+                                         <span>{{ emp_avg2 == 0 ? "N/A" : (emp_avg2 / 1).toFixed(1) }}</span>
+                                         <br>
+                                         <span>{{ mag_avg2 == 0 ? "N/A" : (mag_avg2 / 1).toFixed(1) }}</span>
+                                     </th>
+                                     <th></th>
+                                 </tr>
+                                 <tr>
+                                     <th colspan="2">SUBTOTAL (10%)</th>
+                                     <th>
+                                         <span>{{ emp_avg2 == 0 ? "N/A" : ( emp_avg2 * 0.1 ).toFixed(1) }}</span>
+                                         <br>
+                                         <span>{{ mag_avg2 == 0 ? "N/A" : ( mag_avg2 * 0.1 ).toFixed(1) }}</span>
+                                     </th>
+                                     <th></th>
+                                 </tr>
+                                 </tfoot>
+                            </table>
+
+                            <ul class="summary">
+                                <li><b>TOTAL:</b></li>
+                                <li class="content">
+                                    <span>{{ (emp_avg == 0 && emp_avg1 == 0) ? "N/A" : ( emp_avg * 0.6 + emp_avg1 * 0.4 + (views.agenda2 !== undefined ? parseFloat((emp_avg2 * 0.1).toFixed(1)) : 0.0 ) ).toFixed(1) }}</span>
+                                    <br>
+                                    <span>{{ (mag_avg == 0 && mag_avg1 == 0) ? "N/A" : ( mag_avg * 0.6 + mag_avg1 * 0.4 + (views.agenda2 !== undefined ? parseFloat((mag_avg2 * 0.1).toFixed(1)) : 0.0 ) ).toFixed(1) }}</span>
+                                </li>
+
+                                <li><b>Noteworthy accomplishment</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_1" v-html="views.emp_comment_1.split('\n').join('<br />')" class="subordinate"></span>
+                                    <span v-if="views.mag_comment_1" v-html="views.mag_comment_1.split('\n').join('<br />')" class="supervisor"></span>
+                                </li>
+
+                                <li><b>What is your opinion about the progress of your objective in the past two months? What ability, attitude, or
+                                    method makes you deliver this progress? Anything else can be done or changed to make you execute better?</b>
+                                </li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_2" v-html="views.emp_comment_2.split('\n').join('<br />')" class="subordinate"></span>
+                                </li>
+
+                                <li><b>What is your opinion about the progress of subordinate's objective in the past two months? What ability,
+                                    attitude, or method makes subordinate deliver this progress? Anything else can be done or changed to make
+                                    subordinate execute better?</b>
+                                </li>
+                                <li class="content_disabled">
+                                    <span v-if="views.mag_comment_2" v-html="views.mag_comment_2.split('\n').join('<br />')" class="supervisor"></span>
+                                </li>
+
+                                <li><b>What is your planning objective for the next two months? What is your role and responsibility in the
+                                    objective? How do you define your success and failure in the objective?</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_3" v-html="views.emp_comment_3.split('\n').join('<br />')" class="subordinate"></span>
+                                </li>
+
+                                <li><b>What is your expectation of subordinate's objective for the next two months? What is subordinate's role and
+                                    responsibility in the objective? How do you define subordinate's success and failure in the objective?</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.mag_comment_3" v-html="views.mag_comment_3.split('\n').join('<br />')" class="supervisor"></span>
+                                </li>
+
+                                <li><b>What are your career goals? Did the current job arrangement fit your career goals? If not, any
+                                    suggestions?</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_4" v-html="views.emp_comment_4.split('\n').join('<br />')" class="subordinate"></span>
+                                </li>
+
+                                <li><b>Other comments</b></li>
+                                <li class="content_disabled">
+                                    <span v-if="views.emp_comment_5" v-html="views.emp_comment_5.split('\n').join('<br />')" class="subordinate"></span>
+                                    <span v-if="views.mag_comment_5" v-html="views.mag_comment_5.split('\n').join('<br />')" class="supervisor"></span>
+                                </li>
+
+                                <li><b>Comments after communication</b><span> ({{comment6.length}}/{{ (evals.user_id == user_id) ? 512 : 2048 }})</span></li>
+                                <li><textarea rows="5" v-model="comment6" :maxlength="(evals.user_id == user_id) ? 512 : 2048" show-word-limit></textarea></li>
+
+                            </ul>
+
+                            <div class="btnbox">
+                                <a class="btn green" @click="review_comment_submit">Submit</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- Evaluation form end -->
+
+                </div>
+
+
+            </div>
+
         </div>
     </div>
 </body>

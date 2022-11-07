@@ -99,6 +99,7 @@ $query = "SELECT pm.id,
             pm.billing_name,
             (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1) payment,
             (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0) dp_payment,
+            (SELECT sum(cash_out - cash_in) from price_record pr where pr.project_name = pm.project_name and is_enabled = 1 and pr.project_name <> '' ) expense,
             Coalesce(ps.project_status, '')              project_status,
             Coalesce((SELECT project_est_prob.prob
                     FROM   project_est_prob
@@ -380,6 +381,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $pm = $row['payment'];
     $dpm = $row['dp_payment'];
+    $expense = $row['expense'];
 
     $final_amount = $row['final_amount'];
     $tax_withheld = $row['tax_withheld'];
@@ -461,6 +463,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "invoice" => $invoice,
         "pm" => $pm,
         "dpm" => $dpm,
+        "expense" => $expense,
         "quote_file_string" => $quote_file_string,
         "cnt" => $cnt,
     );

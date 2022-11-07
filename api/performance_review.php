@@ -81,7 +81,8 @@ if (!isset($jwt)) {
                 u.username manager,
                 u1.username employee, 
                 COALESCE(pr.user_complete_at, '') user_complete_at, 
-                COALESCE(pr.manager_complete_at, '') manager_complete_at
+                COALESCE(pr.manager_complete_at, '') manager_complete_at,
+                COALESCE(pr.comment_done_at, '') comment_done_at
                 FROM performance_review pr
                 LEFT JOIN user u ON u.id = pr.create_id
                 LEFT JOIN user u1 ON u1.id = pr.user_id
@@ -145,6 +146,7 @@ if (!isset($jwt)) {
         $version = $row['version'];
         $user_complete_at = $row['user_complete_at'];
         $manager_complete_at = $row['manager_complete_at'];
+        $comment_done_at = $row['comment_done_at'];
 
         $create_id = $row['create_id'];
         $user_id = $row['user_id'];
@@ -184,6 +186,7 @@ if (!isset($jwt)) {
             "create_id" => $create_id,
             "user_id" => $user_id,
             "user_complete_at" => $user_complete_at,
+            "comment_done_at" => $comment_done_at,
             "manager_complete_at" => $manager_complete_at,
             "status" => $status,
             "agenda" => $agenda,

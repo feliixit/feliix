@@ -81,6 +81,8 @@ var app = new Vue({
     //perPage: 10,
     pages: [],
 
+    pages_10: [],
+
     inventory: [
       {name: '10', id: 10},
       {name: '25', id: 25},
@@ -89,6 +91,10 @@ var app = new Vue({
       {name: 'All', id: 10000}
     ],
     perPage: 20,
+
+    orders: [],
+    order: {},
+    temp_order: {},
 
   },
 
@@ -147,6 +153,7 @@ var app = new Vue({
     }
 
     this.getRecords();
+    this.getAllRecords();
     this.getProjects();
     this.getCreators();
     this.getUsers();
@@ -582,13 +589,126 @@ var app = new Vue({
           if(this.page > this.pages.length)
             this.page = this.pages.length;
 
-          let page = this.page;
+            let page = this.page;
           let perPage = this.perPage;
-          let from = (page * perPage) - perPage;
-          let to = (page * perPage);
-          return  this.receive_records.slice(from, to);
+          let from_d = (page * perPage) - perPage;
+          let to_d = (page * perPage);
+
+            let tenPages = Math.floor((this.page - 1) / 10);
+            if(tenPages < 0)
+              tenPages = 0;
+            this.pages_10 = [];
+            let from = tenPages * 10;
+            let to = (tenPages + 1) * 10;
+            this.pages_10 = this.pages.slice(from, to);
+
+          return  this.receive_records.slice(from_d, to_d);
         },
 
+        
+    pre_page: function(){
+      let tenPages = Math.floor((this.page - 1) / 10) + 1;
+
+        this.page = parseInt(this.page) - 10;
+        if(this.page < 1)
+          this.page = 1;
+ 
+        this.pages_10 = [];
+
+        let from = tenPages * 10;
+        let to = (tenPages + 1) * 10;
+
+        this.pages_10 = this.pages.slice(from, to);
+      
+    },
+
+    nex_page: function(){
+      let tenPages = Math.floor((this.page - 1) / 10) + 1;
+
+      this.page = parseInt(this.page) + 10;
+      if(this.page > this.pages.length)
+        this.page = this.pages.length;
+
+      let from = tenPages * 10;
+      let to = (tenPages + 1) * 10;
+      let pages_10 = this.pages.slice(from, to);
+
+      if(pages_10.length > 0)
+        this.pages_10 = pages_10;
+
+    },
+
+        edit_load:function(){
+          this.order = this.temp_order;
+        },
+
+        edit_clear:function(){
+
+          this.order = {};
+        },
+
+        edit_save: function(){
+
+          
+      let _this = this;
+
+      
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      var token = localStorage.getItem("token");
+
+      form_Data.append("jwt", token);
+      form_Data.append('status', _this.order.status);
+      form_Data.append('od_name', _this.order.od_name);
+      form_Data.append('id', _this.order.id);
+      
+
+      axios({
+              method: 'post',
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${token}`
+              },
+              url: 'api/order_mgt_edit',
+              data: form_Data
+          })
+          .then(function(response) {
+              //handle success
+              //this.$forceUpdate();
+              _this.getRecords();
+              _this.getAllRecords();
+             _this.cancel_edit();
+          })
+          .catch(function(response) {
+              //handle error
+              console.log(response)
+          });
+
+        },
+
+        getAllRecords: function() {
+          let _this = this;
+    
+          const params = {};
+        
+              let token = localStorage.getItem('accessToken');
+        
+              axios
+                  .get('api/order_mgt_all', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                  .then(
+                  (res) => {
+                      _this.orders = res.data;
+    
+                  },
+                  (err) => {
+                      alert(err.response);
+                  },
+                  )
+                  .finally(() => {
+                      
+                  });
+          },
 
     getRecords: function(keyword) {
       let _this = this;
@@ -820,6 +940,12 @@ var app = new Vue({
         this.getRecords();
         
 
+      },
+
+      cancel_edit:function() {
+        document.getElementById('edit_dialog').classList.remove("show");
+        this.order = {};
+        this.temp_order = {};
       },
 
       cancel_filters:function() {

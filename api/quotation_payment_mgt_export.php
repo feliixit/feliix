@@ -92,6 +92,7 @@ $query = "SELECT pm.id,
             pm.billing_name,
             (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1) payment,
             (SELECT sum(pp.amount) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0) dp_payment,
+            (SELECT sum(cash_out - cash_in) from price_record pr where pr.project_name = pm.project_name and is_enabled = 1 and pr.project_name <> '' ) expense,
             Coalesce(ps.project_status, '')              project_status,
             Coalesce((SELECT project_est_prob.prob
                     FROM   project_est_prob
@@ -335,6 +336,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $pm = $row['payment'];
     $dpm = $row['dp_payment'];
+    $expense = $row['expense'];
 
     $final_amount = $row['final_amount'];
     $tax_withheld = $row['tax_withheld'];
@@ -416,6 +418,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "invoice" => $invoice,
         "pm" => $pm,
         "dpm" => $dpm,
+        "expense" => $expense,
         "quote_file_string" => $quote_file_string,
         
     );
@@ -478,7 +481,8 @@ $sheet->setCellValue('G'. $i, 'Tax Withheld');
 $sheet->setCellValue('H'. $i, 'Down Payment');
 $sheet->setCellValue('I'. $i, 'Payment');
 $sheet->setCellValue('J'. $i, 'A/R');
-$sheet->setCellValue('K'. $i, 'File');
+$sheet->setCellValue('K'. $i, 'Expense');
+$sheet->setCellValue('L'. $i, 'File');
 
 $sheet->getStyle('A' . $i . ':' . 'K' . $i)->getFont()->setBold(true);
 
@@ -496,6 +500,7 @@ foreach($return_result as $row)
     $sheet->setCellValue('H' . $i, $row['down_payment_amount'] === null ? '' : number_format((float)$row['down_payment_amount'], 2, '.', ''));
     $sheet->setCellValue('I' . $i, $row['payment_amount'] === null ? '' : number_format((float)$row['payment_amount'], 2, '.', ''));
     $sheet->setCellValue('J' . $i, $row['ar'] === null ? '' : number_format((float)$row['ar'], 2, '.', ''));
+    $sheet->setCellValue('K' . $i, $row['expense'] === null ? '' : number_format((float)$row['expense'], 2, '.', ''));
 
     $files = $row['payment'];
 
@@ -516,13 +521,13 @@ foreach($return_result as $row)
                 if($file_url != '')
                 {
                     $link = $baseURL . $file_url;
-                    $sheet->setCellValue(chr(75+$j) . $i, $file_name);
+                    $sheet->setCellValue(chr(76+$j) . $i, $file_name);
                     $sheet->getCellByColumnAndRow($j + 11, $i)->getHyperlink()->setUrl($link);
 
                     $j++;
                 }
                 else
-                    $sheet->setCellValue(chr(75+$j) . $i, '');
+                    $sheet->setCellValue(chr(76+$j) . $i, '');
 
                 
             }

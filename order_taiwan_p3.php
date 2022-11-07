@@ -2264,6 +2264,7 @@ try {
                                 </li>
                             </ul>
 
+                            <!--
                             <ul v-if="product.variation_mode == 1">
                                 <li v-if="toggle_type == 'A'">
                                     <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with
@@ -2276,6 +2277,7 @@ try {
                                     </button>
                                 </li>
                             </ul>
+                            -->
 
                             <ul>
                                 <li>
@@ -2462,6 +2464,7 @@ try {
                                 </li>
                             </ul>
 
+                            <!--
                             <ul>
                                 <li v-if="toggle_type == 'A'">
                                     <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with
@@ -2474,6 +2477,7 @@ try {
                                     </button>
                                 </li>
                             </ul>
+                            -->
 
                             <ul>
                                 <li>

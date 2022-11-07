@@ -184,6 +184,7 @@ var app = new Vue({
       if(this.pg == 0)
         this.filter_apply_new();
 
+        console.log('displayedPosts');
       this.setPages();
       return this.paginate(this.receive_records);
     },

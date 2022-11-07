@@ -521,11 +521,11 @@ $(function(){
 
                 <!-- 分頁 -->
                 <div class="pagenation">
-                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; apply_filters()">Previous</a>
+                    <a class="prev" :disabled="page == 1" @click="pre_page(); apply_filters()">Prev 10</a>
                   
-                    <a class="page" v-for="pg in pages" @click="page=pg; apply_filters()" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages_10" @click="page=pg; apply_filters()" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
                   
-                    <a class="next" :disabled="page == pages.length" @click="page++; apply_filters()">Next</a>
+                    <a class="next" :disabled="page == pages.length" @click="nex_page(); apply_filters()">Next 10</a>
                 </div>
             </div>
             <!-- list -->
@@ -563,11 +563,11 @@ $(function(){
            <div class="list_function">
                <!-- 分頁 -->
                <div class="pagenation">
-                    <a class="prev" :disabled="page == 1" @click="page < 1 ? page = 1 : page--; apply_filters()">Previous</a>
+                    <a class="prev" :disabled="page == 1" @click="pre_page(); apply_filters()">Prev 10</a>
                   
-                    <a class="page" v-for="pg in pages" @click="page=pg; apply_filters()" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages_10" @click="page=pg; apply_filters()" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
                   
-                    <a class="next" :disabled="page == pages.length" @click="page++; apply_filters()">Next</a>
+                    <a class="next" :disabled="page == pages.length" @click="nex_page(); apply_filters()">Next 10</a>
                 </div>
            </div>
         </div>
@@ -577,5 +577,5 @@ $(function(){
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
 <script defer src="js/axios.min.js"></script> 
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/project01.js?rand=<?php echo uniqid(); ?>"></script>
+<script defer src="js/project01.js"></script>
 </html>
