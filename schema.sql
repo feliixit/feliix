@@ -3191,3 +3191,19 @@ ADD COLUMN `comment_done_at` timestamp null;
 -- 20221031 price comparison mgt
 ALTER TABLE price_comparison
 ADD COLUMN `project_id` bigint(20)  DEFAULT 0 AFTER title;
+
+-- 20221107 leave v2
+ALTER TABLE user
+ADD COLUMN `leave_level` varchar(24) DEFAULT '';
+
+ALTER TABLE user
+ADD COLUMN `sil` int(11) DEFAULT 0;
+
+ALTER TABLE user
+ADD COLUMN `vl_sl` int(11) DEFAULT 0;
+
+ALTER TABLE user
+ADD COLUMN `vl` int(11) DEFAULT 0;
+
+ALTER TABLE user
+ADD COLUMN `sl` int(11) DEFAULT 0;

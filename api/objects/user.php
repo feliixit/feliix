@@ -26,6 +26,12 @@ class User{
     public $is_manager;
     public $test_manager;
     public $is_viewer;
+
+    public $leave_level;
+    public $sil;
+    public $vl_sl;
+    public $vl;
+    public $sl;
  
     // constructor
     public function __construct($db){
@@ -53,7 +59,12 @@ class User{
                     title_id = :title_id,
                     pic_url = :pic_url,
                     is_admin = :is_admin,
-                    is_viewer = :is_viewer";
+                    is_viewer = :is_viewer,
+                    leave_level = :leave_level,
+                    sil = :sil,
+                    vl_sl = :vl_sl,
+                    vl = :vl,
+                    sl = :sl";
     
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -94,6 +105,12 @@ class User{
         $stmt->bindParam(':apartment_id', $this->apartment_id);
         $stmt->bindParam(':title_id', $this->title_id);
         $stmt->bindParam(':is_viewer', $this->is_viewer);
+
+        $stmt->bindParam(':leave_level', $this->leave_level);
+        $stmt->bindParam(':sil', $this->sil);
+        $stmt->bindParam(':vl_sl', $this->vl_sl);
+        $stmt->bindParam(':vl', $this->vl);
+        $stmt->bindParam(':sl', $this->sl);
     
         // hash the password before saving to database
         $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
@@ -359,7 +376,17 @@ class User{
                     title_id = :title_id,
                     status = :status,
                     is_admin = :is_admin,
-                    is_viewer = :is_viewer
+                    is_viewer = :is_viewer,
+                    
+                    leave_level = :leave_level,
+                    sil = :sil,
+                    vl_sl = :vl_sl,
+                    vl = :vl,
+                    sl = :sl,
+
+                    updated_id = :updated_id,
+                    updated_at = now()
+
                 WHERE id = :id";
     
         // prepare the query
@@ -387,6 +414,14 @@ class User{
         $stmt->bindParam(':apartment_id', $this->apartment_id);
         $stmt->bindParam(':title_id', $this->title_id);
         $stmt->bindParam(':is_viewer', $this->is_viewer);
+
+        $stmt->bindParam(':leave_level', $this->leave_level);
+        $stmt->bindParam(':sil', $this->sil);
+        $stmt->bindParam(':vl_sl', $this->vl_sl);
+        $stmt->bindParam(':vl', $this->vl);
+        $stmt->bindParam(':sl', $this->sl);
+
+        $stmt->bindParam(':updated_id', $this->updated_id);
         // unique ID of record to be edited
         $stmt->bindParam(':id', $this->id);
     

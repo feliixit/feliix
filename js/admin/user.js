@@ -28,6 +28,12 @@ let mainState = {
     is_manager: 0,
 
     is_viewer:0,
+
+    leave_level: '', 
+    sil:0,
+    vl_sl:0,
+    vl:0,
+    sl:0,
     
     ed_apartment_id: 0,
 
@@ -459,6 +465,12 @@ var app = new Vue({
             formData.append('test_manager', this.record.test_manager)
             formData.append('is_viewer', this.record.is_viewer)
 
+            formData.append('leave_level', this.record.leave_level)
+            formData.append('sil', this.record.sil)
+            formData.append('vl_sl', this.record.vl_sl)
+            formData.append('vl', this.record.vl)
+            formData.append('sl', this.record.sl)
+
             formData.append('apartment_id', this.ed_apartment_id)
             formData.append('title_id', this.record.title_id)
            
@@ -580,6 +592,12 @@ var app = new Vue({
             formData.append('test_manager', this.test_manager)
             formData.append('is_viewer', this.is_viewer)
 
+            formData.append('leave_level', this.leave_level)
+            formData.append('sil', this.sil)
+            formData.append('vl_sl', this.vl_sl)
+            formData.append('vl', this.vl)
+            formData.append('sl', this.sl)
+
             formData.append('apartment_id', this.apartment_id)
             formData.append('title_id', this.title_id)
             formData.append('crud', 'insert')
@@ -626,6 +644,12 @@ var app = new Vue({
             this.is_manager = 0;
             this.test_manager = 0;
             this.is_viewer = 0;
+
+            this.leave_level = '';
+            this.sil = 0;
+            this.vl_sl = 0;
+            this.vl = 0;
+            this.sl = 0;
 
 
             this.isEditing = false;

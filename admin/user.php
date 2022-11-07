@@ -137,6 +137,45 @@ $(function(){
                             <input type="checkbox" name="is_viewer" id="is_viewer" :true-value="1" v-model:checked="is_viewer" @change="updateIsViewer">
                             <label for="is_viewer">Is Viewer</label>
                         </li>
+
+                        <li><b>Leave Level</b></li>
+                        <li style="padding-bottom: 10px;">
+                            <select v-model="leave_level">
+
+                                <option value="A">A: Regular Employee</option>
+
+                                <option value="B">B: Assistant Manager</option>
+
+                                <option value="C">C: Manager</option>
+
+                            </select>
+                        </li>
+                        <li><b>Yearly Credit: Service Incentive Leave (SIL)</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;" v-model="sil">
+                        </li>
+
+                        <li><b>Yearly Credit: Vacation Leave / Sick Leave (VL/SL)</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;"  v-model="vl_sl"
+                                                                 placeholder="">
+                        </li>
+
+                        <li><b>Yearly Credit: Vacation Leave (VL)</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;"  v-model="vl"
+                                                                 placeholder="">
+                        </li>
+
+                        <li><b>Yearly Credit: Sick Leave (SL)</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"  v-model="sl"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;">
+                        </li>
+
                     </ul>
 
                     <div>
@@ -213,6 +252,45 @@ $(function(){
                         <li style="padding-bottom:10px;">
                             <input type="checkbox" name="is_viewer" id="is_viewer" :true-value="1" v-model:checked="record.is_viewer" @change="updateIsViewer">
                             <label for="is_viewer">Is Viewer</label>
+                        </li>
+
+                        
+                        <li><b>Leave Level</b></li>
+                        <li style="padding-bottom: 10px;">
+                            <select v-model="record.leave_level">
+
+                                <option value="A">A: Regular Employee</option>
+
+                                <option value="B">B: Assistant Manager</option>
+
+                                <option value="C">C: Manager</option>
+
+                            </select>
+                        </li>
+                        <li><b>Yearly Credit: Service Incentive Leave (SIL)</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;" v-model="record.sil">
+                        </li>
+
+                        <li><b>Yearly Credit: Vacation Leave / Sick Leave (VL/SL)</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;"  v-model="record.vl_sl"
+                                                                 placeholder="">
+                        </li>
+
+                        <li><b>Yearly Credit: Vacation Leave (VL)</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;"  v-model="record.vl"
+                                                                 placeholder="">
+                        </li>
+
+                        <li><b>Yearly Credit: Sick Leave (SL)</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"  v-model="record.sl"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;">
                         </li>
                     </ul>
 
