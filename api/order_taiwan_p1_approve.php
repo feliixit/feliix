@@ -63,6 +63,31 @@ $action = 'approved';
 
 $items_array = json_decode($items,true);
 
+
+// update main table
+$query = "UPDATE od_main SET `updated_id` = :updated_id,  `updated_at` = now() WHERE id = :id";
+$stmt = $db->prepare($query);
+$stmt->bindParam(':updated_id', $uid);
+$stmt->bindParam(':id', $od_id);
+try {
+    // execute the query, also check if query was successful
+    if (!$stmt->execute()) {
+        $arr = $stmt->errorInfo();
+        error_log($arr[2]);
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+        die();
+    }
+} catch (Exception $e) {
+    error_log($e->getMessage());
+    $db->rollback();
+    http_response_code(501);
+    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+    die();
+}
+
+
 try{
 
     for($i=0; $i<count($items_array); $i++) 
