@@ -25,6 +25,7 @@ function logMail($email, $content){
         $stmt = $db->prepare($query);
 
         $content_b = addslashes($content);
+        $content_b = substr($content_b, 0, 2000);
 
             $stmt->bindParam(':approve', $email);
             $stmt->bindParam(':content', $content_b);
@@ -7715,23 +7716,23 @@ function GetAccessNotifiers($field, $order_type){
 
 function SetupMail($mail, $conf)
 {
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
-
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "tls";
-    $mail->Port       = 587;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
     $mail->SMTPKeepAlive = true;
-    $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'iva.brekke@ethereal.email';
-    $mail->Password   = 'Mr8Fmqx9xh1jbdDpht';
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "tls";
+    // $mail->Port       = 587;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = 'smtp.ethereal.email';
+    // $mail->Username   = 'sylvia99@ethereal.email';
+    // $mail->Password   = '3YEXARcxXFhjT2k5RQ';
 
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
