@@ -70,7 +70,7 @@ $(function(){
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A focus">Apply for Leave</a>
-            <a class="tag B" href="leave_record">Leave Record</a>
+            <a class="tag B" href="leave_record_v2">Leave Record</a>
         </div>
         <!-- Blocks -->
         <div class="block A focus">
@@ -158,7 +158,7 @@ $(function(){
                         <ul style="display:flex;">
                             <li class="head" style="border-top-left-radius: 12px; border-bottom-left-radius: 0px; line-height: 36px;">Start Time</li>
                             <li style="flex-grow:1; flex-shrink:1;">
-                            <input type="datetime-local" v-model="apply_start" style="width: 100%; border: 2px solid var(--pri01a);" />
+                            <input type="datetime-local" :min="min_start_date" v-model="apply_start" style="width: 100%; border: 2px solid var(--pri01a);" />
                             </li>
                         </ul>
                         <ul style="display:flex;">

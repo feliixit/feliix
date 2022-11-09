@@ -46,6 +46,8 @@ var app = new Vue({
     leave_level: '',
 
     file: '',
+
+    min_start_date: '',
   },
 
   created () {
@@ -524,18 +526,25 @@ let _this = this;
       {
         $('#start').val(d1.toISOString().slice(0,4) + "-12");
         $('#end').val(d2.toISOString().slice(0,7));
+
+        this.min_start_date = d1.toISOString().slice(0,4) + "-12-01 00:00:00";
+        
       }
       else
       {
         var manager_start_date = new Date(today.getFullYear() -1, "12", 0);
         $('#start').val(manager_start_date.toISOString().slice(0,7));
         $('#end').val(d1.toISOString().slice(0,4) + "-11");
+
+        this.min_start_date = manager_start_date.toISOString().slice(0,7) + '-01 00:00:00';
       }
     }
     else
     {
       $('#start').val(d1.toISOString().slice(0,4) + "-01");
       $('#end').val(d2.toISOString().slice(0,7));
+
+      this.min_start_date = d1.toISOString().slice(0,4) + "-01-01 00:00:00";
     }
 
     this.getLeaveCredit();
