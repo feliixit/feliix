@@ -171,7 +171,7 @@ class User{
     function userCanLogin(){
         // query to check if email exists
         $query = "SELECT user.id, username, password, user.status, is_admin, need_punch, COALESCE(department, '') department, 
-                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, COALESCE(is_manager, 0) is_manager, COALESCE(test_manager, '0') test_manager, manager_leave, user_title.head_of_department,user.is_viewer, user.pic_url
+                apartment_id, title_id, COALESCE(title, '') title, annual_leave, sick_leave, COALESCE(is_manager, 0) is_manager, COALESCE(test_manager, '0') test_manager, manager_leave, user_title.head_of_department,user.is_viewer, user.pic_url, user.leave_level
                 FROM " . $this->table_name . "
                 LEFT JOIN user_department ON user.apartment_id = user_department.id 
                 LEFT JOIN user_title ON user.title_id = user_title.id
@@ -217,6 +217,7 @@ class User{
             $this->test_manager = $this->RoleManagement($row['test_manager'], $row['title_id'], $row['apartment_id'], $row['id']);
             $this->is_viewer = $row['is_viewer'];
             $this->pic_url = $row['pic_url'];
+            $this->leave_level = $row['leave_level'];
             // return true because email exists in the database
             return true;
         }

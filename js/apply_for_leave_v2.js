@@ -43,6 +43,8 @@ var app = new Vue({
 
     is_manager: 0,
 
+    leave_level: '',
+
     file: '',
   },
 
@@ -199,10 +201,10 @@ let _this = this;
           }
 
           
-          var message = _this.sil_consume > 0 ? "Service Incentive Leave " + _this.sil_consume + " day(s)<br>" : "";
-          message += _this.vl_consume > 0 ? "Vacation Leave " + _this.vl_consume + " day(s)<br>" : "";
-          message += _this.sl_consume > 0 ? "Sick Leave " + _this.sl_consume + " day(s)<br>" : "";
-          message += _this.vlsl_consume > 0 ? "Vacation Leave/Sick Leave " + _this.vlsl_consume + " day(s)<br>" : "";
+          var message = _this.sil_consume > 0 ? "Service Incentive Leave: " + _this.sil_consume + " day(s)<br>" : "";
+          message += _this.vl_consume > 0 ? "Vacation Leave: " + _this.vl_consume + " day(s)<br>" : "";
+          message += _this.sl_consume > 0 ? "Sick Leave: " + _this.sl_consume + " day(s)<br>" : "";
+          message += _this.vlsl_consume > 0 ? "Vacation Leave/Sick Leave: " + _this.vlsl_consume + " day(s)<br>" : "";
           message = "Your current leave application will consume<br>" + message + "<br>Do you want to continue?";
 
           if(this.leave_type == 'U') message = "Confirm to apply?";
@@ -241,7 +243,7 @@ let _this = this;
           this.apply_end = this.normalize(this.apply_end);
 
 
-          if(this.is_manager)
+          if(this.leave_level == 'B' || this.leave_level == 'C')
           {
             var timeStart = this.apply_start.slice(0, 10);
 
@@ -449,7 +451,7 @@ let _this = this;
     var amEnd = 'P';
 
 
-    if(this.is_manager)
+    if(this.leave_level == 'B' || this.leave_level == 'C')
     {
       var timeStart = this.apply_start.slice(0, 10);
 
@@ -516,7 +518,7 @@ let _this = this;
 
     var d_manager =  new Date(today.getFullYear(), "11", 0);
 
-    if(this.is_manager == 1)
+    if(this.leave_level == 'B' || this.leave_level == 'C')
     {
       if(d1 > d_manager)
       {
@@ -562,6 +564,8 @@ let _this = this;
             _this.manager_leave = response.data.manager_leave;
             _this.al_credit = response.data.annual_leave;
             _this.sl_credit = response.data.sick_leave;
+
+            _this.leave_level = response.data.leave_level;
 
             // for is manager period
             _this.setUpLeavePeriod();
