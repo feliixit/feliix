@@ -3207,3 +3207,22 @@ ADD COLUMN `vl` int(11) DEFAULT 0;
 
 ALTER TABLE user
 ADD COLUMN `sl` int(11) DEFAULT 0;
+
+-- 20221108 apply_for_leave
+ALTER TABLE apply_for_leave
+ADD COLUMN `leave_level` varchar(24) DEFAULT '';
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `sil` decimal(10, 2) default 0.0;
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `vl_sl` decimal(10, 2) default 0.0;
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `vl` decimal(10, 2) default 0.0;
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `sl` decimal(10, 2) default 0.0;
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `ul` decimal(10, 2) default 0.0;
