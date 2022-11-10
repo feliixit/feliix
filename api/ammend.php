@@ -61,7 +61,7 @@ $query = "
 SELECT * FROM (
     SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, 
         CASE when a.STATUS = -3 then 'V' when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
-        reason, a.pic_url 
+        reason, a.pic_url, a.leave_level, a.sil, a.vl_sl, a.vl, a.sl  
         FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
         WHERE a.STATUS not in (-1, -2, -3, 1) AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
         and uid IN 
@@ -73,7 +73,7 @@ SELECT * FROM (
 
         SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, 
         CASE when a.STATUS = -3 then 'V' when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
-        reason, a.pic_url 
+        reason, a.pic_url, a.leave_level, a.sil, a.vl_sl, a.vl, a.sl   
         FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
         WHERE a.STATUS not in (-1, -2, -3, 1) AND approval_id <> 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
         and uid IN 
@@ -86,7 +86,7 @@ if($row_id != "")
 
         SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, 
         CASE when a.STATUS = -3 then 'V' when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
-        reason, a.pic_url
+        reason, a.pic_url, a.leave_level, a.sil, a.vl_sl, a.vl, a.sl  
         FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
         WHERE a.STATUS not in (-1, -2, -3, 1)  AND approval_id = 0 AND reject_id = 0 AND re_approval_id = 0 AND re_reject_id = 0 
         and a.uid IN 
@@ -104,7 +104,56 @@ $stmt->execute();
 
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $merged_results[] = $row;
+    $message = GetLeaveMessage($row['le'], $row['leave_type'],  $row['sil'], $row['vl_sl'], $row['vl'], $row['sl']);
+
+    $merged_results[] = array(
+        "is_checked" => $row['is_checked'],
+        "id" => $row['id'],
+        "username" => $row['username'],
+        "created_at" => $row['created_at'],
+        "le" => $row['le'],
+        "leave_type" => $row['leave_type'],
+        "start_date" => $row['start_date'],
+        "start_time" => $row['start_time'],
+        "end_date" => $row['end_date'],
+        "end_time" => $row['end_time'],
+        "approval" => $row['approval'],
+        "reason" => $row['reason'],
+        "pic_url" => $row['pic_url'],
+        "leave_level" => $row['leave_level'],
+        "sil" => $row['sil'],
+        "vl_sl" => $row['vl_sl'],
+        "vl" => $row['vl'],
+        "sl" => $row['sl'],
+        "message" => $message
+
+    );
 }
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
+function GetLeaveMessage($leave, $leave_type, $sil, $vl_sl, $vl, $sl)
+{
+
+    $message = "Consume" . "\r\n";
+    if($sil > 0)
+        $message .=  "Service Incentive Leave: " . $sil . " day(s)"  . "\r\n";
+
+    if($vl_sl > 0)
+        $message .=  "Vacation Leave/Sick Leave: " . $vl_sl . " day(s)"  . "\r\n";
+
+    if($vl > 0)
+        $message .=  "Vacation Leave: " . $vl . " day(s)"  . "\r\n";
+
+    if($sl > 0)
+        $message .=  "Sick Leave: " . $sl . " day(s)"  . "\r\n";
+
+    if($leave_type == 'U')
+        $message .=  "Unpaid Leave: " . $leave . " day(s)"  . "\r\n";
+
+    if($leave_type == 'A' || $leave_type == 'B' || $leave_type == 'C' || $leave_type == 'D')
+        $message =  "";
+
+    return $message;
+
+}
