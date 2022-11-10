@@ -995,6 +995,8 @@ var app = new Vue({
       { 
         if(this.title.trim().toUpperCase() == 'LIGHTING MANAGER')
           can_save = true;
+        if(this.title.trim().toUpperCase() == 'ASSISTANT LIGHTING MANAGER')
+          can_save = true;
       }
 
       if(this.department.trim().toUpperCase() == 'OFFICE')
