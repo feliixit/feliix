@@ -568,8 +568,8 @@ try {
                         -->
                         <template v-for="(username, index) in installer">
                             <div class="custom-control custom-checkbox" style="display:inline-block;" >
-                                <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" :value="username.replaceAll(' ', '_')" :id="username.replaceAll(' ', '_')">
-                                <label class="custom-control-label" :for="username">{{username.replaceAll(' ', '_')}}</label>
+                                <input type="checkbox" class="custom-control-input" name="sc_Installer_needed" :value="username" :id="username">
+                                <label class="custom-control-label" :for="username">{{username}}</label>
                             </div>
 
                             <br>
