@@ -113,6 +113,9 @@ var app = new Vue({
     name :"",
     title: "",
     is_manager: "",
+
+    toggle: true,
+
   },
 
   created() {
@@ -186,6 +189,10 @@ var app = new Vue({
   },
 
   methods: {
+    toggle_price : function() {
+      this.toggle = !this.toggle;
+    },
+
     chunk: function(arr, size) {
       var newArr = [];
       for (var i=0; i<arr.length; i+=size) {
