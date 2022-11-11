@@ -78,6 +78,8 @@ var app = new Vue({
               console.log(response.data);
               _this.receive_records = response.data;
 
+              _this.submit = false;
+            _this.view_detail = false;
 
           })
           .catch(function(error) {

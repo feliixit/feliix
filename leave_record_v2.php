@@ -93,7 +93,7 @@ $(function(){
                         </li>
                        
                         <li>{{ (record.approval == 'P') ? "Waiting for Approval" : (record.approval == 'R') ? "Rejected" : (record.approval == 'D') ? "Archived" : (record.approval == 'W') ? "Withdrawn" : (record.approval == 'V') ? "Void" : "Approved" }}</li>
-                        <li>{{ (record.leave_type == 'A' || record.leave_type == 'N') ? "Service Incentive Leave" : ((record.leave_type == 'B' || record.leave_type == 'S') ? "Sick Leave" : ((record.leave_type == 'C' || record.leave_type == 'U') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Service Incentive Leave" : ((record.leave_type == 'B' || record.leave_type == 'S') ? "Sick Leave" : ((record.leave_type == 'C' || record.leave_type == 'U') ? "Unpaid Leave" : (record.leave_type == 'N') ? "Vaction Leave" : 'Absence')) }}</li>
                         <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
                         <li style="white-space: pre;">{{ record.message }}</li>
                     </ul>
@@ -107,7 +107,7 @@ $(function(){
                 <div class="tablebox" v-if="view_detail">
                     <ul class="head">
                         <li class="head">Leave Type</li>
-                        <li>{{ (record.leave_type == 'A' || record.leave_type == 'N') ? "Service Incentive Leave" : ((record.leave_type == 'B' || record.leave_type == 'S') ? "Sick Leave" : ((record.leave_type == 'C' || record.leave_type == 'U') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Service Incentive Leave" : ((record.leave_type == 'B' || record.leave_type == 'S') ? "Sick Leave" : ((record.leave_type == 'C' || record.leave_type == 'U') ? "Unpaid Leave" : (record.leave_type == 'N') ? "Vaction Leave" : 'Absence')) }}</li>
                     </ul>
                     <ul>
                         <li class="head">Application Time</li>
