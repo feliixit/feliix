@@ -47,6 +47,8 @@ var app = new Vue({
     name :"",
     title: "",
     is_manager: "",
+
+    toggle: true,
   },
 
   created() {
@@ -140,6 +142,10 @@ var app = new Vue({
 
 
   methods: {
+    toggle_price : function() {
+      this.toggle = !this.toggle;
+    },
+
     getUserName: function() {
       var token = localStorage.getItem('token');
       var form_Data = new FormData();
