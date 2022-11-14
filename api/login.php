@@ -84,6 +84,7 @@ if($user_exists && password_verify($password, $user->password)  && $user->status
            "title_id" => $user->title_id,
            "apartment_id" => $user->apartment_id,
            "pic_url" => $user->pic_url,
+           "leave_level" => $user->leave_level,
        )
     );
 

@@ -1,4 +1,33 @@
 <?php include 'check.php';?>
+<?php
+use \Firebase\JWT\JWT;
+try {
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+        $can_use = false;
+
+        $leave_level = $decoded->data->leave_level;
+
+        $valid_date = new DateTime('2022-12-01');
+        $all_valid_date = new DateTime('2023-01-01');
+        $today = new DateTime();
+
+        if($today < $valid_date)
+            header( 'location:index' );
+            
+        if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
+            $can_use = true;
+        else
+            header( 'location:index' );
+    }
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+    
+        header( 'location:index' );
+    }
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,9 +109,9 @@ $(function(){
                 <div class="title">
                 
                     <div class="function">
-                        <input type="month" id="start" name="start" @change="getLeaveCredit()">
+                        <input type="month" id="start" name="start" :min="min_start_date.slice(0,7)" :max="max_start_date.slice(0,7)" @change="getLeaveCredit()">
 
-                        <input type="month" id="end" name="end" @change="getLeaveCredit()">
+                        <input type="month" id="end" name="end" :min="min_start_date.slice(0,7)" :max="max_start_date.slice(0,7)" @change="getLeaveCredit()">
                     </div>
                 </div>
 
@@ -158,13 +187,13 @@ $(function(){
                         <ul style="display:flex;">
                             <li class="head" style="border-top-left-radius: 12px; border-bottom-left-radius: 0px; line-height: 36px;">Start Time</li>
                             <li style="flex-grow:1; flex-shrink:1;">
-                            <input type="datetime-local" :min="min_start_date" v-model="apply_start" style="width: 100%; border: 2px solid var(--pri01a);" />
+                            <input type="datetime-local" :min="min_start_date" :max="max_start_date" v-model="apply_start" style="width: 100%; border: 2px solid var(--pri01a);" />
                             </li>
                         </ul>
                         <ul style="display:flex;">
                             <li class="head" style="border-top-left-radius: 0px; border-bottom-left-radius: 12px; line-height: 36px;">End Time</li>
                             <li style="flex-grow:1; flex-shrink:1;">
-                            <input type="datetime-local" v-model="apply_end" style="width: 100%; border: 2px solid var(--pri01a);" />
+                            <input type="datetime-local" :min="min_start_date" :max="max_start_date"  v-model="apply_end" style="width: 100%; border: 2px solid var(--pri01a);" />
                             </li>
                         </ul>
                     </div>

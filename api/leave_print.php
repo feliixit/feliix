@@ -199,10 +199,10 @@ if($jwt){
                     $ul = "";
                 }
 
-                $sheet->setCellValue('I' . $i, $row['sil']);
-                $sheet->setCellValue('J' . $i, $row['vl_sl']);
-                $sheet->setCellValue('K' . $i, $row['vl']);
-                $sheet->setCellValue('L' . $i, $row['sl']);
+                $sheet->setCellValue('I' . $i, $sil);
+                $sheet->setCellValue('J' . $i, $vl_sl);
+                $sheet->setCellValue('K' . $i, $vl);
+                $sheet->setCellValue('L' . $i, $sl);
                 $sheet->setCellValue('M' . $i, $ul);
 
                 $sheet->setCellValue('N' . $i, $row['created_at']);
@@ -293,7 +293,7 @@ function getLeaveStatus($type){
     $leave_type = '';
 
     if($type =="A")
-        $leave_type = "Approval";
+        $leave_type = "Approved";
     if($type =="P")
         $leave_type = "Waiting for Approval";
     if($type =="R")
@@ -313,9 +313,11 @@ function getLeaveType($type){
 
     if($type =="A")
         $leave_type = "Service Incentive Leave";
-    if($type =="B")
+    if($type =="N")
+        $leave_type = "Vaction Leave";
+    if($type =="B" || $type =="S")
         $leave_type = "Sick Leave";
-    if($type =="C")
+    if($type =="C" || $type =="U")
         $leave_type = "Unpaid Leave";
     if($type =="D")
         $leave_type = "Absence";

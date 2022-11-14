@@ -48,6 +48,8 @@ var app = new Vue({
     file: '',
 
     min_start_date: '',
+    max_start_date: '',
+
   },
 
   created () {
@@ -519,6 +521,7 @@ let _this = this;
     var d2 =  new Date(today.getFullYear(), today.getMonth()+1, 0);
 
     var d_manager =  new Date(today.getFullYear(), "11", 0);
+    var d_next_year =  new Date(today.getFullYear() + 1, 10, 0);
 
     if(this.leave_level == 'B' || this.leave_level == 'C')
     {
@@ -528,7 +531,10 @@ let _this = this;
         $('#end').val(d2.toISOString().slice(0,7));
 
         this.min_start_date = d1.toISOString().slice(0,4) + "-12-01 00:00:00";
-        
+
+        this.max_start_date = d_next_year.toISOString().slice(0,4) + "-11-30 23:59:59";
+       
+
       }
       else
       {
@@ -537,6 +543,8 @@ let _this = this;
         $('#end').val(d1.toISOString().slice(0,4) + "-11");
 
         this.min_start_date = manager_start_date.toISOString().slice(0,7) + '-01 00:00:00';
+
+        this.max_start_date = today.toISOString().slice(0,4) + "-11-30 23:59:59";
       }
     }
     else
@@ -545,6 +553,9 @@ let _this = this;
       $('#end').val(d2.toISOString().slice(0,7));
 
       this.min_start_date = d1.toISOString().slice(0,4) + "-01-01 00:00:00";
+
+      // max start date is last year's nov 30
+      this.max_start_date = d1.toISOString().slice(0,4) + "-12-31 23:59:59";
     }
 
     this.getLeaveCredit();

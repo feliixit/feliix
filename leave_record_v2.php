@@ -1,4 +1,33 @@
 <?php include 'check.php';?>
+<?php
+use \Firebase\JWT\JWT;
+try {
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+
+        $can_use = false;
+
+        $leave_level = $decoded->data->leave_level;
+
+        $valid_date = new DateTime('2022-12-01');
+        $all_valid_date = new DateTime('2023-01-01');
+        $today = new DateTime();
+
+        if($today < $valid_date)
+            header( 'location:index' );
+            
+        if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
+            $can_use = true;
+        else
+            header( 'location:index' );
+    }
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+    
+        header( 'location:index' );
+    }
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
