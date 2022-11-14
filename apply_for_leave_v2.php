@@ -18,6 +18,8 @@ try {
             
         if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
             $can_use = true;
+        elseif($leave_level == 'A' && $today >= $all_valid_date)
+            $can_use = true;
         else
             header( 'location:index' );
     }
