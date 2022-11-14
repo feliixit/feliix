@@ -528,34 +528,38 @@ let _this = this;
       if(d1 > d_manager)
       {
         $('#start').val(d1.toISOString().slice(0,4) + "-12");
-        $('#end').val(d2.toISOString().slice(0,7));
+        
 
         this.min_start_date = d1.toISOString().slice(0,4) + "-12-01 00:00:00";
 
         this.max_start_date = d_next_year.toISOString().slice(0,4) + "-11-30 23:59:59";
        
-
+        $('#end').val(d_next_year.toISOString().slice(0,4) + "-11");
       }
       else
       {
         var manager_start_date = new Date(today.getFullYear() -1, "12", 0);
         $('#start').val(manager_start_date.toISOString().slice(0,7));
-        $('#end').val(d1.toISOString().slice(0,4) + "-11");
+        
 
         this.min_start_date = manager_start_date.toISOString().slice(0,7) + '-01 00:00:00';
 
         this.max_start_date = today.toISOString().slice(0,4) + "-11-30 23:59:59";
+
+        $('#end').val(today.toISOString().slice(0,4) + "-11");
       }
     }
     else
     {
       $('#start').val(d1.toISOString().slice(0,4) + "-01");
-      $('#end').val(d2.toISOString().slice(0,7));
+      
 
       this.min_start_date = d1.toISOString().slice(0,4) + "-01-01 00:00:00";
 
       // max start date is last year's nov 30
       this.max_start_date = d1.toISOString().slice(0,4) + "-12-31 23:59:59";
+
+      $('#end').val(d1.toISOString().slice(0,4) + "-12");
     }
 
     this.getLeaveCredit();
