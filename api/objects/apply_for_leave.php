@@ -28,6 +28,13 @@ class ApplyForLeave
     public $created_at;
     public $updated_at;
     public $status;
+    
+    public $leave_level;
+    public $sil;
+    public $vl_sl;
+    public $vl;
+    public $sl;
+    public $ul;
 
     // constructor
     public function __construct($db)
@@ -104,8 +111,8 @@ class ApplyForLeave
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`uid`, `start_date`, `start_time`, `end_date`, `end_time`, `leave_type`, `leave`, `too_many`, `pic_url`, `reason`, `created_at`) 
-                VALUES (:uid, :start_date, :start_time, :end_date, :end_time, :leave_type, :leave, :too_many, :pic_url, :reason, now())";
+                (`uid`, `start_date`, `start_time`, `end_date`, `end_time`, `leave_type`, `leave`, `too_many`, `pic_url`, `reason`, `created_at`, `leave_level`, `sil`, `vl_sl`, `vl`, `sl`, `ul`) 
+                VALUES (:uid, :start_date, :start_time, :end_date, :end_time, :leave_type, :leave, :too_many, :pic_url, :reason, now(), :leave_level, :sil, :vl_sl, :vl, :sl, :ul)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -140,6 +147,14 @@ class ApplyForLeave
 
             $stmt->bindParam(':pic_url', $this->pic_url);
             $stmt->bindParam(':reason', $this->reason);
+
+            $stmt->bindParam(':leave_level', $this->leave_level);
+            $stmt->bindParam(':sil', $this->sil);
+            $stmt->bindParam(':vl_sl', $this->vl_sl);
+            $stmt->bindParam(':vl', $this->vl);
+            $stmt->bindParam(':sl', $this->sl);
+            $stmt->bindParam(':ul', $this->ul);
+
 
         try {
             // execute the query, also check if query was successful

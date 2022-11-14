@@ -38,6 +38,7 @@ var app = new Vue({
     data: {
         name: "",
         department: "",
+        title:"",
         today: "",
         items: [],
         agenda: [],
@@ -1403,6 +1404,7 @@ var app = new Vue({
                     _this.sl_credit = response.data.sick_leave;
                     _this.is_viewer = response.data.is_viewer;
                     _this.department = response.data.department;
+                    _this.title = response.data.title;
                 })
                 .catch(function (response) {
                     //handle error
@@ -1795,7 +1797,13 @@ var initial = () =>  {
         app.name != "Dennis Lin" &&
         app.name != "dereck" &&
         app.name != "Kristel Tan" &&
-        app.department != 'Service'
+        app.department != 'Service' && 
+        app.title != 'Jr. Project Engineer' &&
+        app.title != 'Project Engineer' &&
+        app.title != 'Sr. Project Engineer' &&
+        app.title != 'Jr. Project Architect' &&
+        app.title != 'Project Architect' &&
+        app.title != 'Sr. Project Architect'
     ) {
         document.getElementById("btn_confirm").style.visibility = "hidden";
         document.getElementById("btn_unconfirm").style.visibility = "hidden";

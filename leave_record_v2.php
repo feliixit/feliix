@@ -13,10 +13,14 @@ try {
         $all_valid_date = new DateTime('2023-01-01');
         $today = new DateTime();
 
-        if($today >= $all_valid_date)
+        if($today < $valid_date)
             header( 'location:index' );
             
         if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
+            $can_use = true;
+        elseif($leave_level == 'A' && $today >= $all_valid_date)
+            $can_use = true;
+        else
             header( 'location:index' );
     }
     // if decode fails, it means jwt is invalid
@@ -88,7 +92,7 @@ $(function(){
     <div id="app" class="mainContent">
         <!-- tags js在 main.js -->
         <div class="tags">
-            <a class="tag A" href="apply_for_leave">Apply for Leave</a>
+            <a class="tag A" href="apply_for_leave_v2">Apply for Leave</a>
             <a class="tag B focus">Leave Record</a>
         </div>
         <!-- Blocks -->
@@ -112,6 +116,7 @@ $(function(){
                         <li>Status</li>
                         <li>Type</li>
                         <li>Leave Time</li>
+                        <li>Notes</li>
                     </ul>
                     <ul v-for='(record, index) in displayedRecord' :key="index">
                         <li>
@@ -119,8 +124,9 @@ $(function(){
                         </li>
                        
                         <li>{{ (record.approval == 'P') ? "Waiting for Approval" : (record.approval == 'R') ? "Rejected" : (record.approval == 'D') ? "Archived" : (record.approval == 'W') ? "Withdrawn" : (record.approval == 'V') ? "Void" : "Approved" }}</li>
-                        <li>{{ (record.leave_type == 'A') ? "Service Incentive Leave" : ((record.leave_type == 'B') ? "Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Service Incentive Leave" : ((record.leave_type == 'B' || record.leave_type == 'S') ? "Sick Leave" : ((record.leave_type == 'C' || record.leave_type == 'U') ? "Unpaid Leave" : (record.leave_type == 'N') ? "Vaction Leave" : 'Absence')) }}</li>
                         <li>{{ record.start_date.substring(0, 4) }}/{{ record.start_date.substring(4, 6) }}/{{ record.start_date.substring(6, 8) }} {{ record.start_time }} - {{ record.end_date.substring(0, 4) }}/{{ record.end_date.substring(4, 6) }}/{{ record.end_date.substring(6, 8) }} {{ record.end_time }}</li>
+                        <li style="white-space: pre;">{{ record.message }}</li>
                     </ul>
                 </div>
 
@@ -132,7 +138,7 @@ $(function(){
                 <div class="tablebox" v-if="view_detail">
                     <ul class="head">
                         <li class="head">Leave Type</li>
-                        <li>{{ (record.leave_type == 'A') ? "Service Incentive Leave" : ((record.leave_type == 'B') ? "Sick Leave" : ((record.leave_type == 'C') ? "Unpaid Leave" : 'Absence')) }}</li>
+                        <li>{{ (record.leave_type == 'A') ? "Service Incentive Leave" : ((record.leave_type == 'B' || record.leave_type == 'S') ? "Sick Leave" : ((record.leave_type == 'C' || record.leave_type == 'U') ? "Unpaid Leave" : (record.leave_type == 'N') ? "Vaction Leave" : 'Absence')) }}</li>
                     </ul>
                     <ul>
                         <li class="head">Application Time</li>
@@ -158,6 +164,10 @@ $(function(){
                         <li class="head">Certificate of Diagnosis</li>
                         <li><i class="fas fa-image"  @click="showPic(record.pic_url)"></i></li>
                     </ul>
+                    <ul>
+                        <li class="head">Notes</li>
+                        <li style="white-space: pre;">{{ record.message }}</li>
+                    </ul>
                 </div>
             </div>
 
@@ -182,5 +192,5 @@ $(function(){
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/leave_record.js"></script>
+<script src="js/leave_record_v2.js"></script>
 </html>

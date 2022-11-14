@@ -1149,7 +1149,7 @@ function grab_image($image_url,$image_file){
 function RefactorInstallerNeeded($merged_results, $db)
 {
     $tech = [];
-    $query = "SELECT username  FROM `user` where status = 1 and title_id in (21, 22)";
+    $query = "SELECT username  FROM `user` where status = 1 and title_id in (21, 22, 56, 57)";
     $stmt = $db->prepare($query);
     $stmt->execute();
 

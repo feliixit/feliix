@@ -35,6 +35,12 @@ try {
         $department = $decoded->data->department;
 
         $user_id = $decoded->data->id;
+
+        $leave_level = $decoded->data->leave_level;
+
+        $valid_date = new DateTime('2022-12-01');
+        $all_valid_date = new DateTime('2023-01-01');
+        $today = new DateTime();
             
         // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
         
@@ -313,7 +319,47 @@ try {
             <li class="pri01a">
                 <a class="uni">Employee<br>Attendance</a>
                 <a class="list" href="on_duty">Punch In/Out</a>
+                <?php 
+                    if($today >= $all_valid_date)
+                    {
+                ?>
+                <a class="list">Leave</a>
+                <?php 
+                    }
+                    else if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
+                    {
+                ?>
+                <a class="list">Leave</a>
+                <?php 
+                    } 
+                    else
+                    {
+                ?>
                 <a class="list" href="apply_for_leave">Leave</a>
+                <?php 
+                    }
+                ?>
+
+                <?php 
+                    if($today >= $all_valid_date)
+                    {
+                ?>
+                <a class="list" href="apply_for_leave_v2">Leave (New)</a>
+                <?php 
+                    }
+                    else if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
+                    {
+                ?>
+                <a class="list" href="apply_for_leave_v2">Leave (New)</a>
+                <?php 
+                    } 
+                    else
+                    {
+                ?>
+                <a class="list">Leave (New)</a>
+                <?php 
+                    }
+                ?>
                 <a class="list" href="">Query/Ammend</a>
             </li>
             <li class="sec02">

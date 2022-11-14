@@ -72,7 +72,9 @@ if($jwt){
                           reject_id, b.username reject_name, reject_at,
                     re_approval_id, c.username re_approval_name, re_approval_at, 
                           re_reject_id, d.username re_reject_name, re_reject_at, 
-                          ap.pic_url, ap.created_at, ud.department, ut.title
+                          ap.pic_url, ap.created_at, ud.department, ut.title,
+
+                          ap.leave_level, ap.sil, ap.vl_sl, ap.vl, ap.sl 
 
                     FROM apply_for_leave ap LEFT JOIN user u ON u.id = ap.uid 
 
@@ -140,13 +142,20 @@ if($jwt){
             $sheet->setCellValue('F1', 'Leave Lenght');
             $sheet->setCellValue('G1', 'Reason');
             $sheet->setCellValue('H1', 'Certificate of Diagnosis');
-            $sheet->setCellValue('I1', 'Application Time');
-            $sheet->setCellValue('J1', '1st Approver');
-            $sheet->setCellValue('K1', 'Decision');
-            $sheet->setCellValue('L1', 'Decision Time');
-            $sheet->setCellValue('M1', '2nd Approver');
-            $sheet->setCellValue('N1', 'Decision');
-            $sheet->setCellValue('O1', 'Decision Time');
+
+            $sheet->setCellValue('I1', 'Consumed SIL');
+            $sheet->setCellValue('J1', 'Consumed VL/SL');
+            $sheet->setCellValue('K1', 'Consumed VL');
+            $sheet->setCellValue('L1', 'Consumed SL');
+            $sheet->setCellValue('M1', 'Consumed UL');
+
+            $sheet->setCellValue('N1', 'Application Time');
+            $sheet->setCellValue('O1', '1st Approver');
+            $sheet->setCellValue('P1', 'Decision');
+            $sheet->setCellValue('Q1', 'Decision Time');
+            $sheet->setCellValue('R1', '2nd Approver');
+            $sheet->setCellValue('S1', 'Decision');
+            $sheet->setCellValue('T1', 'Decision Time');
 
             $conf = new Conf();
 
@@ -171,46 +180,71 @@ if($jwt){
                 else
                     $sheet->setCellValue('H' . $i, '');
 
-                $sheet->setCellValue('I' . $i, $row['created_at']);
+
+                $sil = $row['sil'];
+                $vl_sl = $row['vl_sl'];
+                $vl = $row['vl'];
+                $sl = $row['sl'];
+                $ul = "0";
+
+                if($row['leave_type'] == 'U')
+                    $ul = $row['leave'];
+
+                if($row['leave_type'] == 'A' || $row['leave_type'] == 'B' || $row['leave_type'] == 'C' || $row['leave_type'] == 'D')
+                {
+                    $sil = "";
+                    $vl_sl = "";
+                    $vl = "";
+                    $sl = "";
+                    $ul = "";
+                }
+
+                $sheet->setCellValue('I' . $i, $sil);
+                $sheet->setCellValue('J' . $i, $vl_sl);
+                $sheet->setCellValue('K' . $i, $vl);
+                $sheet->setCellValue('L' . $i, $sl);
+                $sheet->setCellValue('M' . $i, $ul);
+
+                $sheet->setCellValue('N' . $i, $row['created_at']);
 
                 // first decisioner
                 if($row['approval_id'] != 0 && $row['uid'] != $row['approval_id'])
                 {
-                    $sheet->setCellValue('J' . $i, $row['approval_name']);
-                    $sheet->setCellValue('K' . $i, 'Approved');
-                    $sheet->setCellValue('L' . $i, $row['approval_at']);
+                    $sheet->setCellValue('O' . $i, $row['approval_name']);
+                    $sheet->setCellValue('P' . $i, 'Approved');
+                    $sheet->setCellValue('Q' . $i, $row['approval_at']);
                 }
 
                 if($row['reject_id'] != 0 && $row['uid'] != $row['reject_id'])
                 {
-                    $sheet->setCellValue('J' . $i, $row['reject_name']);
-                    $sheet->setCellValue('K' . $i, 'Rejected');
-                    $sheet->setCellValue('L' . $i, $row['reject_at']);
+                    $sheet->setCellValue('O' . $i, $row['reject_name']);
+                    $sheet->setCellValue('P' . $i, 'Rejected');
+                    $sheet->setCellValue('Q' . $i, $row['reject_at']);
                 }
 
                 // second decisioner
                 if($row['re_approval_id'] != 0 && $row['uid'] != $row['re_approval_id'])
                 {
-                    $sheet->setCellValue('M' . $i, $row['re_approval_name']);
-                    $sheet->setCellValue('N' . $i, 'Approved');
-                    $sheet->setCellValue('O' . $i, $row['re_approval_at']);
+                    $sheet->setCellValue('R' . $i, $row['re_approval_name']);
+                    $sheet->setCellValue('S' . $i, 'Approved');
+                    $sheet->setCellValue('T' . $i, $row['re_approval_at']);
                 }
 
                 if($row['re_reject_id'] != 0 && $row['uid'] != $row['re_reject_id'])
                 {
-                    $sheet->setCellValue('M' . $i, $row['re_reject_name']);
-                    $sheet->setCellValue('N' . $i, 'Rejected');
-                    $sheet->setCellValue('O' . $i, $row['re_reject_at']);
+                    $sheet->setCellValue('R' . $i, $row['re_reject_name']);
+                    $sheet->setCellValue('S' . $i, 'Rejected');
+                    $sheet->setCellValue('T' . $i, $row['re_reject_at']);
                 }
 
 
-                $sheet->getStyle('A'. $i. ':' . 'O' . $i)->applyFromArray($styleArray);
+                $sheet->getStyle('A'. $i. ':' . 'T' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'O1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'O' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'T1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'T' . --$i)->applyFromArray($styleArray);
 
             ob_end_clean();
 
@@ -259,7 +293,7 @@ function getLeaveStatus($type){
     $leave_type = '';
 
     if($type =="A")
-        $leave_type = "Approval";
+        $leave_type = "Approved";
     if($type =="P")
         $leave_type = "Waiting for Approval";
     if($type =="R")
@@ -279,9 +313,11 @@ function getLeaveType($type){
 
     if($type =="A")
         $leave_type = "Service Incentive Leave";
-    if($type =="B")
+    if($type =="N")
+        $leave_type = "Vaction Leave";
+    if($type =="B" || $type =="S")
         $leave_type = "Sick Leave";
-    if($type =="C")
+    if($type =="C" || $type =="U")
         $leave_type = "Unpaid Leave";
     if($type =="D")
         $leave_type = "Absence";

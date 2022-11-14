@@ -13,6 +13,8 @@ var app = new Vue({
     receive_records: [],
     record: {},
 
+    leave_level :'',
+
   },
 
   created () {
@@ -75,8 +77,9 @@ var app = new Vue({
           .then(function(response) {
               console.log(response.data);
               _this.receive_records = response.data;
+
               _this.submit = false;
-              _this.view_detail = false;
+            _this.view_detail = false;
 
           })
           .catch(function(error) {
