@@ -564,6 +564,12 @@
                                             <option value="3">
                                                 Updated Time
                                             </option>
+                                            <option value="4">
+                                                SRP
+                                            </option>
+                                            <option value="5">
+                                                QP
+                                            </option>
                                           
                                         </select>
                                     </dd>
@@ -596,6 +602,12 @@
                                             </option>
                                             <option value="3">
                                                 Updated Time
+                                            </option>
+                                            <option value="4">
+                                                SRP
+                                            </option>
+                                            <option value="5">
+                                                QP
                                             </option>
                                         </select>
                                     </dd>

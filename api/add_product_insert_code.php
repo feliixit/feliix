@@ -77,6 +77,11 @@ else
         // 去除非商品資料
         $related_product = valid_id($related_product, $db);
 
+        $srp_max = "";
+        $srp_min = "";
+        $qp_max = "";
+        $qp_min = "";
+
         // now you can apply
         $uid = $user_id;
     
@@ -90,16 +95,24 @@ else
             if($price_ntd != ''  && !is_null($price_ntd))
             {
                 $query .= "`price_ntd` = :price_ntd, ";
+
+                
             }
 
             if($price != ''  && !is_null($price))
             {
                 $query .= "`price` = :price, ";
+
+                $srp_max = $price;
+                $srp_min = $price;
             }
 
             if($quoted_price != ''  && !is_null($quoted_price))
             {
                 $query .= "`quoted_price` = :quoted_price, ";
+
+                $qp_max = $quoted_price;
+                $qp_min = $quoted_price;
             }
 
 
@@ -341,11 +354,29 @@ else
                 if($price != '' && !is_null($price))
                 {
                     $query .= "`price` = :price, ";
+
+                    if(parseFloat($price) > parseFloat($srp_max))
+                        $srp_max = $price;
+                    
+                    if(parseFloat($price) < parseFloat($srp_min))
+                        $srp_min = $price;
+                    
+                    if(parseFloat($price) != 0 && $srp_min == '')
+                        $srp_min = $price;
                 }
 
                 if($quoted_price != '' && !is_null($quoted_price))
                 {
                     $query .= "`quoted_price` = :quoted_price, ";
+
+                    if(parseFloat($quoted_price) > parseFloat($qp_max))
+                        $qp_max = $quoted_price;
+                    
+                    if(parseFloat($quoted_price) < parseFloat($qp_min))
+                        $qp_min = $quoted_price;
+
+                    if(parseFloat($quoted_price) != 0 && $qp_min == '')
+                        $qp_min = $quoted_price;
                 }
 
             $query .= "`price_ntd_change` = :price_ntd_change, ";
@@ -425,6 +456,96 @@ else
                     UpdateImageNameVariation($update_name, $batch_id, $db);
             }
         }
+
+        
+        // update srp_max, srp_min, qp_max, qp_min to product_category
+        $query = "UPDATE product_category SET "; 
+
+        if($srp_max != '')
+        {
+            $query .= "`srp_max` = :srp_max, ";
+        }
+        else
+        {
+            $query .= "`srp_max` = null, ";
+        }
+        
+        if($srp_min != '')
+        {
+            $query .= "`srp_min` = :srp_min, ";
+        }
+        else
+        {
+            $query .= "`srp_min` = null, ";
+        }
+
+        if($qp_max != '')
+        {
+            $query .= "`qp_max` = :qp_max, ";
+        }
+        else
+        {
+            $query .= "`qp_max` = null, ";
+        }
+
+        if($qp_min != '')
+        {
+            $query .= "`qp_min` = :qp_min, ";
+        }
+        else
+        {
+            $query .= "`qp_min` = null, ";
+        }
+
+        $query .= "`updated_at` = now() WHERE `id` = :id";
+        
+           
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        if($srp_max != '' && !is_null($srp_max))
+        {
+            $stmt->bindParam(':srp_max', $srp_max);
+        }
+
+        if($srp_min != '' && !is_null($srp_min))
+        {
+            $stmt->bindParam(':srp_min', $srp_min);
+        }
+
+        if($qp_max != '' && !is_null($qp_max))
+        {
+            $stmt->bindParam(':qp_max', $qp_max);
+        }
+
+        if($qp_min != '' && !is_null($qp_min))
+        {
+            $stmt->bindParam(':qp_min', $qp_min);
+        }
+
+        $stmt->bindParam(':id', $product_id);
+
+        // execute the query, also check if query was successful
+        try {
+            // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+              
+            } else {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                die();
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
+        }
             
         $db->commit();
         
@@ -441,6 +562,28 @@ else
         die();
 
     }
+}
+
+function parseFloat($value) {
+    $ret_value = 0.0;
+
+    // parse $value as float
+    if (is_numeric($value)) {
+        $ret_value = floatval($value);
+    } else {
+        // parse $value as string
+        $value = str_replace(',', '.', $value);
+        $value = str_replace(' ', '', $value);
+        $value = str_replace(' ', '', $value); // this is a non-breaking space (0xC2A0 hex)
+        $value = preg_replace('/[^0-9\.]/', '', $value);
+
+        if (is_numeric($value)) {
+            $ret_value = floatval($value);
+        }
+    }
+
+    return $ret_value;
+    //return floatval(preg_replace('#^([-]*[0-9\.,\' ]+?)((\.|,){1}([0-9-]{1,3}))*$#e', "str_replace(array('.', ',', \"'\", ' '), '', '\\1') . '.\\4'", $value));
 }
 
 function UpdateImageName($upload_name, $type, $batch_id, $db){

@@ -3226,3 +3226,28 @@ ADD COLUMN `sl` decimal(10, 2) default 0.0;
 
 ALTER TABLE apply_for_leave
 ADD COLUMN `ul` decimal(10, 2) default 0.0;
+
+-- 20221115 srp qp sort
+ALTER TABLE product_category
+ADD COLUMN `srp_max` decimal(10, 2) null;
+
+ALTER TABLE product_category
+ADD COLUMN `srp_min` decimal(10, 2) null;
+
+ALTER TABLE product_category
+ADD COLUMN `qp_max` decimal(10, 2) null;
+
+ALTER TABLE product_category
+ADD COLUMN `qp_min` decimal(10, 2) null;
+
+update product_category pc 
+set 
+srp_max = price, srp_min = price, 
+qp_max = quoted_price, qp_min = quoted_price;
+
+update product_category pc set 
+srp_max = (select max(p.price) from product p where p.product_id = pc.id ),
+srp_min = (select min(p.price) from product p where p.product_id = pc.id ),
+qp_max = (select max(p.quoted_price) from product p where p.product_id = pc.id ),
+qp_min = (select min(p.quoted_price) from product p where p.product_id = pc.id ) 
+ where (select count(*) from product p where p.product_id = pc.id ) > 0;
