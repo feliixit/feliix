@@ -3271,6 +3271,7 @@ header( 'location:index' );
                             <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(2)">SRP (High → Low)</a>
                             <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(3)">QP (Low → High)</a>
                             <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(4)">QP (High → Low)</a>
+                            <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(0)">Clear</a>
                         </div>
 
                         <div class="pagenation">

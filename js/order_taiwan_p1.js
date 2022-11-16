@@ -408,6 +408,16 @@ var app = new Vue({
         } else if(type == 4) {
           this.of1 = '5';
           this.ofd1 = '2';
+        } else if(type == 0) {
+          this.fil_id = '';
+          this.fil_code = '';
+          this.fil_tag = [];
+          this.fil_brand = '';
+          this.of1 = '';
+          this.ofd1 = '';
+          this.pg = 1;
+          $("#tag01").val('default');
+          $("#tag01").selectpicker("refresh");
         }
 
         this.filter_apply_new();
