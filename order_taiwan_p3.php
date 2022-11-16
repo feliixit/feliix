@@ -1268,6 +1268,14 @@ try {
             margin-left: 0;
         }
 
+        .list_function .sort_block {
+            float: left;
+        }
+
+        .list_function .sort_block a.btn.green {
+            color: white;
+            margin: 0 5px;
+        }
 
         @media print {
             * {
@@ -2059,6 +2067,13 @@ try {
                 </div>
 
                 <div class="list_function" style="margin: 7px 0;">
+                    <div class="sort_block">
+                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(1)">SRP (Low → High)</a>
+                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(2)">SRP (High → Low)</a>
+                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(3)">QP (Low → High)</a>
+                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(4)">QP (High → Low)</a>
+                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(0)">Clear</a>
+                    </div>
                     <div class="pagenation">
                         <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev
                             10</a>

@@ -292,6 +292,9 @@ var app = new Vue({
         stage_id : 0,
         project_name : '',
         serial_name : '',
+
+        of1:'',
+        ofd1:'',
     },
   
     created() {
@@ -396,7 +399,34 @@ var app = new Vue({
     },
   
     methods: {
+      sort_me(type) {
 
+        if(type == 1) {
+          this.of1 = '4';
+          this.ofd1 = '1';
+        } else if(type == 2) {
+          this.of1 = '4';
+          this.ofd1 = '2';
+        } else if(type == 3) {
+          this.of1 = '5';
+          this.ofd1 = '1';
+        } else if(type == 4) {
+          this.of1 = '5';
+          this.ofd1 = '2';
+        } else if(type == 0) {
+          this.fil_id = '';
+          this.fil_code = '';
+          this.fil_tag = [];
+          this.fil_brand = '';
+          this.of1 = '';
+          this.ofd1 = '';
+          this.pg = 1;
+          $("#tag01").val('default');
+          $("#tag01").selectpicker("refresh");
+        }
+
+        this.filter_apply_new();
+      },
       
       getOdMain: function() {
         let _this = this;
@@ -1121,8 +1151,8 @@ var app = new Vue({
           c: _this.fil_code,
           t: JSON.stringify(_this.fil_tag),
           b: _this.fil_brand,
-          of1: '',
-          ofd1: '',
+          of1: _this.of1,
+        ofd1: _this.ofd1,
           of2: '',
           ofd2: '',
           page: _this.pg,
@@ -1738,8 +1768,8 @@ var app = new Vue({
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
-        of1: '',
-        ofd1: '',
+        of1: _this.of1,
+        ofd1: _this.ofd1,
         of2: '',
         ofd2: '',
         page: _this.pg,

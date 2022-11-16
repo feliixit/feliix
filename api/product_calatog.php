@@ -140,6 +140,19 @@ if($of1 != "" && $of1 != "0")
             else
                 $sOrder = "Coalesce(p.updated_at, '9999-99-99') ";
             break;  
+        case 4:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce(p.srp_max, 0.00) desc";
+            else
+                $sOrder = "Coalesce(p.srp_min, 99999999.99) ";
+            break;  
+
+        case 5:
+            if($ofd1 == 2)
+                $sOrder = "Coalesce(p.qp_max, 0.00) desc";
+            else
+                $sOrder = "Coalesce(p.qp_min, 99999999.99) ";
+            break;  
         
         default:
     }
@@ -166,6 +179,18 @@ if($of2 != "" && $of2 != "0" && $sOrder != "")
                 $sOrder .= ", Coalesce(p.updated_at, '0000-00-00') desc";
             else
                 $sOrder .= ", Coalesce(p.updated_at, '9999-99-99') ";
+            break;  
+        case 4:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce(p.srp_max, 0.00) desc";
+            else
+                $sOrder .= ", Coalesce(p.srp_min, 99999999.99) ";
+            break;  
+        case 5:
+            if($ofd2 == 2)
+                $sOrder .= ", Coalesce(p.qp_max, 0.00) desc";
+            else
+                $sOrder .= ", Coalesce(p.qp_min, 99999999.99) ";
             break;  
      
         default:
@@ -194,6 +219,18 @@ if($of2 != "" && $of2 != "0" && $sOrder == "")
                 $sOrder = "Coalesce(p.updated_at, '0000-00-00') desc";
             else
                 $sOrder = "Coalesce(p.updated_at, '9999-99-99') ";
+            break;  
+        case 4:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce(p.srp_max, 0.00) desc";
+            else
+                $sOrder = "Coalesce(p.srp_min, 99999999.99) ";
+            break;  
+        case 5:
+            if($ofd2 == 2)
+                $sOrder = "Coalesce(p.qp_max, 0.00) desc";
+            else
+                $sOrder = "Coalesce(p.qp_min, 99999999.99) ";
             break;  
      
         default:
