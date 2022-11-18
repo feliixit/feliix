@@ -346,7 +346,7 @@ var app = new Vue({
           can_save = true;
       }
 
-      if (this.my_title == "ASSISTANT SERVICE MANAGER") { // 20220321 for service leave
+      if (this.my_title == "ASSISTANT SERVICE MANAGER" || "ASSISTANT LIGHTING MANAGER") { // 20220321 for service leave
         if (
           _creator_title != "MANAGING DIRECTOR" &&
           _creator_title != "CHIEF ADVISOR" &&

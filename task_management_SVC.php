@@ -59,6 +59,11 @@ try {
         {
             $access6 = true;
         }
+
+        if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER')
+        {
+            $access6 = true;
+        }
     }
 
     if(trim(strtoupper($department)) == 'OFFICE')
