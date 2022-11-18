@@ -119,6 +119,8 @@ var app = new Vue({
     view_d: false,
     view_e: false,
     view_f: false,
+
+    view_proof : false,
   },
 
   created() {
@@ -245,6 +247,19 @@ var app = new Vue({
   },
 
   methods: {
+    show_proof : function() {
+    
+      if(this.record.special == 's')
+        this.view_proof = false;
+      else
+        this.view_proof = true;
+
+      if(this.username.toLowerCase() ==='dennis lin' || this.username.toLowerCase() ==='kristel tan' || this.username.toLowerCase() ==='glendon wendell co' || this.username.toLowerCase() ==='kuan')
+        this.view_proof = true;
+
+
+    },
+
     setPages() {
       console.log("setPages");
       this.pages = [];
@@ -483,6 +498,8 @@ var app = new Vue({
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
+
+      this.show_proof();
 
       this.$refs.mask.style.display = "block";
       this.view_detail = true;
@@ -1896,6 +1913,8 @@ var app = new Vue({
       this.view_detail = false;
       this.$refs.mask.style.display = "none";
       this.view_c = false;
+
+      this.view_proof = false;
     },
 
     prof_create() {

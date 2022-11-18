@@ -40,6 +40,8 @@ var app = new Vue({
     check_number:'',
     bank_account:'',
 
+    view_proof : false,
+
   },
 
   created() {
@@ -181,6 +183,20 @@ var app = new Vue({
       if(pages_10.length > 0)
         this.pages_10 = pages_10;
 
+    },
+
+    show_proof : function() {
+    
+      if(this.record.special == 's')
+        this.view_proof = false;
+      else
+        this.view_proof = true;
+
+      if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='kristel tan' || this.name.toLowerCase() ==='glendon wendell co' || this.name.toLowerCase() ==='kuan')
+        this.view_proof = true;
+
+      if(this.record.username.toLowerCase() == this.name.toLowerCase())
+        this.view_proof = true;
     },
 
     getLeaveCredit: function(page) {
@@ -402,6 +418,8 @@ var app = new Vue({
       this.record = this.shallowCopy(
         this.receive_records.find((element) => element.id == this.proof_id)
       );
+
+      this.show_proof();
 
       this.payment_method = '';
       this.bank_name = '';
@@ -648,6 +666,8 @@ var app = new Vue({
       this.submit = false;
       this.view_detail = false;
       this.who_detail = false;
+
+      this.view_proof = false;
 
       this.receive_records = [];
       this.record = {};

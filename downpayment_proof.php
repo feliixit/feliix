@@ -279,7 +279,7 @@ $(function(){
                     <ul>
                         <li class="head">Proof Files</li>
                         <li>
-                            <span v-for="item in record.items">
+                            <span v-for="item in record.items" v-if="view_proof">
                                 <a :href="baseURL + item.gcp_name" target="_blank">{{item.filename}}</a>&nbsp&nbsp
                             </span>
                         </li>
