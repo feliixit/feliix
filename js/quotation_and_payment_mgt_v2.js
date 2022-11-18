@@ -257,8 +257,7 @@ var app = new Vue({
       if(this.username.toLowerCase() ==='dennis lin' || this.username.toLowerCase() ==='kristel tan' || this.username.toLowerCase() ==='glendon wendell co' || this.username.toLowerCase() ==='kuan')
         this.view_proof = true;
 
-      if(this.record.username.toLowerCase() == this.username.toLowerCase())
-        this.view_proof = true;
+
     },
 
     setPages() {
