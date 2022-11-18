@@ -582,8 +582,8 @@
 
         <div class="lower_section" v-if="(notes != null && notes != '') || description != ''">
             <h5>Description</h5>
-            <p>
-                {{ description }}
+            <p style="white-space: pre;">
+{{ description }}
             </p>
 
             <p v-if="notes != null && notes != ''">
