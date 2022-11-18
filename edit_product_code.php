@@ -705,6 +705,7 @@
         <option value="DIMMER">DIMMER</option>
         <option value="DIRECTIONAL">DIRECTIONAL</option>
         <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
+        <option value="DMX">DMX</option>		
         <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
         <option value="FLOOD LIGHT">FLOOD LIGHT</option>
         <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
@@ -718,6 +719,7 @@
         <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
         <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
         <option value="STAGE LIGHT">STAGE LIGHT</option>
+        <option value="SWITCH">SWITCH</option>
         <option value="TRACK BAR">TRACK BAR</option>
         <option value="TRACK LIGHT">TRACK LIGHT</option>
         <option value="TROFFER LIGHT">TROFFER LIGHT</option>
