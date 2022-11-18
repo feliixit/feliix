@@ -107,6 +107,7 @@ $query = "SELECT pm.id,
                     ORDER  BY created_at DESC
                     LIMIT  1), pm.estimate_close_prob) estimate_close_prob,
             user.username,
+            pm.special,
             Date_format(pm.created_at, '%Y-%m-%d')       created_at,
             Date_format(pm.updated_at, '%Y-%m-%d')       updated_at,
             Coalesce((SELECT project_stage.stage
@@ -386,6 +387,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $final_amount = $row['final_amount'];
     $tax_withheld = $row['tax_withheld'];
     $billing_name = $row['billing_name'];
+    $special = $row['special'];
 
     $quote_file_string = GetQuoteFileString($row['id'], $db);
 
@@ -465,6 +467,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "dpm" => $dpm,
         "expense" => $expense,
         "quote_file_string" => $quote_file_string,
+        "special" => $special,
         "cnt" => $cnt,
     );
 }
