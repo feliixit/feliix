@@ -94,7 +94,7 @@ if($_record[0]["detail"] != $detail)
 
 
 try{
-    $query = "update project_other_task
+    $query = "update project_other_task_l
     SET
         `title` = :title,
         `priority` = :priority,
@@ -190,6 +190,7 @@ function GetOrderType($order_type)
         case 'sample':
             $order_type_name = "Order - Sample";
             break;
+ 
     }
 
     return $order_type_name;
@@ -248,7 +249,7 @@ function SendNotifyMail01($last_id, $old_status_id, $order_type, $order_name)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify01_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
+    task_notify01_type_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, $order_type, $order_name, "LT");
 
 }
 
@@ -306,7 +307,7 @@ function SendNotifyMail02($last_id, $old_status_id, $order_type, $order_name)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify02_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
+    task_notify02_type_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, $order_type, $order_name, "LT");
 
 }
 
@@ -322,7 +323,7 @@ function GetTaskDetail($id, $db)
             stage,
             (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
             detail
-            FROM project_other_task pt
+            FROM project_other_task_l pt
             LEFT JOIN project_stages ps ON pt.stage_id = ps.id
             LEFT JOIN project_stage psg ON ps.stage_id = psg.id
             left JOIN project_main pm ON ps.project_id = pm.id 
@@ -345,7 +346,7 @@ function GetTaskDetail($id, $db)
 function GetTaskDetailOrg($id, $db)
 {
     $sql = "SELECT *
-            FROM project_other_task pt
+            FROM project_other_task_l pt
 
             WHERE pt.id = :id";
 

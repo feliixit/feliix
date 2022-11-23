@@ -80,22 +80,19 @@ $query = "SELECT pm.id,
                 pm.status, 
                 pm.task_id,
                 pm.order_type,
-                p.project_name,
-                p.id as project_id,
-                ps.id as stage_id,
+                pm.task_type stage_id,
+                pm.task_id project_id,
                 pm.serial_name,
-                pm.task_type,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
                 DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at
           FROM od_main pm 
-                left join project_other_task pot on pm.task_id = pot.id
-                left join project_stages ps on pot.stage_id = ps.id
+           
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                left join project_main p on ps.project_id = p.id
-                where pm.status <> -1 ";
+                where pm.status <> -1 and pm.task_type <> '' 
+                ";
 
 if($id != 0){
     $query .= " and pm.id = $id ";
@@ -112,10 +109,6 @@ if($fpc != "")
     $query = $query . " and p.create_id = " . $fpc . " ";
 }
 
-if($fg != "")
-{
-    $query = $query . " and p.group_id = " . $fg . " ";
-}
 
 if($kind != "")
 {
@@ -123,10 +116,7 @@ if($kind != "")
 }
 
 
-if($fc != "")
-{
-    $query = $query . " and p.catagory_id = " . $fc . " ";
-}
+
 
 $sOrder = "";
 if($op1 != "" && $op1 != "0")
@@ -234,7 +224,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $order_type = $row['order_type'];
     $project_id = $row['project_id'];
     $stage_id = $row['stage_id'];
-    $project_name = $row['project_name'];
+   
     $serial_name = $row['serial_name'];
  
     $created_by = $row['created_by'];
@@ -242,13 +232,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
 
-    $task_type = $row['task_type'];
-
-    if($task_type != "")
-    {
-        $project_name = GetTaskDetail($task_id, $task_type, $db);
-        $stage_id = $task_id;
-    }
+    $project_name = GetTaskDetail($task_id, $stage_id, $db);
  
     $merged_results[] = array(
         "is_edited" => 1,
@@ -267,7 +251,6 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "created_at" => $created_at,
         "updated_at" => $updated_at,
  
-        "task_type" => $task_type,
      
     );
 }
@@ -314,7 +297,5 @@ function GetTaskDetail($task_id, $task_type, $db)
   
     return $title;
 }
-
-
 
 ?>

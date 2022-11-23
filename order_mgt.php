@@ -395,7 +395,7 @@ header( 'location:index' );
                                         <option value="">Order – Warehouse</option>
                                         <option value="">Order – 3rd Party</option>
                                         <option value="">Order – Mockup</option>
-                                        <option value="">Order – Stocks</option>
+                                        <option value="stock">Order – Stocks</option>
                                     </select>
                                 </dd>
 
@@ -567,21 +567,25 @@ header( 'location:index' );
                         <li>{{ receive_record.serial_name }}</li>
 
                         <li>
-                            <a v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_p1?id=' + receive_record.id">{{
+                            <a v-if="receive_record.order_type == 'taiwan'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_p1?id=' + receive_record.id">{{
+                                receive_record.od_name }}</a>
+                            <a v-if="receive_record.order_type == 'stock'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_stock_p1?id=' + receive_record.id">{{
                                 receive_record.od_name }}</a>
                             <input name="title" type="text"
                                    v-show="receive_record.is_edited == 0"
                                    v-model="title" maxlength="1024"></li>
 
-                        <li> {{ receive_record.order_type == 'taiwan' ? 'Order – Taiwan' : '' }} </li>
+                        <li v-if="receive_record.order_type == 'taiwan'">Order – Taiwan</li><li v-if="receive_record.order_type == 'stock'">Order – Stocks</li>
 
                         <li>{{ receive_record.status == 0 ? 'Ongoing' : (receive_record.status == 1 ? 'Pending' : 'Completed') }}</li>
 
                         <li>
-                            <a v-show="receive_record.is_edited == 1"
+                            <a v-if="receive_record.task_type == ''" v-show="receive_record.is_edited == 1"
                                v-bind:href="'project03_other?sid='+ receive_record.stage_id">Project: {{ receive_record.project_name }}
                             </a>
-                          
+                            <a v-if="receive_record.task_type != ''" v-show="receive_record.is_edited == 1"
+                               v-bind:href="'task_management_' + receive_record.task_type + '?sid='+ receive_record.stage_id">Project: {{ receive_record.project_name }}
+                            </a>
                             <!--
                             <select name="project_name" v-show="receive_record.is_edited == 0"
                                     class="limitedNumbChosen"
