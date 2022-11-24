@@ -14,6 +14,9 @@ include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
+
+include_once 'mail.php';
+
 use \Firebase\JWT\JWT;
 if ( !isset( $jwt ) ) {
     http_response_code(401);
@@ -66,6 +69,9 @@ try{
 
     $jsonEncodedReturnArray = "";
     if ($stmt->execute()) {
+
+        SendNotifyMail($task_id_to_del);
+
         $returnArray = array('ret' => $task_id_to_del);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
     }
@@ -82,3 +88,74 @@ catch (Exception $e)
     error_log($e->getMessage());
 }
 
+
+function SendNotifyMail($last_id)
+{
+    $project_name = "";
+    $task_name = "";
+    $stages_status = "";
+    $create_id = "";
+
+    $assignee = "";
+    $collaborator = "";
+
+    $due_date = "";
+    $detail = "";
+
+    $stage_id = 0;
+
+    $_record = array();
+
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $_record = GetTaskDetail($last_id, $db);
+ 
+    $project_name = $_record[0]["project_name"];
+    $task_name = $_record[0]["task_name"];
+    $stages_status = $_record[0]["stages_status"];
+    $stages = $_record[0]["stage"];
+    $create_id = $_record[0]["create_id"];
+    $created_at = $_record[0]["created_at"];
+    $assignee = $_record[0]["assignee"];
+    $collaborator = $_record[0]["collaborator"];
+
+    $due_date = str_replace("-", "/", $_record[0]["due_date"]);
+    $detail = $_record[0]["detail"];
+
+    $stage_id = $_record[0]["stage_id"];
+  
+
+    task_notify_r("del", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at);
+
+}
+
+function GetTaskDetail($id, $db)
+{
+    $sql = "SELECT ps.id stage_id, project_name, title task_name, 
+    (CASE `stages_status_id` WHEN '1' THEN 'Ongoing' WHEN '2' THEN 'Pending' WHEN '3' THEN 'Close' END ) as `stages_status`, 
+    pt.created_at,
+    pt.create_id,
+    pt.assignee,
+    pt.collaborator,
+    due_date,
+    stage,
+    detail
+    FROM project_other_task_r pt
+    LEFT JOIN project_stages ps ON pt.stage_id = ps.id
+    LEFT JOIN project_stage psg ON ps.stage_id = psg.id
+    left JOIN project_main pm ON ps.project_id = pm.id 
+            WHERE pt.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
