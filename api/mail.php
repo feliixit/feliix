@@ -3947,6 +3947,14 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
             break;
     }
 
+    $task_department = "";
+    if($task_type == 'LT') 
+        $task_department = "Lighting";
+    if($task_type == 'OS') 
+        $task_department = "Office Systems";
+    if($task_type == 'SLS') 
+        $task_department = "Sales";
+
     $conf = new Conf();
 
     $mail = new PHPMailer();
@@ -4031,8 +4039,8 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name: " . $project_name . "</p>";
-    $content = $content . "<p>Stage: " . $stages_status . "</p>";
+    $content = $content . "<p>Task Management of " . $task_department . " Department</p>";
+    //$content = $content . "<p>Stage: " . $stages_status . "</p>";
 
     //如果是訂單任務，執行下三行
     $content = $content . "<p>Order Task: " . $task_name . "</p>";
@@ -5507,6 +5515,14 @@ if($stage == "Order")
     
 }
 
+$task_department = "";
+if($task_type == 'LT') 
+    $task_department = "Lighting";
+if($task_type == 'OS') 
+    $task_department = "Office Systems";
+if($task_type == 'SLS') 
+    $task_department = "Sales";
+
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
@@ -5522,8 +5538,7 @@ if($stage == "Order")
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name: " . $project_name . "</p>";
-    $content = $content . "<p>Stage: " . $stage . "</p>";
+    $content = $content . "<p>Task Management of " . $task_department . " Department</p>";
 
     //如果是普通任務，執行下一行
     //$content = $content . "<p>Task: " . $task_name . "</p>";
@@ -6032,6 +6047,14 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
         
     }
 
+    $task_department = "";
+    if($task_type == 'LT') 
+        $task_department = "Lighting";
+    if($task_type == 'OS') 
+        $task_department = "Office Systems";
+    if($task_type == 'SLS') 
+        $task_department = "Sales";
+
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
@@ -6050,8 +6073,7 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
-    $content = $content . "<p>Project Name: " . $project_name . "</p>";
-    $content = $content . "<p>Stage: " . $stage . "</p>";
+    $content = $content . "<p>Task Management of " . $task_department . " Department</p>";
     //$content = $content . "<p>Task: " . $task_name . "</p>";
 
     //如果是普通任務，執行下一行

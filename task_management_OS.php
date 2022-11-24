@@ -3106,7 +3106,7 @@ catch (Exception $e) {
                                 <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
                             </li>
                             <li v-if="receive_record.order.length == 0"><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
-                            <li v-if="receive_record.order.length > 0"><a @click="show_detail(receive_record.task_id)" style="color: rgb(253,183,47);">{{ receive_record.title }}</a><a :href="(receive_record.order[0].order_type == 'stock' ? 'order_taiwan_stock_p1' : 'order_taiwan_p1') + '?id=' + receive_record.order[0].id" style="color: rgb(253,183,47);">{{ receive_record.order[0].order_type == 'stock' ? 'Order – Stocks' : ''}} {{ receive_record.order[0].od_name }}</a></li>
+                            <li v-if="receive_record.order.length > 0"><a @click="show_detail(receive_record.task_id)" style="color: rgb(253,183,47);">{{ receive_record.title }}</a><!-- <a :href="(receive_record.order[0].order_type == 'stock' ? 'order_taiwan_stock_p1' : 'order_taiwan_p1') + '?id=' + receive_record.order[0].id" style="color: rgb(253,183,47);">{{ receive_record.order[0].order_type == 'stock' ? 'Order – Stocks' : ''}} {{ receive_record.order[0].od_name }}</a>--></li>
                             <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
                             <li>{{ receive_record.creator }}</li>
                             <li>{{ receive_record.nearest_user }}<br>{{ receive_record.nearest_time }}</li>
@@ -3149,7 +3149,7 @@ catch (Exception $e) {
                             <!-- 如果是訂單類的任務，需要多出 Order Name欄位，內容值的範例: LOTW-0001 LIGHTING FIXTURE -->
                             <ul v-if="receive_record.order.length > 0">
                                 <li><b>Order Name</b></li>
-                                <li><a style="color: #25a2b8" :href="'order_taiwan_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a></li>
+                                <li><a style="color: #25a2b8" :href="(receive_record.order[0].order_type == 'stock' ? 'order_taiwan_stock_p1' : 'order_taiwan_p1') + '?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }}</a></li>
                             </ul>
 
                             <ul>

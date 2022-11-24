@@ -387,6 +387,16 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
+                                <dt>Which Department's Task Management</dt>
+                                <dd>
+                                    <select v-model="fil_task_type">
+                                        <option value=""></option>
+                                        <option value="l">Lighting Department</option>
+                                        <option value="o">Office Systems Department</option>
+                                        <option value="s">Sales Department</option>
+                                    </select>
+                                </dd>
+
                                 <dt>Order Type</dt>
                                 <dd>
                                     <select v-model="fil_kind">
@@ -584,7 +594,7 @@ header( 'location:index' );
                                v-bind:href="'project03_other?sid='+ receive_record.stage_id">Project: {{ receive_record.project_name }}
                             </a>
                             <a v-if="receive_record.task_type != ''" v-show="receive_record.is_edited == 1"
-                               v-bind:href="'task_management_' + receive_record.task_type + '?sid='+ receive_record.stage_id">Project: {{ receive_record.project_name }}
+                               v-bind:href="'task_management_' + receive_record.task_type + '?sid='+ receive_record.stage_id">{{ (receive_record.task_type == 'LT' ? 'Lighting' : (receive_record.task_type == 'OS' ? 'Office Systems' : (receive_record.task_type == 'SLS' ? 'Sales' : ''))) }} Department Task Management : {{ receive_record.project_name }}
                             </a>
                             <!--
                             <select name="project_name" v-show="receive_record.is_edited == 0"

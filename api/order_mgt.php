@@ -69,7 +69,14 @@ $size = (isset($_GET['size']) ?  urldecode($_GET['size']) : "");
 
 $kind = (isset($_GET['kind']) ?  urldecode($_GET['kind']) : "");
 
-$type = (isset($_GET['type']) ?  urldecode($_GET['type']) : '');
+$tp = (isset($_GET['tp']) ?  urldecode($_GET['tp']) : '');
+
+if($tp == "l")
+ $tp="LT";
+if($tp == "o")
+ $tp="OS";
+if($tp == "s")
+ $tp="SLS";
 
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 
@@ -120,6 +127,11 @@ if($fg != "")
 if($kind != "")
 {
     $query = $query . " and pm.order_type = '" . $kind . "' ";
+}
+
+if($tp != "")
+{
+    $query = $query . " and pm.task_type = '" . $tp . "' ";
 }
 
 
