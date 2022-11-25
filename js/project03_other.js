@@ -1866,7 +1866,7 @@ var app = new Vue({
       form_Data.append('title', this.record_r.title.trim());
       form_Data.append('priority', 0);
       form_Data.append('status', 0);
-      form_Data.append('assignee', Array.prototype.map.call(this.record_r.assignee_id, function(item) { return item.id; }).join(","));
+      form_Data.append('assignee', Array.prototype.map.call(this.record_r.assignee, function(item) { return item.id; }).join(","));
       form_Data.append('collaborator', '');
       form_Data.append('due_date', '');
       form_Data.append('detail', this.record_r.detail.trim());
@@ -2337,6 +2337,9 @@ var app = new Vue({
       var myArr = this.arrTask_r[task_id];
       var _this = this;
 
+      if(myArr != undefined)
+     {
+
       //循环文件数组挨个上传
       myArr.forEach((element, index) => {
         var config = {
@@ -2382,9 +2385,9 @@ var app = new Vue({
             console.log(err);
           });
       });
-
+    }
       this.taskCanSub_r[task_id] = true;
-
+      this.getProjectOtherTask_r(_this.stage_id);
     },
 
     msg_create(item_id, msg_id) {

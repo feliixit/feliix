@@ -3764,12 +3764,12 @@ function task_notify_r($request_type, $project_name, $task_name, $stages_status,
     $content = $content . $tab;
     $content = $content . "<p>Project Name: " . $project_name . "</p>";
     $content = $content . "<p>Stage: " . $stages_status . "</p>";
-    $content = $content . "<p>Message: " . $task_name . "</p>";
+    $content = $content . "<p>Message Title: " . $task_name . "</p>";
     $content = $content . "<p>Creator: " . $creators . "</p>";
     $content = $content . "<p>Assignee: " . $assignees . "</p>";
-    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    //$content = $content . "<p>Collaborator: " . $collaborators . "</p>";
     $content = $content . "<p>Created at: " . $created_at . "</p>";
-    $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    //$content = $content . "<p>Due Date: " . $due_date . "</p>";
     $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
@@ -4352,7 +4352,7 @@ function message_notify_r($request_type, $project_name, $task_name, $stages, $cr
     $content = $content . $tab;
     $content = $content . "<p>Project Name: " . $project_name . "</p>";
     $content = $content . "<p>Stage: " . $stages . "</p>";
-    $content = $content . "<p>Message: " . $task_name . "</p>";
+    $content = $content . "<p>Message Title: " . $task_name . "</p>";
     if($request_type == "create")
     {
         $content = $content . "<p>Creator: " . $username . " at " . $created_at . "</p>";
@@ -5286,7 +5286,7 @@ if($stage == "Order")
     $content = $content . "<p>Stage: " . $stage . "</p>";
 
     //如果是普通任務，執行下一行
-    $content = $content . "<p>Message: " . $task_name . "</p>";
+    $content = $content . "<p>Message Title: " . $task_name . "</p>";
  
 
     //如果是訂單任務，執行下兩行
@@ -5295,7 +5295,7 @@ if($stage == "Order")
 
     $content = $content . "<p>Creator: " . $creators . "</p>";
     $content = $content . "<p>Assignee: " . $assignees . "</p>";
-    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    //$content = $content . "<p>Collaborator: " . $collaborators . "</p>";
 
     $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
@@ -5706,7 +5706,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
 }
 
 
-function task_notify02_r($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
+function task_notify02_r($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $created_at, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
 
     //$tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
@@ -5802,10 +5802,10 @@ function task_notify02_r($old_status, $task_status, $project_name, $task_name, $
     $content = $content . $tab;
     $content = $content . "<p>Project Name: " . $project_name . "</p>";
     $content = $content . "<p>Stage: " . $stage . "</p>";
-    $content = $content . "<p>Message: " . $task_name . "</p>";
+    $content = $content . "<p>Message Title: " . $task_name . "</p>";
 
     //如果是普通任務，執行下一行
-    $content = $content . "<p>Task: " . $task_name . "</p>";
+    //$content = $content . "<p>Task: " . $task_name . "</p>";
     //如果是訂單任務，執行下一行
     //$content = $content . "<p>Order Task: " . $task_name . "</p>";
 
@@ -5820,8 +5820,8 @@ function task_notify02_r($old_status, $task_status, $project_name, $task_name, $
 
     $content = $content . "<p>Creator: " . $creators . "</p>";
     $content = $content . "<p>Assignee: " . $assignees . "</p>";
-    $content = $content . "<p>Collaborator: " . $collaborators . "</p>";
-    // $content = $content . "<p>Due Date: " . $due_date . "</p>";
+    //$content = $content . "<p>Collaborator: " . $collaborators . "</p>";
+    $content = $content . "<p>Created at: " . $created_at . "</p>";
     $content = $content . "<p>Description: " . $detail . "</p>";
     $content = $content . "<p> </p>";
     $content = $content . "<p>Please click this link to view the target webpage: </p>";
