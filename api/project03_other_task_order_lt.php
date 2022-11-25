@@ -111,8 +111,6 @@ switch ($method) {
             if ($stmt->execute()) {
                 $last_id = $db->lastInsertId();
 
-                // send notify mail
-                SendNotifyMail($last_id, $stage_id, $order_type, $order);
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);
@@ -164,7 +162,8 @@ switch ($method) {
         try {
             // execute the query, also check if query was successful
             if ($stmt->execute()) {
-
+                // send notify mail
+                SendNotifyMail($last_id, $stage_id, $order_type, $serial . " " . $order);
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);

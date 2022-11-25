@@ -66,6 +66,11 @@ $order_type = (isset($_POST['order_type']) ?  $_POST['order_type'] : '');
 
 $_record = GetTaskDetailOrg($task_id, $db);
 
+$serial_name = "";
+$_order = GetOrder($task_id, 'OS', $db);
+if(count($_order)>0)
+    $serial_name = $_order[0]['serial_name'] . " ";
+
 $mail_type = 2;
 
 if($_record[0]["status"] != $status)
@@ -129,10 +134,10 @@ try{
 
         // send notify mail
         if($mail_type == 1)
-            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $od_name);
+            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $serial_name . $od_name);
 
         if($mail_type == 2)
-            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $od_name);
+            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $serial_name . $od_name);
 
         $returnArray = array('batch_id' => $task_id);
        
@@ -354,6 +359,27 @@ function GetTaskDetailOrg($id, $db)
 
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetOrder($task_id, $task_type, $db)
+{
+    $sql = "SELECT *
+            FROM od_main pt
+            WHERE pt.task_id = :task_id
+            AND pt.task_type = :task_type";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':task_id',  $task_id);
+    $stmt->bindParam(':task_type',  $task_type);
     $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
