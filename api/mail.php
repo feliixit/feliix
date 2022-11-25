@@ -7484,7 +7484,7 @@ function order_type_notification($name, $access,  $access_cc, $project_name, $se
                 <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
                     $content = $content . 'Order Type: ' . $order_type . '<br>';
                     $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
-                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
                     $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
                     $content = $content . 'Submitter: ' . $name . '<br>';
                     $content = $content . 'Comment: ' . $remark . '';
@@ -8397,7 +8397,7 @@ function order_type_notification03($name, $access,  $access_cc, $project_name, $
                 <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
                     $content = $content . 'Order Type: ' . $order_type . '<br>';
                     $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
-                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
                     $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
                     $content = $content . 'Submitter: ' . $name . '<br>';
                     $content = $content . '
@@ -9000,7 +9000,7 @@ function order_type_notification03Access7($name, $access,  $access_cc, $project_
                 <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
                     $content = $content . 'Order Type: ' . $order_type . '<br>';
                     $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
-                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
                     $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
                     $content = $content . 'Submitter: ' . $name . '<br>';
                     $content = $content . '
@@ -9383,7 +9383,7 @@ function order_type_notification04($name, $access,  $access_cc, $project_name, $
                 <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
                     $content = $content . 'Order Type: ' . $order_type . '<br>';
                     $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
-                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
                     $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
                     $content = $content . 'Submitter: ' . $name . '<br>';
                     $content = $content . '
