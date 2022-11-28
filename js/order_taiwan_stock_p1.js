@@ -2447,7 +2447,7 @@ var app = new Vue({
   
         axios({
           method: "post",
-          url: "api/order_taiwan_p1_print",
+          url: "api/order_taiwan_stock_p1_print",
           data: form_Data,
           responseType: "blob",
         })

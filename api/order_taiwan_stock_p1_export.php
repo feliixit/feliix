@@ -201,20 +201,17 @@ if($jwt){
                 pm.status, 
                 pm.task_id,
                 pm.order_type,
-                p.project_name,
-                p.id as project_id,
-                ps.id as stage_id,
+                pm.task_type stage_id,
+                pm.task_id project_id,
                 pm.serial_name,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
                 DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at
                 FROM od_main pm 
-                left join project_other_task pot on pm.task_id = pot.id
-                left join project_stages ps on pot.stage_id = ps.id
+              
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                left join project_main p on ps.project_id = p.id
                 where pm.status <> -1 ";
 
         if($id != 0){
@@ -229,8 +226,9 @@ if($jwt){
 
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $od_name = $row['od_name'];
+            $task_id = $row['task_id'];
             $stage_id = $row['stage_id'];
-            $project_name = $row['project_name'];
+            $project_name = GetTaskDetail($task_id, $stage_id, $db);
             $serial_name = $row['serial_name'];
 
         }
@@ -1135,6 +1133,29 @@ function GetProduct($id, $v1, $v2, $v3, $db){
     }
     
     return $price_ntd;
+}
+
+
+function GetTaskDetail($task_id, $task_type, $db)
+{
+    $title = "";
+    $table = "project_other_task_l";
+    if($task_type == 'LT')
+        $table = "project_other_task_l";
+    
+    if($task_type == 'SLS')
+        $table = "project_other_task_sl";
+
+    if($task_type == 'OS')
+        $table = "project_other_task_o";
+
+    $query = "select title from " . $table . " where id = " . $task_id;
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $title = $row['title'];
+  
+    return $title;
 }
 
 ?>
