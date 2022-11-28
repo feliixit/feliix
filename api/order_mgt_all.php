@@ -53,6 +53,7 @@ $query = "SELECT pm.id,
                 p.id as project_id,
                 ps.id as stage_id,
                 pm.serial_name,
+                pm.task_type,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
@@ -86,6 +87,14 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_by = $row['updated_by'];
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
+
+    $task_type = $row['task_type'];
+
+    if($task_type != "")
+    {
+        $project_name = GetTaskDetail($task_id, $task_type, $db);
+        $stage_id = $task_id;
+    }
  
     $merged_results[] = array(
         "is_edited" => 1,
@@ -104,7 +113,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "created_at" => $created_at,
         "updated_at" => $updated_at,
  
-     
+        "task_type" => $task_type,
     );
 }
 
@@ -113,6 +122,29 @@ $filter_result = [];
     $filter_result = $merged_results;
 
 echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
+
+
+function GetTaskDetail($task_id, $task_type, $db)
+{
+    $title = "";
+    $table = "project_other_task_l";
+    if($task_type == 'LT')
+        $table = "project_other_task_l";
+    
+    if($task_type == 'SLS')
+        $table = "project_other_task_sl";
+
+    if($task_type == 'OS')
+        $table = "project_other_task_o";
+
+    $query = "select title from " . $table . " where id = " . $task_id;
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $title = $row['title'];
+  
+    return $title;
+}
 
 
 

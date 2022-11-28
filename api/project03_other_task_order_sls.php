@@ -70,7 +70,7 @@ switch ($method) {
         $order_type = (isset($_POST['order_type']) ?  $_POST['order_type'] : '');
         $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 
-        $query = "INSERT INTO project_other_task
+        $query = "INSERT INTO project_other_task_sl
         SET
             `stage_id` = :stage_id,
             `title` = :title,
@@ -80,6 +80,8 @@ switch ($method) {
             `due_date` = :due_date,
             `due_time` = :due_time,
             `detail` = :detail,
+            `related_kind` = :related_kind,
+            `related_category` = :related_category,
             
             `create_id` = :create_id,
             `created_at` = now()";
@@ -97,6 +99,9 @@ switch ($method) {
         $stmt->bindParam(':due_time', $due_time);
         $stmt->bindParam(':detail', $detail);
 
+        $stmt->bindParam(':related_kind', $order_type);
+        $stmt->bindParam(':related_category', $category);
+
         $stmt->bindParam(':create_id', $uid);
 
         $last_id = 0;
@@ -106,8 +111,7 @@ switch ($method) {
             if ($stmt->execute()) {
                 $last_id = $db->lastInsertId();
 
-                // send notify mail
-                SendNotifyMail($last_id, $stage_id, $order_type, $order);
+                
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);
@@ -117,9 +121,8 @@ switch ($method) {
         }
 
         $serial = 0;
-        $query = "select count(*) + 1 from od_main where order_type = :order_type and SUBSTRING(serial_name, 1, 1) = :category";
+        $query = "select count(*) + 1 from od_main where SUBSTRING(serial_name, 1, 1) = :category";
         $stmt = $db->prepare($query);
-        $stmt->bindParam(':order_type', $order_type);
         $stmt->bindParam(':category', substr($category, 0, 1));
         $stmt->execute();
         $serial = $stmt->fetchColumn();
@@ -130,6 +133,8 @@ switch ($method) {
 
         if($category == 'Lighting')
             $serial = 'LPO-TW-' . $serial;
+
+        $task_type = 'SLS';
     
 
         $query = "INSERT INTO od_main
@@ -138,7 +143,7 @@ switch ($method) {
             `task_id` = :task_id,
             `order_type` = :order_type,
             `serial_name` = :serial_name,
-          
+            `task_type` = :task_type,
             `create_id` = :create_id,
             `created_at` = now()";
 
@@ -150,6 +155,7 @@ switch ($method) {
         $stmt->bindParam(':task_id', $last_id);
         $stmt->bindParam(':order_type', $order_type);
         $stmt->bindParam(':serial_name', $serial);
+        $stmt->bindParam(':task_type', $task_type);
     
         $stmt->bindParam(':create_id', $uid);
 
@@ -157,7 +163,8 @@ switch ($method) {
         try {
             // execute the query, also check if query was successful
             if ($stmt->execute()) {
-
+                // send notify mail
+                SendNotifyMail($last_id, $stage_id, $order_type, $serial . " " . $order);
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);
@@ -215,7 +222,7 @@ function SendNotifyMail($last_id, $stage_id, $order_type, $order_name)
     //$order_type = $_od_main[0]["order_type"];
     //$order_name = $_od_main[0]["order_name"];
 
-    task_notify_order("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, GetOrderType($order_type), $order_name);
+    task_notify_type_order("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, $created_at, GetOrderType($order_type), $order_name, "SLS");
 
 }
 
@@ -230,7 +237,7 @@ function GetTaskDetail($id, $db)
             due_date,
             stage,
             detail
-            FROM project_other_task pt
+            FROM project_other_task_sl pt
             LEFT JOIN project_stages ps ON pt.stage_id = ps.id
             LEFT JOIN project_stage psg ON ps.stage_id = psg.id
             left JOIN project_main pm ON ps.project_id = pm.id 
@@ -277,10 +284,10 @@ function GetOrderType($order_type)
             $order_type_name = "Order - Taiwan";
             break;
         case 'stock':
-            $order_type_name = "Order - Stocks";
+            $order_type_name = "Order – Stocks";
             break;
         case 'sample':
-            $order_type_name = "Order - Sample";
+            $order_type_name = "Order – Samples";
             break;
     }
 

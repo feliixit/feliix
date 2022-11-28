@@ -44,6 +44,7 @@ var app = new Vue({
     fil_lower : '',
     fil_upper : '',
     fil_kind : '',
+    fil_task_type : '',
 
     od_opt1 : '',
     od_ord1 : '',
@@ -126,6 +127,8 @@ var app = new Vue({
               break;
             case "kind":
               _this.fil_kind = decodeURI(tmp[1]);
+            case "tp":
+              _this.fil_task_type = decodeURI(tmp[1]);
               break;
             case "op1":
               _this.od_opt1 = decodeURI(tmp[1]);
@@ -721,6 +724,7 @@ var app = new Vue({
                 fg: _this.fil_group,
                 key: _this.fil_keyword,
                 kind: _this.fil_kind,
+                tp: _this.fil_task_type,
 
                 op1: _this.od_opt1,
                 od1: _this.od_ord1,
@@ -981,6 +985,8 @@ var app = new Vue({
           _this.fil_keyword +
           "&kind=" +
           _this.fil_kind +
+          "&tp=" +
+          _this.fil_task_type +
           "&op1=" +
           _this.od_opt1 +
           "&od1=" +
@@ -1002,10 +1008,12 @@ var app = new Vue({
         this.fil_status = '';
         this.fil_stage = '';
         this.fil_creator = '';
+        
         this.fil_lower = '';
         this.fil_upper = '';
         this.fil_keyword = '';
         this.fil_kind = '';
+        this.fil_task_type = '';
 
         let _this = this;
 
@@ -1024,6 +1032,8 @@ var app = new Vue({
           _this.fil_keyword +
           "&kind=" +
           _this.fil_kind +
+          "&tp=" +
+          _this.fil_task_type +
           "&op1=" +
           _this.od_opt1 +
           "&od1=" +
@@ -1054,6 +1064,8 @@ var app = new Vue({
           _this.fil_keyword +
           "&kind=" +
           _this.fil_kind +
+          "&tp=" +
+          _this.fil_task_type +
           "&op1=" +
           _this.od_opt1 +
           "&od1=" +
@@ -1084,6 +1096,8 @@ var app = new Vue({
           _this.fil_keyword +
           "&kind=" +
           _this.fil_kind +
+          "&tp=" +
+          _this.fil_task_type +
           "&op1=" +
           _this.od_opt1 +
           "&od1=" +

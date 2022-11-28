@@ -387,6 +387,16 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
+                                <dt>Which Department's Task Management</dt>
+                                <dd>
+                                    <select v-model="fil_task_type">
+                                        <option value=""></option>
+                                        <option value="l">Lighting Department</option>
+                                        <option value="o">Office Systems Department</option>
+                                        <option value="s">Sales Department</option>
+                                    </select>
+                                </dd>
+
                                 <dt>Order Type</dt>
                                 <dd>
                                     <select v-model="fil_kind">
@@ -395,7 +405,7 @@ header( 'location:index' );
                                         <option value="">Order – Warehouse</option>
                                         <option value="">Order – 3rd Party</option>
                                         <option value="">Order – Mockup</option>
-                                        <option value="">Order – Stocks</option>
+                                        <option value="stock">Order – Stocks</option>
                                     </select>
                                 </dd>
 
@@ -567,21 +577,25 @@ header( 'location:index' );
                         <li>{{ receive_record.serial_name }}</li>
 
                         <li>
-                            <a v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_p1?id=' + receive_record.id">{{
+                            <a v-if="receive_record.order_type == 'taiwan'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_p1?id=' + receive_record.id">{{
+                                receive_record.od_name }}</a>
+                            <a v-if="receive_record.order_type == 'stock'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_stock_p1?id=' + receive_record.id">{{
                                 receive_record.od_name }}</a>
                             <input name="title" type="text"
                                    v-show="receive_record.is_edited == 0"
                                    v-model="title" maxlength="1024"></li>
 
-                        <li> {{ receive_record.order_type == 'taiwan' ? 'Order – Taiwan' : '' }} </li>
+                        <li v-if="receive_record.order_type == 'taiwan'">Order – Taiwan</li><li v-if="receive_record.order_type == 'stock'">Order – Stocks</li>
 
                         <li>{{ receive_record.status == 0 ? 'Ongoing' : (receive_record.status == 1 ? 'Pending' : 'Completed') }}</li>
 
                         <li>
-                            <a v-show="receive_record.is_edited == 1"
+                            <a v-if="receive_record.task_type == ''" v-show="receive_record.is_edited == 1"
                                v-bind:href="'project03_other?sid='+ receive_record.stage_id">Project: {{ receive_record.project_name }}
                             </a>
-                          
+                            <a v-if="receive_record.task_type != ''" v-show="receive_record.is_edited == 1"
+                               v-bind:href="'task_management_' + receive_record.task_type + '?sid='+ receive_record.stage_id">{{ (receive_record.task_type == 'LT' ? 'Lighting' : (receive_record.task_type == 'OS' ? 'Office Systems' : (receive_record.task_type == 'SLS' ? 'Sales' : ''))) }} Department Task Management : {{ receive_record.project_name }}
+                            </a>
                             <!--
                             <select name="project_name" v-show="receive_record.is_edited == 0"
                                     class="limitedNumbChosen"

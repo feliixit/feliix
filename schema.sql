@@ -3251,3 +3251,43 @@ srp_min = (select min(p.price) from product p where p.product_id = pc.id ),
 qp_max = (select max(p.quoted_price) from product p where p.product_id = pc.id ),
 qp_min = (select min(p.quoted_price) from product p where p.product_id = pc.id ) 
  where (select count(*) from product p where p.product_id = pc.id ) > 0;
+
+ -- 20221118
+ALTER TABLE project_other_task_l
+ADD COLUMN `related_order` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE project_other_task_l
+ADD COLUMN `related_tab` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_l
+ADD COLUMN `related_kind` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_l
+ADD COLUMN `related_category` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE od_main
+ADD COLUMN `task_type` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE project_other_task_o
+ADD COLUMN `related_order` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE project_other_task_o
+ADD COLUMN `related_tab` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_o
+ADD COLUMN `related_kind` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_o
+ADD COLUMN `related_category` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_sl
+ADD COLUMN `related_order` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE project_other_task_sl
+ADD COLUMN `related_tab` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_sl
+ADD COLUMN `related_kind` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_sl
+ADD COLUMN `related_category` VARCHAR(64) DEFAULT '';

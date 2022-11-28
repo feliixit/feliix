@@ -66,6 +66,11 @@ $order_type = (isset($_POST['order_type']) ?  $_POST['order_type'] : '');
 
 $_record = GetTaskDetailOrg($task_id, $db);
 
+$serial_name = "";
+$_order = GetOrder($task_id, 'LT', $db);
+if(count($_order)>0)
+    $serial_name = $_order[0]['serial_name'] . " ";
+
 $mail_type = 2;
 
 if($_record[0]["status"] != $status)
@@ -94,7 +99,7 @@ if($_record[0]["detail"] != $detail)
 
 
 try{
-    $query = "update project_other_task
+    $query = "update project_other_task_l
     SET
         `title` = :title,
         `priority` = :priority,
@@ -129,10 +134,10 @@ try{
 
         // send notify mail
         if($mail_type == 1)
-            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
+            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $serial_name . $od_name);
 
         if($mail_type == 2)
-            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
+            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $serial_name . $od_name);
 
         $returnArray = array('batch_id' => $task_id);
        
@@ -190,6 +195,7 @@ function GetOrderType($order_type)
         case 'sample':
             $order_type_name = "Order - Sample";
             break;
+ 
     }
 
     return $order_type_name;
@@ -248,7 +254,7 @@ function SendNotifyMail01($last_id, $old_status_id, $order_type, $order_name)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify01_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
+    task_notify01_type_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, $order_type, $order_name, "LT");
 
 }
 
@@ -306,7 +312,7 @@ function SendNotifyMail02($last_id, $old_status_id, $order_type, $order_name)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify02_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
+    task_notify02_type_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, $order_type, $order_name, "LT");
 
 }
 
@@ -322,7 +328,7 @@ function GetTaskDetail($id, $db)
             stage,
             (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
             detail
-            FROM project_other_task pt
+            FROM project_other_task_l pt
             LEFT JOIN project_stages ps ON pt.stage_id = ps.id
             LEFT JOIN project_stage psg ON ps.stage_id = psg.id
             left JOIN project_main pm ON ps.project_id = pm.id 
@@ -345,7 +351,7 @@ function GetTaskDetail($id, $db)
 function GetTaskDetailOrg($id, $db)
 {
     $sql = "SELECT *
-            FROM project_other_task pt
+            FROM project_other_task_l pt
 
             WHERE pt.id = :id";
 
@@ -353,6 +359,28 @@ function GetTaskDetailOrg($id, $db)
 
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+
+function GetOrder($task_id, $task_type, $db)
+{
+    $sql = "SELECT *
+            FROM od_main pt
+            WHERE pt.task_id = :task_id
+            AND pt.task_type = :task_type";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':task_id',  $task_id);
+    $stmt->bindParam(':task_type',  $task_type);
     $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
