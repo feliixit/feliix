@@ -38,7 +38,8 @@ try {
 
         $leave_level = $decoded->data->leave_level;
 
-        $valid_date = new DateTime('2022-12-01');
+        $valid_date = new DateTime('2022-11-29');
+        $pre_valid_date = new DateTime('2022-12-01');
         $all_valid_date = new DateTime('2023-01-01');
         $today = new DateTime();
             
@@ -326,7 +327,7 @@ try {
                 <a class="list">Leave</a>
                 <?php 
                     }
-                    else if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
+                    else if(($leave_level == 'B' || $leave_level == 'C') && $today >= $pre_valid_date)
                     {
                 ?>
                 <a class="list">Leave</a>

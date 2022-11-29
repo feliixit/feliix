@@ -31,6 +31,8 @@ var app = new Vue({
     is_manager: 0,
 
     file: '',
+
+    max_start_date: '2022-12-31 23:59:59',
   },
 
   created () {

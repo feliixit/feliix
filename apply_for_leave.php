@@ -221,7 +221,7 @@ $(function(){
                         <ul style="display:flex;">
                             <li class="head" style="border-top-left-radius: 0px; border-bottom-left-radius: 12px; line-height: 36px;">End Time</li>
                             <li style="flex-grow:1; flex-shrink:1;">
-                            <input type="datetime-local" v-model="apply_end" style="width: 100%; border: 2px solid var(--pri01a);" />
+                            <input type="datetime-local" :max="max_start_date" v-model="apply_end" style="width: 100%; border: 2px solid var(--pri01a);" />
                             </li>
                         </ul>
                     </div>
