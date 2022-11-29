@@ -324,7 +324,7 @@ try {
                 <a class="list">Leave</a>
                 <?php 
                     }
-                    else if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
+                    else if(($leave_level == 'B' || $leave_level == 'C') && $today >= '2022-12-01')
                     {
                 ?>
                 <a class="list">Leave</a>

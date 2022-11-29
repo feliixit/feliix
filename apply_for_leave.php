@@ -9,7 +9,7 @@ try {
 
         $leave_level = $decoded->data->leave_level;
 
-        $valid_date = new DateTime('2022-11-29');
+        $valid_date = new DateTime('2022-12-01');
         $all_valid_date = new DateTime('2023-01-01');
         $today = new DateTime();
 
