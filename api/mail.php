@@ -8795,7 +8795,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 }
 
 
-function order_type_notification03($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $02)
+function order_type_notification03($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $type)
 {
     $conf = new Conf();
 
