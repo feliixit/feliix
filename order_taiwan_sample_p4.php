@@ -1333,7 +1333,7 @@ try {
 
         <div class="tags">
             <a class="tag A" @click="p1()">Preliminary</a>
-            <a class="tag B" @click="p2()">For Approval</a>
+        
             <a class="tag C" @click="p3()">Approved</a>
             <a class="tag D focus">Overview</a>
         </div>
@@ -1348,7 +1348,7 @@ try {
                         <th><i class="micons">view_list</i></th>
                         <th>#</th>
                         <th>Preliminary</th>
-                        <th>For Approval</th>
+                
                         <th>Approved</th>
                         <th>Status</th>
                         <th>Brand</th>
@@ -1373,7 +1373,7 @@ try {
                         <td><input type="checkbox" class="alone" :value="item.index" :true-value="1" v-model:checked="item.is_checked"></td>
                         <td> {{item.serial_number}} </td>
                         <td>{{item.status <= 1 ? '●' : ''}}</td>
-                        <td>{{item.status == 2 ? '●' : ''}}</td>
+                     
                         <td>{{item.status >= 3 ? '●' : ''}}</td>
                         <td>
                             <div class="read_block" v-if="!item.is_edit">
