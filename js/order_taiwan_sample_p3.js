@@ -842,7 +842,7 @@ var app = new Vue({
         
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_p1_shipping',
+          url: 'api/order_taiwan_sample_p1_shipping',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",

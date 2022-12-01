@@ -7582,6 +7582,288 @@ function order_type_notification($name, $access,  $access_cc, $project_name, $se
 
 }
 
+
+function order_sample_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $type)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetAccessNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $url = "";
+
+    // preliminary
+    if($action == 'send_note')
+    {
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" need your feedback';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" need your feedback. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p1?id=" . $od_id;
+    }
+        
+    if($action == 'withdraw_note_tw')
+    {
+        $mail->Subject = 'Request for feedback was withdrawn on items of "' . $order_type . ': ' . $serial_name . '" ';
+        $header = 'The request for your feedback was withdrawn on items of  "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p1?id=" . $od_id;
+    }
+
+    if($action == 'approval')
+    {
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" need your approval';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" need your approval. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p2?id=" . $od_id;
+    }
+
+    if($action == 'finish_notes')
+    {
+        $mail->Subject = 'Taiwan office already provided feedback for items of "' . $order_type . ': ' . $serial_name . '"';
+        $header = 'Taiwan office already provided feedback for items of "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p1?id=" . $od_id;
+    }
+
+    // for approve
+    if($action == 'approved')
+    {
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" were approved';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" were already approved and need you to follow. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+    }
+
+    if($action == 'reject')
+    {
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" were rejected';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" were already rejected and need you to follow. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p1?id=" . $od_id;
+    }
+    
+    if($action == 'withdraw')
+    {
+        $mail->Subject = 'Request for approval was withdrawn on items of "' . $order_type . ': ' . $serial_name . '" ';
+        $header = 'The request for your approval was withdrawn on items of  "' . $order_type . ': ' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p1?id=" . $od_id;
+    }
+
+    // APPROVED
+    if($action == 'ordered')
+    {
+        $receiver = "All";
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" are ordered';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" are ordered. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+    }
+
+    // Canceled
+    if($action == 'canceled')
+    {
+        $receiver = "All";
+        $mail->Subject = 'Items of "' . $order_type . ': ' . $serial_name . '" are canceled';
+        $header = 'Items of "' . $order_type . ': ' . $serial_name . '" are canceled. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+    }
+
+    if($action == 'ship_info')
+    {
+        // $receiver = "All";
+        $mail->Subject = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+    }
+
+    if($action == 'ware_info')
+    {
+        // $receiver = "All";
+        $mail->Subject = 'Warehouse info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = 'Warehouse info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+    }
+
+    if($action == 'batch')
+    {
+        $name = "System";
+        $mail->Subject = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
+        $header = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
+        $url = "https://feliix.myvnc.com/order_taiwan_" . $type . "_p3?id=" . $od_id;
+        
+    }
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Order Type: ' . $order_type . '<br>';
+                    $content = $content . 'Order Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Task: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . 'Comment: ' . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Items
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 280px;">
+                    #
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 440px;">
+                    Product Code
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個產品的其他產品 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px;">
+                        ';
+                        $content = $content . $items[$i]['serial_number'] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
+                        ';
+                        $content = $content . $items[$i]['code'] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            /* 最後一個產品 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 280px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['serial_number']  . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $items[$i]['code'] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 function order_notification02($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
 {
     $conf = new Conf();
