@@ -225,7 +225,7 @@ if($jwt){
             $sheet->setCellValue('I1', 'Description');
             $sheet->setCellValue('J1', 'Qty Needed');
             $sheet->setCellValue('K1', 'SRP');
-            $sheet->setCellValue('L1', 'Date Needed by Client');
+            $sheet->setCellValue('L1', 'Date Needed');
             $sheet->setCellValue('M1', 'Shipping Way');
             $sheet->setCellValue('N1', 'ETA');
             $sheet->setCellValue('O1', 'Arrival Date');
