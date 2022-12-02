@@ -453,7 +453,7 @@ var app = new Vue({
             let token = localStorage.getItem('accessToken');
       
             axios
-                .get('api/order_stock_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .get('api/order_sample_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
                   _this.od_name = res.data[0].od_name;
@@ -783,7 +783,7 @@ var app = new Vue({
   
         axios({
           method: "post",
-          url: "api/order_taiwan_stock_p1_export",
+          url: "api/order_taiwan_sample_p1_export",
           data: form_Data,
           responseType: "blob",
         })
@@ -842,7 +842,7 @@ var app = new Vue({
         
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_shipping',
+          url: 'api/order_taiwan_sample_p1_shipping',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -864,15 +864,13 @@ var app = new Vue({
       },
 
     p1() {
-        window.location.href = "order_taiwan_stock_p1?id=" + this.id;
+        window.location.href = "order_taiwan_sample_p1?id=" + this.id;
         },
 
-    p2() {
-        window.location.href = "order_taiwan_stock_p2?id=" + this.id;
-        },
+ 
 
         p4() {
-          window.location.href = "order_taiwan_stock_p4?id=" + this.id;
+          window.location.href = "order_taiwan_sample_p4?id=" + this.id;
         },
         
       approve : async function() {
@@ -898,7 +896,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_approve',
+          url: 'api/order_taiwan_sample_p1_approve',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -941,7 +939,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_order',
+          url: 'api/order_taiwan_sample_p1_order',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -984,7 +982,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_cancel',
+          url: 'api/order_taiwan_sample_p1_cancel',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -1029,7 +1027,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_reject',
+          url: 'api/order_taiwan_sample_p1_reject',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -1959,7 +1957,7 @@ var app = new Vue({
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        url: "api/order_taiwan_stock_p1_delete_message_a",
+        url: "api/order_taiwan_sample_p1_delete_message_a",
         data: form_Data,
       })
         .then(function(response) {
@@ -2134,7 +2132,7 @@ var app = new Vue({
         let token = localStorage.getItem("accessToken");
   
         axios
-          .get("api/order_taiwan_stock_p1_message_a", {
+          .get("api/order_taiwan_sample_p1_message_a", {
             params,
             headers: { Authorization: `Bearer ${token}` },
           })
@@ -2198,7 +2196,7 @@ var app = new Vue({
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
-          url: "api/order_taiwan_stock_p1_message_a",
+          url: "api/order_taiwan_sample_p1_message_a",
           data: form_Data,
         })
           .then(function(response) {
@@ -2376,7 +2374,7 @@ var app = new Vue({
               headers: {
                 "Content-Type": "multipart/form-data",
               },
-              url: "api/order_taiwan_stock_p1_item_update",
+              url: "api/order_taiwan_sample_p1_item_update",
               data: form_Data,
             })
               .then(function(response) {
@@ -2779,7 +2777,7 @@ var app = new Vue({
   
         axios({
           method: "post",
-          url: "api/order_taiwan_stock_p1_print",
+          url: "api/order_taiwan_sample_p1_print",
           data: form_Data,
           responseType: "blob",
         })

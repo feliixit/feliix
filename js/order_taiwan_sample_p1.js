@@ -272,8 +272,6 @@ var app = new Vue({
         product_pages_10_quo: [],
         comment:'',
 
-        charge : [],
-
         // privledge
         access1 : false,
         access2 : false,
@@ -282,11 +280,6 @@ var app = new Vue({
         access5 : false,
         access6 : false,
         access7 : false,
-
-        is_info: false,
-        ship_item: [],
-
-        info_type : '',
 
         od_name : '',
         stage_id : '',
@@ -316,28 +309,31 @@ var app = new Vue({
                  _this.l_id = _this.id;
 
                 break;
-              // case "role":
-              //   var role = tmp[1];
+                // case "role":
+                //   var role = tmp[1];
+  
+                //   if(role == 1)
+                //    _this.access1 = true;
+                  
+                //    if(role == 2)
+                //    _this.access2 = true;
+  
+                //    if(role == 3)
+                //    _this.access3 = true;
+  
+                //    if(role == 4)
+                //    _this.access4 = true;
+  
+                //    if(role == 5)
+                //    _this.access5 = true;
+  
+                //    if(role == 6)
+                //    _this.access6 = true;
 
-              //   if(role == 1)
-              //    _this.access1 = true;
-                
-              //    if(role == 2)
-              //    _this.access2 = true;
-
-              //    if(role == 3)
-              //    _this.access3 = true;
-
-              //    if(role == 4)
-              //    _this.access4 = true;
-
-              //    if(role == 5)
-              //    _this.access5 = true;
-
-              //    if(role == 6)
-              //    _this.access6 = true;
-
-              //   break;
+                //     if(role == 7)
+                //     _this.access7 = true;
+  
+                //   break;
               default:
                 console.log(`Too many args`);
             }
@@ -351,7 +347,6 @@ var app = new Vue({
       this.getUserName();
       this.get_brands();
       this.getUsers();
-      this.getCharge();
       this.getCreators();
       this.getAccess();
       this.getOdMain();
@@ -387,7 +382,6 @@ var app = new Vue({
     },
   
     watch: {
-      
 
       
       department() {
@@ -400,6 +394,7 @@ var app = new Vue({
     },
   
     methods: {
+
       sort_me(type) {
 
         if(type == 1) {
@@ -428,7 +423,7 @@ var app = new Vue({
 
         this.filter_apply_new();
       },
-      
+
       getOdMain: function() {
         let _this = this;
   
@@ -453,10 +448,10 @@ var app = new Vue({
             let token = localStorage.getItem('accessToken');
       
             axios
-                .get('api/order_stock_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .get('api/order_sample_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
-                  _this.od_name = res.data[0].od_name;
+                    _this.od_name = res.data[0].od_name;
                     _this.stage_id = res.data[0].stage_id;
                     _this.project_name = res.data[0].project_name;
                     _this.serial_name = res.data[0].serial_name;
@@ -471,42 +466,7 @@ var app = new Vue({
                     
                 });
         },
-      
-      getAccess: function() {
-        var token = localStorage.getItem('token');
-        var form_Data = new FormData();
-        let _this = this;
-  
-        form_Data.append('jwt', token);
-  
-        axios({
-            method: 'get',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            url: 'api/order_taiwan_p1_access_control',
-            data: form_Data
-        })
-        .then(function(response) {
-            //handle success
-            _this.access1 = response.data.access1;
-            _this.access2 = response.data.access2;
-            _this.access3 = response.data.access3;
-            _this.access4 = response.data.access4;
-            _this.access5 = response.data.access5;
-            _this.access6 = response.data.access6;
-            _this.access7 = response.data.access7;
-  
-        })
-        .catch(function(response) {
-            //handle error
-            Swal.fire({
-              text: JSON.stringify(response),
-              icon: 'error',
-              confirmButtonText: 'OK'
-            })
-        });
-      },
+
 
       no_privlege() {
         if(this.access1 == false && this.access2 == false && this.access3 == false && this.access4 == false && this.access5 == false && this.access6 == false && this.access7 == false)
@@ -515,504 +475,30 @@ var app = new Vue({
           return false;
       },
 
-      AddItembyManualEncoding()
-      {
-        if(this.access2 == true)
-          return true;
-        else
-          return false;
+      p2() {
+        window.location.href = "order_taiwan_sample_p2?id=" + this.id;
       },
 
-      AddItemfromProductDatabase()
-      {
-        if(this.access2 == true)
-          return true;
-        else
-          return false;
+      p3() {
+        window.location.href = "order_taiwan_sample_p3?id=" + this.id;
       },
 
-      MarkasApproved()
-      {
-        if(this.access2 == true && this.is_info == false)
-          return true;
-        else
-          return false;
+      p4() {
+        window.location.href = "order_taiwan_sample_p4?id=" + this.id;
       },
 
-      MarkasOrdered()
-      {
-        if(this.access2 == true && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      MarkasCanceled()
-      {
-        if(this.access2 == true && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      EditShippingInfo()
-      {
-        if((this.access2 == true || this.access4 || this.access5) && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      EditWarehouseInfo()
-      {
-        if(this.access4 == true && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      AssignTesting()
-      {
-        if(this.access5 == true && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      EditTestingInfo()
-      {
-        if((this.access5 == true || this.access6 == true) && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      AssignDelivery()
-      {
-        if(this.access5 == true && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      EditDeliveryInfo()
-      {
-        if((this.access5 == true || this.access6 == true) && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      EditFinalInfo()
-      {
-        if(false == true && this.is_info == false)
-          return true;
-        else
-          return false;
-      },
-
-      Cancel()
-      {
-        if(this.is_info == true)
-          return true;
-        else
-          return false;
-      },
-
-
-      Save()
-      {
-        if(this.is_info == true)
-          return true;
-        else
-          return false;
-      },
-
-      ShipwayRead(item)
-      {
-        if(!item.is_info )
-          return true;
-        else
-          return false;
-      },
-
-      ShipwayWrite(item)
-      {
-        if(item.is_info && (this.access2 == true || this.access4 == true || this.access5 == true))
-          return true;
-        else
-          return false;
-      },
-
-      EtaRead(item)
-      {
-        if(!item.is_info )
-          return true;
-        else
-          return false;
-      },
-
-      EtaWrite(item)
-      {
-        if(item.is_info && (this.access2 == true || this.access4 == true || this.access5 == true))
-          return true;
-        else
-          return false;
-      },
-
-      ArriveRead(item)
-      {
-        if(!item.is_info )
-          return true;
-        else
-          return false;
-      },
-
-      ArriveWrite(item)
-      {
-        if(item.is_info && (this.access2 == true || this.access4 == true || this.access5 == true))
-          return true;
-        else
-          return false;
-      },
-
-      ArriveRemarkRead(item)
-      {
-        return !this.ArriveRemarkWrite(item);
-      },
-
-      ArriveRemarkWrite(item)
-      {
-        if(item.is_info && this.info_type == 'ware_info' && (this.access2 == true || this.access4 == true))
-          return true;
-        else
-          return false;
-      },
-
-      TestRead(item)
-      {
-        return !this.TestWrite(item);
-      },
-
-      TestWrite(item)
-      {
-        if(this.info_type == 'edit_delivery')
-         return false;
-
-        if(item.is_info && (this.info_type == 'assing_test' || this.info_type == 'edit_test')&& (this.access2 == true || this.access5 == true || this.access6 == true))
-          return true;
-        else
-          return false;
-      },
-
-      DeliveryRead(item)
-      {
-        return !this.DeliveryWrite(item);
-      },
-
-      DeliveryWrite(item)
-      {
-        if(this.info_type == 'edit_test')
-         return false;
-
-        if(item.is_info && (this.info_type == 'assign_delivery' || this.info_type == 'edit_delivery') && (this.access2 == true || this.access5 == true || this.access6 == true))
-          return true;
-        else
-          return false;
-      },
-
-      FinalRead(item)
-      {
-        return !this.FinalWrite(item);
-      },
-
-      FinalWrite(item)
-      {
-        if(item.is_info && this.info_type == 'edit_final' &&  (this.access2 == true || this.info_type == 'edit_final'))
-          return true;
-        else
-          return false;
-      },
-
-      cancel_shipping_info() {
-        this.getRecord();
-        this.is_info = false;
-        this.info_type = '';
-      },
-
-      edit_shipping_info(type) {
-        
-        for (let i = 0; i < this.items.length; i++) {
-          this.items[i].is_info = true;
-          this.is_info = true;
-          this.info_type = type;
-        }
-
-      },
-
-      export_excel() {
-        // if selected, check if they with same brand
-        let brands = [];
-        let ids = [];
-        for(let i = 0; i < this.items.length; i++) {
-          if(this.items[i].is_checked == 1) {
-            if(brands.indexOf(this.items[i].brand) == -1) 
-              brands.push(this.items[i].brand);
-
-            ids.push(this.items[i].id);
-          }
-        }
-
-        if(brands.length > 1) {
-          alert('Please select the item(s) with the same brand.');
-          return
-        }
-
-        if(ids.length == 0) {
-          return;
-        }
-
-        var token = localStorage.getItem("token");
-        var form_Data = new FormData();
-        let _this = this;
-        form_Data.append("jwt", token);
-        form_Data.append("id", this.id);
-        form_Data.append("ids", ids);
-        form_Data.append("brand", brands[0]);
-  
-  
-        axios({
-          method: "post",
-          url: "api/order_taiwan_stock_p1_export",
-          data: form_Data,
-          responseType: "blob",
-        })
-            .then(function(response) {
-                  const url = window.URL.createObjectURL(new Blob([response.data]));
-                  const link = document.createElement('a');
-                  link.href = url;
-                 
-                    link.setAttribute('download', 'Orders.xlsx');
-                 
-                  document.body.appendChild(link);
-                  link.click();
-  
-            })
-            .catch(function(response) {
-                //handle error
-                console.log(response)
-            });
-
-      },
-
-      save_shipping_info: async function() {
-        var token = localStorage.getItem("token");
-        var form_Data = new FormData();
-
-        form_Data.append("jwt", token);
-        form_Data.append("od_id", this.id);
-        form_Data.append("items", JSON.stringify(this.items));
-        form_Data.append("comment", this.comment);
-        form_Data.append("type", this.info_type);
-
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
-
-        // get earch item in items
-        for (let i = 0; i < this.items.length; i++) {
-          var item = this.items[i];
-
-          var file = document.getElementById('photo_' + item.id + '_4');
-
-          if(file) {
-            let f = file.files[0];
-            if(typeof f !== 'undefined') 
-              form_Data.append('photo_' + item.id + '_4', f);
-          }
-
-          var file = document.getElementById('photo_' + item.id + '_5');
-
-          if(file) {
-            let f = file.files[0];
-            if(typeof f !== 'undefined') 
-              form_Data.append('photo_' + item.id + '_5', f);
-          }
-        }
-        
-        let res = await axios({
-          method: 'post',
-          url: 'api/order_taiwan_stock_p1_shipping',
-          data: form_Data,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        this.getRecord();
-        this.comment = '';
-
-        this.is_info = false;
-        this.info_type = '';
-  
-        Swal.fire({
-          //text: "Records Edited" + res.data,
-          text: "Action completed successfully",
-          icon: "info",
-          confirmButtonText: "OK",
-        });
-      },
-
-    p1() {
-        window.location.href = "order_taiwan_stock_p1?id=" + this.id;
-        },
-
-    p2() {
-        window.location.href = "order_taiwan_stock_p2?id=" + this.id;
-        },
-
-        p4() {
-          window.location.href = "order_taiwan_stock_p4?id=" + this.id;
-        },
-        
-      approve : async function() {
-        let element = [];
-
-        for (let i = 0; i < this.items.length; i++) {
-          if (this.items[i].is_checked == 1) {
-            element.push(this.items[i]);
-          }
-        }
-
-        if(element.length == 0)
-          return;
-
-        var token = localStorage.getItem("token");
-        var form_Data = new FormData();
-
-        form_Data.append("jwt", token);
-        form_Data.append("od_id", this.id);
-        form_Data.append("items", JSON.stringify(element));
-        form_Data.append("comment", this.comment);
-        form_Data.append("page", 3);
-
-        let res = await axios({
-          method: 'post',
-          url: 'api/order_taiwan_stock_p1_approve',
-          data: form_Data,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        this.getRecord();
-        this.comment = '';
-
-        Swal.fire({
-          text: "Records Approved",
-          icon: "info",
-          confirmButtonText: "OK",
-        });
-      },
-
-      order : async function() {
-        let element = [];
-
-        for (let i = 0; i < this.items.length; i++) {
-          if (this.items[i].is_checked == 1) {
-            element.push(this.items[i]);
-          }
-        }
-
-        if(element.length == 0)
-          return;
-
-        var token = localStorage.getItem("token");
-        var form_Data = new FormData();
-
-        form_Data.append("jwt", token);
-        form_Data.append("od_id", this.id);
-        form_Data.append("items", JSON.stringify(element));
-        form_Data.append("comment", this.comment);
-
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
-
-        let res = await axios({
-          method: 'post',
-          url: 'api/order_taiwan_stock_p1_order',
-          data: form_Data,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        this.getRecord();
-        this.comment = '';
-
-        Swal.fire({
-          text: "Records Ordered",
-          icon: "info",
-          confirmButtonText: "OK",
-        });
-      },
-
-      cancel : async function() {
-        let element = [];
-
-        for (let i = 0; i < this.items.length; i++) {
-          if (this.items[i].is_checked == 1) {
-            element.push(this.items[i]);
-          }
-        }
-
-        if(element.length == 0)
-          return;
-
-        var token = localStorage.getItem("token");
-        var form_Data = new FormData();
-
-        form_Data.append("jwt", token);
-        form_Data.append("od_id", this.id);
-        form_Data.append("items", JSON.stringify(element));
-        form_Data.append("comment", this.comment);
-
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
-
-        let res = await axios({
-          method: 'post',
-          url: 'api/order_taiwan_stock_p1_cancel',
-          data: form_Data,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        this.getRecord();
-        this.comment = '';
-
-        Swal.fire({
-          text: "Records Canceled",
-          icon: "info",
-          confirmButtonText: "OK",
-        });
-      },
-
-      reject : async function() {
+      finish_notes : async function() {
         let element = [];
 
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i].is_checked == 1) {
-              if(this.items[i].status != 2)
+              if(this.items[i].status != "1")
               {
-                alert("Please only choose the item(s) with the status of “For Approval”.");
+                alert("Please only choose the item(s) with the status of “Waiting Notes from TW”.");
                 return;
               }
               else
-                element.push(this.items[i].id);
+                element.push(this.items[i]);
             }
         }
 
@@ -1026,10 +512,13 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_reject',
+          url: 'api/order_taiwan_sample_p1_finish_notes',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -1040,12 +529,143 @@ var app = new Vue({
         this.comment = '';
 
         Swal.fire({
-          text: "Records Rejected",
+          text: "Records Finished",
           icon: "info",
           confirmButtonText: "OK",
         });
       },
 
+      approval : async function() {
+        let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].is_checked == 1) {
+              if(this.items[i].confirm != "C")
+              {
+                alert("Only confirmed item is allowed to send for approval.");
+                return;
+              }
+              else
+                element.push(this.items[i]);
+            }
+        }
+
+        if(element.length == 0)
+          return;
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("od_id", this.id);
+        form_Data.append("items", JSON.stringify(element));
+        form_Data.append("comment", this.comment);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/order_taiwan_sample_p1_approve',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.getRecord();
+        this.comment = '';
+
+        Swal.fire({
+          text: "Records Sent",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+      },
+
+      sendNotesToTw : async function() {
+        let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].is_checked == 1) {
+              element.push(this.items[i]);
+            }
+        }
+
+        if(element.length == 0)
+          return;
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("od_id", this.id);
+        form_Data.append("items", JSON.stringify(element));
+        form_Data.append("comment", this.comment);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/order_taiwan_sample_p1_send_note_tw',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.getRecord();
+        this.comment = '';
+
+        Swal.fire({
+          text: "Records Send To TW",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+      },
+
+      withdrawNotesToTw : async function() {
+        let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].is_checked == 1) {
+              element.push(this.items[i]);
+            }
+        }
+
+        if(element.length == 0)
+          return;
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("od_id", this.id);
+        form_Data.append("items", JSON.stringify(element));
+        form_Data.append("comment", this.comment);
+        form_Data.append("od_name", this.od_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/order_taiwan_sample_p1_withdraw_note_tw',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.getRecord();
+        this.comment = '';
+
+        Swal.fire({
+          text: "Records Withdraw",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+      },
       
     getCreators () {
 
@@ -1089,27 +709,6 @@ var app = new Vue({
             });
     },
 
-      getCharge () {
-
-        let _this = this;
-  
-        let token = localStorage.getItem('accessToken');
-  
-        axios
-            .get('api/order_taiwan_service_user', { headers: {"Authorization" : `Bearer ${token}`} })
-            .then(
-            (res) => {
-                _this.charge = res.data;
-            },
-            (err) => {
-                alert(err.response);
-            },
-            )
-            .finally(() => {
-                
-            });
-    },
-
       quotation_import: async function(item) {
         let _this = this;
         var sn = 0;
@@ -1128,6 +727,8 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("qid", item.id);
         form_Data.append("sn", sn);
+
+        form_Data.append("access7", this.access7)
 
         let res = await axios({
           method: 'post',
@@ -1154,7 +755,7 @@ var app = new Vue({
           t: JSON.stringify(_this.fil_tag),
           b: _this.fil_brand,
           of1: _this.of1,
-        ofd1: _this.ofd1,
+          ofd1: _this.ofd1,
           of2: '',
           ofd2: '',
           page: _this.pg,
@@ -1404,7 +1005,6 @@ var app = new Vue({
           price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
           // price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
 
-
           // 20221004 price only srp
           price = this.product.srp !== 0 ?  this.product.srp : 0;
 
@@ -1424,8 +1024,8 @@ var app = new Vue({
               is_edit: false,
               id: sn,
               sn: sn,
-              confirm: "A",
-              confirm_text: "Approved",
+              confirm: "N",
+              confirm_text: "Not Yet Confirmed",
               brand:this.product.brand,
               brand_other:"",
               photo1:this.product.photo1 != '' ? this.product.photo1 : '',
@@ -1437,12 +1037,14 @@ var app = new Vue({
               qty:"",
               srp:price,
               date_needed:"",
-              pid:this.product.id,
+              pid: this.product.id,
+              status:"",
+              shipping_way:"",
+              shipping_number:"",
+              notes:[],
               v1:this.v1,
               v2:this.v2,
               v3:this.v3,
-              status:"3",
-              notes:[]
             };
 
             items.push(item);
@@ -1453,6 +1055,8 @@ var app = new Vue({
               form_Data.append("jwt", token);
               form_Data.append("od_id", this.id);
               form_Data.append("block", JSON.stringify(items));
+
+              form_Data.append("access7", this.access7);
 
               axios({
                 method: "post",
@@ -1545,8 +1149,8 @@ var app = new Vue({
           price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
           //price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
 
-          // 20221004 price only srp
-          price = this.product.srp !== 0 ?  this.product.srp : 0;
+        // 20221004 price only srp
+        price = this.product.srp !== 0 ?  this.product.srp : 0;
 
         for(var i=0; i<this.specification.length; i++)
         {
@@ -1575,8 +1179,8 @@ var app = new Vue({
             is_edit: false,
             id: sn,
             sn: sn,
-            confirm: "A",
-            confirm_text: "Approved",
+            confirm: "N",
+            confirm_text: "Not Yet Confirmed",
             brand:this.product.brand,
             brand_other:"",
             photo1:'',
@@ -1588,11 +1192,13 @@ var app = new Vue({
             qty:"",
             srp:price,
             date_needed:"",
-            pid:this.product.id,
-            v1:this.v1,
-            v2:this.v2,
-            v3:this.v3,
-            status:"3",
+            pid: this.product.id,
+            v1: this.v1,
+            v2: this.v2,
+            v3: this.v3,
+            shipping_way:"",
+              shipping_number:"",
+            status:"",
             notes:[]
           };
 
@@ -1604,6 +1210,8 @@ var app = new Vue({
               form_Data.append("jwt", token);
               form_Data.append("od_id", this.id);
               form_Data.append("block", JSON.stringify(items));
+
+              form_Data.append("access7", this.access7);
 
               axios({
                 method: "post",
@@ -1938,7 +1546,7 @@ var app = new Vue({
           });
       },
       
-    do_msg_delete_a(message_id, task_id) {
+    do_msg_delete(message_id, task_id) {
       var token = localStorage.getItem("token");
       var form_Data = new FormData();
       let _this = this;
@@ -1959,7 +1567,7 @@ var app = new Vue({
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        url: "api/order_taiwan_stock_p1_delete_message_a",
+        url: "api/order_taiwan_sample_p1_delete_message",
         data: form_Data,
       })
         .then(function(response) {
@@ -1978,7 +1586,7 @@ var app = new Vue({
         });
     },
 
-      msg_delete_a(message_id, task_id) {
+      msg_delete(message_id, task_id) {
     
         let _this = this;
         Swal.fire({
@@ -1991,14 +1599,14 @@ var app = new Vue({
           confirmButtonText: "Yes, delete it!",
         }).then((result) => {
           if (result.value) {
-            _this.do_msg_delete_a(message_id, task_id); // <--- submit form programmatically
+            _this.do_msg_delete(message_id, task_id); // <--- submit form programmatically
           } else {
             // swal("Cancelled", "Your imaginary file is safe :)", "error");
           }
         });
       },
 
-      got_it_message_a(message_id, task_id) {
+      got_it_message(message_id, task_id) {
         let _this = this;
   
         _this.submit = true;
@@ -2016,7 +1624,7 @@ var app = new Vue({
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`
           },
-          url: 'api/order_taiwan_p1_got_it_a',
+          url: 'api/order_taiwan_p1_got_it',
           data: form_Data
         })
           .then(function (response) {
@@ -2037,39 +1645,7 @@ var app = new Vue({
         {
           Swal.fire({
             text: "User is not allowed to delete the item already with notes.",
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-          return;
-        }
-
-        if(item.notes_a.length > 0)
-        {
-          Swal.fire({
-            text: "User is not allowed to delete the item already with notes.",
-            icon: "info",
-            confirmButtonText: "OK",
-          });
-          return;
-        }
-
-        if(item.shipping_way != '' 
-        || item.shipping_number != '' 
-        || item.eta != '' 
-        || item.arrive != '' 
-        || item.charge != '' 
-        || item.remark != '' 
-        || item.test != '' 
-        || item.check_t != '' 
-        || item.remark_t != ''
-        || item.delivery != '' 
-        || item.check_d != '' 
-        || item.remark_d != '' 
-        || item.final != '') 
-        {
-          Swal.fire({
-            text: "This item already has notes or additional info, so it is not allowed to delete.",
-            icon: "info",
+            icon: "Info",
             confirmButtonText: "OK",
           });
           return;
@@ -2100,6 +1676,9 @@ var app = new Vue({
   
         form_Data.append("jwt", token);
         form_Data.append("item_id", id);
+
+        form_Data.append("access7", this.access7);
+        form_Data.append("od_id", this.id);
   
         axios({
           method: "post",
@@ -2134,13 +1713,13 @@ var app = new Vue({
         let token = localStorage.getItem("accessToken");
   
         axios
-          .get("api/order_taiwan_stock_p1_message_a", {
+          .get("api/order_taiwan_sample_p1_message", {
             params,
             headers: { Authorization: `Bearer ${token}` },
           })
           .then(
             (res) => {
-              _this.items.find((element) => element.id == task_id).notes_a = res.data;
+              _this.items.find((element) => element.id == task_id).notes = res.data;
             },
             (err) => {
               alert(err.response);
@@ -2158,7 +1737,7 @@ var app = new Vue({
         this.reload_task(task_id);
       },
 
-      comment_create_a(task_id) {
+      comment_create(task_id) {
         this.current_task_id = task_id;
   
         let _this = this;
@@ -2182,14 +1761,22 @@ var app = new Vue({
 
         var element = this.items.find((element) => element.id == task_id);
         form_Data.append("item", JSON.stringify(element));
+        
+        form_Data.append("access1", this.access1);
+        form_Data.append("access2", this.access2);
+        form_Data.append("access3", this.access3);
+        form_Data.append("access4", this.access4);
+        form_Data.append("access5", this.access5);
+        form_Data.append("access6", this.access6);
+        form_Data.append("access7", this.access7);
 
         form_Data.append("od_id", this.id);
         form_Data.append("od_name", this.od_name);
         form_Data.append("project_name", this.project_name);
         form_Data.append("serial_name", this.serial_name);
 
-        form_Data.append("page", 3);
-  
+        form_Data.append("page", 1);
+
         const token = sessionStorage.getItem("token");
   
         axios({
@@ -2198,7 +1785,7 @@ var app = new Vue({
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
-          url: "api/order_taiwan_stock_p1_message_a",
+          url: "api/order_taiwan_sample_p1_message",
           data: form_Data,
         })
           .then(function(response) {
@@ -2233,7 +1820,7 @@ var app = new Vue({
           };
           var data = myArr[index];
           var myForm = new FormData();
-          myForm.append("batch_type", "od_message_a");
+          myForm.append("batch_type", "od_message");
           myForm.append("batch_id", batch_id);
           myForm.append("file", data);
   
@@ -2309,7 +1896,7 @@ var app = new Vue({
 
             items = [];
 
-            item_new = {
+            item = {
                 id: item.id,
                 sn: item.sn,
                 confirm: item.confirm,
@@ -2330,10 +1917,12 @@ var app = new Vue({
                 v2:item.v2,
                 v3:item.v3,
                 status:item.status,
-                notes:[]
+                notes:[],
+                shipping_way:item.shipping_way,
+                shipping_number:item.shipping_number,
               };
 
-              items.push(item_new);
+              items.push(item);
 
             var token = localStorage.getItem("token");
             var form_Data = new FormData();
@@ -2342,9 +1931,7 @@ var app = new Vue({
             form_Data.append("od_id", this.id);
             form_Data.append("block", JSON.stringify(items));
 
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
+            form_Data.append("access7", this.access7);
 
             var file = document.getElementById('photo_' + item.id + '_1');
             if(file) {
@@ -2367,16 +1954,12 @@ var app = new Vue({
                 form_Data.append('photo_3', f);
             }
 
-            form_Data.append("page", 3);
-            form_Data.append("access2", this.access2);
-            form_Data.append("item", JSON.stringify(item));
-
             axios({
               method: "post",
               headers: {
                 "Content-Type": "multipart/form-data",
               },
-              url: "api/order_taiwan_stock_p1_item_update",
+              url: "api/order_taiwan_sample_p1_item_update",
               data: form_Data,
             })
               .then(function(response) {
@@ -2409,8 +1992,8 @@ var app = new Vue({
                 is_edit: false,
                 id: sn,
                 sn: sn,
-                confirm: "A",
-                confirm_text: "Approved",
+                confirm: "N",
+                confirm_text: "Not Yet Confirmed",
                 brand:"",
                 brand_other:"",
                 photo1:"",
@@ -2426,7 +2009,9 @@ var app = new Vue({
                 v1:"",
                 v2:"",
                 v3:"",
-                status:"3",
+                shipping_way:"",
+              shipping_number:"",
+                status:"",
                 notes:[]
               };
 
@@ -2438,6 +2023,7 @@ var app = new Vue({
               form_Data.append("jwt", token);
               form_Data.append("od_id", this.id);
               form_Data.append("block", JSON.stringify(items));
+              form_Data.append("access7", this.access7);
 
               axios({
                 method: "post",
@@ -2459,6 +2045,57 @@ var app = new Vue({
                 });
         },
     
+        ShipwayRead(item)
+        {
+          if(!item.is_edit)
+            return true;
+          else
+            return false;
+        },
+  
+        ShipwayWrite(item)
+        {
+          if(item.is_edit && this.access1 == true)
+            return true;
+          else
+            return false;
+        },
+        
+      getAccess: function() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append('jwt', token);
+  
+        axios({
+            method: 'get',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/order_taiwan_p1_access_control',
+            data: form_Data
+        })
+        .then(function(response) {
+            //handle success
+            _this.access1 = response.data.access1;
+            _this.access2 = response.data.access2;
+            _this.access3 = response.data.access3;
+            _this.access4 = response.data.access4;
+            _this.access5 = response.data.access5;
+            _this.access6 = response.data.access6;
+            _this.access7 = response.data.access7;
+  
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
+      },
 
       getUserName: function() {
         var token = localStorage.getItem('token');
@@ -2514,16 +2151,6 @@ var app = new Vue({
           item.photo3 = "";
           document.getElementById('photo_' + item.id + '_3').value = "";
         }
-        if (num === 4) {
-          item.photo4 = "";
-          item.photo4_name = "";
-          document.getElementById('photo_' + item.id + '_4').value = "";
-        }
-        if (num === 5) {
-          item.photo5 = "";
-          item.photo5_name = "";
-          document.getElementById('photo_' + item.id + '_5').value = "";
-        }
   
         
       },
@@ -2541,14 +2168,7 @@ var app = new Vue({
         if (num === 3) {
           item.photo3 = URL.createObjectURL(file);
         }
-        if (num === 4) {
-          item.photo4 = URL.createObjectURL(file);
-          item.photo4_name = file.name;
-        }
-        if (num === 5) {
-          item.photo5 = URL.createObjectURL(file);
-          item.photo5_name = file.name;
-        }
+    
           
       },
 
@@ -2559,8 +2179,8 @@ var app = new Vue({
           return;
   
         const params = {
+          pg: 1,
           id: _this.id,
-          pg: 3
         };
   
         let token = localStorage.getItem("accessToken");
@@ -2769,38 +2389,6 @@ var app = new Vue({
         return this.product_records;
       },
 
-      export_petty() {
-        var token = localStorage.getItem("token");
-        var form_Data = new FormData();
-        let _this = this;
-        form_Data.append("jwt", token);
-        form_Data.append("id", this.id);
-  
-  
-        axios({
-          method: "post",
-          url: "api/order_taiwan_stock_p1_print",
-          data: form_Data,
-          responseType: "blob",
-        })
-            .then(function(response) {
-                  const url = window.URL.createObjectURL(new Blob([response.data]));
-                  const link = document.createElement('a');
-                  link.href = url;
-                 
-                    link.setAttribute('download', 'Order Taiwan Report.xlsx');
-                 
-                  document.body.appendChild(link);
-                  link.click();
-  
-            })
-            .catch(function(response) {
-                //handle error
-                console.log(response)
-            });
-      },
-
-
       do_print_me(item, text){
         let _this = this;
         var cls = '.print_area_' + item.id;
@@ -2814,7 +2402,7 @@ var app = new Vue({
           this.loading = true;
 
           axios
-            .post("api/order_taiwan_p1_snapshot_a", data, {
+            .post("api/order_taiwan_p1_snapshot", data, {
               headers: {
               "Content-Type": "application/json"
               }
@@ -2847,6 +2435,37 @@ var app = new Vue({
           },
         });
       
+      },
+
+      export_petty() {
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+  
+  
+        axios({
+          method: "post",
+          url: "api/order_taiwan_sample_p1_print",
+          data: form_Data,
+          responseType: "blob",
+        })
+            .then(function(response) {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                 
+                    link.setAttribute('download', 'Order Taiwan Report.xlsx');
+                 
+                  document.body.appendChild(link);
+                  link.click();
+  
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
       },
 
     }

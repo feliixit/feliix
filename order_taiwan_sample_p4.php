@@ -45,7 +45,7 @@ try {
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Overview of Order – Taiwan</title>
+    <title>Overview of Order – Stock</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -473,47 +473,46 @@ try {
         }
 
         .block.D .tb_order thead tr th:nth-of-type(3), .block.D .tb_order tbody tr td:nth-of-type(3),
-        .block.D .tb_order thead tr th:nth-of-type(4), .block.D .tb_order tbody tr td:nth-of-type(4),
-        .block.D .tb_order thead tr th:nth-of-type(5), .block.D .tb_order tbody tr td:nth-of-type(5)
+        .block.D .tb_order thead tr th:nth-of-type(4), .block.D .tb_order tbody tr td:nth-of-type(4)
         {
             min-width: 140px;
             text-align: center;
         }
 
-        .block.D .tb_order thead tr th:nth-of-type(6), .block.D .tb_order tbody tr td:nth-of-type(6) {
+        .block.D .tb_order thead tr th:nth-of-type(5), .block.D .tb_order tbody tr td:nth-of-type(5) {
             min-width: 230px;
             text-align: center;
         }
 
-        .block.D .tb_order thead tr th:nth-of-type(7), .block.D .tb_order tbody tr td:nth-of-type(7) {
+        .block.D .tb_order thead tr th:nth-of-type(6), .block.D .tb_order tbody tr td:nth-of-type(6) {
             min-width: 210px;
         }
 
-        .block.D .tb_order thead tr th:nth-of-type(8) {
+        .block.D .tb_order thead tr th:nth-of-type(7) {
             min-width: 930px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(8) {
+        .block.D .tb_order tbody tr td:nth-of-type(7) {
             width: 530px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(9) {
+        .block.D .tb_order tbody tr td:nth-of-type(8) {
             min-width: 400px;
         }
 
-        .block.D .tb_order thead tr th:nth-of-type(9), .block.D .tb_order tbody tr td:nth-of-type(10) {
+        .block.D .tb_order thead tr th:nth-of-type(8), .block.D .tb_order tbody tr td:nth-of-type(9) {
             min-width: 130px;
         }
 
-        .block.D .tb_order thead tr th:nth-of-type(10), .block.D .tb_order tbody tr td:nth-of-type(11) {
+        .block.D .tb_order thead tr th:nth-of-type(9), .block.D .tb_order tbody tr td:nth-of-type(10) {
             min-width: 180px;
         }
 
-        .block.D .tb_order thead tr th:nth-of-type(11), .block.D .tb_order tbody tr td:nth-of-type(12) {
+        .block.D .tb_order thead tr th:nth-of-type(10), .block.D .tb_order tbody tr td:nth-of-type(11) {
             min-width: 200px;
         }
 
-        .block.D .tb_order thead tr th:nth-of-type(12), .block.D .tb_order tbody tr td:nth-of-type(13) {
+        .block.D .tb_order thead tr th:nth-of-type(11), .block.D .tb_order tbody tr td:nth-of-type(12) {
             min-width: 450px;
         }
 
@@ -521,23 +520,21 @@ try {
             min-width: 120px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(14) {
+        .block.D .tb_order tbody tr td:nth-of-type(13) {
             min-width: 450px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(15) {
+        .block.D .tb_order tbody tr td:nth-of-type(14) {
             min-width: 220px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(16),
-        .block.D .tb_order tbody tr td:nth-of-type(17) {
+        .block.D .tb_order tbody tr td:nth-of-type(15),
+        .block.D .tb_order tbody tr td:nth-of-type(16) {
             min-width: 180px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(18),
-        .block.D .tb_order tbody tr td:nth-of-type(19),
-        .block.D .tb_order tbody tr td:nth-of-type(20),
-        .block.D .tb_order tbody tr td:nth-of-type(21) {
+        .block.D .tb_order tbody tr td:nth-of-type(17),
+        .block.D .tb_order tbody tr td:nth-of-type(18) {
             min-width: 400px;
         }
 
@@ -1315,10 +1312,10 @@ try {
             <div class="block" style="display: flex; justify-content: space-between;">
                 <!-- tag -->
                 <div>
-                    <b class="tag focus">ORDER TAIWAN</b>
+                    <b class="tag focus">ORDER – SAMPLES</b>
                     <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + od_name }}</b>
-                    <b class="tag focus">PROJECT</b>
-                    <a :href="'project03_other?sid=' + stage_id"><b class="tag">{{ project_name }}</b></a>
+                    <b class="tag focus">TASK</b>
+                    <a :href="'task_management_' + stage_id + '?sid=' + project_id"><b class="tag">{{ project_name }}</b></a>
                 </div>
 
 
@@ -1333,7 +1330,7 @@ try {
 
         <div class="tags">
             <a class="tag A" @click="p1()">Preliminary</a>
-            <a class="tag B" @click="p2()">For Approval</a>
+        
             <a class="tag C" @click="p3()">Approved</a>
             <a class="tag D focus">Overview</a>
         </div>
@@ -1348,14 +1345,14 @@ try {
                         <th><i class="micons">view_list</i></th>
                         <th>#</th>
                         <th>Preliminary</th>
-                        <th>For Approval</th>
+                
                         <th>Approved</th>
                         <th>Status</th>
                         <th>Brand</th>
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
                         <th>SRP</th>
-                        <th>Date Needed by Client</th>
+                        <th>Date Needed</th>
                         <th>Notes</th>
                         <th>Notes (Only for Approved Stage)</th>
                         <th>Shipping Way</th>
@@ -1363,8 +1360,7 @@ try {
                         <th>Arrival Date</th>
                         <th>Warehouse In Charge</th>
                         <th>Testing</th>
-                        <th>Delivery</th>
-                        <th>Final</th>
+                       
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -1374,7 +1370,7 @@ try {
                         <td><input type="checkbox" class="alone" :value="item.index" :true-value="1" v-model:checked="item.is_checked"></td>
                         <td> {{item.serial_number}} </td>
                         <td>{{item.status <= 1 ? '●' : ''}}</td>
-                        <td>{{item.status == 2 ? '●' : ''}}</td>
+                     
                         <td>{{item.status >= 3 ? '●' : ''}}</td>
                         <td>
                             <div class="read_block" v-if="!item.is_edit">
@@ -1579,26 +1575,7 @@ try {
                 </div>
             </td>
 
-            <td>
-                <div class="read_block" v-if="DeliveryRead(item)">
-                    <select v-model="item.delivery" disabled v-if="1==0">
-                        <option>Choose Assignee for Delivery...</option>
-                        <option v-for="item in charge" :value="item.username" :key="item.username">
-                            {{ item.username }}
-                        </option>
-                    </select>
-                    Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
-                    <textarea rows="3" v-model="item.remark_d" readonly></textarea>
-                    <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
-                    <i v-if="item.delivery_updated_name != ''">({{ item.delivery_updated_name }} at {{ item.delivery_updated_at }})</i>
-                </div>
-            </td>
-
-            <td>
-                <div class="read_block" v-if="FinalRead(item)">
-                    <textarea rows="3" v-model="item.final" readonly></textarea>
-                </div>
-            </td>
+          
 
             <td>
                 <div class="btnbox">
@@ -2658,7 +2635,7 @@ try {
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/order_taiwan_p4.js"></script>
+<script defer src="js/order_taiwan_sample_p4.js"></script>
 <script src="https://superal.github.io/canvas2image/canvas2image.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </html>

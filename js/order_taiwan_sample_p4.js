@@ -293,9 +293,6 @@ var app = new Vue({
         project_name : '',
         serial_name : '',
         project_id : 0,
-
-        of1:'',
-        ofd1:'',
     },
   
     created() {
@@ -400,34 +397,7 @@ var app = new Vue({
     },
   
     methods: {
-      sort_me(type) {
 
-        if(type == 1) {
-          this.of1 = '4';
-          this.ofd1 = '1';
-        } else if(type == 2) {
-          this.of1 = '4';
-          this.ofd1 = '2';
-        } else if(type == 3) {
-          this.of1 = '5';
-          this.ofd1 = '1';
-        } else if(type == 4) {
-          this.of1 = '5';
-          this.ofd1 = '2';
-        } else if(type == 0) {
-          this.fil_id = '';
-          this.fil_code = '';
-          this.fil_tag = [];
-          this.fil_brand = '';
-          this.of1 = '';
-          this.ofd1 = '';
-          this.pg = 1;
-          $("#tag01").val('default');
-          $("#tag01").selectpicker("refresh");
-        }
-
-        this.filter_apply_new();
-      },
       
       getOdMain: function() {
         let _this = this;
@@ -453,7 +423,7 @@ var app = new Vue({
             let token = localStorage.getItem('accessToken');
       
             axios
-                .get('api/order_stock_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .get('api/order_sample_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
                   _this.od_name = res.data[0].od_name;
@@ -557,7 +527,7 @@ var app = new Vue({
 
       EditShippingInfo()
       {
-        if((this.access2 == true || this.access4 || this.access5) && this.is_info == false)
+        if(this.access2 == true && this.is_info == false)
           return true;
         else
           return false;
@@ -630,7 +600,7 @@ var app = new Vue({
 
       ShipwayRead(item)
       {
-        if(!item.is_info )
+        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access5 == true))
           return true;
         else
           return false;
@@ -638,7 +608,7 @@ var app = new Vue({
 
       ShipwayWrite(item)
       {
-        if(item.is_info && (this.access2 == true || this.access4 == true || this.access5 == true))
+        if(item.is_info && this.access2 == true)
           return true;
         else
           return false;
@@ -646,7 +616,7 @@ var app = new Vue({
 
       EtaRead(item)
       {
-        if(!item.is_info )
+        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access6 == true))
           return true;
         else
           return false;
@@ -654,7 +624,7 @@ var app = new Vue({
 
       EtaWrite(item)
       {
-        if(item.is_info && (this.access2 == true || this.access4 == true || this.access5 == true))
+        if(item.is_info && this.access2 == true)
           return true;
         else
           return false;
@@ -662,7 +632,7 @@ var app = new Vue({
 
       ArriveRead(item)
       {
-        if(!item.is_info )
+        if(!item.is_info || (this.access4 == true || this.access5 == true || this.access6 == true))
           return true;
         else
           return false;
@@ -670,7 +640,7 @@ var app = new Vue({
 
       ArriveWrite(item)
       {
-        if(item.is_info && (this.access2 == true || this.access4 == true || this.access5 == true))
+        if(item.is_info && this.access2 == true)
           return true;
         else
           return false;
@@ -783,7 +753,7 @@ var app = new Vue({
   
         axios({
           method: "post",
-          url: "api/order_taiwan_stock_p1_export",
+          url: "api/order_taiwan_sample_p1_export",
           data: form_Data,
           responseType: "blob",
         })
@@ -814,35 +784,10 @@ var app = new Vue({
         form_Data.append("items", JSON.stringify(this.items));
         form_Data.append("comment", this.comment);
         form_Data.append("type", this.info_type);
-
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
-
-        // get earch item in items
-        for (let i = 0; i < this.items.length; i++) {
-          var item = this.items[i];
-
-          var file = document.getElementById('photo_' + item.id + '_4');
-
-          if(file) {
-            let f = file.files[0];
-            if(typeof f !== 'undefined') 
-              form_Data.append('photo_' + item.id + '_4', f);
-          }
-
-          var file = document.getElementById('photo_' + item.id + '_5');
-
-          if(file) {
-            let f = file.files[0];
-            if(typeof f !== 'undefined') 
-              form_Data.append('photo_' + item.id + '_5', f);
-          }
-        }
         
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_shipping',
+          url: 'api/order_taiwan_p1_shipping',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -856,7 +801,7 @@ var app = new Vue({
         this.info_type = '';
   
         Swal.fire({
-          //text: "Records Edited" + res.data,
+          // text: "Records Edited" + res.data,
           text: "Action completed successfully",
           icon: "info",
           confirmButtonText: "OK",
@@ -864,23 +809,20 @@ var app = new Vue({
       },
 
     p1() {
-        window.location.href = "order_taiwan_stock_p1?id=" + this.id;
+        window.location.href = "order_taiwan_sample_p1?id=" + this.id;
         },
 
-    p2() {
-        window.location.href = "order_taiwan_stock_p2?id=" + this.id;
-        },
 
-        p4() {
-          window.location.href = "order_taiwan_stock_p4?id=" + this.id;
-        },
-        
+      p3() {
+          window.location.href = "order_taiwan_sample_p3?id=" + this.id;
+          },
+
       approve : async function() {
         let element = [];
 
         for (let i = 0; i < this.items.length; i++) {
           if (this.items[i].is_checked == 1) {
-            element.push(this.items[i]);
+            element.push(this.items[i].id);
           }
         }
 
@@ -894,11 +836,10 @@ var app = new Vue({
         form_Data.append("od_id", this.id);
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
-        form_Data.append("page", 3);
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_approve',
+          url: 'api/order_taiwan_p1_approve',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -920,7 +861,7 @@ var app = new Vue({
 
         for (let i = 0; i < this.items.length; i++) {
           if (this.items[i].is_checked == 1) {
-            element.push(this.items[i]);
+            element.push(this.items[i].id);
           }
         }
 
@@ -935,13 +876,9 @@ var app = new Vue({
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
 
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
-
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_order',
+          url: 'api/order_taiwan_p1_order',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -963,7 +900,7 @@ var app = new Vue({
 
         for (let i = 0; i < this.items.length; i++) {
           if (this.items[i].is_checked == 1) {
-            element.push(this.items[i]);
+            element.push(this.items[i].id);
           }
         }
 
@@ -978,13 +915,9 @@ var app = new Vue({
         form_Data.append("items", JSON.stringify(element));
         form_Data.append("comment", this.comment);
 
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
-
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_cancel',
+          url: 'api/order_taiwan_p1_cancel',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -1029,7 +962,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_stock_p1_reject',
+          url: 'api/order_taiwan_p1_reject',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -1153,8 +1086,8 @@ var app = new Vue({
           c: _this.fil_code,
           t: JSON.stringify(_this.fil_tag),
           b: _this.fil_brand,
-          of1: _this.of1,
-        ofd1: _this.ofd1,
+          of1: '',
+          ofd1: '',
           of2: '',
           ofd2: '',
           page: _this.pg,
@@ -1403,7 +1336,6 @@ var app = new Vue({
         if(price == null)
           price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
           // price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
-
 
           // 20221004 price only srp
           price = this.product.srp !== 0 ?  this.product.srp : 0;
@@ -1770,8 +1702,8 @@ var app = new Vue({
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
-        of1: _this.of1,
-        ofd1: _this.ofd1,
+        of1: '',
+        ofd1: '',
         of2: '',
         ofd2: '',
         page: _this.pg,
@@ -1946,20 +1878,12 @@ var app = new Vue({
       form_Data.append("jwt", token);
       form_Data.append("message_id", message_id);
 
-      var element = this.items.find((element) => element.id == task_id);
-      form_Data.append("item", JSON.stringify(element));
-
-      form_Data.append("od_id", this.id);
-      form_Data.append("od_name", this.od_name);
-      form_Data.append("project_name", this.project_name);
-      form_Data.append("serial_name", this.serial_name);
-
       axios({
         method: "post",
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        url: "api/order_taiwan_stock_p1_delete_message_a",
+        url: "api/order_taiwan_p1_delete_message_a",
         data: form_Data,
       })
         .then(function(response) {
@@ -2134,7 +2058,7 @@ var app = new Vue({
         let token = localStorage.getItem("accessToken");
   
         axios
-          .get("api/order_taiwan_stock_p1_message_a", {
+          .get("api/order_taiwan_p1_message_a", {
             params,
             headers: { Authorization: `Bearer ${token}` },
           })
@@ -2179,16 +2103,6 @@ var app = new Vue({
   
         form_Data.append("task_id", task_id);
         form_Data.append("message", comment.value.trim());
-
-        var element = this.items.find((element) => element.id == task_id);
-        form_Data.append("item", JSON.stringify(element));
-
-        form_Data.append("od_id", this.id);
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
-
-        form_Data.append("page", 3);
   
         const token = sessionStorage.getItem("token");
   
@@ -2198,7 +2112,7 @@ var app = new Vue({
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
-          url: "api/order_taiwan_stock_p1_message_a",
+          url: "api/order_taiwan_p1_message_a",
           data: form_Data,
         })
           .then(function(response) {
@@ -2309,7 +2223,7 @@ var app = new Vue({
 
             items = [];
 
-            item_new = {
+            item = {
                 id: item.id,
                 sn: item.sn,
                 confirm: item.confirm,
@@ -2333,7 +2247,7 @@ var app = new Vue({
                 notes:[]
               };
 
-              items.push(item_new);
+              items.push(item);
 
             var token = localStorage.getItem("token");
             var form_Data = new FormData();
@@ -2341,10 +2255,6 @@ var app = new Vue({
             form_Data.append("jwt", token);
             form_Data.append("od_id", this.id);
             form_Data.append("block", JSON.stringify(items));
-
-        form_Data.append("od_name", this.od_name);
-        form_Data.append("project_name", this.project_name);
-        form_Data.append("serial_name", this.serial_name);
 
             var file = document.getElementById('photo_' + item.id + '_1');
             if(file) {
@@ -2367,16 +2277,12 @@ var app = new Vue({
                 form_Data.append('photo_3', f);
             }
 
-            form_Data.append("page", 3);
-            form_Data.append("access2", this.access2);
-            form_Data.append("item", JSON.stringify(item));
-
             axios({
               method: "post",
               headers: {
                 "Content-Type": "multipart/form-data",
               },
-              url: "api/order_taiwan_stock_p1_item_update",
+              url: "api/order_taiwan_p1_item_update",
               data: form_Data,
             })
               .then(function(response) {
@@ -2514,16 +2420,6 @@ var app = new Vue({
           item.photo3 = "";
           document.getElementById('photo_' + item.id + '_3').value = "";
         }
-        if (num === 4) {
-          item.photo4 = "";
-          item.photo4_name = "";
-          document.getElementById('photo_' + item.id + '_4').value = "";
-        }
-        if (num === 5) {
-          item.photo5 = "";
-          item.photo5_name = "";
-          document.getElementById('photo_' + item.id + '_5').value = "";
-        }
   
         
       },
@@ -2541,14 +2437,7 @@ var app = new Vue({
         if (num === 3) {
           item.photo3 = URL.createObjectURL(file);
         }
-        if (num === 4) {
-          item.photo4 = URL.createObjectURL(file);
-          item.photo4_name = file.name;
-        }
-        if (num === 5) {
-          item.photo5 = URL.createObjectURL(file);
-          item.photo5_name = file.name;
-        }
+    
           
       },
 
@@ -2560,7 +2449,7 @@ var app = new Vue({
   
         const params = {
           id: _this.id,
-          pg: 3
+          pg: 4
         };
   
         let token = localStorage.getItem("accessToken");
@@ -2779,7 +2668,7 @@ var app = new Vue({
   
         axios({
           method: "post",
-          url: "api/order_taiwan_stock_p1_print",
+          url: "api/order_taiwan_sample_p1_print",
           data: form_Data,
           responseType: "blob",
         })
@@ -2814,7 +2703,7 @@ var app = new Vue({
           this.loading = true;
 
           axios
-            .post("api/order_taiwan_p1_snapshot_a", data, {
+            .post("api/order_taiwan_p1_snapshot", data, {
               headers: {
               "Content-Type": "application/json"
               }

@@ -508,7 +508,7 @@
 
         <div class="lower_section">
             <h5>Description</h5>
-            <p style="white-space: pre;">
+            <p style="white-space: break-spaces;">
  {{ description }}
             </p>
 

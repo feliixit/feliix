@@ -2680,7 +2680,7 @@ catch (Exception $e) {
                                         <dd>
                                             <select v-model="order_type">
                                                 <option value="stock">Order – Stocks</option>
-                                                <option disabled value="sample">Order – Samples</option>
+                                                <option value="sample">Order – Samples</option>
                                             </select>
                                         </dd>
                                     </dl>
@@ -2875,7 +2875,7 @@ catch (Exception $e) {
                                         <dd>
                                             <select v-model="record.od_type" disabled>
                                                 <option value="stock">Order – Stocks</option>
-                                                <option disabled>Order – Samples</option>
+                                                <option value="sample">Order – Samples</option>
                                             </select>
                                         </dd>
                                     </dl>
@@ -3151,12 +3151,16 @@ catch (Exception $e) {
                             <!-- 如果是訂單類的任務，需要多出 Order Type欄位 -->
                             <ul v-if="receive_record.order.length > 0">
                                 <li><b>Order Type</b></li>
-                                <li>Order – {{ receive_record.order[0].order_type == 'stock' ? 'Stocks' : '' }}</li>
+                                <li>Order – {{ receive_record.order[0].order_type == 'stock' ? 'Stocks' : receive_record.order[0].order_type == 'sample' ? 'Samples' : '' }}</li>
                             </ul>
                             <!-- 如果是訂單類的任務，需要多出 Order Name欄位，內容值的範例: LOTW-0001 LIGHTING FIXTURE -->
                             <ul v-if="receive_record.order.length > 0">
                                 <li><b>Order Name</b></li>
-                                <li><a style="color: #25a2b8" :href="(receive_record.order[0].order_type == 'stock' ? 'order_taiwan_stock_p1' : 'order_taiwan_p1') + '?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }}  {{ receive_record.order[0].od_name }}</a></li>
+                                <li>
+                                    <a v-if="receive_record.order[0].order_type == ''" style="color: #25a2b8" :href="'order_taiwan_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
+                                    <a v-if="receive_record.order[0].order_type == 'stock'" style="color: #25a2b8" :href="'order_taiwan_stock_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
+                                    <a v-if="receive_record.order[0].order_type == 'sample'" style="color: #25a2b8" :href="'order_taiwan_sample_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
+                                </li>
                             </ul>
 
                             <ul>
