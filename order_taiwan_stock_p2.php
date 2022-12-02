@@ -1281,7 +1281,7 @@ try {
             <div class="block" style="display: flex; justify-content: space-between;">
                 <!-- tag -->
                 <div>
-                    <b class="tag focus">ORDER STOCK</b>
+                    <b class="tag focus">ORDER – STOCKS</b>
                     <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + od_name }}</b>
                     <b class="tag focus">TASK</b>
                     <a :href="'task_management_' + stage_id + '?sid=' + project_id"><b class="tag">{{ project_name }}</b></a>
@@ -1339,7 +1339,7 @@ try {
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
                         <th>SRP</th>
-                        <th>Date Needed by Client</th>
+                        <th>Date Needed</th>
                         <th>Notes</th>
                         <th>Shipping Way</th>
                         <th>Action</th>
