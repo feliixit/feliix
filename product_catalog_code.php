@@ -418,7 +418,7 @@
                                             data-width="100%" title="No tag selected" id="tag01" v-model="fil_tag">
 
                                         
-            <optgroup label="BY INSTALL LOCATION">
+                                            <optgroup label="BY INSTALL LOCATION">
                 <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
                 <option value="CABINET">CABINET</option>
                 <option value="CEILING">CEILING</option>
@@ -448,7 +448,8 @@
                 <option value="BATTEN LIGHT">BATTEN LIGHT</option>
                 <option value="BOLLARD">BOLLARD</option>
                 <option value="CUSTOMIZED">CUSTOMIZED</option>
-                <option value="DIMMER">DIMMER</option>
+                <option value="DIMMABLE">DIMMABLE</option>
+		    <option value="DIMMER">DIMMER</option>
                 <option value="DIRECTIONAL">DIRECTIONAL</option>
                 <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
                 <option value="DMX">DMX</option>		
@@ -461,6 +462,8 @@
                 <option value="LED TUBE">LED TUBE</option>
                 <option value="LIGHTBOX">LIGHTBOX</option>
                 <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+		    <option value="MAGNETIC TRACK BAR">MAGNETIC TRACK BAR</option>
+		    <option value="MAGNETIC TRACK LIGHT">MAGNETIC TRACK LIGHT</option>		   
                 <option value="PANEL LIGHT">PANEL LIGHT</option>
                 <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
                 <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
