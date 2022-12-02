@@ -8125,7 +8125,7 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
                         $content = $content . $items[$i]['serial_number'] . '';
                         $content = $content . '
                     </td>
-                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px padding: 8px; font-size: 14px; text-align: center; width: 440px;">
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
                         ';
                         $content = $content . $items[$i]['code'] . '';
                         $content = $content . '
@@ -8142,7 +8142,7 @@ function order_notification02($name, $access,  $access_cc, $project_name, $seria
                     $content = $content . $items[$i]['serial_number'] . '';
                     $content = $content . '
                 </td>
-                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px padding: 8px; font-size: 14px; text-align: center; width: 440px;">
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 440px;">
                     ';
                     $content = $content . $items[$i]['code'] . '';
                     $content = $content . '
