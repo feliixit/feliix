@@ -2214,8 +2214,8 @@ var app = new Vue({
             _this.items = response.data;
             if (_this.items.length > 0) {
             
-              _this.status = res.data[0].iq_status;
-              _this.last_updated_id = res.data[0].iq_updated_id;
+              _this.status = _this.items[0].iq_status;
+              _this.last_updated_id = _this.items[0].iq_updated_id;
             }
           })
           .catch(function(error) {
