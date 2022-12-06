@@ -3291,3 +3291,110 @@ ADD COLUMN `related_kind` VARCHAR(64) DEFAULT '';
 
 ALTER TABLE project_other_task_sl
 ADD COLUMN `related_category` VARCHAR(64) DEFAULT '';
+
+-- 20221205 inquiry taiwan
+CREATE TABLE IF NOT EXISTS `iq_main` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `iq_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `task_id` bigint(20) NOT NULL DEFAULT 0,
+  `order_type` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `serial_name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `project_status` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `access7` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `task_type` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `iq_item` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `iq_id` bigint(20) unsigned NOT NULL,
+  `sn` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `confirm` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brand` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brand_other` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo1` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo2` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo3` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `code` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brief` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `listing` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `qty` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `srp` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `date_needed` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `shipping_way` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `shipping_number` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `eta` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `charge` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `test` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `delivery` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `final` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `arrive` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `remark_t` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `remark_d` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `check_t` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `check_d` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `shipping_vendor` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pid` bigint(20) DEFAULT 0,
+  `v1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `v2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `v3` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo4` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo5` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `test_updated_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `test_updated_at` timestamp NULL DEFAULT NULL,
+  `delivery_updated_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `delivery_updated_at` timestamp NULL DEFAULT NULL,
+  `photo4_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo5_name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `iq_message` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `item_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `message` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `iq_got_it`
+(
+	`id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `message_id` bigint(20) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `iq_process`
+(
+	`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `iq_id` bigint(20) unsigned NOT NULL,
+  `comment` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `action` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `items` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`items`)),
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
