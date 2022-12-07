@@ -47,7 +47,7 @@ if (!isset($jwt)) {
     $merged_results = array();
     
 
-    $query = "SELECT iq_item.id, b.serial_number,
+    $query = "SELECT iq_item.id, b.serial_number, iq_id,
                     sn, 
                     confirm, 
                     brand, 
@@ -169,7 +169,8 @@ if (!isset($jwt)) {
 
         //$notes_a = GetNotesA($row['id'], $db);
 
-        $iq_main = GetIqMain($id, $db);
+        $iq_id = $row['iq_id'];
+        $iq_main = GetIqMain($iq_id, $db);
         $iq_status = $iq_main[0]['status'];
         $iq_updated_id = $iq_main[0]['updated_id'];
         
