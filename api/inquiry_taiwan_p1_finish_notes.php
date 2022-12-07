@@ -62,7 +62,7 @@ $items_array = json_decode($items,true);
 
 
 // update main table
-$query = "UPDATE iq_main SET `status` = 3, `updated_id` = :updated_id,  `updated_at` = now() WHERE id = :id";
+$query = "UPDATE iq_main SET `status` = 2, `updated_id` = :updated_id,  `updated_at` = now() WHERE id = :id";
 $stmt = $db->prepare($query);
 $stmt->bindParam(':updated_id', $uid);
 $stmt->bindParam(':id', $iq_id);
