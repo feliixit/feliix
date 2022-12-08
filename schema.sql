@@ -3398,3 +3398,7 @@ CREATE TABLE IF NOT EXISTS `iq_process`
   `updated_at` timestamp NULL DEFAULT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 20221208 related inquiry
+ALTER TABLE project_other_task
+ADD COLUMN `related_inquiry` VARCHAR(128) DEFAULT '';

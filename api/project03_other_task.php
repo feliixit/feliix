@@ -65,7 +65,7 @@ switch ($method) {
         $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
         $sql = "SELECT  pm.stage_id, pg.stage, pm.id task_id, title, priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
-        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, related_order, related_tab
+        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, related_order, related_tab, related_inquiry
         from project_other_task pm 
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task'
@@ -129,17 +129,28 @@ switch ($method) {
 
         $related_order = "";
         $related_tab = "";
+
+        $related_inquiry = "";
         
         $order = [];
 
         $od_name = "";
         $od_type = "";
+
+        $inquiry = [];
+
+        $iq_name = "";
+        $iq_type = "";
        
         $items = [];
         $message = [];
 
         $related_order_name = "";
         $related_serial_name = "";
+
+        $related_inquiry_name = "";
+        $related_inquiry_serial_name = "";
+   
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ($task_id != $row['task_id'] && $task_id != 0) {
@@ -169,11 +180,21 @@ switch ($method) {
                     "od_type" => $od_type,
                     "od_name" => $od_name,
 
+                    "inquiry" => $inquiry,
+
+                    "iq_type" => $iq_type,
+                    "iq_name" => $iq_name,
+
                     "related_order" => $related_order,
                     "related_tab" => $related_tab,
 
+                    "related_inquiry" => $related_inquiry,
+
                     "related_order_name" => $related_order_name,
                     "related_serial_name" => $related_serial_name,
+
+                    "related_inquiry_name" => $related_inquiry_name,
+                    "related_inquiry_serial_name" => $related_inquiry_serial_name,
                     
                 );
 
@@ -214,11 +235,19 @@ switch ($method) {
 
             $order = GetOrderInfo($task_id, $db);
 
-
             if(count($order) > 0)
             {
                 $od_name = $order[0]['od_name'];
                 $od_type = $order[0]['order_type'];
+            }
+
+
+            $inquiry = GetInquiryInfo($task_id, $db);
+
+            if(count($inquiry) > 0)
+            {
+                $iq_name = $inquiry[0]['iq_name'];
+                $iq_type = $inquiry[0]['order_type'];
             }
 
             $related_order_data = [];
@@ -234,6 +263,24 @@ switch ($method) {
             {
                 $related_order_name = "";
                 $related_serial_name = "";
+            }
+
+
+            $related_inquiry_data = [];
+            if($related_inquiry != '')
+                $related_inquiry_data = GetRelatedInquiryInfo($related_inquiry, $db);
+
+            if(count($related_inquiry_data) > 0)
+            {
+                $related_inquiry_name = $related_inquiry_data[0]['iq_name'];
+                $related_inquiry_serial_name = $related_inquiry_data[0]['serial_name'];
+            
+            }
+            else
+            {
+                $related_inquiry_name = "";
+                $related_inquiry_serial_name = "";
+            
             }
 
             if ($filename != "")
@@ -270,11 +317,21 @@ switch ($method) {
                 "od_type" => $od_type,
                 "od_name" => $od_name,
 
+                "inquiry" => $inquiry,
+                
+                "iq_type" => $iq_type,
+                "iq_name" => $iq_name,
+
                 "related_order" => $related_order,
                 "related_tab" => $related_tab,
 
+                "related_inquiry" => $related_inquiry,
+
                 "related_order_name" => $related_order_name,
                 "related_serial_name" => $related_serial_name,
+
+                "related_inquiry_name" => $related_inquiry_name,
+                "related_inquiry_serial_name" => $related_inquiry_serial_name,
 
             );
         }
@@ -662,6 +719,55 @@ function GetRelatedOrderInfo($_id, $db)
         $_result[] = array(
             "id" => $row['id'],
             "od_name" => $row['od_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
+
+function GetInquiryInfo($task_id, $db)
+{
+    $sql = "select id, iq_name, order_type, serial_name
+            from iq_main
+            where task_id = " . $task_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "iq_name" => $row['iq_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
+
+
+function GetRelatedInquiryInfo($_id, $db)
+{
+    $sql = "select id, iq_name, order_type, serial_name
+            from iq_main
+            where id = " . $_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "iq_name" => $row['iq_name'],
             "order_type" => $row['order_type'],
             "serial_name" => $row['serial_name'],
         );
