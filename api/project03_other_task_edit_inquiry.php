@@ -129,10 +129,10 @@ try{
 
         // send notify mail
         if($mail_type == 1)
-            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
+            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $iq_name);
 
         if($mail_type == 2)
-            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
+            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $iq_name);
 
         $returnArray = array('batch_id' => $task_id);
        

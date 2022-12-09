@@ -1945,7 +1945,7 @@ var app = new Vue({
       form_Data.append('due_time', this.record.due_time.trim());
       form_Data.append('detail', this.record.detail.trim());
 
-      form_Data.append('order', this.record.iq_name.trim());
+      form_Data.append('iq_name', this.record.iq_name.trim());
       form_Data.append('order_type', this.record.iq_type.trim());
 
       const token = sessionStorage.getItem('token');
