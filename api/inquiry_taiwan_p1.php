@@ -173,6 +173,11 @@ if (!isset($jwt)) {
         $iq_main = GetIqMain($iq_id, $db);
         $iq_status = $iq_main[0]['status'];
         $iq_updated_id = $iq_main[0]['updated_id'];
+
+        $iq_submit_id  = 0;
+        $iq_submit = GetLatestSubmitId($iq_id, $db);
+        if(count($iq_submit) > 0)
+            $iq_submit_id = $iq_submit[0]['create_id'];
         
         $merged_results[] = array(
             "is_checked" => "",
@@ -223,7 +228,9 @@ if (!isset($jwt)) {
             "create_id" => $create_id,
 
             "iq_status" => $iq_status,
-            "iq_updated_id" => $iq_updated_id
+            //"iq_updated_id" => $iq_updated_id,
+
+            "iq_updated_id" => $iq_submit_id,
             
         );
     }
@@ -354,6 +361,23 @@ function GetIqMain($id, $db)
         $merged_results[] = array(
             "status" => $row['status'],
             "updated_id" => $row['updated_id'],
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetLatestSubmitId($id, $db)
+{
+    $query = "select create_id from iq_process ip where iq_id = " . $id . " and action = 'send_note' order by id desc limit 1";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = array(
+            "create_id" => $row['create_id'],
         );
     }
 

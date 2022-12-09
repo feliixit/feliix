@@ -274,14 +274,14 @@ header( 'location:index' );
 
                                 <dt>Inquiry Name</dt>
                                 <dd><input type="text" placeholder="" v-model="order.iq_name"></dd>
-                                <dt>Inquiry Status</dt>
+                                <!-- <dt>Inquiry Status</dt>
                                 <dd>
                                     <select v-model="order.status">
                                         <option value="0">Draft</option>
                                         <option value="1">Waiting Feedback from TW</option>
                                         <option value="2">Inquiry Completed</option>
                                     </select>
-                                </dd>
+                                </dd> -->
 
                             </dl>
                             <div class="btnbox">
