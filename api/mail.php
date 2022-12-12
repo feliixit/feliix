@@ -7301,6 +7301,167 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
 
 
 
+function inquiry_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $url = "";
+
+    // preliminary
+    if($action == 'send_note')
+    {
+        $receiver = "Ariel Lin";
+        $mail->Subject = '[Inquiry Notification] Inquiry "' . $serial_name . '" need your feedback';
+        $header = 'Inquiry "' . $serial_name . '" need your feedback. Please check details below:';
+        $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
+    }
+        
+    if($action == 'withdraw_note_tw')
+    {
+        $receiver = "Ariel Lin";
+        $mail->Subject = 'Request for Inquiry "' . $serial_name . '" was withdrawn';
+        $header = 'The request for inquiry "' . $serial_name . '" was withdrawn. Please check details below:';
+        $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
+    }
+
+    if($action == 'finish_notes')
+    {
+        $receiver = $name;
+        $mail->Subject = 'Taiwan office already provided feedback for Inquiry "' . $serial_name . '".';
+        $header = 'Taiwan office already provided feedback for Inquiry "' . $serial_name . '". Please check details below:';
+        $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
+    }
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear " . $receiver . ",";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
+                    $content = $content . 'Inquiry Name: ' . $serial_name . ' ' . $order_name . '<br>';
+                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
+                    $content = $content . 'Submitter: ' . $name . '<br>';
+                    $content = $content . 'Comment: ' . $remark . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            </tbody>
+        </table>
+       
+            ';
+
+
+        $content = $content . '
+            
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Please click this link to view the target webpage: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+
 function order_type_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $type)
 {
     $conf = new Conf();
@@ -10324,14 +10485,14 @@ function GetAccessNotifiers($field, $order_type){
 
 function SetupMail($mail, $conf)
 {
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
 
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
@@ -10342,14 +10503,14 @@ function SetupMail($mail, $conf)
     // $mail->Username   = 'sylvia99@ethereal.email';
     // $mail->Password   = '3YEXARcxXFhjT2k5RQ';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'ian58@ethereal.email';
-    // $mail->Password   = 'enN1bKmRfPx77v5TMR';
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'ian58@ethereal.email';
+    $mail->Password   = 'enN1bKmRfPx77v5TMR';
 
      return $mail;
 

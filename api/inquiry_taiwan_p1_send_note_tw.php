@@ -154,7 +154,11 @@ try{
     
     }
 
-    order_notification($user_name, 'access2', 'access1', $project_name, $serial_name, $iq_name, 'Order - Taiwan', $comment, $action, $items_array, $iq_id);
+    $users = GetTaskUsersInfo($iq_id, $db);
+
+    $users .= ", " . $user_id;
+
+    inquiry_notification($user_name, '48', $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id);
 
     $returnArray = array('ret' => $item_id);
     $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
@@ -164,6 +168,34 @@ try{
 catch (Exception $e)
 {
     error_log($e->getMessage());
+}
+
+function GetTaskUsersInfo($pid, $db)
+{
+    $users = "";
+
+    $query = "select create_id, assignee, collaborator from project_other_task where id = :pid";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($row['create_id'] != '')
+    {
+        $users .= $row['create_id'] . ',';
+    }
+    if($row['assignee'] != '')
+    {
+        $users .= $row['assignee'] . ',';
+    }
+    if($row['collaborator'] != '')
+    {
+        $users .= $row['collaborator'] . ',';
+    }
+
+    $users = rtrim($users, ",");
+
+    return $users;
 }
 
 function GetCurrentStatus($id, $db)

@@ -181,7 +181,11 @@ try{
         die();
     }
 
-    order_notification($user_name, 'access1', 'access2', $project_name, $serial_name, $iq_name, 'Order - Taiwan', $comment, $action, $items_array, $iq_id);
+    $users = GetTaskUsersInfo($iq_id, $db);
+
+    $users .= ", 48" ;
+
+    inquiry_notification($user_name, $uid, $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id);
 
     echo $jsonEncodedReturnArray;
 }
@@ -199,4 +203,33 @@ function GerPreStatus($id, $db)
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row['items'];
+}
+
+
+function GetTaskUsersInfo($pid, $db)
+{
+    $users = "";
+
+    $query = "select create_id, assignee, collaborator from project_other_task where id = :pid";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':pid', $pid);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($row['create_id'] != '')
+    {
+        $users .= $row['create_id'] . ',';
+    }
+    if($row['assignee'] != '')
+    {
+        $users .= $row['assignee'] . ',';
+    }
+    if($row['collaborator'] != '')
+    {
+        $users .= $row['collaborator'] . ',';
+    }
+
+    $users = rtrim($users, ",");
+
+    return $users;
 }
