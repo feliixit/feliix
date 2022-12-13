@@ -7776,7 +7776,7 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
 
     if($action == 'finish_notes')
     {
-        $receiver = $name;
+        
         $mail->Subject = 'Taiwan office already provided feedback for Inquiry "' . $serial_name . '".';
         $header = 'Taiwan office already provided feedback for Inquiry "' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
