@@ -174,7 +174,7 @@ function GetTaskUsersInfo($pid, $db)
 {
     $users = "";
 
-    $query = "select create_id, assignee, collaborator from project_other_task where id = :pid";
+    $query = "select create_id, assignee, collaborator from project_other_task where id = (select task_id from iq_main where id = :pid)";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':pid', $pid);
     $stmt->execute();
