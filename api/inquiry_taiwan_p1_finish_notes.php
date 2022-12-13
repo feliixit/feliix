@@ -184,14 +184,33 @@ try{
     $users = GetTaskUsersInfo($iq_id, $db);
 
     $users .= ",48" ;
+    
+    $last_id = GetLatestSubmitId($iq_id, $db);
 
-    inquiry_notification($user_name, $uid, $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id);
+    inquiry_notification($user_name, $last_id, $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id);
 
     echo $jsonEncodedReturnArray;
 }
 catch (Exception $e)
 {
     error_log($e->getMessage());
+}
+
+function GetLatestSubmitId($id, $db)
+{
+    $last_id = 0;
+
+    $query = "select create_id from iq_process ip where iq_id = " . $id . " and action = 'send_note' order by id desc limit 1";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $last_id = $row['create_id'];
+        
+    }
+
+    return $last_id;
 }
 
 
