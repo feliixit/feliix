@@ -251,7 +251,7 @@ function SendNotifyMail01($last_id, $old_status_id, $order_type, $order_name)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify01_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
+    task_notify01_inquiry($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
 
 }
 
@@ -309,7 +309,7 @@ function SendNotifyMail02($last_id, $old_status_id, $order_type, $order_name)
     $stage_id = $_record[0]["stage_id"];
     $task_status = $_record[0]["task_status"];
 
-    task_notify02_order($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
+    task_notify02_inquiry($old_status, $task_status, $project_name, $task_name, $stages, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name);
 
 }
 
