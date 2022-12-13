@@ -7769,7 +7769,7 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
     if($action == 'withdraw_note_tw')
     {
         $receiver = "Ariel Lin";
-        $mail->Subject = 'Request for Inquiry "' . $serial_name . '" was withdrawn';
+        $mail->Subject = '[Inquiry Notification] Request for Inquiry "' . $serial_name . '" was withdrawn';
         $header = 'The request for inquiry "' . $serial_name . '" was withdrawn. Please check details below:';
         $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
     }
@@ -7777,7 +7777,7 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
     if($action == 'finish_notes')
     {
         
-        $mail->Subject = 'Taiwan office already provided feedback for Inquiry "' . $serial_name . '".';
+        $mail->Subject = '[Inquiry Notification] Taiwan office already provided feedback for Inquiry "' . $serial_name . '".';
         $header = 'Taiwan office already provided feedback for Inquiry "' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
     }
