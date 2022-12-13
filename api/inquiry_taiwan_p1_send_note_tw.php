@@ -107,52 +107,56 @@ try{
 
             if($stmt->execute())
             {
-                $query = "INSERT INTO iq_process
-                SET
-                    `iq_id` = :iq_id,
-                    `comment` = :comment,
-                    `action` = :action,
-                    `items` = :items,
-                    `status` = 0,
-                    `create_id` = :create_id,
-                    `created_at` =  now() ";
-            
-                // prepare the query
-                $stmt = $db->prepare($query);
-            
-                // bind the values
-                $stmt->bindParam(':iq_id', $item_id);
-                $stmt->bindParam(':comment', $comment);
-                $stmt->bindParam(':action', $action);
-                $stmt->bindParam(':items', $json);
-                $stmt->bindParam(':create_id', $user_id);
-            
-            
-                $last_id = 0;
-                // execute the query, also check if query was successful
-                try {
-                    // execute the query, also check if query was successful
-                    if ($stmt->execute()) {
-                        $last_id = $db->lastInsertId();
-                    } else {
-                        $arr = $stmt->errorInfo();
-                        error_log($arr[2]);
-                        $db->rollback();
-                        http_response_code(501);
-                        echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
-                        die();
-                    }
-                } catch (Exception $e) {
-                    error_log($e->getMessage());
-                    $db->rollback();
-                    http_response_code(501);
-                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-                    die();
-                }
+                
             }
         }
     
     }
+
+
+    $query = "INSERT INTO iq_process
+    SET
+        `iq_id` = :iq_id,
+        `comment` = :comment,
+        `action` = :action,
+        `items` = :items,
+        `status` = 0,
+        `create_id` = :create_id,
+        `created_at` =  now() ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':iq_id', $iq_id);
+    $stmt->bindParam(':comment', $comment);
+    $stmt->bindParam(':action', $action);
+    $stmt->bindParam(':items', $items);
+    $stmt->bindParam(':create_id', $user_id);
+
+
+    $last_id = 0;
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $last_id = $db->lastInsertId();
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
+
 
     $users = GetTaskUsersInfo($iq_id, $db);
 
