@@ -183,7 +183,7 @@ try{
 
     $users = GetTaskUsersInfo($iq_id, $db);
 
-    $users .= ", 48" ;
+    $users .= ",48" ;
 
     inquiry_notification($user_name, $uid, $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id);
 
