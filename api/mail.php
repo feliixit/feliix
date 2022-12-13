@@ -7761,8 +7761,8 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
     if($action == 'send_note')
     {
         $receiver = "Ariel Lin";
-        $mail->Subject = '[Inquiry Notification] Inquiry "' . $serial_name . '" need your feedback';
-        $header = 'Inquiry "' . $serial_name . '" need your feedback. Please check details below:';
+        $mail->Subject = '[Inquiry Notification] Inquiry "' . $serial_name . '" needs your feedback';
+        $header = 'Inquiry "' . $serial_name . '" needs your feedback. Please check details below:';
         $url = "https://feliix.myvnc.com/inquiry_taiwan?id=" . $od_id;
     }
         
