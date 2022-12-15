@@ -3037,9 +3037,9 @@ catch (Exception $e) {
                                         <dt>Order Type:</dt>
                                         <dd>
                                             <select v-model="order_type">
-                                                <option value="taiwan">Order – Taiwan</option>
-                                                <option disabled>Order – Warehouse</option>
-                                                <option disabled>Order – 3rd Party</option>
+                                                <option value="taiwan" :disabled="stage != 'Order'">Order – Taiwan</option>
+                                                <option value="mockup" :disabled="stage != 'Proposal - Mock up'">Order – Mockup</option>
+                    
                                             </select>
                                         </dd>
                                     </dl>
@@ -3220,9 +3220,9 @@ catch (Exception $e) {
                                         <dt>Order Type:</dt>
                                         <dd>
                                             <select v-model="record.od_type" disabled>
-                                                <option value="taiwan">Order – Taiwan</option>
-                                                <option disabled>Order – Warehouse</option>
-                                                <option disabled>Order – 3rd Party</option>
+                                                <option :disabled="stage != 'Order'" value="taiwan">Order – Taiwan</option>
+                                                <option :disabled="stage != 'Proposal - Mock up'" value="mockup">Order – Mockup</option>
+                                         
                                             </select>
                                         </dd>
                                     </dl>
@@ -3627,12 +3627,13 @@ catch (Exception $e) {
                             <!-- 如果是訂單類的任務，需要多出 Order Type欄位 -->
                             <ul v-if="receive_record.order.length > 0">
                                 <li><b>Order Type</b></li>
-                                <li>Order – {{ receive_record.order[0].order_type == 'taiwan' ? 'Taiwan' : '' }}</li>
+                                <li>Order – {{ receive_record.order[0].order_type == 'taiwan' ? 'Taiwan' : receive_record.order[0].order_type == 'mockup' ? 'Mock up' : '' }}</li>
                             </ul>
                             <!-- 如果是訂單類的任務，需要多出 Order Name欄位，內容值的範例: LOTW-0001 LIGHTING FIXTURE -->
                             <ul v-if="receive_record.order.length > 0">
                                 <li><b>Order Name</b></li>
-                                <li><a style="color: #25a2b8" :href="'order_taiwan_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a></li>
+                                <li v-if="receive_record.order[0].order_type == 'taiwan'"><a style="color: #25a2b8" :href="'order_taiwan_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a></li>
+                                <li v-if="receive_record.order[0].order_type == 'mockup'"><a style="color: #25a2b8" :href="'order_taiwan_mockup_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a></li>
                             </ul>
 
                             <!-- 如果是詢問單類的任務，需要多出 Inquiry Name欄位，內容值的範例: LI-0001 Decorative Lights -->
