@@ -192,7 +192,7 @@ try {
             $access7 = true;
         }
 
-        if($user_id == 1 || $user_id == 99 || $user_id == 41 )
+        if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 )
             $access6 = true;
 
         $pic_url = $decoded->data->pic_url;
