@@ -109,7 +109,7 @@ try {
             }
         }
 
-        if($user_id == 1 || $user_id == 99 || $user_id == 41 )
+        if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 )
             $access6 = true;
 
         if($access6 == false)

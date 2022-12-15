@@ -1282,6 +1282,9 @@ var app = new Vue({
         if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
+
+      if(this.username.trim() == 'Mary Jude Jeng Articulo')
+      can_save = true;
       
       if(this.username.trim() == this.record.username.trim())
         can_save = true;
@@ -1360,6 +1363,9 @@ var app = new Vue({
         if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
+
+      if(this.username.trim() == 'Mary Jude Jeng Articulo')
+      can_save = true;
     
       return can_save;
     },
