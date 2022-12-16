@@ -537,7 +537,7 @@ var app = new Vue({
             if (this.items[i].is_checked == 1) {
               if(this.items[i].confirm != "C")
               {
-                alert("Only confirmed item is allowed to send for approval.");
+                alert("Only confirmed item is allowed to approve.");
                 return;
               }
               else
@@ -561,7 +561,7 @@ var app = new Vue({
 
         let res = await axios({
           method: 'post',
-          url: 'api/order_taiwan_mockup_p1_approval',
+          url: 'api/order_taiwan_mockup_p1_approve',
           data: form_Data,
           headers: {
             "Content-Type": "multipart/form-data",

@@ -108,7 +108,7 @@ switch ($method) {
         $returnArray = array('batch_id' => $last_id);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
 
-        order_notification03($user_name, 'access1,access2,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Mockup', $message, 'new_message_21', $items, $od_id);
+        mockup_notification03($user_name, 'access1,access2,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Mockup', $message, 'new_message_21', $items, $od_id);
 
         echo $jsonEncodedReturnArray;
 

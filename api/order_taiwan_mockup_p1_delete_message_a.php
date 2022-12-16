@@ -98,7 +98,7 @@ try{
         $message = $items['notes_a'][$index]['message'];
     }
 
-    order_notification03($user_name, 'access1,access2,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Mockup', $message, 'new_message_22', $items, $od_id);
+    mockup_notification03($user_name, 'access1,access2,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Mockup', $message, 'new_message_22', $items, $od_id);
 
     echo $jsonEncodedReturnArray;
 }

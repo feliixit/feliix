@@ -160,7 +160,7 @@ try{
         die();
     }
 
-    order_notification($user_name, 'access3', 'access1, access2', $project_name, $serial_name, $od_name, 'Order - Mockup', $comment, $action, $items_array, $od_id);
+    mockup_notification($user_name, 'access3', 'access1, access2', $project_name, $serial_name, $od_name, 'Order - Mockup', $comment, $action, $items_array, $od_id);
 
     echo $jsonEncodedReturnArray;
 }

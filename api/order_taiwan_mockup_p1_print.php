@@ -215,43 +215,43 @@ if($jwt){
 
             $sheet->setCellValue('A1', '#');
             $sheet->setCellValue('B1', 'Preliminary');
-            $sheet->setCellValue('C1', 'For Approval');
-            $sheet->setCellValue('D1', 'Approved');
-            $sheet->setCellValue('E1', 'Status');
-            $sheet->setCellValue('F1', 'Brand');
-            $sheet->setCellValue('G1', 'Photo 1');
-            $sheet->setCellValue('H1', 'Photo 2');
-            $sheet->setCellValue('I1', 'Photo 3');
-            $sheet->setCellValue('J1', 'Description');
-            $sheet->setCellValue('K1', 'Qty Needed');
-            $sheet->setCellValue('L1', 'SRP');
-            $sheet->setCellValue('M1', 'Date Needed by Client');
-            $sheet->setCellValue('N1', 'Shipping Way');
-            $sheet->setCellValue('O1', 'ETA');
-            $sheet->setCellValue('P1', 'Arrival Date');
-            $sheet->setCellValue('Q1', 'Warehouse In Charge');
-            $sheet->setCellValue('R1', 'Testing');
-            $sheet->setCellValue('S1', 'Delivery');
+            //$sheet->setCellValue('C1', 'For Approval');
+            $sheet->setCellValue('C1', 'Approved');
+            $sheet->setCellValue('D1', 'Status');
+            $sheet->setCellValue('E1', 'Brand');
+            $sheet->setCellValue('F1', 'Photo 1');
+            $sheet->setCellValue('G1', 'Photo 2');
+            $sheet->setCellValue('H1', 'Photo 3');
+            $sheet->setCellValue('I1', 'Description');
+            $sheet->setCellValue('J1', 'Qty Needed');
+            $sheet->setCellValue('K1', 'SRP');
+            $sheet->setCellValue('L1', 'Date Needed by Client');
+            $sheet->setCellValue('M1', 'Shipping Way');
+            $sheet->setCellValue('N1', 'ETA');
+            $sheet->setCellValue('O1', 'Arrival Date');
+            $sheet->setCellValue('P1', 'Warehouse In Charge');
+            $sheet->setCellValue('Q1', 'Testing');
+            $sheet->setCellValue('R1', 'Delivery');
 
             $sheet->getColumnDimension('A')->setWidth(4.82);
             $sheet->getColumnDimension('B')->setWidth(12.82);
+            //$sheet->getColumnDimension('C')->setWidth(12.82);
             $sheet->getColumnDimension('C')->setWidth(12.82);
-            $sheet->getColumnDimension('D')->setWidth(12.82);
-            $sheet->getColumnDimension('E')->setWidth(22.82);
-            $sheet->getColumnDimension('F')->setWidth(13.82);
+            $sheet->getColumnDimension('D')->setWidth(22.82);
+            $sheet->getColumnDimension('E')->setWidth(13.82);
+            $sheet->getColumnDimension('F')->setWidth(18.82);
             $sheet->getColumnDimension('G')->setWidth(18.82);
             $sheet->getColumnDimension('H')->setWidth(18.82);
-            $sheet->getColumnDimension('I')->setWidth(18.82);
-            $sheet->getColumnDimension('J')->setWidth(40.82);
+            $sheet->getColumnDimension('I')->setWidth(40.82);
+            $sheet->getColumnDimension('J')->setWidth(15.82);
             $sheet->getColumnDimension('K')->setWidth(15.82);
-            $sheet->getColumnDimension('L')->setWidth(15.82);
-            $sheet->getColumnDimension('M')->setWidth(20.82);
-            $sheet->getColumnDimension('N')->setWidth(22.82);
+            $sheet->getColumnDimension('L')->setWidth(20.82);
+            $sheet->getColumnDimension('M')->setWidth(22.82);
+            $sheet->getColumnDimension('N')->setWidth(13.82);
             $sheet->getColumnDimension('O')->setWidth(13.82);
-            $sheet->getColumnDimension('P')->setWidth(13.82);
+            $sheet->getColumnDimension('P')->setWidth(30.82);
             $sheet->getColumnDimension('Q')->setWidth(30.82);
             $sheet->getColumnDimension('R')->setWidth(30.82);
-            $sheet->getColumnDimension('S')->setWidth(30.82);
 
             $i = 2;
             foreach($merged_results as $row)
@@ -259,21 +259,21 @@ if($jwt){
                 $sheet->setCellValue('A' . $i, $i-1);
                 $sheet->setCellValue('B' . $i, $row['status'] <= 1 ? '●' : '');
                 $sheet->getStyle('B'. $i)->applyFromArray($center_style);
-                $sheet->setCellValue('C' . $i, $row['status'] == 2 ? '●' : '');
+                //$sheet->setCellValue('C' . $i, $row['status'] == 2 ? '●' : '');
+                //$sheet->getStyle('C'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('C' . $i, $row['status'] >= 3 ? '●' : '');
                 $sheet->getStyle('C'. $i)->applyFromArray($center_style);
-                $sheet->setCellValue('D' . $i, $row['status'] >= 3 ? '●' : '');
-                $sheet->getStyle('D'. $i)->applyFromArray($center_style);
 
                 
                     
-                $sheet->setCellValue('E' . $i, $row['confirm_text']);
-                $sheet->getStyle('E'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('D' . $i, $row['confirm_text']);
+                $sheet->getStyle('D'. $i)->applyFromArray($center_style);
 
                 if($row['brand_other'] != 'OTHER')
-                    $sheet->setCellValue('F' . $i, $row['brand']);
+                    $sheet->setCellValue('E' . $i, $row['brand']);
                 else
-                    $sheet->setCellValue('F' . $i, $row['brand_other']);
-                $sheet->getStyle('F'. $i)->applyFromArray($center_style);
+                    $sheet->setCellValue('E' . $i, $row['brand_other']);
+                $sheet->getStyle('E'. $i)->applyFromArray($center_style);
 
                 if($row['photo1'] != '')
                 {
@@ -283,6 +283,26 @@ if($jwt){
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
                     $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo1']));
+                    $objDrawing->setCoordinates('F' . $i);
+                    $objDrawing->setWidthAndHeight(100, 100);
+                    $objDrawing->setResizeProportional(true);
+                    $objDrawing->setOffsetX(15);
+                    $objDrawing->setOffsetY(30);
+                    $objDrawing->setWorksheet($sheet);
+
+                    $sheet->getRowDimension($i)->setRowHeight(120);
+
+                    $sheet->getStyle('F'. $i)->applyFromArray($center_style);
+                }
+
+                if($row['photo2'] != '')
+                {
+                    grab_image(str_replace(' ', '%20', $row['photo2']), $conf::$upload_path . str_replace(' ', '%20', $row['photo2']));
+
+                    $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                    $objDrawing->setName('photo2');
+                    $objDrawing->setDescription('photo2');
+                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo2']));
                     $objDrawing->setCoordinates('G' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -295,14 +315,14 @@ if($jwt){
                     $sheet->getStyle('G'. $i)->applyFromArray($center_style);
                 }
 
-                if($row['photo2'] != '')
+                if($row['photo3'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo2']), $conf::$upload_path . str_replace(' ', '%20', $row['photo2']));
+                    grab_image(str_replace(' ', '%20', $row['photo3']), $conf::$upload_path . str_replace(' ', '%20', $row['photo3']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-                    $objDrawing->setName('photo2');
-                    $objDrawing->setDescription('photo2');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo2']));
+                    $objDrawing->setName('photo3');
+                    $objDrawing->setDescription('photo3');
+                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo3']));
                     $objDrawing->setCoordinates('H' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -314,68 +334,48 @@ if($jwt){
 
                     $sheet->getStyle('H'. $i)->applyFromArray($center_style);
                 }
-
-                if($row['photo3'] != '')
-                {
-                    grab_image(str_replace(' ', '%20', $row['photo3']), $conf::$upload_path . str_replace(' ', '%20', $row['photo3']));
-
-                    $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-                    $objDrawing->setName('photo3');
-                    $objDrawing->setDescription('photo3');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo3']));
-                    $objDrawing->setCoordinates('I' . $i);
-                    $objDrawing->setWidthAndHeight(100, 100);
-                    $objDrawing->setResizeProportional(true);
-                    $objDrawing->setOffsetX(15);
-                    $objDrawing->setOffsetY(30);
-                    $objDrawing->setWorksheet($sheet);
-
-                    $sheet->getRowDimension($i)->setRowHeight(120);
-
-                    $sheet->getStyle('I'. $i)->applyFromArray($center_style);
-                }
                 
-                $sheet->setCellValue('J'. $i, "ID: ". ($row['pid'] == 0 ? "" : $row['pid']) . "\n" . $row['code'] . "\n" . $row['brief'] . "\n" . $row['listing']);
-                $sheet->getStyle('J'. $i)->getAlignment()->setWrapText(true);
+                $sheet->setCellValue('I'. $i, "ID: ". ($row['pid'] == 0 ? "" : $row['pid']) . "\n" . $row['code'] . "\n" . $row['brief'] . "\n" . $row['listing']);
+                $sheet->getStyle('I'. $i)->getAlignment()->setWrapText(true);
 
-                $sheet->setCellValue('K' . $i, $row['qty']);
+                $sheet->setCellValue('J' . $i, $row['qty']);
+                $sheet->getStyle('J'. $i)->applyFromArray($center_style);
+
+                $sheet->setCellValue('K' . $i, ($row['srp'] != '' ? "₱ " . $row['srp'] : ''));
                 $sheet->getStyle('K'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('L' . $i, ($row['srp'] != '' ? "₱ " . $row['srp'] : ''));
+                $sheet->setCellValue('L' . $i,  $row['date_needed']);
                 $sheet->getStyle('L'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('M' . $i,  $row['date_needed']);
+                $sheet->setCellValue('M' . $i,  $row['shipping_way'] . "\n" . $row['shipping_number']);
                 $sheet->getStyle('M'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('N' . $i,  $row['shipping_way'] . "\n" . $row['shipping_number']);
+                $sheet->setCellValue('N' . $i,  $row['eta']);
                 $sheet->getStyle('N'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('O' . $i,  $row['eta']);
+                $sheet->setCellValue('O' . $i,  $row['arrive']);
                 $sheet->getStyle('O'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('P' . $i,  $row['arrive']);
+                $sheet->setCellValue('P'. $i, "Confirm Arrival: " . ($row['charge'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark'] );
+                $sheet->getStyle('P'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('P'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('Q'. $i, "Confirm Arrival: " . ($row['charge'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark'] );
+                //$sheet->setCellValue('R'. $i, "Assignee: " . $row['test'] . "\n" . "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
+                $sheet->setCellValue('Q'. $i, "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
                 $sheet->getStyle('Q'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('Q'. $i)->applyFromArray($center_style);
 
-                //$sheet->setCellValue('R'. $i, "Assignee: " . $row['test'] . "\n" . "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
-                $sheet->setCellValue('R'. $i, "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
+                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->setCellValue('R'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
                 $sheet->getStyle('R'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('R'. $i)->applyFromArray($center_style);
-
-                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                $sheet->setCellValue('S'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
-                $sheet->getStyle('S'. $i)->applyFromArray($center_style);
 
 
                 $i++;
             }
         
-            $sheet->getStyle('A1:' . 'S1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'S' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'R1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'R' . --$i)->applyFromArray($styleArray);
 
             ob_end_clean();
 

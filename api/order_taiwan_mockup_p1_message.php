@@ -146,11 +146,11 @@ switch ($method) {
                 $send17 = true;
     
             if($send17==true)
-                order_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $od_name, 'Order - Mockup', $message, 'new_message_17', $items, $od_id, GetAccess7($od_id, $db));
+                mockup_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $od_name, 'Order - Mockup', $message, 'new_message_17', $items, $od_id, GetAccess7($od_id, $db));
         }
 
         if($page == 2)
-        order_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $od_name, 'Order - Mockup', $message, 'new_message_19', $items, $od_id);
+        mockup_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $od_name, 'Order - Mockup', $message, 'new_message_19', $items, $od_id);
         
         echo $jsonEncodedReturnArray;
 

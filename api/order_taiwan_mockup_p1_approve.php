@@ -166,7 +166,7 @@ try{
     }
 
     if($page != 3)
-        order_notification($user_name, 'access2', 'access1, access3', $project_name, $serial_name, $od_name, 'Order - Mockup', $comment, $action, $items_array, $od_id);
+        mockup_notification($user_name, 'access2', 'access1, access3', $project_name, $serial_name, $od_name, 'Order - Mockup', $comment, $action, $items_array, $od_id);
 
     echo $jsonEncodedReturnArray;
 }
