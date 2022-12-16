@@ -61,7 +61,7 @@ $due_date = (isset($_POST['due_date']) ?  $_POST['due_date'] : '');
 $due_time = (isset($_POST['due_time']) ?  $_POST['due_time'] : '');
 $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 
-$od_name = (isset($_POST['od_name']) ?  $_POST['od_name'] : '');
+$od_name = (isset($_POST['order']) ?  $_POST['order'] : '');
 $order_type = (isset($_POST['order_type']) ?  $_POST['order_type'] : '');
 
 $_record = GetTaskDetailOrg($task_id, $db);
