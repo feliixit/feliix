@@ -1350,7 +1350,7 @@ try {
                             <a class="btn small green" @click="approval()" v-if="access1 == true && no_privlege() != true">Approved</a>
                             <a class="btn small" @click="withdrawNotesToTw()" v-if="access1 == true && no_privlege() != true">Withdraw</a>
                         
-                           <!-- <a class="btn small green" @click="finish_notes()" v-if="access2 == true">Finish Notes</a> -->
+                            <a class="btn small green" @click="finish_notes()" v-if="access2 == true">Finish Notes</a> 
                            
                             <input type="text" placeholder="Comment" v-model="comment" v-if="(access1 == true || access2 == true) && no_privlege() != true">
                         </div>
