@@ -1294,7 +1294,7 @@ try {
             <div class="block" style="display: flex; justify-content: space-between;">
                 <!-- tag -->
                 <div>
-                    <b class="tag focus">ORDER MOCKUP</b>
+                    <b class="tag focus">ORDER – MOCKUP</b>
                     <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + od_name }}</b>
                     <b class="tag focus">PROJECT</b>
                     <a :href="'project03_other?sid=' + stage_id"><b class="tag">{{ project_name }}</b></a>
@@ -1347,7 +1347,7 @@ try {
                         <div class="btn_block">
                        
                             <a class="btn small green" @click="sendNotesToTw()" v-if="access1 == true && no_privlege() != true">Send TW for Notes</a>
-                            <a class="btn small green" @click="approval()" v-if="access1 == true && no_privlege() != true">Approved</a>
+                            <a class="btn small green" @click="approval()" v-if="access1 == true && no_privlege() != true">Approve</a>
                             <a class="btn small" @click="withdrawNotesToTw()" v-if="access1 == true && no_privlege() != true">Withdraw</a>
                         
                             <a class="btn small green" @click="finish_notes()" v-if="access2 == true">Finish Notes</a> 
