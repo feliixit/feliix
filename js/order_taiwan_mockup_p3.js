@@ -781,7 +781,7 @@ var app = new Vue({
   
         axios({
           method: "post",
-          url: "api/order_taiwan_p1_export",
+          url: "api/order_taiwan_mockup_p1_export",
           data: form_Data,
           responseType: "blob",
         })
