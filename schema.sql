@@ -3402,3 +3402,14 @@ CREATE TABLE IF NOT EXISTS `iq_process`
 -- 20221208 related inquiry
 ALTER TABLE project_other_task
 ADD COLUMN `related_inquiry` VARCHAR(128) DEFAULT '';
+
+
+-- 20221219 related inquiry for task management
+ALTER TABLE project_other_task_l
+ADD COLUMN `related_inquiry` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE project_other_task_o
+ADD COLUMN `related_inquiry` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE project_other_task_sl
+ADD COLUMN `related_inquiry` VARCHAR(128) DEFAULT '';
