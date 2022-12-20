@@ -978,6 +978,29 @@ function GetRelatedOrderInfo($_id, $db)
 }
 
 
+function GetInquiryInfo($task_id, $db)
+{
+    $sql = "select id, iq_name, order_type, serial_name
+            from iq_main
+            where task_id = " . $task_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "iq_name" => $row['iq_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
 function GetRelatedInquiryInfo($_id, $db)
 {
     $sql = "select id, iq_name, order_type, serial_name

@@ -2012,6 +2012,197 @@ var app = new Vue({
         }).finally(function () { _this.task_edit_clear_o() });
     },
 
+    
+    task_create_i() {
+      let _this = this;
+
+      if (this.title.trim() == '') {
+        Swal.fire({
+          text: 'Please enter title!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.order.trim() == '') {
+        Swal.fire({
+          text: 'Please enter inquiry name!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      if (this.due_date.trim() == '' && this.due_time.trim() != '') {
+        Swal.fire({
+          text: 'Please enter due date!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.order_category.trim() == '') {
+        Swal.fire({
+          text: 'Please choose Category!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      form_Data.append('stage_id', this.stage_id);
+      form_Data.append('order', this.order.trim());
+      form_Data.append('category', this.order_category.trim());
+      form_Data.append('order_type', this.order_type.trim());
+      form_Data.append('title', this.title.trim());
+      form_Data.append('priority', this.priority);
+      form_Data.append('assignee', Array.prototype.map.call(this.assignee, function(item) { return item.id; }).join(","));
+      form_Data.append('collaborator', Array.prototype.map.call(this.collaborator, function(item) { return item.id; }).join(",") );
+      form_Data.append('due_date', this.due_date.trim());
+      form_Data.append('due_time', this.due_time.trim());
+      form_Data.append('detail', this.detail.trim());
+ 
+
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project03_other_task_inquiry_sls',
+        data: form_Data
+      })
+        .then(function (response) {
+          if (response.data['batch_id'] != 0) {
+            _this.task_upload(response.data['batch_id']);
+          }
+          else {
+            _this.task_clear_i();
+
+          }
+
+          if (_this.fileArray.length == 0) {
+            _this.getProjectOtherTask(_this.stage_id);
+            _this.task_clear_i();
+          }
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () { _this.task_clear_i() });
+    },
+
+
+    task_clear_i() {
+
+      this.detail = "";
+      this.order = "";
+      this.order_type = "";
+
+      document.getElementById('dialog_a1_i').classList.remove("focus");
+      document.getElementById('add_a1_i').classList.remove("show");
+    },
+
+    task_edit_clear_i() {
+
+      document.getElementById('dialog_red_edit_i').classList.remove("show");
+      document.getElementById('edit_red_i').classList.remove("focus");
+    },
+
+
+    task_edit_create_i() {
+      let _this = this;
+
+      if (this.task_id_to_load == 0) {
+        Swal.fire({
+          text: 'Please select a task to edit',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+      if (this.record.due_date.trim() == '' && this.record.due_time.trim() != '') {
+        Swal.fire({
+          text: 'Please enter due date!',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        })
+
+        //$(window).scrollTop(0);
+        return;
+      }
+
+
+      _this.submit = true;
+      var form_Data = new FormData();
+
+      form_Data.append('task_id', this.record.task_id);
+      form_Data.append('title', this.record.title.trim());
+      form_Data.append('priority', this.record.priority_id);
+      form_Data.append('status', this.record.task_status);
+      form_Data.append('assignee', Array.prototype.map.call(this.record.assignee, function(item) { return item.id; }).join(","));
+      form_Data.append('collaborator', Array.prototype.map.call(this.record.collaborator, function(item) { return item.id; }).join(","));
+      form_Data.append('due_date', this.record.due_date.trim());
+      form_Data.append('due_time', this.record.due_time.trim());
+      form_Data.append('detail', this.record.detail.trim());
+
+      form_Data.append('iq_name', this.record.iq_name.trim());
+      form_Data.append('order_type', this.record.iq_type.trim());
+
+      const token = sessionStorage.getItem('token');
+
+      axios({
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
+        url: 'api/project03_other_task_edit_inquiry_sls',
+        data: form_Data
+      })
+        .then(function (response) {
+          if (response.data['batch_id'] != 0) {
+            _this.task_edit_upload(response.data['batch_id']);
+          }
+          else {
+            _this.task_edit_clear_i();
+
+          }
+
+          if (_this.editfileArray.length == 0) {
+            _this.getProjectOtherTask(_this.stage_id);
+            _this.task_edit_clear_i();
+          }
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response)
+        }).finally(function () { _this.task_edit_clear_i() });
+    },
+
+
   },
 });
 

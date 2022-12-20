@@ -2035,7 +2035,6 @@ var app = new Vue({
       form_Data.append('due_date', this.due_date.trim());
       form_Data.append('due_time', this.due_time.trim());
       form_Data.append('detail', this.detail.trim());
-      form_Data.append('category', this.category.trim());
  
 
 
@@ -2138,7 +2137,7 @@ var app = new Vue({
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
         },
-        url: 'api/project03_other_task_edit_inquiry',
+        url: 'api/project03_other_task_edit_inquiry_l',
         data: form_Data
       })
         .then(function (response) {
