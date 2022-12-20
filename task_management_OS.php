@@ -2870,6 +2870,15 @@ catch (Exception $e) {
                                         <dd><input type="text" v-model="record.title"></dd>
                                     </dl>
                                     <dl>
+                                        <dt>Order Category:</dt>
+                                        <dd>
+                                            <select v-model="record.related_category" disabled>
+                                                <option value="Lighting">Lighting</option>
+                                                <option value="Office Systems">Office Systems</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    <dl>
                                         <dt>Priority:</dt>
                                         <dd>
                                             <select name="" id="" v-model="record.priority_id">

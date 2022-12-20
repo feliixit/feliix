@@ -1797,6 +1797,8 @@ var app = new Vue({
 
     task_edit_clear_o() {
 
+      this.record = {};
+
       document.getElementById('dialog_red_edit_o').classList.remove("show");
       document.getElementById('edit_red_o').classList.remove("focus");
     },
@@ -2081,6 +2083,8 @@ var app = new Vue({
     },
 
     task_edit_clear_i() {
+
+      this.record = {};
 
       document.getElementById('dialog_red_edit_i').classList.remove("show");
       document.getElementById('edit_red_i').classList.remove("focus");
