@@ -3488,9 +3488,10 @@ catch (Exception $e) {
                         <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
                         <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
                         <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
-                        <b v-if="receive_record.order.length == 0">[Task] {{ receive_record.title }}</b>
+                        <b v-if="receive_record.order.length == 0 && receive_record.inquiry.length == 0">[Task] {{ receive_record.title }}</b>
                         <!-- 如果是訂單類的任務，任務標題前的字樣會從 Task 變成 Order Task，如下 -->
                         <b v-if="receive_record.order.length > 0">{{ receive_record.order.length > 0 ? '[Order Task]' : '' }} {{ receive_record.title }}</b>
+                        <b v-if="receive_record.inquiry.length > 0">{{ receive_record.inquiry.length > 0 ? '[Inquiry Task]' : '' }} {{ receive_record.title }}</b>
                         <!-- <a class="btn small blue right" id="btn_arrange">Arrange Meeting</a> -->
                     </div>
                     <div class="teskbox dialogclear" style="margin-top:-2px !important">

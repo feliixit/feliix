@@ -134,6 +134,7 @@ switch ($method) {
         if($category == 'Lighting')
             $serial = 'LI-' . $serial;
     
+        $task_type = 'SLS';
 
         $query = "INSERT INTO iq_main
         SET
@@ -141,7 +142,7 @@ switch ($method) {
             `task_id` = :task_id,
             `order_type` = :order_type,
             `serial_name` = :serial_name,
-          
+            `task_type` = :task_type,
             `create_id` = :create_id,
             `created_at` = now()";
 
@@ -153,7 +154,8 @@ switch ($method) {
         $stmt->bindParam(':task_id', $last_id);
         $stmt->bindParam(':order_type', $order_type);
         $stmt->bindParam(':serial_name', $serial);
-    
+        $stmt->bindParam(':task_type', $task_type);
+        
         $stmt->bindParam(':create_id', $uid);
 
         // execute the query, also check if query was successful
@@ -219,7 +221,7 @@ function SendNotifyMail($last_id, $stage_id, $order_type, $order_name)
     //$order_type = $_od_main[0]["order_type"];
     //$order_name = $_od_main[0]["order_name"];
 
-    task_notify_type_order("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, $created_at, GetOrderType($order_type), $order_name, "LT");
+    task_notify_type_inquiry("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, $created_at, GetOrderType($order_type), $order_name, "SLS");
 
 }
 

@@ -982,7 +982,7 @@ function GetInquiryInfo($task_id, $db)
 {
     $sql = "select id, iq_name, order_type, serial_name
             from iq_main
-            where task_id = " . $task_id;
+            where task_type = 'SLS' and task_id = " . $task_id;
 
     $stmt = $db->prepare($sql);
     $stmt->execute();
