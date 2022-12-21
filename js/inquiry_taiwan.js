@@ -61,7 +61,7 @@ var app = new Vue({
       pages : [],
       temp_pages : [],
 
-      
+      task_type : '',
 
       // block_names
       block_names : [],
@@ -162,7 +162,7 @@ var app = new Vue({
       show_title : true,
 
       // version II new parameters
-
+      project_id: 0, // dummy
       
 
         // paging
@@ -461,6 +461,7 @@ var app = new Vue({
                     _this.serial_name = res.data[0].serial_name;
                     _this.status = res.data[0].status;
                     _this.updated_by = res.data[0].updated_by;
+                    _this.task_type = res.data[0].task_type;
   
                 },
                 (err) => {

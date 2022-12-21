@@ -1295,8 +1295,10 @@ try {
                 <div>
                     <b class="tag focus">INQUIRY</b>
                     <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + iq_name }}</b>
-                    <b class="tag focus">PROJECT</b>
-                    <a :href="'project03_other?sid=' + stage_id"><b class="tag">{{ project_name }}</b></a>
+                    <b class="tag focus" v-if="task_type == ''">PROJECT</b>
+                    <b class="tag focus" v-if="task_type != ''">TASK</b>
+                    <a :href="'project03_other?sid=' + stage_id" v-if="task_type == ''"><b class="tag">{{ project_name }}</b></a>
+                    <a :href="'task_management_' + task_type + '?sid=' + project_id" v-if="task_type != ''"><b class="tag">{{ project_name }}</b></a>
                 </div>
 
 
