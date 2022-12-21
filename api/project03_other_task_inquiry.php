@@ -106,8 +106,7 @@ switch ($method) {
             if ($stmt->execute()) {
                 $last_id = $db->lastInsertId();
 
-                // send notify mail
-                SendNotifyMail($last_id, $stage_id, $order_type, $order);
+                
             } else {
                 $arr = $stmt->errorInfo();
                 error_log($arr[2]);
@@ -166,6 +165,8 @@ switch ($method) {
             error_log($e->getMessage());
         }
 
+        // send notify mail
+        SendNotifyMail($last_id, $stage_id, $order_type, $order, $serial);
 
         $returnArray = array('batch_id' => $last_id);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);

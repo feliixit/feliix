@@ -3925,7 +3925,7 @@ function task_notify_order($request_type, $project_name, $task_name, $stages_sta
 
 
 
-function task_notify_inquiry($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, $order_type, $order_name)
+function task_notify_inquiry($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, $order_type, $order_name, $serial_name)
 {
     $tab = "";
 
@@ -4037,7 +4037,7 @@ function task_notify_inquiry($request_type, $project_name, $task_name, $stages_s
     //如果是訂單任務，執行下三行
     $content = $content . "<p>Inquiry Task: " . $task_name . "</p>";
     // $content = $content . "<p>Order Type: " . $order_type . "</p>";
-    $content = $content . "<p>Inquiry Name: " . $order_name . "</p>";
+    $content = $content . "<p>Inquiry Name: " . $serial_name . " "  . $order_name . "</p>";
 
     $content = $content . "<p>Creator: " . $creators . "</p>";
     $content = $content . "<p>Assignee: " . $assignees . "</p>";

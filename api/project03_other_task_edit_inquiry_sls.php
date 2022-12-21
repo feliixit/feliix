@@ -62,6 +62,7 @@ $due_time = (isset($_POST['due_time']) ?  $_POST['due_time'] : '');
 $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 
 $iq_name = (isset($_POST['iq_name']) ?  $_POST['iq_name'] : '');
+$serial_name = (isset($_POST['serial_name']) ? $_POST['serial_name'] : '');
 $order_type = (isset($_POST['order_type']) ?  $_POST['order_type'] : '');
 
 $_record = GetTaskDetailOrg($task_id, $db);
@@ -129,10 +130,10 @@ try{
 
         // send notify mail
         if($mail_type == 1)
-            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $iq_name);
+            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $serial_name . ' ' . $iq_name);
 
         if($mail_type == 2)
-            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $iq_name);
+            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $serial_name . ' ' . $iq_name);
 
         $returnArray = array('batch_id' => $task_id);
        
