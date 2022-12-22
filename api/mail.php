@@ -8395,7 +8395,7 @@ function mockup_notification($name, $access,  $access_cc, $project_name, $serial
 
 
 
-function inquiry_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
+function inquiry_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $task_type)
 {
     $conf = new Conf();
 
@@ -8509,7 +8509,12 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
             <tr>
                 <td style="font-size: 15px; padding: 0 0 5px 15px; text-align: justify; line-height: 1.8;">';
                     $content = $content . 'Inquiry Name: ' . $serial_name . ' ' . $order_name . '<br>';
-                    $content = $content . 'Related Project: ' . $project_name . '<br>';
+
+                    if($task_type == "")
+                        $content = $content . 'Related Project: ' . $project_name . '<br>';
+                    else
+                        $content = $content . 'Task Management of ' . $task_type . ' Department<br>';
+
                     $content = $content . 'Submission Time: ' . date('Y/m/d h:i:s a', time()) . '<br>';
                     $content = $content . 'Submitter: ' . $name . '<br>';
                     $content = $content . 'Comment: ' . $remark . '';

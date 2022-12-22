@@ -181,13 +181,22 @@ try{
         die();
     }
 
-    $users = GetTaskUsersInfo($iq_id, $db);
+    $task = GetTaskInfo($iq_id, $db);
+    if(count($task) == 0) {
+        $task_table_info = "";
+        $task_department_info = "";
+    }
+    else {
+        $task_table_info = GetTaskTableInfo($task[0]['task_type']);
+        $task_department_info = GetTaskDepartmentInfo($task[0]['task_type']);
+        }
+    $users = GetTaskUsersInfo($iq_id, $db, $task_table_info);
 
     $users .= ",48" ;
     
     $last_id = GetLatestSubmitId($iq_id, $db);
 
-    inquiry_notification($user_name, $last_id, $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id);
+    inquiry_notification($user_name, $last_id, $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id, $task_department_info);
 
     echo $jsonEncodedReturnArray;
 }
@@ -224,12 +233,28 @@ function GerPreStatus($id, $db)
     return $row['items'];
 }
 
+function GetTaskInfo($id, $db)
+{
+    $query = "SELECT task_id, task_type FROM iq_main WHERE id = :id ";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
 
-function GetTaskUsersInfo($pid, $db)
+    $merged_results = array();
+
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetTaskUsersInfo($pid, $db, $task_type)
 {
     $users = "";
 
-    $query = "select create_id, assignee, collaborator from project_other_task where id = (select task_id from iq_main where id = :pid)";
+    $query = "select create_id, assignee, collaborator from project_other_task" . $task_type . " where id = (select task_id from iq_main where id = :pid)";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':pid', $pid);
     $stmt->execute();
@@ -251,4 +276,45 @@ function GetTaskUsersInfo($pid, $db)
     $users = rtrim($users, ",");
 
     return $users;
+}
+
+
+function GetTaskTableInfo($task_type)
+{
+    $info = "";
+
+    if($task_type == "LT")
+    {
+        $info = "_l";
+    }
+    else if($task_type == "OS")
+    {
+        $info = "_o";
+    }
+    else if($task_type == "SLS")
+    {
+        $info = "_sl";
+    }
+
+    return $info;
+}
+
+function GetTaskDepartmentInfo($task_type)
+{
+    $info = "";
+
+    if($task_type == "LT")
+    {
+        $info = "Lighting";
+    }
+    else if($task_type == "OS")
+    {
+        $info = "Office System";
+    }
+    else if($task_type == "SLS")
+    {
+        $info = "Sales";
+    }
+
+    return $info;
 }

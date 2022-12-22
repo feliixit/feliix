@@ -160,11 +160,20 @@ try{
         die();
     }
 
-    $users = GetTaskUsersInfo($iq_id, $db);
+    $task = GetTaskInfo($iq_id, $db);
+    if(count($task) == 0) {
+        $task_table_info = "";
+        $task_department_info = "";
+    }
+    else {
+        $task_table_info = GetTaskTableInfo($task[0]['task_type']);
+        $task_department_info = GetTaskDepartmentInfo($task[0]['task_type']);
+        }
+    $users = GetTaskUsersInfo($iq_id, $db, $task_table_info);
 
     $users .= ", " . $user_id;
 
-    inquiry_notification($user_name, $uid, $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id);
+    inquiry_notification($user_name, $uid, $users, $project_name, $serial_name, $iq_name, 'Inquiry - Taiwan', $comment, $action, $items_array, $iq_id, $task_department_info);
 
     echo $jsonEncodedReturnArray;
 }
@@ -174,11 +183,28 @@ catch (Exception $e)
 }
 
 
-function GetTaskUsersInfo($pid, $db)
+function GetTaskInfo($id, $db)
+{
+    $query = "SELECT task_id, task_type FROM iq_main WHERE id = :id ";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+
+    $merged_results = array();
+
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetTaskUsersInfo($pid, $db, $task_type)
 {
     $users = "";
 
-    $query = "select create_id, assignee, collaborator from project_other_task where id = :pid";
+    $query = "select create_id, assignee, collaborator from project_other_task" . $task_type . " where id = (select task_id from iq_main where id = :pid)";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':pid', $pid);
     $stmt->execute();

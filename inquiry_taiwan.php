@@ -1298,7 +1298,7 @@ try {
                     <b class="tag focus" v-if="task_type == ''">PROJECT</b>
                     <b class="tag focus" v-if="task_type != ''">TASK</b>
                     <a :href="'project03_other?sid=' + stage_id" v-if="task_type == ''"><b class="tag">{{ project_name }}</b></a>
-                    <a :href="'task_management_' + task_type + '?sid=' + project_id" v-if="task_type != ''"><b class="tag">{{ project_name }}</b></a>
+                    <a :href="'task_management_' + task_type + '?sid=' + stage_id" v-if="task_type != ''"><b class="tag">{{ project_name }}</b></a>
                 </div>
 
 
