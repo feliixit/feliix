@@ -3421,6 +3421,16 @@ catch (Exception $e) {
                                         </select>
                                     </dd>
 
+                                    <dt>Task Type</dt>
+                                    <dd>
+                                        <select v-model="fil_type">
+                                            <option value=""></option>
+                                            <option value="r">Regular Task</option>
+                                            <option value="o">Order Task</option>
+                                            <option value="i">Inquiry Task</option>
+                                        </select>
+                                    </dd>
+
                                     <dt>Keyword (only for task title and recent message)</dt>
                                     <dd><input type="text" v-model="fil_keyword"></dd>
 

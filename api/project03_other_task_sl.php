@@ -60,6 +60,7 @@ switch ($method) {
         $fp = (isset($_GET["fp"]) ?  $_GET["fp"] : 0);
         $fc = (isset($_GET["fc"]) ?  $_GET["fc"] : "");
         $fk = (isset($_GET["fk"]) ?  $_GET["fk"] : "");
+        $ft = (isset($_GET["ft"]) ?  $_GET["ft"] : "");
 
         $fc = urldecode($fc);
         $fk = urldecode($fk);
@@ -347,6 +348,47 @@ switch ($method) {
             );
         }
 
+        if($ft == "r")  // regular test
+        {
+            $_result = array();
+            
+            foreach ($merged_results as &$value) {
+                if(count($value['order']) == 0 && count($value['inquiry']) == 0)
+                {
+                    $_result[] = $value;
+                }
+            }
+
+                $merged_results = $_result;
+        }
+
+        if($ft == "o")  // Order Task
+        {
+            $_result = array();
+            
+            foreach ($merged_results as &$value) {
+                if(count($value['order']) > 0)
+                {
+                    $_result[] = $value;
+                }
+            }
+
+                $merged_results = $_result;
+        }
+
+        if($ft == "i")  // Inquiry Task
+        {
+            $_result = array();
+            
+            foreach ($merged_results as &$value) {
+                if(count($value['inquiry']) > 0)
+                {
+                    $_result[] = $value;
+                }
+            }
+
+                $merged_results = $_result;
+        }
         
         if($fk != "" && $id == 0)
         {

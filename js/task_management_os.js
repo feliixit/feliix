@@ -99,6 +99,7 @@ var app = new Vue({
 
     fil_creator: "",
     fil_keyword: "",
+    fil_type: "",
 
     // priorities: {},
     // statuses: {},
@@ -144,6 +145,9 @@ var app = new Vue({
             case "fk":
               _this.fil_keyword = decodeURI(tmp[1]);
               break;
+            case "ft":
+                _this.fil_type = tmp[1];
+                break;
             case "pg":
                 _this.pg = tmp[1];
                 break;
@@ -372,6 +376,7 @@ var app = new Vue({
       this.fil_status = "";
       this.fil_creator = "";
       this.fil_keyword = "";
+      this.fil_type = "";
 
       document.getElementById("btn_filter").classList.remove("focus");
       document.getElementById("filter_dialog").classList.remove("show");
@@ -478,6 +483,8 @@ var app = new Vue({
       _this.fil_priority +
       "&fk=" +
       _this.fil_keyword +
+      "&ft=" +
+      _this.fil_type +
       "&fs=" +
       _this.fil_status +
       "&fc=" +
@@ -783,6 +790,7 @@ var app = new Vue({
         "fp": this.fil_priority,
         "fc": this.fil_creator,
         "fk": this.fil_keyword,
+        "ft": this.fil_type,
       };
 
       let token = localStorage.getItem("accessToken");
