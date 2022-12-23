@@ -266,7 +266,7 @@ var app = new Vue({
 
         // paging
         product_page_quo: 1,
-        pg_quo:0,
+        //pg_quo:0,
         //perPage: 10,
         product_pages_quo: [],
         product_pages_10_quo: [],
@@ -880,7 +880,7 @@ var app = new Vue({
         let _this = this;
   
         const params = {
-  
+                  id: _this.id,
                   fc : _this.fil_project_category,
                   fpc: _this.fil_project_creator,
                   fpt: _this.fil_creator,
@@ -899,7 +899,7 @@ var app = new Vue({
             let token = localStorage.getItem('accessToken');
       
             axios
-                .get('api/quotation_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .get('api/inquiry_query_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
                     _this.receive_records_quo_master = res.data;
@@ -1445,7 +1445,7 @@ var app = new Vue({
       let _this = this;
 
       const params = {
-
+                id: _this.id,
                 fc : _this.fil_project_category,
                 fpc: _this.fil_project_creator,
                 fpt: _this.fil_creator,
@@ -1464,7 +1464,7 @@ var app = new Vue({
           let token = localStorage.getItem('accessToken');
     
           axios
-              .get('api/quotation_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .get('api/inquiry_query_mgt', { params, headers: {"Authorization" : `Bearer ${token}`} })
               .then(
               (res) => {
                   _this.receive_records_quo_master = res.data;

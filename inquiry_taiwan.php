@@ -2196,7 +2196,7 @@ try {
 
             <div class="modal-header">
 
-                <h4 class="modal-title" id="myLargeModalLabel">List of Existing Quotations</h4>
+                <h4 class="modal-title" id="myLargeModalLabel">List of Existing Inquiries</h4>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn_close">
                     <span aria-hidden="true">&times;</span>
@@ -2236,14 +2236,14 @@ try {
                         <br>
 
                         <select v-model="fil_creator">
-                            <option value="">Choose Quotation Creator...</option>
+                            <option value="">Choose Inquiry Creator...</option>
                             <option v-for="item in creators" :value="item.username" :key="item.username">
                                 {{ item.username }}
                             </option>
                         </select>
 
                         <input type="text" v-model="fil_keyword"
-                               placeholder="Input Keyword Here (only for quotation name, project name or quotation no.)">
+                               placeholder="Input Keyword Here (only for inquiry name, project name or inquiry no.)">
                     </div>
 
                     <a class="btn small green" @click="filter_apply_new_quo()">Search</a>
@@ -2269,9 +2269,9 @@ try {
                     <table id="tb_quotation_list" class="table  table-sm table-bordered">
                         <thead>
                         <tr>
-                            <th>Quotation Name</th>
-                            <th>Related Project / Related Task Mgt.</th>
-                            <th>Quotation Number</th>
+                            <th>Inquiry Name</th>
+                            <th>Related Project / Task Management</th>
+                            <th>Inquiry Number</th>
                             <th>Created Time</th>
                             <th>Last Updated Time</th>
                             <th>Action</th>
@@ -2281,30 +2281,30 @@ try {
                         <tr v-for="(item, index) in displayedQuoMasterPosts">
 
                             <td>
-                                <a :href="'quotation?id=' + item.id" target="_blank">{{
+                                <a :href="'inquiry_taiwan?id=' + item.id" target="_blank">{{
                                 item.title }}</a>
                             </td>
 
                             <td>
                                 <a v-show="item.kind == ''"
-                                v-bind:href="'project02?p='+ item.project_id">Project: {{ item.project_name }}
+                                v-bind:href="'project03_other?sid='+ item.stage_id">Project: {{ item.project_name }}
                                 </a>
-                                <a v-show="item.kind == 'a'"
+                                <a v-show="item.kind == 'AD'"
                                 v-bind:href="'task_management_AD?sid='+ item.project_id">Admin Department Task Management: {{ item.project_name_a }}
                                 </a>
-                                <a v-show="item.kind == 'd'"
+                                <a v-show="item.kind == 'DS'"
                                 v-bind:href="'task_management_DS?sid='+ item.project_id">Design Department Task Management: {{ item.project_name_d }}
                                 </a>
-                                <a v-show="item.kind == 'l'"
+                                <a v-show="item.kind == 'LT'"
                                 v-bind:href="'task_management_LT?sid='+ item.project_id">Lighting Department Task Management: {{ item.project_name_l }}
                                 </a>
-                                <a v-show="item.kind == 'o'"
+                                <a v-show="item.kind == 'OS'"
                                 v-bind:href="'task_management_OS?sid='+ item.project_id">Office Systems Department Task Management: {{ item.project_name_o }}
                                 </a>
-                                <a v-show="item.kind == 'sl'"
+                                <a v-show="item.kind == 'SLS'"
                                 v-bind:href="'task_management_SLS?sid='+ item.project_id">Sales Task Management: {{ item.project_name_sl }}
                                 </a>
-                                <a v-show="item.kind == 'sv'"
+                                <a v-show="item.kind == 'SVC'"
                                 v-bind:href="'task_management_SVC?sid='+ item.project_id">Service Task Management: {{ item.project_name_sv }}
                                 </a>
                             </td>
@@ -2330,34 +2330,34 @@ try {
                         <tr v-for='(receive_record, index) in displayedQuoDetailPosts'>
                             <td>
                                 <a v-show="receive_record.is_edited == 1"
-                                   v-bind:href="'quotation?id=' + receive_record.id">{{
+                                   v-bind:href="'inquiry_taiwan?id=' + receive_record.id">{{
                                     receive_record.title }}</a>
                             <td>
                                 <a v-show="receive_record.is_edited == 1 && receive_record.kind == ''"
-                                   v-bind:href="'project02?p='+ receive_record.project_id">Project: {{
+                                   v-bind:href="'project03_other?sid='+ receive_record.project_id">Project: {{
                                     receive_record.project_name }}
                                 </a>
-                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'a'"
+                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'AD'"
                                    v-bind:href="'task_management_AD?sid='+ receive_record.project_id">Admin
                                     Department Task Management: {{ receive_record.project_name_a }}
                                 </a>
-                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'd'"
+                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'DS'"
                                    v-bind:href="'task_management_DS?sid='+ receive_record.project_id">Design
                                     Department Task Management: {{ receive_record.project_name_d }}
                                 </a>
-                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'l'"
+                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'LT'"
                                    v-bind:href="'task_management_LT?sid='+ receive_record.project_id">tdghting
                                     Department Task Management: {{ receive_record.project_name_l }}
                                 </a>
-                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'o'"
+                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'OS'"
                                    v-bind:href="'task_management_OS?sid='+ receive_record.project_id">Office Systems
                                     Department Task Management: {{ receive_record.project_name_o }}
                                 </a>
-                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'sl'"
+                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'SLS'"
                                    v-bind:href="'task_management_SLS?sid='+ receive_record.project_id">Sales Task
                                     Management: {{ receive_record.project_name_sl }}
                                 </a>
-                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'sv'"
+                                <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'SVC'"
                                    v-bind:href="'task_management_SVC?sid='+ receive_record.project_id">Service Task
                                     Management: {{ receive_record.project_name_sv }}
                                 </a>
