@@ -498,7 +498,7 @@ function GetConfirmText($loc)
     $location = "";
     switch ($loc) {
         case "N":
-            $location = "";
+            $location = "Price Inquiry";
             break;
         case "C":
             $location = "Stock Inquiry";
