@@ -2212,8 +2212,8 @@ try {
 
                         <select v-model="fil_project_category">
                             <option value="">Choose Project Category...</option>
-                            <option value="2">Lighting</option>
-                            <option value="1">Office Systems</option>
+                            <option value="L">Lighting</option>
+                            <option value="O">Office Systems</option>
                         </select>
 
                         <select v-model="fil_project_creator">
@@ -2225,12 +2225,11 @@ try {
 
                         <select v-model="fil_kind">
                             <option value="">Which Department's Task Management</option>
-                            <option value="a">Admin Department</option>
-                            <option value="d">Design Department</option>
-                            <option value="l">Lighting Department</option>
-                            <option value="o">Office Systems Department</option>
-                            <option value="sl">Sales Department</option>
-                            <option value="sv">Service Department</option>
+                         
+                            <option value="LT">Lighting Department</option>
+                            <option value="OS">Office Systems Department</option>
+                            <option value="SLS">Sales Department</option>
+                         
                         </select>
 
                         <br>

@@ -94,7 +94,6 @@ $query = "SELECT pm.id,
         FROM iq_main pm 
             LEFT JOIN user c_user ON pm.create_id = c_user.id 
             LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-            left join project_main p on pm.task_id = p.id
             where pm.status <> -1 and pm.id <> " . $id;
 
 
@@ -105,7 +104,7 @@ if($fpt != "")
 
 if($fpc != "")
 {
-    $query = $query . " and p.create_id = " . $fpc . " ";
+    $query = $query . " and (SELECT create_id FROM project_main WHERE id = (select project_id from project_stages where id = (select stage_id from project_other_task where id = pm.task_id) ) and pm.task_type = '') = " . $fpc . " ";
 }
 
 if($kind != "")
@@ -116,7 +115,7 @@ if($kind != "")
 
 if($fc != "")
 {
-    $query = $query . " and p.catagory_id = " . $fc . " ";
+    $query = $query . " and SUBSTR(pm.serial_name, 1, 1) = '" . $fc . "' ";
 }
 
 $sOrder = "";
