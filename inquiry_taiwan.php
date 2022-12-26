@@ -2317,7 +2317,7 @@ try {
                             </td>
 
                             <td>
-                            {{item.post[0].updated_at}}<br>{{item.post[0].username}}
+                            {{item.updated_at}}<br>{{item.updated_by}}
                             </td>
 
                             <td>
