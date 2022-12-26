@@ -174,7 +174,6 @@ switch ($method) {
                     die();
                 }
 
-                $sn++;
 
             }
 

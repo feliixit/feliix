@@ -72,66 +72,88 @@ switch ($method) {
             die();
         }
 
-        //$block_array = GetQuotationItems($qid, $db);
+        $block_array = GetQuotationItems($qid, $db);
 
         
         try {
 
-            //$sn = GetMaxSn($iq_id, $db);
+            $sn = GetMaxSn($iq_id, $db);
 
-            //for($i=0; $i<count($block_array); $i++) 
-            //{
-            //    $sn++;
+            for($i=0; $i<count($block_array); $i++) 
+            {
+                $sn++;
                 // insert quotation_page_type_block
-                $query = "INSERT INTO iq_item (iq_id, 
-                                                sn, 
-                                                confirm, 
-                                                brand, 
-                                                brand_other, 
-                                                photo1, 
-                                                photo2, 
-                                                photo3, 
-                                                code, 
-                                                brief, 
-                                                listing, 
-                                                qty, 
-                                                srp, 
-                                                date_needed, 
-                                                pid, 
-                                                v1, 
-                                                v2, 
-                                                v3, 
-                                                `status`, 
-                                                create_id,
-                                                created_at)
-                    SELECT 
-                    " . $iq_id . ",
-                    sn,
-                    confirm,
-                    brand,
-                    brand_other,
-                    photo1,
-                    photo2,
-                    photo3,
-                    code,
-                    brief,
-                    listing,
-                    qty,
-                    srp,
-                    date_needed,
-                    pid,
-                    v1,
-                    v2,
-                    v3,
-                    0,
-                    " . $user_id . ",
-                    now()
-                    from iq_item 
-                    where iq_id = " . $qid;
+                $query = "INSERT INTO iq_item
+                    SET
+                    `iq_id` = :iq_id,
+                    `sn` = :sn,
+                    `confirm` = :confirm,
+                    `brand` = :brand,
+                    `brand_other` = :brand_other,
+                    `photo1` = :photo1,
+                    `photo2` = :photo2,
+                    `photo3` = :photo3,
+                    `code` = :code,
+                    `brief` = :brief,
+                    `listing` = :listing,
+                    `qty` = :qty,
+                    `srp` = :srp,
+                    `date_needed` = :date_needed,
+                    `pid` = :pid,
+                    `v1` = :v1,
+                    `v2` = :v2,
+                    `v3` = :v3,
+                    `status` = 0,
+                    `create_id` = :create_id,
+                    `created_at` = now()";
 
                 // prepare the query
                 $stmt = $db->prepare($query);
 
+                $confirm = '';
+                $brand = isset($block_array[$i]['brand']) ? $block_array[$i]['brand'] : '';;
+                $brand_other = isset($block_array[$i]['brand_other']) ? $block_array[$i]['brand_other'] : '';;
+
+                $photo1 = isset($block_array[$i]['photo1']) ? $block_array[$i]['photo1'] : '';
+                $photo2 = isset($block_array[$i]['photo2']) ? $block_array[$i]['photo2'] : '';
+                $photo3 = isset($block_array[$i]['photo3']) ? $block_array[$i]['photo3'] : '';
+
+                $code = isset($block_array[$i]['code']) ? $block_array[$i]['code'] : '';
+                $brief = isset($block_array[$i]['desc']) ? $block_array[$i]['desc'] : '';
+                $listing = isset($block_array[$i]['list']) ? $block_array[$i]['list'] : '';
+
+                $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : '';
+                $srp = isset($block_array[$i]['amount']) ? $block_array[$i]['amount'] : '';
+                $date_needed =  isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
+                $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
+       
+                $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
+                $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
+                $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+
+                // bind the values
+                $stmt->bindParam(':iq_id', $iq_id);
+                $stmt->bindParam(':sn', $sn);
+                $stmt->bindParam(':confirm', $confirm);
+                $stmt->bindParam(':brand', $brand);
+                $stmt->bindParam(':brand_other', $brand_other);
+                $stmt->bindParam(':photo1', $photo1);
+                $stmt->bindParam(':photo2', $photo2);
+                $stmt->bindParam(':photo3', $photo3);
+                $stmt->bindParam(':code', $code);
+                $stmt->bindParam(':brief', $brief);
+                $stmt->bindParam(':listing', $listing);
+                $stmt->bindParam(':qty', $qty);
+                $stmt->bindParam(':srp', $srp);
+                $stmt->bindParam(':date_needed', $date_needed);
+                $stmt->bindParam(':pid', $pid);
+
+                $stmt->bindParam(':v1', $v1);
+                $stmt->bindParam(':v2', $v2);
+                $stmt->bindParam(':v3', $v3);
+              
+                $stmt->bindParam(':create_id', $user_id);
+               
                 try {
                     // execute the query, also check if query was successful
                     if ($stmt->execute()) {
@@ -151,6 +173,7 @@ switch ($method) {
                     echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                     die();
                 }
+            }
 
             $db->commit();
 
@@ -165,4 +188,83 @@ switch ($method) {
             die();
         }
         break;
+}
+
+
+
+function GetQuotationItems($qid, $db){
+
+    $query = "select * from iq_item where iq_id = $qid order by sn";
+
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $merged_results = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = array(
+            'id' => $row['id'],
+            'iq_id' => $row['iq_id'],
+            'sn' => $row['sn'],
+            'confirm' => $row['confirm'],
+            'brand' => $row['brand'],
+            'brand_other' => $row['brand_other'],
+            'photo1' => $row['photo1'],
+            'photo2' => $row['photo2'],
+            'photo3' => $row['photo3'],
+            'code' => $row['code'],
+            'brief' => $row['brief'],
+            'listing' => $row['listing'],
+            'qty' => $row['qty'],
+            'srp' => $row['srp'],
+            'date_needed' => $row['date_needed'],
+            'pid' => $row['pid'],
+            'v1' => $row['v1'],
+            'v2' => $row['v2'],
+            'v3' => $row['v3'],
+            'status' => $row['status'],
+            'create_id' => $row['create_id'],
+            'created_at' => $row['created_at'],
+            'update_id' => $row['update_id'],
+            'updated_at' => $row['updated_at'],
+            
+        );
+    }
+
+    return $merged_results;
+}
+
+
+function GetMaxSn($iq_id, $db)
+{
+    $max_sn = 0;
+    $query = "SELECT COALESCE(max(sn*1), 0) as max_sn FROM `iq_item` WHERE iq_id = :iq_id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':iq_id', $iq_id);
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $max_sn = $row['max_sn'];
+            return $max_sn;
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
 }
