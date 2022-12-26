@@ -129,10 +129,10 @@ try{
 
         // send notify mail
         if($mail_type == 1)
-            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
+            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $od_name);
 
         if($mail_type == 2)
-            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
+            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $od_name);
 
         $returnArray = array('batch_id' => $task_id);
        
@@ -189,6 +189,12 @@ function GetOrderType($order_type)
             break;
         case 'sample':
             $order_type_name = "Order - Sample";
+            break;
+        case 'mockup':
+            $order_type_name = "Order - Mockup";
+            break;
+        case 'inquiry':
+            $order_type_name = "Inquiry";
             break;
     }
 

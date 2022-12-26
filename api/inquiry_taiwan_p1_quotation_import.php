@@ -110,20 +110,20 @@ switch ($method) {
                 // prepare the query
                 $stmt = $db->prepare($query);
 
-                $confirm = '';
-                $brand = isset($block_array[$i]['brand']) ? $block_array[$i]['brand'] : '';;
-                $brand_other = isset($block_array[$i]['brand_other']) ? $block_array[$i]['brand_other'] : '';;
+                $confirm = isset($block_array[$i]['confirm']) ? $block_array[$i]['confirm'] : '';
+                $brand = isset($block_array[$i]['brand']) ? $block_array[$i]['brand'] : '';
+                $brand_other = isset($block_array[$i]['brand_other']) ? $block_array[$i]['brand_other'] : '';
 
                 $photo1 = isset($block_array[$i]['photo1']) ? $block_array[$i]['photo1'] : '';
                 $photo2 = isset($block_array[$i]['photo2']) ? $block_array[$i]['photo2'] : '';
                 $photo3 = isset($block_array[$i]['photo3']) ? $block_array[$i]['photo3'] : '';
 
                 $code = isset($block_array[$i]['code']) ? $block_array[$i]['code'] : '';
-                $brief = isset($block_array[$i]['desc']) ? $block_array[$i]['desc'] : '';
-                $listing = isset($block_array[$i]['list']) ? $block_array[$i]['list'] : '';
+                $brief = isset($block_array[$i]['brief']) ? $block_array[$i]['brief'] : '';
+                $listing = isset($block_array[$i]['listing']) ? $block_array[$i]['listing'] : '';
 
                 $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : '';
-                $srp = isset($block_array[$i]['amount']) ? $block_array[$i]['amount'] : '';
+                $srp = isset($block_array[$i]['srp']) ? $block_array[$i]['srp'] : '';
                 $date_needed =  isset($block_array[$i]['date_needed']) ? $block_array[$i]['date_needed'] : '';
                 $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
        
@@ -194,7 +194,7 @@ switch ($method) {
 
 function GetQuotationItems($qid, $db){
 
-    $query = "select * from iq_item where iq_id = $qid order by sn";
+    $query = "select * from iq_item where iq_id = $qid order by sn * 1";
 
     $stmt = $db->prepare($query);
     $stmt->execute();

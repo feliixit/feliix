@@ -282,6 +282,12 @@ function GetOrderType($order_type)
         case 'sample':
             $order_type_name = "Order - Sample";
             break;
+        case 'mockup':
+            $order_type_name = "Order - Mockup";
+            break;
+        case 'inquiry':
+            $order_type_name = "Inquiry";
+            break;
     }
 
     return $order_type_name;

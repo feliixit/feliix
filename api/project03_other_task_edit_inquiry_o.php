@@ -191,6 +191,9 @@ function GetOrderType($order_type)
         case 'sample':
             $order_type_name = "Order - Sample";
             break;
+        case 'mockup':
+            $order_type_name = "Order - Mockup";
+            break;
         case 'inquiry':
             $order_type_name = "Inquiry";
             break;
@@ -198,7 +201,6 @@ function GetOrderType($order_type)
 
     return $order_type_name;
 }
-
 function SendNotifyMail01($last_id, $old_status_id, $order_type, $order_name)
 {
     $project_name = "";
