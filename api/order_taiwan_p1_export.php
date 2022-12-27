@@ -68,6 +68,7 @@ if($jwt){
             brief,
             listing,
             qty,
+            backup_qty,
             srp,
             date_needed,
             pid,
@@ -125,6 +126,7 @@ if($jwt){
             $brief = $row['brief'];
             $listing = $row['listing'];
             $qty = $row['qty'];
+            $backup_qty = $row['backup_qty'];
             $srp = $row['srp'];
             $date_needed = $row['date_needed'];
 
@@ -166,6 +168,7 @@ if($jwt){
             "brief" => $brief,
             "listing" => $listing,
             "qty" => $qty,
+            "backup_qty" => $backup_qty,
             "srp" => $srp,
             "date_needed" => $date_needed,
             "shipping_way" => $shipping_way,
@@ -447,14 +450,14 @@ if($jwt){
 
             // body title
             $sheet->setCellValue('B10', '圖示' . "\n" . 'IMAGE');
-            $sheet->setCellValue('C10', '品名/型號' . "\n" . 'CODE'); $sheet->setCellValue('D10', '顏色/規格' . "\n" . 'COLOR/SPEC'); $sheet->setCellValue('E10', '數量' . "\n" . 'QTY');
-            $sheet->setCellValue('F10', '單價' . "\n" . 'PRICE'); $sheet->setCellValue('G10', '總價' . "\n" . 'AMOUNT'); $sheet->setCellValue('H10', '交期' . "\n" . 'DELIVERY');
-            $sheet->setCellValue('I10', '寄送地址'); $sheet->setCellValue('J10', '海運或空運');
+            $sheet->setCellValue('C10', '品名/型號' . "\n" . 'CODE'); $sheet->setCellValue('D10', '顏色/規格' . "\n" . 'COLOR/SPEC'); $sheet->setCellValue('E10', '數量' . "\n" . 'QTY'); $sheet->setCellValue('F10', 'BACKUP 數量' . "\n" . 'BACKUP QTY');
+            $sheet->setCellValue('G10', '單價' . "\n" . 'PRICE'); $sheet->setCellValue('H10', '總價' . "\n" . 'AMOUNT'); $sheet->setCellValue('I10', '交期' . "\n" . 'DELIVERY');
+            $sheet->setCellValue('J10', '寄送地址'); $sheet->setCellValue('K10', '海運或空運');
 
-            $sheet->getStyle('B10:J10')->getFont()->setSize(20);
-            $sheet->getStyle('B10:J10')->getFont()->setName('M+ 1c regular');
-            $sheet->getStyle('B10:I10')->applyFromArray($boldandthin_border_style);
-            $sheet->getStyle('J10:J10')->applyFromArray($bold_border_style);
+            $sheet->getStyle('B10:K10')->getFont()->setSize(20);
+            $sheet->getStyle('B10:K10')->getFont()->setName('M+ 1c regular');
+            $sheet->getStyle('B10:J10')->applyFromArray($boldandthin_border_style);
+            $sheet->getStyle('K10:K10')->applyFromArray($bold_border_style);
 
 
 
@@ -467,6 +470,7 @@ if($jwt){
             $sheet->getStyle('H10')->getAlignment()->setWrapText(true);
             $sheet->getStyle('I10')->getAlignment()->setWrapText(true);
             $sheet->getStyle('J10')->getAlignment()->setWrapText(true);
+            $sheet->getStyle('K10')->getAlignment()->setWrapText(true);
             
             // body
             $i = 11;
@@ -509,6 +513,9 @@ if($jwt){
 
                 $sheet->setCellValue('E' . $i, $row['qty']);
                 $sheet->getStyle('E'. $i)->applyFromArray($center_style);
+                
+                $sheet->setCellValue('F' . $i, $row['backup_qty']);
+                $sheet->getStyle('F'. $i)->applyFromArray($center_style);
 
                 $price = "";
                 if($row['product'] != "") {
@@ -519,18 +526,18 @@ if($jwt){
                     }
                 }
 
-                $sheet->setCellValue('F' . $i, $price);
-                $sheet->getStyle('F'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('G' . $i, $price);
+                $sheet->getStyle('G'. $i)->applyFromArray($center_style);
 
                 $amount = "";
                 if($row['qty'] != '' && $price != '') {
                     $amount = $price * $row['qty'];
                 }
 
-                $sheet->setCellValue('G' . $i, $amount);
-                $sheet->getStyle('G'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('H' . $i, $amount);
+                $sheet->getStyle('H'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('H' . $i, '');
+                $sheet->setCellValue('I' . $i, '');
 
                 $vendor = "";
                 if($row['shipping_vendor'] == 'ssit'){
@@ -545,23 +552,23 @@ if($jwt){
                     $vendor = "東渝";
                     $dy = "1";
                 }
-                $sheet->setCellValue('I' . $i, $vendor);
-                $sheet->getStyle('I'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('J' . $i, $vendor);
+                $sheet->getStyle('J'. $i)->applyFromArray($center_style);
 
                 $shipway = "";
                 if($row['shipping_way'] == 'sea')
                     $shipway = "海運";
                 if($row['shipping_way'] == 'air')
                     $shipway = "空運";
-                $sheet->setCellValue('J' . $i, $shipway);
-                $sheet->getStyle('J'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('K' . $i, $shipway);
+                $sheet->getStyle('K'. $i)->applyFromArray($center_style);
 
                 $sheet->getStyle('D' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
-                $sheet->getStyle('F' . $i . ':G' . $i)->getAlignment()->setHorizontal('right');
-                $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setSize(18);
-                $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setName('M+ 1c regular');
-                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($boldandthin_border_style1);
-                $sheet->getStyle('J' . $i . ':J' . $i)->applyFromArray($bold_border_style);
+                $sheet->getStyle('G' . $i . ':H' . $i)->getAlignment()->setHorizontal('right');
+                $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setSize(18);
+                $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setName('M+ 1c regular');
+                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($boldandthin_border_style1);
+                $sheet->getStyle('K' . $i . ':K' . $i)->applyFromArray($bold_border_style);
 
                 $i++;
             }

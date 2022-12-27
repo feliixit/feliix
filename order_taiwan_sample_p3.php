@@ -1409,6 +1409,7 @@ try {
                         <th>Brand</th>
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
+                        <th>Backup Qty</th>
                         <th>SRP</th>
                         <th>Date Needed</th>
                         <th>Notes</th>
@@ -1508,6 +1509,15 @@ try {
                 </div>
                 <div class="write_block" v-if="item.is_edit">
                     <input type="text" v-model="item.qty">
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_edit">
+                {{ item.backup_qty }}
+                </div>
+                <div class="write_block" v-if="item.is_edit">
+                    <input type="text" v-model="item.backup_qty">
                 </div>
             </td>
 

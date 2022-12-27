@@ -3413,3 +3413,7 @@ ADD COLUMN `related_inquiry` VARCHAR(128) DEFAULT '';
 
 ALTER TABLE project_other_task_sl
 ADD COLUMN `related_inquiry` VARCHAR(128) DEFAULT '';
+
+-- 20221227 backup qty
+ALTER TABLE od_item
+ADD COLUMN `backup_qty` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '';
