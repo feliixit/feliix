@@ -68,7 +68,6 @@ if($jwt){
             brief,
             listing,
             qty,
-            backup_qty,
             srp,
             date_needed,
             pid,
@@ -126,7 +125,6 @@ if($jwt){
             $brief = $row['brief'];
             $listing = $row['listing'];
             $qty = $row['qty'];
-            $backup_qty = $row['backup_qty'];
             $srp = $row['srp'];
             $date_needed = $row['date_needed'];
 
@@ -168,7 +166,6 @@ if($jwt){
             "brief" => $brief,
             "listing" => $listing,
             "qty" => $qty,
-            "backup_qty" => $backup_qty,
             "srp" => $srp,
             "date_needed" => $date_needed,
             "shipping_way" => $shipping_way,
@@ -514,8 +511,8 @@ if($jwt){
                 $sheet->setCellValue('E' . $i, $row['qty']);
                 $sheet->getStyle('E'. $i)->applyFromArray($center_style);
                 
-                $sheet->setCellValue('F' . $i, $row['backup_qty']);
-                $sheet->getStyle('F'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('E' . $i, $row['qty']);
+                $sheet->getStyle('E'. $i)->applyFromArray($center_style);
 
                 $price = "";
                 if($row['product'] != "") {
@@ -526,18 +523,18 @@ if($jwt){
                     }
                 }
 
-                $sheet->setCellValue('G' . $i, $price);
-                $sheet->getStyle('G'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('F' . $i, $price);
+                $sheet->getStyle('F'. $i)->applyFromArray($center_style);
 
                 $amount = "";
                 if($row['qty'] != '' && $price != '') {
                     $amount = $price * $row['qty'];
                 }
 
-                $sheet->setCellValue('H' . $i, $amount);
-                $sheet->getStyle('H'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('G' . $i, $amount);
+                $sheet->getStyle('G'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('I' . $i, '');
+                $sheet->setCellValue('H' . $i, '');
 
                 $vendor = "";
                 if($row['shipping_vendor'] == 'ssit'){
@@ -552,23 +549,23 @@ if($jwt){
                     $vendor = "東渝";
                     $dy = "1";
                 }
-                $sheet->setCellValue('J' . $i, $vendor);
-                $sheet->getStyle('J'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('I' . $i, $vendor);
+                $sheet->getStyle('I'. $i)->applyFromArray($center_style);
 
                 $shipway = "";
                 if($row['shipping_way'] == 'sea')
                     $shipway = "海運";
                 if($row['shipping_way'] == 'air')
                     $shipway = "空運";
-                $sheet->setCellValue('K' . $i, $shipway);
-                $sheet->getStyle('K'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('J' . $i, $shipway);
+                $sheet->getStyle('J'. $i)->applyFromArray($center_style);
 
                 $sheet->getStyle('D' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
-                $sheet->getStyle('G' . $i . ':H' . $i)->getAlignment()->setHorizontal('right');
-                $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setSize(18);
-                $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setName('M+ 1c regular');
-                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($boldandthin_border_style1);
-                $sheet->getStyle('K' . $i . ':K' . $i)->applyFromArray($bold_border_style);
+                $sheet->getStyle('F' . $i . ':G' . $i)->getAlignment()->setHorizontal('right');
+                $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setSize(18);
+                $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setName('M+ 1c regular');
+                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($boldandthin_border_style1);
+                $sheet->getStyle('J' . $i . ':J' . $i)->applyFromArray($bold_border_style);
 
                 $i++;
             }
