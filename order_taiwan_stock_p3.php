@@ -499,14 +499,18 @@ try {
         }
 
         .block.C .tb_order thead tr th:nth-of-type(7), .block.C .tb_order tbody tr td:nth-of-type(8) {
-            min-width: 180px;
+            min-width: 130px;
         }
 
         .block.C .tb_order thead tr th:nth-of-type(8), .block.C .tb_order tbody tr td:nth-of-type(9) {
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .block.C .tb_order thead tr th:nth-of-type(9), .block.C .tb_order tbody tr td:nth-of-type(10) {
+            min-width: 200px;
+        }
+
+        .block.C .tb_order thead tr th:nth-of-type(10), .block.C .tb_order tbody tr td:nth-of-type(11) {
             min-width: 450px;
         }
 
@@ -514,21 +518,21 @@ try {
             min-width: 120px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(11) {
+        .block.C .tb_order tbody tr td:nth-of-type(12) {
             min-width: 450px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(12) {
+        .block.C .tb_order tbody tr td:nth-of-type(13) {
             min-width: 220px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(13),
-        .block.C .tb_order tbody tr td:nth-of-type(14) {
+        .block.C .tb_order tbody tr td:nth-of-type(14),
+        .block.C .tb_order tbody tr td:nth-of-type(15) {
             min-width: 180px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(15),
-        .block.C .tb_order tbody tr td:nth-of-type(16){
+        .block.C .tb_order tbody tr td:nth-of-type(16),
+        .block.C .tb_order tbody tr td:nth-of-type(17){
             min-width: 400px;
         }
 
@@ -1410,6 +1414,7 @@ try {
                         <th>Brand</th>
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
+                        <th>Backup Qty</th>
                         <th>SRP</th>
                         <th>Date Needed</th>
                         <th>Notes</th>
@@ -1509,6 +1514,15 @@ try {
                 </div>
                 <div class="write_block" v-if="item.is_edit">
                     <input type="text" v-model="item.qty">
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="!item.is_edit">
+                {{ item.backup_qty }}
+                </div>
+                <div class="write_block" v-if="item.is_edit">
+                    <input type="text" v-model="item.backup_qty">
                 </div>
             </td>
 

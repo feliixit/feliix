@@ -97,6 +97,7 @@ switch ($method) {
                     `brief` = :brief,
                     `listing` = :listing,
                     `qty` = :qty,
+                    `backup_qty` = '',
                     `srp` = :srp,
                     `date_needed` = :date_needed,
                     `pid` = :pid,
@@ -144,6 +145,7 @@ switch ($method) {
                 $stmt->bindParam(':brief', $brief);
                 $stmt->bindParam(':listing', $listing);
                 $stmt->bindParam(':qty', $qty);
+     
                 $stmt->bindParam(':srp', $srp);
                 $stmt->bindParam(':date_needed', $date_needed);
                 $stmt->bindParam(':pid', $pid);
@@ -174,7 +176,6 @@ switch ($method) {
                     die();
                 }
 
-                $sn++;
 
             }
 

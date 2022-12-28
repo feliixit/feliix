@@ -128,6 +128,10 @@ catch (Exception $e) {
 
                 dialogshow($('.list_function a.add.yellow'), $('.list_function .dialog.r-add_o'));
                 dialogshow($('.list_function a.edit.yellow'), $('.list_function .dialog.r-edit_o'));
+
+                dialogshow($('.list_function a.add.purple'), $('.list_function .dialog.r-add_i'));
+                dialogshow($('.list_function a.edit.purple'), $('.list_function .dialog.r-edit_i'));
+       
             <?php
             }
             ?>
@@ -2352,6 +2356,13 @@ catch (Exception $e) {
             background-image: url(images/ui/btn_edit_yellow.svg);
         }
 
+        .list_function.main a.add.purple {
+            background-image: url(images/ui/btn_add_purple.svg);
+        }
+
+        .list_function.main a.edit.purple {
+            background-image: url(images/ui/btn_edit_purple.svg);
+        }
 
     </style>
 
@@ -2647,6 +2658,351 @@ catch (Exception $e) {
                         </div>
                         <!-- dialog end -->
                     </div>
+
+
+                        <!-- add purple (只有Proposal - Inquiry Stage 才會出現這個紫色按鈕) -->
+                        <div class="popupblock">
+                            <a id="dialog_a1_i" class="add purple"></a>
+                            <!-- dialog -->
+                            <div id="add_a1_i" class="dialog r-add_i add">
+                                <h6>Add Inquiry Task</h6>
+                                <div class="tablebox s1">
+                                    <ul>
+                                        <li class="head">Operation Type:</li>
+                                        <li style="padding-right: 0;">
+                                            <select name="" id="opType3">
+                                                <option value="add">Add New Inquiry Task</option>
+                                                <!--
+                                                <option value="dup">Duplicate Existing Inquiry Task</option>
+                                                -->
+                                            </select>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="formbox s2 add">
+                                    <dl>
+                                        <dt>Order Category:</dt>
+                                        <dd>
+                                            <select v-model="order_category">
+                                                <option value="Lighting">Lighting</option>
+                                                <option value="Office Systems">Office Systems</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Inquiry Name:</dt>
+                                        <dd><input type="text" v-model="order"></dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dt>Task Title:</dt>
+                                        <dd><input type="text" v-model="title"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Priority:</dt>
+                                        <dd>
+                                            <select v-model="priority">
+                                                <option value="1">No Priority</option>
+                                                <option value="2">Low</option>
+                                                <option value="3">Normal</option>
+                                                <option value="4">High</option>
+                                                <option value="5">Urgent</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Assignee:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="assignee" :id="assignee" :options="users" attach
+                                                          chips label="username" multiple></v-select>
+
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Collaborator:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="collaborator" :id="collaborator" :options="users"
+                                                          attach chips label="username" multiple></v-select>
+
+                                            </div>
+
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Due Date:</dt>
+                                        <dd>
+                                            <div class="browser_group">
+                                                <input type="date" style="width: 47.5% !important;" v-model="due_date">
+                                                <input type="time"
+                                                       style="margin-left: 5%!important; width: 47.5% !important"
+                                                       v-model="due_time">
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Task Detail:</dt>
+                                        <dd><textarea placeholder="" v-model="detail"></textarea></dd>
+                                    </dl>
+                                    <dl>
+                                        <dd style="display: flex; justify-content: flex_start;">
+                                            <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+                                            <div class="pub-con" ref="bg">
+                                                <div class="input-zone">
+                                                    <span class="upload-des">choose file</span>
+                                                    <input class="input" type="file" name="file" value
+                                                           placeholder="choose file" ref="file" v-show="canSub"
+                                                           @change="changeFile()" multiple/>
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+
+                                        <dd>
+                                            <div class="browser_group">
+                                                <div class="pad">
+                                                    <div class="file-list">
+                                                        <div class="file-item" v-for="(item,index) in fileArray"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.name}}
+                                                                <span @click="deleteFile(index)"
+                                                                      v-show="item.progress==0" class="upload-delete"><i
+                                                                        class="fas fa-backspace"></i>
+                                                            </span>
+                                                            </p>
+                                                            <div class="progress-container" v-show="item.progress!=0">
+                                                                <div class="progress-wrapper">
+                                                                    <div class="progress-progress"
+                                                                         :style="'width:'+item.progress*100+'%'"></div>
+                                                                </div>
+                                                                <div class="progress-rate">
+                                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                    <span v-else><i
+                                                                            class="fas fa-check-circle"></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                        </dd>
+                                    </dl>
+                                    <div class="btnbox">
+                                        <a class="btn small" @click="task_clear_i">Cancel</a>
+                                        <a class="btn small green" id="btn_arrange">Calendar</a>
+                                        <a class="btn small green" @click="task_create_i">Create</a>
+                                    </div>
+                                </div>
+                                <!--
+                                <div class="tablebox s2 dup">
+                                    <ul>
+                                        <li class="head">Target Inquiry Task:</li>
+                                        <li class="mix">
+                                            <select v-model="task_id_to_dup">
+                                                <option v-for="(it, index) in project03_other_task" :value="it.task_id">
+                                                    {{ it.title }}
+                                                </option>
+                                            </select>
+                                            <a class="btn small green" @click="task_dup">Duplicate</a>
+                                        </li>
+                                    </ul>
+                                </div>
+    -->
+                            </div>
+                            <!-- dialog end -->
+                        </div>
+                        <!-- edit purple (只有Proposal - Inquiry Stage 才會出現這個紫色按鈕) -->
+                        <div class="popupblock">
+                            <a id="edit_red_i" class="edit purple"></a>
+                            <!-- dialog -->
+                            <div id="dialog_red_edit_i" class="dialog r-edit_i edit">
+                                <h6>Edit Inquiry Task:</h6>
+                                <div class="tablebox s1">
+                                    <ul>
+                                        <li class="head">Operation Type:</li>
+                                        <li style="padding-right: 0;">
+                                            <select name="" id="opType">
+                                                <option value="edit">Edit Existing Inquiry Task</option>
+                                                <!--
+                                                <option value="del">Delete Existing Inquiry Task</option>
+                                                -->
+                                            </select>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tablebox s2 del" v-if="1==0">
+                                    <ul>
+                                        <li class="head">Target Inquiry Task:</li>
+                                        <li class="mix">
+                                            <select v-model="task_id_to_del">
+                                                <option v-for="(it, index) in project03_other_task" :value="it.task_id"
+                                                        v-if="it.task_status != '-1' && it.order.length > 0">
+                                                    {{ it.title }}
+                                                </option>
+                                            </select>
+                                            <a class="btn small" @click="task_del_o">Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tablebox s2 edit">
+                                    <ul>
+                                        <li class="head">Target Inquiry Task:</li>
+                                        <li class="mix">
+                                            <select v-model="task_id_to_load">
+                                                <option v-for="(it, index) in project03_other_task" :value="it.task_id"
+                                                        v-if="it.task_status != '-1' && it.inquiry.length > 0">
+                                                    {{ it.title }}
+                                                </option>
+                                            </select>
+                                            <a class="btn small green" @click="task_load">Load</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="formbox s2 edit">
+                                    <dl>
+                                        <dt>Inquiry Name:</dt>
+                                        <dd><input type="text" v-model="record.iq_name"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Task Title:</dt>
+                                        <dd><input type="text" v-model="record.title"></dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dt>Order Category:</dt>
+                                        <dd>
+                                            <select v-model="record.related_category" disabled>
+                                                <option value="Lighting">Lighting</option>
+                                                <option value="Office Systems">Office Systems</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    
+                                    <dl>
+                                        <dt>Priority:</dt>
+                                        <dd>
+                                            <select name="" id="" v-model="record.priority_id">
+                                                <option value="1">No Priority</option>
+                                                <option value="2">Low</option>
+                                                <option value="3">Normal</option>
+                                                <option value="4">High</option>
+                                                <option value="5">Urgent</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Status:</dt>
+                                        <dd>
+                                            <select name="" id="" v-model="record.task_status">
+                                                <option value="0">Ongoing</option>
+                                                <option value="1">Pending</option>
+                                                <option value="2">Close</option>
+                                            </select>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Assignee:</dt>
+                                        <dd>
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="record.assignee" :id="record.assignee_id"
+                                                          :options="users_del" attach chips label="username"
+                                                          multiple></v-select>
+
+                                            </div>
+
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Collaborator:</dt>
+                                        <dd>
+
+                                            <div style="text-align: left;font-size: 12px;">
+                                                <v-select v-model="record.collaborator" :id="record.collaborator_id"
+                                                          :options="users_del" attach chips label="username"
+                                                          multiple></v-select>
+
+                                            </div>
+                                        </dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dt>Due Date:</dt>
+                                        <dd>
+                                            <div class="browser_group">
+                                                <input type="date" style="width: 47.5%!important;"
+                                                       v-model="record.due_date">
+                                                <input type="time"
+                                                       style="margin-left: 5%!important; width: 47.5%!important;"
+                                                       v-model="record.due_time">
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Description:</dt>
+                                        <dd><textarea placeholder="" v-model="record.detail"></textarea></dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dd style="display: flex; justify-content: flex_start;">
+                                            <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+
+                                            <div class="pub-con" ref="bg">
+                                                <div class="input-zone">
+                                                    <span class="upload-des">choose file</span>
+                                                    <input class="input" type="file" :ref="'editfile'"
+                                                           placeholder="choose file" @change="changeEditFile()"
+                                                           multiple/>
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
+
+                                    <dl>
+
+                                        <dd>
+                                            <div class="browser_group">
+                                                <div class="pad">
+                                                    <div class="file-list">
+                                                        <div class="file-item" v-for="(item,index) in editfileArray"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.name}}
+                                                                <span @click="deleteEditFile(index)"
+                                                                      v-show="item.progress==0" class="upload-delete"><i
+                                                                        class="fas fa-backspace"></i>
+                                                            </span>
+                                                            </p>
+                                                            <div class="progress-container" v-show="item.progress!=0">
+                                                                <div class="progress-wrapper">
+                                                                    <div class="progress-progress"
+                                                                         :style="'width:'+item.progress*100+'%'"></div>
+                                                                </div>
+                                                                <div class="progress-rate">
+                                                                    <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                                    <span v-else><i
+                                                                            class="fas fa-check-circle"></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                        </dd>
+                                    </dl>
+
+                                    <div class="btnbox">
+                                        <a class="btn small" @click="task_edit_clear_i">Cancel</a>
+                                        <a class="btn small green" id="btn_arrange">Calendar</a>
+                                        <a class="btn small green" @click="task_edit_create_i">Save</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- dialog end -->
+                        </div>
+
+
 
 
                     <!-- add yellow (建立 訂單任務 的按鈕) -->
@@ -3061,6 +3417,16 @@ catch (Exception $e) {
                                         </select>
                                     </dd>
 
+                                    <dt>Task Type</dt>
+                                    <dd>
+                                        <select v-model="fil_type">
+                                            <option value=""></option>
+                                            <option value="r">Regular Task</option>
+                                            <option value="o">Order Task</option>
+                                            <option value="i">Inquiry Task</option>
+                                        </select>
+                                    </dd>
+
                                     <dt>Keyword (only for task title and recent message)</dt>
                                     <dd><input type="text" v-model="fil_keyword"></dd>
 
@@ -3106,8 +3472,9 @@ catch (Exception $e) {
                                 <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
                                 <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
                             </li>
-                            <li v-if="receive_record.order.length == 0"><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
+                            <li v-if="receive_record.order.length == 0 && receive_record.inquiry.length == 0"><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
                             <li v-if="receive_record.order.length > 0"><a @click="show_detail(receive_record.task_id)" style="color: rgb(253,183,47);">{{ receive_record.title }}</a><!-- <a :href="(receive_record.order[0].order_type == 'stock' ? 'order_taiwan_stock_p1' : 'order_taiwan_p1') + '?id=' + receive_record.order[0].id" style="color: rgb(253,183,47);">{{ receive_record.order[0].order_type == 'stock' ? 'Order – Stocks' : ''}} {{ receive_record.order[0].od_name }}</a> --></li>
+                            <li v-if="receive_record.inquiry.length > 0"><a @click="show_detail(receive_record.task_id)" style="color: rgb(163, 73, 164);">{{ receive_record.title }}</a><!-- <a :href="(receive_record.order[0].order_type == 'stock' ? 'order_taiwan_stock_p1' : 'order_taiwan_p1') + '?id=' + receive_record.order[0].id" style="color: rgb(253,183,47);">{{ receive_record.order[0].order_type == 'stock' ? 'Order – Stocks' : ''}} {{ receive_record.order[0].od_name }}</a> --></li>
                             <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
                             <li>{{ receive_record.creator }}</li>
                             <li>{{ receive_record.nearest_user }}<br>{{ receive_record.nearest_time }}</li>
@@ -3134,9 +3501,10 @@ catch (Exception $e) {
                         <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
                         <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
                         <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
-                        <b v-if="receive_record.order.length == 0">[Task] {{ receive_record.title }}</b>
+                        <b v-if="receive_record.order.length == 0 && receive_record.inquiry.length == 0">[Task] {{ receive_record.title }}</b>
                         <!-- 如果是訂單類的任務，任務標題前的字樣會從 Task 變成 Order Task，如下 -->
                         <b v-if="receive_record.order.length > 0">{{ receive_record.order.length > 0 ? '[Order Task]' : '' }} {{ receive_record.title }}</b>
+                        <b v-if="receive_record.inquiry.length > 0">{{ receive_record.inquiry.length > 0 ? '[Inquiry Task]' : '' }} {{ receive_record.title }}</b>
                         <!-- <a class="btn small blue right" id="btn_arrange">Arrange Meeting</a> -->
                     </div>
                     <div class="teskbox dialogclear" style="margin-top:-2px !important">
@@ -3154,6 +3522,13 @@ catch (Exception $e) {
                                     <a v-if="receive_record.order[0].order_type == ''" style="color: #25a2b8" :href="'order_taiwan_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
                                     <a v-if="receive_record.order[0].order_type == 'stock'" style="color: #25a2b8" :href="'order_taiwan_stock_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
                                     <a v-if="receive_record.order[0].order_type == 'sample'" style="color: #25a2b8" :href="'order_taiwan_sample_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
+                                </li>
+                            </ul>
+                            <!-- 如果是Inquiry的任務，需要多出 Inquiry Name欄位，內容值的範例: LOTW-0001 LIGHTING FIXTURE -->
+                            <ul v-if="receive_record.inquiry.length > 0">
+                                <li><b>Inquiry Name</b></li>
+                                <li>
+                                    <a style="color: #25a2b8" :href="'inquiry_taiwan?id=' + receive_record.inquiry[0].id">{{ receive_record.inquiry[0].serial_name }} {{ receive_record.inquiry[0].iq_name }}</a>
                                 </li>
                             </ul>
 

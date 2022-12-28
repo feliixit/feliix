@@ -68,6 +68,7 @@ if($jwt){
             brief,
             listing,
             qty,
+            backup_qty,
             srp,
             date_needed,
             pid,
@@ -125,6 +126,7 @@ if($jwt){
             $brief = $row['brief'];
             $listing = $row['listing'];
             $qty = $row['qty'];
+            $backup_qty = $row['backup_qty'];
             $srp = $row['srp'];
             $date_needed = $row['date_needed'];
 
@@ -166,6 +168,7 @@ if($jwt){
             "brief" => $brief,
             "listing" => $listing,
             "qty" => $qty,
+            "backup_qty" => $backup_qty,
             "srp" => $srp,
             "date_needed" => $date_needed,
             "shipping_way" => $shipping_way,
@@ -507,15 +510,26 @@ if($jwt){
                 $sheet->setCellValue('D'. $i, $row['brief'] . "\n" . $row['listing']);
                 $sheet->getStyle('D'. $i)->getAlignment()->setWrapText(true);
 
-                $sheet->setCellValue('E' . $i, $row['qty']);
+                $qq = "";
+                if($row['qty'] != "")
+                {
+                    $qq = intval($row['qty']);
+                }
+                if($row['backup_qty'] != "")
+                {
+                    $qq += intval($row['backup_qty']);
+                }
+                
+                $sheet->setCellValue('E' . $i, $qq);
                 $sheet->getStyle('E'. $i)->applyFromArray($center_style);
+                
 
                 $price = "";
                 if($row['product'] != "") {
                     $price = $row['product'];
 
-                    if($row['qty'] != '' && $price != '') {
-                        $total_price_ntd = $total_price_ntd + $price * $row['qty'];
+                    if($qq != '' && $price != '') {
+                        $total_price_ntd = $total_price_ntd + $price * $qq;
                     }
                 }
 
@@ -523,8 +537,8 @@ if($jwt){
                 $sheet->getStyle('F'. $i)->applyFromArray($center_style);
 
                 $amount = "";
-                if($row['qty'] != '' && $price != '') {
-                    $amount = $price * $row['qty'];
+                if($qq != '' && $price != '') {
+                    $amount = $price * $qq;
                 }
 
                 $sheet->setCellValue('G' . $i, $amount);

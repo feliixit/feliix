@@ -61,7 +61,7 @@ $due_date = (isset($_POST['due_date']) ?  $_POST['due_date'] : '');
 $due_time = (isset($_POST['due_time']) ?  $_POST['due_time'] : '');
 $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 
-$od_name = (isset($_POST['od_name']) ?  $_POST['od_name'] : '');
+$od_name = (isset($_POST['order']) ?  $_POST['order'] : '');
 $order_type = (isset($_POST['order_type']) ?  $_POST['order_type'] : '');
 
 $_record = GetTaskDetailOrg($task_id, $db);
@@ -129,10 +129,10 @@ try{
 
         // send notify mail
         if($mail_type == 1)
-            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
+            SendNotifyMail01($task_id, $_record[0]["status"], GetOrderType($order_type), $od_name);
 
         if($mail_type == 2)
-            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $order);
+            SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $od_name);
 
         $returnArray = array('batch_id' => $task_id);
        
@@ -189,6 +189,12 @@ function GetOrderType($order_type)
             break;
         case 'sample':
             $order_type_name = "Order - Sample";
+            break;
+        case 'mockup':
+            $order_type_name = "Order - Mockup";
+            break;
+        case 'inquiry':
+            $order_type_name = "Inquiry";
             break;
     }
 
