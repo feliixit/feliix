@@ -498,14 +498,18 @@ try {
         }
 
         .block.A .tb_order thead tr th:nth-of-type(7), .block.A .tb_order tbody tr td:nth-of-type(8) {
-            min-width: 180px;
+            min-width: 130px;
         }
 
         .block.A .tb_order thead tr th:nth-of-type(8), .block.A .tb_order tbody tr td:nth-of-type(9) {
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .block.A .tb_order thead tr th:nth-of-type(9), .block.A .tb_order tbody tr td:nth-of-type(10) {
+            min-width: 200px;
+        }
+
+        .block.A .tb_order thead tr th:nth-of-type(10), .block.A .tb_order tbody tr td:nth-of-type(11) {
             min-width: 450px;
         }
 
@@ -1294,7 +1298,7 @@ try {
             <div class="block" style="display: flex; justify-content: space-between;">
                 <!-- tag -->
                 <div>
-                    <b class="tag focus">ORDER TAIWAN</b>
+                    <b class="tag focus">ORDER – TAIWAN</b>
                     <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + od_name }}</b>
                     <b class="tag focus">PROJECT</b>
                     <a :href="'project03_other?sid=' + stage_id"><b class="tag">{{ project_name }}</b></a>

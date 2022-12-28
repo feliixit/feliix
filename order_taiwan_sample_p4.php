@@ -505,14 +505,18 @@ try {
         }
 
         .block.D .tb_order thead tr th:nth-of-type(9), .block.D .tb_order tbody tr td:nth-of-type(10) {
-            min-width: 180px;
+            min-width: 130px;
         }
 
         .block.D .tb_order thead tr th:nth-of-type(10), .block.D .tb_order tbody tr td:nth-of-type(11) {
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .block.D .tb_order thead tr th:nth-of-type(11), .block.D .tb_order tbody tr td:nth-of-type(12) {
+            min-width: 200px;
+        }
+
+        .block.D .tb_order thead tr th:nth-of-type(12), .block.D .tb_order tbody tr td:nth-of-type(13) {
             min-width: 450px;
         }
 
@@ -520,21 +524,21 @@ try {
             min-width: 120px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(13) {
+        .block.D .tb_order tbody tr td:nth-of-type(14) {
             min-width: 450px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(14) {
+        .block.D .tb_order tbody tr td:nth-of-type(15) {
             min-width: 220px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(15),
-        .block.D .tb_order tbody tr td:nth-of-type(16) {
+        .block.D .tb_order tbody tr td:nth-of-type(16),
+        .block.D .tb_order tbody tr td:nth-of-type(17) {
             min-width: 180px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(17),
-        .block.D .tb_order tbody tr td:nth-of-type(18) {
+        .block.D .tb_order tbody tr td:nth-of-type(18),
+        .block.D .tb_order tbody tr td:nth-of-type(19) {
             min-width: 400px;
         }
 

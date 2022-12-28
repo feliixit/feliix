@@ -506,14 +506,18 @@ try {
         }
 
         .block.D .tb_order thead tr th:nth-of-type(10), .block.D .tb_order tbody tr td:nth-of-type(11) {
-            min-width: 180px;
+            min-width: 130px;
         }
 
         .block.D .tb_order thead tr th:nth-of-type(11), .block.D .tb_order tbody tr td:nth-of-type(12) {
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .block.D .tb_order thead tr th:nth-of-type(12), .block.D .tb_order tbody tr td:nth-of-type(13) {
+            min-width: 200px;
+        }
+
+        .block.D .tb_order thead tr th:nth-of-type(13), .block.D .tb_order tbody tr td:nth-of-type(14) {
             min-width: 450px;
         }
 
@@ -521,23 +525,23 @@ try {
             min-width: 120px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(14) {
+        .block.D .tb_order tbody tr td:nth-of-type(15) {
             min-width: 450px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(15) {
+        .block.D .tb_order tbody tr td:nth-of-type(16) {
             min-width: 220px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(16),
-        .block.D .tb_order tbody tr td:nth-of-type(17) {
+        .block.D .tb_order tbody tr td:nth-of-type(17),
+        .block.D .tb_order tbody tr td:nth-of-type(18) {
             min-width: 180px;
         }
 
-        .block.D .tb_order tbody tr td:nth-of-type(18),
         .block.D .tb_order tbody tr td:nth-of-type(19),
         .block.D .tb_order tbody tr td:nth-of-type(20),
-        .block.D .tb_order tbody tr td:nth-of-type(21) {
+        .block.D .tb_order tbody tr td:nth-of-type(21),
+        .block.D .tb_order tbody tr td:nth-of-type(22) {
             min-width: 400px;
         }
 
@@ -1315,7 +1319,7 @@ try {
             <div class="block" style="display: flex; justify-content: space-between;">
                 <!-- tag -->
                 <div>
-                    <b class="tag focus">ORDER TAIWAN</b>
+                    <b class="tag focus">ORDER – TAIWAN</b>
                     <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + od_name }}</b>
                     <b class="tag focus">PROJECT</b>
                     <a :href="'project03_other?sid=' + stage_id"><b class="tag">{{ project_name }}</b></a>
