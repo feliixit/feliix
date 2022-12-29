@@ -5022,7 +5022,7 @@ catch (Exception $e) {
                                 localStorage.getItem('token');
                                 var form_Data = new FormData();
 
-                                form_Data.append('category', 'en');
+                                form_Data.append('category', 'eng');
 
                                 $.ajax({
                                     url: "api/project03_other_task_calendar_dep",
