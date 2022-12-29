@@ -625,7 +625,7 @@ header( 'location:index' );
                                     <option :value="'l'">Lighting Department</option>
                                     <option :value="'o'">Office Systems Department</option>
                                     <option :value="'sl'">Sales Department</option>
-                                    <option :value="'sv'">Service Department</option>
+                                    <option :value="'sv'">Engineering Department</option>
                                 </select>
 
                                 <select v-model="task_id" v-if="kind == 'a' && type == 'task'">

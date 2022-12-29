@@ -75,9 +75,9 @@ $access6 = true;
 }
 }
 
-if(trim(strtoupper($department)) == 'SERVICE')
+if(trim(strtoupper($department)) == 'ENGINEERING')
 {
-if(trim(strtoupper($position)) == "SERVICE MANAGER")
+if(trim(strtoupper($position)) == "ENGINEERING MANAGER")
 {
 $access6 = true;
 }
@@ -630,7 +630,7 @@ header('location:index');
                                     <dt style="display: none;">
                                         <input type="checkbox" id="send_emai" v-model="edit_send_mail">
                                         <label for="send_emai" style="font-size: 14px; margin-left: -3px;">Send E-mail
-                                            to service manager when full payment is verified</label>
+                                            to engineering manager when full payment is verified</label>
                                     </dt>
 
                                     <dt>Reason for Editing Project Info:</dt>

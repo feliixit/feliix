@@ -1827,12 +1827,13 @@ try {
                                     <option value="AUDIO EQUIPMENT">AUDIO EQUIPMENT</option>
                                     <option value="BATTEN LIGHT">BATTEN LIGHT</option>
                                     <option value="BOLLARD">BOLLARD</option>
+                                    <option value="CONTROLLER">CONTROLLER</option>
                                     <option value="CUSTOMIZED">CUSTOMIZED</option>
                                     <option value="DIMMABLE">DIMMABLE</option>
-                                <option value="DIMMER">DIMMER</option>
+                                    <option value="DIMMER">DIMMER</option>
                                     <option value="DIRECTIONAL">DIRECTIONAL</option>
                                     <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
-                                    <option value="DMX">DMX</option>		
+                                    <option value="DMX">DMX</option>
                                     <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
                                     <option value="FLOOD LIGHT">FLOOD LIGHT</option>
                                     <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
@@ -1842,10 +1843,11 @@ try {
                                     <option value="LED TUBE">LED TUBE</option>
                                     <option value="LIGHTBOX">LIGHTBOX</option>
                                     <option value="LINEAR LIGHT">LINEAR LIGHT</option>
-                                <option value="MAGNETIC TRACK BAR">MAGNETIC TRACK BAR</option>
-                                <option value="MAGNETIC TRACK LIGHT">MAGNETIC TRACK LIGHT</option>		   
+                                    <option value="MAGNETIC TRACK BAR">MAGNETIC TRACK BAR</option>
+                                    <option value="MAGNETIC TRACK LIGHT">MAGNETIC TRACK LIGHT</option>
                                     <option value="PANEL LIGHT">PANEL LIGHT</option>
                                     <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
+                                    <option value="RECEIVER">RECEIVER</option>
                                     <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
                                     <option value="STAGE LIGHT">STAGE LIGHT</option>
                                     <option value="SWITCH">SWITCH</option>
@@ -2445,7 +2447,7 @@ try {
                             <option value="l">Lighting Department</option>
                             <option value="o">Office Systems Department</option>
                             <option value="sl">Sales Department</option>
-                            <option value="sv">Service Department</option>
+                            <option value="sv">Engineering Department</option>
                         </select>
 
                         <br>
@@ -2520,7 +2522,7 @@ try {
                                 v-bind:href="'task_management_SLS?sid='+ item.project_id">Sales Task Management: {{ item.project_name_sl }}
                                 </a>
                                 <a v-show="item.kind == 'sv'"
-                                v-bind:href="'task_management_SVC?sid='+ item.project_id">Service Task Management: {{ item.project_name_sv }}
+                                v-bind:href="'task_management_SVC?sid='+ item.project_id">Engineering Task Management: {{ item.project_name_sv }}
                                 </a>
                             </td>
 
@@ -2573,7 +2575,7 @@ try {
                                     Management: {{ receive_record.project_name_sl }}
                                 </a>
                                 <a v-show="receive_record.is_edited == 1 && receive_record.kind == 'sv'"
-                                   v-bind:href="'task_management_SVC?sid='+ receive_record.project_id">Service Task
+                                   v-bind:href="'task_management_SVC?sid='+ receive_record.project_id">Engineering Task
                                     Management: {{ receive_record.project_name_sv }}
                                 </a>
                             </td>

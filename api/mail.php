@@ -822,6 +822,8 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
     //if($kind == 0 || $kind == 1)
         //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
+    if($kind == 0 || $kind == 1)
+        $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
         
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -1151,6 +1153,8 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
+    $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
+
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -1251,6 +1255,8 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
 
     //if($kind == 0 || $kind == 1)
         //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
+    if($kind == 0 || $kind == 1)
+        $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -1420,6 +1426,7 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $mail->AddCC($email1, $name);
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
+    $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -3290,7 +3297,7 @@ function stage_close_notify($project_creator_id, $project_id, $project_name, $st
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -3361,7 +3368,7 @@ function stage_order_close_notify($project_creator_id, $project_id, $project_nam
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -3610,7 +3617,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -3739,7 +3746,7 @@ function task_notify_r($request_type, $project_name, $task_name, $stages_status,
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -3869,7 +3876,7 @@ function task_notify_order($request_type, $project_name, $task_name, $stages_sta
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -4006,7 +4013,7 @@ function task_notify_inquiry($request_type, $project_name, $task_name, $stages_s
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -4151,7 +4158,7 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -4296,7 +4303,7 @@ function task_notify_type_inquiry($request_type, $project_name, $task_name, $sta
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -4379,8 +4386,12 @@ function message_notify_dept($request_type, $project_name, $task_name, $stages, 
             $department = "Sales";
             $uri = "task_management_SLS";
             break;
+        case "ENG":
+            $department = "Engineering";
+            $uri = "task_management_SVC";
+            break;
         case "SVC":
-            $department = "Service";
+            $department = "Engineering";
             $uri = "task_management_SVC";
             break;
         case "C":
@@ -4614,7 +4625,7 @@ function message_notify_r($request_type, $project_name, $task_name, $stages, $cr
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -4751,7 +4762,7 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -5416,7 +5427,7 @@ if($stage == "Order")
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
-    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    $notifior = GetChargeNotifiersByTitle('Engineering Manager');
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -5541,7 +5552,7 @@ if($stage == "Order")
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
-    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    $notifior = GetChargeNotifiersByTitle('Engineering Manager');
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -5663,7 +5674,7 @@ if($stage == "Order")
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
-    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    $notifior = GetChargeNotifiersByTitle('Engineering Manager');
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -5789,7 +5800,7 @@ if($stage == "Order")
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
-    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    $notifior = GetChargeNotifiersByTitle('Engineering Manager');
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -5914,7 +5925,7 @@ if($stage == "Order")
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
-    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    $notifior = GetChargeNotifiersByTitle('Engineering Manager');
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -6046,7 +6057,7 @@ if($stage == "Order")
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
-    $notifior = GetChargeNotifiersByTitle('Service Manager');
+    $notifior = GetChargeNotifiersByTitle('Engineering Manager');
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
@@ -6180,7 +6191,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -6313,7 +6324,7 @@ function task_notify02_r($old_status, $task_status, $project_name, $task_name, $
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -6445,7 +6456,7 @@ function task_notify02_order($old_status, $task_status, $project_name, $task_nam
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -6578,7 +6589,7 @@ function task_notify02_inquiry($old_status, $task_status, $project_name, $task_n
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -6711,7 +6722,7 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -6851,7 +6862,7 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $notifior = GetChargeNotifiersByTitle('Service Manager');
+        $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
         {
             $mail->AddAddress($list["email"], $list["username"]);
@@ -12555,7 +12566,7 @@ function GetProjectServiceNotifiers()
             LEFT JOIN user_title ut
             ON u.title_id = ut.id 
             WHERE title IN(
-                'Service Manager') and u.status = 1";
+                'Engineering Manager') and u.status = 1";
 
 
     $merged_results = array();
@@ -12698,14 +12709,6 @@ function SetupMail($mail, $conf)
     $mail->Username   = $conf::$mail_username;
     $mail->Password   = $conf::$mail_password;
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'sylvia99@ethereal.email';
-    // $mail->Password   = '3YEXARcxXFhjT2k5RQ';
 
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;

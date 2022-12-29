@@ -154,9 +154,9 @@ try {
             }
         }
 
-        if(trim(strtoupper($department)) == 'SERVICE')
+        if(trim(strtoupper($department)) == 'ENGINEERING')
         {
-            if(trim(strtoupper($position)) == "ENGINERING MANAGER")
+            if(trim(strtoupper($position)) == "ENGINEERING MANAGER")
             {
                 $access6 = true;
             }
@@ -253,6 +253,7 @@ try {
             <?php 
             }
             ?>
+                <a class="list" href="inquiry_mgt">Inquiry Management</a>
                 <a class="list" href="order_mgt">Order Management</a>
                 <a class="list" href="price_comparison_mgt">Price Comparison Management</a>
                 <a class="list" href="schedule_calendar">Schedule Calendar</a>
@@ -271,7 +272,7 @@ try {
                 <a class="list" href="task_management_LT">Lighting Department</a>
                 <a class="list" href="task_management_OS">Office Systems Department</a>
                 <a class="list" href="task_management_SLS">Sales Department</a>
-                <a class="list" href="task_management_SVC">Service Department</a>
+                <a class="list" href="task_management_SVC">Engineering Department</a>
             </li>
 
             <li class="sec02">

@@ -1670,6 +1670,7 @@ var initial = () =>  {
         app.name != "Mary Jude Jeng Articulo" &&
         app.name != "Stefanie Mika C. Santos" &&
         app.name != "Edneil Fernandez" &&
+        app.name != "Aiza Eisma" &&
         app.name != "Kristel Tan"
     ) {
         document.getElementById("btn_lock").style.visibility = "hidden";

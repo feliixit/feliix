@@ -3646,7 +3646,7 @@ header('location:index');
             }
         }
 
-        if(department === 'SVC' || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
+        if(department === 'ENG' || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
         {
             if(level === "MANAGING DIRECTOR" || level === "CHIEF ADVISOR")
             {
@@ -3658,9 +3658,9 @@ header('location:index');
                     can_close = true;
             }
 
-            if(level === "SERVICE MANAGER" || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
+            if(level === "ENGINEERING MANAGER" || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER')  // 20220321 for service leave
             {
-                if(creator_level === "ASSISTANT SERVICE MANAGER")
+                if(creator_level === "ASSISTANT ENGINEERING MANAGER")
                 {
                     can_close = true;
                 }
@@ -3835,7 +3835,7 @@ header('location:index');
                     header: {
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'individual,admin,design,lighting,furniture,sls,svc,tw,overall',
+                        right: 'individual,admin,design,lighting,furniture,sls,eng,tw,overall',
                     },
 
                     //Individual按鈕：只顯示出Creator、Assignee或Collaborator是當前使用者的task在日曆上
@@ -4282,8 +4282,8 @@ header('location:index');
                             }
                         },
 
-                        svc: {
-                            text: 'SVC',
+                        eng: {
+                            text: 'ENG',
                             click: function() {
 
                                 //刪除當前在日曆上的所有任務資訊
@@ -4302,7 +4302,7 @@ header('location:index');
                                 localStorage.getItem('token');
                                 var form_Data = new FormData();
 
-                                form_Data.append('category', 'svc');
+                                form_Data.append('category', 'eng');
 
                                 $.ajax({
                                     url: "api/project03_other_task_calendar_dep",
@@ -4522,7 +4522,7 @@ header('location:index');
                                                 window.open('https://feliix.myvnc.com/task_management_OS?sid=' + info.event.id, "_blank");
                                             else if(info.event.extendedProps.category == 'SLS')
                                                 window.open('https://feliix.myvnc.com/task_management_SLS?sid=' + info.event.id, "_blank");
-                                            else if(info.event.extendedProps.category == 'SVC')
+                                            else if(info.event.extendedProps.category == 'ENG')
                                                 window.open('https://feliix.myvnc.com/task_management_SVC?sid=' + info.event.id, "_blank");
                                             else if(info.event.extendedProps.category == 'C')
                                                 window.open('https://feliix.myvnc.com/project03_client_v2?sid=' + info.event.extendedProps.stage_id, "_blank");

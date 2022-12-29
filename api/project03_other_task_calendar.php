@@ -103,8 +103,8 @@ switch ($method) {
             $sql = $sql . " and LOWER(pc.category) = 'sales' ";
         }
 
-        if ($cat == 'svc') {
-            $sql = $sql . " and LOWER(pc.category) = 'service' ";
+        if ($cat == 'eng') {
+            $sql = $sql . " and LOWER(pc.category) = 'engineering' ";
         }
 
         if ($cat == 'c') {
@@ -199,7 +199,7 @@ switch ($method) {
             $merged_results = array_merge($merged_results, CombineWithSLS($db, $my_department, $my_level, $user_id));
         }
 
-        if($cat == '' || $cat == 'svc')
+        if($cat == '' || $cat == 'eng')
         {
             $merged_results = array_merge($merged_results, CombineWithSVC($db, $my_department, $my_level, $user_id));
         }
@@ -742,7 +742,7 @@ function CombineWithSVC($db, $my_department, $my_level, $my_id)
                         pm.due_time, 
                         pm.`status` task_status, 
                         pm.create_id, 
-                        'SVC' category, 
+                        'ENG' category, 
                         '' project_name, 
                         pm.collaborator, 
                         pm.assignee,
@@ -778,7 +778,7 @@ function CombineWithSVC($db, $my_department, $my_level, $my_id)
             $priority = GetPriority($row['priority']);
             $title = $row['due_time'] . ' ' .
                     '[' . $priority . ']' . 
-                    '[SVC]' .
+                    '[ENG]' .
                     
                      $row['title'];
             $due_date = $row['due_date'];
