@@ -271,7 +271,7 @@ try {
                 <a class="list" href="task_management_LT">Lighting Department</a>
                 <a class="list" href="task_management_OS">Office Systems Department</a>
                 <a class="list" href="task_management_SLS">Sales Department</a>
-                <a class="list" href="task_management_SVC">Service Department</a>
+                <a class="list" href="task_management_SVC">Engineering Department</a>
             </li>
 
             <li class="sec02">
