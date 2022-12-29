@@ -4379,6 +4379,10 @@ function message_notify_dept($request_type, $project_name, $task_name, $stages, 
             $department = "Sales";
             $uri = "task_management_SLS";
             break;
+        case "ENG":
+            $department = "Engineering";
+            $uri = "task_management_SVC";
+            break;
         case "SVC":
             $department = "Engineering";
             $uri = "task_management_SVC";

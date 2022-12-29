@@ -53,7 +53,7 @@ $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
 $uid = $user_id;
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 
-if($category != 'AD' && $category != 'DS' && $category != 'LT_T' && $category != 'OS_T' && $category != 'SLS' && $category != 'SVC')
+if($category != 'AD' && $category != 'DS' && $category != 'LT_T' && $category != 'OS_T' && $category != 'SLS' && $category != 'ENG')
     $_record = GetTaskDetailOrg($id, $db);
 
 $mail_type = 1;
@@ -122,7 +122,7 @@ try{
                 where id = :id ";
     }
 
-    if($category == 'SVC')
+    if($category == 'ENG')
     {
         $_record = GetTaskDetailOrg_svc($id, $db);
         $query = "update project_other_task_sv
@@ -214,7 +214,7 @@ function SendNotifyMail01($last_id, $old_status_id, $username, $category)
     if($category == 'SLS')
         $_record = GetTaskDetail_sls($last_id, $db);
 
-    if($category == 'SVC')
+    if($category == 'ENG')
         $_record = GetTaskDetail_svc($last_id, $db);
 
     if($category == 'C')
