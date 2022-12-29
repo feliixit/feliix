@@ -1251,9 +1251,9 @@ var app = new Vue({
           can_save = true;
       }
 
-      if(this.department.trim().toUpperCase() == 'SERVICE')
+      if(this.department.trim().toUpperCase() == 'ENGINEERING')
       { 
-        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER' || this.title.trim().toUpperCase() == 'SERVICE MANAGER')
+        if(this.title.trim().toUpperCase() == 'ENGINEERING MANAGER')
           can_save = true;
       }
 
@@ -1332,9 +1332,9 @@ var app = new Vue({
           can_save = true;
       }
 
-      if(this.department.trim().toUpperCase() == 'SERVICE')
+      if(this.department.trim().toUpperCase() == 'ENGINEERING')
       { 
-        if(this.title.trim().toUpperCase() == 'ENGINERING MANAGER' || this.title.trim().toUpperCase() == 'SERVICE MANAGER')
+        if(this.title.trim().toUpperCase() == 'ENGINEERING MANAGER')
           can_save = true;
       }
 

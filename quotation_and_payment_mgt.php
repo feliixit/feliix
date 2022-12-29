@@ -76,9 +76,9 @@ try {
             }
         }
 
-        if(trim(strtoupper($department)) == 'SERVICE')
+        if(trim(strtoupper($department)) == 'ENGINEERING')
         {
-            if(trim(strtoupper($position)) == "ENGINERING MANAGER" || trim(strtoupper($position)) == "SERVICE MANAGER")
+            if(trim(strtoupper($position)) == "ENGINEERING MANAGER")
             {
                 $access6 = true;
             }

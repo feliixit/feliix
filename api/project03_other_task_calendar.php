@@ -104,7 +104,7 @@ switch ($method) {
         }
 
         if ($cat == 'svc') {
-            $sql = $sql . " and LOWER(pc.category) = 'service' ";
+            $sql = $sql . " and LOWER(pc.category) = 'engineering' ";
         }
 
         if ($cat == 'c') {

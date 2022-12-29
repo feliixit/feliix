@@ -30,9 +30,9 @@ try {
 
     $access6 = false;
 
-    if(trim(strtoupper($department)) == 'SERVICE')
+    if(trim(strtoupper($department)) == 'ENGINEERING')
     {
-        if(trim(strtoupper($position)) == 'SERVICE MANAGER' || trim(strtoupper($position)) == 'ASSISTANT SERVICE MANAGER')
+        if(trim(strtoupper($position)) == 'ENGINEERING MANAGER' || trim(strtoupper($position)) == 'ASSISTANT ENGINEERING MANAGER')
         {
             $access6 = true;
         }
@@ -3343,9 +3343,9 @@ catch (Exception $e) {
                     can_close = true;
             }
 
-            if(level === "SERVICE MANAGER" || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER') // 20220321 for service leave
+            if(level === "ENGINEERING MANAGER" || level === 'LIGHTING MANAGER' || level === 'OFFICE SYSTEMS MANAGER') // 20220321 for service leave
             {
-                if(creator_level === "ASSISTANT SERVICE MANAGER")
+                if(creator_level === "ASSISTANT ENGINEERING MANAGER")
                 {
                     can_close = true;
                 }

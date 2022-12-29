@@ -4384,9 +4384,9 @@ catch (Exception $e) {
                     can_close = true;
             }
 
-            if(level === "SERVICE MANAGER")
+            if(level === "ENGINEERING MANAGER")
             {
-                if(creator_level === "ASSISTANT SERVICE MANAGER")
+                if(creator_level === "ASSISTANT ENGINEERING MANAGER")
                 {
                     can_close = true;
                 }
