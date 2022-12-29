@@ -59,7 +59,7 @@ $(function(){
             <a class="tag A" href="user">User</a>
             <a class="tag F" href="user_profile">User Profile</a>
             <a class="tag B" href="department">Department</a>
-            <a class="tag C focus">Postion</a>
+            <a class="tag C focus">Position</a>
             <a class="tag D" href="leave_flow">Leave Flow</a>
             <a class="tag E" href="expense_flow">Expense Flow</a>
         </div>
