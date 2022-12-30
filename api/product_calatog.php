@@ -628,6 +628,63 @@ else
 
                 $moq = $row['moq'];
 
+                $str_price_change = "";
+                if($max_price_change != "" || $min_price_change != "")
+                {
+                    if($min_price_change != "" && $max_price_change != "")
+                    {
+                        if($min_price_change == $max_price_change)
+                        {
+                            $str_price_change = "(" . $min_price_change . ")";
+                        }else
+                        {
+                            $str_price_change = "(" . $min_price_change . " ~ " . $max_price_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_price_change = "(" . $min_price_change . " ~ " . $max_price_change . ")";
+                    }
+                }
+
+                $str_price_ntd_change = "";
+                if($max_price_ntd_change != "" || $min_price_ntd_change != "")
+                {
+                    if($min_price_ntd_change != "" && $max_price_ntd_change != "")
+                    {
+                        if($min_price_ntd_change == $max_price_ntd_change)
+                        {
+                            $str_price_ntd_change = "(" . $min_price_ntd_change . ")";
+                        }else
+                        {
+                            $str_price_ntd_change = "(" . $min_price_ntd_change . " ~ " . $max_price_ntd_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_price_ntd_change = "(" . $min_price_ntd_change . " ~ " . $max_price_ntd_change . ")";
+                    }
+                }
+
+                $str_quoted_price_change = "";
+                if($max_quoted_price_change != "" || $min_quoted_price_change != "")
+                {
+                    if($max_quoted_price_change != "" && $min_quoted_price_change != "")
+                    {
+                        if($max_quoted_price_change == $min_quoted_price_change)
+                        {
+                            $str_quoted_price_change = "(" . $min_quoted_price_change . ")";
+                        }else
+                        {
+                            $str_quoted_price_change = "(" . $min_quoted_price_change . " ~ " . $max_quoted_price_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_quoted_price_change = "(" . $min_quoted_price_change . " ~ " . $max_quoted_price_change . ")";
+                    }
+                }
+
                 $merged_results[] = array( "id" => $id,
                                     "category" => $category,
                                     "sub_category" => $sub_category,
@@ -684,6 +741,10 @@ else
                                     "min_price_ntd_change" => $min_price_ntd_change,
                                     "max_quoted_price_change" => $max_quoted_price_change,
                                     "min_quoted_price_change" => $min_quoted_price_change,
+
+                                    "str_price_change" => $str_price_change,
+                                    "str_price_ntd_change" => $str_price_ntd_change,
+                                    "str_quoted_price_change" => $str_quoted_price_change,
 
                 );
             }
