@@ -711,24 +711,39 @@ else
 
 function update_product_category_price_date($id, $db)
 {
-    $query = "SET SQL_MODE='ALLOW_INVALID_DATES';
+    $query = "
+    SET SQL_MODE='ALLOW_INVALID_DATES';
     update product_category 
-    INNER JOIN 
-    (select pc.id, 
-    max(pc.price_change) max_pc, min(pc.price_change) min_pc, max(p.price_change) max_p, min(p.price_change) min_p, 
-    max(pc.price_ntd_change) max_npc, min(pc.price_ntd_change) min_npc, max(p.price_ntd_change) max_np, min(p.price_ntd_change) min_np,
-    max(pc.quoted_price_change) max_qpc, min(pc.quoted_price_change) min_qpc, max(p.quoted_price_change) max_qp, min(p.quoted_price_change) min_qp 
-    from product_category pc 
-    left join product p on pc.id = p.product_id 
-    group by pc.id) op ON product_category.id=op.id 
-    set 
-    max_price_change = case when Coalesce(op.max_pc, '0000-00-00') > Coalesce(op.max_p, '0000-00-00') then op.max_pc else op.max_p end,
-    min_price_change = case when Coalesce(op.min_pc, '9999-99-99') < Coalesce(op.min_p, '9999-99-99') then op.min_pc else op.min_p end,
-    max_price_ntd_change = case when Coalesce(op.max_npc, '0000-00-00') > Coalesce(op.max_np, '0000-00-00') then op.max_npc else op.max_np end,
-    min_price_ntd_change = case when Coalesce(op.min_npc, '9999-99-99') < Coalesce(op.min_np, '9999-99-99') then op.min_npc else op.min_np end,
-    max_quoted_price_change = case when Coalesce(op.max_qpc, '0000-00-00') > Coalesce(op.max_qp, '0000-00-00') then op.max_qpc else op.max_qp end,
-    min_quoted_price_change = case when Coalesce(op.min_qpc, '9999-99-99') < Coalesce(op.min_qp, '9999-99-99') then op.min_qpc else op.min_qp end
-    where op.id = product_category.id and  op.`id` = :id";
+        INNER JOIN 
+        (
+        select pc.id, pc.variation_mode,
+        max(p.price_change) max_p, min(Coalesce(p.price_change, '1000-01-01 00:00:00')) min_p, 
+        max(p.price_ntd_change) max_np, min(Coalesce(p.price_ntd_change, '1000-01-01 00:00:00')) min_np,
+        max(p.quoted_price_change) max_qp, min(Coalesce(p.quoted_price_change, '1000-01-01 00:00:00')) min_qp 
+        from product_category pc 
+        left join product p on pc.id = p.product_id 
+        group by pc.id having pc.variation_mode = 1 and pc.id = :id) 
+        op ON product_category.id=op.id 
+        set 
+        max_price_change = op.max_p,
+        min_price_change = case when op.min_p = '1000-01-01 00:00:00' then null else op.min_p end,
+        max_price_ntd_change = op.max_np,
+        min_price_ntd_change =  case when op.min_np = '1000-01-01 00:00:00' then null else op.min_np end, 
+        max_quoted_price_change =  op.max_qp,
+        min_quoted_price_change =   case when op.min_qp = '1000-01-01 00:00:00' then null else op.min_qp end
+        where op.id = product_category.id and  op.`id` = :id;
+
+    update product_category 
+        set 
+        max_price_change = price_change,
+        min_price_change = price_change,
+        max_price_ntd_change = price_ntd_change,
+        min_price_ntd_change =  price_ntd_change, 
+        max_quoted_price_change = quoted_price_change,
+        min_quoted_price_change = quoted_price_change
+        where variation_mode = 0 and id = :id;
+
+    ";
 
     
     // prepare the query
