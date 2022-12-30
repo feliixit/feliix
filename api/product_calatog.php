@@ -356,6 +356,14 @@ else
 
                 $currency = $row['currency'];
 
+                // max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, max_quoted_price_change, min_quoted_price_change
+                $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : '';
+                $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : '';
+                $max_price_ntd_change = $row['max_price_ntd_change'] ? substr($row['max_price_ntd_change'], 0, 10) : '';
+                $min_price_ntd_change = $row['min_price_ntd_change'] ? substr($row['min_price_ntd_change'], 0, 10) : '';
+                $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : '';
+                $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : '';
+
                 $srp = 0;
                 $srp_quoted = 0;
 
@@ -670,6 +678,12 @@ else
                                     "cnt" => $cnt,
                                     "srp" => $srp,
                                     "srp_quoted" => $srp_quoted,
+                                    "max_price_change" => $max_price_change,
+                                    "min_price_change" => $min_price_change,
+                                    "max_price_ntd_change" => $max_price_ntd_change,
+                                    "min_price_ntd_change" => $min_price_ntd_change,
+                                    "max_quoted_price_change" => $max_quoted_price_change,
+                                    "min_quoted_price_change" => $min_quoted_price_change,
 
                 );
             }

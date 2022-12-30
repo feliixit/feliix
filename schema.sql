@@ -3417,3 +3417,41 @@ ADD COLUMN `related_inquiry` VARCHAR(128) DEFAULT '';
 -- 20221227 backup qty
 ALTER TABLE od_item
 ADD COLUMN `backup_qty` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20221230 max and min price change
+ALTER TABLE product_category
+ADD COLUMN `max_price_change` timestamp NULL;
+
+ALTER TABLE product_category
+ADD COLUMN `min_price_change` timestamp NULL;
+
+ALTER TABLE product_category
+ADD COLUMN `max_price_ntd_change` timestamp NULL;
+
+ALTER TABLE product_category
+ADD COLUMN `min_price_ntd_change` timestamp NULL;
+
+ALTER TABLE product_category
+ADD COLUMN `max_quoted_price_change` timestamp NULL;
+
+ALTER TABLE product_category
+ADD COLUMN `min_quoted_price_change` timestamp NULL;
+
+SET SQL_MODE='ALLOW_INVALID_DATES';
+update product_category 
+INNER JOIN 
+(select pc.id, 
+max(pc.price_change) max_pc, min(pc.price_change) min_pc, max(p.price_change) max_p, min(p.price_change) min_p, 
+max(pc.price_ntd_change) max_npc, min(pc.price_ntd_change) min_npc, max(p.price_ntd_change) max_np, min(p.price_ntd_change) min_np,
+max(pc.quoted_price_change) max_qpc, min(pc.quoted_price_change) min_qpc, max(p.quoted_price_change) max_qp, min(p.quoted_price_change) min_qp 
+from product_category pc 
+left join product p on pc.id = p.product_id 
+group by pc.id) op ON product_category.id=op.id 
+set 
+max_price_change = case when op.max_pc > op.max_p then op.max_pc else op.max_p end,
+min_price_change = case when op.min_pc < op.min_p then op.min_pc else op.min_p end,
+max_price_ntd_change = case when op.max_npc > op.max_np then op.max_npc else op.max_np end,
+min_price_ntd_change = case when op.min_npc < op.min_np then op.min_npc else op.min_np end,
+max_quoted_price_change = case when op.max_qpc > op.max_qp then op.max_qpc else op.max_qp end,
+min_quoted_price_change = case when op.min_qpc < op.min_qp then op.min_qpc else op.min_qp end
+where op.id = product_category.id;

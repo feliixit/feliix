@@ -781,9 +781,9 @@
 
                     </td>
                     <td>
-                        <span v-show="show_ntd == true && toggle == true">CP: {{ item.price_ntd }}<br></span>
-                        <span>SRP: {{ item.price }}<br></span>
-                        <span>QP: {{ item.quoted_price }}<br></span>
+                        <span v-show="show_ntd == true && toggle == true">CP: {{ item.price_ntd }} {{ item.max_price_ntd_change ? 'Max:' + item.max_price_ntd_change : '' }} {{ item.min_price_ntd_change ? 'Min:' + item.min_price_ntd_change : '' }}<br></span>
+                        <span>SRP: {{ item.price }} {{ item.max_price_change ? 'Max:' + item.max_price_change : '' }} {{ item.min_price_change ? 'Min:' + item.min_price_change : '' }}<br></span>
+                        <span>QP: {{ item.quoted_price }} {{ item.max_quoted_price_change ? 'Max:' + item.max_quoted_price_change : '' }} {{ item.min_quoted_price_change ? 'Min:' + item.min_quoted_price_change : '' }}<br></span>
                     </td>
                     <!-- <td></td> -->
                     <td>
