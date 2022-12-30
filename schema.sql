@@ -3448,10 +3448,10 @@ from product_category pc
 left join product p on pc.id = p.product_id 
 group by pc.id) op ON product_category.id=op.id 
 set 
-max_price_change = case when op.max_pc > op.max_p then op.max_pc else op.max_p end,
-min_price_change = case when op.min_pc < op.min_p then op.min_pc else op.min_p end,
-max_price_ntd_change = case when op.max_npc > op.max_np then op.max_npc else op.max_np end,
-min_price_ntd_change = case when op.min_npc < op.min_np then op.min_npc else op.min_np end,
-max_quoted_price_change = case when op.max_qpc > op.max_qp then op.max_qpc else op.max_qp end,
-min_quoted_price_change = case when op.min_qpc < op.min_qp then op.min_qpc else op.min_qp end
+max_price_change = case when Coalesce(op.max_pc, '0000-00-00') > Coalesce(op.max_p, '0000-00-00') then op.max_pc else op.max_p end,
+min_price_change = case when Coalesce(op.min_pc, '9999-99-99') < Coalesce(op.min_p, '9999-99-99') then op.min_pc else op.min_p end,
+max_price_ntd_change = case when Coalesce(op.max_npc, '0000-00-00') > Coalesce(op.max_np, '0000-00-00') then op.max_npc else op.max_np end,
+min_price_ntd_change = case when Coalesce(op.min_npc, '9999-99-99') < Coalesce(op.min_np, '9999-99-99') then op.min_npc else op.min_np end,
+max_quoted_price_change = case when Coalesce(op.max_qpc, '0000-00-00') > Coalesce(op.max_qp, '0000-00-00') then op.max_qpc else op.max_qp end,
+min_quoted_price_change = case when Coalesce(op.min_qpc, '9999-99-99') < Coalesce(op.min_qp, '9999-99-99') then op.min_qpc else op.min_qp end
 where op.id = product_category.id;

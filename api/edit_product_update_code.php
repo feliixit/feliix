@@ -691,6 +691,8 @@ else
 
             
         $db->commit();
+
+        update_product_category_price_date($product_id, $db);
         
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") ));
@@ -705,6 +707,54 @@ else
         die();
 
     }
+}
+
+function update_product_category_price_date($id, $db)
+{
+    $query = "SET SQL_MODE='ALLOW_INVALID_DATES';
+    update product_category 
+    INNER JOIN 
+    (select pc.id, 
+    max(pc.price_change) max_pc, min(pc.price_change) min_pc, max(p.price_change) max_p, min(p.price_change) min_p, 
+    max(pc.price_ntd_change) max_npc, min(pc.price_ntd_change) min_npc, max(p.price_ntd_change) max_np, min(p.price_ntd_change) min_np,
+    max(pc.quoted_price_change) max_qpc, min(pc.quoted_price_change) min_qpc, max(p.quoted_price_change) max_qp, min(p.quoted_price_change) min_qp 
+    from product_category pc 
+    left join product p on pc.id = p.product_id 
+    group by pc.id) op ON product_category.id=op.id 
+    set 
+    max_price_change = case when Coalesce(op.max_pc, '0000-00-00') > Coalesce(op.max_p, '0000-00-00') then op.max_pc else op.max_p end,
+    min_price_change = case when Coalesce(op.min_pc, '9999-99-99') < Coalesce(op.min_p, '9999-99-99') then op.min_pc else op.min_p end,
+    max_price_ntd_change = case when Coalesce(op.max_npc, '0000-00-00') > Coalesce(op.max_np, '0000-00-00') then op.max_npc else op.max_np end,
+    min_price_ntd_change = case when Coalesce(op.min_npc, '9999-99-99') < Coalesce(op.min_np, '9999-99-99') then op.min_npc else op.min_np end,
+    max_quoted_price_change = case when Coalesce(op.max_qpc, '0000-00-00') > Coalesce(op.max_qp, '0000-00-00') then op.max_qpc else op.max_qp end,
+    min_quoted_price_change = case when Coalesce(op.min_qpc, '9999-99-99') < Coalesce(op.min_qp, '9999-99-99') then op.min_qpc else op.min_qp end
+    where op.id = product_category.id and  op.`id` = :id";
+
+    
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $id);
+
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+          
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+    
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+  
+    }
+
 }
 
 function parseFloat($value) {
