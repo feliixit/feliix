@@ -551,6 +551,8 @@ function GetProduct($id, $db, $currency){
         else
             $url = '';
 
+            $enabled = $row['enabled'];
+
         $merged_results[] = array(  "id" => $id, 
                                     "k1" => $k1, 
                                     "k2" => $k2, 
@@ -573,6 +575,7 @@ function GetProduct($id, $db, $currency){
                                     "url" => $url, 
                                     "photo" => $photo, 
                                     "currency" => $currency,
+                                    "enabled" => $enabled,
                                    
                                     "file" => array( "value" => ''),
                                    

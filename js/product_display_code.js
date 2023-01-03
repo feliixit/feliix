@@ -64,6 +64,8 @@ var app = new Vue({
     str_price_ntd_change: "",
     str_price_change: "",
 
+    phased_out: "",
+
     // accessory
 
     // variation
@@ -265,6 +267,8 @@ var app = new Vue({
         this.str_price_ntd_change = (item_product.price_ntd_change != "" ? "(" + item_product.price_ntd_change + ")" : "");
         this.str_price_change = (item_product.price_change != "" ? "(" + item_product.price_change + ")" : "");
         this.str_quoted_price_change = (item_product.quoted_price_change != "" ? "(" + item_product.quoted_price_change + ")" : "");
+
+        this.phased_out = (item_product.enabled == 0 ? "F" : "");
       }
       else
       {
@@ -276,6 +280,8 @@ var app = new Vue({
         this.str_price_ntd_change = this.record[0]['str_price_ntd_change'];
         this.str_price_change = this.record[0]['str_price_change'];
         this.str_quoted_price_change = this.record[0]['str_quoted_price_change'];
+
+        this.phased_out = "";
       }
 
     },

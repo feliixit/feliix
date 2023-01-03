@@ -178,6 +178,17 @@
             padding: 30px 20px 5px;
         }
 
+        .infobox .basic_info span.phasedout{
+            font-size: 16px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-bottom: 3px;
+            padding: 0 7px 3px;
+            border-radius: 10px;
+        }
+
         .infobox .basic_info div.tags {
             margin-bottom: 0.5rem;
         }
@@ -436,6 +447,8 @@
 
             <div class="infobox">
                 <div class="basic_info">
+                    <!-- 網頁載入時，下面的<span>結構不會顯示出來，但當使用者選擇到某一個停產的子規格時，下方的 <span> 結構就會顯示出來；若使用者切換到另一個沒有停產的子規格 或是 沒有選擇任何子規格時，下面的<span>結構不會顯示出來 -->
+                    <span class="phasedout" v-if="phased_out == 'F'">Phased Out</span>
                     <h3 style="word-break: break-all;">{{code}}</h3>
                     <h6>{{brand}}</h6>
                     <h6 v-if="category == 'Lighting'">{{ category}}</h6>
