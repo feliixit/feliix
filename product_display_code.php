@@ -448,15 +448,15 @@
                 <ul class="price_stock">
 
                     <li class="NTD_price" v-show="show_ntd == true && toggle == true">
-                        Cost Price: <span>{{ price_ntd }}</span><span></span>
+                        Cost Price: <span>{{ price_ntd }}</span><span>{{ str_price_ntd_change }}</span>
                     </li>
 
                     <li>
-                        Standard Retail Price: <span>{{price}}</span><span></span>
+                        Standard Retail Price: <span>{{price}}</span><span>{{ str_price_change }}</span>
                     </li>
 
                     <li>
-                        Quoted Price: <span>{{quoted_price}}</span><span></span>
+                        Quoted Price: <span>{{quoted_price}}</span><span>{{ str_quoted_price_change }}</span>
                     </li>
 
                 </ul>

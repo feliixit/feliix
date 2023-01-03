@@ -141,6 +141,15 @@ else
 
                 $currency = $row['currency'];
 
+                // max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, max_quoted_price_change, min_quoted_price_change
+                $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : '';
+                $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : '';
+                $max_price_ntd_change = $row['max_price_ntd_change'] ? substr($row['max_price_ntd_change'], 0, 10) : '';
+                $min_price_ntd_change = $row['min_price_ntd_change'] ? substr($row['min_price_ntd_change'], 0, 10) : '';
+                $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : '';
+                $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : '';
+
+
                 $product = GetProduct($id, $db, $currency);
                 $related_product = GetRelatedProductCode($id, $db);
 
@@ -338,6 +347,63 @@ else
                     $variation3_custom = "";
                 }
 
+                $str_price_change = "";
+                if($max_price_change != "" || $min_price_change != "")
+                {
+                    if($min_price_change != "" && $max_price_change != "")
+                    {
+                        if($min_price_change == $max_price_change)
+                        {
+                            $str_price_change = "(" . $min_price_change . ")";
+                        }else
+                        {
+                            $str_price_change = "(" . $min_price_change . " ~ " . $max_price_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_price_change = "(" . $min_price_change . " ~ " . $max_price_change . ")";
+                    }
+                }
+
+                $str_price_ntd_change = "";
+                if($max_price_ntd_change != "" || $min_price_ntd_change != "")
+                {
+                    if($min_price_ntd_change != "" && $max_price_ntd_change != "")
+                    {
+                        if($min_price_ntd_change == $max_price_ntd_change)
+                        {
+                            $str_price_ntd_change = "(" . $min_price_ntd_change . ")";
+                        }else
+                        {
+                            $str_price_ntd_change = "(" . $min_price_ntd_change . " ~ " . $max_price_ntd_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_price_ntd_change = "(" . $min_price_ntd_change . " ~ " . $max_price_ntd_change . ")";
+                    }
+                }
+
+                $str_quoted_price_change = "";
+                if($max_quoted_price_change != "" || $min_quoted_price_change != "")
+                {
+                    if($max_quoted_price_change != "" && $min_quoted_price_change != "")
+                    {
+                        if($max_quoted_price_change == $min_quoted_price_change)
+                        {
+                            $str_quoted_price_change = "(" . $min_quoted_price_change . ")";
+                        }else
+                        {
+                            $str_quoted_price_change = "(" . $min_quoted_price_change . " ~ " . $max_quoted_price_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_quoted_price_change = "(" . $min_quoted_price_change . " ~ " . $max_quoted_price_change . ")";
+                    }
+                }
+
                 $merged_results[] = array( "id" => $id,
                                     "category" => $category,
                                     "sub_category" => $sub_category,
@@ -387,6 +453,17 @@ else
                                     "quoted_price_change" => substr($quoted_price_change, 0, 10),
                                     "price_change" => substr($price_change, 0, 10),
                                     "price_ntd_change" => substr($price_ntd_change, 0, 10),
+
+                                    "max_price_change" => $max_price_change,
+                                    "min_price_change" => $min_price_change,
+                                    "max_price_ntd_change" => $max_price_ntd_change,
+                                    "min_price_ntd_change" => $min_price_ntd_change,
+                                    "max_quoted_price_change" => $max_quoted_price_change,
+                                    "min_quoted_price_change" => $min_quoted_price_change,
+
+                                    "str_price_change" => $str_price_change,
+                                    "str_price_ntd_change" => $str_price_ntd_change,
+                                    "str_quoted_price_change" => $str_quoted_price_change,
 
             );
             }
