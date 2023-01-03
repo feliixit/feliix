@@ -693,6 +693,7 @@ else
         $db->commit();
 
         update_product_category_price_date($product_id, $db);
+        update_product_category_phased_out_cnt($product_id, $db);
         
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") ));
@@ -743,6 +744,69 @@ function update_product_category_price_date($id, $db)
         min_quoted_price_change = quoted_price_change
         where variation_mode = 0 and id = :id;
 
+    ";
+
+    
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $id);
+
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+          
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+    
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+  
+    }
+
+}
+
+
+function update_product_category_phased_out_cnt($id, $db)
+{
+    $query = "
+    update product_category INNER JOIN ( select a_group.id, COALESCE(a_group.cnt, 0) cnt, COALESCE(e_group.cnt, 0) ecnt from (  select pc.id,  count(p.enabled) cnt  from product_category pc   left join product p on pc.id = p.product_id   where pc.variation_mode = 1  group by pc.id   ) a_group left join (  select pc.id,  count(p.enabled) cnt  from product_category pc   left join product p on pc.id = p.product_id   where p.enabled = 1 and pc.variation_mode = 1  group by pc.id ) e_group on a_group.id = e_group.id) op ON product_category.id=op.id set phased_out_cnt = op.cnt - op.ecnt where op.id = product_category.id and product_category.id = :id;
+    ";
+
+    
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $id);
+
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+          
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+    
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+  
+    }
+
+    $query = "
+    update product_category set phased_out_cnt = 0 where variation_mode = 0 and id = :id;
     ";
 
     

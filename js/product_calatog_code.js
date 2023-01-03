@@ -448,6 +448,14 @@ var app = new Vue({
         window.open("edit_product_code?id=" + id);
     },
 
+    phased_out_info: function(info) {
+      Swal.fire({
+        title: "<i>Phased out products:</i>", 
+        html: info,  
+        confirmButtonText: "Close", 
+      });
+    },
+
     btnDelClick: function(id) {
       let _this = this;
 

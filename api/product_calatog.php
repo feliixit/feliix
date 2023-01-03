@@ -364,6 +364,24 @@ else
                 $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : '';
                 $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : '';
 
+                $phased_out_cnt = $row['phased_out_cnt'];
+
+                $phased_out_info = [];
+                $phased_out_text = "";
+                if($phased_out_cnt > 0)
+                {
+                    $phased_out_info = phased_out_info($id, $db);
+                    for($i = 0; $i < count($phased_out_info); $i++)
+                    {
+                        $phased_out_text .= $phased_out_info[$i]["code"] . " " . $phased_out_info[$i]["1st_variation"] . "<br> ";
+                        if($i < count($phased_out_info) - 1)
+                        {
+                            $phased_out_text .= "<br> ";
+                        }
+                    }
+                }
+                
+
                 $srp = 0;
                 $srp_quoted = 0;
 
@@ -746,6 +764,10 @@ else
                                     "str_price_ntd_change" => $str_price_ntd_change,
                                     "str_quoted_price_change" => $str_quoted_price_change,
 
+                                    "phased_out_cnt" => $phased_out_cnt,
+                                    "phased_out_info" => $phased_out_info,
+                                    "phased_out_text" => $phased_out_text,
+
                 );
             }
 
@@ -1113,6 +1135,21 @@ function GetDetail($cat_id, $db){
 
 }
 
+function phased_out_info($id, $db){
+    $sql = "SELECT * FROM product WHERE product_id = ". $id . " and enabled = 0";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+
+}
 
 function GetAccessoryInfomation($cat_id, $db, $product_id){
     $sql = "SELECT * FROM accessory_category_attribute WHERE LEVEL = 3 AND left(cat_id, 4) = '". substr($cat_id, 0, 4) . "' and STATUS <> -1";
