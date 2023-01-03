@@ -262,9 +262,9 @@ var app = new Vue({
         this.price = "PHP " + Number(item_product.price).toLocaleString();
         this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
 
-        this.str_price_ntd_change = item_product.price_ntd_change;
-        this.str_price_change = item_product.price_change;
-        this.str_quoted_price_change = item_product.quoted_price_change;
+        this.str_price_ntd_change = (item_product.price_ntd_change != "" ? "(" + item_product.price_ntd_change + ")" : "");
+        this.str_price_change = (item_product.price_change != "" ? "(" + item_product.price_change + ")" : "");
+        this.str_quoted_price_change = (item_product.quoted_price_change != "" ? "(" + item_product.quoted_price_change + ")" : "");
       }
       else
       {
