@@ -450,7 +450,7 @@ var app = new Vue({
 
     phased_out_info: function(info) {
       Swal.fire({
-        title: "<i>Phased out products:</i>", 
+        title: "<i>Phased-out Variants:</i>", 
         html: info,  
         confirmButtonText: "Close", 
       });
