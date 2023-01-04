@@ -382,7 +382,7 @@ else
 
                         if($i < count($phased_out_info) - 1)
                         {
-                            $phased_out_text .= "<br> ";
+                            $phased_out_text .= '\n';
                         }
                     }
                 }
