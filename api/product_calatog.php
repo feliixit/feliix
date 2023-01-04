@@ -54,6 +54,8 @@ else
       $c = urldecode($c);
       $t = (isset($_GET['t']) ?  $_GET['t'] : "");
       $t = urldecode($t);
+      $k = (isset($_GET['k']) ?  $_GET['k'] : "");
+      $k = urldecode($k);
       $tag_array = json_decode($t, true);
       $b = (isset($_GET['b']) ?  $_GET['b'] : "");
       $b = urldecode($b);
@@ -114,6 +116,12 @@ else
             {
                 $sql = $sql . " and p.brand = '" . $b . "' ";
                 $query_cnt = $query_cnt . " and p.brand = '" . $b . "' ";
+            }
+
+            if($k != "")
+            {
+                $sql = $sql . " and (p.description like '%" . $k . "%' or p.notes like '%" . $k . "%') ";
+                $query_cnt = $query_cnt . " and (p.description like '%" . $k . "%' or p.notes like '%" . $k . "%') ";
             }
     
             

@@ -517,6 +517,9 @@
                                         <option v-for="(item, index) in brands">{{ item.brand }}</option>
                                     </select>
                                 </dd>
+
+                                <dt>Keyword (only for description and notes)</dt>
+                                <dd><input type="text" v-model="fil_keyword"></dd>
 <!--
                                 <div class="half">
                                     <dt></dt>
