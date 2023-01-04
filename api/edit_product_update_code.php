@@ -12,6 +12,7 @@ $id = (isset($_POST['id']) ? $_POST['id'] : 0);
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 $brand = (isset($_POST['brand']) ?  $_POST['brand'] : '');
+$currency = (isset($_POST['currency']) ? $_POST['currency'] : 'NTD');
 $code = (isset($_POST['code']) ?  $_POST['code'] : '');
 $tags = (isset($_POST['tags']) ?  $_POST['tags'] : '');
 $moq = (isset($_POST['moq']) ?  $_POST['moq'] : '');
@@ -96,6 +97,7 @@ else
         $query = "update product_category
         SET
             `brand` = :brand,
+            `currency` = :currency,
             `code` = :code, ";
 
             if($price_ntd != '' && !is_null($price_ntd) && $price_ntd != 'null')
@@ -196,6 +198,7 @@ else
 
         // bind the values
         $stmt->bindParam(':brand', $brand);
+        $stmt->bindParam(':currency', $currency);
         $stmt->bindParam(':code', $code);
 
         if($price_ntd != '' && !is_null($price_ntd) && $price_ntd != 'null')

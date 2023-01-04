@@ -767,6 +767,18 @@
 
             <ul class="NTD_price" v-show="show_ntd === true">
                 <li>
+                    Currency of Cost Price
+                </li>
+                <li>
+                    <select class="form-control one_half" v-model="currency">
+                        <option value="NTD">NTD</option>
+                        <option value="USD">USD</option>
+                    </select>
+                </li>
+            </ul>
+
+            <ul class="NTD_price" v-show="show_ntd === true">
+                <li>
                     Cost Price (NTD)
                 </li>
                 <li>

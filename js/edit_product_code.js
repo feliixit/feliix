@@ -39,6 +39,7 @@ var app = new Vue({
     // data
     brand: "",
     code: "",
+    currency: "NTD",
     price_ntd: "",
     price: "",
     price_ntd_change: "",
@@ -277,6 +278,7 @@ var app = new Vue({
             _this.accessory_infomation = _this.record[0]['accessory_information'];
 
             _this.brand = _this.record[0]['brand'];
+            _this.currency = _this.record[0]['currency'];
             _this.code = _this.record[0]['code'];
             _this.price_ntd = _this.record[0]['price_ntd'];
             _this.price = _this.record[0]['price'];
@@ -1009,6 +1011,7 @@ var app = new Vue({
           form_Data.append("category", _this.category);
           form_Data.append("sub_category", _this.sub_category);
           form_Data.append("brand", _this.brand);
+          form_Data.append("currency", _this.currency);
           form_Data.append("code", _this.code);
           form_Data.append("price_ntd", _this.price_ntd);
           form_Data.append("price", _this.price);
@@ -1113,6 +1116,7 @@ var app = new Vue({
       // data for
       this.code = "";
       this.brand = "";
+      this.currency = "NTD";
       this.price = "";
       this.price_ntd = "";
       this.price_change = "";

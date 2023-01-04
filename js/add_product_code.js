@@ -43,6 +43,8 @@ var app = new Vue({
     accessory_mode: false,
     variation_mode: false,
 
+    currency:"NTD",
+
     quoted_price:"",
     quoted_price_change:"",
     // accessory
@@ -906,6 +908,7 @@ var app = new Vue({
           form_Data.append("description", _this.description);
 
           form_Data.append("out", _this.out);
+          form_Data.append("currency", _this.currency);
 
           let related_product = $('#related_product').val();
           form_Data.append("related_product", related_product);
@@ -983,6 +986,8 @@ var app = new Vue({
       // data for
       this.code = "";
       this.brand = "";
+
+      this.currency = "NTD";
 
       $('#tag01').val('default');
       $('#tag01').selectpicker('refresh');

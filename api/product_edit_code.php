@@ -66,6 +66,7 @@ else
             $sub_category = '';
             $sub_category_name = '';
             $brand = '';
+            $currency = '';
             $code = '';
             $price_ntd = '';
             $price_ntd_org = '';
@@ -111,6 +112,7 @@ else
                 $sub_category = $row['sub_category'];
                 $sub_category_name = $row['sub_category_name'];
                 $brand = $row['brand'];
+                $currency = $row['currency'];
                 $code = $row['code'];
                 $price_ntd = $row['price_ntd'];
                 $price_org = $row['price'];
@@ -241,6 +243,7 @@ else
                                     "category" => $category,
                                     "sub_category" => $sub_category,
                                     "brand" => $brand,
+                                    "currency" => $currency,
                                     "code" => $code,
                                     "price_ntd" => $price_ntd,
                                     "price" => $price,
