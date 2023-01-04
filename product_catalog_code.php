@@ -301,6 +301,10 @@
             border-radius: 10px;
         }
 
+        #tb_product_list tbody td div.phasedout_variant button:focus {
+            outline-color: transparent;
+        }
+
         .NTD_price {
 
         }
