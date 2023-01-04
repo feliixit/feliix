@@ -373,8 +373,8 @@ else
                     $phased_out_info = phased_out_info($id, $db);
                     for($i = 0; $i < count($phased_out_info); $i++)
                     {
-                        $cnt = $i + 1;
-                        $phased_out_text .= "(" . $cnt . ") " . ($phased_out_info[$i]["1st_variation"] != "=>" ? str_replace('=>', ' = ', $phased_out_info[$i]["1st_variation"]) . ", " : "");
+                        $cn = $i + 1;
+                        $phased_out_text .= "(" . $cn . ") " . ($phased_out_info[$i]["1st_variation"] != "=>" ? str_replace('=>', ' = ', $phased_out_info[$i]["1st_variation"]) . ", " : "");
                         $phased_out_text .= ($phased_out_info[$i]["2rd_variation"] != "=>" ? str_replace('=>', ' = ', $phased_out_info[$i]["2rd_variation"]) . ", " : "");
                         $phased_out_text .= ($phased_out_info[$i]["3th_variation"] != "=>" ? str_replace('=>', ' = ', $phased_out_info[$i]["3th_variation"]) . ", " : "");
 
