@@ -244,6 +244,8 @@ var app = new Vue({
 
         of1:'',
         ofd1:'',
+
+        phased : 1,
     },
   
     created() {
@@ -551,6 +553,10 @@ var app = new Vue({
               list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
         }
 
+        // add phased out information
+        if(this.product.phased_out_cnt > 0)
+          list += this.product.phased_out_text.split("<br/>").join("\n");
+
         if(price == null)
           price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
           // price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
@@ -698,6 +704,10 @@ var app = new Vue({
             if(this.specification[i].k2 !== '')
               list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
         }
+
+        // add phased out information
+        if(this.product.phased_out_cnt > 0)
+          list += this.product.phased_out_text.split("<br/>").join("\n");
 
         list.replace(/\n+$/, "");
 
@@ -3040,6 +3050,7 @@ Installation:`;
           this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
           this.price = "PHP " + Number(item_product.price).toLocaleString();
           this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
+          this.phased = item_product.enabled;
         }
         else
         {
@@ -3047,6 +3058,7 @@ Installation:`;
           this.price_ntd = this.product['price_ntd'];
           this.price = this.product['price'];
           this.quoted_price = this.product['quoted_price'];
+          this.phased = 1;
         }
   
       },

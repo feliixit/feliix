@@ -839,6 +839,7 @@ function GetProduct($id, $db){
         $price_ntd_change = $row['price_ntd_change'];
         $status = $row['enabled'];
         $photo = trim($row['photo']);
+        $enabled = $row['enabled'];
         if($photo != '')
             $url = $row['url'];
         else
@@ -865,6 +866,7 @@ function GetProduct($id, $db){
                                     "status" => $status, 
                                     "url" => $url, 
                                     "photo" => $photo, 
+                                    "enabled" => $enabled,
 
                                     "quoted_price" => $quoted_price, 
                                     "quoted_price_org" => $quoted_price, 
