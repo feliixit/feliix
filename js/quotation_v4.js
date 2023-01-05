@@ -228,6 +228,7 @@ var app = new Vue({
         fil_code: "",
         fil_tag : [],
         fil_id: "",
+        fil_keyword: "",
 
         special_infomation: [],
         special_infomation_detail: [],
@@ -422,6 +423,7 @@ var app = new Vue({
         } else if(type == 0) {
           this.fil_id = '';
           this.fil_code = '';
+          this.fil_keyword = '';
           this.fil_tag = [];
           this.fil_brand = '';
           this.of1 = '';
@@ -1083,6 +1085,7 @@ var app = new Vue({
       const params = {
         d: _this.fil_id,
         c: _this.fil_code,
+        k: _this.fil_keyword,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
         of1: _this.of1,
@@ -2046,6 +2049,7 @@ Installation:`;
         const params = {
           d: _this.fil_id,
           c: _this.fil_code,
+          k: _this.fil_keyword,
           t: JSON.stringify(_this.fil_tag),
           b: _this.fil_brand,
           of1: _this.of1,
@@ -3045,6 +3049,14 @@ Installation:`;
           this.quoted_price = this.product['quoted_price'];
         }
   
+      },
+
+      phased_out_info: function(info) {
+        Swal.fire({
+          title: "<i>Phased-out Variants:</i>", 
+          html: info,  
+          confirmButtonText: "Close", 
+        });
       },
 
       print_me() {
