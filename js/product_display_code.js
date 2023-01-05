@@ -60,6 +60,12 @@ var app = new Vue({
     moq:"",
     currency: "",
 
+    str_quoted_price_change: "",
+    str_price_ntd_change: "",
+    str_price_change: "",
+
+    phased_out: "",
+
     // accessory
 
     // variation
@@ -257,6 +263,12 @@ var app = new Vue({
         this.price_ntd = item_product.currency + " " + Number(item_product.price_ntd).toLocaleString();
         this.price = "PHP " + Number(item_product.price).toLocaleString();
         this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
+
+        this.str_price_ntd_change = (item_product.price_ntd_change != "" ? "(" + item_product.price_ntd_change + ")" : "");
+        this.str_price_change = (item_product.price_change != "" ? "(" + item_product.price_change + ")" : "");
+        this.str_quoted_price_change = (item_product.quoted_price_change != "" ? "(" + item_product.quoted_price_change + ")" : "");
+
+        this.phased_out = (item_product.enabled == 0 ? "F" : "");
       }
       else
       {
@@ -264,6 +276,12 @@ var app = new Vue({
         this.price_ntd = this.record[0]['price_ntd'];
         this.price = this.record[0]['price'];
         this.quoted_price = this.record[0]['quoted_price'];
+
+        this.str_price_ntd_change = this.record[0]['str_price_ntd_change'];
+        this.str_price_change = this.record[0]['str_price_change'];
+        this.str_quoted_price_change = this.record[0]['str_quoted_price_change'];
+
+        this.phased_out = "";
       }
 
     },
@@ -427,6 +445,10 @@ var app = new Vue({
             _this.moq = _this.record[0]['moq'];
 
             _this.currency = _this.record[0]['currency'];
+
+            _this.str_price_ntd_change = _this.record[0]['str_price_ntd_change'];
+            _this.str_price_change = _this.record[0]['str_price_change'];
+            _this.str_quoted_price_change = _this.record[0]['str_quoted_price_change'];
 
             //var select_items = _this.record[0]['tags'].split(',');
 

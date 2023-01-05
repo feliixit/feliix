@@ -318,49 +318,8 @@ try {
             <li class="pri01a">
                 <a class="uni">Employee<br>Attendance</a>
                 <a class="list" href="../on_duty">Punch In/Out</a>
-             
-                <?php 
-                    if($today >= $all_valid_date)
-                    {
-                ?>
-                <a class="list">Leave</a>
-                <?php 
-                    }
-                    else if(($leave_level == 'B' || $leave_level == 'C') && $today >= $pre_valid_date)
-                    {
-                ?>
-                <a class="list">Leave</a>
-                <?php 
-                    } 
-                    else
-                    {
-                ?>
-                <a class="list" href="../apply_for_leave">Leave</a>
-                <?php 
-                    }
-                ?>
-
-
-                <?php 
-                    if($today >= $all_valid_date)
-                    {
-                ?>
-                <a class="list" href="../apply_for_leave_v2">Leave (New)</a>
-                <?php 
-                    }
-                    else if(($leave_level == 'B' || $leave_level == 'C') && $today >= $valid_date)
-                    {
-                ?>
-                <a class="list" href="../apply_for_leave_v2">Leave (New)</a>
-                <?php 
-                    } 
-                    else
-                    {
-                ?>
-                <a class="list">Leave (New)</a>
-                <?php 
-                    }
-                ?>
+                <a class="list" href="../apply_for_leave_v2">Leave</a>
+                
                 <a class="list">Query/Ammend</a>
             </li>
             <li class="sec02">

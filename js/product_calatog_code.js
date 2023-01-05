@@ -42,6 +42,7 @@ var app = new Vue({
     fil_code: "",
     fil_tag: [],
     fil_brand: "",
+    fil_keyword: "",
 
     // info
     name :"",
@@ -76,6 +77,9 @@ var app = new Vue({
               break;
             case "b":
               _this.fil_brand = decodeURI(tmp[1]);
+              break;
+              case "k":
+              _this.fil_keyword = decodeURI(tmp[1]);
               break;
             case "of1":
               _this.od_factor1 = tmp[1];
@@ -248,6 +252,7 @@ var app = new Vue({
       this.fil_code = '';
       this.fil_tag = [];
       this.fil_brand = '';
+      this.fil_keyword = '';
    
     
       document.getElementById("btn_filter").classList.remove("focus");
@@ -303,6 +308,8 @@ var app = new Vue({
         JSON.stringify(_this.fil_tag) +
         "&b=" +
         _this.fil_brand +
+        "&k=" +
+        _this.fil_keyword +
         "&of1=" +
         _this.od_factor1 +
         "&ofd1=" +
@@ -338,6 +345,8 @@ var app = new Vue({
         JSON.stringify(_this.fil_tag) +
         "&b=" +
         _this.fil_brand +
+        "&k=" +
+        _this.fil_keyword +
         "&of1=" +
         _this.od_factor1 +
         "&ofd1=" +
@@ -387,6 +396,7 @@ var app = new Vue({
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
+        k: _this.fil_keyword,
         of1: _this.od_factor1,
         ofd1: _this.od_factor1_order,
         of2: _this.od_factor2,
@@ -446,6 +456,14 @@ var app = new Vue({
 
     btnEditClick: function(id) {
         window.open("edit_product_code?id=" + id);
+    },
+
+    phased_out_info: function(info) {
+      Swal.fire({
+        title: "<i>Phased-out Variants:</i>", 
+        html: info,  
+        confirmButtonText: "Close", 
+      });
     },
 
     btnDelClick: function(id) {

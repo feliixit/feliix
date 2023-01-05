@@ -54,6 +54,8 @@ else
       $c = urldecode($c);
       $t = (isset($_GET['t']) ?  $_GET['t'] : "");
       $t = urldecode($t);
+      $k = (isset($_GET['k']) ?  $_GET['k'] : "");
+      $k = urldecode($k);
       $tag_array = json_decode($t, true);
       $b = (isset($_GET['b']) ?  $_GET['b'] : "");
       $b = urldecode($b);
@@ -114,6 +116,12 @@ else
             {
                 $sql = $sql . " and p.brand = '" . $b . "' ";
                 $query_cnt = $query_cnt . " and p.brand = '" . $b . "' ";
+            }
+
+            if($k != "")
+            {
+                $sql = $sql . " and (p.description like '%" . $k . "%' or p.notes like '%" . $k . "%') ";
+                $query_cnt = $query_cnt . " and (p.description like '%" . $k . "%' or p.notes like '%" . $k . "%') ";
             }
     
             
@@ -355,6 +363,38 @@ else
                 $price_ntd_change = $row['price_ntd_change'];
 
                 $currency = $row['currency'];
+
+                // max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, max_quoted_price_change, min_quoted_price_change
+                $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : '';
+                $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : '';
+                $max_price_ntd_change = $row['max_price_ntd_change'] ? substr($row['max_price_ntd_change'], 0, 10) : '';
+                $min_price_ntd_change = $row['min_price_ntd_change'] ? substr($row['min_price_ntd_change'], 0, 10) : '';
+                $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : '';
+                $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : '';
+
+                $phased_out_cnt = $row['phased_out_cnt'];
+
+                $phased_out_info = [];
+                $phased_out_text = "";
+                if($phased_out_cnt > 0)
+                {
+                    $phased_out_info = phased_out_info($id, $db);
+                    for($i = 0; $i < count($phased_out_info); $i++)
+                    {
+                        $cn = $i + 1;
+                        $phased_out_text .= "(" . $cn . ") " . ($phased_out_info[$i]["1st_variation"] != "=>" ? str_replace('=>', ' = ', $phased_out_info[$i]["1st_variation"]) . ", " : "");
+                        $phased_out_text .= ($phased_out_info[$i]["2rd_variation"] != "=>" ? str_replace('=>', ' = ', $phased_out_info[$i]["2rd_variation"]) . ", " : "");
+                        $phased_out_text .= ($phased_out_info[$i]["3th_variation"] != "=>" ? str_replace('=>', ' = ', $phased_out_info[$i]["3th_variation"]) . ", " : "");
+
+                        $phased_out_text = rtrim($phased_out_text, ", ");
+
+                        if($i < count($phased_out_info) - 1)
+                        {
+                            $phased_out_text .= "<br/>";
+                        }
+                    }
+                }
+                
 
                 $srp = 0;
                 $srp_quoted = 0;
@@ -620,6 +660,63 @@ else
 
                 $moq = $row['moq'];
 
+                $str_price_change = "";
+                if($max_price_change != "" || $min_price_change != "")
+                {
+                    if($min_price_change != "" && $max_price_change != "")
+                    {
+                        if($min_price_change == $max_price_change)
+                        {
+                            $str_price_change = "(" . $min_price_change . ")";
+                        }else
+                        {
+                            $str_price_change = "(" . $min_price_change . " ~ " . $max_price_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_price_change = "(" . $min_price_change . " ~ " . $max_price_change . ")";
+                    }
+                }
+
+                $str_price_ntd_change = "";
+                if($max_price_ntd_change != "" || $min_price_ntd_change != "")
+                {
+                    if($min_price_ntd_change != "" && $max_price_ntd_change != "")
+                    {
+                        if($min_price_ntd_change == $max_price_ntd_change)
+                        {
+                            $str_price_ntd_change = "(" . $min_price_ntd_change . ")";
+                        }else
+                        {
+                            $str_price_ntd_change = "(" . $min_price_ntd_change . " ~ " . $max_price_ntd_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_price_ntd_change = "(" . $min_price_ntd_change . " ~ " . $max_price_ntd_change . ")";
+                    }
+                }
+
+                $str_quoted_price_change = "";
+                if($max_quoted_price_change != "" || $min_quoted_price_change != "")
+                {
+                    if($max_quoted_price_change != "" && $min_quoted_price_change != "")
+                    {
+                        if($max_quoted_price_change == $min_quoted_price_change)
+                        {
+                            $str_quoted_price_change = "(" . $min_quoted_price_change . ")";
+                        }else
+                        {
+                            $str_quoted_price_change = "(" . $min_quoted_price_change . " ~ " . $max_quoted_price_change . ")";
+                        }
+                    }
+                    else
+                    {
+                        $str_quoted_price_change = "(" . $min_quoted_price_change . " ~ " . $max_quoted_price_change . ")";
+                    }
+                }
+
                 $merged_results[] = array( "id" => $id,
                                     "category" => $category,
                                     "sub_category" => $sub_category,
@@ -670,6 +767,20 @@ else
                                     "cnt" => $cnt,
                                     "srp" => $srp,
                                     "srp_quoted" => $srp_quoted,
+                                    "max_price_change" => $max_price_change,
+                                    "min_price_change" => $min_price_change,
+                                    "max_price_ntd_change" => $max_price_ntd_change,
+                                    "min_price_ntd_change" => $min_price_ntd_change,
+                                    "max_quoted_price_change" => $max_quoted_price_change,
+                                    "min_quoted_price_change" => $min_quoted_price_change,
+
+                                    "str_price_change" => $str_price_change,
+                                    "str_price_ntd_change" => $str_price_ntd_change,
+                                    "str_quoted_price_change" => $str_quoted_price_change,
+
+                                    "phased_out_cnt" => $phased_out_cnt,
+                                    "phased_out_info" => $phased_out_info,
+                                    "phased_out_text" => $phased_out_text,
 
                 );
             }
@@ -728,6 +839,7 @@ function GetProduct($id, $db){
         $price_ntd_change = $row['price_ntd_change'];
         $status = $row['enabled'];
         $photo = trim($row['photo']);
+        $enabled = $row['enabled'];
         if($photo != '')
             $url = $row['url'];
         else
@@ -754,6 +866,7 @@ function GetProduct($id, $db){
                                     "status" => $status, 
                                     "url" => $url, 
                                     "photo" => $photo, 
+                                    "enabled" => $enabled,
 
                                     "quoted_price" => $quoted_price, 
                                     "quoted_price_org" => $quoted_price, 
@@ -1038,6 +1151,21 @@ function GetDetail($cat_id, $db){
 
 }
 
+function phased_out_info($id, $db){
+    $sql = "SELECT * FROM product WHERE product_id = ". $id . " and enabled = 0";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+
+}
 
 function GetAccessoryInfomation($cat_id, $db, $product_id){
     $sql = "SELECT * FROM accessory_category_attribute WHERE LEVEL = 3 AND left(cat_id, 4) = '". substr($cat_id, 0, 4) . "' and STATUS <> -1";

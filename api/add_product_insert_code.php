@@ -12,6 +12,7 @@ $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 $tags = (isset($_POST['tags']) ?  $_POST['tags'] : '');
 $brand = (isset($_POST['brand']) ?  $_POST['brand'] : '');
+$currency = (isset($_POST['currency']) ? $_POST['currency'] : 'NTD');
 $code = (isset($_POST['code']) ?  $_POST['code'] : '');
 $price_ntd = (isset($_POST['price_ntd']) ?  $_POST['price_ntd'] : '');
 $price_ntd_change = (isset($_POST['price_ntd_change']) ?  $_POST['price_ntd_change'] : '');
@@ -91,6 +92,7 @@ else
             `sub_category` = :sub_category,
             `tags` = :tags,
             `brand` = :brand,
+            `currency` = :currency,
             `code` = :code, ";
             if($price_ntd != ''  && !is_null($price_ntd))
             {
@@ -142,6 +144,7 @@ else
         $stmt->bindParam(':sub_category', $sub_category);
         $stmt->bindParam(':tags', $tags);
         $stmt->bindParam(':brand', $brand);
+        $stmt->bindParam(':currency', $currency);
         $stmt->bindParam(':code', $code);
         if($price_ntd != '' && !is_null($price_ntd))
         {

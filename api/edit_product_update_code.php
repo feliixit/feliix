@@ -12,6 +12,7 @@ $id = (isset($_POST['id']) ? $_POST['id'] : 0);
 $category = (isset($_POST['category']) ?  $_POST['category'] : '');
 $sub_category = (isset($_POST['sub_category']) ?  $_POST['sub_category'] : '');
 $brand = (isset($_POST['brand']) ?  $_POST['brand'] : '');
+$currency = (isset($_POST['currency']) ? $_POST['currency'] : 'NTD');
 $code = (isset($_POST['code']) ?  $_POST['code'] : '');
 $tags = (isset($_POST['tags']) ?  $_POST['tags'] : '');
 $moq = (isset($_POST['moq']) ?  $_POST['moq'] : '');
@@ -96,6 +97,7 @@ else
         $query = "update product_category
         SET
             `brand` = :brand,
+            `currency` = :currency,
             `code` = :code, ";
 
             if($price_ntd != '' && !is_null($price_ntd) && $price_ntd != 'null')
@@ -196,6 +198,7 @@ else
 
         // bind the values
         $stmt->bindParam(':brand', $brand);
+        $stmt->bindParam(':currency', $currency);
         $stmt->bindParam(':code', $code);
 
         if($price_ntd != '' && !is_null($price_ntd) && $price_ntd != 'null')
@@ -691,6 +694,9 @@ else
 
             
         $db->commit();
+
+        update_product_category_price_date($product_id, $db);
+        update_product_category_phased_out_cnt($product_id, $db);
         
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") ));
@@ -705,6 +711,132 @@ else
         die();
 
     }
+}
+
+function update_product_category_price_date($id, $db)
+{
+    $query = "
+    SET SQL_MODE='ALLOW_INVALID_DATES';
+    update product_category 
+        INNER JOIN 
+        (
+        select pc.id, pc.variation_mode,
+        max(p.price_change) max_p, min(Coalesce(p.price_change, '1000-01-01 00:00:00')) min_p, 
+        max(p.price_ntd_change) max_np, min(Coalesce(p.price_ntd_change, '1000-01-01 00:00:00')) min_np,
+        max(p.quoted_price_change) max_qp, min(Coalesce(p.quoted_price_change, '1000-01-01 00:00:00')) min_qp 
+        from product_category pc 
+        left join product p on pc.id = p.product_id 
+        group by pc.id having pc.variation_mode = 1 and pc.id = :id) 
+        op ON product_category.id=op.id 
+        set 
+        max_price_change = op.max_p,
+        min_price_change = case when op.min_p = '1000-01-01 00:00:00' then null else op.min_p end,
+        max_price_ntd_change = op.max_np,
+        min_price_ntd_change =  case when op.min_np = '1000-01-01 00:00:00' then null else op.min_np end, 
+        max_quoted_price_change =  op.max_qp,
+        min_quoted_price_change =   case when op.min_qp = '1000-01-01 00:00:00' then null else op.min_qp end
+        where op.id = product_category.id and  op.`id` = :id;
+
+    update product_category 
+        set 
+        max_price_change = price_change,
+        min_price_change = price_change,
+        max_price_ntd_change = price_ntd_change,
+        min_price_ntd_change =  price_ntd_change, 
+        max_quoted_price_change = quoted_price_change,
+        min_quoted_price_change = quoted_price_change
+        where variation_mode = 0 and id = :id;
+
+    ";
+
+    
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $id);
+
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+          
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+    
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+  
+    }
+
+}
+
+
+function update_product_category_phased_out_cnt($id, $db)
+{
+    $query = "
+    update product_category INNER JOIN ( select a_group.id, COALESCE(a_group.cnt, 0) cnt, COALESCE(e_group.cnt, 0) ecnt from (  select pc.id,  count(p.enabled) cnt  from product_category pc   left join product p on pc.id = p.product_id   where pc.variation_mode = 1  group by pc.id   ) a_group left join (  select pc.id,  count(p.enabled) cnt  from product_category pc   left join product p on pc.id = p.product_id   where p.enabled = 1 and pc.variation_mode = 1  group by pc.id ) e_group on a_group.id = e_group.id) op ON product_category.id=op.id set phased_out_cnt = op.cnt - op.ecnt where op.id = product_category.id and product_category.id = :id;
+    ";
+
+    
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $id);
+
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+          
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+    
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+  
+    }
+
+    $query = "
+    update product_category set phased_out_cnt = 0 where variation_mode = 0 and id = :id;
+    ";
+
+    
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $id);
+
+    // execute the query, also check if query was successful
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+          
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+    
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+  
+    }
+
 }
 
 function parseFloat($value) {

@@ -228,6 +228,7 @@ var app = new Vue({
         fil_code: "",
         fil_tag : [],
         fil_id: "",
+        fil_keyword: "",
 
         special_infomation: [],
         special_infomation_detail: [],
@@ -243,6 +244,8 @@ var app = new Vue({
 
         of1:'',
         ofd1:'',
+
+        phased : 0,
     },
   
     created() {
@@ -422,6 +425,7 @@ var app = new Vue({
         } else if(type == 0) {
           this.fil_id = '';
           this.fil_code = '';
+          this.fil_keyword = '';
           this.fil_tag = [];
           this.fil_brand = '';
           this.of1 = '';
@@ -547,6 +551,14 @@ var app = new Vue({
               list += this.specification[i].k1 + ': ' + this.specification[i].v1 + "\n";
             if(this.specification[i].k2 !== '')
               list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
+        }
+
+        // add phased out information
+        if((this.product.phased_out_cnt > 0 && this.phased == 1) || (this.product.phased_out_cnt > 0 && all == 'all'))
+        {
+          list += "\n";
+          list += "Phased-out Variants:\n";
+          list += this.product.phased_out_text.split("<br/>").join("\n");
         }
 
         if(price == null)
@@ -695,6 +707,14 @@ var app = new Vue({
               list += this.specification[i].k1 + ': ' + this.specification[i].v1 + "\n";
             if(this.specification[i].k2 !== '')
               list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
+        }
+
+        // add phased out information
+        if((this.product.phased_out_cnt > 0 && this.phased == 1) || (this.product.phased_out_cnt > 0 && all == 'all'))
+        {
+          list += "\n";
+          list += "Phased-out Variants:\n";
+          list += this.product.phased_out_text.split("<br/>").join("\n");
         }
 
         list.replace(/\n+$/, "");
@@ -1083,6 +1103,7 @@ var app = new Vue({
       const params = {
         d: _this.fil_id,
         c: _this.fil_code,
+        k: _this.fil_keyword,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
         of1: _this.of1,
@@ -2046,6 +2067,7 @@ Installation:`;
         const params = {
           d: _this.fil_id,
           c: _this.fil_code,
+          k: _this.fil_keyword,
           t: JSON.stringify(_this.fil_tag),
           b: _this.fil_brand,
           of1: _this.of1,
@@ -3036,6 +3058,7 @@ Installation:`;
           this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
           this.price = "PHP " + Number(item_product.price).toLocaleString();
           this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
+          this.phased = item_product.enabled == 0 ? 1 : 0;
         }
         else
         {
@@ -3043,8 +3066,17 @@ Installation:`;
           this.price_ntd = this.product['price_ntd'];
           this.price = this.product['price'];
           this.quoted_price = this.product['quoted_price'];
+          this.phased = 0;
         }
   
+      },
+
+      phased_out_info: function(info) {
+        Swal.fire({
+          title: "<i>Phased-out Variants:</i>", 
+          html: info,  
+          confirmButtonText: "Close", 
+        });
       },
 
       print_me() {
