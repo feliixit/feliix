@@ -554,7 +554,7 @@ var app = new Vue({
         }
 
         // add phased out information
-        if(this.product.phased_out_cnt > 0 && this.phased == 1)
+        if((this.product.phased_out_cnt > 0 && this.phased == 1) || (this.product.phased_out_cnt > 0 && all == 'all'))
         {
           list += "\n";
           list += "Phased-out Variants:\n";
@@ -710,7 +710,7 @@ var app = new Vue({
         }
 
         // add phased out information
-        if(this.product.phased_out_cnt > 0 && this.phased == 1)
+        if((this.product.phased_out_cnt > 0 && this.phased == 1) || (this.product.phased_out_cnt > 0 && all == 'all'))
         {
           list += "\n";
           list += "Phased-out Variants:\n";
