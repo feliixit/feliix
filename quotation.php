@@ -3592,7 +3592,7 @@ header( 'location:index' );
                             </div>
                         </div>
                         <div class="infobox">
-                            <div class="basic_info"><span class="phasedout" v-if="phased == 0">Phased Out</span><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
+                            <div class="basic_info"><span class="phasedout" v-if="phased == 1">Phased Out</span><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
                                 {{product.brand}}</h6>
                                 <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
                                 <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
@@ -3628,10 +3628,10 @@ header( 'location:index' );
                             <div class="btnbox">
                                 <ul>
                                     <li v-if="toggle_type == 'A'">
-                                        <button class="btn btn-info" @click="add_with_image()" :disabled="phased=0">Add with Image</button>
+                                        <button class="btn btn-info" @click="add_with_image()" :disabled="phased==1">Add with Image</button>
                                     </li>
                                     <li>
-                                        <button class="btn btn-info" @click="add_without_image()" :disabled="phased=0">Add without Image
+                                        <button class="btn btn-info" @click="add_without_image()" :disabled="phased==1">Add without Image
                                         </button>
                                     </li>
                                 </ul>
@@ -3746,7 +3746,7 @@ header( 'location:index' );
 
 
                         <div class="infobox">
-                            <div class="basic_info"><span class="phasedout" v-if="phased == 0">Phased Out</span>
+                            <div class="basic_info"><span class="phasedout" v-if="phased == 1">Phased Out</span>
                                 <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6>
                                 <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
                                 <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
@@ -3826,10 +3826,10 @@ header( 'location:index' );
                             <div class="btnbox">
                                 <ul>
                                     <li v-if="toggle_type == 'A'">
-                                        <button class="btn btn-info" @click="add_with_image()" :disabled="phased==0">Add with Image</button>
+                                        <button class="btn btn-info" @click="add_with_image()" :disabled="phased==1">Add with Image</button>
                                     </li>
                                     <li>
-                                        <button class="btn btn-info" @click="add_without_image()" :disabled="phased==0">Add without Image
+                                        <button class="btn btn-info" @click="add_without_image()" :disabled="phased==1">Add without Image
                                         </button>
                                     </li>
                                 </ul>

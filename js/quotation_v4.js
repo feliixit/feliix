@@ -245,7 +245,7 @@ var app = new Vue({
         of1:'',
         ofd1:'',
 
-        phased : 1,
+        phased : 0,
     },
   
     created() {
@@ -3058,7 +3058,7 @@ Installation:`;
           this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
           this.price = "PHP " + Number(item_product.price).toLocaleString();
           this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
-          this.phased = item_product.enabled;
+          this.phased = item_product.enabled == 0 ? 1 : 0;
         }
         else
         {
@@ -3066,7 +3066,7 @@ Installation:`;
           this.price_ntd = this.product['price_ntd'];
           this.price = this.product['price'];
           this.quoted_price = this.product['quoted_price'];
-          this.phased = 1;
+          this.phased = 0;
         }
   
       },
