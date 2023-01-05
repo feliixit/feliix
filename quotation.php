@@ -1743,7 +1743,7 @@ header( 'location:index' );
             height: 38px;
             border: 1px solid #707070;
             font-size: 16px;
-            width: 250px;
+            width: 280px;
             margin: 5px 20px 5px 0;
         }
 
@@ -1839,6 +1839,17 @@ header( 'location:index' );
             border-bottom: 2px solid rgb(225, 225, 225);
             margin-left: 20px;
             padding: 30px 20px 5px;
+        }
+
+        .infobox .basic_info span.phasedout {
+            font-size: 16px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-bottom: 3px;
+            padding: 0 7px 3px;
+            border-radius: 10px;
         }
 
         .infobox .basic_info div.tags {
@@ -2065,15 +2076,9 @@ header( 'location:index' );
         }
 
         #modal_product_catalog tbody td div.phasedout_variant button:focus {
-            outline-color: transparent;
+            outline-color: transparent!important;
         }
 
-        #modal_product_display div.infobox .basic_info span.phasedout{
-            background-color: red;
-            color: white;
-            padding: 0px 5px 3px;
-            border-radius: 10px;
-        }
 
         @media print {
             * {
@@ -3226,7 +3231,7 @@ header( 'location:index' );
                             <br>
 
                             <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                    data-width="55%" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
+                                    data-width="585px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
 
                                     <optgroup label="BY INSTALL LOCATION">
                 <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
@@ -3296,7 +3301,7 @@ header( 'location:index' );
 
                             </select>
 
-                            <input type="text" placeholder="Keyword" v-model="fil_keyword">
+                            <input type="text" placeholder="Keyword" v-model="fil_keyword" style="margin-left: 20px;">
                         </div>
 
                         <a class="btn small green" @click="filter_apply_new()">Search</a>
