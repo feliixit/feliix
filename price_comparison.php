@@ -1798,6 +1798,17 @@ header( 'location:index' );
             padding: 30px 20px 5px;
         }
 
+        .infobox .basic_info span.phasedout {
+            font-size: 16px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-bottom: 3px;
+            padding: 0 7px 3px;
+            border-radius: 10px;
+        }
+
         .infobox .basic_info div.tags {
             margin-bottom: 0.5rem;
         }
@@ -2000,6 +2011,29 @@ header( 'location:index' );
         .list_function .sort_block a.btn.green {
             color: white;
             margin: 0 5px;
+        }
+
+        #modal_product_catalog tbody td div.phasedout_variant {
+            text-align: left;
+            color: red;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px 0 0 3px;
+        }
+
+        #modal_product_catalog tbody td div.phasedout_variant button {
+            font-size: 14px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-left: 3px;
+            padding: 0 5px 3px;
+            border-radius: 10px;
+        }
+
+        #modal_product_catalog tbody td div.phasedout_variant button:focus {
+            outline-color: transparent!important;
         }
 
         @media print {
@@ -3413,7 +3447,7 @@ header( 'location:index' );
                             <br>
 
                             <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                    data-width="100%" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
+                                    data-width="585px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
 
                                     <optgroup label="BY INSTALL LOCATION">
                 <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
@@ -3482,6 +3516,7 @@ header( 'location:index' );
             </optgroup>
 
                             </select>
+                            <input type="text" placeholder="Keyword" v-model="fil_keyword" style="margin-left: 20px;">
                         </div>
 
                         <a class="btn small green" @click="filter_apply_new()">Search</a>
@@ -3590,6 +3625,16 @@ header( 'location:index' );
                                             {{ item.updated_at }}
                                         </li>
                                     </ul>
+                                    <!-- 如果停產的子規格數目大於 0，才需要顯示下面的<div class="phasedout_variant"> 結構 -->
+                                    <div class="phasedout_variant" v-if="item.phased_out_cnt > 0">
+
+                                        <!-- 如果停產的子規格數目大於或等於2，則顯示下面這一行 -->
+                                        ※ {{ item.phased_out_cnt }} variant{{ item.phased_out_cnt > 1 ? 's' : '' }} are phased out.
+
+                                        <!-- 當使用者點擊下方的 info 按鈕，這時候系統才會向資料庫利用這個產品的id，去查詢product這張表裡這個商品是哪些子規格停產，之後則會利用 sweetalert2@9 跑出一個彈出訊息框，訊息框裡面會列出停產子規格的資訊 -->
+                                        <!-- 並不需要網頁載入時，就把所有停產的子規格查詢出來 且 掛在網頁上。只有當使用者點擊下方的 info 按鈕，才需去額外查詢停產的子規格，以減少頁面負載量。 -->
+                                        <button @click="phased_out_info(item.phased_out_text)">info</button>
+                                    </div>
                                 </td>
                                 <td>
                                     <ul v-for="(att, index) in item.attribute_list">
@@ -3606,9 +3651,9 @@ header( 'location:index' );
                                     </ul>
                                 </td>
                                 <td>
-                                    <span v-show="show_ntd === true">CP: {{ item.price_ntd }}<br></span>
-                                    <span>SRP: {{ item.price }}<br></span>
-                                    <span>QP: {{ item.quoted_price }}<br></span>
+                                    <span v-show="show_ntd === true">CP: {{ item.price_ntd }} <br v-if="item.str_price_ntd_change"> {{ item.str_price_ntd_change ?  item.str_price_ntd_change : '' }}<br></span>
+                                    <span>SRP: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
+                                    <span>QP: {{ item.quoted_price }} <br v-if="item.str_quoted_price_change"> {{ item.str_quoted_price_change ? item.str_quoted_price_change : '' }}<br></span>
                                 </td>
                                 <td>
                                     <button id="edit01" @click="btnEditClick(item)"><i aria-hidden="true"
@@ -3765,7 +3810,7 @@ header( 'location:index' );
                             </div>
                         </div>
                         <div class="infobox">
-                            <div class="basic_info"><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
+                            <div class="basic_info"><span class="phasedout" v-if="phased == 1">Phased Out</span><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
                                 {{product.brand}}</h6>
                                 <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
                                 <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
@@ -3919,7 +3964,7 @@ header( 'location:index' );
 
 
                         <div class="infobox">
-                            <div class="basic_info">
+                            <div class="basic_info"><span class="phasedout" v-if="phased == 1">Phased Out</span>
                                 <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6>
                                 <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
                                 <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
