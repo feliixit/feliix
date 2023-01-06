@@ -147,7 +147,7 @@ var app = new Vue({
 
   computed: {
     show_ntd : function() {
-      if(this.name.toLowerCase() ==='dennis lin' || this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
+      if(this.name.toLowerCase() ==='dereck' || this.name.toLowerCase() ==='ariel lin' || this.name.toLowerCase() ==='kuan')
        return true;
       else
       return false;
