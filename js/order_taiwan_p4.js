@@ -292,6 +292,9 @@ var app = new Vue({
         stage_id : 0,
         project_name : '',
         serial_name : '',
+
+        phased : 0,
+        fil_k : '',
     },
   
     created() {
@@ -1087,6 +1090,7 @@ var app = new Vue({
           c: _this.fil_code,
           t: JSON.stringify(_this.fil_tag),
           b: _this.fil_brand,
+          k: _this.fil_k,
           of1: '',
           ofd1: '',
           of2: '',
@@ -1250,6 +1254,7 @@ var app = new Vue({
           this.price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
           this.price = "PHP " + Number(item_product.price).toLocaleString();
           this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
+          this.phased = item_product.enabled == 0 ? 1 : 0;
         }
         else
         {
@@ -1257,8 +1262,17 @@ var app = new Vue({
           this.price_ntd = this.product['price_ntd'];
           this.price = this.product['price'];
           this.quoted_price = this.product['quoted_price'];
+          this.phased = 0;
         }
   
+      },
+
+      phased_out_info: function(info) {
+        Swal.fire({
+          title: "<i>Phased-out Variants:</i>", 
+          html: info,  
+          confirmButtonText: "Close", 
+        });
       },
 
       add_with_image(all) {
@@ -1330,6 +1344,14 @@ var app = new Vue({
               list += this.specification[i].k1 + ': ' + this.specification[i].v1 + "\n";
             if(this.specification[i].k2 !== '')
               list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
+        }
+
+        // add phased out information
+        if((this.product.phased_out_cnt > 0 && this.phased == 1) || (this.product.phased_out_cnt > 0 && all == 'all'))
+        {
+          list += "\n";
+          list += "Phased-out Variants:\n";
+          list += this.product.phased_out_text.split("<br/>").join("\n");
         }
 
         list.replace(/\n+$/, "");
@@ -1488,6 +1510,14 @@ var app = new Vue({
               list += this.specification[i].k1 + ': ' + this.specification[i].v1 + "\n";
             if(this.specification[i].k2 !== '')
               list += this.specification[i].k2 + ': ' + this.specification[i].v2 + "\n";
+        }
+
+        // add phased out information
+        if((this.product.phased_out_cnt > 0 && this.phased == 1) || (this.product.phased_out_cnt > 0 && all == 'all'))
+        {
+          list += "\n";
+          list += "Phased-out Variants:\n";
+          list += this.product.phased_out_text.split("<br/>").join("\n");
         }
 
         list.replace(/\n+$/, "");
@@ -1705,6 +1735,7 @@ var app = new Vue({
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
+        k: _this.fil_k,
         of1: '',
         ofd1: '',
         of2: '',

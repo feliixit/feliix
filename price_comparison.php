@@ -3447,7 +3447,7 @@ header( 'location:index' );
                             <br>
 
                             <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                    data-width="585px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
+                                    data-width="555px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
 
                                     <optgroup label="BY INSTALL LOCATION">
                 <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
@@ -3846,10 +3846,10 @@ header( 'location:index' );
                             <div class="btnbox">
                                 <ul>
                                     <li v-if="toggle_type == 'A'">
-                                        <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
+                                        <button class="btn btn-info" @click="add_with_image()" :disabled="phased==1">Add with Image</button>
                                     </li>
                                     <li>
-                                        <button class="btn btn-info" @click="add_without_image()">Add without Image
+                                        <button class="btn btn-info" @click="add_without_image()" :disabled="phased==1">Add without Image
                                         </button>
                                     </li>
                                 </ul>
@@ -4044,10 +4044,10 @@ header( 'location:index' );
                             <div class="btnbox">
                                 <ul>
                                     <li v-if="toggle_type == 'A'">
-                                        <button class="btn btn-info" @click="add_with_image()">Add with Image</button>
+                                        <button class="btn btn-info" @click="add_with_image()" :disabled="phased==1">Add with Image</button>
                                     </li>
                                     <li>
-                                        <button class="btn btn-info" @click="add_without_image()">Add without Image
+                                        <button class="btn btn-info" @click="add_without_image()" :disabled="phased==1">Add without Image
                                         </button>
                                     </li>
                                 </ul>
