@@ -1700,7 +1700,7 @@ header( 'location:index' );
             height: 38px;
             border: 1px solid #707070;
             font-size: 16px;
-            width: 250px;
+            width: 280px;
             margin: 5px 20px 5px 0;
         }
 
@@ -3447,7 +3447,7 @@ header( 'location:index' );
                             <br>
 
                             <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                    data-width="555px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
+                                    data-width="585px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
 
                                     <optgroup label="BY INSTALL LOCATION">
                 <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
