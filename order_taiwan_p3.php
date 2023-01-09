@@ -2047,7 +2047,7 @@ try {
                         <br>
 
                         <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                data-width="100%" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
+                                data-width="555px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
 
                                 <optgroup label="BY INSTALL LOCATION">
                                     <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
@@ -2116,6 +2116,7 @@ try {
                                 </optgroup>
 
                         </select>
+                        <input type="text" placeholder="Keyword" v-model="fil_k" style="margin-left: 20px;">
                     </div>
 
                     <a class="btn small green" @click="filter_apply_new()">Search</a>
