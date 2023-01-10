@@ -958,7 +958,7 @@ var app = new Vue({
 
             _this.getRelatedOrders(_this.project_id);
 
-            if(_this.stage == 'Order' || _this.stage == 'Proposal - Mock up') {
+            if(_this.stage == 'Order' || _this.stage == 'Proposal - Mock up' || _this.stage == 'Proposal - Inquiry') {
               _this.order_stage = true;
             }
 
