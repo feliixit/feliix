@@ -3221,7 +3221,7 @@ catch (Exception $e) {
                                         <dd>
                                             <select v-model="record.od_type" disabled>
                                                 <option :disabled="stage != 'Order' && stage != 'Proposal - Inquiry'" value="taiwan">Order – Taiwan</option>
-                                                <option :disabled="stage != 'Proposal - Mock up'" value="mockup">Order – Mockup</option>
+                                                <option :disabled="stage != 'Proposal - Mock up' && stage != 'Proposal - Inquiry'" value="mockup">Order – Mockup</option>
                                          
                                             </select>
                                         </dd>
