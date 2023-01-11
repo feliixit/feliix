@@ -139,7 +139,8 @@ switch ($method) {
                     $send17 = true;
             }
     
-            if($access3 == "true" || $access4 == "true" || $access5 == "true" || $access6 == "true")
+            //if($access3 == "true" || $access4 == "true" || $access5 == "true" || $access6 == "true")
+            if( $access1 != "true" && $access2 != "true" && $access7 != "true" && ($access3 == "true" || $access4 == "true" || $access5 == "true" || $access6 == "true"))
                 $send17 = true;
 
             if($access1 == "false" && $access2 == "false" && $access3 == "false" && $access4 == "false" && $access5 == "false" && $access6 == "false" && $access7 == "false")
