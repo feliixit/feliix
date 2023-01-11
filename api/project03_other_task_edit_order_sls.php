@@ -187,7 +187,7 @@ function GetOrderType($order_type)
 
     switch ($order_type) {
         case 'taiwan':
-            $order_type_name = "Order - Taiwan";
+            $order_type_name = "Order - Close Deal";
             break;
         case 'stock':
             $order_type_name = "Order - Stocks";

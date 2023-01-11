@@ -103,7 +103,7 @@ try{
 
     if($page == 1)
         order_type_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $od_name, 'Order - Samples', $message, 'new_message_18', $items, $od_id, GetAccess7($od_id, $db), "sample");
-        //order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Taiwan', $message, 'new_message_18', $items, $od_id);
+        //order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $od_name, 'Order - Close Deal', $message, 'new_message_18', $items, $od_id);
 
     if($page == 2)
         order_type_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $od_name, 'Order - Samples', $message, 'new_message_20', $items, $od_id, "sample");

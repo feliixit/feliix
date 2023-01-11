@@ -3038,7 +3038,7 @@ catch (Exception $e) {
                                         <dt>Order Type:</dt>
                                         <dd>
                                             <select v-model="order_type">
-                                                <option value="taiwan" :disabled="(stage != 'Order')">Order – Taiwan</option>
+                                                <option value="taiwan" :disabled="(stage != 'Order')">Order – Close Deal</option>
                                                 <option value="mockup" :disabled="(stage != 'Proposal - Mock up' && stage != 'Proposal - Inquiry')">Order – Mockup</option>
                     
                                             </select>
@@ -3221,7 +3221,7 @@ catch (Exception $e) {
                                         <dt>Order Type:</dt>
                                         <dd>
                                             <select v-model="record.od_type" disabled>
-                                                <option :disabled="(stage != 'Order')" value="taiwan">Order – Taiwan</option>
+                                                <option :disabled="(stage != 'Order')" value="taiwan">Order – Close Deal</option>
                                                 <option :disabled="(stage != 'Proposal - Mock up' && stage != 'Proposal - Inquiry')" value="mockup">Order – Mockup</option>
                                          
                                             </select>

@@ -401,7 +401,7 @@ header( 'location:index' );
                                 <dd>
                                     <select v-model="fil_kind">
                                         <option value=""></option>
-                                        <option value="taiwan">Order – Taiwan</option>
+                                        <option value="taiwan">Order – Close Deal</option>
                                         <option value="mockup">Order – Mockup</option>
                                         <option value="stock">Order – Stocks</option>
                                         <option value="sample">Order – Samples</option>
@@ -584,7 +584,7 @@ header( 'location:index' );
                                    v-show="receive_record.is_edited == 0"
                                    v-model="title" maxlength="1024"></li>
 
-                        <li v-if="receive_record.order_type == 'taiwan'">Order – Taiwan</li><li v-if="receive_record.order_type == 'stock'">Order – Stocks</li><li v-if="receive_record.order_type == 'sample'">Order – Samples</li><li v-if="receive_record.order_type == 'mockup'">Order – Mockup</li>
+                        <li v-if="receive_record.order_type == 'taiwan'">Order – Close Deal</li><li v-if="receive_record.order_type == 'stock'">Order – Stocks</li><li v-if="receive_record.order_type == 'sample'">Order – Samples</li><li v-if="receive_record.order_type == 'mockup'">Order – Mockup</li>
 
                         <li>{{ receive_record.status == 0 ? 'Ongoing' : (receive_record.status == 1 ? 'Pending' : 'Completed') }}</li>
 

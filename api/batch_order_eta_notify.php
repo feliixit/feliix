@@ -105,7 +105,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     if(count($changes) > 0)
     {
-        order_notification('', 'access4', 'access1,access2,access3,access5', $project_name, $serial_name, $od_name, 'Order - Taiwan', '', 'batch', $changes, $od_id);
+        order_notification('', 'access4', 'access1,access2,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', '', 'batch', $changes, $od_id);
     }
 
 }

@@ -102,11 +102,11 @@ try{
 
 
     if($page == 1)
-        order_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $iq_name, 'Order - Taiwan', $message, 'new_message_18', $items, $iq_id, GetAccess7($iq_id, $db));
-        //order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $iq_name, 'Order - Taiwan', $message, 'new_message_18', $items, $iq_id);
+        order_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $iq_name, 'Order - Close Deal', $message, 'new_message_18', $items, $iq_id, GetAccess7($iq_id, $db));
+        //order_notification03($user_name, 'access1,access2,access7', '', $project_name, $serial_name, $iq_name, 'Order - Close Deal', $message, 'new_message_18', $items, $iq_id);
 
     if($page == 2)
-        order_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $iq_name, 'Order - Taiwan', $message, 'new_message_20', $items, $iq_id);
+        order_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $iq_name, 'Order - Close Deal', $message, 'new_message_20', $items, $iq_id);
     
     echo $jsonEncodedReturnArray;
 }

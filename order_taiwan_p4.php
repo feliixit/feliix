@@ -45,7 +45,7 @@ try {
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Overview of Order – Taiwan</title>
+    <title>Overview of Order – Close Deal</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
