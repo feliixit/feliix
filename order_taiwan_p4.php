@@ -1401,7 +1401,7 @@ try {
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
                         <th>Backup Qty</th>
-                        <th>SRP</th>
+                        <th>Amount</th>
                         <th>Date Needed by Client</th>
                         <th>Notes</th>
                         <th>Notes (Only for Approved Stage)</th>
@@ -1702,7 +1702,7 @@ try {
                     <th>Brand</th>
                     <th colspan="2">Description</th>
                     <th>Qty Needed</th>
-                    <th>SRP</th>
+                    <th>Amount</th>
                     <th>Date Needed by Client</th>
                     <th>Notes</th>
                     <th>Action</th>
@@ -2082,7 +2082,7 @@ try {
                             </td>
                             <td>
                                 <span v-show="show_ntd === true">CP: {{ item.price_ntd }} <br v-if="item.str_price_ntd_change"> {{ item.str_price_ntd_change ?  item.str_price_ntd_change : '' }}<br></span>
-                                <span>SRP: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
+                                <span>Amount: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
                                 <span>QP: {{ item.quoted_price }} <br v-if="item.str_quoted_price_change"> {{ item.str_quoted_price_change ? item.str_quoted_price_change : '' }}<br></span>
                             </td>
                             <td>
