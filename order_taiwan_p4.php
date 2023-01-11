@@ -1361,7 +1361,7 @@ try {
             <div class="block" style="display: flex; justify-content: space-between;">
                 <!-- tag -->
                 <div>
-                    <b class="tag focus">ORDER – TAIWAN</b>
+                    <b class="tag focus">ORDER – CLOSE DEAL</b>
                     <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + od_name }}</b>
                     <b class="tag focus">PROJECT</b>
                     <a :href="'project03_other?sid=' + stage_id"><b class="tag">{{ project_name }}</b></a>
