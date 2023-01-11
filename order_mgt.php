@@ -178,23 +178,23 @@ header( 'location:index' );
         }
 
         .tablebox.lv1 ul li:nth-of-type(1) {
-            width: 130px;
-        }
-
-        .tablebox.lv1 ul li:nth-of-type(2), .tablebox.lv1 ul li:nth-of-type(5) {
-            width: 350px;
-        }
-
-        .tablebox.lv1 ul li:nth-of-type(3) {
-            min-width: 170px;
+            width: 480px;
         }
 
         .tablebox.lv1 ul li:nth-of-type(4) {
+            width: 350px;
+        }
+
+        .tablebox.lv1 ul li:nth-of-type(2) {
+            min-width: 170px;
+        }
+
+        .tablebox.lv1 ul li:nth-of-type(3) {
             min-width: 100px;
             color: #000;
         }
 
-        .tablebox.lv1 ul li:nth-of-type(6), .tablebox.lv1 ul li:nth-of-type(7) {
+        .tablebox.lv1 ul li:nth-of-type(5), .tablebox.lv1 ul li:nth-of-type(6) {
             color: #000;
             min-width: 200px;
         }
@@ -563,7 +563,6 @@ header( 'location:index' );
             <div class="tableframe">
                 <div class="tablebox lv1">
                     <ul class="head">
-                        <li>Order Number</li>
                         <li>Order Name</li>
                         <li>Order Type</li>
                         <li>Status</li>
@@ -572,17 +571,14 @@ header( 'location:index' );
                         <li>Last Updated Time</li>
                     </ul>
                     <ul v-for='(receive_record, index) in displayedPosts'>
-
-                        <li>{{ receive_record.serial_name }}</li>
-
                         <li>
-                            <a v-if="receive_record.order_type == 'taiwan'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_p1?id=' + receive_record.id">{{
+                            <a v-if="receive_record.order_type == 'taiwan'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_p1?id=' + receive_record.id">{{ receive_record.serial_name }} {{
                                 receive_record.od_name }}</a>
-                            <a v-if="receive_record.order_type == 'stock'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_stock_p1?id=' + receive_record.id">{{
+                            <a v-if="receive_record.order_type == 'stock'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_stock_p1?id=' + receive_record.id">{{ receive_record.serial_name }} {{
                                 receive_record.od_name }}</a>
-                            <a v-if="receive_record.order_type == 'sample'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_sample_p1?id=' + receive_record.id">{{
+                            <a v-if="receive_record.order_type == 'sample'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_sample_p1?id=' + receive_record.id">{{ receive_record.serial_name }} {{
                                 receive_record.od_name }}</a>
-                            <a v-if="receive_record.order_type == 'mockup'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_mockup_p1?id=' + receive_record.id">{{
+                            <a v-if="receive_record.order_type == 'mockup'" v-show="receive_record.is_edited == 1" v-bind:href="'order_taiwan_mockup_p1?id=' + receive_record.id">{{ receive_record.serial_name }} {{
                                 receive_record.od_name }}</a>
                             <input name="title" type="text"
                                    v-show="receive_record.is_edited == 0"
