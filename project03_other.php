@@ -3628,7 +3628,7 @@ catch (Exception $e) {
                             <!-- 如果是訂單類的任務，需要多出 Order Type欄位 -->
                             <ul v-if="receive_record.order.length > 0">
                                 <li><b>Order Type</b></li>
-                                <li>Order – {{ receive_record.order[0].order_type == 'taiwan' ? 'Taiwan' : receive_record.order[0].order_type == 'mockup' ? 'Mock up' : '' }}</li>
+                                <li>Order – {{ receive_record.order[0].order_type == 'taiwan' ? 'Close Deal' : receive_record.order[0].order_type == 'mockup' ? 'Mock up' : '' }}</li>
                             </ul>
                             <!-- 如果是訂單類的任務，需要多出 Order Name欄位，內容值的範例: LOTW-0001 LIGHTING FIXTURE -->
                             <ul v-if="receive_record.order.length > 0">
