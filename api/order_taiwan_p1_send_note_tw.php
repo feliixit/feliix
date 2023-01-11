@@ -154,7 +154,7 @@ try{
     
     }
 
-    order_notification($user_name, 'access2', 'access1', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $action, $items_array, $od_id);
+    order_notification($user_name, 'access2', 'access1', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $action, $items_array, $od_id);
 
     $returnArray = array('ret' => $item_id);
     $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);

@@ -2681,7 +2681,7 @@ catch (Exception $e) {
                                 </div>
                                 <div class="formbox s2 add">
                                     <dl>
-                                        <dt>Order Category:</dt>
+                                        <dt>Inquiry Category:</dt>
                                         <dd>
                                             <select v-model="order_category">
                                                 <option value="Lighting">Lighting</option>
@@ -2872,7 +2872,7 @@ catch (Exception $e) {
                                     </dl>
 
                                     <dl>
-                                        <dt>Order Category:</dt>
+                                        <dt>Inquiry Category:</dt>
                                         <dd>
                                             <select v-model="record.related_category" disabled>
                                                 <option value="Lighting">Lighting</option>

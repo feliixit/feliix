@@ -1290,7 +1290,7 @@ if ($access6 == true) {
                     <ul>
                         <li class="morespace">
                             <div v-for='(receive_record, index) in project_orders'>
-                                • {{ receive_record.order_type == 'taiwan' ? 'Order – Taiwan' : receive_record.order_type == 'mockup' ? 'Order – Mockup' : '' }} <br>
+                                • {{ receive_record.order_type == 'taiwan' ? 'Order – Close Deal' : receive_record.order_type == 'mockup' ? 'Order – Mockup' : '' }} <br>
                                 <span>
                                         <a v-if="receive_record.order_type == 'taiwan'" :href="'order_taiwan_p4?id=' + receive_record.id" target="_blank" class="attch">{{ receive_record.serial_name + ' ' + receive_record.od_name }}</a>
                                         <a v-if="receive_record.order_type == 'mockup'" :href="'order_taiwan_mockup_p4?id=' + receive_record.id" target="_blank" class="attch">{{ receive_record.serial_name + ' ' + receive_record.od_name }}</a>

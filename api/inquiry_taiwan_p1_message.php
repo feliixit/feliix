@@ -146,11 +146,11 @@ switch ($method) {
                 $send17 = true;
     
             if($send17==true)
-                order_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $iq_name, 'Order - Taiwan', $message, 'new_message_17', $items, $iq_id, GetAccess7($iq_id, $db));
+                order_notification03Access7($user_name, 'access1,access2', '', $project_name, $serial_name, $iq_name, 'Order - Close Deal', $message, 'new_message_17', $items, $iq_id, GetAccess7($iq_id, $db));
         }
 
         if($page == 2)
-        order_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $iq_name, 'Order - Taiwan', $message, 'new_message_19', $items, $iq_id);
+        order_notification03($user_name, 'access1,access2,access3', '', $project_name, $serial_name, $iq_name, 'Order - Close Deal', $message, 'new_message_19', $items, $iq_id);
         
         echo $jsonEncodedReturnArray;
 

@@ -46,7 +46,7 @@ try {
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Order – Taiwan</title>
+    <title>Order – Close Deal</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -1375,7 +1375,7 @@ try {
             <div class="block" style="display: flex; justify-content: space-between;">
                 <!-- tag -->
                 <div>
-                    <b class="tag focus">ORDER – TAIWAN</b>
+                    <b class="tag focus">ORDER – CLOSE DEAL</b>
                     <b class="tag" style="margin-right: 30px;">{{ serial_name + ' ' + od_name }}</b>
                     <b class="tag focus">PROJECT</b>
                     <a :href="'project03_other?sid=' + stage_id"><b class="tag">{{ project_name }}</b></a>
@@ -1459,7 +1459,7 @@ try {
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
                         <th>Backup Qty</th>
-                        <th>SRP</th>
+                        <th>Amount</th>
                         <th>Date Needed by Client</th>
                         <th>Notes</th>
                         <th>Notes (Only for Approved Stage)</th>
@@ -1872,7 +1872,7 @@ try {
                     <th>Brand</th>
                     <th colspan="2">Description</th>
                     <th>Qty Needed</th>
-                    <th>SRP</th>
+                    <th>Amount</th>
                     <th>Date Needed by Client</th>
                     <th>Notes</th>
                     <th>Action</th>
@@ -2132,8 +2132,8 @@ try {
 
                 <div class="list_function" style="margin: 7px 0;">
                     <div class="sort_block">
-                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(1)">SRP (Low → High)</a>
-                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(2)">SRP (High → Low)</a>
+                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(1)">Amount (Low → High)</a>
+                        <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(2)">Amount (High → Low)</a>
                         <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(3)">QP (Low → High)</a>
                         <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(4)">QP (High → Low)</a>
                         <a class="btn small green" style="color: white; margin: 0 5px;" @click="sort_me(0)">Clear</a>
@@ -2259,7 +2259,7 @@ try {
                             </td>
                             <td>
                                 <span v-show="show_ntd === true">CP: {{ item.price_ntd }} <br v-if="item.str_price_ntd_change"> {{ item.str_price_ntd_change ?  item.str_price_ntd_change : '' }}<br></span>
-                                <span>SRP: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
+                                <span>Amount: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
                                 <span>QP: {{ item.quoted_price }} <br v-if="item.str_quoted_price_change"> {{ item.str_quoted_price_change ? item.str_quoted_price_change : '' }}<br></span>
                             </td>
                             <td>

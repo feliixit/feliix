@@ -248,7 +248,7 @@ if($block_array[$i]['photo3'] == '')
                 }
 
                 if($page == 3 && $access2 == 'true')
-                    order_notification04($user_name, 'access1,access3,access4,access5', '', $project_name, $serial_name, $iq_name, 'Order - Taiwan', '', 'new_message_23', $item_array, $iq_id);
+                    order_notification04($user_name, 'access1,access3,access4,access5', '', $project_name, $serial_name, $iq_name, 'Order - Close Deal', '', 'new_message_23', $item_array, $iq_id);
 
             }
 

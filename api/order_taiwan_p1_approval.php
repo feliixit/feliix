@@ -160,7 +160,7 @@ try{
         die();
     }
 
-    order_notification($user_name, 'access3', 'access1, access2', $project_name, $serial_name, $od_name, 'Order - Taiwan', $comment, $action, $items_array, $od_id);
+    order_notification($user_name, 'access3', 'access1, access2', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $action, $items_array, $od_id);
 
     echo $jsonEncodedReturnArray;
 }
