@@ -7841,6 +7841,7 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
 
 }
 
+
 function order_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
 {
     $conf = new Conf();
@@ -7874,8 +7875,28 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver .= $list["username"] . ", ";
-            $mail->AddAddress($list["email"], $list["username"]);
+            if($list["username"] == 'Nestor Rosales')
+            {
+                if($action == 'finish_notes')
+                {
+                    $receiver = "Aiza Eisma";
+                    $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                }
+                else
+                {
+                    if($action == 'reject')
+                    {
+                        $receiver = "Aiza Eisma";
+                        $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                        $mail->AddAddress($list["email"], $list["username"]);
+                    }
+                    else
+                    {
+                        $receiver .= $list["username"] . ", ";
+                        $mail->AddAddress($list["email"], $list["username"]);
+                    }
+                }
+            }
         }
     }
 
@@ -7888,8 +7909,28 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $cc = $list["username"];
-            $mail->AddCC($list["email"], $list["username"]);
+            if($list["username"] == 'Nestor Rosales')
+            {
+                if($action == 'send_note' || $action == 'withdraw_note_tw')
+                {
+                    $cc = "Aiza Eisma";
+                    $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+                }
+                else
+                {
+                    if($action == 'approval' || $action == 'approved' || $action == 'withdraw')
+                    {
+                        $cc = "Aiza Eisma";
+                        $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+                        $mail->AddCC($list["email"], $list["username"]);
+                    }
+                    else
+                    {
+                        $cc = $list["username"];
+                        $mail->AddCC($list["email"], $list["username"]);
+                    }
+                }
+            }
         }
     }
     
@@ -12700,24 +12741,24 @@ function GetAccessNotifiers($field, $order_type){
 
 function SetupMail($mail, $conf)
 {
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-
-
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
     // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'ciara.boehm63@ethereal.email';
-    // $mail->Password   = '56NR9hZ8wK5d8dPsw5';
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'ciara.boehm63@ethereal.email';
+    $mail->Password   = '56NR9hZ8wK5d8dPsw5';
 
      return $mail;
 
