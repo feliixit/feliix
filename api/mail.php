@@ -7841,7 +7841,6 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
 
 }
 
-
 function order_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
 {
     $conf = new Conf();
@@ -7897,6 +7896,11 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
                     }
                 }
             }
+            else
+            {
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
         }
     }
 
@@ -7930,6 +7934,11 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
                         $mail->AddCC($list["email"], $list["username"]);
                     }
                 }
+            }
+            else
+            {
+                $cc = $list["username"];
+                $mail->AddCC($list["email"], $list["username"]);
             }
         }
     }
