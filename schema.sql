@@ -3507,3 +3507,51 @@ update product_category set phased_out_cnt = 0 where variation_mode = 0;
 -- for production
 update product_category INNER JOIN ( select a_group.id, COALESCE(a_group.cnt, 0) cnt, COALESCE(e_group.cnt, 0) ecnt from (  select pc.id,  count(p.enabled) cnt  from product_category pc   left join product p on pc.id = p.product_id   where pc.variation_mode = 1  group by pc.id   ) a_group left join (  select pc.id,  count(p.enabled) cnt  from product_category pc   left join product p on pc.id = p.product_id   where p.enabled = 1 and pc.variation_mode = 1  group by pc.id ) e_group on a_group.id = e_group.id) op ON product_category.id=op.id set phased_out_cnt = op.cnt - op.ecnt where op.id = product_category.id;
 update product_category set phased_out_cnt = 0 where variation_mode = 0;
+
+
+-- 20230109 knowledge
+CREATE TABLE IF NOT EXISTS `knowledge` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `cover` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `title` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `category` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `access` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `type` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `link` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `attach` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `watch` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `duration` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `desciption` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `deleted_id` int(11) DEFAULT 0,
+  `deleted_time` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `tags` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `gtag` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `tag` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sn` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- sample data
+insert into tags(`gtag`, tag, sn) values('BY INSTALL LOCATION', 'BLDG. FAÇADE', 10);
+insert into tags(`gtag`, tag, sn) values('BY INSTALL LOCATION', 'CABINET', 20);
+insert into tags(`gtag`, tag, sn) values('BY INSTALL LOCATION', 'CEILING', 30);
+insert into tags(`gtag`, tag, sn) values('INSTALL METHOD', 'POLE-MOUNTED', 40);
+insert into tags(`gtag`, tag, sn) values('INSTALL METHOD', 'RECESSED', 50);
+insert into tags(`gtag`, tag, sn) values('INSTALL METHOD', 'STAND-ALONE', 60);
+insert into tags(`gtag`, tag, sn) values('BY TYPE / FUNCTION', 'ALUMINUM PROFILE', 70);
+insert into tags(`gtag`, tag, sn) values('BY TYPE / FUNCTION', 'ASSEMBLED', 80);
+insert into tags(`gtag`, tag, sn) values('BY TYPE / FUNCTION', 'AUDIO EQUIPMENT', 90);
