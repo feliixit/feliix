@@ -10169,7 +10169,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
 
 
     $mail->IsHTML(true);
-    
+
     $receiver = "";
     $cc = "";
     $assignee = [];
@@ -10180,13 +10180,31 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver .= $list["username"] . ", ";
-            $mail->AddAddress($list["email"], $list["username"]);
+            if($list["username"] == 'Nestor Rosales')
+            {
+                if($order_type == 'Order - Close Deal')
+                {
+                    $receiver .= "Aiza Eisma" . ", ";
+                    $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                    $receiver .= $list["username"] . ", ";
+                    $mail->AddAddress($list["email"], $list["username"]);
+                }
+                else
+                {
+                    $receiver .= $list["username"] . ", ";
+                    $mail->AddAddress($list["email"], $list["username"]);
+                }
+            }
+            else
+            {
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
         }
     }
 
     $receiver = rtrim($receiver, ", ");
-    
+
     // explore cc into array
     $cc_list = explode(",", $access_cc);
     foreach($cc_list as &$c_list)
@@ -10198,7 +10216,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
             $mail->AddCC($list["email"], $list["username"]);
         }
     }
-    
+
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -10223,7 +10241,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_18')
@@ -10242,7 +10260,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_19')
@@ -10261,7 +10279,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_20')
@@ -10280,7 +10298,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_21')
@@ -10299,7 +10317,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_22')
@@ -10318,7 +10336,7 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
-        
+
     }
 
 
@@ -11041,7 +11059,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
 
 
     $mail->IsHTML(true);
-    
+
     $receiver = "";
     $cc = "";
     $assignee = [];
@@ -11052,8 +11070,24 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver .= $list["username"] . ", ";
-            $mail->AddAddress($list["email"], $list["username"]);
+            if($list["username"] == 'Nestor Rosales')
+            {
+                if($order_type == 'Order - Close Deal')
+                {
+                    $receiver .= "Aiza Eisma" . ", ";
+                    $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                }
+                else
+                {
+                    $receiver .= $list["username"] . ", ";
+                    $mail->AddAddress($list["email"], $list["username"]);
+                }
+            }
+            else
+            {
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
         }
     }
 
@@ -11062,14 +11096,14 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $notifior = GetAccessNotifiersByName($access7, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver = $list["username"];
-            $mail->AddCC($list["email"], $list["username"]);
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
         }
     }
 
 
     $receiver = rtrim($receiver, ", ");
-    
+
     // explore cc into array
     $cc_list = explode(",", $access_cc);
     foreach($cc_list as &$c_list)
@@ -11081,7 +11115,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
             $mail->AddCC($list["email"], $list["username"]);
         }
     }
-    
+
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -11106,7 +11140,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_18')
@@ -11125,7 +11159,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_19')
@@ -11144,7 +11178,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_20')
@@ -11163,7 +11197,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p2?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_21')
@@ -11182,7 +11216,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $mail->Subject = 'New message was created for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' created a new message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
-        
+
     }
 
     if($action == 'new_message_22')
@@ -11201,7 +11235,7 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $mail->Subject = 'Existing message was deleted for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '" ';
         $header = $name . ' deleted an existing message for item #' . $item_sn . ' in "' . $order_type . ': ' . $serial_name . '". Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
-        
+
     }
 
 
