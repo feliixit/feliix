@@ -127,12 +127,14 @@ if($date % 2 == 0)
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 1vw 0 9px;
+            padding: 0 12px 0 9px;
         }
 
         .left_box .filebox span{
-            font-size: 20px;
-            font-weight: 400;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0 5px;
+            display: block;
         }
 
         .left_box .filebox input[type="file"]{
@@ -142,6 +144,30 @@ if($date % 2 == 0)
             left: 0;
             opacity: 0;
             z-index: 2;
+        }
+
+        .left_box .filebox div:nth-of-type(1){
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0 5px;
+            display: block;
+            max-width: calc( 100% - 50px);
+            overflow-x: hidden;
+            white-space: nowrap;
+        }
+
+        .left_box .filebox div:nth-of-type(2){
+            display: block;
+            width: 24px;
+            height: 24px;
+            border: 2px dashed #EA0029;
+            border-radius: 12px;
+            line-height: 15px;
+            text-align: center;
+            color: #EA0029;
+            font-size: 20px;
+            font-weight: 400;
+            cursor: pointer;
         }
 
         .left_box .durationbox {
@@ -250,6 +276,25 @@ if($date % 2 == 0)
             margin: 14px 0;
         }
 
+        .left_box div.dropdown.bootstrap-select.show-tick{
+            max-width: 515px;
+            border: 1px solid #555555;
+            border-radius: 7px;
+            margin: 14px 0;
+            height: 50px;
+        }
+
+        .left_box button.btn.dropdown-toggle.btn-light{
+            background-color: transparent;
+            height: 100%;
+            border-radius: 7px;
+        }
+
+        .left_box div.filter-option{
+            display: flex;
+            align-items: center;
+        }
+
     </style>
 
 </head>
@@ -270,7 +315,7 @@ if($date % 2 == 0)
                 <input type="text" placeholder="Title" v-model="title">
 
                 <!-- 在資料庫中會新建立一張資料表，我會直接在資料表中新增/修改/刪除 tag，這邊只需要把該資料表中的 tag 引入即可 -->
-                <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="Choose Category..." id="category" v-model="category">
+                <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="100%" title="Choose Category..." id="category" v-model="category">
                     <optgroup v-for="(group, index) in tags" :label="group.gtag">
                         <option v-for="tag in group.tags" :value="tag.tag">{{tag.tag}}</option>
                     </option>
@@ -279,7 +324,7 @@ if($date % 2 == 0)
 
 
                 <!-- 選擇權限的select之中，裡面第一部分的選項是固定的，是讓使用者可以一次選擇全部的人或整個部門，第二部分的選擇則是要載入當前系統已註冊且enabled=True但尚未被刪除的人進來當作選項 -->
-                <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="Choose Access..." id="access" v-model="access">
+                <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="100%" title="Choose Access..." id="access" v-model="access">
 
                     <optgroup label="By Group">
                         <option value="All">All</option>
@@ -307,9 +352,15 @@ if($date % 2 == 0)
                 </select>
 
                 <div class="filebox" v-show="type == 'file'">
+                    <!-- 沒選擇任何檔案時，下方的 span 和 input 則是 display: block; 但如果有選擇一個檔案時，下方的 span 和 input 則是 display: none; -->
                     <span>File</span>
                     <span><i class="fas fa-paperclip"></i></span>
                     <input type="file" id="file1">
+
+                    <!-- 沒選擇任何檔案時，下方的 div 則是 display: none; 但如果有選擇一個檔案時，下方的 div 則是 display: block; -->
+                    <!-- 使用者點了 x 的 div 時，則代表要清空所選擇的檔案 -->
+                    <div>被選擇的檔案的檔名</div>
+                    <div>x</div>
                 </div>
 
                 <input type="text" placeholder="Website Link" v-model="link"  v-if="type == 'link' || type == 'video'">
@@ -332,7 +383,7 @@ if($date % 2 == 0)
                 <div :class="['coverimg_box', (url !== null ? 'chosen' : '')]">
                     <img v-if="url" :src="url" />
                     <div>Cover Image
-                        <input type="file" id="photo" name="photo"  @change="onFileChange($event)">
+                        <input type="file" accept="image/*" id="photo" name="photo"  @change="onFileChange($event)">
                     </div>
 
                     <div @click="clear_photo()">x</div>
