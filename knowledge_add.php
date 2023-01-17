@@ -295,6 +295,11 @@ if($date % 2 == 0)
             align-items: center;
         }
 
+        .left_box div.filter-option-inner-inner{
+            color: black;
+            font-weight: 500;
+        }
+
     </style>
 
 </head>
