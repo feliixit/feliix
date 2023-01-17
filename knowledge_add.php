@@ -1,14 +1,103 @@
 <?php
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ( !isset( $jwt ) ) {
+  header( 'location:index' );
+}
 
- date_default_timezone_set('Asia/Taipei');
- $date = date('d');
- $show0 = false;
+include_once 'api/config/core.php';
+include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
+include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once 'api/libs/php-jwt-master/src/JWT.php';
+include_once 'api/config/database.php';
 
-if($date % 2 == 0)
-    $show0 = true;
+
+use \Firebase\JWT\JWT;
+
+
+try {
+    // decode jwt
+    try {
+        // decode jwt
+        $decoded = JWT::decode($jwt, $key, array('HS256'));
+        $user_id = $decoded->data->id;
+        $username = $decoded->data->username;
+
+        $database = new Database();
+        $db = $database->getConnection();
+
+        // for tags
+        $tag_results = array();
+        $query = "SELECT id,
+                        `gtag`, 
+                        tag, 
+                        sn
+                        FROM tags
+                        WHERE status <> -1 order by sn
+                        ";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        $gtag = "";
+        $group_tags = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            //group tags by gtag put tags in array
+            if($gtag != $row['gtag']){
+                if($gtag != ""){
+                    $tag_results[] = array(
+                        "gtag" => $gtag,
+                        "tags" => $group_tags,
+                    );
+                }
+                $gtag = $row['gtag'];
+                $group_tags = array();
+            }
+            $group_tags[] = array(
+                "id" => $row['id'],
+                "tag" => $row['tag'],
+                "sn" => $row['sn'],
+            );
+        }
+
+        //add last group
+        $tag_results[] = array(
+            "gtag" => $gtag,
+            "tags" => $group_tags,
+        );
+
+
+        // for users
+        $user_results = array();
+        $query = "SELECT username FROM user WHERE status = 1 ORDER BY username
+                        ";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user_results[] = array(
+                "username" => $row['username'],
+            );
+        }
+        
+
+    }
+    catch (Exception $e){
+
+        header( 'location:index' );
+    }
+
+
+    //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
+    //    header( 'location:index.php' );
+}
+// if decode fails, it means jwt is invalid
+catch (Exception $e){
+
+    header( 'location:index' );
+}
+
 ?>
 
-<?php include 'check.php';?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -321,10 +410,15 @@ if($date % 2 == 0)
 
                 <!-- 在資料庫中會新建立一張資料表，我會直接在資料表中新增/修改/刪除 tag，這邊只需要把該資料表中的 tag 引入即可 -->
                 <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="100%" title="Choose Category..." id="category" v-model="category">
-                    <optgroup v-for="(group, index) in tags" :label="group.gtag">
-                        <option v-for="tag in group.tags" :value="tag.tag">{{tag.tag}}</option>
-                    </option>
-
+                    <?php foreach ($tag_results as $tags) { 
+                        $opts = $tags["tags"];
+                        ?>
+                        <optgroup label="<?php echo $tags["gtag"]; ?>">
+                            <?php foreach ($opts as $opt) { ?>
+                                <option value="<?php echo $opt["tag"]; ?>"><?php echo $opt["tag"]; ?></option>
+                            <?php } ?>
+                        </optgroup>
+                    <?php } ?>
                 </select>
 
 
@@ -343,7 +437,9 @@ if($date % 2 == 0)
                     </optgroup>
 
                     <optgroup label="By Person">
-                        <option v-for="user in users" :value="user.username">{{user.username}}</option>
+                        <?php foreach ($user_results as $user) { ?>
+                            <option value="<?php echo $user["username"]; ?>"><?php echo $user["username"]; ?></option>
+                        <?php } ?>
                     </optgroup>
 
                 </select>

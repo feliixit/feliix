@@ -33,8 +33,8 @@ var app = new Vue({
     async created() {
         let _this = this;
 
-        await _this.tags_data();
-        await _this.get_all_user();
+        //await _this.tags_data();
+        //await _this.get_all_user();
 
         let uri = window.location.href.split("?");
         if (uri.length >= 2) {
