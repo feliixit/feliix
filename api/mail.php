@@ -5508,7 +5508,7 @@ if($stage == "Order")
     //如果是普通任務，執行下一行
     $content = $content . "<p>Task: " . $task_name . "</p>";
     //如果是訂單任務，執行下一行
-    $content = $content . "<p>Order Task: " . $task_name . "</p>";
+    //$content = $content . "<p>Order Task: " . $task_name . "</p>";
     
 
     $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
@@ -6295,7 +6295,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $content = $content . $tab;
     $content = $content . "<p>Project Name: " . $project_name . "</p>";
     $content = $content . "<p>Stage: " . $stage . "</p>";
-    $content = $content . "<p>Task: " . $task_name . "</p>";
+    //$content = $content . "<p>Task: " . $task_name . "</p>";
 
     //如果是普通任務，執行下一行
     $content = $content . "<p>Task: " . $task_name . "</p>";
