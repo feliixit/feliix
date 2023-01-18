@@ -798,7 +798,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
     if($kind == 0)
         $payment = "Down Payment";
-    
+
     if($kind == 1)
         $payment = "Full Payment";
 
@@ -822,9 +822,9 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
     //if($kind == 0 || $kind == 1)
         //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-    if($kind == 0 || $kind == 1)
+    if($category == '2' && ($kind == 0 || $kind == 1))
         $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
-        
+
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -838,9 +838,9 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
                     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
                 </head>
                 <body>
-                
+
                 <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
-                
+
                     <table style="width: 100%;">
                         <tbody>
                         <tr>
@@ -1086,13 +1086,13 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     $content = $content . "<p>Date of Receiving Payment: " . $receive_date . "</p>";
 
     $content = $content . "<p>Amount of Receiving Payment: " . number_format($amount) . "</p>";
-    
+
     $content = $content . "<p>Project Name: " . $projectname . "</p>";
     $content = $content . "<p>Submission Time: " . $subtime . "</p>";
     $content = $content . "<p>Submitter: " . $leaver . "</p>";
     $content = $content . "<p>Checked: " . $status . "</p>";
     $content = $content . "<p>Remark: " . $remark . "</p>";
-    
+
 
     if($reason != "")
         $content = $content . "<p>Additional Remark: " . $reason . "</p>";
@@ -1153,7 +1153,9 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-    $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
+
+    if($category == '2')
+        $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -1255,7 +1257,7 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
 
     //if($kind == 0 || $kind == 1)
         //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-    if($kind == 0 || $kind == 1)
+    if($category == '2' && ($kind == 0 || $kind == 1))
         $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
@@ -1391,6 +1393,7 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
 
 }
 
+
 function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $subtime, $category)
 {
     $conf = new Conf();
@@ -1426,7 +1429,10 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $mail->AddCC($email1, $name);
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-    $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
+
+    if($category == '2')
+        $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
+
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -12950,8 +12956,8 @@ function SetupMail($mail, $conf)
     $mail->Port       = 587;
     $mail->SMTPKeepAlive = true;
     $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'ciara.boehm63@ethereal.email';
-    $mail->Password   = '56NR9hZ8wK5d8dPsw5';
+    $mail->Username   = 'imelda40@ethereal.email';
+    $mail->Password   = 'R9sQqzpnmYq4dPQrK2';
 
     return $mail;
 
