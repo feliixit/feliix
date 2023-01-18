@@ -3632,7 +3632,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
             $mail->AddAddress($list["email"], $list["username"]);
         }
 
-        $category_id = GetCategoryIdByStageId($stage_id);
+        $category_id = GetProjectCategoryByStageId($stage_id);
         if($category_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
@@ -7253,7 +7253,7 @@ function project02_stage_notify_mail($stage_name, $project_name, $username, $cre
     if($stage_name == 'A Meeting / Close Deal' || $stage_name == 'Order')
     {
         $category_id = GetProjectCategoryByProjectId($project_id);
-        if($catagory_id == "2")
+        if($category_id == "2")
         {
             $notifior = GetProjectServiceNotifiers();
             foreach($notifior as &$list)
