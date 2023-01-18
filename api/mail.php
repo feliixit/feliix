@@ -3900,7 +3900,7 @@ function task_notify_order($request_type, $project_name, $task_name, $stages_sta
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -4042,7 +4042,7 @@ function task_notify_inquiry($request_type, $project_name, $task_name, $stages_s
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -4191,7 +4191,7 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -4340,7 +4340,7 @@ function task_notify_type_inquiry($request_type, $project_name, $task_name, $sta
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -4666,7 +4666,7 @@ function message_notify_r($request_type, $project_name, $task_name, $stages, $cr
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -4807,7 +4807,7 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -5476,7 +5476,7 @@ if($stage == "Order")
     }
 
     $catagory_id = GetProjectCategoryByStageId($stage_id);
-    if($category_id == "2")
+    if($catagory_id == "2")
     {
         $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
@@ -5605,7 +5605,7 @@ if($stage == "Order")
     }
 
     $catagory_id = GetProjectCategoryByStageId($stage_id);
-    if($category_id == "2")
+    if($catagory_id == "2")
     {
         $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
@@ -5731,7 +5731,7 @@ if($stage == "Order")
     }
 
     $catagory_id = GetProjectCategoryByStageId($stage_id);
-    if($category_id == "2")
+    if($catagory_id == "2")
     {
         $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
@@ -5861,7 +5861,7 @@ if($stage == "Order")
     }
 
     $catagory_id = GetProjectCategoryByStageId($stage_id);
-    if($category_id == "2")
+    if($catagory_id == "2")
     {
         $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
@@ -5990,7 +5990,7 @@ if($stage == "Order")
     }
 
     $catagory_id = GetProjectCategoryByStageId($stage_id);
-    if($category_id == "2")
+    if($catagory_id == "2")
     {
         $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
@@ -6126,7 +6126,7 @@ if($stage == "Order")
     }
 
     $catagory_id = GetProjectCategoryByStageId($stage_id);
-    if($category_id == "2")
+    if($catagory_id == "2")
     {
         $notifior = GetChargeNotifiersByTitle('Engineering Manager');
         foreach($notifior as &$list)
@@ -6264,7 +6264,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -6401,7 +6401,7 @@ function task_notify02_r($old_status, $task_status, $project_name, $task_name, $
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -6537,7 +6537,7 @@ function task_notify02_order($old_status, $task_status, $project_name, $task_nam
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -6674,7 +6674,7 @@ function task_notify02_inquiry($old_status, $task_status, $project_name, $task_n
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -6811,7 +6811,7 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
@@ -6955,7 +6955,7 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
         }
 
         $catagory_id = GetProjectCategoryByStageId($stage_id);
-        if($category_id == "2")
+        if($catagory_id == "2")
         {
             $notifior = GetChargeNotifiersByTitle('Engineering Manager');
             foreach($notifior as &$list)
