@@ -1536,6 +1536,8 @@ var app = new Vue({
       this.editfileArray_i = [];
       this.editfileArray_o = [];
 
+      this.task_id_to_load = 0;
+
       console.log("all clear");
     },
 
