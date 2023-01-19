@@ -179,7 +179,7 @@ switch ($method) {
 
 
 
-function SendNotifyMail($last_id, $stage_id, $order_type, $order_name)
+function SendNotifyMail($last_id, $stage_id, $order_type, $order_name, $serial_name)
 {
     $project_name = "";
     $task_name = "";
@@ -216,7 +216,7 @@ function SendNotifyMail($last_id, $stage_id, $order_type, $order_name)
     //$order_type = $_iq_main[0]["order_type"];
     //$order_name = $_iq_main[0]["order_name"];
 
-    task_notify_inquiry("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, GetOrderType($order_type), $order_name);
+    task_notify_inquiry("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, GetOrderType($order_type), $order_name, $serial_name);
 
 }
 
