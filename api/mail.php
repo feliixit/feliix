@@ -4593,7 +4593,7 @@ function message_notify_r($request_type, $project_name, $task_name, $stages, $cr
             $tab = "<p>A message was revised and needs you to follow. Below is the details:</p>";
             break;
         case "del":
-            $tab = '<p>A new message in "' . $stages . '" stage of project "' . $project_name . '" was deleted by "' . $username . '". Following are the details:</p>';
+            $tab = '<p>A message in "' . $stages . '" stage of project "' . $project_name . '" was deleted by "' . $username . '". Following are the details:</p>';
             $title = '[Message Notification] Message was deleted in "' . $stages . '" stage of project "' . $project_name . '"';
             break;
         default:
@@ -4734,7 +4734,7 @@ function message_notify($request_type, $project_name, $task_name, $stages, $crea
             $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
             break;
         case "del":
-            $tab = '<p>A new message in "' . $stages . '" stage of project "' . $project_name . '" was deleted by "' . $username . '". Following are the details:</p>';
+            $tab = '<p>A message in "' . $stages . '" stage of project "' . $project_name . '" was deleted by "' . $username . '". Following are the details:</p>';
             $title = '[Message Notification] Message was deleted in "' . $stages . '" stage of project "' . $project_name . '"';
             break;
         default:

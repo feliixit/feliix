@@ -1506,13 +1506,42 @@ var app = new Vue({
         _this.task_clear_r();
     },
 
-    task_clear_o() {
-
+    all_clear() {
+      this.title = "";
       this.detail = "";
       this.order = "";
       this.order_type = "";
 
+      this.priority = 0;
+
+      this.assignee = [];
+      this.collaborator = [];
+
+      this.related_order = "";
+      this.related_tab = "1";
+
+      this.related_inquirys = [];
+      this.related_orders = [];
+
+      this.due_date = "";
+      this.due_time = "";
+      this.detail = "";
+
+      this.fileArray = [];
+      this.fileArray_i = [];
       this.fileArray_o = [];
+
+      this.record = [];
+      this.editfileArray = [];
+      this.editfileArray_i = [];
+      this.editfileArray_o = [];
+
+      console.log("all clear");
+    },
+
+    task_clear_o() {
+
+      this.all_clear()
 
       document.getElementById('dialog_a1_o').classList.remove("focus");
       document.getElementById('add_a1_o').classList.remove("show");
@@ -1520,11 +1549,7 @@ var app = new Vue({
 
     task_clear_i() {
 
-      this.detail = "";
-      this.order = "";
-      this.order_type = "";
-
-      this.fileArray_i = [];
+      this.all_clear()
 
       document.getElementById('dialog_a1_i').classList.remove("focus");
       document.getElementById('add_a1_i').classList.remove("show");
@@ -1533,8 +1558,7 @@ var app = new Vue({
 
     task_edit_clear_o() {
 
-      this.record = [];
-      this.editfileArray_o = [];
+      this.all_clear()
 
       document.getElementById('dialog_red_edit_o').classList.remove("show");
       document.getElementById('edit_red_o').classList.remove("focus");
@@ -1542,8 +1566,7 @@ var app = new Vue({
 
     task_edit_clear_i() {
 
-      this.record = [];
-      this.editfileArray_i = [];
+      this.all_clear()
 
       document.getElementById('dialog_red_edit_i').classList.remove("show");
       document.getElementById('edit_red_i').classList.remove("focus");
@@ -1551,7 +1574,7 @@ var app = new Vue({
 
     task_clear() {
 
-      this.detail = "";
+      this.all_clear()
 
       document.getElementById('dialog_a1').classList.remove("focus");
       document.getElementById('add_a1').classList.remove("show");
@@ -1559,8 +1582,7 @@ var app = new Vue({
 
     task_edit_clear() {
 
-      this.record = [];
-      this.editfileArray = [];
+      this.all_clear()
 
       document.getElementById('dialog_red_edit').classList.remove("show");
       document.getElementById('edit_red').classList.remove("focus");
