@@ -118,10 +118,32 @@ catch (Exception $e) {
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <!-- <script type="text/javascript" src="js/main.js"></script> -->
     <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js"></script>
 
     <script>
+        function dialogclear(){
+                console.log('dialogclear');
+                $('.list_function .dialog').removeClass('show');
+                $('.list_function a').removeClass('focus');
+                $('.list_function.main .block.fn a').removeClass('focus');   
+                $('.tablebox .dialog').removeClass('show');
+                $('.tablebox a').removeClass('focus');
+                app.all_clear();
+        }
+
+        function dialogshow($me,$target){
+            $me.click(function(){
+                if ($me.hasClass('focus')){
+                    dialogclear();
+                } else {
+                    dialogclear();
+                    $me.addClass('focus');
+                    $target.addClass('show');
+                }
+            })
+        }
+
         $(function() {
             $('header').load('include/header.php');
             //
@@ -2522,7 +2544,7 @@ catch (Exception $e) {
                                         <li class="mix">
                                             <select v-model="task_id_to_del">
                                                 <option v-for="(it, index) in project03_other_task" :value="it.task_id"
-                                                        v-if="it.task_status != '-1' && it.order.length == 0">
+                                                        v-if="it.task_status != '-1' && it.order.length == 0 && it.inquiry.length == 0 && it.order.length == 0">
                                                     {{ it.title }}
                                                 </option>
                                             </select>
@@ -2536,7 +2558,7 @@ catch (Exception $e) {
                                         <li class="mix">
                                             <select v-model="task_id_to_load">
                                                 <option v-for="(it, index) in project03_other_task" :value="it.task_id"
-                                                        v-if="it.task_status != '-1' && it.order.length == 0">
+                                                        v-if="it.task_status != '-1' && it.order.length == 0 && it.inquiry.length == 0 && it.order.length == 0">
                                                     {{ it.title }}
                                                 </option>
                                             </select>
@@ -2775,8 +2797,8 @@ catch (Exception $e) {
                                                 <div class="input-zone">
                                                     <span class="upload-des">choose file</span>
                                                     <input class="input" type="file" name="file" value
-                                                           placeholder="choose file" ref="file" v-show="canSub"
-                                                           @change="changeFile()" multiple/>
+                                                           placeholder="choose file" ref="file_i" v-show="canSub"
+                                                           @change="changeFile_i()" multiple/>
                                                 </div>
                                             </div>
                                         </dd>
@@ -2787,11 +2809,11 @@ catch (Exception $e) {
                                             <div class="browser_group">
                                                 <div class="pad">
                                                     <div class="file-list">
-                                                        <div class="file-item" v-for="(item,index) in fileArray"
+                                                        <div class="file-item" v-for="(item,index) in fileArray_i"
                                                              :key="index">
                                                             <p>
                                                                 {{item.name}}
-                                                                <span @click="deleteFile(index)"
+                                                                <span @click="deleteFile_i(index)"
                                                                       v-show="item.progress==0" class="upload-delete"><i
                                                                         class="fas fa-backspace"></i>
                                                             </span>
@@ -2963,8 +2985,8 @@ catch (Exception $e) {
                                             <div class="pub-con" ref="bg">
                                                 <div class="input-zone">
                                                     <span class="upload-des">choose file</span>
-                                                    <input class="input" type="file" :ref="'editfile'"
-                                                           placeholder="choose file" @change="changeEditFile()"
+                                                    <input class="input" type="file" :ref="'editfile_i'"
+                                                           placeholder="choose file" @change="changeEditFile_i()"
                                                            multiple/>
                                                 </div>
                                             </div>
@@ -2977,11 +2999,11 @@ catch (Exception $e) {
                                             <div class="browser_group">
                                                 <div class="pad">
                                                     <div class="file-list">
-                                                        <div class="file-item" v-for="(item,index) in editfileArray"
+                                                        <div class="file-item" v-for="(item,index) in editfileArray_i"
                                                              :key="index">
                                                             <p>
                                                                 {{item.name}}
-                                                                <span @click="deleteEditFile(index)"
+                                                                <span @click="deleteEditFile_i(index)"
                                                                       v-show="item.progress==0" class="upload-delete"><i
                                                                         class="fas fa-backspace"></i>
                                                             </span>
@@ -3108,8 +3130,8 @@ catch (Exception $e) {
                                                 <div class="input-zone">
                                                     <span class="upload-des">choose file</span>
                                                     <input class="input" type="file" name="file" value
-                                                           placeholder="choose file" ref="file" v-show="canSub"
-                                                           @change="changeFile()" multiple/>
+                                                           placeholder="choose file" ref="file_o" v-show="canSub"
+                                                           @change="changeFile_o()" multiple/>
                                                 </div>
                                             </div>
                                         </dd>
@@ -3120,11 +3142,11 @@ catch (Exception $e) {
                                             <div class="browser_group">
                                                 <div class="pad">
                                                     <div class="file-list">
-                                                        <div class="file-item" v-for="(item,index) in fileArray"
+                                                        <div class="file-item" v-for="(item,index) in fileArray_o"
                                                              :key="index">
                                                             <p>
                                                                 {{item.name}}
-                                                                <span @click="deleteFile(index)"
+                                                                <span @click="deleteFile_o(index)"
                                                                       v-show="item.progress==0" class="upload-delete"><i
                                                                         class="fas fa-backspace"></i>
                                                             </span>
@@ -3306,8 +3328,8 @@ catch (Exception $e) {
                                             <div class="pub-con" ref="bg">
                                                 <div class="input-zone">
                                                     <span class="upload-des">choose file</span>
-                                                    <input class="input" type="file" :ref="'editfile'"
-                                                           placeholder="choose file" @change="changeEditFile()"
+                                                    <input class="input" type="file" :ref="'editfile_o'"
+                                                           placeholder="choose file" @change="changeEditFile_o()"
                                                            multiple/>
                                                 </div>
                                             </div>
@@ -3320,11 +3342,11 @@ catch (Exception $e) {
                                             <div class="browser_group">
                                                 <div class="pad">
                                                     <div class="file-list">
-                                                        <div class="file-item" v-for="(item,index) in editfileArray"
+                                                        <div class="file-item" v-for="(item,index) in editfileArray_o"
                                                              :key="index">
                                                             <p>
                                                                 {{item.name}}
-                                                                <span @click="deleteEditFile(index)"
+                                                                <span @click="deleteEditFile_o(index)"
                                                                       v-show="item.progress==0" class="upload-delete"><i
                                                                         class="fas fa-backspace"></i>
                                                             </span>

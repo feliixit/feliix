@@ -118,6 +118,18 @@ var app = new Vue({
     order_type: '',
     order_category: '',
 
+    canSub_i: true,
+    finish_i: false,
+
+    canSub_o: true,
+    finish_o: false,
+
+    fileArray_o: [],
+    editfileArray_o: [],
+
+    fileArray_i: [],
+    editfileArray_i: [],
+
   },
 
   created() {
@@ -311,9 +323,486 @@ var app = new Vue({
       },
       deep: true,
     },
+
+
+    fileArray_o: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.fileArray_o.length) {
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon",
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish = true;
+            _this.getProjectOtherTask(0);
+          });
+          this.task_clear_o();
+        }
+      },
+      deep: true,
+    },
+
+    editfileArray_o: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.editfileArray_o.length) {
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon",
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish = true;
+            _this.getProjectOtherTask(0);
+          });
+          this.task_edit_clear_o();
+        }
+      },
+      deep: true,
+    },
+
+    fileArray_i: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.fileArray_i.length) {
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon",
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish = true;
+            _this.getProjectOtherTask(0);
+          });
+          this.task_clear_i();
+        }
+      },
+      deep: true,
+    },
+
+    editfileArray_i: {
+      handler(newValue, oldValue) {
+        var _this = this;
+        console.log(newValue);
+        var finish = newValue.find(function(currentValue, index) {
+          return currentValue.progress != 1;
+        });
+        if (finish === undefined && this.editfileArray_i.length) {
+          Swal.fire({
+            text: "upload finished",
+            type: "success",
+            duration: 1 * 1000,
+            customClass: "message-box",
+            iconClass: "message-icon",
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            _this.finish = true;
+            _this.getProjectOtherTask(0);
+          });
+          this.task_edit_clear_i();
+        }
+      },
+      deep: true,
+    },
   },
 
   methods: {
+
+    changeEditFile_o() {
+      var fileTarget = this.$refs.editfile_o;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.editfileArray_o.indexOf(fileTarget.files[i]) == -1 ||
+          this.editfileArray_o.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.editfileArray_o.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    deleteEditFile_o(index) {
+      this.editfileArray_o.splice(index, 1);
+      var fileTarget = this.$refs.editfile_o;
+      fileTarget.value = "";
+    },
+
+    deleteFile_o(index) {
+      this.fileArray_o.splice(index, 1);
+      var fileTarget = this.$refs.file_o;
+      fileTarget.value = "";
+    },
+
+    changeFile_o() {
+      var fileTarget = this.$refs.file_o;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.fileArray_o.indexOf(fileTarget.files[i]) == -1 ||
+          this.fileArray_o.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.fileArray_o.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    changeEditFile_i() {
+      var fileTarget = this.$refs.editfile_i;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.editfileArray_i.indexOf(fileTarget.files[i]) == -1 ||
+          this.editfileArray_i.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.editfileArray_i.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    deleteEditFile_i(index) {
+      this.editfileArray_i.splice(index, 1);
+      var fileTarget = this.$refs.editfile_i;
+      fileTarget.value = "";
+    },
+
+    deleteFile_i(index) {
+      this.fileArray_i.splice(index, 1);
+      var fileTarget = this.$refs.file_i;
+      fileTarget.value = "";
+    },
+
+    changeFile_i() {
+      var fileTarget = this.$refs.file_i;
+
+      for (i = 0; i < fileTarget.files.length; i++) {
+        // remove duplicate
+        if (
+          this.fileArray_i.indexOf(fileTarget.files[i]) == -1 ||
+          this.fileArray_i.length == 0
+        ) {
+          var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+          this.fileArray_i.push(fileItem);
+        } else {
+          fileTarget.value = "";
+        }
+      }
+    },
+
+    all_clear() {
+      this.title = "";
+      this.detail = "";
+      this.order = "";
+      this.order_type = "";
+
+      this.priority = 0;
+
+      this.assignee = [];
+      this.collaborator = [];
+
+      this.related_order = "";
+      this.related_tab = "1";
+
+      this.related_inquirys = [];
+      this.related_orders = [];
+
+      this.due_date = "";
+      this.due_time = "";
+      this.detail = "";
+
+      this.fileArray = [];
+      this.fileArray_i = [];
+      this.fileArray_o = [];
+
+      this.record = [];
+      this.editfileArray = [];
+      this.editfileArray_i = [];
+      this.editfileArray_o = [];
+
+      this.order_category = "";
+      this.task_id_to_load = 0;
+
+      console.log("all clear");
+    },
+
+    task_clear_o() {
+
+      this.all_clear()
+
+      document.getElementById('dialog_a1_o').classList.remove("focus");
+      document.getElementById('add_a1_o').classList.remove("show");
+    },
+
+    task_clear_i() {
+
+      this.all_clear()
+
+      document.getElementById('dialog_a1_i').classList.remove("focus");
+      document.getElementById('add_a1_i').classList.remove("show");
+    },
+
+
+    task_edit_clear_o() {
+
+      this.all_clear()
+
+      document.getElementById('dialog_red_edit_o').classList.remove("show");
+      document.getElementById('edit_red_o').classList.remove("focus");
+    },
+
+    task_edit_clear_i() {
+
+      this.all_clear()
+
+      document.getElementById('dialog_red_edit_i').classList.remove("show");
+      document.getElementById('edit_red_i').classList.remove("focus");
+    },
+
+    task_upload_i(batch_id) {
+
+      this.canSub_i = false;
+      var myArr = this.fileArray_i;
+      var vm = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                vm.$set(vm.fileArray_i, index, myArr[index]);
+              } else {
+                myArr[index].progress = 0.99;
+                vm.$set(vm.fileArray_i, index, myArr[index]);
+              }
+            }
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task_sl');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
+
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              vm.$set(vm.fileArray_i, index, myArr[index]);
+              console.log(vm.fileArray_i, index);
+            } else {
+              alert(JSON.stringify(res.data));
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.canSub_i = true;
+
+    },
+
+
+    task_upload_o(batch_id) {
+
+      this.canSub_o = false;
+      var myArr = this.fileArray_o;
+      var vm = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                vm.$set(vm.fileArray_o, index, myArr[index]);
+              } else {
+                myArr[index].progress = 0.99;
+                vm.$set(vm.fileArray_o, index, myArr[index]);
+              }
+            }
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task_sl');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
+
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              vm.$set(vm.fileArray_o, index, myArr[index]);
+              console.log(vm.fileArray_o, index);
+            } else {
+              alert(JSON.stringify(res.data));
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.canSub_o = true;
+
+    },
+
+    task_edit_upload_o(batch_id) {
+
+      this.canSub = false;
+      var myArr = this.editfileArray_o;
+      var vm = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                vm.$set(vm.editfileArray_o, index, myArr[index]);
+              } else {
+                myArr[index].progress = 0.99;
+                vm.$set(vm.editfileArray_o, index, myArr[index]);
+              }
+            }
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task_sl');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
+
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              vm.$set(vm.editfileArray_o, index, myArr[index]);
+              console.log(vm.editfileArray_o, index);
+            } else {
+              alert(JSON.stringify(res.data));
+              _this.getProjectOtherTask(0);
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.canSub = true;
+
+    },
+
+    task_edit_upload_i(batch_id) {
+
+      this.canSub = false;
+      var myArr = this.editfileArray_i;
+      var vm = this;
+
+      //循环文件数组挨个上传
+      myArr.forEach((element, index) => {
+        var config = {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: function (e) {
+
+            if (e.lengthComputable) {
+              var rate = e.loaded / e.total;
+              console.log(index, e.loaded, e.total, rate);
+              if (rate < 1) {
+
+                myArr[index].progress = rate;
+                vm.$set(vm.editfileArray_i, index, myArr[index]);
+              } else {
+                myArr[index].progress = 0.99;
+                vm.$set(vm.editfileArray_i, index, myArr[index]);
+              }
+            }
+          }
+        };
+        var data = myArr[index];
+        var myForm = new FormData();
+        myForm.append('batch_type', 'other_task_sl');
+        myForm.append('batch_id', batch_id);
+        myForm.append("file", data);
+
+        axios
+          .post("api/uploadFile_gcp", myForm, config)
+          .then(function (res) {
+            if (res.data.code == 0) {
+
+              myArr[index].progress = 1;
+              vm.$set(vm.editfileArray_i, index, myArr[index]);
+              console.log(vm.editfileArray_i, index);
+            } else {
+              alert(JSON.stringify(res.data));
+              _this.getProjectOtherTask(_this.stage_id);
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      });
+
+      this.canSub = true;
+
+    },
 
     open_add() {
  
@@ -1100,8 +1589,7 @@ var app = new Vue({
     },
 
     task_clear() {
-      this.detail = "";
-      this.record = {};
+      this.all_clear()
       this.task_id_to_load = 0;
       this.task_id_to_del = 0;
       this.task_id_to_dup = 0;
@@ -1113,7 +1601,7 @@ var app = new Vue({
     },
 
     task_edit_clear() {
-      this.record = {};
+      this.all_clear()
       this.task_id_to_load = 0;
       this.task_id_to_del = 0;
       this.task_id_to_dup = 0;
@@ -1837,9 +2325,7 @@ var app = new Vue({
 
     task_clear_o() {
 
-      this.detail = "";
-      this.order = "";
-      this.order_type = "";
+      this.all_clear()
 
       document.getElementById('dialog_a1_o').classList.remove("focus");
       document.getElementById('add_a1_o').classList.remove("show");
@@ -1847,7 +2333,7 @@ var app = new Vue({
 
     task_edit_clear_o() {
 
-      this.record = {};
+      this.all_clear()
 
       document.getElementById('dialog_red_edit_o').classList.remove("show");
       document.getElementById('edit_red_o').classList.remove("focus");
@@ -1930,7 +2416,7 @@ var app = new Vue({
       })
         .then(function (response) {
           if (response.data['batch_id'] != 0) {
-            _this.task_upload(response.data['batch_id']);
+            _this.task_upload_o(response.data['batch_id']);
           }
           else {
             _this.task_clear_o();
@@ -2004,7 +2490,7 @@ var app = new Vue({
       })
         .then(function (response) {
           if (response.data['batch_id'] != 0) {
-            _this.task_edit_upload(response.data['batch_id']);
+            _this.task_edit_upload_o(response.data['batch_id']);
           }
           else {
             _this.task_edit_clear_o();
@@ -2103,7 +2589,7 @@ var app = new Vue({
       })
         .then(function (response) {
           if (response.data['batch_id'] != 0) {
-            _this.task_upload(response.data['batch_id']);
+            _this.task_upload_i(response.data['batch_id']);
           }
           else {
             _this.task_clear_i();
@@ -2124,9 +2610,7 @@ var app = new Vue({
 
     task_clear_i() {
 
-      this.detail = "";
-      this.order = "";
-      this.order_type = "";
+      this.all_clear()
 
       document.getElementById('dialog_a1_i').classList.remove("focus");
       document.getElementById('add_a1_i').classList.remove("show");
@@ -2134,7 +2618,7 @@ var app = new Vue({
 
     task_edit_clear_i() {
 
-      this.record = {};
+      this.all_clear()
 
       document.getElementById('dialog_red_edit_i').classList.remove("show");
       document.getElementById('edit_red_i').classList.remove("focus");
@@ -2197,7 +2681,7 @@ var app = new Vue({
       })
         .then(function (response) {
           if (response.data['batch_id'] != 0) {
-            _this.task_edit_upload(response.data['batch_id']);
+            _this.task_edit_upload_i(response.data['batch_id']);
           }
           else {
             _this.task_edit_clear_i();
