@@ -131,10 +131,32 @@ catch (Exception $e) {
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <!-- <script type="text/javascript" src="js/main.js"></script> -->
     <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js"></script>
 
     <script>
+        function dialogclear(){
+                console.log('dialogclear');
+                $('.list_function .dialog').removeClass('show');
+                $('.list_function a').removeClass('focus');
+                $('.list_function.main .block.fn a').removeClass('focus');   
+                $('.tablebox .dialog').removeClass('show');
+                $('.tablebox a').removeClass('focus');
+                app.all_clear();
+        }
+
+        function dialogshow($me,$target){
+            $me.click(function(){
+                if ($me.hasClass('focus')){
+                    dialogclear();
+                } else {
+                    dialogclear();
+                    $me.addClass('focus');
+                    $target.addClass('show');
+                }
+            })
+        }
+
         $(function() {
             $('header').load('include/header.php');
             //
