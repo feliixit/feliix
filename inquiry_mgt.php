@@ -557,7 +557,6 @@ header( 'location:index' );
                     </ul>
                     <ul v-for='(receive_record, index) in displayedPosts'>
 
-                        <li></li>
 
                         <li>
                             <a  v-show="receive_record.is_edited == 1" v-bind:href="'inquiry_taiwan?id=' + receive_record.id">{{ receive_record.serial_name }} {{
