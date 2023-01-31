@@ -178,19 +178,19 @@ header( 'location:index' );
         }
 
         .tablebox.lv1 ul li:nth-of-type(1) {
-            width: 130px;
-        }
-
-        .tablebox.lv1 ul li:nth-of-type(2), .tablebox.lv1 ul li:nth-of-type(4) {
-            width: 350px;
+            width: 480px;
         }
 
         .tablebox.lv1 ul li:nth-of-type(3) {
+            width: 350px;
+        }
+
+        .tablebox.lv1 ul li:nth-of-type(2) {
             min-width: 180px;
             color: #000;
         }
 
-        .tablebox.lv1 ul li:nth-of-type(6), .tablebox.lv1 ul li:nth-of-type(6) {
+        .tablebox.lv1 ul li:nth-of-type(4), .tablebox.lv1 ul li:nth-of-type(5) {
             color: #000;
             min-width: 200px;
         }
@@ -549,7 +549,6 @@ header( 'location:index' );
             <div class="tableframe">
                 <div class="tablebox lv1">
                     <ul class="head">
-                        <li>Inquiry Number</li>
                         <li>Inquiry Name</li>
                         <li>Status</li>
                         <li>Related Project / Task Management</li>
@@ -558,10 +557,9 @@ header( 'location:index' );
                     </ul>
                     <ul v-for='(receive_record, index) in displayedPosts'>
 
-                        <li>{{ receive_record.serial_name }}</li>
 
                         <li>
-                            <a  v-show="receive_record.is_edited == 1" v-bind:href="'inquiry_taiwan?id=' + receive_record.id">{{
+                            <a  v-show="receive_record.is_edited == 1" v-bind:href="'inquiry_taiwan?id=' + receive_record.id">{{ receive_record.serial_name }} {{
                                 receive_record.iq_name }}</a>
                            
                             <input name="title" type="text"

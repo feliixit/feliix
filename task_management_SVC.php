@@ -131,10 +131,32 @@ catch (Exception $e) {
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <!-- <script type="text/javascript" src="js/main.js"></script> -->
     <script type="text/javascript" src="js/fancyBox/jquery.fancybox.min.js"></script>
 
     <script>
+        function dialogclear(){
+                console.log('dialogclear');
+                $('.list_function .dialog').removeClass('show');
+                $('.list_function a').removeClass('focus');
+                $('.list_function.main .block.fn a').removeClass('focus');   
+                $('.tablebox .dialog').removeClass('show');
+                $('.tablebox a').removeClass('focus');
+                app.all_clear();
+        }
+
+        function dialogshow($me,$target){
+            $me.click(function(){
+                if ($me.hasClass('focus')){
+                    dialogclear();
+                } else {
+                    dialogclear();
+                    $me.addClass('focus');
+                    $target.addClass('show');
+                }
+            })
+        }
+
         $(function() {
             $('header').load('include/header.php');
             //
@@ -586,89 +608,18 @@ catch (Exception $e) {
             margin-left: 0;
         }
 
-        #vs1__combobox {
+        #vs1__combobox, #vs2__combobox, #vs3__combobox, #vs4__combobox, #vs5__combobox, #vs6__combobox, #vs7__combobox, #vs8__combobox, #vs9__combobox, #vs10__combobox, #vs11__combobox, #vs12__combobox {
             border: 1px solid #707070;
             border-radius: 0;
         }
 
-        #vs1__listbox {
+        #vs1__listbox, #vs2__listbox, #vs3__listbox, #vs4__listbox, #vs5__listbox, #vs6__listbox, #vs7__listbox, #vs8__listbox, #vs9__listbox, #vs10__listbox, #vs11__listbox, #vs12__listbox {
             border: none;
             border-radius: 0;
             margin-top: 0;
         }
 
-        #vs1__listbox li {
-            border-right: 2px solid #707070;
-            font-size: 12px;
-        }
-
-        #vs2__combobox {
-            border: 1px solid #707070;
-            border-radius: 0;
-        }
-
-        #vs2__listbox {
-            border: none;
-            border-radius: 0;
-            margin-top: 0;
-        }
-
-        #vs2__listbox li {
-            border-right: 2px solid #707070;
-            font-size: 12px;
-        }
-
-        #vs3__combobox {
-            border: 1px solid #707070;
-            border-radius: 0;
-        }
-
-        #vs3__listbox {
-            border: none;
-            border-radius: 0;
-            margin-top: 0;
-        }
-
-        #vs3__listbox li {
-            border-right: 2px solid #707070;
-            font-size: 12px;
-        }
-
-        #vs4__combobox {
-            border: 1px solid #707070;
-            border-radius: 0;
-        }
-
-        #vs4__listbox {
-            border: none;
-            border-radius: 0;
-            margin-top: 0;
-        }
-
-        #vs4__listbox li {
-            border-right: 2px solid #707070;
-            font-size: 12px;
-        }
-
-        #vs5__combobox,
-        #vs6__combobox {
-            border: 1px solid #707070;
-            border-radius: 0;
-        }
-
-        #vs5__listbox,
-        #vs6__listbox {
-            border: none;
-            border-radius: 0;
-            margin-top: 0;
-        }
-
-        #vs5__listbox li {
-            border-right: 2px solid #707070;
-            font-size: 12px;
-        }
-
-        #vs6__listbox li {
+        #vs1__listbox li, #vs2__listbox li, #vs3__listbox li, #vs4__listbox li, #vs5__listbox li, #vs6__listbox li, #vs7__listbox li, #vs8__listbox li, #vs9__listbox li, #vs10__listbox li, #vs11__listbox li, #vs12__listbox li {
             border-right: 2px solid #707070;
             font-size: 12px;
         }

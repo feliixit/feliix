@@ -56,6 +56,8 @@ include_once 'config/database.php';
 include_once 'config/conf.php';
 require_once '../vendor/autoload.php';
 
+include_once 'mail.php';
+
 
 $database = new Database();
 $db = $database->getConnection();
@@ -695,6 +697,8 @@ else
             
         $db->commit();
 
+        EmailNotify($product_id, $db);
+
         update_product_category_price_date($product_id, $db);
         update_product_category_phased_out_cnt($product_id, $db);
         
@@ -712,6 +716,497 @@ else
 
     }
 }
+
+
+function EmailNotify($id, $db){
+    $_record = GetProductCategory($id, $db);
+    if(count($_record) > 0)
+        product_notify("update", $_record[0]);
+}
+
+function GetProductCategory($id, $db){
+    $query = "SELECT p.id, p.category, p.sub_category, p.brand, p.code, p.photo1, p.created_at, p.create_id, p.updated_at, p.updated_id, p.attributes, c.username creator, u.username updator  FROM product_category  p left join user c on p.create_id = c.id left join user u on p.updated_id = u.id  WHERE p.id = :id";
+
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $merged_results = array();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        $product = GetProduct($row["id"], $db);
+
+        $variation1_value = [];
+        $variation2_value = [];
+        $variation3_value = [];
+
+        if(count($product) > 0)
+        {
+            $variation1_text = $product[0]['k1'];
+            $variation2_text = $product[0]['k2'];
+            $variation3_text = $product[0]['k3'];
+
+            $variation1_value = [];
+            $variation2_value = [];
+            $variation3_value = [];
+
+            for($i = 0; $i < count($product); $i++)
+            {
+                if (!in_array($product[$i]['v1'],$variation1_value))
+                {
+                    array_push($variation1_value,$product[$i]['v1']);
+                }
+                if (!in_array($product[$i]['v2'],$variation2_value))
+                {
+                    array_push($variation2_value,$product[$i]['v2']);
+                }
+                if (!in_array($product[$i]['v3'],$variation3_value))
+                {
+                    array_push($variation3_value,$product[$i]['v3']);
+                }
+            }
+        }
+
+        $special_info_json = json_decode($row["attributes"]);
+
+        $sub_category = $row["sub_category"];
+
+        $special_information = GetSpecialInfomation($sub_category, $db, $special_info_json);
+        $accessory_information = GetAccessoryInfomation($sub_category, $db, $id);
+
+        $variation1 = 'custom';
+        $variation1_custom = $variation1_text;
+        $variation2 = 'custom';
+        $variation2_custom = $variation2_text;
+        $variation3 = 'custom';
+        $variation3_custom = $variation3_text;
+
+        for($i = 0; $i < count($special_information); $i++)
+        {
+            if ($special_information[$i]['cat_id'] == $sub_category)
+            {
+                $lv3 = $special_information[$i]['lv3'][0];
+                for($j = 0; $j < count($lv3); $j++)
+                {
+                    if($lv3[$j]['category'] == $variation1_text)
+                    {
+                        $variation1 = $variation1_text;
+                        $variation1_custom = "";
+                    }
+
+                    if($lv3[$j]['category'] == $variation2_text)
+                    {
+                        $variation2 = $variation2_text;
+                        $variation2_custom = "";
+                    }
+
+                    if($lv3[$j]['category'] == $variation3_text)
+                    {
+                        $variation3 = $variation3_text;
+                        $variation3_custom = "";
+                    }
+                }
+            }
+            
+        }
+
+        if($variation1_text == "")
+        {
+            $variation1 = "";
+            $variation1_custom = "";
+        }
+
+        if($variation2_text == "")
+        {
+            $variation2 = "";
+            $variation2_custom = "";
+        }
+
+        if($variation3_text == "")
+        {
+            $variation3 = "";
+            $variation3_custom = "";
+        }
+
+        $attribute_list = [];
+        if($special_info_json != null)
+        {
+            for($i=0; $i<count($special_info_json); $i++)
+            {
+                $value = [];
+                $_category = $special_info_json[$i]->category;
+
+                if($special_info_json[$i]->value != "")
+                {
+                    array_push($value, $special_info_json[$i]->value);
+                    
+                }
+                
+                if($variation1_text == $special_info_json[$i]->category)
+                {
+                    $value = $variation1_value;
+                }
+                if($variation2_text == $special_info_json[$i]->category)
+                {
+                    $value = $variation2_value;
+                }
+                if($variation3_text == $special_info_json[$i]->category)
+                {
+                    $value = $variation3_value;
+                }
+
+                if(count($value) > 0)
+                {
+                    $attribute_list[] = array("category" => $special_info_json[$i]->category,
+                                    "value" => $value,
+                                );
+                }
+            }
+        }
+
+        
+        if($variation1 == "custom" && $variation1_custom != "1st Variation")
+        {
+            $attribute_list[] = array("category" => $variation1_text,
+                                   "value" => $variation1_value,
+                                );
+        }
+
+        if($variation2 == "custom" && $variation2_custom != "2nd Variation")
+        {
+            $attribute_list[] = array("category" => $variation2_text,
+                                   "value" => $variation2_value,
+                                );
+        }
+
+        if($variation3 == "custom" && $variation3_custom != "3rd Variation")
+        {
+            $attribute_list[] = array("category" => $variation3_text,
+                                   "value" => $variation3_value,
+                                );
+        }
+
+        $merged_results[] = array( "id" => $row["id"],
+                            "category" => $row["category"],
+                            "tags" => explode(',', $row["tags"]),
+                            "brand" => $row["brand"],
+                            "code" => $row["code"],
+                        
+                            "photo1" => $row["photo1"],
+                
+                            "created_at" => $row["created_at"],
+                            "create_id" => $row["create_id"],
+                            "updated_at" => $row["updated_at"],
+                            "updated_id" => $row["updated_id"],
+                            "creator" => $row["creator"],
+                            "updator" => $row["updator"],
+                           
+                            "attribute_list" => $attribute_list,
+                           
+
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetKey($str)
+{
+    if(trim($str) == '')
+        return "";
+    
+    $obj = explode('=>', $str);
+
+    return isset($obj[0]) ? $obj[0] : "";
+}
+
+function GetValue($str)
+{
+    if(trim($str) == '')
+        return "";
+    
+    $obj = explode('=>', $str);
+
+    return isset($obj[1]) ? $obj[1] : "";
+}
+
+function GetProduct($id, $db){
+    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $k1 = GetKey($row['1st_variation']);
+        $k2 = GetKey($row['2rd_variation']);
+        $k3 = GetKey($row['3th_variation']);
+        $v1 = GetValue($row['1st_variation']);
+        $v2 = GetValue($row['2rd_variation']);
+        $v3 = GetValue($row['3th_variation']);
+        $checked = '';
+        $code = $row['code'];
+        $price = $row['price'];
+        $price_ntd = $row['price_ntd'];
+        $price_org = $row['price'];
+        $price_ntd_org = $row['price_ntd'];
+        $price_change = $row['price_change'];
+        $price_ntd_change = $row['price_ntd_change'];
+        $status = $row['enabled'];
+        $photo = trim($row['photo']);
+        $enabled = $row['enabled'];
+        if($photo != '')
+            $url = $row['url'];
+        else
+            $url = '';
+
+        $quoted_price = $row['quoted_price'];
+        $quoted_price_change = $row['quoted_price_change'];
+
+        $merged_results[] = array(  "id" => $id, 
+                                    "k1" => $k1, 
+                                    "k2" => $k2, 
+                                    "k3" => $k3, 
+                                    "v1" => $v1, 
+                                    "v2" => $v2, 
+                                    "v3" => $v3, 
+                                    "checked" => $checked, 
+                                    "code" => $code, 
+                                    "price" => $price, 
+                                    "price_ntd" => $price_ntd, 
+                                    "price_org" => $price_org, 
+                                    "price_ntd_org" => $price_ntd_org, 
+                                    "price_change" => $price_change, 
+                                    "price_ntd_change" => $price_ntd_change, 
+                                    "status" => $status, 
+                                    "url" => $url, 
+                                    "photo" => $photo, 
+                                    "enabled" => $enabled,
+
+                                    "quoted_price" => $quoted_price, 
+                                    "quoted_price_org" => $quoted_price, 
+                                    "quoted_price_change" => substr($quoted_price_change, 0, 10), 
+                                   
+                                    "file" => array( "value" => ''),
+                                   
+            );
+    }
+    
+    return $merged_results;
+}
+
+function GetSpecialInfomation($cat_id, $db, $special_info_json){
+    $sql = "SELECT * FROM product_category_attribute WHERE LEVEL = 2 AND left(cat_id, 1) = '". substr($cat_id, 0, 1) . "' and STATUS <> -1";
+
+    $sql = $sql . " ORDER BY cat_id ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    $cat_id = "";
+    $category = "";
+
+    $lv3 = [];
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        if($cat_id != $row['cat_id'] && $cat_id != "")
+        {
+            $merged_results[] = array( "cat_id" => $cat_id,
+                                    "category" => $category,
+                                    "lv3" => $lv3,
+            );
+
+            $lv3 = [];
+
+        }
+
+        $cat_id = $row['cat_id'];
+        $category = $row['category'];
+
+        $lv3[] = GetLevel3_value($cat_id, $db, $special_info_json);
+    }
+
+    if($cat_id != "")
+    {
+        $merged_results[] = array( "cat_id" => $cat_id,
+                                    "category" => $category,
+                                    "lv3" => $lv3,
+            );
+    }
+
+    return $merged_results;
+
+}
+
+
+function GetLevel3_value($cat_id, $db, $special_info_json){
+    $sql = "SELECT * FROM product_category_attribute WHERE LEVEL = 3 AND left(cat_id, 4) = '". substr($cat_id, 0, 4) . "' and STATUS <> -1";
+
+    $sql = $sql . " ORDER BY cat_id ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    $cat_id = "";
+    $category = "";
+
+    $lv2 = [];
+
+    $value = '';
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        if($cat_id != $row['cat_id'] && $cat_id != "")
+        {
+            $merged_results[] = array( "cat_id" => $cat_id,
+                                    "category" => $category,
+                                    "detail" => $lv2,
+                                    "value" => $value,
+            );
+
+            $lv2 = [];
+
+        }
+
+        $cat_id = $row['cat_id'];
+        $category = $row['category'];
+
+        $value = '';
+        if($special_info_json != null)
+        {
+            for($i=0; $i<count($special_info_json); $i++)
+            {
+                if($special_info_json[$i]->cat_id == $cat_id)
+                {
+                    $value = $special_info_json[$i]->value;
+                    break;
+                }
+            }
+        }
+
+        $lv2[] = GetDetail($cat_id, $db);
+    }
+
+    if($cat_id != "")
+    {
+        $merged_results[] = array( "cat_id" => $cat_id,
+                                    "category" => $category,
+                                    "detail" => $lv2,
+                                    "value" => $value,
+            );
+    }
+
+    return $merged_results;
+
+}
+
+function GetDetail($cat_id, $db){
+    $sql = "SELECT cat_id, sn, `option` FROM product_category_attribute_detail WHERE cat_id = '". $cat_id . "' and STATUS <> -1";
+
+    $sql = $sql . " ORDER BY sn ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+
+}
+
+function GetAccessoryInfomation($cat_id, $db, $product_id){
+    $sql = "SELECT * FROM accessory_category_attribute WHERE LEVEL = 3 AND left(cat_id, 4) = '". substr($cat_id, 0, 4) . "' and STATUS <> -1";
+
+    $sql = $sql . " ORDER BY cat_id ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    $cat_id = "";
+    $category = "";
+
+    $lv2 = [];
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        if($cat_id != $row['cat_id'] && $cat_id != "")
+        {
+            $merged_results[] = array( "cat_id" => $cat_id,
+                                    "category" => $category,
+                                    "detail" => $lv2,
+            );
+
+            $lv2 = [];
+
+        }
+
+        $cat_id = $row['cat_id'];
+        $category = $row['category'];
+
+        $lv2[] = GetAccessoryInfomationDetail($cat_id, $product_id, $db);
+    }
+
+    if($cat_id != "")
+    {
+        $merged_results[] = array( "cat_id" => $cat_id,
+                                    "category" => $category,
+                                    "detail" => $lv2,
+            );
+    }
+
+    return $merged_results;
+
+}
+
+function GetAccessoryInfomationDetail($cat_id, $product_id, $db){
+
+    $sql = "SELECT id, code, accessory_name `name`, price, price_ntd, category_id cat_id, photo, CONCAT('https://storage.cloud.google.com/feliiximg/', photo) url FROM accessory WHERE product_id = ". $product_id . " and category_id = '" . $cat_id . "' and STATUS <> -1";
+
+    $sql = $sql . " ORDER BY id ";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $photo = trim($row['photo']);
+        if($photo != '')
+            $url = $row['url'];
+        else
+            $url = '';
+
+        $merged_results[] = array(  "id" => $row['id'], 
+                                    "code" => $row['code'],
+                                    "name" => $row['name'],
+                                    "price" => $row['price'],
+                                    "price_ntd" => $row['price_ntd'],
+                                    "cat_id" => $row['cat_id'],
+                                    "url" => $url,
+                                    "photo" => $photo,
+                                    "file" => array( "value" => ''),
+                                   
+            );
+    }
+
+    return $merged_results;
+
+}
+
 
 function update_product_category_price_date($id, $db)
 {

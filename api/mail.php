@@ -12636,6 +12636,341 @@ function order_type_notification04($name, $access,  $access_cc, $project_name, $
 
 }
 
+function product_notify($action, $_record)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    //收件人名單內容
+    if($_record["category"] == "20000000")
+    {
+        // Office Department 所有的人、Sales Department 所有的人、Ariel Lin 需要放入收件人名單
+        $notifior = GetAccessNotifiersByDepartment("Office");
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetAccessNotifiersByDepartment("Sales");
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $mail->AddAddress("ariel@feliix.com", "Ariel Lin");
+    }
+
+
+    if($_record["category"] == "10000000")
+    {
+        // Lighting Department 所有的人、Sales Department 所有的人、Ariel Lin 需要放入收件人名單
+        $notifior = GetAccessNotifiersByDepartment("Lighting");
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $notifior = GetAccessNotifiersByDepartment("Sales");
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+
+        $mail->AddAddress("ariel@feliix.com", "Ariel Lin");
+    }
+
+
+    //cc收件人名單
+    if($action == "add") {
+        // 建立者 放入 cc收件人名單名字
+        $notifior = GetNotifiers($_record["create_id"]);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        if($_record["category"] == "10000000")
+        {
+            // Aiza 放入cc收件人名單
+            $receiver .= "Aiza Eisma" . ", ";
+            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+        }
+
+    }
+
+    if( $action == "update" ){
+        // 編輯者  放入 cc收件人名單名字
+        $notifior = GetNotifiers($_record["updated_id"]);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        if($_record["category"] == "10000000")
+        {
+            // Aiza 放入cc收件人名單
+            $receiver .= "Aiza Eisma" . ", ";
+            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+        }
+    }
+
+    if( $action == "delete" ){
+        // 刪除者名字 放入 cc收件人名單名字
+        $notifior = GetNotifiers($_record["updated_id"]);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        if($_record["category"] == "10000000")
+        {
+            // Aiza 放入cc收件人名單
+            $receiver .= "Aiza Eisma" . ", ";
+            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+        }
+    }
+
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+
+
+    //信件主旨
+    if( $action == "add" )
+        $mail->Subject = "[Product Notification] " . $_record["creator"] . " created a new product in Product Database";
+    if( $action == "update" )
+        $mail->Subject = "[Product Notification] " . $_record["updator"] . " revised an existing product in Product Database";
+    if( $action == "delete" )
+        $mail->Subject = "[Product Notification] " . $_record["updator"] . " deleted an existing product in Product Database";
+
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+        <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+            <table style="width: 100%;">
+                <tbody>
+                <tr>
+                    <td style="font-size: 18px; padding: 20px 0 20px 5px;"> Dear all,</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 18px; padding: 0 0 20px 5px; text-align: justify;">';
+if( $action == "add" )
+    $content = $content . $_record["creator"] . " created a new product in Product Database. Below is the details of the product:";
+if( $action == "update" )
+    $content = $content . $_record["updator"] . " revised an existing product in Product Database. Below is the details of the product after revision:";
+if( $action == "delete" )
+    $content = $content . $_record["updator"] . " deleted an existing product in Product Database. Below is the details of the product:";
+
+$content = $content . '
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+<table style="width: 100%">
+<tbody>
+<tr>
+    <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+        <eng style="font-size: 16px;">
+            Image
+        </eng>
+    </td>
+    <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+
+    if($_record["photo1"] != "")
+        $content .= "<img style='max-width: 400px; max-height: 400px;' src='https://storage.cloud.google.com/feliiximg/" . $_record["photo1"] . "' >";
+
+    $content .= '</td>
+    </tr>
+
+    <tr>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+            <eng style="font-size: 16px;">
+                ID
+            </eng>
+        </td>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+
+    $content .= $_record["id"];
+
+    $content .= '</td>
+    </tr>
+
+    <tr>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+            <eng style="font-size: 16px;">
+                Code
+            </eng>
+        </td>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+
+    $content .= $_record["code"];
+
+    $content .= '</td>
+    </tr>
+
+    <tr>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+            <eng style="font-size: 16px;">
+                Brand
+            </eng>
+        </td>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+
+    $content .= $_record["brand"];
+
+    $content .= '</td>
+    </tr>
+
+    <tr>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+            <eng style="font-size: 16px;">
+                Specification
+            </eng>
+        </td>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+
+        foreach ($_record["attribute_list"] as &$att) {
+
+            $att_value = "";
+
+            foreach($att["value"] as &$att_value_list)
+            {
+                $att_value .=  $att_value_list . ", ";
+            }
+
+            $att_value = rtrim($att_value, ", ");
+
+            $content .= "<ul style='margin: 8px 0; padding-left: 20px;'><li>" . $att["category"] . ' : ' . $att_value . '</li></ul>';
+        }
+
+    $content .= '</td>
+    </tr>
+
+    <tr>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+            <eng style="font-size: 16px;">
+                Created Time
+            </eng>
+        </td>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+
+    $content .= $_record["creator"] . ' at ' . $_record["created_at"];
+
+if( $action == "update" || $action == "delete" )
+{
+    $content .= '</td>
+    </tr>
+
+    <tr>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+            <eng style="font-size: 16px;">
+                Last Updated Time
+            </eng>
+        </td>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+
+        if($_record["updator"] != "")
+            $content .= $_record["updator"] . ' at ' . $_record["updated_at"];
+}
+
+if( $action == "delete")
+{
+    $content .= '</td>
+    </tr>
+
+    <tr>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+            <eng style="font-size: 16px;">
+                Delete Time
+            </eng>
+        </td>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+
+    $content .= $_record["deletor"] . ' at ' . $_record["deleted_time"];
+}
+    $content .= '</td>
+
+        </tr>
+        </tbody>
+    </table>';
+
+    // tail
+    $content .= '<hr style="margin-top: 45px;">
+
+    <table style="width: 100%;">
+        <tbody>
+        <tr>
+            <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">';
+
+            if( $action == "add" || $action == "update" ){
+                $content = $content . 'Please log on to Feliix >> Product Database >> Product Catalog to review the product.<br>';
+                $content = $content . 'URL:  <a href="https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '">https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '</a> ';
+            }
+            if( $action == "delete" ){
+                $content = $content . 'URL:  <a href="https://feliix.myvnc.com/product_display_code?id=' . $_record["id"] . '">https://feliix.myvnc.com/product_display_code?id=' . $_record["id"] . '</a> ';
+            }
+
+    $content = $content . '
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</body>
+</html>';
+
+
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($email1, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($email1, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+}
+
 function GetChargeNotifiersByTitle($title)
 {
     $database = new Database();
@@ -12650,6 +12985,30 @@ function GetChargeNotifiersByTitle($title)
                 '" . $title . "'
             )  and u.status = 1";
     
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetAccessNotifiersByDepartment($department)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "
+        SELECT username, email, department
+        FROM user u LEFT JOIN user_department ut
+        ON u.apartment_id  = ut.id 
+        WHERE department IN(
+            '" . $department . "')  and u.status = 1";
 
     $merged_results = array();
 

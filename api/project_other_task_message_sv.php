@@ -144,7 +144,7 @@ function SendNotifyMail($last_id, $uid)
     $username = $_record[0]["username"];
     $_id = $_record[0]["_id"];
 
-    message_notify_dept("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, "", $detail, $stage_id, $msg, $username, $created_at, $_id, 'SVS');
+    message_notify_dept("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, "", $detail, $stage_id, $msg, $username, $created_at, $_id, 'SVC');
 
 }
 

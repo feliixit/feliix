@@ -56,7 +56,7 @@ else
             $merged_results = array();
 
             // product main
-            $sql = "SELECT p.*, pa.category sub_category_name FROM product_category p left join product_category_attribute pa on p.sub_category = pa.cat_id WHERE p.id = " . $id . " AND p.STATUS <> -1";
+            $sql = "SELECT p.*, pa.category sub_category_name FROM product_category p left join product_category_attribute pa on p.sub_category = pa.cat_id WHERE p.id = " . $id . " ";
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();

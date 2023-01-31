@@ -1040,12 +1040,37 @@ var app = new Vue({
       _this.task_clear();
     },
 
-    task_clear() {
+    all_clear() {
+      this.title = "";
       this.detail = "";
-      this.record = {};
-      this.task_id_to_load = 0;
+      this.order = "";
+      this.order_type = "";
+
+      this.priority = 0;
+
+      this.assignee = [];
+      this.collaborator = [];
+
+
+      this.due_date = "";
+      this.due_time = "";
+
+      this.fileArray = [];
+
+
+      this.record = [];
+      this.editfileArray = [];
+
       this.task_id_to_del = 0;
       this.task_id_to_dup = 0;
+      this.task_id_to_load = 0;
+
+      console.log("all clear");
+    },
+
+    task_clear() {
+      this.all_clear();
+
       document.getElementById("dialog_red_edit").classList.remove("show");
       document.getElementById("edit_red").classList.remove("focus");
 
@@ -1054,10 +1079,8 @@ var app = new Vue({
     },
 
     task_edit_clear() {
-      this.record = {};
-      this.task_id_to_load = 0;
-      this.task_id_to_del = 0;
-      this.task_id_to_dup = 0;
+      this.all_clear();
+      
       document.getElementById("dialog_red_edit").classList.remove("show");
       document.getElementById("edit_red").classList.remove("focus");
 

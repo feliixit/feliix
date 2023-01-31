@@ -89,7 +89,7 @@ try{
         $returnArray = array('ret' => $stage_id_to_edit);
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
 
-        SendNotifyMail($message_id, $uid);
+        SendNotifyMail($message_id, $uid, $item_id);
     }
     else
     {
@@ -105,7 +105,7 @@ catch (Exception $e)
 }
 
 
-function SendNotifyMail($last_id, $uid)
+function SendNotifyMail($last_id, $uid, $item_id)
 {
     $project_name = "";
     $task_name = "";
@@ -125,7 +125,10 @@ function SendNotifyMail($last_id, $uid)
     $database = new Database();
     $db = $database->getConnection();
 
-    $_record = GetTaskDetail($last_id, $db);
+    f($item_id != 0)
+        $_record = GetTaskReplyDetail($last_id, $db);
+    else 
+        $_record = GetTaskDetail($last_id, $db);
  
     $task_name = $_record[0]["task_name"];
     $created_at = $_record[0]["created_at"];
@@ -165,6 +168,42 @@ function GetTaskDetail($id, $db)
             LEFT JOIN project_other_task_d pt ON pmsg.task_id = pt.id
             LEFT JOIN user u ON u.id = pmsg.create_id
             WHERE pmsg.id = :id";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+
+
+function GetTaskReplyDetail($id, $db)
+{
+    $sql = "SELECT pt.stage_id, pt.id, title task_name, project_name,
+                pt.create_id,
+                pt.assignee,
+                pt.collaborator,
+                due_date,
+                detail,
+                pmsgr.message,
+                u.username,
+                pmsgr.created_at,
+                pmsgr.create_id _id
+            FROM project_other_task_message_reply_d pmsgr
+            LEFT JOIN project_other_task_message_d pmsg ON pmsgr.message_id = pmsg.id
+            LEFT JOIN project_other_task_d pt ON pmsg.task_id = pt.id
+            LEFT JOIN user u ON u.id = pmsg.create_id
+            LEFT JOIN project_stages ps ON pt.stage_id = ps.id
+            LEFT JOIN project_stage psg ON ps.stage_id = psg.id
+            left JOIN project_main pm ON ps.project_id = pm.id 
+            WHERE pmsgr.id = :id";
 
     $merged_results = array();
 

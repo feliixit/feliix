@@ -198,8 +198,8 @@ function GetTaskReplyDetail($id, $db)
                 detail,
                 pmsgr.message,
                 u.username,
-                pmsg.created_at,
-                pmsg.create_id _id
+                pmsgr.created_at,
+                pmsgr.create_id _id
             FROM project_other_task_message_reply_c pmsgr
             LEFT JOIN project_other_task_message_c pmsg ON pmsgr.message_id = pmsg.id
             LEFT JOIN project_other_task_c pt ON pmsg.task_id = pt.id
