@@ -12891,7 +12891,7 @@ $content = $content . '
 
     $content .= $_record["creator"] . ' at ' . $_record["created_at"];
 
-if( $action == "update")
+if( $action == "update" || $action == "delete" )
 {
     $content .= '</td>
     </tr>
@@ -12904,7 +12904,8 @@ if( $action == "update")
         </td>
         <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
 
-    $content .= $_record["updator"] . ' at ' . $_record["updated_at"];
+        if($_record["updator"] != "")
+            $content .= $_record["updator"] . ' at ' . $_record["updated_at"];
 }
 
 if( $action == "delete")
@@ -12920,7 +12921,7 @@ if( $action == "delete")
         </td>
         <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
 
-    $content .= $_record["updator"] . ' at ' . $_record["updated_at"];
+    $content .= $_record["deletor"] . ' at ' . $_record["deleted_time"];
 }
     $content .= '</td>
 

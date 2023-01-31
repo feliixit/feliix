@@ -498,7 +498,7 @@ var app = new Vue({
             .then(function(response) {
               //handle success
               Swal.fire({
-                text: "Finished deleting selected record(s) " + response.data.message,
+                html: "Finished deleting selected record<br>" + response.data.message,
                 icon: "info",
                 confirmButtonText: "OK",
               });

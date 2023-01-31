@@ -95,7 +95,7 @@ function EmailNotify($id, $db){
 }
 
 function GetProductCategory($id, $db){
-    $query = "SELECT p.id, p.category, p.sub_category, p.brand, p.code, p.photo1, p.created_at, p.create_id, p.updated_at, p.updated_id, p.attributes, c.username creator, u.username updator  FROM product_category  p left join user c on p.create_id = c.id left join user u on p.updated_id = u.id  WHERE p.id = :id";
+    $query = "SELECT p.id, p.category, p.sub_category, p.brand, p.code, p.photo1, p.created_at, p.create_id, p.updated_at, p.updated_id, p.deleted_time, p.attributes, c.username creator, u.username updator, d.username deletor  FROM product_category  p left join user c on p.create_id = c.id left join user u on p.updated_id = u.id  left join user d on p.deleted_id = d.id WHERE p.id = :id";
 
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $id);
@@ -269,8 +269,12 @@ function GetProductCategory($id, $db){
                             "create_id" => $row["create_id"],
                             "updated_at" => $row["updated_at"],
                             "updated_id" => $row["updated_id"],
+
+                            "deleted_time" => $row["deleted_time"],
+
                             "creator" => $row["creator"],
                             "updator" => $row["updator"],
+                            "deletor" => $row["deletor"],
                            
                             "attribute_list" => $attribute_list,
                            
