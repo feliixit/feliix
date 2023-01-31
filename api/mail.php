@@ -12636,7 +12636,6 @@ function order_type_notification04($name, $access,  $access_cc, $project_name, $
 
 }
 
-
 function product_notify($action, $_record)
 {
     $conf = new Conf();
@@ -12680,7 +12679,7 @@ function product_notify($action, $_record)
 
         $mail->AddAddress("ariel@feliix.com", "Ariel Lin");
     }
-        
+
 
     if($_record["category"] == "10000000")
     {
@@ -12701,7 +12700,7 @@ function product_notify($action, $_record)
 
         $mail->AddAddress("ariel@feliix.com", "Ariel Lin");
     }
-        
+
 
     //cc收件人名單
     if($action == "add") {
@@ -12719,7 +12718,7 @@ function product_notify($action, $_record)
             $receiver .= "Aiza Eisma" . ", ";
             $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
         }
-            
+
     }
 
     if( $action == "update" ){
@@ -12786,7 +12785,7 @@ function product_notify($action, $_record)
                     <td style="font-size: 18px; padding: 20px 0 20px 5px;"> Dear all,</td>
                 </tr>
                 <tr>
-                    <td style="font-size: 20px; padding: 0 0 20px 5px; text-align: justify;">';
+                    <td style="font-size: 18px; padding: 0 0 20px 5px; text-align: justify;">';
 if( $action == "add" )
     $content = $content . $_record["creator"] . " created a new product in Product Database. Below is the details of the product:";
 if( $action == "update" )
@@ -12811,7 +12810,7 @@ $content = $content . '
     <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
 
     if($_record["photo1"] != "")
-        $content .= "<img src='https://storage.cloud.google.com/feliiximg/" . $_record["photo1"] . "' >";
+        $content .= "<img style='max-width: 400px; max-height: 400px;' src='https://storage.cloud.google.com/feliiximg/" . $_record["photo1"] . "' >";
 
     $content .= '</td>
     </tr>
@@ -12852,31 +12851,30 @@ $content = $content . '
 
     $content .= $_record["brand"];
 
-    $content .= '<span style="color: red; display: block; margin-top: 5px; text-align: justify;">Notes: the cut off date is the date that our container was gated-in to the carrier company. The ETA Manila port is far away from the cut off date usually because the carrier company kept changing the departure date of vessel due to vessel availability, port congestion, or weather condition. As a result, the tentative date of pick-up will be affected.</span>
-    </td>
-</tr>
+    $content .= '</td>
+    </tr>
 
-<tr>
-    <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
-        <eng style="font-size: 16px;">
-            Specification
-        </eng>
-    </td>
-    <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
+    <tr>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
+            <eng style="font-size: 16px;">
+                Specification
+            </eng>
+        </td>
+        <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
 
-    foreach ($_record["attribute_list"] as &$att) {
+        foreach ($_record["attribute_list"] as &$att) {
 
-        $att_value = "";
+            $att_value = "";
 
-        foreach($att["value"] as &$att_value_list)
-        {
-            $att_value .=  $att_value_list . ", ";
+            foreach($att["value"] as &$att_value_list)
+            {
+                $att_value .=  $att_value_list . ", ";
+            }
+
+            $att_value = rtrim($att_value, ", ");
+
+            $content .= "<ul style='margin: 8px 0; padding-left: 20px;'><li>" . $att["category"] . ' : ' . $att_value . '</li></ul>';
         }
-        
-        $att_value = rtrim($att_value, ", ");
-
-        $content .= "<ul><li>" . $att["category"] . ' : ' . $att_value . '</li></ul>';
-    }
 
     $content .= '</td>
     </tr>
@@ -12935,10 +12933,18 @@ if( $action == "delete")
     <table style="width: 100%;">
         <tbody>
         <tr>
-            <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
-                                Please log on to Feliix >> Product Database >> Product Catalog to review the infomation.<br>';
-    $content = $content . 'URL:  <a href="https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '">https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '</a> ';
-    $content = $content . '</td>
+            <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">';
+
+            if( $action == "add" || $action == "update" ){
+                $content = $content . 'Please log on to Feliix >> Product Database >> Product Catalog to review the product.<br>';
+                $content = $content . 'URL:  <a href="https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '">https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '</a> ';
+            }
+            if( $action == "delete" ){
+                $content = $content . 'URL:  <a href="https://feliix.myvnc.com/product_display_code?id=' . $_record["id"] . '">https://feliix.myvnc.com/product_display_code?id=' . $_record["id"] . '</a> ';
+            }
+
+    $content = $content . '
+            </td>
         </tr>
         </tbody>
 
@@ -13293,24 +13299,24 @@ function GetProjectCategoryByProjectId($id)
 
 function SetupMail($mail, $conf)
 {
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
-
-
     $mail->SMTPDebug  = 0;
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "tls";
-    $mail->Port       = 587;
+    $mail->SMTPSecure = "ssl";
+    $mail->Port       = 465;
     $mail->SMTPKeepAlive = true;
-    $mail->Host       = 'smtp.ethereal.email';
-    $mail->Username   = 'imelda40@ethereal.email';
-    $mail->Password   = 'R9sQqzpnmYq4dPQrK2';
+    $mail->Host       = $conf::$mail_host;
+    $mail->Username   = $conf::$mail_username;
+    $mail->Password   = $conf::$mail_password;
+
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "tls";
+    // $mail->Port       = 587;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = 'smtp.ethereal.email';
+    // $mail->Username   = 'imelda40@ethereal.email';
+    // $mail->Password   = 'R9sQqzpnmYq4dPQrK2';
 
     return $mail;
 
