@@ -12914,7 +12914,7 @@ if( $action == "delete")
     <tr>
         <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; font-size: 14px; width: 280px; font-weight: 600;">
             <eng style="font-size: 16px;">
-                Delete Time
+                Deleted Time
             </eng>
         </td>
         <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
@@ -12936,7 +12936,7 @@ if( $action == "delete")
             <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">';
 
             if( $action == "add" || $action == "update" ){
-                $content = $content . 'Please log on to Feliix >> Product Database >> Product Catalog to review the product.<br>';
+                $content = $content . 'Please log on to Feliix >> Product Database >> Product Catalog to view the product.<br>';
                 $content = $content . 'URL:  <a href="https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '">https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '</a> ';
             }
             if( $action == "delete" ){
