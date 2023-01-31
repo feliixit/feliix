@@ -56,6 +56,8 @@ include_once 'config/database.php';
 include_once 'config/conf.php';
 require_once '../vendor/autoload.php';
 
+include_once 'mail.php';
+
 
 $database = new Database();
 $db = $database->getConnection();
@@ -695,6 +697,8 @@ else
             
         $db->commit();
 
+        EmailNotify($product_id, $db);
+
         update_product_category_price_date($product_id, $db);
         update_product_category_phased_out_cnt($product_id, $db);
         
@@ -711,6 +715,87 @@ else
         die();
 
     }
+}
+
+
+function EmailNotify($id, $db){
+    $_record = GetProductCategory($id, $db);
+    if(count($_record) > 0)
+        product_notify("update", $_record[0]);
+}
+
+function GetProductCategory($id, $db){
+    $query = "SELECT p.id, p.category, p.brand, p.code, p.photo1, p.created_at, p.create_id, p.updated_at, p.updated_id, p.attributes, c.username creator, u.username updator  FROM product_category  p left join user c on p.create_id = c.id left join user u on p.updated_id = u.id  WHERE p.id = :id";
+
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $merged_results = array();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        
+        $special_info_json = json_decode($row["attributes"]);
+
+        $attribute_list = [];
+        if($special_info_json != null)
+        {
+            for($i=0; $i<count($special_info_json); $i++)
+            {
+                $value = [];
+                $_category = $special_info_json[$i]->category;
+
+                if($special_info_json[$i]->value != "")
+                {
+                    array_push($value, $special_info_json[$i]->value);
+                    
+                }
+                
+                if($variation1_text == $special_info_json[$i]->category)
+                {
+                    $value = $variation1_value;
+                }
+                if($variation2_text == $special_info_json[$i]->category)
+                {
+                    $value = $variation2_value;
+                }
+                if($variation3_text == $special_info_json[$i]->category)
+                {
+                    $value = $variation3_value;
+                }
+
+                if(count($value) > 0)
+                {
+                    $attribute_list[] = array("category" => $special_info_json[$i]->category,
+                                    "value" => $value,
+                                );
+                }
+            }
+        }
+
+        $merged_results[] = array( "id" => $row["id"],
+                            "category" => $row["category"],
+                            "tags" => explode(',', $row["tags"]),
+                            "brand" => $row["brand"],
+                            "code" => $row["code"],
+                        
+                            "photo1" => $row["photo1"],
+                
+                            "created_at" => $row["created_at"],
+                            "create_id" => $row["create_id"],
+                            "updated_at" => $row["updated_at"],
+                            "updated_id" => $row["updated_id"],
+                            "creator" => $row["creator"],
+                            "updator" => $row["updator"],
+                           
+                            "attribute_list" => $attribute_list,
+                           
+
+        );
+    }
+
+    return $merged_results;
 }
 
 function update_product_category_price_date($id, $db)
