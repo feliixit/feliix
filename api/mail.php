@@ -12867,18 +12867,12 @@ $content = $content . '
 
         $att_value = "";
 
-        if(count($att["category"]["value"]) > 1)
+        foreach($att["value"] as &$att_value_list)
         {
-            foreach($att["category"]["value"] as &$att_value_list)
-            {
-                $att_value .= "<span>" . $att_value_list . "</span>";
-            }
+            $att_value .=  $att_value_list . ", ";
         }
-
-        if(count($att["category"]["value"]) == 1)
-        {
-            $att_value =  $att["category"]["value"];
-        }
+        
+        $att_value = rtrim($att_value, ", ");
 
         $content .= "<ul><li>" . $att["category"] . ' : ' . $att_value . '</li></ul>';
     }
