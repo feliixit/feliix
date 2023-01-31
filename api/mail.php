@@ -12810,7 +12810,8 @@ $content = $content . '
     </td>
     <td style="background-color: #F0F0F0; border: 2px solid #FFFFFF; padding: 8px; width: 440px; font-size: 16px;">';
 
-    $content .= "<img src='https://storage.cloud.google.com/feliiximg/" . $_record["photo1"] . "' >";
+    if($_record["photo1"] != "")
+        $content .= "<img src='https://storage.cloud.google.com/feliiximg/" . $_record["photo1"] . "' >";
 
     $content .= '</td>
     </tr>
@@ -12935,7 +12936,7 @@ if( $action == "delete")
         <tr>
             <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
                                 Please log on to Feliix >> Product Database >> Product Catalog to review the infomation.<br>';
-    $content = $content . 'URL:  <a href="https://feliix.myvnc.com/product_display_code?id=' . $_record["id"] . '">https://feliix.myvnc.com/product_display_code?id=' . $_record["id"] . '</a> ';
+    $content = $content . 'URL:  <a href="https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '">https://feliix.myvnc.com/product_catalog_code?d=' . $_record["id"] . '</a> ';
     $content = $content . '</td>
         </tr>
         </tbody>
