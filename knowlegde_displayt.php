@@ -125,7 +125,7 @@ if($date % 2 == 0)
     <!-- header -->
     <header>header</header>
     <!-- header end -->
-    <div class="mainContent" style="text-align: center;">
+    <div class="mainContent" style="text-align: center;" id="app">
         <!-- mainContent為動態內容包覆的內容區塊 -->
 
         <div class="container">
@@ -262,4 +262,10 @@ if($date % 2 == 0)
 </div>
 
 </body>
+
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/axios.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/knowledge_display.js"></script>
+
 </html>
