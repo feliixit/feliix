@@ -2292,10 +2292,6 @@ header( 'location:index' );
                                             <!--
                                             <i class="fas fa-save" @click="page_save()"></i>
                                             -->
-
-                                            
-                                            <i class="fas fa-copy" @click="page_copy(page.id, block.id)"></i>
-                                           
                                             <i class="fas fa-trash-alt" @click="del_block(page.id, block.id)"></i>
                                         </li>
                                     </ul>

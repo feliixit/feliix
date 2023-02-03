@@ -2462,41 +2462,6 @@ Installation:`;
         this.temp_pages[toIndex].types.splice(this.temp_pages[toIndex].types.length - 1, 0, element);
       },
 
-      page_copy: async function(pid,  eid) {
-        // page
-        var page = this.temp_pages.find(({ id }) => id === pid);
-        var element = page.types.find(({ id }) => id === eid);
-
-        let obj_id = 0;
-
-        if(page.types.length != 0)
-          obj_id = Math.max.apply(Math, page.types.map(function(o) { return o.id; }))
-
-        var obj = JSON.parse(JSON.stringify(element));
-        obj.id = obj_id + 1
-        obj.page_id = page.id;
-       
-
-     
-
-        // subtotal
-        // var block = this.block_names.find(({ id }) => id === eid);
-        var block = this.block_names.filter(element => {
-          return element.id === eid && element.page_id === pid;
-        });
-
-        var new_blocks = JSON.parse(JSON.stringify(block[0].blocks));
-
-        for(var i = 0; i < new_blocks.length; i++) {
-          new_blocks[i].type_id = obj_id + 1;
-        }
-
-
-        await this.page_copy_save(this.id, obj_id + 1, new_blocks, obj);
-
-        this.reload();
-      },
-
       del_block: function(pid, eid) {
         var page = this.temp_pages.find(({ id }) => id === pid);
         var index = page.types.findIndex(({ id }) => id === eid);
@@ -2684,61 +2649,6 @@ Installation:`;
             });
         }
       
-      },
-
-      page_copy_save: async function(id, type_id, temp_block, page) {
-
-        console.log(type_id);
-
-        var form_Data = new FormData();
-        let _this = this;
-
-        var token = localStorage.getItem("token");
-  
-        form_Data.append("jwt", token);
- 
-        form_Data.append("id", this.id);
-
-        form_Data.append("types", JSON.stringify(page));
-
-        let res = await axios({
-          method: 'post',
-          url: 'api/quotation_page_update',
-          data: form_Data,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        type_id = res.data.message;
-
-        console.log(type_id);
-            
-        var form_Data1 = new FormData();
-        form_Data1.append("jwt", token);
- 
-        form_Data1.append("id", id);
-        form_Data1.append("type_id", type_id);
-        form_Data1.append("block", JSON.stringify(temp_block));
-      
-        for (var i = 0; i < temp_block.length; i++) {
-          let file = document.getElementById('block_image_' + temp_block[i].id);
-          if(file) {
-            let f = file.files[0];
-            if(typeof f !== 'undefined') 
-              form_Data.append('block_image_' + temp_block[i].id, f);
-          }
-        }
-
-        let res1 = await axios({
-          method: 'post',
-          url: 'api/quotation_page_type_block_update_copy',
-          data: form_Data1,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
       },
 
       page_save : function() {
