@@ -49,21 +49,21 @@ if (!isset($jwt)) {
     {
         $query = "SELECT u.id uid, u.username, ut.title, ud.department, sm.id sid, salary, sm.updated_at, uu.username updated_name, u.status
                     FROM salary_mgt sm
-                    LEFT JOIN user u ON sm.uid = u.id
+                    RIGHT JOIN user u ON sm.uid = u.id
                     LEFT JOIN user_title ut ON u.title_id = ut.id
                     LEFT JOIN user_department ud ON u.apartment_id = ud.id
                     LEFT JOIN user uu on uu.id = sm.updated_id
-                    WHERE 1 = 1 " . ($id != 0 ? " and u.id=$id" : ' ');
+                    WHERE u.id not in(3, 1, 48, 86, 87, 94) " . ($id != 0 ? " and u.id=$id" : ' ');
     }
     else
     {
         $query = "SELECT u.id uid, u.username, ut.title, ud.department, sm.id sid, salary, sm.updated_at, uu.username updated_name, u.status
                     FROM salary_mgt sm
-                    LEFT JOIN user u ON sm.uid = u.id
+                    RIGHT JOIN user u ON sm.uid = u.id
                     LEFT JOIN user_title ut ON u.title_id = ut.id
                     LEFT JOIN user_department ud ON u.apartment_id = ud.id
                     LEFT JOIN user uu on uu.id = sm.updated_id
-                    WHERE u.status = 1 " . ($id != 0 ? " and u.id=$id" : ' ');
+                    WHERE u.status = 1 and u.id not in(3, 1, 48, 86, 87, 94) " . ($id != 0 ? " and u.id=$id" : ' ');
     }
 
     if($dp != '') {
