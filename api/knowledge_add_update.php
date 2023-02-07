@@ -67,8 +67,8 @@ else
             `watch` = :watch, 
             `duration` = :duration,
             `status` = 1,
-            `create_id` = :create_id,
-            `created_at` = now()
+            `updated_id` = :create_id,
+            `updated_at` = now()
             where id = :id";
 
         // prepare the query
