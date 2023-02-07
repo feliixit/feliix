@@ -99,8 +99,12 @@ if (!isset($jwt)) {
             $duration_in_huours = round($duration/60, 1);
             $duration_in_minutes = floor($duration % 60);
             
-            if($duration_in_huours > 0){
+            if($duration_in_huours > 1){
                 $duration_str = $duration_in_huours . '-hr ';
+            }
+            else
+            {
+                $duration_str = $duration_in_minutes . '-min';
             }
 
             //if($duration_in_minutes > 0){
