@@ -25,6 +25,9 @@ var app = new Vue({
         url: null,
         
         submit: false,
+
+        cover : '',
+        filename : '',
         
         id : 0, 
         
@@ -187,6 +190,8 @@ var app = new Vue({
                 _this.watch = _this.knowledge[0].watch;
                 _this.description = _this.knowledge[0].description;
                 _this.url = _this.knowledge[0].cover;
+                _this.filename = _this.knowledge[0].filename;
+                _this.cover = _this.knowledge[0].cover;
 
                 _this.edit_mode = true;
                 console.log("knowledge_add_get");
@@ -196,19 +201,31 @@ var app = new Vue({
         },
         
         
+        onFileChange1(e) {
+            const file = e.target.files[0];
+            if(file != undefined)
+                this.filename = file.name;
+        },
+        
+        
+        clear_photo1() {
+            this.filename = "";
+            document.getElementById('file1').value = null;
+        },
+        
+
         onFileChange(e) {
             const file = e.target.files[0];
             this.url = URL.createObjectURL(file);
+            this.cover = file.name;
         },
         
         
         clear_photo() {
             this.url = null;
-            
+            this.cover = "";
             document.getElementById('photo').value = "";
         },
-        
-        
         
         
         get_positions: function() {
@@ -240,7 +257,7 @@ var app = new Vue({
                 this.reset();
             },
             
-            check_input: function(){
+            check_input: async function(){
                 ret = "";
                 reason = "Please fill in title, access, type and the corresponding file/web link.";
                 
@@ -257,7 +274,7 @@ var app = new Vue({
                 }
                 
                 if(this.type == "file"){
-                    if(document.getElementById('file1').files[0] == 'undefined'){
+                    if(document.getElementById('file1').files[0] == undefined && this.filename == ""){
                         ret = reason;
                     }
                 }
@@ -272,9 +289,9 @@ var app = new Vue({
                 
             },
             
-            save: function() {
+            save: async function() {
                 let _this = this;
-                let reason = this.check_input();
+                let reason = await this.check_input();
                 if (reason !== "") {
                     Swal.fire({
                         text: reason,
@@ -286,7 +303,7 @@ var app = new Vue({
                 
                 Swal.fire({
                     title: "Submit",
-                    text: "Are you sure to save?",
+                    text: "Are you sure to upload?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -365,9 +382,9 @@ var app = new Vue({
                 
             },
 
-            edit: function() {
+            edit: async function() {
                 let _this = this;
-                let reason = this.check_input();
+                let reason = await this.check_input();
                 if (reason !== "") {
                     Swal.fire({
                         text: reason,
@@ -404,6 +421,14 @@ var app = new Vue({
                         
                         let access01 = $('#access').val();
                         form_Data.append("access", access01.join());
+
+                        if(_this.type != "file"){
+                            _this.filename = "";
+                        }
+
+                        if(_this.type == "file"){
+                            _this.link = "";
+                        }
                         
                         form_Data.append("type", _this.type);
                         form_Data.append("link", _this.link);
@@ -415,12 +440,15 @@ var app = new Vue({
                         let photo = document.getElementById('photo').files[0];
                         if(typeof photo !== 'undefined') 
                         form_Data.append('photo', photo);
+
+                        
                         
                         
                         form_Data.append("watch", _this.watch);
                         form_Data.append("duration", _this.duration);
                         
-                        
+                        form_Data.append("filename", _this.filename);
+                        form_Data.append("cover", _this.cover);
                         
                         axios({
                             method: "post",

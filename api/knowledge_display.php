@@ -66,7 +66,7 @@ if (!isset($jwt)) {
                     FROM knowledge pm
                     LEFT JOIN user c_user ON pm.create_id = c_user.id 
                     LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                    WHERE pm.status <> -1 and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%')
+                    WHERE pm.status <> -1 and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%' or pm.access like '%All%')
                     order by pm.created_at desc
                     ";
                     

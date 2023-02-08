@@ -454,14 +454,14 @@ catch (Exception $e){
 
                 <div class="filebox" v-show="type == 'file'">
                     <!-- 沒選擇任何檔案時，下方的 span 和 input 則是 display: block; 但如果有選擇一個檔案時，下方的 span 和 input 則是 display: none; -->
-                    <span>File</span>
-                    <span><i class="fas fa-paperclip"></i></span>
-                    <input type="file" id="file1">
-
+                    <span v-show="filename == ''">File</span>
+                    <span><i class="fas fa-paperclip" v-if="filename == ''"></i></span>
+                    <input type="file" id="file1" name="file1" @change="onFileChange1($event)" v-show="filename == ''" />
+                    
                     <!-- 沒選擇任何檔案時，下方的 div 則是 display: none; 但如果有選擇一個檔案時，下方的 div 則是 display: block; -->
                     <!-- 使用者點了 x 的 div 時，則代表要清空所選擇的檔案 -->
-                    <div>被選擇的檔案的檔名</div>
-                    <div>x</div>
+                    <div v-if="filename != ''">{{ filename }}</div>
+                    <div v-if="filename != ''" @click="clear_photo1()">x</div>
                 </div>
 
                 <input type="text" placeholder="Website Link" v-model="link"  v-if="type == 'link' || type == 'video'">
@@ -481,7 +481,7 @@ catch (Exception $e){
             <div class="right_box">
 
                 <!-- 當有圖片被選擇時，則需要在 coverimg_box 的結構中，加入 class="chosen" -->
-                <div :class="['coverimg_box', (url !== null ? 'chosen' : '')]">
+                <div :class="['coverimg_box', ((url != null && url != '') ? 'chosen' : '')]">
                     <img v-if="url" :src="url" />
                     <div>Cover Image
                         <input type="file" accept="image/*" id="photo" name="photo"  @change="onFileChange($event)">
