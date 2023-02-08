@@ -30,18 +30,117 @@ var app = new Vue({
         order: {},
         temp_order: {},
         
+        
+        // search
+        title: '',
+        creator: [],
+        updater: [],
+
+        // order
+        od_opt1 : '',
+        od_ord1 : '',
+    
+        od_opt2 : '',
+        od_ord2 : '',
+    
+        // paging
+        page: 1,
+        pg:0,
+        //perPage: 10,
+        pages: [],
+
+        pages_10: [],
+
+        is_special: false,
+        
+        
     },
     
     created () {
-        let _this = this;
+
+    let _this = this;
+    let uri = window.location.href.split("?");
+    if (uri.length >= 2) {
+      let vars = uri[1].split("&");
+
+      let tmp = "";
+      vars.forEach(async function(v) {
+        tmp = v.split("=");
+        if (tmp.length == 2) {
+          switch (tmp[0]) {
+            case "fpc":
+              _this.fil_project_category = decodeURI(tmp[1]);
+              break;
+            case "fct":
+              _this.fil_client_type = decodeURI(tmp[1]);
+              break;
+            case "fp":
+              _this.fil_priority = decodeURI(tmp[1]);
+              break;
+            case "gp":
+                _this.fil_group = decodeURI(tmp[1]);
+              break;
+            case "fs":
+              _this.fil_status = decodeURI(tmp[1]);
+              break;
+            case "ft":
+              _this.fil_type = decodeURI(tmp[1]);
+              break;
+            case "fcs":
+              _this.fil_stage = decodeURI(tmp[1]);
+              break;
+            case "fpt":
+              _this.fil_creator = decodeURI(tmp[1]);
+              break;
+            case "flo":
+              _this.fil_lower = decodeURI(tmp[1]);
+              break;
+            case "fup":
+              _this.fil_upper = decodeURI(tmp[1]);
+              break;
+            case "key":
+              _this.fil_keyword = decodeURI(tmp[1]);
+              break;
+            case "op1":
+              _this.od_opt1 = decodeURI(tmp[1]);
+              break;
+            case "od1":
+              _this.od_ord1 = decodeURI(tmp[1]);
+              break;
+            case "op2":
+              _this.od_opt2 = decodeURI(tmp[1]);
+              break;
+            case "od2":
+              _this.od_ord2 = decodeURI(tmp[1]);
+              break;
+            case "id":
+              _this.id = tmp[1];
+              break;
+            case "pg":
+              _this.pg = tmp[1];
+              break;
+            case "page":
+              _this.page = tmp[1];
+              break;
+            case "size":
+              _this.perPage = tmp[1];
+              break;
+            default:
+              console.log(`Too many args`);
+          }
+        }
+      });
         
+      }
         this.getRecords();
-        
+        $('#creator').selectpicker('refresh');
+        $('#updater').selectpicker('refresh');
     },
     
     computed: {
         displayedPosts () {
-            return this.receive_records;
+            this.setPages();
+            return this.paginate(this.receive_records);
         },
         
     },
@@ -52,13 +151,16 @@ var app = new Vue({
     
     watch: {
         
-        
+        receive_records () {
+            console.log('Vue watch receive_records');
+            this.setPages();
+          },
     },
     
     
     
     methods:{
-        
+   
         
         editRow:function(item){
             if(this.is_modifying)
@@ -215,6 +317,26 @@ var app = new Vue({
                     
                     this.is_modifying = false;
                 },
+
+                setPages () {
+                    console.log('setPages');
+                    this.pages = [];
+          
+                    let numberOfPages = Math.ceil(this.total / this.perPage);
+          
+                    if(this.fil_keyword != '')
+                      numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+          
+                    if(numberOfPages == 1)
+                      this.page = 1;
+                    for (let index = 1; index <= numberOfPages; index++) {
+                      this.pages.push(index);
+                    }
+          
+                    this.paginate(this.receive_records);
+                  },
+          
+                
                 
                 paginate: function (posts) {
                     console.log('paginate');
@@ -347,9 +469,28 @@ var app = new Vue({
                         let _this = this;
                         
                         const params = {
-                            
-                            
+                            fpc: _this.fil_project_category,
+                            fct: _this.fil_client_type,
+                            fp: _this.fil_priority,
+                            gp: _this.fil_group,
+                            fs: _this.fil_status,
+                            ft: _this.fil_type,
+                            fcs: _this.fil_stage,
+                            fpt: _this.fil_creator,
+                            flo: _this.fil_lower,
+                            fup: _this.fil_upper,
+                            key: _this.fil_keyword,
+            
+                            op1: _this.od_opt1,
+                            od1: _this.od_ord1,
+                            op2: _this.od_opt2,
+                            od2: _this.od_ord2,
+            
+                            page: _this.page,
+                            size: _this.perPage,
                         };
+            
+                        this.total = 0;
                         
                         
                         let token = localStorage.getItem('accessToken');
@@ -359,6 +500,13 @@ var app = new Vue({
                         .then(
                             (res) => {
                                 _this.receive_records = res.data;
+                                _this.total = _this.receive_records[0].cnt;
+
+                                if(_this.pg !== 0)
+                                { 
+                                    _this.page = _this.pg;
+                                    _this.setPages();
+                                }
                                 
                             },
                             (err) => {
@@ -659,6 +807,36 @@ var app = new Vue({
                             return result;
                         },
                         
+                        pre_page: function(){
+                            let tenPages = Math.floor((this.page - 1) / 10) + 1;
+                            
+                            this.page = parseInt(this.page) - 10;
+                            if(this.page < 1)
+                            this.page = 1;
+                            
+                            this.pages_10 = [];
+                            
+                            let from = tenPages * 10;
+                            let to = (tenPages + 1) * 10;
+                            
+                            this.pages_10 = this.pages.slice(from, to);
+                            
+                        },
                         
+                        nex_page: function(){
+                            let tenPages = Math.floor((this.page - 1) / 10) + 1;
+                            
+                            this.page = parseInt(this.page) + 10;
+                            if(this.page > this.pages.length)
+                            this.page = this.pages.length;
+                            
+                            let from = tenPages * 10;
+                            let to = (tenPages + 1) * 10;
+                            let pages_10 = this.pages.slice(from, to);
+                            
+                            if(pages_10.length > 0)
+                            this.pages_10 = pages_10;
+                            
+                        },
                     }
                 });

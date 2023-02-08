@@ -11,6 +11,33 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $user_id = 0;
 
+$uid = (isset($_GET['uid']) ?  urldecode($_GET['uid']) : '');
+$fpc = (isset($_GET['fpc']) ?  urldecode($_GET['fpc']) : '');
+$fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
+$fp = (isset($_GET['fp']) ?  urldecode($_GET['fp']) : '');
+$fs = (isset($_GET['fs']) ?  urldecode($_GET['fs']) : '');
+$ft = (isset($_GET['ft']) ?  urldecode($_GET['ft']) : '');
+$gp = (isset($_GET['gp']) ?  urldecode($_GET['gp']) : '');
+$fcs = (isset($_GET['fcs']) ?  urldecode($_GET['fcs']) : '');
+$fpt = (isset($_GET['fpt']) ?  $_GET['fpt'] : '');
+
+$fpt = urldecode($fpt);
+
+$flo = (isset($_GET['flo']) ?  urldecode($_GET['flo']) : '');
+$fup = (isset($_GET['fup']) ?  urldecode($_GET['fup']) : '');
+$key = (isset($_GET['key']) ?  $_GET['key'] : '');
+
+$key = urldecode($key);
+
+$op1 = (isset($_GET['op1']) ?  urldecode($_GET['op1']) : '');
+$od1 = (isset($_GET['od1']) ?  urldecode($_GET['od1']) : '');
+
+$op2 = (isset($_GET['op2']) ?  urldecode($_GET['op2']) : '');
+$od2 = (isset($_GET['od2']) ?  urldecode($_GET['od2']) : '');
+
+$page = (isset($_GET['page']) ?  urldecode($_GET['page']) : "");
+$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : "");
+
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -66,11 +93,44 @@ if (!isset($jwt)) {
                     WHERE pm.status <> -1 and pm.create_id=$user_id 
                     order by pm.created_at desc
                     ";
-                    
+                
+    // for record size
+    $query_cnt = "SELECT count(*) cnt 
+                    FROM knowledge pm
+                        LEFT JOIN user c_user ON pm.create_id = c_user.id 
+                        LEFT JOIN user u_user ON pm.updated_id = u_user.id 
+                        WHERE pm.status <> -1 and pm.create_id=$user_id  ";
+
+
+
+if(!empty($_GET['page'])) {
+    $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+    if(false === $page) {
+        $page = 1;
+    }
+}
+
+if(!empty($_GET['size'])) {
+    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
+    if(false === $size) {
+        $size = 10;
+    }
+
+    $offset = ($page - 1) * $size;
+
+    $query = $query . " LIMIT " . $offset . "," . $size;
+}
 
 
     $stmt = $db->prepare($query);
     $stmt->execute();
+
+    $cnt = 0;
+    $stmt_cnt = $db->prepare( $query_cnt );
+    $stmt_cnt->execute();
+    while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+        $cnt = $row['cnt'];
+    }
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
@@ -111,7 +171,7 @@ if (!isset($jwt)) {
             "updated_by" => $updated_by,
             "created_at" => $created_at,
             "updated_at" => $updated_at,
-         
+            "cnt" => $cnt,
         );
     }
 
