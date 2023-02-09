@@ -11,6 +11,31 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $user_id = 0;
 
+$uid = (isset($_GET['uid']) ?  urldecode($_GET['uid']) : '');
+$ft = (isset($_GET['ft']) ?  urldecode($_GET['ft']) : '');
+$fc = (isset($_GET['fc']) ?  urldecode($_GET['fc']) : []);
+$fta = (isset($_GET['fta']) ?  urldecode($_GET['fta']) : []);
+$fty = (isset($_GET['fty']) ?  urldecode($_GET['fty']) : '');
+$fw = (isset($_GET['fw']) ?  urldecode($_GET['fw']) : '');
+
+$fcf = (isset($_GET['fcf']) ?  urldecode($_GET['fcf']) : '');
+$fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
+
+$fdf = (isset($_GET['fdf']) ?  urldecode($_GET['fdf']) : '');
+$fdt = (isset($_GET['fdt']) ?  urldecode($_GET['fdt']) : '');
+
+$fpt = urldecode($fpt);
+
+
+$op1 = (isset($_GET['op1']) ?  urldecode($_GET['op1']) : '');
+$od1 = (isset($_GET['od1']) ?  urldecode($_GET['od1']) : '');
+
+$op2 = (isset($_GET['op2']) ?  urldecode($_GET['op2']) : '');
+$od2 = (isset($_GET['od2']) ?  urldecode($_GET['od2']) : '');
+
+$page = (isset($_GET['page']) ?  urldecode($_GET['page']) : 1);
+$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : 10);
+
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -66,14 +91,239 @@ if (!isset($jwt)) {
                     FROM knowledge pm
                     LEFT JOIN user c_user ON pm.create_id = c_user.id 
                     LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                    WHERE pm.status <> -1 and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%' or pm.access like '%All%')
-                    order by pm.created_at desc
-                    ";
-                    
+                    WHERE pm.status <> -1 and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%' or pm.access like '%All%')";
+    // for record size
+    $query_cnt = "SELECT count(*) cnt 
+                    FROM knowledge pm
+                        LEFT JOIN user c_user ON pm.create_id = c_user.id 
+                        LEFT JOIN user u_user ON pm.updated_id = u_user.id 
+                        WHERE pm.status <> -1 and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%' or pm.access like '%All%')";
+
+if ($ft != '') {
+    $query = $query . " and pm.`title` like '%" . $ft . "%' ";
+
+    $query_cnt = $query_cnt . " and pm.`title` like '%" . $ft . "%' ";
+}
+
+if($fc != "")
+{
+    // split by comma
+    $fc = explode(",", $fc);
+    $query = $query . " and c_user.username in ('" . implode("','", $fc) . "') ";
+    $query_cnt = $query_cnt . " and c_user.username in ('" . implode("','", $fc) . "') ";
+}
+
+if($fta != "")
+{
+    // split by comma
+    $fta = explode(",", $fta);
+
+    $or_status = "";
+
+    for($i = 0; $i < count($fta); $i++)
+    {
+        $or_status .= " pm.category like '%" . $fta[$i] . "%' or";
+    }
+
+    if($or_status != "")
+    {
+        $or_status = substr($or_status, 0, -2);
+        $query = $query . " and (" . $or_status . ") ";
+        $query_cnt = $query_cnt . " and (" . $or_status . ") ";
+    }
+}
+
+if ($fty != '') {
+    $query = $query . " and pm.`type` = '" . $fty . "' ";
+    $query_cnt = $query_cnt . " and pm.`type` = '" . $fty . "' ";
+}
+
+if($fw != "")
+{
+    $query = $query . " and pm.watch = '" . $fw . "' ";
+    $query_cnt = $query_cnt . " and pm.watch = '" . $fw . "' ";
+}
+
+
+if($fcf != "")
+{
+    $query = $query . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') >= '" . $fcf . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') >= '" . $fcf . "' ";
+}
+
+if($fct != "")
+{
+    $query = $query . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') <= '" . $fct . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') <= '" . $fct . "' ";
+}
+
+if($fdf != "")
+{
+    $query = $query . " and pm.duration >= '" . $fdf . "' ";
+    $query_cnt = $query_cnt . " and pm.duration >= '" . $fdf . "' ";
+}
+
+if($fdt != "")
+{
+    $query = $query . " and pm.duration <= '" . $fdt . "' ";
+    $query_cnt = $query_cnt . " pm.duration <= '" . $fdt . "' ";
+}
+
+
+$sOrder = "";
+if($op1 != "" && $op1 != "0")
+{
+    switch ($op1)
+    {
+        case 1:
+            if($od1 == 2)
+                $sOrder = "pm.title desc";
+            else
+                $sOrder = "pm.title ";
+            break;  
+        case 2:
+            if($od1 == 2)
+                $sOrder = "c_user.username desc";
+            else
+                $sOrder = "c_user.username ";
+            break;  
+        case 3:
+            if($od1 == 2)
+                $sOrder = "pm.duration desc";
+            else
+                $sOrder = "pm.duration ";
+            break;  
+        case 4:
+            if($od1 == 2)
+                $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(pm.created_at, '9999-99-99') ";
+            break;  
+        case 5:
+            if($od1 == 2)
+                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
+            break;  
+        
+        default:
+    }
+}
+
+if($op2 != "" && $op2 != "0" && $sOrder != "")
+{
+    switch ($op2)
+    {
+        case 1:
+            if($od2 == 2)
+                $sOrder .= ", pm.title desc ";
+            else
+                $sOrder .= ", pm.title ";
+            break;  
+        case 2:
+            if($od2 == 2)
+                $sOrder .= ", c_user.username desc ";
+            else
+                $sOrder .= ", c_user.username ";
+            break;  
+        case 3:
+            if($od2 == 2)
+                $sOrder = ", pm.duration desc ";
+            else
+                $sOrder = ", pm.duration ";
+            break;  
+        case 4:
+            if($od2 == 2)
+                $sOrder = ", Coalesce(pm.created_at, '0000-00-00') desc ";
+            else
+                $sOrder = ", Coalesce(pm.created_at, '9999-99-99') ";
+            break;  
+        case 5:
+            if($od2 == 2)
+                $sOrder = ", Coalesce(pm.updated_at, '0000-00-00') desc ";
+            else
+                $sOrder = ", Coalesce(pm.updated_at, '9999-99-99') ";
+            break;  
+        
+        default:
+    }
+}
+
+
+if($op2 != "" && $op2 != "0" && $sOrder == "")
+{
+    switch ($op2)
+    {
+        case 1:
+            if($od2 == 2)
+                $sOrder = "pm.title desc";
+            else
+                $sOrder = "pm.title ";
+            break;  
+        case 2:
+            if($od2 == 2)
+                $sOrder = "c_user.username desc";
+            else
+                $sOrder = "c_user.username ";
+            break;  
+        case 3:
+            if($od2 == 2)
+                $sOrder = "pm.duration desc ";
+            else
+                $sOrder = "pm.duration ";
+            break;  
+        case 4:
+            if($od2 == 2)
+                $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(pm.created_at, '9999-99-99') ";
+            break;  
+        case 5:
+            if($od2 == 2)
+                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
+            break;  
+        
+        default:
+    }
+}
+
+if($sOrder != "")
+    $query = $query . " order by  " . $sOrder;
+else
+    $query = $query . " order by pm.created_at desc ";
+
+
+
+if(!empty($_GET['page'])) {
+    $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+    if(false === $page) {
+        $page = 1;
+    }
+}
+
+if(!empty($_GET['size'])) {
+    $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
+    if(false === $size) {
+        $size = 10;
+    }
+
+    $offset = ($page - 1) * $size;
+
+    $query = $query . " LIMIT " . $offset . "," . $size;
+}
 
 
     $stmt = $db->prepare($query);
     $stmt->execute();
+
+    $cnt = 0;
+    $stmt_cnt = $db->prepare( $query_cnt );
+    $stmt_cnt->execute();
+    while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+        $cnt = $row['cnt'];
+    }
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
@@ -133,7 +383,7 @@ if (!isset($jwt)) {
             "updated_by" => $updated_by,
             "created_at" => $created_at,
             "updated_at" => $updated_at,
-         
+            "cnt" => $cnt,
         );
     }
 

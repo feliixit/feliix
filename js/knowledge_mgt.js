@@ -1,8 +1,7 @@
-
 var app = new Vue({
     el: '#app',
     data:{
-        
+        id:0,
         
         receive_records: [],
         record: {},
@@ -24,7 +23,7 @@ var app = new Vue({
             {name: '100', id: 100},
             {name: 'All', id: 10000}
         ],
-        perPage: 20000,
+        perPage: 10,
         
         orders: [],
         order: {},
@@ -32,9 +31,14 @@ var app = new Vue({
         
         
         // search
-        title: '',
-        creator: [],
-        updater: [],
+        fil_title: '',
+        fil_creator: [],
+        fil_updater: [],
+
+        fil_create_from: '',
+        fil_create_to: '',
+        fil_update_from: '',
+        fil_update_to: '',
 
         // order
         od_opt1 : '',
@@ -53,10 +57,11 @@ var app = new Vue({
 
         is_special: false,
         
-        
+        creators : [],
+        updaters : [],
     },
     
-    created () {
+    async created () {
 
     let _this = this;
     let uri = window.location.href.split("?");
@@ -68,38 +73,26 @@ var app = new Vue({
         tmp = v.split("=");
         if (tmp.length == 2) {
           switch (tmp[0]) {
-            case "fpc":
-              _this.fil_project_category = decodeURI(tmp[1]);
+            case "ft":
+                _this.fil_title = decodeURI(tmp[1]);
+                break;
+            case "fc":
+                _this.fil_creator = decodeURI(tmp[1]).split(",");
+                break;
+            case "fu":
+                _this.fil_updater = decodeURI(tmp[1]).split(",");
+                break;
+            case "fcf":
+              _this.fil_create_from = decodeURI(tmp[1]);
               break;
             case "fct":
-              _this.fil_client_type = decodeURI(tmp[1]);
+              _this.fil_create_to = decodeURI(tmp[1]);
               break;
-            case "fp":
-              _this.fil_priority = decodeURI(tmp[1]);
+            case "fuf":
+              _this.fil_update_from = decodeURI(tmp[1]);
               break;
-            case "gp":
-                _this.fil_group = decodeURI(tmp[1]);
-              break;
-            case "fs":
-              _this.fil_status = decodeURI(tmp[1]);
-              break;
-            case "ft":
-              _this.fil_type = decodeURI(tmp[1]);
-              break;
-            case "fcs":
-              _this.fil_stage = decodeURI(tmp[1]);
-              break;
-            case "fpt":
-              _this.fil_creator = decodeURI(tmp[1]);
-              break;
-            case "flo":
-              _this.fil_lower = decodeURI(tmp[1]);
-              break;
-            case "fup":
-              _this.fil_upper = decodeURI(tmp[1]);
-              break;
-            case "key":
-              _this.fil_keyword = decodeURI(tmp[1]);
+            case "fut":
+              _this.fil_update_to = decodeURI(tmp[1]);
               break;
             case "op1":
               _this.od_opt1 = decodeURI(tmp[1]);
@@ -133,8 +126,7 @@ var app = new Vue({
         
       }
         this.getRecords();
-        $('#creator').selectpicker('refresh');
-        $('#updater').selectpicker('refresh');
+
     },
     
     computed: {
@@ -469,17 +461,14 @@ var app = new Vue({
                         let _this = this;
                         
                         const params = {
-                            fpc: _this.fil_project_category,
-                            fct: _this.fil_client_type,
-                            fp: _this.fil_priority,
-                            gp: _this.fil_group,
-                            fs: _this.fil_status,
-                            ft: _this.fil_type,
-                            fcs: _this.fil_stage,
-                            fpt: _this.fil_creator,
-                            flo: _this.fil_lower,
-                            fup: _this.fil_upper,
-                            key: _this.fil_keyword,
+                            ft: _this.fil_title,
+                            fc: _this.fil_creator.join(','),
+                            fu: _this.fil_updater.join(','),
+                            fcf: _this.fil_create_from,
+                            fct: _this.fil_create_to,
+                            fuf: _this.fil_update_from,
+                            fut: _this.fil_update_to,
+                     
             
                             op1: _this.od_opt1,
                             od1: _this.od_ord1,
@@ -506,6 +495,9 @@ var app = new Vue({
                                 { 
                                     _this.page = _this.pg;
                                     _this.setPages();
+
+                                    $('#creator').selectpicker('refresh');
+                                    $('#updater').selectpicker('refresh');
                                 }
                                 
                             },
@@ -651,86 +643,80 @@ var app = new Vue({
                         },
                         
                         clear_orders: function() {
-                            this.iq_opt1 = '';
-                            this.iq_ord1 = '';
-                            this.iq_opt2 = '';
-                            this.iq_ord2 = '';
+                            this.od_opt1 = '';
+                            this.od_ord1 = '';
+                            this.od_opt2 = '';
+                            this.od_ord2 = '';
                             
                             let _this = this;
                             
                             window.location.href =
                             "knowledge_mgt?" +
                             
-                            "fpt=" +
-                            _this.fil_creator +
+                            "ft=" +
+                            _this.fil_title +
                             "&fc=" +
-                            _this.fil_project_category +
-                            "&fpc=" +
-                            _this.fil_project_creator +
-                            "&fg=" +
-                            _this.fil_group +
-                            "&key=" +
-                            _this.fil_keyword +
-                            "&kind=" +
-                            _this.fil_kind +
-                            "&tp=" +
-                            _this.fil_task_type +
+                            _this.fil_creator +
+                            "&fu=" +
+                            _this.fil_updater +
+                            "&fcf=" +
+                            _this.fil_create_from +
+                            "&fct=" +
+                            _this.fil_create_to +
+                            "&fuf=" +
+                            _this.fil_update_from +
+                            "&fut=" +
+                            _this.fil_update_to +
                             "&op1=" +
-                            _this.iq_opt1 +
+                            _this.od_opt1 +
                             "&od1=" +
-                            _this.iq_ord1 +
+                            _this.od_ord1 +
                             "&op2=" +
-                            _this.iq_opt2 +
+                            _this.od_opt2 +
                             "&od2=" +
-                            _this.iq_ord2 +
-                            "&pg=" +
+                            _this.od_ord2 +
+                            "&page=" +
                             _this.page;
                         },
                         
                         clear_filters: function() {
-                            this.fil_project_category = '';
-                            this.fil_project_creator = '';
-                            this.fil_client_type = '';
-                            this.fil_priority = '';
-                            this.fil_group = '';
-                            this.fil_status = '';
-                            this.fil_stage = '';
-                            this.fil_creator = '';
+                            this.fil_title = '';
+                            this.fil_creator = [];
+                            this.fil_updater = [];
+                            this.fil_create_from = '';
+                            this.fil_create_to = '';
+                            this.fil_update_from = '';
+                            this.fil_update_to = '';
                             
-                            this.fil_lower = '';
-                            this.fil_upper = '';
-                            this.fil_keyword = '';
-                            this.fil_kind = '';
-                            this.fil_task_type = '';
                             
                             let _this = this;
                             
                             window.location.href =
                             "knowledge_mgt?" +
                             
-                            "fpt=" +
-                            _this.fil_creator +
+                            "ft=" +
+                            _this.fil_title +
                             "&fc=" +
-                            _this.fil_project_category +
-                            "&fpc=" +
-                            _this.fil_project_creator +
-                            "&fg=" +
-                            _this.fil_group +
-                            "&key=" +
-                            _this.fil_keyword +
-                            "&kind=" +
-                            _this.fil_kind +
-                            "&tp=" +
-                            _this.fil_task_type +
+                            _this.fil_creator +
+                            "&fu=" +
+                            _this.fil_updater +
+                            "&fcf=" +
+                            _this.fil_create_from +
+                            "&fct=" +
+                            _this.fil_create_to +
+                            "&fuf=" +
+                            _this.fil_update_from +
+                            "&fut=" +
+                            _this.fil_update_to +
                             "&op1=" +
-                            _this.iq_opt1 +
+                            _this.od_opt1 +
                             "&od1=" +
-                            _this.iq_ord1 +
+                            _this.od_ord1 +
                             "&op2=" +
-                            _this.iq_opt2 +
+                            _this.od_opt2 +
                             "&od2=" +
-                            _this.iq_ord2 +
-                            "&pg=" +
+                            _this.od_ord2 +
+                            "&page=" +
                             _this.page;
                         },
                         
@@ -740,29 +726,29 @@ var app = new Vue({
                             window.location.href =
                             "knowledge_mgt?" +
                             
-                            "fpt=" +
-                            _this.fil_creator +
+                            "ft=" +
+                            _this.fil_title +
                             "&fc=" +
-                            _this.fil_project_category +
-                            "&fpc=" +
-                            _this.fil_project_creator +
-                            "&fg=" +
-                            _this.fil_group +
-                            "&key=" +
-                            _this.fil_keyword +
-                            "&kind=" +
-                            _this.fil_kind +
-                            "&tp=" +
-                            _this.fil_task_type +
+                            _this.fil_creator +
+                            "&fu=" +
+                            _this.fil_updater +
+                            "&fcf=" +
+                            _this.fil_create_from +
+                            "&fct=" +
+                            _this.fil_create_to +
+                            "&fuf=" +
+                            _this.fil_update_from +
+                            "&fut=" +
+                            _this.fil_update_to +
                             "&op1=" +
-                            _this.iq_opt1 +
+                            _this.od_opt1 +
                             "&od1=" +
-                            _this.iq_ord1 +
+                            _this.od_ord1 +
                             "&op2=" +
-                            _this.iq_opt2 +
+                            _this.od_opt2 +
                             "&od2=" +
-                            _this.iq_ord2 +
-                            "&pg=" +
+                            _this.od_ord2 +
+                            "&page=" +
                             _this.page;
                         },
                         
@@ -772,29 +758,29 @@ var app = new Vue({
                             window.location.href =
                             "knowledge_mgt?" +
                             
-                            "fpt=" +
-                            _this.fil_creator +
+                            "ft=" +
+                            _this.fil_title +
                             "&fc=" +
-                            _this.fil_project_category +
-                            "&fpc=" +
-                            _this.fil_project_creator +
-                            "&fg=" +
-                            _this.fil_group +
-                            "&key=" +
-                            _this.fil_keyword +
-                            "&kind=" +
-                            _this.fil_kind +
-                            "&tp=" +
-                            _this.fil_task_type +
+                            _this.fil_creator +
+                            "&fu=" +
+                            _this.fil_updater +
+                            "&fcf=" +
+                            _this.fil_create_from +
+                            "&fct=" +
+                            _this.fil_create_to +
+                            "&fuf=" +
+                            _this.fil_update_from +
+                            "&fut=" +
+                            _this.fil_update_to +
                             "&op1=" +
-                            _this.iq_opt1 +
+                            _this.od_opt1 +
                             "&od1=" +
-                            _this.iq_ord1 +
+                            _this.od_ord1 +
                             "&op2=" +
-                            _this.iq_opt2 +
+                            _this.od_opt2 +
                             "&od2=" +
-                            _this.iq_ord2 +
-                            "&pg=" +
+                            _this.od_ord2 +
+                            "&page=" +
                             _this.page;
                         },
                         
@@ -806,37 +792,6 @@ var app = new Vue({
                             }
                             return result;
                         },
-                        
-                        pre_page: function(){
-                            let tenPages = Math.floor((this.page - 1) / 10) + 1;
-                            
-                            this.page = parseInt(this.page) - 10;
-                            if(this.page < 1)
-                            this.page = 1;
-                            
-                            this.pages_10 = [];
-                            
-                            let from = tenPages * 10;
-                            let to = (tenPages + 1) * 10;
-                            
-                            this.pages_10 = this.pages.slice(from, to);
-                            
-                        },
-                        
-                        nex_page: function(){
-                            let tenPages = Math.floor((this.page - 1) / 10) + 1;
-                            
-                            this.page = parseInt(this.page) + 10;
-                            if(this.page > this.pages.length)
-                            this.page = this.pages.length;
-                            
-                            let from = tenPages * 10;
-                            let to = (tenPages + 1) * 10;
-                            let pages_10 = this.pages.slice(from, to);
-                            
-                            if(pages_10.length > 0)
-                            this.pages_10 = pages_10;
-                            
-                        },
+
                     }
                 });

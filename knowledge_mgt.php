@@ -30,6 +30,7 @@ try {
         // for creator
         $creators = array();
         $query = "select distinct u.id, u.username from knowledge k left join user u on k.create_id = u.id WHERE u.status = 1 and k.status = 1 ORDER BY username ";
+        // $query = "select distinct u.id, u.username from  user u WHERE u.status = 1  ORDER BY username ";
         $stmt = $db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -39,13 +40,13 @@ try {
             );
         }
         
-        // for updator
-        $updators = array();
+        // for updater
+        $updaters = array();
         $query = "select distinct u.id, u.username from knowledge k left join user u on k.updated_id = u.id WHERE u.status = 1 and k.status = 1 ORDER BY username ";
         $stmt = $db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $updators[] = array(
+            $updaters[] = array(
                 "id" => $row['id'],
                 "username" => $row['username'],
             );
@@ -102,6 +103,9 @@ catch (Exception $e){
     <link rel="stylesheet" type="text/css" href="css/ui.css"/>
     <link rel="stylesheet" type="text/css" href="css/case.css"/>
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+    
     <link rel="stylesheet" type="text/css"
           href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
@@ -119,6 +123,8 @@ catch (Exception $e){
             src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
+
+    <script src="js/vue-select.js"></script>
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
     <script>
@@ -262,6 +268,8 @@ catch (Exception $e){
             cursor: pointer;
         }
 
+    
+
     </style>
 
 </head>
@@ -292,28 +300,32 @@ catch (Exception $e){
                             <dl>
                                 <dt>Title</dt>
                                 <dd>
-                                    <input type="text" v-model="title">
+                                    <input type="text" v-model="fil_title">
                                 </dd>
 
                                 <dt>Creator</dt>
                                 <dd>
                                     <div style="text-align: left; font-size: 12px;">
-                                        <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                                data-width="100%" id="creator" v-model="creator">
-                                                <?php foreach ($creators as $user) { ?>
-                                                    <option value="<?php echo $user["username"]; ?>"><?php echo $user["username"]; ?></option>
-                                                <?php } ?>
-                                            </select>
+                                    <select class="selectpicker" multiple data-live-search="true" data-size="8"
+                                            data-width="100%" id="creator" v-model="fil_creator">
+                                        
+                                            <?php foreach ($creators as $user) { ?>
+                                                <option value="<?php echo $user["username"]; ?>"><?php echo $user["username"]; ?></option>
+                                            <?php } ?>
+
+                                        </select>
                                     </div>
+
+                                    
                                 </dd>
 
                                 <dt>Updater</dt>
                                 <dd>
                                     <div style="text-align: left; font-size: 12px;">
                                         <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                            data-width="100%" id="updater" v-model="updater">
+                                            data-width="100%" id="updater" v-model="fil_updater">
                                         
-                                            <?php foreach ($updators as $user) { ?>
+                                            <?php foreach ($updaters as $user) { ?>
                                                 <option value="<?php echo $user["username"]; ?>"><?php echo $user["username"]; ?></option>
                                             <?php } ?>
 
@@ -326,13 +338,13 @@ catch (Exception $e){
                                 <div class="half">
                                     <dt>from</dt>
                                     <dd>
-                                        <input type="date">
+                                        <input type="date" v-model="fil_create_from">
                                     </dd>
                                 </div>
                                 <div class="half">
                                     <dt>to</dt>
                                     <dd>
-                                        <input type="date">
+                                        <input type="date" v-model="fil_create_to">
                                     </dd>
                                 </div>
 
@@ -340,13 +352,13 @@ catch (Exception $e){
                                 <div class="half">
                                     <dt>from</dt>
                                     <dd>
-                                        <input type="date">
+                                        <input type="date" v-model="fil_update_from">
                                     </dd>
                                 </div>
                                 <div class="half">
                                     <dt>to</dt>
                                     <dd>
-                                        <input type="date">
+                                        <input type="date" v-model="fil_update_to">
                                     </dd>
                                 </div>
 
@@ -494,8 +506,22 @@ catch (Exception $e){
 </div>
 
 </body>
-<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script defer src="js/axios.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
+<script src="//unpkg.com/element-ui"></script>
+<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+
+<!-- Awesome Font for current webpage -->
+<script src="js/a076d05399.js"></script>
+
+<script>
+    ELEMENT.locale(ELEMENT.lang.en)
+</script>
+
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script defer src="js/knowledge_mgt.js"></script>
 </html>

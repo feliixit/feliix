@@ -12,22 +12,16 @@ $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $user_id = 0;
 
 $uid = (isset($_GET['uid']) ?  urldecode($_GET['uid']) : '');
-$fpc = (isset($_GET['fpc']) ?  urldecode($_GET['fpc']) : '');
-$fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
-$fp = (isset($_GET['fp']) ?  urldecode($_GET['fp']) : '');
-$fs = (isset($_GET['fs']) ?  urldecode($_GET['fs']) : '');
 $ft = (isset($_GET['ft']) ?  urldecode($_GET['ft']) : '');
-$gp = (isset($_GET['gp']) ?  urldecode($_GET['gp']) : '');
-$fcs = (isset($_GET['fcs']) ?  urldecode($_GET['fcs']) : '');
-$fpt = (isset($_GET['fpt']) ?  $_GET['fpt'] : '');
+$fc = (isset($_GET['fc']) ?  urldecode($_GET['fc']) : []);
+$fu = (isset($_GET['fu']) ?  urldecode($_GET['fu']) : []);
+$fcf = (isset($_GET['fcf']) ?  urldecode($_GET['fcf']) : '');
+$fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
+$fuf = (isset($_GET['fuf']) ?  urldecode($_GET['fuf']) : '');
+$fut = (isset($_GET['fut']) ?  urldecode($_GET['fut']) : '');
 
 $fpt = urldecode($fpt);
 
-$flo = (isset($_GET['flo']) ?  urldecode($_GET['flo']) : '');
-$fup = (isset($_GET['fup']) ?  urldecode($_GET['fup']) : '');
-$key = (isset($_GET['key']) ?  $_GET['key'] : '');
-
-$key = urldecode($key);
 
 $op1 = (isset($_GET['op1']) ?  urldecode($_GET['op1']) : '');
 $od1 = (isset($_GET['od1']) ?  urldecode($_GET['od1']) : '');
@@ -35,8 +29,8 @@ $od1 = (isset($_GET['od1']) ?  urldecode($_GET['od1']) : '');
 $op2 = (isset($_GET['op2']) ?  urldecode($_GET['op2']) : '');
 $od2 = (isset($_GET['od2']) ?  urldecode($_GET['od2']) : '');
 
-$page = (isset($_GET['page']) ?  urldecode($_GET['page']) : "");
-$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : "");
+$page = (isset($_GET['page']) ?  urldecode($_GET['page']) : 1);
+$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : 10);
 
 
 include_once 'config/core.php';
@@ -90,16 +84,186 @@ if (!isset($jwt)) {
                     FROM knowledge pm
                     LEFT JOIN user c_user ON pm.create_id = c_user.id 
                     LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                    WHERE pm.status <> -1 and pm.create_id=$user_id 
-                    order by pm.created_at desc
-                    ";
+                    WHERE pm.status <> -1 " . ($user_id != 0 ? " and pm.create_id=$user_id " : ' '); 
+                
                 
     // for record size
     $query_cnt = "SELECT count(*) cnt 
                     FROM knowledge pm
                         LEFT JOIN user c_user ON pm.create_id = c_user.id 
                         LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                        WHERE pm.status <> -1 and pm.create_id=$user_id  ";
+                        WHERE pm.status <> -1 " . ($user_id != 0 ? " and pm.create_id=$user_id " : ' '); 
+
+if ($ft != '') {
+    $query = $query . " and pm.`title` like '%" . $ft . "%' ";
+
+    $query_cnt = $query_cnt . " and pm.`title` like '%" . $ft . "%' ";
+}
+
+if($fc != "")
+{
+    // split by comma
+    $fc = explode(",", $fc);
+    $query = $query . " and c_user.username in ('" . implode("','", $fc) . "') ";
+    $query_cnt = $query_cnt . " and c_user.username in ('" . implode("','", $fc) . "') ";
+}
+
+if($fu != "")
+{
+    // split by comma
+    $fu = explode(",", $fu);
+    $query = $query . " and u_user.username in ('" . implode("','", $fu) . "') ";
+    $query_cnt = $query_cnt . " and u_user.username in ('" . implode("','", $fu) . "') ";
+}
+
+if($fcf != "")
+{
+    $query = $query . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') >= '" . $fcf . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') >= '" . $fcf . "' ";
+}
+
+if($fct != "")
+{
+    $query = $query . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') <= '" . $fct . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') <= '" . $fct . "' ";
+}
+
+if($fuf != "")
+{
+    $query = $query . " and DATE_FORMAT(pm.updated_at, '%Y/%m/%d') >= '" . $fuf . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.updated_at, '%Y/%m/%d') >= '" . $fuf . "' ";
+}
+
+if($fut != "")
+{
+    $query = $query . " and DATE_FORMAT(pm.updated_at, '%Y/%m/%d') <= '" . $fut . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.updated_at, '%Y/%m/%d') <= '" . $fut . "' ";
+}
+
+
+$sOrder = "";
+if($op1 != "" && $op1 != "0")
+{
+    switch ($op1)
+    {
+        case 1:
+            if($od1 == 2)
+                $sOrder = "pm.title desc";
+            else
+                $sOrder = "pm.title ";
+            break;  
+        case 2:
+            if($od1 == 2)
+                $sOrder = "c_user.username desc";
+            else
+                $sOrder = "c_user.username ";
+            break;  
+        case 3:
+            if($od1 == 2)
+                $sOrder = "u_user.username desc";
+            else
+                $sOrder = "u_user.username ";
+            break;  
+        case 4:
+            if($od1 == 2)
+                $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(pm.created_at, '9999-99-99') ";
+            break;  
+        case 5:
+            if($od1 == 2)
+                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
+            break;  
+        
+        default:
+    }
+}
+
+if($op2 != "" && $op2 != "0" && $sOrder != "")
+{
+    switch ($op2)
+    {
+        case 1:
+            if($od2 == 2)
+                $sOrder .= ", pm.title desc ";
+            else
+                $sOrder .= ", pm.title ";
+            break;  
+        case 2:
+            if($od2 == 2)
+                $sOrder .= ", c_user.username desc ";
+            else
+                $sOrder .= ", c_user.username ";
+            break;  
+        case 3:
+            if($od2 == 2)
+                $sOrder = ", u_user.username desc ";
+            else
+                $sOrder = ", u_user.username ";
+            break;  
+        case 4:
+            if($od2 == 2)
+                $sOrder = ", Coalesce(pm.created_at, '0000-00-00') desc ";
+            else
+                $sOrder = ", Coalesce(pm.created_at, '9999-99-99') ";
+            break;  
+        case 5:
+            if($od2 == 2)
+                $sOrder = ", Coalesce(pm.updated_at, '0000-00-00') desc ";
+            else
+                $sOrder = ", Coalesce(pm.updated_at, '9999-99-99') ";
+            break;  
+        
+        default:
+    }
+}
+
+
+if($op2 != "" && $op2 != "0" && $sOrder == "")
+{
+    switch ($op2)
+    {
+        case 1:
+            if($od2 == 2)
+                $sOrder = "pm.title desc";
+            else
+                $sOrder = "pm.title ";
+            break;  
+        case 2:
+            if($od2 == 2)
+                $sOrder = "c_user.username desc";
+            else
+                $sOrder = "c_user.username ";
+            break;  
+        case 3:
+            if($od2 == 2)
+                $sOrder = "u_user.username desc ";
+            else
+                $sOrder = "u_user.username ";
+            break;  
+        case 4:
+            if($od2 == 2)
+                $sOrder = "Coalesce(pm.created_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(pm.created_at, '9999-99-99') ";
+            break;  
+        case 5:
+            if($od2 == 2)
+                $sOrder = "Coalesce(pm.updated_at, '0000-00-00') desc";
+            else
+                $sOrder = "Coalesce(pm.updated_at, '9999-99-99') ";
+            break;  
+        
+        default:
+    }
+}
+
+if($sOrder != "")
+    $query = $query . " order by  " . $sOrder;
+else
+    $query = $query . " order by pm.created_at desc ";
 
 
 
