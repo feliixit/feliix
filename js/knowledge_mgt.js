@@ -8,13 +8,7 @@ var app = new Vue({
         
         
         submit : false,
-        // paging
-        page: 1,
-        pg:0,
-        //perPage: 10,
-        pages: [],
-        
-        pages_10: [],
+  
         
         inventory: [
             {name: '10', id: 10},
@@ -114,6 +108,8 @@ var app = new Vue({
               break;
             case "page":
               _this.page = tmp[1];
+              if(_this.page < 1)
+                _this.page = 1;
               break;
             case "size":
               _this.perPage = tmp[1];
@@ -647,6 +643,8 @@ var app = new Vue({
                             this.od_ord1 = '';
                             this.od_opt2 = '';
                             this.od_ord2 = '';
+
+                            this.page = 1;
                             
                             let _this = this;
                             
@@ -688,6 +686,7 @@ var app = new Vue({
                             this.fil_update_from = '';
                             this.fil_update_to = '';
                             
+                            this.page = 1;
                             
                             let _this = this;
                             

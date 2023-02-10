@@ -21,6 +21,14 @@ $fw = (isset($_GET['fw']) ?  urldecode($_GET['fw']) : '');
 $fcf = (isset($_GET['fcf']) ?  urldecode($_GET['fcf']) : '');
 $fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
 
+if($fcf != "") {
+    $fcf = date("Y/m/d", strtotime($fcf));
+}
+
+if($fct != "") {
+    $fct = date("Y/m/d", strtotime($fct));
+}
+
 $fdf = (isset($_GET['fdf']) ?  urldecode($_GET['fdf']) : '');
 $fdt = (isset($_GET['fdt']) ?  urldecode($_GET['fdt']) : '');
 
@@ -159,14 +167,14 @@ if($fct != "")
 
 if($fdf != "")
 {
-    $query = $query . " and pm.duration >= '" . $fdf . "' ";
-    $query_cnt = $query_cnt . " and pm.duration >= '" . $fdf . "' ";
+    $query = $query . " and (0 + CAST(pm.duration AS UNSIGNED)) >= '" . $fdf . "' ";
+    $query_cnt = $query_cnt . " and (0 + CAST(pm.duration AS UNSIGNED)) >= '" . $fdf . "' ";
 }
 
 if($fdt != "")
 {
-    $query = $query . " and pm.duration <= '" . $fdt . "' ";
-    $query_cnt = $query_cnt . " pm.duration <= '" . $fdt . "' ";
+    $query = $query . " and (0 + CAST(pm.duration AS UNSIGNED)) <= '" . $fdt . "' ";
+    $query_cnt = $query_cnt . " (0 + CAST(pm.duration AS UNSIGNED)) <= '" . $fdt . "' ";
 }
 
 
@@ -189,9 +197,9 @@ if($op1 != "" && $op1 != "0")
             break;  
         case 3:
             if($od1 == 2)
-                $sOrder = "pm.duration desc";
+                $sOrder = "(0 + CAST(pm.duration AS UNSIGNED)) desc";
             else
-                $sOrder = "pm.duration ";
+                $sOrder = "(0 + CAST(pm.duration AS UNSIGNED)) ";
             break;  
         case 4:
             if($od1 == 2)
@@ -228,9 +236,9 @@ if($op2 != "" && $op2 != "0" && $sOrder != "")
             break;  
         case 3:
             if($od2 == 2)
-                $sOrder = ", pm.duration desc ";
+                $sOrder = ", (0 + CAST(pm.duration AS UNSIGNED)) desc ";
             else
-                $sOrder = ", pm.duration ";
+                $sOrder = ", (0 + CAST(pm.duration AS UNSIGNED)) ";
             break;  
         case 4:
             if($od2 == 2)
@@ -268,9 +276,9 @@ if($op2 != "" && $op2 != "0" && $sOrder == "")
             break;  
         case 3:
             if($od2 == 2)
-                $sOrder = "pm.duration desc ";
+                $sOrder = "(0 + CAST(pm.duration AS UNSIGNED)) desc ";
             else
-                $sOrder = "pm.duration ";
+                $sOrder = "(0 + CAST(pm.duration AS UNSIGNED)) ";
             break;  
         case 4:
             if($od2 == 2)

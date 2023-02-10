@@ -20,7 +20,21 @@ $fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
 $fuf = (isset($_GET['fuf']) ?  urldecode($_GET['fuf']) : '');
 $fut = (isset($_GET['fut']) ?  urldecode($_GET['fut']) : '');
 
-$fpt = urldecode($fpt);
+if($fcf != "") {
+    $fcf = date("Y/m/d", strtotime($fcf));
+}
+
+if($fct != "") {
+    $fct = date("Y/m/d", strtotime($fct));
+}
+
+if($fuf != "") {
+    $fuf = date("Y/m/d", strtotime($fuf));
+}
+
+if($fut != "") {
+    $fut = date("Y/m/d", strtotime($fut));
+}
 
 
 $op1 = (isset($_GET['op1']) ?  urldecode($_GET['op1']) : '');

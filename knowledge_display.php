@@ -135,7 +135,6 @@ catch (Exception $e){
     <script type="text/javascript" src="js/tagsinput.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
 
-    <script src="js/vue-select.js"></script>
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
     <script>
