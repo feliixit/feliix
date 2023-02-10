@@ -11,6 +11,8 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $user_id = 0;
 
+$usnername = "";
+
 $uid = (isset($_GET['uid']) ?  urldecode($_GET['uid']) : '');
 $ft = (isset($_GET['ft']) ?  urldecode($_GET['ft']) : '');
 $fc = (isset($_GET['fc']) ?  urldecode($_GET['fc']) : []);
@@ -76,8 +78,15 @@ if (!isset($jwt)) {
     $decoded = JWT::decode($jwt, $key, array('HS256'));
     $GLOBALS["user_id"] = $decoded->data->id;
 
+    // is manager
+    $username = $decoded->data->username;
+    $admin = is_manager($username, $db);
+    if($admin == true)
+    {
+        $GLOBALS["user_id"] = 0;
+    }
+
     $merged_results = array();
-    
 
     $query = "SELECT pm.id,
                     pm.cover, 
@@ -356,6 +365,20 @@ if(!empty($_GET['size'])) {
 
 
     echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+}
+
+function is_manager($username, $db)
+{
+    $is_manager = false;
+
+    $query = "SELECT * FROM access_control WHERE knowledge LIKE '%" . $username . "%' ";
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $is_manager = true;
+    }
+
+    return $is_manager;
 }
 
 ?>

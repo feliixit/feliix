@@ -400,4 +400,18 @@ if(!empty($_GET['size'])) {
     echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 }
 
+function is_manager($usnername, $db)
+{
+    $is_manager = false;
+
+    $query = "SELECT * FROM access_control WHERE knowledge LIKE '%" . $usnername . "%' ";
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $is_manager = true;
+    }
+
+    return $is_manager;
+}
+
 ?>

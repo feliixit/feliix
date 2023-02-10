@@ -513,6 +513,10 @@ catch (Exception $e){
                     <span> // </span>
                     <span class="duration">{{ rec.duration_str }} {{ rec.watch }}</span>
                 </li>
+
+                <li>
+                    ({{rec.created_by}} at {{rec.created_at.substr(0,10)}})
+                </li>
             </ul>
 
         </div>

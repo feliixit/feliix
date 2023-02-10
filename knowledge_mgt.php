@@ -27,6 +27,16 @@ try {
         $database = new Database();
         $db = $database->getConnection();
 
+        // is admin?
+        $is_manager = false;
+
+        $query = "SELECT * FROM access_control WHERE knowledge LIKE '%" . $username . "%' ";
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $is_manager = true;
+        }
+
         // for creator
         $creators = array();
         $query = "select distinct u.id, u.username from knowledge k left join user u on k.create_id = u.id WHERE u.status = 1 and k.status = 1 ORDER BY username ";
@@ -301,7 +311,9 @@ catch (Exception $e){
                                 <dd>
                                     <input type="text" v-model="fil_title">
                                 </dd>
-
+<?php
+    if($is_manager){
+?>
                                 <dt>Creator</dt>
                                 <dd>
                                     <div style="text-align: left; font-size: 12px;">
@@ -332,7 +344,9 @@ catch (Exception $e){
                                             
                                     </div>
                                 </dd>
-
+<?php
+    }
+?>
                                 <dt style="margin-bottom:-18px;">Created Time</dt>
                                 <div class="half">
                                     <dt>from</dt>
@@ -385,12 +399,18 @@ catch (Exception $e){
                                             <option value="1">
                                                 Title
                                             </option>
+<?php
+    if($is_manager){
+?>
                                             <option value="2">
                                                 Creator
                                             </option>
                                             <option value="3">
                                                 Updater
                                             </option>
+<?php
+    }
+?>
                                             <option value="4">
                                                 Created Time
                                             </option>
@@ -423,12 +443,18 @@ catch (Exception $e){
                                             <option value="1">
                                                 Title
                                             </option>
+<?php
+    if($is_manager){
+?>
                                             <option value="2">
                                                 Creator
                                             </option>
                                             <option value="3">
                                                 Updater
                                             </option>
+<?php
+    }
+?>
                                             <option value="4">
                                                 Created Time
                                             </option>

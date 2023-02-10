@@ -8,8 +8,11 @@ var app = new Vue({
         users:[],
         
         edit_mode: false,
+        is_manager: false,
+        is_manager_view: false,
         
         name : '',
+        user_id : '',
         
         // data
         title: "",
@@ -39,6 +42,9 @@ var app = new Vue({
         //await _this.tags_data();
         //await _this.get_all_user();
 
+        await this.getUserName();
+        await this.is_manager_can_view();
+
         let uri = window.location.href.split("?");
         if (uri.length >= 2) {
             let vars = uri[1].split("&");
@@ -61,7 +67,6 @@ var app = new Vue({
             });
         }
 
-        this.getUserName();
     },
     
     computed: {
@@ -80,36 +85,63 @@ var app = new Vue({
     },
     
     methods: {
-        getUserName: function() {
+
+        is_manager_can_view: async function() {
             var token = localStorage.getItem('token');
             var form_Data = new FormData();
             let _this = this;
             
             form_Data.append('jwt', token);
+
+            try {
+
+                let res = await axios({
+                    method: 'post',
+                    url: 'api/knowledge_is_manager',
+                    data: form_Data,
+                    headers: {
+                        'Content-Type': `multipart/form-data;`,
+                    },
+                });
+
+                _this.is_manager_view = res.data.is_manager;
             
-            axios({
-                method: 'post',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                url: 'api/on_duty_get_myname',
-                data: form_Data
-            })
-            .then(function(response) {
-                //handle success
-                _this.name = response.data.username;
-                _this.is_manager = response.data.is_manager;
+            } catch (err) {
+                console.log(err)
+
+            }
+            console.log("is_manager_can_view");
+        },
+
+
+        getUserName: async function() {
+            var token = localStorage.getItem('token');
+            var form_Data = new FormData();
+            let _this = this;
+            
+            form_Data.append('jwt', token);
+
+            try {
+                let res = await axios({
+                    method: 'post',
+                    url: 'api/on_duty_get_myname',
+                    data: form_Data,
+                    headers: {
+                        'Content-Type': `multipart/form-data;`,
+                    },
+                });
                 
-                
-            })
-            .catch(function(response) {
-                //handle error
-                Swal.fire({
-                    text: JSON.stringify(response),
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                })
-            });
+                _this.name = res.data.username;
+                _this.is_manager = res.data.is_manager;
+                _this.user_id = res.data.user_id;
+
+                console.log("getUserName");
+            
+            } catch (err) {
+                console.log(err)
+
+            }
+            
         },
         
         get_all_user: async function() {
@@ -180,6 +212,10 @@ var app = new Vue({
             _this.knowledge = res.data;
 
             if(_this.knowledge.length > 0){
+
+                if(_this.knowledge[0].create_id != _this.user_id && _this.is_manager_view == false)
+                    location.href = "index";
+
                 _this.title = _this.knowledge[0].title;
                 _this.category = _this.knowledge[0].category;
                 _this.access = _this.knowledge[0].access;

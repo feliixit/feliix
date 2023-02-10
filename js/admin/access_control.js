@@ -23,6 +23,8 @@ var app = new Vue({
     access6: [],
     access7: [],
 
+    knowledge: [],
+
     payees: [],
   },
 
@@ -112,6 +114,10 @@ var app = new Vue({
               _this.access7 = res.data[0]["access7"].split(",").filter(function (el) {
                 return el != "";
               });
+              if (kind === 16 || kind === undefined)
+              _this.knowledge = res.data[0]["knowledge"].split(",").filter(function (el) {
+                return el != "";
+              });
 
           },
           (err) => {
@@ -172,6 +178,7 @@ var app = new Vue({
       form_Data.append("access5", this.access5.toString());
       form_Data.append("access6", this.access6.toString());
       form_Data.append("access7", this.access7.toString());
+      form_Data.append("knowledge", this.knowledge.toString());
 
       axios({
         method: "post",

@@ -3555,3 +3555,7 @@ insert into tags(`gtag`, tag, sn) values('INSTALL METHOD', 'STAND-ALONE', 60);
 insert into tags(`gtag`, tag, sn) values('BY TYPE / FUNCTION', 'ALUMINUM PROFILE', 70);
 insert into tags(`gtag`, tag, sn) values('BY TYPE / FUNCTION', 'ASSEMBLED', 80);
 insert into tags(`gtag`, tag, sn) values('BY TYPE / FUNCTION', 'AUDIO EQUIPMENT', 90);
+
+-- 20230210
+ALTER TABLE access_control
+ADD COLUMN `knowledge` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
