@@ -34,7 +34,7 @@ $op2 = (isset($_GET['op2']) ?  urldecode($_GET['op2']) : '');
 $od2 = (isset($_GET['od2']) ?  urldecode($_GET['od2']) : '');
 
 $page = (isset($_GET['page']) ?  urldecode($_GET['page']) : 1);
-$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : 10);
+$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : 8);
 
 
 include_once 'config/core.php';
@@ -306,7 +306,7 @@ if(!empty($_GET['page'])) {
 if(!empty($_GET['size'])) {
     $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
     if(false === $size) {
-        $size = 10;
+        $size = 8;
     }
 
     $offset = ($page - 1) * $size;
