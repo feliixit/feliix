@@ -336,7 +336,7 @@ try {
                 <a class="list" href="frequently_used_options">Attribute’s Frequently Used Options</a>
             </li>
 
-            <li class="cyan01 focus" style="border: 3px solid var(--cyan01);">
+            <li class="cyan01" style="border: 3px solid var(--cyan01);">
                 <a class="uni">Knowledge<br>Library</a>
                 <a class="list" href="knowledge_display">Knowledge List</a>
                 <a class="list" href="knowledge_mgt">Knowledge Management</a>
