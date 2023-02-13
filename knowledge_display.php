@@ -506,7 +506,7 @@ catch (Exception $e){
 
                 <li>
                     <a :href="rec.link" target="_blank" v-if="rec.type == 'link' || rec.type == 'video'">{{rec.title}}</a>
-                    <a :href="rec.attach" target="_blank" v-if="rec.type == 'file' ">{{rec.title}}</a>
+                    <a :href="'https://storage.googleapis.com/feliiximg/' + rec.attach" target="_blank" v-if="rec.type == 'file' ">{{rec.title}}</a>
                 </li>
 
                 <li>
