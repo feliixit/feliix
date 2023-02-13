@@ -507,7 +507,8 @@ catch (Exception $e){
                 <li>
                     <a :href="rec.link" target="_blank" v-if="(rec.type == 'link' || rec.type == 'video') && rec.link != ''">{{rec.title}}</a>
                     <template v-if="(rec.type == 'link' || rec.type == 'video') && rec.link == ''">{{rec.title}}</template>
-                    <a :href="encodeURI(rec.attach)" v-if="rec.type == 'file'">{{rec.title}}</a>
+                    <a :href="encodeURI(rec.attach)" v-if="rec.type == 'file' && rec.attach != ''">{{rec.title}}</a>
+                    <template v-if="rec.type == 'file' && rec.attach == ''">{{rec.title}}</template>
                 </li>
 
                 <li>
