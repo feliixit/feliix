@@ -505,7 +505,8 @@ catch (Exception $e){
                 </li>
 
                 <li>
-                    {{rec.title}}
+                    <a href="rec.link" target="_blank" v-if="rec.type == 'link' || rec.type == 'video'">{{rec.title}}</a>
+                    <a href="rec.attach" target="_blank" v-if="rec.type == 'file' ">{{rec.title}}</a>
                 </li>
 
                 <li>
