@@ -152,7 +152,32 @@ catch (Exception $e){
 
     <style>
         body.primary header > .headerbox {
-            background-color: #006BA6;
+            background-color: #7ACCC8;
+        }
+
+        a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.primary header nav a, body.primary header nav a:link {
+            color: #000;
+        }
+
+        body.primary header nav a:hover {
+            color: #333;
+        }
+
+        body.primary header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
+        body.primary header nav ul.info {
+            margin-bottom: 0;
+        }
+
+        body.primary header nav ul.info b {
+            font-weight: bold;
         }
 
         .mainContent > .block {
@@ -160,6 +185,13 @@ catch (Exception $e){
             width: 92vw;
             margin: 30px auto 0;
             border: none;
+        }
+
+        .block .formbox ul > li {
+            display: list-item;
+            padding: 0;
+            font-weight: 400;
+            border-right: none;
         }
 
         .list_function .dialog{
@@ -222,12 +254,16 @@ catch (Exception $e){
             width: 92vw;
             min-height: calc(100vh - 150px);
             margin: 15px auto 0;
+            padding-left: 0;
+            padding-right: 0;
             background-color: #EBEBEB;
+            max-width: 100%;
         }
 
         .container ul {
             width: 100%;
             display: flex;
+            margin-bottom: 0;
         }
 
         .container ul li {
@@ -494,7 +530,7 @@ catch (Exception $e){
                     <a class="prev" :disabled="page == 1" @click="pre_page(); apply_filters()">Prev 10</a>
 
                     <a class="page" v-for="pg in pages_10" @click="page=pg; apply_filters()"
-                       v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                       v-bind:style="[pg == page ? { 'background':'#7ACCC8', 'color': 'white'} : { }]">{{ pg }}</a>
 
                     <a class="next" :disabled="page == pages.length" @click="nex_page(); apply_filters()">Next 10</a>
                 </div>

@@ -112,7 +112,7 @@ catch (Exception $e){
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Knowledge Management</title>
+    <title>Add/Edit Knowledge</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -159,7 +159,7 @@ catch (Exception $e){
 
     <style>
         body.primary header > .headerbox {
-            background-color: #006BA6;
+            background-color: #7ACCC8;
         }
 
         a, a:link, a:visited, a:active, a:hover, area {

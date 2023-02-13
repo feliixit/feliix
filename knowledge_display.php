@@ -95,7 +95,7 @@ catch (Exception $e){
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Knowledge Management</title>
+    <title>Knowledge List</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -153,7 +153,36 @@ catch (Exception $e){
 
     <style>
         body.primary header > .headerbox {
-            background-color: #006BA6;
+            background-color: #7ACCC8;
+        }
+
+        a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.primary header nav a, body.primary header nav a:link {
+            color: #000;
+        }
+
+        body.primary header nav a:hover {
+            color: #333;
+        }
+
+        body.primary header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
+        body.primary header nav ul.info {
+            margin-bottom: 0;
+        }
+
+        body.primary header nav ul.info b {
+            font-weight: bold;
+        }
+
+        .mainContent {
+            min-height: calc(100vh + 100px);
         }
 
         .mainContent > .block {
@@ -161,6 +190,13 @@ catch (Exception $e){
             width: 92vw;
             margin: 30px auto 0;
             border: none;
+        }
+
+        .block .formbox ul > li {
+            display: list-item;
+            padding: 0;
+            font-weight: 400;
+            border-right: none;
         }
 
         .list_function .dialog{
@@ -221,13 +257,15 @@ catch (Exception $e){
 
         .container {
             width: 92vw;
-            margin: 15px auto 4vh;
+            margin: 15px auto 0;
             background-color: #EBEBEB;
             display: flex;
             align-items: stretch;
-            padding: 25px 2.5vw;
+            padding: 25px 0;
             justify-content: space-evenly;
             flex-wrap: wrap;
+            max-width: 100%;
+            min-height: calc(100vh - 150px);
         }
 
         .itembox {
@@ -266,11 +304,22 @@ catch (Exception $e){
             font-size: 16px;
         }
 
+        .itembox li:nth-of-type(3) a{
+            color: black;
+            text-decoration: none;
+        }
+
         .itembox li:nth-of-type(4) {
             color: #8B8B89;
             font-size: 12px;
             font-weight: 400;
             padding: 7px 0 0;
+        }
+
+        .itembox li:nth-of-type(5) {
+            color: #8B8B89;
+            font-size: 12px;
+            font-weight: 400;
         }
 
 
@@ -485,7 +534,7 @@ catch (Exception $e){
                     <a class="prev" :disabled="page == 1" @click="pre_page(); apply_filters()">Prev 10</a>
 
                     <a class="page" v-for="pg in pages_10" @click="page=pg; apply_filters()"
-                       v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                       v-bind:style="[pg == page ? { 'background':'#7ACCC8', 'color': 'white'} : { }]">{{ pg }}</a>
 
                     <a class="next" :disabled="page == pages.length" @click="nex_page(); apply_filters()">Next 10</a>
                 </div>
