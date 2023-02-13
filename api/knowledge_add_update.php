@@ -16,6 +16,8 @@ $link = (isset($_POST['link']) ?  $_POST['link'] : '');
 $watch = (isset($_POST['watch']) ?  $_POST['watch'] : '');
 $duration = (isset($_POST['duration']) ?  $_POST['duration'] : '');
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
+$cover = (isset($_POST['cover']) ?  $_POST['cover'] : '');
+$filename = (isset($_POST['filename']) ?  $_POST['filename'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -59,16 +61,28 @@ else
     
         $query = "UPDATE knowledge
         SET
-            `title` = :title,
-            `category` = :category,
+            `title` = :title, ";
+
+        if($cover == '')
+        {
+            $query .= "`cover` = '', ";
+        }
+
+        if($filename == '')
+        {
+            $query .= "`attach` = '', ";
+        }
+
+        
+        $query .= " `category` = :category,
             `access` = :access,
             `type` = :type,
             `link` = :link, 
             `watch` = :watch, 
             `duration` = :duration,
             `status` = 1,
-            `create_id` = :create_id,
-            `created_at` = now()
+            `updated_id` = :create_id,
+            `updated_at` = now()
             where id = :id";
 
         // prepare the query

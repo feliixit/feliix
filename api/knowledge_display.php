@@ -11,16 +11,15 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
 $user_id = 0;
 
-$usnername = "";
-
 $uid = (isset($_GET['uid']) ?  urldecode($_GET['uid']) : '');
 $ft = (isset($_GET['ft']) ?  urldecode($_GET['ft']) : '');
 $fc = (isset($_GET['fc']) ?  urldecode($_GET['fc']) : []);
-$fu = (isset($_GET['fu']) ?  urldecode($_GET['fu']) : []);
+$fta = (isset($_GET['fta']) ?  urldecode($_GET['fta']) : []);
+$fty = (isset($_GET['fty']) ?  urldecode($_GET['fty']) : '');
+$fw = (isset($_GET['fw']) ?  urldecode($_GET['fw']) : '');
+
 $fcf = (isset($_GET['fcf']) ?  urldecode($_GET['fcf']) : '');
 $fct = (isset($_GET['fct']) ?  urldecode($_GET['fct']) : '');
-$fuf = (isset($_GET['fuf']) ?  urldecode($_GET['fuf']) : '');
-$fut = (isset($_GET['fut']) ?  urldecode($_GET['fut']) : '');
 
 if($fcf != "") {
     $fcf = date("Y/m/d", strtotime($fcf));
@@ -30,13 +29,10 @@ if($fct != "") {
     $fct = date("Y/m/d", strtotime($fct));
 }
 
-if($fuf != "") {
-    $fuf = date("Y/m/d", strtotime($fuf));
-}
+$fdf = (isset($_GET['fdf']) ?  urldecode($_GET['fdf']) : '');
+$fdt = (isset($_GET['fdt']) ?  urldecode($_GET['fdt']) : '');
 
-if($fut != "") {
-    $fut = date("Y/m/d", strtotime($fut));
-}
+$fpt = urldecode($fpt);
 
 
 $op1 = (isset($_GET['op1']) ?  urldecode($_GET['op1']) : '');
@@ -46,7 +42,7 @@ $op2 = (isset($_GET['op2']) ?  urldecode($_GET['op2']) : '');
 $od2 = (isset($_GET['od2']) ?  urldecode($_GET['od2']) : '');
 
 $page = (isset($_GET['page']) ?  urldecode($_GET['page']) : 1);
-$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : 10);
+$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : 8);
 
 
 include_once 'config/core.php';
@@ -77,16 +73,12 @@ if (!isset($jwt)) {
     // decode jwt
     $decoded = JWT::decode($jwt, $key, array('HS256'));
     $GLOBALS["user_id"] = $decoded->data->id;
-
-    // is manager
-    $username = $decoded->data->username;
-    $admin = is_manager($username, $db);
-    if($admin == true)
-    {
-        $GLOBALS["user_id"] = 0;
-    }
+    
+    $user_name = $decoded->data->username;
+    $user_department = $decoded->data->department;
 
     $merged_results = array();
+    
 
     $query = "SELECT pm.id,
                     pm.cover, 
@@ -107,15 +99,13 @@ if (!isset($jwt)) {
                     FROM knowledge pm
                     LEFT JOIN user c_user ON pm.create_id = c_user.id 
                     LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                    WHERE pm.status <> -1 " . ($user_id != 0 ? " and pm.create_id=$user_id " : ' '); 
-                
-                
+                    WHERE pm.status <> -1 and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%' or pm.access like '%All%')";
     // for record size
     $query_cnt = "SELECT count(*) cnt 
                     FROM knowledge pm
                         LEFT JOIN user c_user ON pm.create_id = c_user.id 
                         LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                        WHERE pm.status <> -1 " . ($user_id != 0 ? " and pm.create_id=$user_id " : ' '); 
+                        WHERE pm.status <> -1 and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%' or pm.access like '%All%')";
 
 if ($ft != '') {
     $query = $query . " and pm.`title` like '%" . $ft . "%' ";
@@ -131,13 +121,37 @@ if($fc != "")
     $query_cnt = $query_cnt . " and c_user.username in ('" . implode("','", $fc) . "') ";
 }
 
-if($fu != "")
+if($fta != "")
 {
     // split by comma
-    $fu = explode(",", $fu);
-    $query = $query . " and u_user.username in ('" . implode("','", $fu) . "') ";
-    $query_cnt = $query_cnt . " and u_user.username in ('" . implode("','", $fu) . "') ";
+    $fta = explode(",", $fta);
+
+    $or_status = "";
+
+    for($i = 0; $i < count($fta); $i++)
+    {
+        $or_status .= " pm.category like '%" . $fta[$i] . "%' or";
+    }
+
+    if($or_status != "")
+    {
+        $or_status = substr($or_status, 0, -2);
+        $query = $query . " and (" . $or_status . ") ";
+        $query_cnt = $query_cnt . " and (" . $or_status . ") ";
+    }
 }
+
+if ($fty != '') {
+    $query = $query . " and pm.`type` = '" . $fty . "' ";
+    $query_cnt = $query_cnt . " and pm.`type` = '" . $fty . "' ";
+}
+
+if($fw != "")
+{
+    $query = $query . " and pm.watch = '" . $fw . "' ";
+    $query_cnt = $query_cnt . " and pm.watch = '" . $fw . "' ";
+}
+
 
 if($fcf != "")
 {
@@ -151,16 +165,16 @@ if($fct != "")
     $query_cnt = $query_cnt . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') <= '" . $fct . "' ";
 }
 
-if($fuf != "")
+if($fdf != "")
 {
-    $query = $query . " and DATE_FORMAT(pm.updated_at, '%Y/%m/%d') >= '" . $fuf . "' ";
-    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.updated_at, '%Y/%m/%d') >= '" . $fuf . "' ";
+    $query = $query . " and (0 + CAST(pm.duration AS UNSIGNED)) >= '" . $fdf . "' ";
+    $query_cnt = $query_cnt . " and (0 + CAST(pm.duration AS UNSIGNED)) >= '" . $fdf . "' ";
 }
 
-if($fut != "")
+if($fdt != "")
 {
-    $query = $query . " and DATE_FORMAT(pm.updated_at, '%Y/%m/%d') <= '" . $fut . "' ";
-    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.updated_at, '%Y/%m/%d') <= '" . $fut . "' ";
+    $query = $query . " and (0 + CAST(pm.duration AS UNSIGNED)) <= '" . $fdt . "' ";
+    $query_cnt = $query_cnt . " (0 + CAST(pm.duration AS UNSIGNED)) <= '" . $fdt . "' ";
 }
 
 
@@ -183,9 +197,9 @@ if($op1 != "" && $op1 != "0")
             break;  
         case 3:
             if($od1 == 2)
-                $sOrder = "u_user.username desc";
+                $sOrder = "(0 + CAST(pm.duration AS UNSIGNED)) desc";
             else
-                $sOrder = "u_user.username ";
+                $sOrder = "(0 + CAST(pm.duration AS UNSIGNED)) ";
             break;  
         case 4:
             if($od1 == 2)
@@ -222,9 +236,9 @@ if($op2 != "" && $op2 != "0" && $sOrder != "")
             break;  
         case 3:
             if($od2 == 2)
-                $sOrder = ", u_user.username desc ";
+                $sOrder = ", (0 + CAST(pm.duration AS UNSIGNED)) desc ";
             else
-                $sOrder = ", u_user.username ";
+                $sOrder = ", (0 + CAST(pm.duration AS UNSIGNED)) ";
             break;  
         case 4:
             if($od2 == 2)
@@ -262,9 +276,9 @@ if($op2 != "" && $op2 != "0" && $sOrder == "")
             break;  
         case 3:
             if($od2 == 2)
-                $sOrder = "u_user.username desc ";
+                $sOrder = "(0 + CAST(pm.duration AS UNSIGNED)) desc ";
             else
-                $sOrder = "u_user.username ";
+                $sOrder = "(0 + CAST(pm.duration AS UNSIGNED)) ";
             break;  
         case 4:
             if($od2 == 2)
@@ -300,7 +314,7 @@ if(!empty($_GET['page'])) {
 if(!empty($_GET['size'])) {
     $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
     if(false === $size) {
-        $size = 10;
+        $size = 8;
     }
 
     $offset = ($page - 1) * $size;
@@ -338,6 +352,23 @@ if(!empty($_GET['size'])) {
         $created_at = $row['created_at'];
         $updated_at = $row['updated_at'];
 
+        $duration_str = '';
+        if($duration > 0){
+            $duration_in_huours = round($duration/60, 1);
+            $duration_in_minutes = floor($duration % 60);
+            
+            if($duration_in_huours > 1){
+                $duration_str = $duration_in_huours . '-hr ';
+            }
+            else
+            {
+                $duration_str = $duration_in_minutes . '-min';
+            }
+
+            //if($duration_in_minutes > 0){
+            //    $duration_str .= $duration_in_minutes . '-min';
+            //}
+        }
         
         
         $merged_results[] = array(
@@ -354,6 +385,8 @@ if(!empty($_GET['size'])) {
             "desciption" => $desciption,
             "status" => $status,
 
+            "duration_str" => $duration_str,
+
             "created_by" => $created_by,
             "updated_by" => $updated_by,
             "created_at" => $created_at,
@@ -367,11 +400,11 @@ if(!empty($_GET['size'])) {
     echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 }
 
-function is_manager($username, $db)
+function is_manager($usnername, $db)
 {
     $is_manager = false;
 
-    $query = "SELECT * FROM access_control WHERE knowledge LIKE '%" . $username . "%' ";
+    $query = "SELECT * FROM access_control WHERE knowledge LIKE '%" . $usnername . "%' ";
     $stmt = $db->prepare( $query );
     $stmt->execute();
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

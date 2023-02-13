@@ -112,7 +112,7 @@ catch (Exception $e){
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Knowledge Management</title>
+    <title>Add/Edit Knowledge</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -159,7 +159,32 @@ catch (Exception $e){
 
     <style>
         body.primary header > .headerbox {
-            background-color: #006BA6;
+            background-color: #7ACCC8;
+        }
+
+        a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.primary header nav a, body.primary header nav a:link {
+            color: #000;
+        }
+
+        body.primary header nav a:hover {
+            color: #333;
+        }
+
+        body.primary header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
+        body.primary header nav ul.info {
+            margin-bottom: 0;
+        }
+
+        body.primary header nav ul.info b {
+            font-weight: bold;
         }
 
         .container{
@@ -454,14 +479,14 @@ catch (Exception $e){
 
                 <div class="filebox" v-show="type == 'file'">
                     <!-- 沒選擇任何檔案時，下方的 span 和 input 則是 display: block; 但如果有選擇一個檔案時，下方的 span 和 input 則是 display: none; -->
-                    <span>File</span>
-                    <span><i class="fas fa-paperclip"></i></span>
-                    <input type="file" id="file1">
-
+                    <span v-show="filename == ''">File</span>
+                    <span><i class="fas fa-paperclip" v-if="filename == ''"></i></span>
+                    <input type="file" id="file1" name="file1" @change="onFileChange1($event)" v-show="filename == ''" />
+                    
                     <!-- 沒選擇任何檔案時，下方的 div 則是 display: none; 但如果有選擇一個檔案時，下方的 div 則是 display: block; -->
                     <!-- 使用者點了 x 的 div 時，則代表要清空所選擇的檔案 -->
-                    <div>被選擇的檔案的檔名</div>
-                    <div>x</div>
+                    <div v-if="filename != ''">{{ filename }}</div>
+                    <div v-if="filename != ''" @click="clear_photo1()">x</div>
                 </div>
 
                 <input type="text" placeholder="Website Link" v-model="link"  v-if="type == 'link' || type == 'video'">
@@ -481,7 +506,7 @@ catch (Exception $e){
             <div class="right_box">
 
                 <!-- 當有圖片被選擇時，則需要在 coverimg_box 的結構中，加入 class="chosen" -->
-                <div :class="['coverimg_box', (url !== null ? 'chosen' : '')]">
+                <div :class="['coverimg_box', ((url != null && url != '') ? 'chosen' : '')]">
                     <img v-if="url" :src="url" />
                     <div>Cover Image
                         <input type="file" accept="image/*" id="photo" name="photo"  @change="onFileChange($event)">

@@ -422,6 +422,28 @@ $(function(){
                 </div>
             </div>
 
+            <div class="box-content">
+                <ul>
+                    <li><b>Knowledge Mgt</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="knowledge"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="Name"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(16)">Cancel</a>
+                    <a class="btn" @click="save(16)">Save</a>
+                </div>
+            </div>
+
 
         </div>
     </div>

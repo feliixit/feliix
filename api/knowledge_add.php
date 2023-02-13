@@ -80,6 +80,7 @@ if (!isset($jwt)) {
         $type = $row['type'];
         $link = $row['link'];
         $attach = ($row['attach'] != '') ? 'https://storage.googleapis.com/feliiximg/' . $row['attach'] : '';
+        $filename = $row['attach'];
         $duration = $row['duration'];
         $desciption = $row['desciption'];
         $watch = $row['watch'];
@@ -105,6 +106,7 @@ if (!isset($jwt)) {
             "duration" => $duration,
             "watch" => $watch,
             "desciption" => $desciption,
+            "filename" => $filename,
             "status" => $status,
             "create_id" => $create_id,
             "created_at" => $created_at,

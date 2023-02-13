@@ -27,16 +27,6 @@ try {
         $database = new Database();
         $db = $database->getConnection();
 
-        // is admin?
-        $is_manager = false;
-
-        $query = "SELECT * FROM access_control WHERE knowledge LIKE '%" . $username . "%' ";
-        $stmt = $db->prepare( $query );
-        $stmt->execute();
-        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $is_manager = true;
-        }
-
         // for creator
         $creators = array();
         $query = "select distinct u.id, u.username from knowledge k left join user u on k.create_id = u.id WHERE u.status = 1 and k.status = 1 ORDER BY username ";
@@ -59,6 +49,17 @@ try {
             $updaters[] = array(
                 "id" => $row['id'],
                 "username" => $row['username'],
+            );
+        }
+
+        // for tags
+        $tags = array();
+        $query = "select tag from tags ORDER BY tag ";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $tags[] = array(
+                "tag" => $row['tag'],
             );
         }
 
@@ -94,7 +95,7 @@ catch (Exception $e){
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Knowledge Management</title>
+    <title>Knowledge List</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -137,7 +138,7 @@ catch (Exception $e){
 
     <!-- 這個script之後寫成aspx時，改用include方式載入header.htm，然後這個就可以刪掉了 -->
     <script>
-        $(function(){
+        $(function () {
             $('header').load('include/header.php');
 
             dialogshow($('.list_function .new_project a.filter'),$('.list_function .dialog.d-filter'));
@@ -178,6 +179,10 @@ catch (Exception $e){
 
         body.primary header nav ul.info b {
             font-weight: bold;
+        }
+
+        .mainContent {
+            min-height: calc(100vh + 100px);
         }
 
         .mainContent > .block {
@@ -252,69 +257,71 @@ catch (Exception $e){
 
         .container {
             width: 92vw;
-            min-height: calc(100vh - 150px);
             margin: 15px auto 0;
-            padding-left: 0;
-            padding-right: 0;
             background-color: #EBEBEB;
-            max-width: 100%;
-        }
-
-        .container ul {
-            width: 100%;
             display: flex;
-            margin-bottom: 0;
+            align-items: stretch;
+            padding: 25px 0;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            max-width: 100%;
+            min-height: calc(100vh - 150px);
         }
 
-        .container ul li {
-            width: 25%;
-            padding: 15px 10px;
-            font-weight: 400;
+        .itembox {
+            width: 320px;
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 25px 5px;
+        }
+
+        .itembox li:nth-of-type(1) {
+            width: 220px;
+            height: 290px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .container ul.head li {
-            background-color: #7ACCC8;
+        .itembox li:nth-of-type(1) img {
+            width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .itembox li:nth-of-type(2) {
+            color: #8B8B89;
+            padding: 15px 0 0;
+            font-size: 12px;
+            font-weight: 400;
+            margin-bottom: -3px;
+        }
+
+        .itembox li:nth-of-type(3) {
             font-weight: 500;
+            font-size: 16px;
         }
 
-        .container ul li {
-            border-bottom: 2px solid black;
-            border-right: 2px solid black;
-        }
-
-        .container ul:nth-of-type(1) li {
-            border-top: 1px solid black;
-        }
-
-        .container ul li:first-of-type {
-            border-left: 1px solid black;
-        }
-
-        .container ul li:last-of-type {
-            border-right: 1px solid black;
-        }
-
-        .container ul:last-of-type li {
-            border-bottom: 1px solid black;
-        }
-
-        .container ul li:last-of-type i {
-            font-size: 24px;
-            margin: 0 4px;
-            cursor: pointer;
-        }
-
-        .container ul li:last-of-type a {
-            font-size: 24px;
-            margin: 0 4px;
-            cursor: pointer;
+        .itembox li:nth-of-type(3) a{
             color: black;
+            text-decoration: none;
         }
 
-    
+        .itembox li:nth-of-type(4) {
+            color: #8B8B89;
+            font-size: 12px;
+            font-weight: 400;
+            padding: 7px 0 0;
+        }
+
+        .itembox li:nth-of-type(5) {
+            color: #8B8B89;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
 
     </style>
 
@@ -344,46 +351,18 @@ catch (Exception $e){
                     <div id="filter_dialog" class="dialog d-filter"><h6>Filter Function:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt>Title</dt>
-                                <dd>
-                                    <input type="text" v-model="fil_title">
-                                </dd>
-<?php
-    if($is_manager){
-?>
                                 <dt>Creator</dt>
                                 <dd>
                                     <div style="text-align: left; font-size: 12px;">
-                                    <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                            data-width="100%" id="creator" v-model="fil_creator">
-                                        
-                                            <?php foreach ($creators as $user) { ?>
-                                                <option value="<?php echo $user["username"]; ?>"><?php echo $user["username"]; ?></option>
-                                            <?php } ?>
-
-                                        </select>
-                                    </div>
-
-                                    
-                                </dd>
-
-                                <dt>Updater</dt>
-                                <dd>
-                                    <div style="text-align: left; font-size: 12px;">
                                         <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                            data-width="100%" id="updater" v-model="fil_updater">
-                                        
-                                            <?php foreach ($updaters as $user) { ?>
+                                            data-width="100%" id="creator" v-model="fil_creator">
+                                        <?php foreach ($creators as $user) { ?>
                                                 <option value="<?php echo $user["username"]; ?>"><?php echo $user["username"]; ?></option>
                                             <?php } ?>
-
                                         </select>
-                                            
                                     </div>
                                 </dd>
-<?php
-    }
-?>
+
                                 <dt style="margin-bottom:-18px;">Created Time</dt>
                                 <div class="half">
                                     <dt>from</dt>
@@ -398,17 +377,53 @@ catch (Exception $e){
                                     </dd>
                                 </div>
 
-                                <dt style="margin-bottom:-18px;">Last Updated Time</dt>
+                                <dt>Title</dt>
+                                <dd>
+                                    <input type="text" v-model="fil_title">
+                                </dd>
+
+                                <dt>Category</dt>
+                                <dd>
+                                    <div style="text-align: left; font-size: 12px;">
+                                        <select class="selectpicker" multiple data-live-search="true" data-size="8"
+                                                data-width="100%" id="tag" v-model="fil_tag">
+                                            <?php foreach ($tags as $tag) { ?>
+                                                <option value="<?php echo $tag["tag"]; ?>"><?php echo $tag["tag"]; ?></option>
+                                            <?php } ?>
+                                            </select>
+                                    </div>
+                                </dd>
+
+                                <dt>Type</dt>
+                                <dd>
+                                    <select v-model="fil_type">
+                                        <option value=""></option>
+                                        <option value="file">File</option>
+                                        <option value="link">Web Text</option>
+                                        <option value="video">Web Video</option>
+                                    </select>
+                                </dd>
+
+                                <dt>Viewing Way</dt>
+                                <dd>
+                                    <select v-model="fil_watch">
+                                        <option value=""></option>
+                                        <option value="read">Read</option>
+                                        <option value="watch">Watch</option>
+                                    </select>
+                                </dd>
+
+                                <dt style="margin-bottom:-18px;">Required Time Length (in minutes)</dt>
                                 <div class="half">
                                     <dt>from</dt>
                                     <dd>
-                                        <input type="date" v-model="fil_update_from">
+                                        <input type="number" v-model="fil_dur_from">
                                     </dd>
                                 </div>
                                 <div class="half">
                                     <dt>to</dt>
                                     <dd>
-                                        <input type="date" v-model="fil_update_to">
+                                        <input type="number" v-model="fil_dur_to">
                                     </dd>
                                 </div>
 
@@ -436,18 +451,12 @@ catch (Exception $e){
                                             <option value="1">
                                                 Title
                                             </option>
-<?php
-    if($is_manager){
-?>
                                             <option value="2">
                                                 Creator
                                             </option>
                                             <option value="3">
-                                                Updater
+                                                Required Time Length (in minutes)
                                             </option>
-<?php
-    }
-?>
                                             <option value="4">
                                                 Created Time
                                             </option>
@@ -480,18 +489,12 @@ catch (Exception $e){
                                             <option value="1">
                                                 Title
                                             </option>
-<?php
-    if($is_manager){
-?>
                                             <option value="2">
                                                 Creator
                                             </option>
                                             <option value="3">
-                                                Updater
+                                                Required Time Length (in minutes)
                                             </option>
-<?php
-    }
-?>
                                             <option value="4">
                                                 Created Time
                                             </option>
@@ -538,26 +541,35 @@ catch (Exception $e){
             </div>
 
         </div>
-
         <div class="container">
 
-            <ul class="head">
-                <li>TITLE</li>
-                <li>CREATED ON</li>
-                <li>LAST UPDATE</li>
-                <li>ACTIONS</li>
-            </ul>
+            <!-- 利用迴圈 套用 ul=itembox 這個結構，來建立出每一則知識的區塊 -->
+            <ul class="itembox" v-for="(rec, index) in receive_records" @click="select(rec.link);">
+                <li :style='{"background-color":colors[index%7]}'>
+                    <img :src="rec.cover">
+                </li>
 
-            <ul v-for='(receive_record, index) in displayedPosts'>
-                <li>{{ receive_record.title }}</li>
-                <li>{{ receive_record.created_at }} {{ receive_record.created_by }}</li>
-                <li>{{ receive_record.updated_at }} {{ receive_record.updated_by }}</li>
                 <li>
-                    <a class="fas fa-edit" :href="'knowledge_add?id=' + receive_record.id" target="_blank"></a>
-                    <i class="fas fa-trash" @click="deleteRow(receive_record)"></i>
+                    Title:
+                </li>
+
+                <li>
+                    <a :href="rec.link" target="_blank" v-if="(rec.type == 'link' || rec.type == 'video') && rec.link != ''">{{rec.title}}</a>
+                    <template v-if="(rec.type == 'link' || rec.type == 'video') && rec.link == ''">{{rec.title}}</template>
+                    <a :href="encodeURI(rec.attach)" v-if="rec.type == 'file' && rec.attach != ''">{{rec.title}}</a>
+                    <template v-if="rec.type == 'file' && rec.attach == ''">{{rec.title}}</template>
+                </li>
+
+                <li>
+                    <span class="category">{{rec.category.join(', ')}}</span>
+                    <span> // </span>
+                    <span class="duration">{{ rec.duration_str }} {{ rec.watch }}</span>
+                </li>
+
+                <li>
+                    ({{rec.created_by}} at {{rec.created_at.substr(0,10)}})
                 </li>
             </ul>
-
 
         </div>
 
@@ -568,22 +580,10 @@ catch (Exception $e){
 </div>
 
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="js/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
-<script src="//unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
-<script src="//unpkg.com/element-ui"></script>
-<script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script defer src="js/axios.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="js/knowledge_display.js"></script>
 
-<!-- Awesome Font for current webpage -->
-<script src="js/a076d05399.js"></script>
-
-<script>
-    ELEMENT.locale(ELEMENT.lang.en)
-</script>
-
-<!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script defer src="js/knowledge_mgt.js"></script>
 </html>
