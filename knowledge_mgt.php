@@ -311,6 +311,7 @@ catch (Exception $e){
             font-size: 24px;
             margin: 0 4px;
             cursor: pointer;
+            color: black;
         }
 
     

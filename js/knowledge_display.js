@@ -542,6 +542,14 @@ getAllRecords: function() {
             window.open(link, '_blank');
           },
         
-        
+          cancel_filters:function() {
+            document.getElementById('filter_dialog').classList.remove("show");
+            this.is_modifying = false;
+          },
+    
+          cancel_orders:function() {
+            document.getElementById('order_dialog').classList.remove("show");
+            this.is_modifying = false;
+          },
     }
 });
