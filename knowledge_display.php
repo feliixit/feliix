@@ -54,7 +54,7 @@ try {
 
         // for tags
         $tags = array();
-        $query = "select tag from tags ORDER BY tag ";
+        $query = "select tag from tags where status <> -1 ORDER BY sn ";
         $stmt = $db->prepare($query);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
