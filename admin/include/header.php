@@ -192,6 +192,19 @@ try {
             $access7 = true;
         }
 
+        // SALES DASHBOARD
+        $dashboard = false;
+        if(trim(strtoupper($department)) == 'SALES')
+        {
+
+            $dashboard = true;
+        }
+       
+        if($username == "Kristel Tan" || $username == "Kuan" || $username == "Dennis Lin")
+        {
+            $dashboard = true;
+        }
+
         if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 )
             $access6 = true;
 
@@ -295,7 +308,7 @@ try {
                 }
             ?>
             <?php 
-                if($access5 == true || $access7 == true)
+                if($access5 == true || $access7 == true || $dashboard == true)
                 {
             ?>
             <li class="red01" style="border: 3px solid var(--red01);">
@@ -313,6 +326,14 @@ try {
             <?php 
                 }
             ?>
+            <?php 
+                    if($dashboard == true)
+                    {
+                ?>
+                <a class="list" href="../sales_dashboard">Sales Dashboard</a>
+                <?php 
+                    }
+                ?>
         </ul>
         <ul class="menu">
             <li class="pri01a">
