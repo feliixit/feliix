@@ -164,7 +164,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
             $sql = $sql . " and pm.catagory_id = " . $category . " ";
         }
                 
-            $sql = $sql . " group by user.username, pm.project_name
+            $sql = $sql . " group by user.username, pm.project_name, catagory
                     ORDER BY username, catagory
                     ";
 
