@@ -181,6 +181,8 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 
         $subtotal = 0;
 
+        $merged_results = [];
+
         foreach ($result as &$value) {
             if ($username != $value['username'] && $username != "") {
 
