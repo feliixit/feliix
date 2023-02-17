@@ -322,11 +322,7 @@ try {
                 <?php 
                     }
                 ?>
-            </li>
-            <?php 
-                }
-            ?>
-            <?php 
+                <?php 
                     if($dashboard == true)
                     {
                 ?>
@@ -334,6 +330,11 @@ try {
                 <?php 
                     }
                 ?>
+            </li>
+            <?php 
+                }
+            ?>
+            
         </ul>
         <ul class="menu">
             <li class="pri01a">
