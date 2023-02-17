@@ -253,7 +253,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     sum(pp.amount) amount
                 FROM   project_proof pp
                 LEFT JOIN project_main pm
-                        ON pp.project_id = pm.id
+                        ON pm.project_id = pm.id
                 LEFT JOIN user
                         ON pp.create_id = user.id
                 WHERE pp.status = 1

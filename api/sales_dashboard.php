@@ -149,7 +149,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 LEFT JOIN project_main pm
                         ON pp.project_id = pm.id
                 LEFT JOIN user
-                        ON pp.create_id = user.id
+                        ON pm.create_id = user.id
                 WHERE pp.status = 1
                 AND pp.kind in(0, 1) AND user.apartment_id = 1
                 AND pp.received_date > '" . $PeriodStart . " 23:59:59' AND pp.received_date < '" . $PeriodEnd . "' ";
