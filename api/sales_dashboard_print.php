@@ -373,7 +373,7 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
 
 function GetSalesMember($person, $db)
 {
-    $sql = "SELECT id, username FROM user WHERE apartment_id = 1 AND status <> -1 ";
+    $sql = "SELECT id, username FROM user WHERE `status` <> -1 AND apartment_id = 1 AND status <> -1 ";
 
     if($person != "")
     {
