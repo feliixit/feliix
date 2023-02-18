@@ -264,6 +264,34 @@ background-color: #94BABB;
             text-align: right;
             min-width: 125px;
         }
+
+        table.spantable thead tr:nth-of-type(2) > th:nth-of-type(1){
+            width: 200px
+        }
+
+        table.spantable thead tr:nth-of-type(2) > th:nth-of-type(2){
+            width: 140px
+        }
+
+        table.spantable thead tr:nth-of-type(2) > th:nth-of-type(3){
+            width: 140px
+        }
+
+        table.spantable thead tr:nth-of-type(2) > th:nth-of-type(4){
+            width: 450px
+        }
+
+        table.spantable thead tr:nth-of-type(2) > th:nth-of-type(5){
+            width: 200px
+        }
+
+        table.spantable thead tr:nth-of-type(2) > th:nth-of-type(6){
+            width: 250px
+        }
+
+        table.spantable thead tr:nth-of-type(2) > th:nth-of-type(7){
+            width: 200px
+        }
     </style>
 
 
