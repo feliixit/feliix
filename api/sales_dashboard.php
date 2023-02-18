@@ -135,6 +135,37 @@ function GetOneMonth($strDate, $sale_person, $category, $db)
     return array("date" => date("Y/m",strtotime($strDate . "first day of -1 month")), "report" => $report1);
 }
 
+function GetSalesMember($person, $db)
+{
+    $sql = "SELECT id, username FROM user WHERE apartment_id = 1 AND status <> -1 ";
+
+    if($person != "")
+    {
+        $sql = $sql . " and username = '" . $person . "' ";
+    }
+    
+    $sql = $sql . " ORDER BY username";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $num = $stmt->rowCount();
+
+    if($num > 0)
+    {
+        $results = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $results[] = array("id" => $id, "username" => $username);
+        }
+
+        return $results;
+    }
+    else
+    {
+        return array();
+    }
+}
 
 function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $db){
     $sql = "SELECT user.username,
@@ -227,6 +258,39 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
             
             );
         }
+
+        $sales = GetSalesMember($sale_person, $db);
+
+        // if $merged_results not match with $sale_person, add the empty result
+        foreach ($sales as &$value) {
+            $bFound = false;
+            foreach ($merged_results as &$value2) {
+                if($value['username'] == $value2['username'])
+                {
+                    $bFound = true;
+                    break;
+                }
+            }
+
+            if($bFound == false)
+            {
+                $dummy_catagory = [];
+                $dummy_catagory[] = array("catagory" => "", "project_name" => "", "amount" => 0);
+                $merged_results[] = array(
+                    "username" => $value['username'],
+                    "l_catagory" => $dummy_catagory,
+                    "o_catagory" => [],
+
+                    "subtotal" => 0,
+                
+                );
+            }
+        }
+
+        // sort by name again
+        usort($merged_results, function($a, $b) {
+            return strtoupper($a['username']) <=> strtoupper($b['username']);
+        });
 
         return $merged_results;
 }

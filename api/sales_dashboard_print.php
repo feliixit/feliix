@@ -136,11 +136,11 @@ if($jwt){
                         $i = $i + 1;
                         $sheet->setCellValue('A' . $i, $rp['username']);
                         $sheet->setCellValue('B' . $i, '2,200,000.00');
-                        $sheet->setCellValue('C' . $i, 'Ligthing');
+                        $sheet->setCellValue('C' . $i, $low['catagory']);
                         $sheet->setCellValue('D' . $i, $low['project_name']);
                         $sheet->setCellValue('E' . $i, number_format((float)$low['amount'], 2, '.', ''));
-                        $sheet->setCellValue('F' . $i, number_format(2200000.00 - (float)$rp['subtotal'], 2, '.', ''));
-                        $sheet->setCellValue('G' . $i, 2200000.00 - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
+                        //$sheet->setCellValue('F' . $i, number_format(2200000.00 - (float)$rp['subtotal'], 2, '.', ''));
+                        //$sheet->setCellValue('G' . $i, 2200000.00 - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
                     }
 
                     foreach ($rp['o_catagory'] as $oow)
@@ -151,13 +151,15 @@ if($jwt){
                         $sheet->setCellValue('C' . $i, 'Office Systems');
                         $sheet->setCellValue('D' . $i, $oow['project_name']);
                         $sheet->setCellValue('E' . $i, number_format((float)$oow['amount'], 2, '.', ''));
-                        $sheet->setCellValue('F' . $i, number_format(2200000.00 - (float)$rp['subtotal'], 2, '.', ''));
-                        $sheet->setCellValue('G' . $i, 2200000.00 - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
+                        //$sheet->setCellValue('F' . $i, number_format(2200000.00 - (float)$rp['subtotal'], 2, '.', ''));
+                        //$sheet->setCellValue('G' . $i, 2200000.00 - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
                     }
 
                     $i = $i + 1;
                     $sheet->setCellValue('D' . $i, "Sub Total:");
                     $sheet->setCellValue('E' . $i, number_format((float)$rp['subtotal'], 2, '.', ''));
+                    $sheet->setCellValue('F' . $i, number_format(2200000.00 - (float)$rp['subtotal'], 2, '.', ''));
+                    $sheet->setCellValue('G' . $i, 2200000.00 - (float)$rp['subtotal'] <= 0 ? 'Achieved Monthly Quota' : '');
 
                     $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
 
@@ -253,9 +255,9 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                     sum(pp.amount) amount
                 FROM   project_proof pp
                 LEFT JOIN project_main pm
-                        ON pm.project_id = pm.id
+                        ON pp.project_id = pm.id
                 LEFT JOIN user
-                        ON pp.create_id = user.id
+                        ON pm.create_id = user.id
                 WHERE pp.status = 1
                 AND pp.kind in(0, 1) AND user.apartment_id = 1
                 AND pp.received_date > '" . $PeriodStart . " 23:59:59' AND pp.received_date < '" . $PeriodEnd . "' ";
@@ -332,8 +334,73 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
             );
         }
 
+        
+        $sales = GetSalesMember($sale_person, $db);
+
+        // if $merged_results not match with $sale_person, add the empty result
+        foreach ($sales as &$value) {
+            $bFound = false;
+            foreach ($merged_results as &$value2) {
+                if($value['username'] == $value2['username'])
+                {
+                    $bFound = true;
+                    break;
+                }
+            }
+
+            if($bFound == false)
+            {
+                $dummy_catagory = [];
+                $dummy_catagory[] = array("catagory" => "", "project_name" => "", "amount" => 0);
+                $merged_results[] = array(
+                    "username" => $value['username'],
+                    "l_catagory" => $dummy_catagory,
+                    "o_catagory" => [],
+
+                    "subtotal" => 0,
+                
+                );
+            }
+        }
+
+        // sort by name again
+        usort($merged_results, function($a, $b) {
+            return strtoupper($a['username']) <=> strtoupper($b['username']);
+        });
+
         return $merged_results;
 }
 
+function GetSalesMember($person, $db)
+{
+    $sql = "SELECT id, username FROM user WHERE apartment_id = 1 AND status <> -1 ";
+
+    if($person != "")
+    {
+        $sql = $sql . " and username = '" . $person . "' ";
+    }
+    
+    $sql = $sql . " ORDER BY username";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $num = $stmt->rowCount();
+
+    if($num > 0)
+    {
+        $results = array();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $results[] = array("id" => $id, "username" => $username);
+        }
+
+        return $results;
+    }
+    else
+    {
+        return array();
+    }
+}
 
 ?>

@@ -368,7 +368,7 @@ background-color: #94BABB;
                             <tr v-for="(it, j) in item.l_catagory">
                                 <td v-if="j == 0" :rowspan="item.l_catagory.length + item.o_catagory.length">{{ item.username }}</td>
                                 <td v-if="j == 0" :rowspan="item.l_catagory.length + item.o_catagory.length">2,200,000.00</td>
-                                    <td v-if="j == 0" :rowspan="item.l_catagory.length">Lighting</td>
+                                    <td v-if="j == 0" :rowspan="item.l_catagory.length">{{ it.catagory == '' ? "" : 'Lighting' }}</td>
                                     <td>{{ it.project_name }}</td>
                                     <!-- 下面這各td要放的是: 這個月份收到的 down payment 和 full payment 的加總金額 -->
                                     <td class="money">{{ it.amount == 0 ? "" : Number(it.amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
