@@ -373,7 +373,7 @@ background-color: #94BABB;
                                     <!-- 下面這各td要放的是: 這個月份收到的 down payment 和 full payment 的加總金額 -->
                                     <td class="money">{{ it.amount == 0 ? "" : Number(it.amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
                                     <!-- 下面這各td要放的是: 2,200,000.00 減掉 這個月份收到的 down payment 和 full payment 的加總金額 -->
-                                    <td class="money"  v-if="j == 0" :rowspan="item.l_catagory.length + item.o_catagory.length">{{ item.subtotal == 0 ? "0.00" : Number(2200000 - item.subtotal).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money"  v-if="j == 0" :rowspan="item.l_catagory.length + item.o_catagory.length">{{ item.subtotal == 0 ? "2,200,000.00" : Number(2200000 - item.subtotal).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
                                     <!-- 如果上面的td裡面的金額 小於或等於 0，則下面這各td要放的是字串「Achieved Monthly Quota」；如果金額是大於0，則下面這各td裡不用放任和內容 -->
                                     <td  v-if="j == 0" :rowspan="item.l_catagory.length + item.o_catagory.length">{{ 2200000 - item.subtotal <= 0 ? 'Achieved Monthly Quota' : '' }}</td>
                             </tr>
@@ -386,7 +386,7 @@ background-color: #94BABB;
                                     <!-- 下面這各td要放的是: 這個月份收到的 down payment 和 full payment 的加總金額 -->
                                     <td class="money">{{ it.amount == 0 ? "" : Number(it.amount).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
                                     <!-- 下面這各td要放的是: 2,200,000.00 減掉 這個月份收到的 down payment 和 full payment 的加總金額 -->
-                                    <td class="money" v-if="item.l_catagory.length == 0 && j==0" :rowspan="item.l_catagory.length + item.o_catagory.length">{{ item.subtotal == 0 ? "0.00" : Number(2200000 - item.subtotal).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
+                                    <td class="money" v-if="item.l_catagory.length == 0 && j==0" :rowspan="item.l_catagory.length + item.o_catagory.length">{{ item.subtotal == 0 ? "2,200,000.00" : Number(2200000 - item.subtotal).toLocaleString(undefined, {minimumFractionDigits: 2,maximumFractionDigits: 2}) }}</td>
                                     <!-- 如果上面的td裡面的金額 小於或等於 0，則下面這各td要放的是字串「Achieved Monthly Quota」；如果金額是大於0，則下面這各td裡不用放任和內容 -->
                                     <td v-if="item.l_catagory.length == 0 && j==0" :rowspan="item.l_catagory.length + item.o_catagory.length">{{ 2200000 - item.subtotal <= 0 ? 'Achieved Monthly Quota' : '' }}</td>
                             </tr>
