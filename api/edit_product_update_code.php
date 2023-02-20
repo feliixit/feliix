@@ -146,7 +146,7 @@ else
                         if($price_ntd_change != '')
                             $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
                         else
-                            $query .= "`price_ntd_change` = now(), ";
+                            $query .= "`price_ntd_change` = null, ";
                     }
                     
                 //}
@@ -165,7 +165,7 @@ else
                         if($price_change != '')
                             $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
                         else
-                            $query .= "`price_change` = now(), ";
+                            $query .= "`price_change` = null, ";
                     }
                 //}
                 //else
@@ -183,7 +183,7 @@ else
                         if($quoted_price_change != '')
                             $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
                         else
-                            $query .= "`quoted_price_change` = now(), ";
+                            $query .= "`quoted_price_change` = null, ";
                     }
                 //}
                 //else
@@ -526,7 +526,7 @@ else
                             $query .= "`price_ntd_change` = STR_TO_DATE('" . $price_ntd_change . "', '%Y-%m-%d'), ";
                         }
                         else
-                            $query .= "`price_ntd_change` = now(), ";
+                            $query .= "`price_ntd_change` = null, ";
                     }
 
                     if(($price != $price_org) || $price_change != '')
@@ -536,7 +536,7 @@ else
                             $query .= "`price_change` = STR_TO_DATE('" . $price_change . "', '%Y-%m-%d'), ";
                         }
                         else
-                            $query .= "`price_change` = now(), ";
+                            $query .= "`price_change` = null, ";
                     }
                     
                     if(($quoted_price != $quoted_price_org) || $quoted_price_change != '')
@@ -546,7 +546,7 @@ else
                             $query .= "`quoted_price_change` = STR_TO_DATE('" . $quoted_price_change . "', '%Y-%m-%d'), ";
                         }
                         else
-                            $query .= "`quoted_price_change` = now(), ";
+                            $query .= "`quoted_price_change` = null, ";
                     }
 
                     $query .= "`enabled` = :enabled,
