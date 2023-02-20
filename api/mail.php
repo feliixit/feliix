@@ -830,7 +830,16 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
-    $mail->Subject = "Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
+
+    if($status == 'True'){
+        $mail->Subject = "[PAYMENT CONFIRMED] Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
+
+        if($category == '2')
+            $mail->AddAddress('cristina@feliix.com', 'Cristina Matining');
+    }
+    if($status == 'False')
+        $mail->Subject = "Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
+
 
     $content = '<!DOCTYPE html>
                 <html lang="en">
@@ -1162,7 +1171,17 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
-    $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
+
+
+    if($status == 'True'){
+        $mail->Subject = "[PAYMENT CONFIRMED] Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
+
+        if($category == '2')
+            $mail->AddAddress('cristina@feliix.com', 'Cristina Matining');
+    }
+    if($status == 'False')
+        $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
+
     $content =  "<p>Dear " . $name . ",</p>";
     $content = $content . "<p>Glen has checked downpayment proof, Following are the details:</p>";
 
@@ -2421,27 +2440,7 @@ function task_notify_admin_c($request_type,  $project_name, $task_name, $task_st
 {
     $tab = "";
 
-    switch ($request_type) {
-        case "create":
-            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was created";
-            break;
-        case "edit":
-            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was revised";
-            break;
-        case "del":
-            $tab = "<p>A existing task was deleted. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was deleted";
-            break;
-        case "notify":
-            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
-            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
-            break;
-        default:
-            return;
-            break;
-    }
+
 
     $conf = new Conf();
 
@@ -2514,9 +2513,33 @@ function task_notify_admin_c($request_type,  $project_name, $task_name, $task_st
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Reminder: Due Date is Near] Task " . $task_name . " ";
+            break;
+        default:
+            return;
+            break;
+    }
+
 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -2556,27 +2579,7 @@ function task_notify_admin_d($request_type, $task_status, $task_name, $stages_st
 {
     $tab = "";
 
-    switch ($request_type) {
-        case "create":
-            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was created";
-            break;
-        case "edit":
-            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was revised";
-            break;
-        case "del":
-            $tab = "<p>A existing task was deleted. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was deleted";
-            break;
-        case "notify":
-            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
-            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
-            break;
-        default:
-            return;
-            break;
-    }
+
 
     $conf = new Conf();
 
@@ -2649,9 +2652,31 @@ function task_notify_admin_d($request_type, $task_status, $task_name, $stages_st
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Reminder: Due Date is Near] Task " . $task_name . " ";
+            break;
+        default:
+            return;
+            break;
+    }
 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -2690,27 +2715,7 @@ function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_s
 {
     $tab = "";
 
-    switch ($request_type) {
-        case "create":
-            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was created";
-            break;
-        case "edit":
-            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was revised";
-            break;
-        case "del":
-            $tab = "<p>A existing task was deleted. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was deleted";
-            break;
-        case "notify":
-            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
-            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
-            break;
-        default:
-            return;
-            break;
-    }
+
 
     $conf = new Conf();
 
@@ -2783,9 +2788,31 @@ function task_notify_admin_sl($request_type, $task_status, $task_name, $stages_s
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Reminder: Due Date is Near] Task " . $task_name . " ";
+            break;
+        default:
+            return;
+            break;
+    }
 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -2845,27 +2872,7 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
 {
     $tab = "";
 
-    switch ($request_type) {
-        case "create":
-            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was created";
-            break;
-        case "edit":
-            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was revised";
-            break;
-        case "del":
-            $tab = "<p>A existing task was deleted. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was deleted";
-            break;
-        case "notify":
-            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
-            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
-            break;
-        default:
-            return;
-            break;
-    }
+
 
     $conf = new Conf();
 
@@ -2946,9 +2953,31 @@ function task_notify_admin_sv($request_type, $task_status, $task_name, $stages_s
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Reminder: Due Date is Near] Task " . $task_name . " ";
+            break;
+        default:
+            return;
+            break;
+    }
 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -2987,27 +3016,7 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
 {
     $tab = "";
 
-    switch ($request_type) {
-        case "create":
-            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was created";
-            break;
-        case "edit":
-            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was revised";
-            break;
-        case "del":
-            $tab = "<p>A existing task was deleted. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was deleted";
-            break;
-        case "notify":
-            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
-            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
-            break;
-        default:
-            return;
-            break;
-    }
+
 
     $conf = new Conf();
 
@@ -3080,9 +3089,31 @@ function task_notify_admin_o($request_type, $task_status, $task_name, $stages_st
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Reminder: Due Date is Near] Task " . $task_name . " ";
+            break;
+        default:
+            return;
+            break;
+    }
 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -3121,27 +3152,7 @@ function task_notify_admin_l($request_type, $task_status, $task_name, $stages_st
 {
     $tab = "";
 
-    switch ($request_type) {
-        case "create":
-            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was created";
-            break;
-        case "edit":
-            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was revised";
-            break;
-        case "del":
-            $tab = "<p>A existing task was deleted. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was deleted";
-            break;
-        case "notify":
-            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
-            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
-            break;
-        default:
-            return;
-            break;
-    }
+
 
     $conf = new Conf();
 
@@ -3214,9 +3225,31 @@ function task_notify_admin_l($request_type, $task_status, $task_name, $stages_st
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Reminder: Due Date is Near] Task " . $task_name . " ";
+            break;
+        default:
+            return;
+            break;
+    }
 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -3421,27 +3454,7 @@ function task_notify_admin($request_type, $task_status, $task_name, $stages_stat
 {
     $tab = "";
 
-    switch ($request_type) {
-        case "create":
-            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was created";
-            break;
-        case "edit":
-            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was revised";
-            break;
-        case "del":
-            $tab = "<p>A existing task was deleted. Below is the details:</p>";
-            $title = "[Task Notification] Task " . $task_name . " was deleted";
-            break;
-        case "notify":
-            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
-            $title = "[Task Reminder: Due Date is Near] Task " . $task_name . " ";
-            break;
-        default:
-            return;
-            break;
-    }
+
 
     $conf = new Conf();
 
@@ -3514,9 +3527,31 @@ function task_notify_admin($request_type, $task_status, $task_name, $stages_stat
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    switch ($request_type) {
+        case "create":
+            $tab = "<p>A new task was created and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was created";
+            break;
+        case "edit":
+            $tab = "<p>A task was revised and needs you to follow. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was revised";
+            break;
+        case "del":
+            $tab = "<p>A existing task was deleted. Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Notification] Task " . $task_name . " was deleted";
+            break;
+        case "notify":
+            $tab = "<p>Just a quick reminder that the due date of Task " . $task_name . " is " . $due_date . ". Below is the details:</p>";
+            $title = "[" . $assignees . "][Task Reminder: Due Date is Near] Task " . $task_name . " ";
+            break;
+        default:
+            return;
+            break;
+    }
 
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
@@ -3581,7 +3616,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -3592,7 +3627,7 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
     // $mail->Password   = $conf::$mail_password;
 
     $mail = SetupMail($mail, $conf);
-    
+
 
     $mail->IsHTML(true);
 
@@ -3641,21 +3676,21 @@ function task_notify($request_type, $project_name, $task_name, $stages_status, $
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
 
     if($request_type == "notify")
-        $title = "[Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
-    
+        $title = "[" . $assignees . "][Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -3817,7 +3852,6 @@ function task_notify_r($request_type, $project_name, $task_name, $stages_status,
 }
 
 
-
 function task_notify_order($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, $order_type, $order_name)
 {
     $tab = "";
@@ -3848,7 +3882,7 @@ function task_notify_order($request_type, $project_name, $task_name, $stages_sta
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -3859,7 +3893,7 @@ function task_notify_order($request_type, $project_name, $task_name, $stages_sta
     // $mail->Password   = $conf::$mail_password;
 
     $mail = SetupMail($mail, $conf);
-    
+
 
     $mail->IsHTML(true);
 
@@ -3908,24 +3942,24 @@ function task_notify_order($request_type, $project_name, $task_name, $stages_sta
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
-        
+
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是訂單任務，執行下一行
-    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是訂單任務，執行下兩行
     if($request_type == "notify")
-        $title = "[Order Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
-    
+        $title = "[" . $assignees . "][Order Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -3990,7 +4024,7 @@ function task_notify_inquiry($request_type, $project_name, $task_name, $stages_s
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -4001,7 +4035,7 @@ function task_notify_inquiry($request_type, $project_name, $task_name, $stages_s
     // $mail->Password   = $conf::$mail_password;
 
     $mail = SetupMail($mail, $conf);
-    
+
 
     $mail->IsHTML(true);
 
@@ -4050,23 +4084,23 @@ function task_notify_inquiry($request_type, $project_name, $task_name, $stages_s
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是訂單任務，執行下一行
-    $title = "[Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是訂單任務，執行下兩行
     if($request_type == "notify")
-        $title = "[Inquiry Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
-    
+        $title = "[" . $assignees . "][Inquiry Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -4101,6 +4135,7 @@ function task_notify_inquiry($request_type, $project_name, $task_name, $stages_s
 
 
 
+
 function task_notify_type_order($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, $order_type, $order_name, $task_type)
 {
     $tab = "";
@@ -4124,11 +4159,11 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
     }
 
     $task_department = "";
-    if($task_type == 'LT') 
+    if($task_type == 'LT')
         $task_department = "Lighting";
-    if($task_type == 'OS') 
+    if($task_type == 'OS')
         $task_department = "Office Systems";
-    if($task_type == 'SLS') 
+    if($task_type == 'SLS')
         $task_department = "Sales";
 
     $conf = new Conf();
@@ -4139,7 +4174,7 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -4150,7 +4185,7 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
     // $mail->Password   = $conf::$mail_password;
 
     $mail = SetupMail($mail, $conf);
-    
+
 
     $mail->IsHTML(true);
 
@@ -4199,23 +4234,23 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是訂單任務，執行下一行
-    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是訂單任務，執行下兩行
     if($request_type == "notify")
-        $title = "[Order Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
-    
+        $title = "[" . $assignees . "][Order Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -4273,11 +4308,11 @@ function task_notify_type_inquiry($request_type, $project_name, $task_name, $sta
     }
 
     $task_department = "";
-    if($task_type == 'LT') 
+    if($task_type == 'LT')
         $task_department = "Lighting";
-    if($task_type == 'OS') 
+    if($task_type == 'OS')
         $task_department = "Office Systems";
-    if($task_type == 'SLS') 
+    if($task_type == 'SLS')
         $task_department = "Sales";
 
     $conf = new Conf();
@@ -4288,7 +4323,7 @@ function task_notify_type_inquiry($request_type, $project_name, $task_name, $sta
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -4299,7 +4334,7 @@ function task_notify_type_inquiry($request_type, $project_name, $task_name, $sta
     // $mail->Password   = $conf::$mail_password;
 
     $mail = SetupMail($mail, $conf);
-    
+
 
     $mail->IsHTML(true);
 
@@ -4348,23 +4383,23 @@ function task_notify_type_inquiry($request_type, $project_name, $task_name, $sta
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是訂單任務，執行下一行
-    $title = "[Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是訂單任務，執行下兩行
     if($request_type == "notify")
-        $title = "[Inquiry Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
-    
+        $title = "[" . $assignees . "][Inquiry Task Reminder: Due Date is Near] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -4918,12 +4953,12 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
-    
+    $title = "[" . $assignees . "][Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -4945,19 +4980,19 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
     if($category == 'AD')
         $content = $content . "<p>https://feliix.myvnc.com/task_management_AD?sid=" . $stage_id . "</p>";
     else if($category == 'DS')
-        $content = $content . "<p>https://feliix.myvnc.com/task_management_DS?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_DS?sid=" . $stage_id . "</p>";
     else if($category == 'LT_T')
-        $content = $content . "<p>https://feliix.myvnc.com/task_management_LT?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_LT?sid=" . $stage_id . "</p>";
     else if($category == 'OS_T')
-        $content = $content . "<p>https://feliix.myvnc.com/task_management_OS?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_OS?sid=" . $stage_id . "</p>";
     else if($category == 'SL')
-        $content = $content . "<p>https://feliix.myvnc.com/task_management_SLS?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_SLS?sid=" . $stage_id . "</p>";
     else if($category == 'SV')
-        $content = $content . "<p>https://feliix.myvnc.com/task_management_SVC?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/task_management_SVC?sid=" . $stage_id . "</p>";
     else if($category == 'C')
-        $content = $content . "<p>https://feliix.myvnc.com/project03_client_v2?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/project03_client_v2?sid=" . $stage_id . "</p>";
     else
-        $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";  
+        $content = $content . "<p>https://feliix.myvnc.com/project03_other?sid=" . $stage_id . "</p>";
 
     $mail->MsgHTML($content);
     if($mail->Send()) {
@@ -4969,6 +5004,7 @@ function task_notify01_admin($old_status, $task_status, $revisor, $task_name, $c
     }
 
 }
+
 
 function task_notify01_admin_sl($old_status, $task_status, $revisor, $task_name, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id)
 {
@@ -5026,12 +5062,12 @@ function task_notify01_admin_sl($old_status, $task_status, $revisor, $task_name,
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
-    
+    $title = "[" . $assignees . "][Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -5113,12 +5149,12 @@ function task_notify01_admin_sv($old_status, $task_status, $revisor, $task_name,
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
-    
+    $title = "[" . $assignees . "][Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -5201,12 +5237,12 @@ function task_notify01_admin_d($old_status, $task_status, $revisor, $task_name, 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
-    
+    $title = "[" . $assignees . "][Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -5289,12 +5325,12 @@ function task_notify01_admin_o($old_status, $task_status, $revisor, $task_name, 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
-    
+    $title = "[" . $assignees . "][Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -5377,12 +5413,12 @@ function task_notify01_admin_l($old_status, $task_status, $revisor, $task_name, 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    $title = "[Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
-    
+    $title = "[" . $assignees . "][Task Notification] Status of " . $task_name . " changed from " . $old_status . ' to ' . $task_status;
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -5465,7 +5501,7 @@ function task_notify01($old_status, $task_status, $project_name, $task_name, $st
         $creators = $creators . $list["username"] . ", ";
     }
 
-    
+
 // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
 if($stage == "Order")
 {
@@ -5484,21 +5520,21 @@ if($stage == "Order")
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
-    
+
 }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是普通任務，執行下一行
-    $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    //$title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
-    
+    //$title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -5509,7 +5545,7 @@ if($stage == "Order")
     $content = $content . "<p>Task: " . $task_name . "</p>";
     //如果是訂單任務，執行下一行
     //$content = $content . "<p>Order Task: " . $task_name . "</p>";
-    
+
 
     $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
 
@@ -5720,7 +5756,7 @@ function task_notify01_order($old_status, $task_status, $project_name, $task_nam
         $creators = $creators . $list["username"] . ", ";
     }
 
-    
+
 // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
 if($stage == "Order")
 {
@@ -5739,21 +5775,21 @@ if($stage == "Order")
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
-    
+
 }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是普通任務，執行下一行
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
-    
+    $title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -5764,7 +5800,7 @@ if($stage == "Order")
     //$content = $content . "<p>Task: " . $task_name . "</p>";
     //如果是訂單任務，執行下一行
     $content = $content . "<p>Order Task: " . $task_name . "</p>";
-    
+
 
     $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
 
@@ -5791,8 +5827,6 @@ if($stage == "Order")
     }
 
 }
-
-
 
 function task_notify01_inquiry($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name)
 {
@@ -5850,7 +5884,7 @@ function task_notify01_inquiry($old_status, $task_status, $project_name, $task_n
         $creators = $creators . $list["username"] . ", ";
     }
 
-    
+
 // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
 if($stage == "Order")
 {
@@ -5869,21 +5903,21 @@ if($stage == "Order")
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
-    
+
 }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是普通任務，執行下一行
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    $title = "[Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
-    
+    $title = "[" . $assignees . "][Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -5894,7 +5928,7 @@ if($stage == "Order")
     //$content = $content . "<p>Task: " . $task_name . "</p>";
     //如果是訂單任務，執行下一行
     $content = $content . "<p>Inquiry Task: " . $task_name . "</p>";
-    
+
 
     $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
 
@@ -5979,7 +6013,7 @@ function task_notify01_type_order($old_status, $task_status, $project_name, $tas
         $creators = $creators . $list["username"] . ", ";
     }
 
-    
+
 // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
 if($stage == "Order")
 {
@@ -5998,29 +6032,29 @@ if($stage == "Order")
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
-    
+
 }
 
 $task_department = "";
-if($task_type == 'LT') 
+if($task_type == 'LT')
     $task_department = "Lighting";
-if($task_type == 'OS') 
+if($task_type == 'OS')
     $task_department = "Office Systems";
-if($task_type == 'SLS') 
+if($task_type == 'SLS')
     $task_department = "Sales";
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是普通任務，執行下一行
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
-    
+    $title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -6030,7 +6064,7 @@ if($task_type == 'SLS')
     //$content = $content . "<p>Task: " . $task_name . "</p>";
     //如果是訂單任務，執行下一行
     $content = $content . "<p>Order Task: " . $task_name . "</p>";
-    
+
 
     $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
 
@@ -6115,7 +6149,7 @@ function task_notify01_type_inquiry($old_status, $task_status, $project_name, $t
         $creators = $creators . $list["username"] . ", ";
     }
 
-    
+
 // 在Order Stage中，當使用者XXXX Task，系統發出的通知信中需要額外加入「職位為 Service Manager」和「職位為 Warehouse in charge」的人員
 if($stage == "Order")
 {
@@ -6134,29 +6168,29 @@ if($stage == "Order")
             $mail->AddAddress($list["email"], $list["username"]);
         }
     }
-    
+
 }
 
 $task_department = "";
-if($task_type == 'LT') 
+if($task_type == 'LT')
     $task_department = "Lighting";
-if($task_type == 'OS') 
+if($task_type == 'OS')
     $task_department = "Office Systems";
-if($task_type == 'SLS') 
+if($task_type == 'SLS')
     $task_department = "Sales";
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //如果是普通任務，執行下一行
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    $title = "[Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
-    
+    $title = "[" . $assignees . "][Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -6166,7 +6200,7 @@ if($task_type == 'SLS')
     //$content = $content . "<p>Task: " . $task_name . "</p>";
     //如果是訂單任務，執行下一行
     $content = $content . "<p>Inquiry Task: " . $task_name . "</p>";
-    
+
 
     $content = $content . "<p>Task Status: " . $old_status . ' => ' . $task_status . "</p>";
 
@@ -6212,7 +6246,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     $mail->Mailer = "smtp";
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
-   
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -6221,7 +6255,7 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
     // $mail->Host       = $conf::$mail_host;
     // $mail->Username   = $conf::$mail_username;
     // $mail->Password   = $conf::$mail_password;
-    
+
     $mail = SetupMail($mail, $conf);
 
 
@@ -6272,24 +6306,24 @@ function task_notify02($old_status, $task_status, $project_name, $task_name, $st
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是普通任務，執行下一行
-    $title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    //$title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
 
-    
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -6349,7 +6383,7 @@ function task_notify02_r($old_status, $task_status, $project_name, $task_name, $
     $mail->Mailer = "smtp";
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
-   
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -6358,7 +6392,7 @@ function task_notify02_r($old_status, $task_status, $project_name, $task_name, $
     // $mail->Host       = $conf::$mail_host;
     // $mail->Username   = $conf::$mail_username;
     // $mail->Password   = $conf::$mail_password;
-    
+
     $mail = SetupMail($mail, $conf);
 
 
@@ -6409,24 +6443,24 @@ function task_notify02_r($old_status, $task_status, $project_name, $task_name, $
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是普通任務，執行下一行
-    $title = "[Message Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Message Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    //$title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
 
-    
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -6485,7 +6519,7 @@ function task_notify02_order($old_status, $task_status, $project_name, $task_nam
     $mail->Mailer = "smtp";
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
-   
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -6494,7 +6528,7 @@ function task_notify02_order($old_status, $task_status, $project_name, $task_nam
     // $mail->Host       = $conf::$mail_host;
     // $mail->Username   = $conf::$mail_username;
     // $mail->Password   = $conf::$mail_password;
-    
+
     $mail = SetupMail($mail, $conf);
 
 
@@ -6545,24 +6579,24 @@ function task_notify02_order($old_status, $task_status, $project_name, $task_nam
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是普通任務，執行下一行
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
 
-    
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -6622,7 +6656,7 @@ function task_notify02_inquiry($old_status, $task_status, $project_name, $task_n
     $mail->Mailer = "smtp";
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
-   
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -6631,7 +6665,7 @@ function task_notify02_inquiry($old_status, $task_status, $project_name, $task_n
     // $mail->Host       = $conf::$mail_host;
     // $mail->Username   = $conf::$mail_username;
     // $mail->Password   = $conf::$mail_password;
-    
+
     $mail = SetupMail($mail, $conf);
 
 
@@ -6682,24 +6716,24 @@ function task_notify02_inquiry($old_status, $task_status, $project_name, $task_n
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是普通任務，執行下一行
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    $title = "[Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
 
-    
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -6741,7 +6775,6 @@ function task_notify02_inquiry($old_status, $task_status, $project_name, $task_n
 
 }
 
-
 function task_notify02_type_order($old_status, $task_status, $project_name, $task_name, $stage, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $order_type, $order_name, $task_type)
 {
 
@@ -6759,7 +6792,7 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
     $mail->Mailer = "smtp";
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
-   
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -6768,7 +6801,7 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
     // $mail->Host       = $conf::$mail_host;
     // $mail->Username   = $conf::$mail_username;
     // $mail->Password   = $conf::$mail_password;
-    
+
     $mail = SetupMail($mail, $conf);
 
 
@@ -6819,32 +6852,32 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $task_department = "";
-    if($task_type == 'LT') 
+    if($task_type == 'LT')
         $task_department = "Lighting";
-    if($task_type == 'OS') 
+    if($task_type == 'OS')
         $task_department = "Office Systems";
-    if($task_type == 'SLS') 
+    if($task_type == 'SLS')
         $task_department = "Sales";
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是普通任務，執行下一行
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    $title = "[Order Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Order Task Notification] " . $project_name . " - " . $task_name . " ";
 
-    
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
@@ -6903,7 +6936,7 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
     $mail->Mailer = "smtp";
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
-   
+
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
     // $mail->SMTPSecure = "ssl";
@@ -6912,7 +6945,7 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
     // $mail->Host       = $conf::$mail_host;
     // $mail->Username   = $conf::$mail_username;
     // $mail->Password   = $conf::$mail_password;
-    
+
     $mail = SetupMail($mail, $conf);
 
 
@@ -6963,32 +6996,32 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
                 $mail->AddAddress($list["email"], $list["username"]);
             }
         }
-        
+
     }
 
     $task_department = "";
-    if($task_type == 'LT') 
+    if($task_type == 'LT')
         $task_department = "Lighting";
-    if($task_type == 'OS') 
+    if($task_type == 'OS')
         $task_department = "Office Systems";
-    if($task_type == 'SLS') 
+    if($task_type == 'SLS')
         $task_department = "Sales";
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
     $collaborators = rtrim($collaborators, ", ");
-    
+
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
 
     //如果是普通任務，執行下一行
-    //$title = "[Task Notification] " . $project_name . " - " . $task_name . " ";
+    //$title = "[" . $assignees . "][Task Notification] " . $project_name . " - " . $task_name . " ";
     //如果是訂單任務，執行下一行
-    $title = "[Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
+    $title = "[" . $assignees . "][Inquiry Task Notification] " . $project_name . " - " . $task_name . " ";
 
-    
+
     $mail->Subject = $title;
     $content =  "<p>Dear all,</p>";
     $content = $content . $tab;
