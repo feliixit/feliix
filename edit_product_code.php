@@ -902,7 +902,7 @@
                     {{ item.category }}
                 </li>
                 <li>
-                    <input type="text" class="form-control one_half" :ref="item.cat_id" :value="item.value">
+                    <input type="text" class="form-control one_half" :ref="item.cat_id" v-model="item.value">
                     <i class="fas fa-hand-pointer" @click="get_special_infomation_detail(item.cat_id)"></i>
                 </li>
             </ul>
