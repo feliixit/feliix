@@ -109,11 +109,11 @@ try {
         }
 
         $access3 = false;
-        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87 || $user_id == 99)
+        if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87 || $user_id == 99 || $user_id == 139)
             $access3 = true;
 
         // 5. 針對 Reporting Section的內容，只有 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到
-        if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 9 || $user_id == 41 || $user_id == 99)
+        if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 9 || $user_id == 41 || $user_id == 99 || $user_id == 139)
             $access5 = true;
 
         
@@ -205,7 +205,7 @@ try {
             $dashboard = true;
         }
 
-        if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 )
+        if($user_id == 1 || $user_id == 99 || $user_id == 41 || $user_id == 9 || $user_id == 139)
             $access6 = true;
 
         $pic_url = $decoded->data->pic_url;
