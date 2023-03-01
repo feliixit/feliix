@@ -251,7 +251,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
 
-    $details = GetDetail($id, $db);
+    $details = GetDetail($id, $user_id, $db);
     if($access != "") {
         $access_array = json_decode($access,true);
         $access_text = GetAccessText($access_array);
@@ -264,6 +264,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $rule_text = GetRuleText($rule);
     $display_text = GetDisplayText($display);
     $sort_text = GetSortText($sort);
+
+    $votes = GetVotes($id, $db);
+    $votes_cnt = GetVotesCnt($id, $db);
 
  
     $merged_results[] = array(
@@ -289,8 +292,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         'details' => $details,
         "vote_status" => GetVotingStatus($start_date, $end_date),
-        "votes" => [],
-
+        "votes" => $votes,
+        "votes_cnt" => $votes_cnt,
         "cnt" => $cnt,
 
     );
@@ -298,10 +301,28 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
-
-function GetDetail($template_id, $db)
+function IsChecked($review_question_id, $user_id, $db)
 {
-    $query = "select id, template_id, sn, title, pic, description, link from voting_template_detail where template_id = " . $template_id . " order by sn";
+    $query = "select answer from voting_review_detail
+    where review_question_id = " . $review_question_id . " and create_id = " . $user_id . " and status <> -1";
+
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+
+    $answer = "";
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $answer = $row['answer'];
+    }
+
+    return $answer;
+}
+
+function GetDetail($template_id, $uid, $db)
+{
+    $query = "select q.id, q.template_id, sn, title, pic, description, link from voting_template_detail q 
+    where q.template_id = " . $template_id . "  order by sn";
+
     $stmt = $db->prepare( $query );
     $stmt->execute();
 
@@ -314,9 +335,11 @@ function GetDetail($template_id, $db)
         $pic = $row['pic'];
         $description = $row['description'];
         $link = $row['link'];
+        $check = IsChecked($id, $uid, $db);
 
         $merged_results[] = array(
             'id' => $id,
+            'check' => $check,
             'template_id' => $template_id,
             'sn' => $sn,
             'title' => $title,
@@ -419,5 +442,106 @@ function GetAccessText($access_array)
 
     return $access_text;
 }
+
+function GetVotes($template_id, $db)
+{
+    $query = "select voting_review.id, template_id, user_id, u.username, voting_review.created_at from voting_review left join user u on u.id = voting_review.create_id where voting_review.`status` <> -1 and template_id = " . $template_id;
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+
+    $merged_results = [];
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $template_id = $row['template_id'];
+        $user_id = $row['user_id'];
+        $username = $row['username'];
+        $answers = GetAnswers($id, $db);
+        $created_at = $row['created_at'];
+
+        $merged_results[] = array(
+            'id' => $id,
+            'template_id' => $template_id,
+            'user_id' => $user_id,
+            'username' => $username,
+            'answers' => $answers,
+            'created_at' => $created_at,
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetAnswers($review_id, $db)
+{
+    $query = "select a.id, review_question_id, answer, sn, title, pic, description, link from voting_review_detail a left join voting_template_detail q on q.id = a. review_question_id where a.`status` <> -1 and review_id = " . $review_id;
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+
+    $merged_results = [];
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $review_question_id = $row['review_question_id'];
+        $answer = $row['answer'];
+        $sn = $row['sn'];
+        $title = $row['title'];
+        $pic = $row['pic'];
+        $description = $row['description'];
+        $link = $row['link'];
+
+        $merged_results[] = array(
+            'id' => $id,
+            'review_question_id' => $review_question_id,
+            'answer' => $answer,
+            'sn' => $sn,
+            'title' => $title,
+            'pic' => $pic,
+            'description' => $description,
+            'link' => $link,
+            'url' => ($pic != '' ? "https://storage.googleapis.com/feliiximg/" . $pic : ''),
+            
+        );
+    }
+
+    return $merged_results;
+}
+
+
+
+function GetVotesCnt($template_id, $db)
+{
+    $query = "select review_question_id, sum(case when answer = '1' then 1 else 0 end) as score, sn, title, pic, description, link from voting_review_detail a 
+    left join voting_template_detail q on q.id = a. review_question_id where a.`status` <> -1  and q.template_id = " . $template_id . "
+    group by review_question_id, sn, title, pic,  description, link  order by sum(case when answer = '1' then 1 else 0 end) desc";
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+
+    $merged_results = [];
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $review_question_id = $row['review_question_id'];
+        $score = $row['score'];
+
+        $sn = $row['sn'];
+        $title = $row['title'];
+        $pic = $row['pic'];
+        $description = $row['description'];
+        $link = $row['link'];
+
+        $merged_results[] = array(
+            'review_question_id' => $review_question_id,
+            'score' => $score,
+    
+            'sn' => $sn,
+            'title' => $title,
+            'pic' => $pic,
+            'description' => $description,
+            'link' => $link,
+            'url' => ($pic != '' ? "https://storage.googleapis.com/feliiximg/" . $pic : ''),
+            
+        );
+    }
+
+    return $merged_results;
+}
+
 
 ?>

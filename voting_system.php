@@ -579,13 +579,13 @@ try {
 
                             <ul>
                                 <li><b>Voting Time</b></li>
-                                <li class="content">{{ voting_time_start }} ~ {{ voting_time_end }}</li>
+                                <li class="content">{{ record.start_date }} ~ {{ record.end_date }}</li>
 
                                 <li><b>Voting Rule</b></li>
-                                <li class="content">{{ vote_rule }}</li>
+                                <li class="content">{{ record.rule_text }}</li>
 
                                 <li><b>Last Time You Voted</b></li>
-                                <li class="content">{{ record.lasttime_at }}</li>
+                                <li class="content">{{ record.updated_at }}</li>
 
                             </ul>
 
@@ -608,21 +608,21 @@ try {
                                 </thead>
 
                                 <tbody>
-                                <tr v-for='(item, index) in record.agenda' :key="index">
+                                <tr v-for='(item, index) in record.details' :key="index">
                                     <td>
                                         <input type="checkbox" name="" class="alone green"  v-model="item.check">
                                     </td>
                                     <td>
-                                        {{ item.topic }}
+                                        {{ item.title }}
                                     </td>
                                     <td>
-                                        <img> 圖片
+                                        <img v-if="item.url" :src="item.url"/>
                                     </td>
                                     <td>
                                         {{ item.description }}
                                     </td>
                                     <td>
-                                        <a></a>
+                                    <a>{{ record.link }}</a>
                                     </td>
                                 </tr>
 
@@ -661,16 +661,16 @@ try {
 
                             <ul>
                                 <li><b>Topic Name</b></li>
-                                <li class="content">{{ topic }}</li>
+                                <li class="content">{{ record.topic }}</li>
 
                                 <li><b>Voting Time</b></li>
-                                <li class="content">{{ start_date}} ~ {{ end_date }}</li>
+                                <li class="content">{{ record.start_date}} ~ {{ record.end_date }}</li>
 
                                 <li><b>Voting Rule</b></li>
-                                <li class="content">{{ vote_rule }}</li>
+                                <li class="content">{{ record.rule_text }}</li>
 
                                 <li><b>Voter Turnout</b></li>
-                                <li class="content">{{ vote_sort }}</li>
+                                <li class="content">{{ record.votes != undefined ?  record.votes.length : '0' }}</li>
                             </ul>
 
                         </div>
@@ -693,23 +693,23 @@ try {
                                 </thead>
 
                                 <tbody>
-                                <tr v-for='(item, index) in record.agenda' :key="index">
+                                <tr v-for='(item, index) in record.votes_cnt' :key="index">
                                     <!-- {{從1開始，數字會到使用者當初設定的取前多少名為止，例如當初選Top 3，則只會列出前三名}} -->
                                     <td>1</td>
                                     <td>
-                                        {{ item.topic }}
+                                        {{ item.title }}
                                     </td>
                                     <td>
-                                        <img>
+                                        <img v-if="item.url" :src="item.url"/>
                                     </td>
                                     <td>
                                         {{ item.description }}
                                     </td>
                                     <td>
-                                        <a>網址</a>
+                                        <a>{{ item.link }}</a>
                                     </td>
                                     <td>
-                                        {{ item.votes}}
+                                        {{ item.score }}
                                     </td>
                                 </tr>
 

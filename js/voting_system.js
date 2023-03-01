@@ -1178,7 +1178,71 @@ var app = new Vue({
     },
 
     vote: function () {
-      this.$refs.voteForm.submit();
+      var max_votes = this.record.rule;
+
+      // get details checked cnt
+      var cnt = 0;
+      for (var i = 0; i < this.record.details.length; i++) {
+        if (this.record.details[i].check) cnt++;
+      }
+
+      // sweet alert if cnt > max_votes
+      if (cnt > max_votes) {
+        Swal.fire({
+          title: "Warning!",
+          text: "Vote Rule:" + this.record.rule_text,
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      // post vote resutl
+
+      if (this.submit == true) return;
+
+      this.submit = true;
+
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append("jwt", token);
+      form_Data.append("id", this.proof_id);
+
+      form_Data.append("answers", JSON.stringify(this.record.details));
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/voting_system_insert",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            html: response.data.message,
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+          _this.reset();
+
+          window.jQuery(".mask").toggle();
+          window.jQuery('#Modal_4').toggle();
+        })
+        .catch(function(error) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(error),
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+
+          _this.submit = false;
+        });
     },
     
   },

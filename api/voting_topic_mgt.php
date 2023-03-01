@@ -265,6 +265,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $display_text = GetDisplayText($display);
     $sort_text = GetSortText($sort);
 
+    $votes = GetVotes($id, $db);
+
  
     $merged_results[] = array(
         'id' => $id,
@@ -289,7 +291,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         'details' => $details,
         "vote_status" => GetVotingStatus($start_date, $end_date),
-        "votes" => [],
+        "votes" => $votes,
 
         "cnt" => $cnt,
 
@@ -419,5 +421,68 @@ function GetAccessText($access_array)
 
     return $access_text;
 }
+
+function GetVotes($template_id, $db)
+{
+    $query = "select id, template_id, user_id, u.username, created_at from voting_review left join user u on u.id = voting_review.create_id where voting_review.`status` <> -1 and template_id = " . $template_id;
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+
+    $merged_results = [];
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $template_id = $row['template_id'];
+        $user_id = $row['user_id'];
+        $username = $row['username'];
+        $answers = GetAnswers($id, $db);
+        $created_at = $row['created_at'];
+
+        $merged_results[] = array(
+            'id' => $id,
+            'template_id' => $template_id,
+            'user_id' => $user_id,
+            'username' => $username,
+            'answers' => $answers,
+            'created_at' => $created_at,
+        );
+    }
+
+    return $merged_results;
+}
+
+function GetAnswers($review_id, $db)
+{
+    $query = "select id, review_question_id, answer, sn, title, pic, description, link from voting_review_detail a left join voting_template_detail q on q.id = a. review_question_id where voting_review_detail.`status` <> -1 and review_id = " . $review_id;
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+
+    $merged_results = [];
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $review_question_id = $row['review_question_id'];
+        $answer = $row['answer'];
+        $sn = $row['sn'];
+        $title = $row['title'];
+        $pic = $row['pic'];
+        $description = $row['description'];
+        $link = $row['link'];
+
+        $merged_results[] = array(
+            'id' => $id,
+            'review_question_id' => $review_question_id,
+            'answer' => $answer,
+            'sn' => $sn,
+            'title' => $title,
+            'pic' => $pic,
+            'description' => $description,
+            'link' => $link,
+            'url' => ($pic != '' ? "https://storage.googleapis.com/feliiximg/" . $pic : ''),
+            
+        );
+    }
+
+    return $merged_results;
+}
+
 
 ?>

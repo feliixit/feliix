@@ -3615,11 +3615,11 @@ CREATE TABLE IF NOT EXISTS `voting_review` (
 
 CREATE TABLE IF NOT EXISTS `voting_review_detail` (
   `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `template_id` bigint(20)  DEFAULT 0 NOT NULL,
   `review_id` bigint(20)  DEFAULT 0 NOT NULL,
-  `review_type` int(11) DEFAULT 0 NOT NULL,
   `review_question_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `answer`  varchar(512) DEFAULT '',
   `score` int(11) DEFAULT 0 NOT NULL,
-  `option`  varchar(2048) DEFAULT '',
   `status` int(11) DEFAULT 0,
   `create_id` int(11) DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
