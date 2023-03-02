@@ -14,7 +14,11 @@ var app = new Vue({
     department: "",
     title_id: 0,
 
-    
+    // info
+    name :"",
+    title: "",
+    is_manager: "",
+    uid : 0,
 
     // data
     type: 0,
@@ -102,6 +106,9 @@ var app = new Vue({
 
     item:[],
 
+    vote1: "",
+    vote2: "",
+
   },
 
   created() {
@@ -132,6 +139,8 @@ var app = new Vue({
     }
 
     this.getRecords();
+    this.getUserName();
+    this.getAccess();
   },
 
   computed: {
@@ -307,6 +316,24 @@ var app = new Vue({
             return;
           }
           
+          if (this.record.votes.length > 0) {
+            Swal.fire({
+                text: "Can't edit this topic with votes",
+                icon: "warning",
+                confirmButtonText: "OK",
+              });
+            return;
+          }
+
+          if(this.record.create_id != this.uid && this.vote2 != true) {
+            Swal.fire({
+              text: "User doesn’t have the access to execute this action.",
+              icon: "warning",
+              confirmButtonText: "OK",
+            });
+          return;
+        }
+
           
           window.jQuery(".mask").toggle();
           window.jQuery('#Modal_3').toggle();
@@ -478,6 +505,15 @@ var app = new Vue({
 
         return;
       };
+
+      if(this.record.create_id != this.uid && this.vote2 != true) {
+        Swal.fire({
+          text: "User doesn’t have the access to execute this action.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+      return;
+    }
 
       let _this = this;
 
@@ -1021,6 +1057,70 @@ var app = new Vue({
       if (index > -1) {
         this.record.details.splice(index, 1);
       }
+    },
+
+    getAccess: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'get',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/voting_topic_mgt_access_control',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.vote1 = response.data.vote1;
+          _this.vote2 = response.data.vote2;
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
+    },
+
+    getUserName: function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append('jwt', token);
+
+      axios({
+          method: 'post',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          url: 'api/on_duty_get_myname',
+          data: form_Data
+      })
+      .then(function(response) {
+          //handle success
+          _this.name = response.data.username;
+          _this.is_manager = response.data.is_manager;
+          _this.title = response.data.title.toLowerCase();
+          _this.uid = response.data.user_id;
+
+      })
+      .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
+      });
     },
 
   },

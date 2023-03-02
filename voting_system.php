@@ -23,81 +23,21 @@ try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
+            $username = $decoded->data->username;
 
-            $position = $decoded->data->position;
-            $department = $decoded->data->department;
-            
-            // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
-            $test_manager = $decoded->data->test_manager;
+            $database = new Database();
+            $db = $database->getConnection();
 
-            $access6 = true;
+            $access_attendance = false;
 
-            // QOUTE AND PAYMENT Management
-            if(trim(strtoupper($department)) == 'SALES')
-            {
-                if(trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
-                || trim(strtoupper($position)) == 'SALES MANAGER')
-                {
-                    $access6 = true;
-                }
+            $vote1 = false;
+
+            $query = "SELECT * FROM access_control WHERE (vote1 LIKE '%" . $username . "%' or vote2 LIKE '%" . $username . "%') ";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $vote1 = true;
             }
-
-            if(trim(strtoupper($department)) == 'LIGHTING')
-            {
-                if(trim(strtoupper($position)) == 'LIGHTING MANAGER')
-                {
-                    $access6 = true;
-                }
-
-                if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER')
-                {
-                    $access6 = true;
-                }
-            }
-
-            if(trim(strtoupper($department)) == 'OFFICE')
-            {
-                if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
-                {
-                    $access6 = true;
-                }
-            }
-
-            if(trim(strtoupper($department)) == 'DESIGN')
-            {
-                if(trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER' || trim(strtoupper($position)) == 'BRAND MANAGER')
-                {
-                    $access6 = true;
-                }
-            }
-
-            if(trim(strtoupper($department)) == 'ENGINEERING')
-            {
-                if(trim(strtoupper($position)) == "ENGINEERING MANAGER")
-                {
-                    $access6 = true;
-                }
-            }
-
-            if(trim(strtoupper($department)) == 'ADMIN')
-            {
-                if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
-                {
-                    $access6 = true;
-                }
-            }
-
-
-            if(trim($department) == '')
-            {
-                if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
-                {
-                    $access6 = true;
-                }
-            }
-
-            if($access6 == false)
-                header( 'location:index' );
         }
         catch (Exception $e){
 
@@ -495,7 +435,8 @@ try {
         <!-- tags js在 main.js -->
         <div class="tags">
             <a class="tag A focus">Voting System</a>
-            <a class="tag B" href="voting_topic_mgt">Voting Topic Management</a>
+            <?php if($vote1 == true){ ?> <a class="tag B" href="voting_topic_mgt">Voting Topic Management</a> <?php } ?>
+            
         </div>
         <!-- Blocks -->
         <div class="block A focus">
@@ -507,19 +448,19 @@ try {
                     <div class="list_function">
 
                         <div class="front">
-                            <a class="create" href="javascript: void(0)" onclick="ToggleModal(1)"></a>
+                            <a class="create" href="javascript: void(0)" ></a>
 
                             <div class="searching">
 
-                                <select>
-                                    <option>All</option>
-                                    <option>Ongoing</option>
-                                    <option>Finished</option>
+                                <select v-model="fil_status">
+                                    <option value="all">All</option>
+                                    <option value="ongoing">Ongoing</option>
+                                    <option value="finished">Finished</option>
                                 </select>
 
-                                <select>
-                                    <option>Not Yet Vote</option>
-                                    <option>Already Vote</option>
+                                <select v-model="fil_votes">
+                                    <option value="yet">Not Yet Vote</option>
+                                    <option value="had">Already Vote</option>
                                 </select>
 
                                 <input type="text" placeholder="Searching Keyword Here" v-model="keyword">
@@ -549,9 +490,9 @@ try {
                         <input type="radio" name="record_id" class="alone green" :value="record.id" v-model="proof_id">
                         </li>
                         <li>{{ record.topic }}</li>
-                        <li>{{ record.vote_status }}</li>
+                        <li>{{ record.vote_status }} / {{ record.review > 0 ? 'Already Vote' : 'Not Yet Vote' }}</li>
                         <li>{{ record.start_date }} ~ {{ record.end_date }}</li>
-                        <li>{{ record.votes.length }}</li>
+                        <li>{{ record.votes != undefined ?  record.votes.length : '0' }}</li>
                     </ul>
 
                 </div>
@@ -585,7 +526,7 @@ try {
                                 <li class="content">{{ record.rule_text }}</li>
 
                                 <li><b>Last Time You Voted</b></li>
-                                <li class="content">{{ record.updated_at }}</li>
+                                <li class="content">{{ record.review_time }}</li>
 
                             </ul>
 

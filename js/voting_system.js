@@ -67,6 +67,8 @@ var app = new Vue({
     // search
     keyword: "",
     fil_status: "",
+    fil_votes: "",
+
 
     // attributes
     topic: "",
@@ -120,6 +122,12 @@ var app = new Vue({
           switch (tmp[0]) {
             case "kw":
               _this.keyword = decodeURI(tmp[1]);
+              break;
+              case "st":
+              _this.fil_status = tmp[1];
+              break;
+              case "vt":
+              _this.fil_votes = tmp[1];
               break;
             case "pg":
               _this.pg = tmp[1];
@@ -252,6 +260,10 @@ var app = new Vue({
           "voting_system?" +
           "kw=" +
           _this.keyword +
+          "&st=" +
+          _this.fil_status +
+          "&vt=" +
+          _this.fil_votes +
           "&pg=" +
           _this.page;
       },
@@ -261,6 +273,8 @@ var app = new Vue({
 
       const params = {
         kw: _this.keyword,
+        st: _this.fil_status,
+        vt: _this.fil_votes,
       };
 
       let token = localStorage.getItem("accessToken");
@@ -871,11 +885,20 @@ var app = new Vue({
               confirmButtonText: "OK",
             });
           return;
-        }else
-        {
+        }
+
+        if(this.record.vote_status != 'Ongoing'){
+          Swal.fire({
+            text: "Voting is already finished",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+        return;
+        }
+        
           window.jQuery(".mask").toggle();
           window.jQuery('#Modal_4').toggle();
-        }
+        
       
   },
 
@@ -887,11 +910,20 @@ var app = new Vue({
               confirmButtonText: "OK",
             });
           return;
-        }else
-        {
+        }
+        
+        if(this.record.vote_status == 'Ongoing'){
+          Swal.fire({
+            text: "Only when voting is finished, user is allowed to view result.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+        return;
+        }
+
           window.jQuery(".mask").toggle();
           window.jQuery('#Modal_5').toggle();
-        }
+        
       
   },
 

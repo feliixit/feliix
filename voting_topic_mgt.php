@@ -23,99 +23,30 @@ try {
             // decode jwt
             $decoded = JWT::decode($jwt, $key, array('HS256'));
             $user_id = $decoded->data->id;
+            $username = $decoded->data->username;
 
-            $position = $decoded->data->position;
-            $department = $decoded->data->department;
-            
-            // 1. 針對 Verify and Review的內容，只有 1st Approver 和 2nd Approver有權限可以進入和看到
-            $test_manager = $decoded->data->test_manager;
+            $database = new Database();
+            $db = $database->getConnection();
 
-            $access6 = true;
+            $access_attendance = false;
 
-            // QOUTE AND PAYMENT Management
-            if(trim(strtoupper($department)) == 'SALES')
-            {
-                if(trim(strtoupper($position)) == 'ASSISTANT SALES MANAGER'
-                || trim(strtoupper($position)) == 'SALES MANAGER')
-                {
-                    $access6 = true;
-                }
+            $vote1 = false;
+
+            //if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
+            //    $access2 = true;
+            $query = "SELECT * FROM access_control WHERE (vote1 LIKE '%" . $username . "%' or vote2 LIKE '%" . $username . "%') ";
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $vote1 = true;
             }
 
-            if(trim(strtoupper($department)) == 'LIGHTING')
+            // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
+            // 為了測試先加上testmanager(87) by BB
+            if($vote1 != true) 
             {
-                if(trim(strtoupper($position)) == 'LIGHTING MANAGER')
-                {
-                    $access6 = true;
-                }
-
-                if(trim(strtoupper($position)) == 'ASSISTANT LIGHTING MANAGER')
-                {
-                    $access6 = true;
-                }
-            }
-
-            if(trim(strtoupper($department)) == 'OFFICE')
-            {
-                if(trim(strtoupper($position)) == 'OFFICE SYSTEMS MANAGER')
-                {
-                    $access6 = true;
-                }
-            }
-
-            if(trim(strtoupper($department)) == 'DESIGN')
-            {
-                if(trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER' || trim(strtoupper($position)) == 'BRAND MANAGER')
-                {
-                    $access6 = true;
-                }
-            }
-
-            if(trim(strtoupper($department)) == 'ENGINEERING')
-            {
-                if(trim(strtoupper($position)) == "ENGINEERING MANAGER")
-                {
-                    $access6 = true;
-                }
-            }
-
-            if(trim(strtoupper($department)) == 'ADMIN')
-            {
-                if(trim(strtoupper($position)) == 'OPERATIONS MANAGER')
-                {
-                    $access6 = true;
-                }
-            }
-
-
-            if(trim($department) == '')
-            {
-                if(trim(strtoupper($position)) == 'OWNER' || trim(strtoupper($position)) == 'MANAGING DIRECTOR' || trim(strtoupper($position)) == 'CHIEF ADVISOR')
-                {
-                    $access6 = true;
-                }
-            }
-
-            
-            if($access6 == false)
                 header( 'location:index' );
-
-
-                $database = new Database();
-                $db = $database->getConnection();
-
-                // for users
-                $user_results = array();
-                $query = "SELECT username FROM user WHERE status = 1 ORDER BY username
-                                ";
-                $stmt = $db->prepare($query);
-                $stmt->execute();
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $user_results[] = array(
-                        "username" => $row['username'],
-                    );
-                }
-                
+            }
         }
         catch (Exception $e){
 

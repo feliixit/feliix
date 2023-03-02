@@ -822,8 +822,8 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
     //if($kind == 0 || $kind == 1)
         //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-    if($category == '2' && ($kind == 0 || $kind == 1))
-        $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
+    //if($category == '2' && ($kind == 0 || $kind == 1))
+        //$mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -1163,9 +1163,6 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
 
-    if($category == '2')
-        $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
-
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
@@ -1276,8 +1273,8 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
 
     //if($kind == 0 || $kind == 1)
         //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-    if($category == '2' && ($kind == 0 || $kind == 1))
-        $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
+    //if($category == '2' && ($kind == 0 || $kind == 1))
+        //$mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -1446,11 +1443,6 @@ function send_pay_notify_mail($name, $email1,  $leaver, $projectname, $remark, $
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC($email1, $name);
-    //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
-    //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-
-    if($category == '2')
-        $mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -8009,7 +8001,7 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
 
 
     $mail->IsHTML(true);
-    
+
     $receiver = "";
     $cc = "";
 
@@ -8019,33 +8011,8 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            if($list["username"] == 'Nestor Rosales')
-            {
-                if($action == 'finish_notes')
-                {
-                    $receiver = "Aiza Eisma";
-                    $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
-                }
-                else
-                {
-                    if($action == 'reject')
-                    {
-                        $receiver = "Aiza Eisma";
-                        $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
-                        $mail->AddAddress($list["email"], $list["username"]);
-                    }
-                    else
-                    {
-                        $receiver .= $list["username"] . ", ";
-                        $mail->AddAddress($list["email"], $list["username"]);
-                    }
-                }
-            }
-            else
-            {
-                $receiver .= $list["username"] . ", ";
-                $mail->AddAddress($list["email"], $list["username"]);
-            }
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
         }
     }
 
@@ -8058,36 +8025,11 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            if($list["username"] == 'Nestor Rosales')
-            {
-                if($action == 'send_note' || $action == 'withdraw_note_tw')
-                {
-                    $cc = "Aiza Eisma";
-                    $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
-                }
-                else
-                {
-                    if($action == 'approval' || $action == 'approved' || $action == 'withdraw')
-                    {
-                        $cc = "Aiza Eisma";
-                        $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
-                        $mail->AddCC($list["email"], $list["username"]);
-                    }
-                    else
-                    {
-                        $cc = $list["username"];
-                        $mail->AddCC($list["email"], $list["username"]);
-                    }
-                }
-            }
-            else
-            {
-                $cc = $list["username"];
-                $mail->AddCC($list["email"], $list["username"]);
-            }
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
         }
     }
-    
+
 
     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
@@ -8104,7 +8046,7 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" need your feedback. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
     }
-        
+
     if($action == 'withdraw_note_tw')
     {
         $mail->Subject = 'Request for feedback was withdrawn on items of "' . $order_type . ': ' . $serial_name . '" ';
@@ -8140,7 +8082,7 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $header = 'Items of "' . $order_type . ': ' . $serial_name . '" were already rejected and need you to follow. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p1?id=" . $od_id;
     }
-    
+
     if($action == 'withdraw')
     {
         $mail->Subject = 'Request for approval was withdrawn on items of "' . $order_type . ': ' . $serial_name . '" ';
@@ -8188,7 +8130,7 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $mail->Subject = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated';
         $header = 'Shipping info for items of "' . $order_type . ': ' . $serial_name . '" is updated. Please check details below:';
         $url = "https://feliix.myvnc.com/order_taiwan_p3?id=" . $od_id;
-        
+
     }
 
     $content = '<!DOCTYPE html>
@@ -10325,26 +10267,10 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            if($list["username"] == 'Nestor Rosales')
-            {
-                if($order_type == 'Order - Close Deal')
-                {
-                    $receiver .= "Aiza Eisma" . ", ";
-                    $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
-                    $receiver .= $list["username"] . ", ";
-                    $mail->AddAddress($list["email"], $list["username"]);
-                }
-                else
-                {
-                    $receiver .= $list["username"] . ", ";
-                    $mail->AddAddress($list["email"], $list["username"]);
-                }
-            }
-            else
-            {
-                $receiver .= $list["username"] . ", ";
-                $mail->AddAddress($list["email"], $list["username"]);
-            }
+
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+
         }
     }
 
@@ -11215,24 +11141,8 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            if($list["username"] == 'Nestor Rosales')
-            {
-                if($order_type == 'Order - Close Deal')
-                {
-                    $receiver .= "Aiza Eisma" . ", ";
-                    $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
-                }
-                else
-                {
-                    $receiver .= $list["username"] . ", ";
-                    $mail->AddAddress($list["email"], $list["username"]);
-                }
-            }
-            else
-            {
-                $receiver .= $list["username"] . ", ";
-                $mail->AddAddress($list["email"], $list["username"]);
-            }
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
         }
     }
 
@@ -12745,13 +12655,6 @@ function product_notify($action, $_record)
             $mail->AddCC($list["email"], $list["username"]);
         }
 
-        if($_record["category"] == "10000000")
-        {
-            // Aiza 放入cc收件人名單
-            $receiver .= "Aiza Eisma" . ", ";
-            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
-        }
-
     }
 
     if( $action == "update" ){
@@ -12763,12 +12666,6 @@ function product_notify($action, $_record)
             $mail->AddCC($list["email"], $list["username"]);
         }
 
-        if($_record["category"] == "10000000")
-        {
-            // Aiza 放入cc收件人名單
-            $receiver .= "Aiza Eisma" . ", ";
-            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
-        }
     }
 
     if( $action == "delete" ){
@@ -12780,12 +12677,6 @@ function product_notify($action, $_record)
             $mail->AddCC($list["email"], $list["username"]);
         }
 
-        if($_record["category"] == "10000000")
-        {
-            // Aiza 放入cc收件人名單
-            $receiver .= "Aiza Eisma" . ", ";
-            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
-        }
     }
 
 

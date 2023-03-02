@@ -3627,3 +3627,10 @@ CREATE TABLE IF NOT EXISTS `voting_review_detail` (
   `updated_at` timestamp NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20230302 access
+ALTER TABLE access_control
+ADD COLUMN `vote1` text COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE access_control
+ADD COLUMN `vote2` text COLLATE utf8mb4_unicode_ci DEFAULT '';

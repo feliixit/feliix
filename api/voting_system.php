@@ -26,6 +26,9 @@ else
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
         $user_id = $decoded->data->id;
+
+        $user_name = $decoded->data->username;
+        $user_department = $decoded->data->department;
     }
         // if decode fails, it means jwt is invalid
     catch (Exception $e){
@@ -58,7 +61,7 @@ $kw = (isset($_GET['kw']) ?  $_GET['kw'] : '');
 $kw = urldecode($kw);
 
 $st = (isset($_GET['st']) ?  $_GET['st'] : '');
-
+$vt = (isset($_GET['vt']) ?  $_GET['vt'] : '');
 
 $op1 = (isset($_GET['op1']) ?  urldecode($_GET['op1']) : '');
 $od1 = (isset($_GET['od1']) ?  urldecode($_GET['od1']) : '');
@@ -90,18 +93,20 @@ $query = "SELECT pm.id,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
-                DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at
+                DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at,
+                (select count(*) from voting_review where template_id = pm.id and voting_review.status <> -1 and user_id = " . $user_id . ") as review,
+                (select COALESCE(created_at) from voting_review where template_id = pm.id and voting_review.status <> -1 and user_id = " . $user_id . ") as review_time
           FROM voting_template pm 
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                where pm.status <> -1 ";
+                where pm.status <> -1 and DATE_FORMAT(NOW(), '%Y-%m-%d') >= pm.start_date and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%' or pm.access like '%All%') ";
 
 // for record size
 $query_cnt = "SELECT count(*) cnt 
 FROM voting_template pm 
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
-                where pm.status <> -1"; 
+                where pm.status <> -1 and DATE_FORMAT(NOW(), '%Y-%m-%d') >= pm.start_date and (pm.access like '%".$user_name."%' or pm.access like '%".$user_department."%' or pm.access like '%All%') "; 
 
 if($id != 0){
     $query .= " and pm.id = $id ";
@@ -131,6 +136,18 @@ if($st == 'finished')
 {
     $query = $query . " and pm.end_date < DATE_FORMAT(NOW(), '%Y-%m-%d') ";
     $query_cnt = $query_cnt . " and pm.end_date < DATE_FORMAT(NOW(), '%Y-%m-%d') ";
+}
+
+if($vt == 'yet')
+{
+    $query = $query . " and (select count(*) from voting_review where template_id = pm.id and voting_review.status <> -1 and user_id = " . $user_id . ") = 0 ";
+    $query_cnt = $query_cnt . " and (select count(*) from voting_review where template_id = pm.id and voting_review.status <> -1 and user_id = " . $user_id . ") = 0 ";
+}
+
+if($vt == 'had')
+{
+    $query = $query . " and (select count(*) from voting_review where template_id = pm.id and voting_review.status <> -1 and user_id = " . $user_id . ") > 0 ";
+    $query_cnt = $query_cnt . " and (select count(*) from voting_review where template_id = pm.id and voting_review.status <> -1 and user_id = " . $user_id . ") > 0 ";
 }
 
 $sOrder = "";
@@ -250,6 +267,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_by = $row['updated_by'];
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
+    $review = $row['review'];
+    $review_time = $row['review_time'];
 
     $details = GetDetail($id, $user_id, $db);
     if($access != "") {
@@ -266,7 +285,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $sort_text = GetSortText($sort);
 
     $votes = GetVotes($id, $db);
-    $votes_cnt = GetVotesCnt($id, $db);
+    $votes_cnt = GetVotesCnt($id, $db, $sort, $display);
 
  
     $merged_results[] = array(
@@ -294,10 +313,45 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "vote_status" => GetVotingStatus($start_date, $end_date),
         "votes" => $votes,
         "votes_cnt" => $votes_cnt,
+
+        "review" => $review,
+        "review_time" => $review_time,
+
         "cnt" => $cnt,
 
     );
 }
+
+$notyet_result = [];
+$ongoing_result = [];
+$finished_result = [];
+// seperate by vote status
+foreach($merged_results as $result) {
+    if($result["vote_status"] == "Ongoing") {
+        $ongoing_result[] = $result;
+    }
+    
+    if($result["vote_status"] == "Finished"){
+        $finished_result[] = $result;
+    }
+
+    if($result["vote_status"] == "Not Yet Start"){
+        $notyet_result[] = $result;
+    }
+}
+
+// sort by start date desc
+usort($ongoing_result, function($a, $b) {
+    return strtotime($a['end_date']) - strtotime($b['end_date']);
+});
+
+usort($finished_result, function($a, $b) {
+    return strtotime($b['end_date']) - strtotime($a['end_date']);
+});
+
+// merge results
+$merged_results = array_merge($ongoing_result, $finished_result);
+
 
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
@@ -507,11 +561,27 @@ function GetAnswers($review_id, $db)
 
 
 
-function GetVotesCnt($template_id, $db)
+function GetVotesCnt($template_id, $db, $sort, $limit)
 {
     $query = "select review_question_id, sum(case when answer = '1' then 1 else 0 end) as score, sn, title, pic, description, link from voting_review_detail a 
     left join voting_template_detail q on q.id = a. review_question_id where a.`status` <> -1  and q.template_id = " . $template_id . "
-    group by review_question_id, sn, title, pic,  description, link  order by sum(case when answer = '1' then 1 else 0 end) desc";
+    group by review_question_id, sn, title, pic,  description, link  order by sum(case when answer = '1' then 1 else 0 end) ";
+
+    if($sort == "1")
+        $query .= "desc";
+    else if($sort == "2")
+        $query .= "asc";
+
+    if($limit == "1")
+        $query .= " limit 1 ";
+    if($limit == "2")
+        $query .= " limit 3 ";
+    if($limit == "3")
+        $query .= " limit 5 ";
+    if($limit == "4")
+        $query .= " limit 10 ";
+
+
     $stmt = $db->prepare( $query );
     $stmt->execute();
 
