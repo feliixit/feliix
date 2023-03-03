@@ -739,9 +739,7 @@ try {
                                     <td>
                                     <img v-if="record.url" :src="record.url"/>
                                     </td>
-                                    <td>
-                                        {{ record.description }}
-                                    </td>
+                                    <td style="white-space: pre;">{{ record.description }}</td>
                                     <td>
                                         <a>{{ record.link }}</a>
                                     </td>
@@ -805,7 +803,7 @@ try {
                                 <li class="content">{{ record.rule_text }}</li>
 
                                 <li><b>Rule of Displaying Result</b></li>
-                                <li class="content">{{ record.displa_texty }}</li>
+                                <li class="content">{{ record.display_text }}</li>
 
                                 <li><b>Created Time</b></li>
                                 <li class="content">{{ record.created_by + " at " + record.created_at }}</li>
@@ -839,11 +837,9 @@ try {
                                     <td>
                                         <img v-if="item.url" :src="item.url"/>
                                     </td>
+                                    <td style="white-space: pre;">{{ item.description }}</td>
                                     <td>
-                                        {{ item.description }}
-                                    </td>
-                                    <td>
-                                        <a v-if="item.link" :href="item.link">{{ item.link }}</a>
+                                        <a v-if="item.link" :href="format_url(item.link)" target="_blank">{{ item.link }}</a>
                                     </td>
                                 </tr>
 
@@ -995,9 +991,7 @@ try {
                                     <td>
                                         <img v-if="item.url" :src="item.url">
                                     </td>
-                                    <td>
-                                        {{ item.description }}
-                                    </td>
+                                    <td style="white-space: pre;">{{ item.description }}</td>
                                     <td>
                                         <a v-if="item.link" :href="item.link">{{ item.link }}</a>
                                     </td>

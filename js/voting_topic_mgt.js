@@ -484,6 +484,15 @@ var app = new Vue({
         });
     },
 
+    format_url: function(url) {
+      var pattern = /^((http|https|ftp):\/\/)/;
+
+      if(!pattern.test(url)) {
+          url = "https://" + url;
+      }
+      return url.replace(/\\/g, "/");
+    },
+
     remove() {
       if (this.proof_id == 0) {
         Swal.fire({
@@ -1108,8 +1117,6 @@ var app = new Vue({
       .then(function(response) {
           //handle success
           _this.name = response.data.username;
-          _this.is_manager = response.data.is_manager;
-          _this.title = response.data.title.toLowerCase();
           _this.uid = response.data.user_id;
 
       })

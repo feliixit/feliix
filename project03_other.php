@@ -48,6 +48,7 @@ try {
             || $position == 'Sr. Project Engineer'
             || $position == 'Project Engineer'
             || $position == 'Jr. Project Engineer'
+            || $position == 'Sales Manager'
             || trim($GLOBALS['username']) == 'Kelvin Garcia')
         $test_manager[2] = "1";
 
@@ -60,6 +61,7 @@ try {
         || $position == 'Office Systems Manager'
         || $position == 'Assistant Office Systems Manager'
         || $position == 'Engineering Manager'
+        || $position == 'Sales Manager'
         || trim($GLOBALS['username']) == 'Cristina Matining')
         $order_menu = "1";
 }

@@ -3630,7 +3630,7 @@ CREATE TABLE IF NOT EXISTS `voting_review_detail` (
 
 -- 20230302 access
 ALTER TABLE access_control
-ADD COLUMN `vote1` text COLLATE utf8mb4_unicode_ci DEFAULT '';
+ADD COLUMN `vote1` text COLLATE utf8mb4_unicode_ci;
 
 ALTER TABLE access_control
-ADD COLUMN `vote2` text COLLATE utf8mb4_unicode_ci DEFAULT '';
+ADD COLUMN `vote2` text COLLATE utf8mb4_unicode_ci;

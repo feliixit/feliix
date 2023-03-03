@@ -871,6 +871,15 @@ var app = new Vue({
       }
     },
 
+    format_url: function(url) {
+      var pattern = /^((http|https|ftp):\/\/)/;
+
+      if(!pattern.test(url)) {
+          url = "https://" + url;
+      }
+      return url.replace(/\\/g, "/");
+    },
+
     scrollMeTo(refName) {
       var element = this.$refs[refName];
       element.scrollIntoView({ behavior: 'smooth' });

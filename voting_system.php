@@ -563,7 +563,7 @@ try {
                                         {{ item.description }}
                                     </td>
                                     <td>
-                                    <a>{{ record.link }}</a>
+                                    <a v-if="item.link" :href="format_url(item.link)" target="_blank">{{ item.link }}</a>
                                     </td>
                                 </tr>
 
@@ -647,7 +647,7 @@ try {
                                         {{ item.description }}
                                     </td>
                                     <td>
-                                        <a>{{ item.link }}</a>
+                                    <a v-if="item.link" :href="format_url(item.link)" target="_blank">{{ item.link }}</a>
                                     </td>
                                     <td>
                                         {{ item.score }}
