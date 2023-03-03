@@ -993,7 +993,7 @@ try {
                                     </td>
                                     <td style="white-space: pre;">{{ item.description }}</td>
                                     <td>
-                                        <a v-if="item.link" :href="item.link">{{ item.link }}</a>
+                                        <a v-if="item.link" :href="format_url(item.link)" target="_blank">{{ item.link }}</a>
                                     </td>
                                     <td>
                                         <i class="fas fa-arrow-alt-circle-up" @click="e_set_up(index, item.id)"></i>
