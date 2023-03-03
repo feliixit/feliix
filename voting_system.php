@@ -559,9 +559,7 @@ try {
                                     <td>
                                         <img v-if="item.url" :src="item.url"/>
                                     </td>
-                                    <td>
-                                        {{ item.description }}
-                                    </td>
+                                    <td style="white-space: pre;">{{ item.description }}</td>
                                     <td>
                                     <a v-if="item.link" :href="format_url(item.link)" target="_blank">{{ item.link }}</a>
                                     </td>
@@ -643,9 +641,7 @@ try {
                                     <td>
                                         <img v-if="item.url" :src="item.url"/>
                                     </td>
-                                    <td>
-                                        {{ item.description }}
-                                    </td>
+                                    <td style="white-space: pre;">{{ item.description }}</td>
                                     <td>
                                     <a v-if="item.link" :href="format_url(item.link)" target="_blank">{{ item.link }}</a>
                                     </td>
