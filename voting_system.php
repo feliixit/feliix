@@ -448,7 +448,6 @@ try {
                     <div class="list_function">
 
                         <div class="front">
-                            <a class="create" href="javascript: void(0)" ></a>
 
                             <div class="searching">
 
@@ -459,6 +458,7 @@ try {
                                 </select>
 
                                 <select v-model="fil_votes">
+                                    <option value="all">All</option>
                                     <option value="yet">Not Yet Vote</option>
                                     <option value="had">Already Vote</option>
                                 </select>
@@ -519,6 +519,9 @@ try {
                         <div class="box-content">
 
                             <ul>
+                                <li><b>Topic Name</b></li>
+                                <li class="content">{{ record.topic }}</li>
+
                                 <li><b>Voting Time</b></li>
                                 <li class="content">{{ record.start_date }} ~ {{ record.end_date }}</li>
 

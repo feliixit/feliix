@@ -803,7 +803,7 @@ try {
                                 <li class="content">{{ record.rule_text }}</li>
 
                                 <li><b>Rule of Displaying Result</b></li>
-                                <li class="content">{{ record.display_text }}</li>
+                                <li class="content">{{ record.display_text }} {{ record.sort_text }}</li>
 
                                 <li><b>Created Time</b></li>
                                 <li class="content">{{ record.created_by + " at " + record.created_at }}</li>

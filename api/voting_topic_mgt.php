@@ -87,6 +87,7 @@ $query = "SELECT pm.id,
                 pm.display,
                 pm.sort,
                 pm.status,
+                pm.create_id,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
@@ -246,6 +247,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $display = $row['display'];
     $sort = $row['sort'];
     $status = $row['status'];
+    $create_id = $row['create_id'];
     $created_by = $row['created_by'];
     $updated_by = $row['updated_by'];
     $created_at = $row['created_at'];
@@ -278,6 +280,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         'display' => $display,
         'sort' => $sort,
         'status' => $status,
+
+        'create_id' => $create_id,
         'created_by' => $created_by,
         'updated_by' => $updated_by,
         'created_at' => $created_at,
@@ -424,7 +428,7 @@ function GetAccessText($access_array)
 
 function GetVotes($template_id, $db)
 {
-    $query = "select id, template_id, user_id, u.username, created_at from voting_review left join user u on u.id = voting_review.create_id where voting_review.`status` <> -1 and template_id = " . $template_id;
+    $query = "select voting_review.id, template_id, user_id, u.username, voting_review.created_at from voting_review left join user u on u.id = voting_review.create_id where voting_review.`status` <> -1 and template_id = " . $template_id;
     $stmt = $db->prepare( $query );
     $stmt->execute();
 
