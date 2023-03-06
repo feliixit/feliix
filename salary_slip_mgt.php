@@ -430,7 +430,7 @@ try {
             height: 38px;
         }
 
-        .modal .modal-content .box-content select, .modal .modal-content .box-content input[type=text], .modal .modal-content .box-content input[type=number], .modal .modal-content .box-content input[type=date] {
+        .modal .modal-content .box-content select, .modal .modal-content .box-content input[type=text], .modal .modal-content .box-content input[type=number], .modal .modal-content .box-content input[type=date], .modal .modal-content .box-content textarea {
             border: 1px solid black;
             width: 100%;
             padding: 8px 35px 8px 15px;
@@ -465,6 +465,10 @@ try {
         .modal .modal-content .box-content .tablebox ul > li input {
             border-color: #D0D0D0;
             text-align: center;
+        }
+
+        .modal .modal-content .box-content .tablebox ul > li textarea {
+            border-color: #D0D0D0;
         }
 
         .modal .modal-content .box-content .tablebox ul > li:nth-of-type(3) input {
@@ -691,7 +695,8 @@ try {
                                         <li v-if="item.type == 1">{{ item.category }}</li>
                                         <li v-if="item.type == 0"><input type="text" v-model="item.category" placeholder="Other Earning"></li>
                                         <li><input type="number" v-model="item.amount"></li>
-                                        <li><input type="text" v-model="item.remark"></li>
+                                        <li v-if="item.category == 'Commission'"><textarea style="height: 100px;" v-model="item.remark"></textarea></li>
+                                        <li v-if="item.category != 'Commission'"><input type="text" v-model="item.remark"></li>
                                         <li><span v-if="item.type == 0" @click=del_plus_detail(item.order)>x</span></li>
                                     </ul>
 
@@ -753,7 +758,7 @@ try {
                                         <li><input type="text"  v-model="item.category"></li>
                                         <li><input type="number" min="0" v-model="item.previous" @change=refresh_other()></li>
                                         <li><input type="number" min="0" v-model="item.payment" @change=refresh_other()></li>
-                                        <li>{{ item.remark }}</li>
+                                        <li style="white-space: pre;">{{ item.remark }}</li>
                                         <li><span @click=del_other_detail(item.order)>x</span></li>
                                     </ul>
 
@@ -841,7 +846,7 @@ try {
                                 <ul v-for='(item, index) in record.detail_plus' :key="index">
                                     <li>{{ item.category }}</li>
                                     <li>{{ (item.amount == 0) ? "" : item.amount }}</li>
-                                    <li>{{ item.remark }}</li>
+                                    <li style="white-space: pre;">{{ item.remark }}</li>
                                 </ul>
 
 
@@ -896,7 +901,7 @@ try {
                                     <li>{{ item.category }}</li>
                                     <li>{{ (item.previous == 0) ? "" : item.previous }}</li>
                                     <li>{{ (item.payment == 0) ? "" : item.payment }}</li>
-                                    <li>{{ item.remark }}</li>
+                                    <li style="white-space: pre;">{{ item.remark }}</li>
                                 </ul>
                             </div>
 
@@ -994,7 +999,8 @@ try {
                                         <li v-if="item.type == 1">{{ item.category }}</li>
                                         <li v-if="item.type == 0"><input type="text" v-model="item.category" placeholder="Other Earning"></li>
                                         <li><input type="number" v-model="item.amount"></li>
-                                        <li><input type="text" v-model="item.remark"></li>
+                                        <li v-if="item.category == 'Commission'"><textarea style="height: 100px;" v-model="item.remark"></textarea></li>
+                                        <li v-if="item.category != 'Commission'"><input type="text" v-model="item.remark"></li>
                                         <li><span v-if="item.type == 0" @click=del_plus_detail(item.order)>x</span></li>
                                     </ul>
 
@@ -1056,7 +1062,7 @@ try {
                                         <li><input type="text"  v-model="item.category"></li>
                                         <li><input type="number" min="0" v-model="item.previous" @change=refresh_other()></li>
                                         <li><input type="number" min="0" v-model="item.payment" @change=refresh_other()></li>
-                                        <li>{{ item.remark }}</li>
+                                        <li style="white-space: pre;">{{ item.remark }}</li>
                                         <li><span @click=del_other_detail(item.order)>x</span></li>
                                     </ul>
 
@@ -1156,7 +1162,8 @@ try {
                                         <li v-if="item.type == 1">{{ item.category }}</li>
                                         <li v-if="item.type == 0"><input type="text" v-model="item.category" placeholder="Other Earning"></li>
                                         <li><input type="number" v-model="item.amount"></li>
-                                        <li><input type="text" v-model="item.remark"></li>
+                                        <li v-if="item.category == 'Commission'"><textarea style="height: 100px;" v-model="item.remark"></textarea></li>
+                                        <li v-if="item.category != 'Commission'"><input type="text" v-model="item.remark"></li>
                                         <li><span v-if="item.type == 0" @click=del_plus_detail(item.order)>x</span></li>
                                     </ul>
 
@@ -1218,7 +1225,7 @@ try {
                                         <li><input type="text"  v-model="item.category"></li>
                                         <li><input type="number" min="0" v-model="item.previous" @change=refresh_other()></li>
                                         <li><input type="number" min="0" v-model="item.payment" @change=refresh_other()></li>
-                                        <li>{{ item.remark }}</li>
+                                        <li style="white-space: pre;">{{ item.remark }}</li>
                                         <li><span @click=del_other_detail(item.order)>x</span></li>
                                     </ul>
 

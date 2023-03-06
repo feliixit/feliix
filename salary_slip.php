@@ -531,7 +531,7 @@ try {
                             <input type="radio" name="record_id" class="alone green" :value="record.id" @click="reload_detail()"
                                    v-model="proof_id">
                         </li>
-                        <li>{{ record.status_remark }}</li>
+                        <li style="white-space: pre;">{{ record.status_remark }}</li>
                         <li>{{ record.username }}</li>
                         <li>{{ record.title_then }} ({{ record.department_then }})</li>
                         <li>{{ record.start_date }} ~ {{ record.end_date }}</li>
@@ -598,7 +598,7 @@ try {
                                 <ul v-for='(item, index) in detail_plus' :key="index">
                                     <li>{{ item.category }}</li>
                                     <li>{{ (item.amount == 0) ? "" : item.amount }}</li>
-                                    <li>{{ item.remark }}</li>
+                                    <li style="white-space: pre;">{{ item.remark }}</li>
                                 </ul>
 
 

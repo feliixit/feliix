@@ -59,6 +59,10 @@ if (!isset($jwt)) {
         $query = $query . " and pt.end_date < '" . date("Y-m-d",strtotime($edate . "-01 first day of 1 month")) . "' ";
     }
 
+    if($sdate == '' && $edate == '') {
+        $query = $query . " and pt.end_date >= '" . date("Y-m-d",strtotime("last day of -2 month")) . "' ";
+    }
+
     $query = $query . " order by pt.created_at desc ";
 
     if (!empty($_GET['page'])) {
