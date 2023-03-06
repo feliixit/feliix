@@ -150,15 +150,47 @@ try {
         /* -------------------------- */
         /* body.green Style (Yellow) */
         /* -------------------------- */
+
+        body.green {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+            font-weight: 300;
+        }
+
+         a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.green header nav a, body.green header nav a:link {
+            color: #000;
+        }
+
+        body.green header nav a:hover {
+            color: #333;
+        }
+
+        body.green header nav ul.info {
+            margin-bottom: 0;
+        }
+
+        body.green header nav ul.info b {
+            font-weight: bold;
+        }
+
         body.green .mainContent > .block,
         body.green .mainContent > .block h6,
         body.green .mainContent > .block .tablebox,
         body.green .mainContent > .block .tablebox > ul > li,
         body.green .mainContent > .block .tablebox2,
         body.green .mainContent > .block .formbox,
-        body.green .mainContent > .block .formbox dd,
+        body.green .mainContent > .block .formbox dd {
+            border-color: #2F9A57;
+        }
+
         body.green .mainContent > .tags a {
             border-color: #2F9A57;
+            text-decoration: none;
+            color: #000;
         }
 
         body.green .mainContent > .block h6 {
@@ -231,6 +263,7 @@ try {
 
         body.green a.btn.green {
             background-color: #2F9A57;
+            color: #FFF;
         }
 
         body.green a.btn.green:hover {
@@ -479,6 +512,18 @@ try {
 
         .list_table td i {
             font-size: 25px;
+        }
+
+        .list_table td a {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .list_table td a:hover {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .list_table td i:nth-of-type(odd) {
