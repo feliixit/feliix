@@ -509,7 +509,7 @@ try {
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h6>{{ topic }}</h6>
+                            <h6>{{ record.topic }}</h6>
                             <a href="javascript: void(0)" onclick="ToggleModal(4)"><i class="fa fa-times fa-lg"
                                                                                      aria-hidden="true"></i></a>
                         </div>
@@ -519,8 +519,6 @@ try {
                         <div class="box-content">
 
                             <ul>
-                                <li><b>Topic Name</b></li>
-                                <li class="content">{{ record.topic }}</li>
 
                                 <li><b>Voting Time</b></li>
                                 <li class="content">{{ record.start_date }} ~ {{ record.end_date }}</li>
