@@ -695,7 +695,7 @@ try {
                                         <li v-if="item.type == 1">{{ item.category }}</li>
                                         <li v-if="item.type == 0"><input type="text" v-model="item.category" placeholder="Other Earning"></li>
                                         <li><input type="number" v-model="item.amount"></li>
-                                        <li v-if="item.category == 'Commission'"><textarea v-model="item.remark"></textarea></li>
+                                        <li v-if="item.category == 'Commission'"><textarea style="height: 100px;" v-model="item.remark"></textarea></li>
                                         <li v-if="item.category != 'Commission'"><input type="text" v-model="item.remark"></li>
                                         <li><span v-if="item.type == 0" @click=del_plus_detail(item.order)>x</span></li>
                                     </ul>
@@ -999,7 +999,7 @@ try {
                                         <li v-if="item.type == 1">{{ item.category }}</li>
                                         <li v-if="item.type == 0"><input type="text" v-model="item.category" placeholder="Other Earning"></li>
                                         <li><input type="number" v-model="item.amount"></li>
-                                        <li v-if="item.category == 'Commission'"><textarea v-model="item.remark"></textarea></li>
+                                        <li v-if="item.category == 'Commission'"><textarea style="height: 100px;" v-model="item.remark"></textarea></li>
                                         <li v-if="item.category != 'Commission'"><input type="text" v-model="item.remark"></li>
                                         <li><span v-if="item.type == 0" @click=del_plus_detail(item.order)>x</span></li>
                                     </ul>
@@ -1162,7 +1162,7 @@ try {
                                         <li v-if="item.type == 1">{{ item.category }}</li>
                                         <li v-if="item.type == 0"><input type="text" v-model="item.category" placeholder="Other Earning"></li>
                                         <li><input type="number" v-model="item.amount"></li>
-                                        <li v-if="item.category == 'Commission'"><textarea v-model="item.remark"></textarea></li>
+                                        <li v-if="item.category == 'Commission'"><textarea style="height: 100px;" v-model="item.remark"></textarea></li>
                                         <li v-if="item.category != 'Commission'"><input type="text" v-model="item.remark"></li>
                                         <li><span v-if="item.type == 0" @click=del_plus_detail(item.order)>x</span></li>
                                     </ul>
