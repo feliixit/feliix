@@ -153,7 +153,6 @@ try {
 
         body.green {
             font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
-            font-weight: 300;
         }
 
          a, a:link, a:visited, a:active, a:hover, area {
@@ -204,6 +203,7 @@ try {
 
         body.green .mainContent > .tags a.focus {
             background-color: #2F9A57;
+            color: #FFF;
         }
 
         body.green .mainContent > .block .tablebox {
@@ -560,6 +560,12 @@ try {
             line-height: 2;
         }
 
+        button.btn.dropdown-toggle.btn-light {
+            background-color: #FFF;
+            border: 1px solid black;
+            border-radius: 0;
+            height: 42px;
+        }
 
     </style>
 
@@ -643,7 +649,7 @@ try {
                     <a class="btn green" @click="view_detai()">Detail</a>
                     <a class="btn green" @click="duplicate()">Duplicate</a>
                     <a class="btn green" @click="edit_detail()">Edit</a>
-                    <a class="btn" @click="remove()">Delete</a>
+                    <a class="btn" style="color: #FFF;" @click="remove()">Delete</a>
                 </div>
 
 
