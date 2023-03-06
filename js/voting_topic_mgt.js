@@ -306,7 +306,37 @@ var app = new Vue({
         
     },
 
-    edit_detail:function(){
+    // is this topic voted by someone
+    asyncVote: async function(template_id) {
+      let _this = this;
+      let token = localStorage.getItem("accessToken");
+      const params = {
+        id: template_id,
+      };
+
+      try {
+        let res = await axios.get("api/voting_topic_mgt_vote", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        this.record.votes = res.data;
+        // find receive_recrod's index
+        var rec = this.receive_records.find((element) => element.id == template_id);
+
+        if (rec) {
+          rec.votes = res.data;
+        }
+
+      } catch (err) {
+        console.log(err)
+        alert('error')
+      }
+
+    },
+
+
+    edit_detail: async function(){
         if (this.proof_id == 0) {
             Swal.fire({
                 text: "Please select row to edit",
@@ -316,9 +346,11 @@ var app = new Vue({
             return;
           }
           
+          await this.asyncVote(this.proof_id);
+
           if (this.record.votes.length > 0) {
             Swal.fire({
-                text: "Can't edit this topic with votes",
+                text: "Someone has already voted in this topic, so it cannot be edited.",
                 icon: "warning",
                 confirmButtonText: "OK",
               });
@@ -493,7 +525,7 @@ var app = new Vue({
       return url.replace(/\\/g, "/");
     },
 
-    remove() {
+    async remove() {
       if (this.proof_id == 0) {
         Swal.fire({
           text: "Please select a record to delete",
@@ -504,10 +536,12 @@ var app = new Vue({
         return;
       }
 
+      await this.asyncVote(this.proof_id);
+
       if(this.record.votes.length != 0)
       {
         Swal.fire({
-          text: "This topic has been used for someone's vote, so cannot be deleted.",
+          text: "Someone has already voted in this topic, so it cannot be deleted. ",
           icon: "warning",
           confirmButtonText: "OK",
         });
