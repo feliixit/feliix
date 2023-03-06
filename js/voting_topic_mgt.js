@@ -613,12 +613,28 @@ var app = new Vue({
       });
     },
 
-    update_template() {
+    async update_template() {
 
       if (this.proof_id == 0) {
       
         return;
       }
+
+      await this.asyncVote(this.proof_id);
+
+      if(this.record.votes.length != 0)
+      {
+        Swal.fire({
+          text: "Someone has already voted in this topic, so it cannot be edited. ",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        window.jQuery(".mask").toggle();
+        window.jQuery('#Modal_3').toggle();
+
+        return;
+      };
 
       if (this.submit == true) return;
 
