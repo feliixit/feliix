@@ -635,7 +635,7 @@ try {
                                 <tbody>
                                 <tr v-for='(item, index) in record.votes_cnt' :key="index">
                                     <!-- {{從1開始，數字會到使用者當初設定的取前多少名為止，例如當初選Top 3，則只會列出前三名}} -->
-                                    <td>1</td>
+                                    <td>{{ item.order }}</td>
                                     <td>
                                         {{ item.title }}
                                     </td>

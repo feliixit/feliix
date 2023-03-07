@@ -567,19 +567,20 @@ function GetVotesCnt($template_id, $db, $sort, $limit)
     left join voting_template_detail q on q.id = a. review_question_id where a.`status` <> -1  and q.template_id = " . $template_id . "
     group by review_question_id, sn, title, pic,  description, link  order by sum(case when answer = '1' then 1 else 0 end) ";
 
+    
     if($sort == "1")
         $query .= "desc";
     else if($sort == "2")
         $query .= "asc";
 
-    if($limit == "1")
-        $query .= " limit 1 ";
-    if($limit == "2")
-        $query .= " limit 3 ";
-    if($limit == "3")
-        $query .= " limit 5 ";
-    if($limit == "4")
-        $query .= " limit 10 ";
+    // if($limit == "1")
+    //     $query .= " limit 1 ";
+    // if($limit == "2")
+    //     $query .= " limit 3 ";
+    // if($limit == "3")
+    //     $query .= " limit 5 ";
+    // if($limit == "4")
+    //     $query .= " limit 10 ";
 
 
     $stmt = $db->prepare( $query );
@@ -597,6 +598,7 @@ function GetVotesCnt($template_id, $db, $sort, $limit)
         $link = $row['link'];
 
         $merged_results[] = array(
+            'order' => 0,
             'review_question_id' => $review_question_id,
             'score' => $score,
     
@@ -610,7 +612,44 @@ function GetVotesCnt($template_id, $db, $sort, $limit)
         );
     }
 
-    return $merged_results;
+
+    // get top n by $limit n score group
+    $top_n = [];
+
+    $top_n_cnt = 0;
+
+    if($limit == "1")
+        $top_n_cnt = 1;
+    if($limit == "2")
+        $top_n_cnt = 3;
+    if($limit == "3")
+        $top_n_cnt = 5;
+    if($limit == "4")
+        $top_n_cnt = 10;
+    if($limit == "all")
+        $top_n_cnt = 10000;
+
+    $temp_score = -1;
+    $order = 0;
+
+    foreach($merged_results as $result)
+    {
+        if($temp_score != $result['score'])
+        {
+            $temp_score = $result['score'];
+            $top_n_cnt = $top_n_cnt -1;
+            $order = $order + 1;
+        }
+
+        if($top_n_cnt >= 0)
+        {
+            $result['order'] = $order;
+            $top_n[] = $result;
+        }
+    }
+
+
+    return $top_n;
 }
 
 
