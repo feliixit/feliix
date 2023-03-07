@@ -567,6 +567,12 @@ try {
             height: 42px;
         }
 
+        button.btn.dropdown-toggle.btn-light div.filter-option {
+            color: black;
+            font-weight: 500;
+            line-height: 28px;
+        }
+
     </style>
 
 
