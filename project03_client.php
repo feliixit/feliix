@@ -2559,16 +2559,14 @@ header('location:index');
                     <!-- 一筆Tesk -->
                     <ul v-for='(receive_record, index) in project03_client_stage_task'>
                         <li><b>{{ receive_record.num }}</b></li>
-                        <li class="cmt">
-                            <p>
-                                {{ receive_record.message }}
+                        <li class="cmt"  style="white-space: pre;">
+                            <p>{{ receive_record.message }}
                                 <a v-for="item in receive_record.attachments" class="attch" :href="'https://storage.cloud.google.com/feliiximg/' + item.gcp_name" target="_blank">{{ item.name }}</a>
                                 <i class="t">{{ receive_record.username }} at {{receive_record.created_at }}</i>
 
                             </p>
 
-                            <p v-for="item in receive_record.items">
-                                {{ item.f_message }}
+                            <p v-for="item in receive_record.items">{{ item.f_message }}
                                 <a class="attch" v-for="it in item.f_attachments" :href="'https://storage.cloud.google.com/feliiximg/'+ it.gcp_name" target="_blank">{{ it.name }}</a>
                                 <i class="t"> {{ item.f_username }} at {{ item.f_created_at }}</i>
                             </p>
