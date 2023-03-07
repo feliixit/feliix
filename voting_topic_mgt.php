@@ -47,6 +47,18 @@ try {
             {
                 header( 'location:index' );
             }
+
+            // for users
+            $user_results = array();
+            $query = "SELECT username FROM user WHERE status = 1 ORDER BY username
+                            ";
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $user_results[] = array(
+                    "username" => $row['username'],
+                );
+            }
         }
         catch (Exception $e){
 
