@@ -2649,6 +2649,44 @@ var app = new Vue({
         },
 
 
+        
+        update_status(record) {
+          let _this = this;
+
+          _this.submit = true;
+          var form_Data = new FormData();
+
+          form_Data.append('stage_id', record.id);
+            form_Data.append('sequence', record.sequence);
+            form_Data.append('project_stage_id', record.project_stage_id);
+            form_Data.append('stages_status_id', record.stages_status_id);
+            form_Data.append('stage_edit_reason', '');
+            form_Data.append('stage_edit_title', record.title);
+
+          const token = sessionStorage.getItem('token');
+
+          axios({
+                  method: 'post',
+                  headers: {
+                      'Content-Type': 'multipart/form-data',
+                      Authorization: `Bearer ${token}`
+                  },
+                  url: 'api/project02_edit_project_stage',
+                  data: form_Data
+              })
+              .then(function(response) {
+                  //handle success
+                  //this.$forceUpdate();
+                  _this.getRecordsStage(_this.project_id);
+                    _this.edit_stage_clear();
+              })
+              .catch(function(response) {
+                  //handle error
+                  console.log(response)
+              });
+      },
+
+
         stage_add() {
           let _this = this;
 
