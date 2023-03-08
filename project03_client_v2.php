@@ -2668,7 +2668,7 @@ header('location:index');
                 </ul>
                 <ul>
                     <li>
-                        <div v-for='(receive_record, index) in stage_client_venue'>{{ receive_record.message }} ({{
+                        <div v-for='(receive_record, index) in stage_client_venue' style="white-space: pre;">{{ receive_record.message }} ({{
                             receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
@@ -2903,7 +2903,7 @@ header('location:index');
                 </ul>
                 <ul>
                     <li>
-                        <div v-for='(receive_record, index) in stage_client_competitor'>{{ receive_record.message }} ({{
+                        <div v-for='(receive_record, index) in stage_client_competitor' style="white-space: pre;">{{ receive_record.message }} ({{
                             receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
@@ -2936,7 +2936,7 @@ header('location:index');
                 </ul>
                 <ul>
                     <li>
-                        <div v-for='(receive_record, index) in stage_client_infomation'>{{ receive_record.message }} ({{
+                        <div v-for='(receive_record, index) in stage_client_infomation' style="white-space: pre;">{{ receive_record.message }} ({{
                             receive_record.username }} at {{ receive_record.created_at }})
                             <br v-if="receive_record.items.length > 0">
                             <span v-for="item in receive_record.items">
@@ -3070,7 +3070,7 @@ header('location:index');
                         </ul>
                         <ul>
                             <li><b>Description</b></li>
-                            <li>{{ receive_record.detail }}</li>
+                            <li style="white-space: pre;">{{ receive_record.detail }}</li>
                         </ul>
                         <ul>
                             <li><b>Attachments</b></li>
@@ -3111,7 +3111,7 @@ header('location:index');
                                         <div class="msgbox dialogclear">
                                             <p style="color: #AAA;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{
                                                 item.ref_msg}}"</p>
-                                            <p>{{ item.message }}</p>
+                                            <p style="white-space: pre;">{{ item.message }}</p>
                                             <i v-for="file in item.items">
                                                 <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'"
                                                    class="attch_pic" :href="baseURL + file.gcp_name"
@@ -3201,7 +3201,7 @@ header('location:index');
                                     <div class="msg">
                                         <div class="msgbox">
                                             <p>
-                                                <del>{{ item.message }}</del>
+                                                <del style="white-space: pre;">{{ item.message }}</del>
                                                 <br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at
                                                 {{ item.update_date }}
                                             </p>

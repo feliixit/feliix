@@ -2201,7 +2201,7 @@ header('location:index');
                 </ul>
                 <ul>
                     <li>
-                        <div v-for='(receive_record, index) in stage_client_venue'>{{ receive_record.message }} ({{
+                        <div v-for='(receive_record, index) in stage_client_venue' style="white-space: pre;">{{ receive_record.message }} ({{
                             receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
@@ -2436,7 +2436,7 @@ header('location:index');
                 </ul>
                 <ul>
                     <li>
-                        <div v-for='(receive_record, index) in stage_client_competitor'>{{ receive_record.message }} ({{
+                        <div v-for='(receive_record, index) in stage_client_competitor' style="white-space: pre;">{{ receive_record.message }} ({{
                             receive_record.username }} at {{ receive_record.created_at }})
                         </div>
                     </li>
@@ -2469,7 +2469,7 @@ header('location:index');
                 </ul>
                 <ul>
                     <li>
-                        <div v-for='(receive_record, index) in stage_client_infomation'>{{ receive_record.message }} ({{
+                        <div v-for='(receive_record, index) in stage_client_infomation' style="white-space: pre;">{{ receive_record.message }} ({{
                             receive_record.username }} at {{ receive_record.created_at }})
                             <br v-if="receive_record.items.length > 0">
                             <span v-for="item in receive_record.items">
@@ -2559,14 +2559,12 @@ header('location:index');
                     <!-- 一筆Tesk -->
                     <ul v-for='(receive_record, index) in project03_client_stage_task'>
                         <li><b>{{ receive_record.num }}</b></li>
-                        <li class="cmt"  style="white-space: pre;">
-                            <p>{{ receive_record.message }}
+                        <li class="cmt">
+                            <p style="white-space: pre;">{{ receive_record.message }}
                                 <a v-for="item in receive_record.attachments" class="attch" :href="'https://storage.cloud.google.com/feliiximg/' + item.gcp_name" target="_blank">{{ item.name }}</a>
                                 <i class="t">{{ receive_record.username }} at {{receive_record.created_at }}</i>
-
                             </p>
-
-                            <p v-for="item in receive_record.items">{{ item.f_message }}
+                            <p v-for="item in receive_record.items" style="white-space: pre;">{{ item.f_message }}
                                 <a class="attch" v-for="it in item.f_attachments" :href="'https://storage.cloud.google.com/feliiximg/'+ it.gcp_name" target="_blank">{{ it.name }}</a>
                                 <i class="t"> {{ item.f_username }} at {{ item.f_created_at }}</i>
                             </p>

@@ -2498,8 +2498,10 @@ var app = new Vue({
 
               clear_all_diag() {
                 for (i = 1; i <= this.tid; i++) {
-                  var me = this.$refs['dialog' + i][0];
-                  me.classList.remove('diashow');
+                  var me = document.getElementById("dialog_a" + i);
+                  //var me = this.$refs['dialog_a' + i][0];
+                  if(me != undefined)
+                    me.classList.remove('diashow');
                 }
               },
 
