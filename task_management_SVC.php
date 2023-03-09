@@ -2762,7 +2762,7 @@ catch (Exception $e) {
                             </ul>
                             <ul>
                                 <li><b>Description</b></li>
-                                <li>{{ receive_record.detail }}</li>
+                                <li style="white-space: pre-wrap;">{{ receive_record.detail }}</li>
                             </ul>
                             <ul>
                                 <li><b>Attachments</b></li>
@@ -2795,8 +2795,8 @@ catch (Exception $e) {
                                     <li v-if="item.message_status == 0">
                                         <div class="msg">
                                             <div class="msgbox dialogclear">
-                                                <p style="color: #AAA;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
-                                                <p>{{ item.message }}</p>
+                                                <p style="color: #AAA; white-space: pre-wrap;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p><br>
+                                                <p style="white-space: pre-wrap;">{{ item.message }}</p>
                                                 <i v-for="file in item.items">
                                                     
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
@@ -2844,7 +2844,7 @@ catch (Exception $e) {
                                             </div>
 
                                             <div class="msgbox dialogclear" v-for="reply in item.reply">
-                                                <p><a href="" class="tag_name">@{{ item.messager}}</a> {{ reply.reply}}</p>
+                                                <p style="white-space: pre-wrap;"><a href="" class="tag_name" >@{{ item.messager}}</a> {{ reply.reply}}</p>
                                                 <i v-for="file in reply.items">
                                                     
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
@@ -2862,7 +2862,9 @@ catch (Exception $e) {
                                     <li v-if="item.message_status == -1">
                                         <div class="msg">
                                             <div class="msgbox">
-                                                <p><del>{{ item.message }}</del><br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
+                                                <p style="white-space: pre-wrap;">
+                                                    <del>{{ item.message }}</del>
+                                                    <br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
                                             </div>
                                         </div>
                                     </li>

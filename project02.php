@@ -237,6 +237,13 @@ header('location:index');
             margin: auto;
         }
 
+        .tablebox.lv2b > ul > li > select{
+            font-size: 14px;
+            font-weight: 500;
+            border-color: var(--fth01);
+            background-image: url(../images/ui/icon_form_select_arrow_blue.svg);
+        }
+
         .list_function .info_btnbox {
             display: inline-block;
             width: 40px;
@@ -1457,7 +1464,25 @@ if ($access6 == true) {
                     <li v-if="receive_record.project_stage_id != 1 && receive_record.project_stage_id != 3"><a
                             v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                             <div class="subtitle">{{receive_record.title}}</div></li>
+
+                <?php
+                    if ($test_manager[1] == "1") {
+                ?>
+                    <li><select v-model="receive_record.stages_status_id" @change="update_status(receive_record)">
+                            <option value="1">Ongoing</option>
+                            <option value="2">Pending</option>
+                            <option value="3">Close</option>
+                        </select>
+                    </li>
+                <?php
+                    } else {    
+                ?>
                     <li>{{ receive_record.stages_status }}</li>
+                <?php
+                }
+                ?>
+
+                    
                     <li>{{ receive_record.start }} ~</li>
                     <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
                     <!-- <li>{{ receive_record.replies }}/{{ receive_record.post }}</li> -->
