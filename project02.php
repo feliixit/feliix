@@ -237,6 +237,13 @@ header('location:index');
             margin: auto;
         }
 
+        .tablebox.lv2b > ul > li > select{
+            font-size: 14px;
+            font-weight: 500;
+            border-color: var(--fth01);
+            background-image: url(../images/ui/icon_form_select_arrow_blue.svg);
+        }
+
         .list_function .info_btnbox {
             display: inline-block;
             width: 40px;
