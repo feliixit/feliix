@@ -3636,7 +3636,7 @@ catch (Exception $e) {
                             </ul>
                             <ul>
                                 <li><b>Description</b></li>
-                                <li style="white-space: pre;">{{ receive_record.detail }}</li>
+                                <li style="white-space: pre-wrap;">{{ receive_record.detail }}</li>
                             </ul>
                             <ul>
                                 <li><b>Attachments</b></li>
@@ -3668,8 +3668,8 @@ catch (Exception $e) {
                                     <li v-if="item.message_status == 0">
                                         <div class="msg">
                                             <div class="msgbox dialogclear">
-                                                <p style="color: #AAA; white-space: pre;"  v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
-                                                <p style="white-space: pre;">{{ item.message }}</p>
+                                                <p style="color: #AAA; white-space: pre-wrap;"  v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
+                                                <p style="white-space: pre-wrap;">{{ item.message }}</p>
                                                 <i v-for="file in item.items">
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
@@ -3727,7 +3727,9 @@ catch (Exception $e) {
                                     <li v-if="item.message_status == -1">
                                         <div class="msg">
                                             <div class="msgbox">
-                                                <p><del>{{ item.message }}</del><br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
+                                                <p style="white-space: pre-wrap;">
+                                                    <del>{{ item.message }}</del>
+                                                    <br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}</p>
                                             </div>
                                         </div>
                                     </li>
@@ -3801,7 +3803,7 @@ catch (Exception $e) {
                                     </ul>
                                     <ul>
                                         <li><b>Description</b></li>
-                                        <li style="white-space: pre;">{{ receive_record.detail }}</li>
+                                        <li style="white-space: pre-wrap;">{{ receive_record.detail }}</li>
                                     </ul>
                                     <ul>
                                         <li><b>Attachments</b></li>
@@ -3830,8 +3832,8 @@ catch (Exception $e) {
                                             <li v-if="item.message_status == 0">
                                                 <div class="msg">
                                                     <div class="msgbox dialogclear">
-                                                        <p style="color: #AAA; white-space: pre;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
-                                                        <p style="white-space: pre;">{{ item.message }}</p>
+                                                        <p style="color: #AAA; white-space: pre-wrap;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
+                                                        <p style="white-space: pre-wrap;">{{ item.message }}</p>
                                                         <i v-for="file in item.items">
                                                             <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
                                                             <a v-if="file.gcp_name.split('.').pop().toLowerCase() !== 'jpg' && file.gcp_name.split('.').pop().toLowerCase() !== 'png'" class="attch" :href="baseURL + file.gcp_name" target="_blank">{{file.filename}}</a>
@@ -3887,7 +3889,7 @@ catch (Exception $e) {
                                             <li v-if="item.message_status == -1">
                                                 <div class="msg">
                                                     <div class="msgbox">
-                                                        <p>
+                                                        <p style="white-space: pre-wrap;">
                                                             <del>{{ item.message }}</del>
                                                             <br>
                                                             Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}

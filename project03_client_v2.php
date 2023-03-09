@@ -3202,8 +3202,7 @@ header('location:index');
                                         <div class="msgbox">
                                             <p style="white-space: pre-wrap;">
                                                 <del>{{ item.message }}</del>
-                                                <br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at
-                                                {{ item.update_date }}
+                                                <br> Deleted by <a href="" class="tag_name">@{{ item.updator }}</a> at {{ item.update_date }}
                                             </p>
                                         </div>
                                     </div>
