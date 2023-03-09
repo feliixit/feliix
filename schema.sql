@@ -3634,3 +3634,7 @@ ADD COLUMN `vote1` text COLLATE utf8mb4_unicode_ci;
 
 ALTER TABLE access_control
 ADD COLUMN `vote2` text COLLATE utf8mb4_unicode_ci;
+
+-- 20230309 print option
+ALTER TABLE product_category
+ADD COLUMN `print_option` JSON;
