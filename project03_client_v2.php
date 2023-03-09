@@ -3110,7 +3110,7 @@ header('location:index');
                                     <div class="msg">
                                         <div class="msgbox dialogclear">
                                             <p style="color: #AAA;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{
-                                                item.ref_msg}}"</p>
+                                                item.ref_msg}}"</p><br>
                                             <p style="white-space: pre-wrap;">{{ item.message }}</p>
                                             <i v-for="file in item.items">
                                                 <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'"

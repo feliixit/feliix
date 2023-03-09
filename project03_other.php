@@ -3668,7 +3668,7 @@ catch (Exception $e) {
                                     <li v-if="item.message_status == 0">
                                         <div class="msg">
                                             <div class="msgbox dialogclear">
-                                                <p style="color: #AAA; white-space: pre-wrap;"  v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
+                                                <p style="color: #AAA; white-space: pre-wrap;"  v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p><br>
                                                 <p style="white-space: pre-wrap;">{{ item.message }}</p>
                                                 <i v-for="file in item.items">
                                                     <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
@@ -3832,7 +3832,7 @@ catch (Exception $e) {
                                             <li v-if="item.message_status == 0">
                                                 <div class="msg">
                                                     <div class="msgbox dialogclear">
-                                                        <p style="color: #AAA; white-space: pre-wrap;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p>
+                                                        <p style="color: #AAA; white-space: pre-wrap;" v-if="item.ref_id != 0">{{ item.ref_name}} wrote "{{ item.ref_msg}}"</p><br>
                                                         <p style="white-space: pre-wrap;">{{ item.message }}</p>
                                                         <i v-for="file in item.items">
                                                             <a v-if="file.gcp_name.split('.').pop().toLowerCase() === 'jpg' || file.gcp_name.split('.').pop().toLowerCase() === 'png'" class="attch_pic" :href="baseURL + file.gcp_name" target="_blank"><img :src="baseURL + file.gcp_name"></a>
