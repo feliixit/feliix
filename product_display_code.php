@@ -109,7 +109,7 @@
 
         .btnbox > button, .heading-and-btn button {
             margin: 0 10px;
-            width: 80px;
+            width: 130px;
         }
 
         .bodybox .mask {
@@ -523,7 +523,7 @@
                 </ul>
 
                 <div class="btnbox noPrint">
-                    <button class="btn btn-info" @click="print_option_page()">Export Option</button> <button class="btn btn-info" @click="print_page()">Export</button>
+                    <button class="btn btn-secondary" @click="print_option_page()">Export Setting</button> <button class="btn btn-info" @click="print_page()">Export</button>
                     
                 </div>
 
