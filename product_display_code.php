@@ -109,7 +109,7 @@
 
         .btnbox > button, .heading-and-btn button {
             margin: 0 10px;
-            width: 80px;
+            width: 130px;
         }
 
         .bodybox .mask {
@@ -450,7 +450,7 @@
                     <!-- 網頁載入時，下面的<span>結構不會顯示出來，但當使用者選擇到某一個停產的子規格時，下方的 <span> 結構就會顯示出來；若使用者切換到另一個沒有停產的子規格 或是 沒有選擇任何子規格時，下面的<span>結構不會顯示出來 -->
                     <span class="phasedout" v-if="phased_out == 'F'">Phased Out</span>
                     <h3 style="word-break: break-all;">{{code}}</h3>
-                    <h6>{{brand}}</h6>
+                    <h6 id="print_brand">{{brand}}</h6>
                     <h6 v-if="category == 'Lighting'">{{ category}}</h6>
                     <h6 v-if="category != 'Lighting'">{{ category}} >> {{ sub_category_name}}</h6>
                     <div class="tags">
@@ -464,11 +464,11 @@
                         Cost Price: <span>{{ price_ntd }}</span><span>{{ str_price_ntd_change }}</span>
                     </li>
 
-                    <li>
+                    <li id="print_srp">
                         Standard Retail Price: <span>{{price}}</span><span>{{ str_price_change }}</span>
                     </li>
 
-                    <li>
+                    <li id="print_qp">
                         Quoted Price: <span>{{quoted_price}}</span><span>{{ str_quoted_price_change }}</span>
                     </li>
 
@@ -523,7 +523,7 @@
                 </ul>
 
                 <div class="btnbox noPrint">
-                    <button class="btn btn-info" @click="print_page()">Export</button>
+                    <button class="btn btn-secondary" @click="print_option_page()">Export Setting</button> <button class="btn btn-info" @click="print_page()">Export</button>
                     
                 </div>
 

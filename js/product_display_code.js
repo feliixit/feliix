@@ -122,6 +122,9 @@ var app = new Vue({
 
     toggle: true,
 
+    print_brand: 'true',
+    print_srp: 'true',
+    print_qp: 'true',
   },
 
   created() {
@@ -154,7 +157,7 @@ var app = new Vue({
 
     this.get_records(this.id);
     this.getUserName();
-
+    this.load_print_option();
   },
 
   computed: {
@@ -565,8 +568,172 @@ var app = new Vue({
       }
     },
 
-    print_page() {
+    async save_print_options()
+    {
+      let token = localStorage.getItem("accessToken");
+
+      var form_Data = new FormData();
+
+       form_Data.append('id', this.id)
+       form_Data.append('brand', this.print_brand)
+       form_Data.append('srp', this.print_srp)
+      form_Data.append('qp', this.print_qp)
+
+      try {
+        res = await axios.post("api/save_product_print_option", form_Data, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (err) {
+        console.log(err)
+        alert('error')
+      }
+    },
+
+    async get_previous_print_options() {
+      let token = localStorage.getItem("accessToken");
+      var res = {brand: true, srp: true, qp: true};
+      const params = {
+        id: this.id,
+      };
+
+      try {
+        res = await axios.get("api/get_previous_product_print_option", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+      } catch (err) {
+        console.log(err)
+        alert('error')
+      }
+
+      return res;
+    },
+
+    async load_print_option() {
+      res = await this.get_previous_print_options();
+      var brand = res.data.brand;
+      var srp = res.data.srp;
+      var qp = res.data.qp;
+
+
+      this.print_brand = brand;
+      this.print_srp = srp;
+      this.print_qp = qp;
+
+      if(brand == true) {
+        $('#print_brand').removeClass('noPrint')
+      } else {
+        $('#print_brand').addClass('noPrint')
+      }
+
+      if(srp == true) {
+        $('#print_srp').removeClass('noPrint')
+      }
+      else {
+        $('#print_srp').addClass('noPrint')
+      }
+
+      if(qp == true) {
+        $('#print_qp').removeClass('noPrint')
+      }
+      else {
+        $('#print_qp').addClass('noPrint')
+      }
+
+    },
+
+    async print_page() {
+
+      //await this.print_option_page();
+
       window.print();
+    },
+
+    async print_option_page() {
+      let _this = this;
+
+      res = await this.get_previous_print_options();
+      var brand = res.data.brand;
+      var srp = res.data.srp;
+      var qp = res.data.qp;
+
+      Swal.fire({
+          title: 'Export Setting:',
+          html: '<div>Show Brand Name <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="brand" ' + (brand == 'true' ? 'checked' : '') + ' /></div><p/>' +
+                '<div>Show SRP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="srp" ' + (srp == 'true' ? 'checked' : '') + '  /></div><p/>' +
+                '<div>Show QP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="qp" ' + (qp == 'true' ? 'checked' : '') + '  /></div>',
+          confirmButtonText: 'OK',
+          showCancelButton: true,
+          preConfirm: () => {
+            brand = Swal.getPopup().querySelector('#brand').checked
+            srp = Swal.getPopup().querySelector('#srp').checked
+            qp = Swal.getPopup().querySelector('#qp').checked
+            
+
+            return {brand: brand, srp: srp, qp:qp}
+          }
+        }).then((result) => {
+          //Swal.fire("alcool: "+`${result.value.alcool}`+" and Cigarro: "+`${result.value.cigarro}`);
+
+          _this.print_brand = result.value.brand;
+          _this.print_srp = result.value.srp;
+          _this.print_qp = result.value.qp;
+
+          if(result.value.brand == true) {
+            $('#print_brand').removeClass('noPrint')
+          } else {
+            $('#print_brand').addClass('noPrint')
+          }
+
+          if(result.value.srp == true) {
+            $('#print_srp').removeClass('noPrint')
+          }
+          else {
+            $('#print_srp').addClass('noPrint')
+          }
+
+          if(result.value.qp == true) {
+            $('#print_qp').removeClass('noPrint')
+          }
+          else {
+            $('#print_qp').addClass('noPrint')
+          }
+          
+          _this.save_print_options();
+        })
+
+
+      // (async () => {
+
+      //   const {value: country} = await swal.fire({
+      //       title: 'Select Ukraine',
+      //       input: 'select',
+      //       inputOptions: {
+      //           'SRB': 'Serbia',
+      //           'UKR': 'Ukraine',
+      //           'HRV': 'Croatia'
+      //       },
+      //       inputPlaceholder: 'Select country',
+      //       showCancelButton: true,
+      //       inputValidator: (value) => {
+      //           return new Promise((resolve) => {
+      //               if (value === 'UKR') {
+      //                   resolve()
+      //               } else {
+      //                   resolve('You need to select Ukraine :)')
+      //               }
+      //           })
+      //       }
+      //   })
+      //   if (country) {
+      //       // swal.fire('You selected: ' + country)
+
+            
+      //   }
+      //   })()
+      
+        
     },
 
     onFileChange(e, num) {
