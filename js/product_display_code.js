@@ -157,7 +157,7 @@ var app = new Vue({
 
     this.get_records(this.id);
     this.getUserName();
-
+    this.load_print_option();
   },
 
   computed: {
@@ -610,6 +610,39 @@ var app = new Vue({
       return res;
     },
 
+    async load_print_option() {
+      res = await this.get_previous_print_options();
+      var brand = res.data.brand;
+      var srp = res.data.srp;
+      var qp = res.data.qp;
+
+
+      this.print_brand = brand;
+      this.print_srp = srp;
+      this.print_qp = qp;
+
+      if(brand == true) {
+        $('#print_brand').removeClass('noPrint')
+      } else {
+        $('#print_brand').addClass('noPrint')
+      }
+
+      if(srp == true) {
+        $('#print_srp').removeClass('noPrint')
+      }
+      else {
+        $('#print_srp').addClass('noPrint')
+      }
+
+      if(qp == true) {
+        $('#print_qp').removeClass('noPrint')
+      }
+      else {
+        $('#print_qp').removeClass('noPrint')
+      }
+
+    },
+
     async print_page() {
 
       //await this.print_option_page();
@@ -648,23 +681,23 @@ var app = new Vue({
           _this.print_qp = result.value.qp;
 
           if(result.value.brand == true) {
-            document.getElementById('print_brand').style.display = 'block';
+            $('#print_brand').removeClass('noPrint')
           } else {
-            document.getElementById('print_brand').style.display = 'none';
+            $('#print_brand').addClass('noPrint')
           }
 
           if(result.value.srp == true) {
-            document.getElementById('print_srp').style.display = 'block';
+            $('#print_srp').removeClass('noPrint')
           }
           else {
-            document.getElementById('print_srp').style.display = 'none';
+            $('#print_srp').addClass('noPrint')
           }
 
           if(result.value.qp == true) {
-            document.getElementById('print_qp').style.display = 'block';
+            $('#print_qp').removeClass('noPrint')
           }
           else {
-            document.getElementById('print_qp').style.display = 'none';
+            $('#print_qp').removeClass('noPrint')
           }
           
           _this.save_print_options();
