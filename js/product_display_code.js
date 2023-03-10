@@ -638,7 +638,7 @@ var app = new Vue({
         $('#print_qp').removeClass('noPrint')
       }
       else {
-        $('#print_qp').removeClass('noPrint')
+        $('#print_qp').addClass('noPrint')
       }
 
     },
@@ -659,7 +659,7 @@ var app = new Vue({
       var qp = res.data.qp;
 
       Swal.fire({
-          title: 'Print Options:',
+          title: 'Export Setting:',
           html: '<div>Show Brand Name <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="brand" ' + (brand == 'true' ? 'checked' : '') + ' /></div><p/>' +
                 '<div>Show SRP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="srp" ' + (srp == 'true' ? 'checked' : '') + '  /></div><p/>' +
                 '<div>Show QP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="qp" ' + (qp == 'true' ? 'checked' : '') + '  /></div>',
@@ -697,7 +697,7 @@ var app = new Vue({
             $('#print_qp').removeClass('noPrint')
           }
           else {
-            $('#print_qp').removeClass('noPrint')
+            $('#print_qp').addClass('noPrint')
           }
           
           _this.save_print_options();
