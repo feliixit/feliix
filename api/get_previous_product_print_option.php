@@ -49,7 +49,8 @@ if (!isset($jwt)) {
     $print_option = ['brand' => 'true', 'srp' => 'true', 'qp' => 'true' ];
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $print_option = json_decode($row['print_option']);
+        if($row['print_option'] != '')
+            $print_option = json_decode($row['print_option']);
     }
 
 
