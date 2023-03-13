@@ -661,6 +661,12 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    deleteEditFileItems(index) {
+      this.record.pre_items.splice(index, 1);
+      this.$forceUpdate();
+
+    },
+
     deleteEditFile(index) {
       this.editfileArray.splice(index, 1);
       var fileTarget = this.$refs.editfile;
@@ -830,6 +836,8 @@ var app = new Vue({
 
         form_Data.append('related_order', this.record.related_order);
       form_Data.append('related_tab', this.record.related_tab);
+
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
   
         const token = sessionStorage.getItem("token");
   
@@ -925,6 +933,8 @@ var app = new Vue({
               (element) => element.task_id == this.task_id_to_load
             )
           );
+
+          this.record.pre_items = JSON.parse(JSON.stringify(this.record.items));
   
           if (!this.CanAccess(this.record.creator_title)) {
             Swal.fire({

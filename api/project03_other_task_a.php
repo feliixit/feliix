@@ -209,11 +209,7 @@ switch ($method) {
                 }
             }
 
-            if ($filename != "")
-                $items[] = array(
-                    'filename' => $filename,
-                    'gcp_name' => $gcp_name
-                );
+            $items = GetItemInfo($task_id, 'other_task_a', $db);
         }
 
         if ($task_id != 0) {
@@ -377,6 +373,25 @@ function SendNotifyMail($last_id)
     task_notify_admin("create", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $last_id, 0, 0, $created_at);
 
 }
+
+function GetItemInfo($id, $batch_type, $db)
+{
+    $sql = "SELECT id,  COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name FROM gcp_storage_file f WHERE batch_id = :id AND batch_type = :batch_type and f.status <> -1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->bindParam(':batch_type',  $batch_type);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
 
 function GetTaskDetail($id, $db)
 {

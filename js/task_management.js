@@ -588,6 +588,12 @@ var app = new Vue({
       document.getElementById("filter_dialog").classList.remove("show");
     },
 
+    deleteEditFileItems(index) {
+      this.record.pre_items.splice(index, 1);
+      this.$forceUpdate();
+
+    },
+
     task_load() {
       if (this.task_id_to_load != 0) {
         this.record = {};
@@ -596,6 +602,8 @@ var app = new Vue({
             (element) => element.task_id == this.task_id_to_load
           )
         );
+
+        this.record.pre_items = JSON.parse(JSON.stringify(this.record.items));
 
         if (!this.CanAccess(this.record.creator_title)) {
           Swal.fire({
@@ -1481,6 +1489,8 @@ var app = new Vue({
       form_Data.append("due_date", this.record.due_date.trim());
       form_Data.append("due_time", this.record.due_time.trim());
       form_Data.append("detail", this.record.detail.trim());
+
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
 
       const token = sessionStorage.getItem("token");
 
