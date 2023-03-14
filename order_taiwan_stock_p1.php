@@ -1393,9 +1393,9 @@ try {
 
                         <div class="btn_block">
                        
-                            <a class="btn small green" @click="sendNotesToTw()" v-if="access1 == true && no_privlege() != true">Send TW for Notes</a>
+                            <a class="btn small green" @click="sendNotesToTw()" v-if="(access1 == true || access7 == true) && no_privlege() != true">Send TW for Notes</a>
                             <a class="btn small green" @click="approval()" v-if="access1 == true && no_privlege() != true">Submit for Approval</a>
-                            <a class="btn small" @click="withdrawNotesToTw()" v-if="access1 == true && no_privlege() != true">Withdraw</a>
+                            <a class="btn small" @click="withdrawNotesToTw()" v-if="(access1 == true || access7 == true) && no_privlege() != true">Withdraw</a>
                         
                             <a class="btn small green" @click="finish_notes()" v-if="access2 == true">Finish Notes</a>
                            
