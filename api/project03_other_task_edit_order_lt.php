@@ -64,6 +64,9 @@ $detail = (isset($_POST['detail']) ?  $_POST['detail'] : '');
 $od_name = (isset($_POST['od_name']) ?  $_POST['od_name'] : '');
 $order_type = (isset($_POST['order_type']) ?  $_POST['order_type'] : '');
 
+$pre_items = (isset($_POST['pre_items']) ?  $_POST['pre_items'] : []);
+$pre_items_array = json_decode($pre_items, true);
+
 $_record = GetTaskDetailOrg($task_id, $db);
 
 $serial_name = "";
@@ -139,6 +142,9 @@ try{
         if($mail_type == 2)
             SendNotifyMail02($task_id, $_record[0]["status"], GetOrderType($order_type), $serial_name . $od_name);
 
+        // update pre items
+        UpdatePreItems($task_id, $pre_items_array, 'other_task_l', $db);
+
         $returnArray = array('batch_id' => $task_id);
        
         $jsonEncodedReturnArray = json_encode($returnArray, JSON_PRETTY_PRINT);
@@ -204,6 +210,39 @@ function GetOrderType($order_type)
     }
 
     return $order_type_name;
+}
+
+
+function UpdatePreItems($task_id, $pre_items_array, $type, $db)
+{
+    // get previous items
+    $query = "select * from gcp_storage_file where batch_id = :task_id and batch_type = :type and status <> -1";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':task_id', $task_id);
+    $stmt->bindParam(':type', $type);
+    $stmt->execute();
+    $pre_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // delete items id not in pre_items_array id
+    foreach ($pre_items as $pre_item) {
+        $is_exist = false;
+        foreach ($pre_items_array as $pre_item_array) {
+            if($pre_item_array["id"] == $pre_item["id"])
+            {
+                $is_exist = true;
+                break;
+            }
+        }
+
+        if(!$is_exist)
+        {
+            $query = "update gcp_storage_file set status = -1 where id = :id";
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':id', $pre_item["id"]);
+            $stmt->execute();
+        }
+    }
+
 }
 
 function SendNotifyMail01($last_id, $old_status_id, $order_type, $order_name)

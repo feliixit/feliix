@@ -25,6 +25,9 @@ var app = new Vue({
 
     knowledge: [],
 
+    vote1: [],
+    vote2: [],
+
     payees: [],
   },
 
@@ -118,6 +121,14 @@ var app = new Vue({
               _this.knowledge = res.data[0]["knowledge"].split(",").filter(function (el) {
                 return el != "";
               });
+              if (kind === 17 || kind === undefined)
+              _this.vote1 = res.data[0]["vote1"].split(",").filter(function (el) {
+                return el != "";
+              });
+              if (kind === 18 || kind === undefined)
+              _this.vote2 = res.data[0]["vote2"].split(",").filter(function (el) {
+                return el != "";
+              });
 
           },
           (err) => {
@@ -179,6 +190,8 @@ var app = new Vue({
       form_Data.append("access6", this.access6.toString());
       form_Data.append("access7", this.access7.toString());
       form_Data.append("knowledge", this.knowledge.toString());
+      form_Data.append("vote1", this.vote1.toString());
+      form_Data.append("vote2", this.vote2.toString());
 
       axios({
         method: "post",

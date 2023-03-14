@@ -455,6 +455,12 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    deleteEditFileItems(index) {
+      this.record.pre_items.splice(index, 1);
+      this.$forceUpdate();
+
+    },
+
     changeFile_o() {
       var fileTarget = this.$refs.file_o;
 
@@ -1107,7 +1113,9 @@ var app = new Vue({
           )
         );
 
-        if (!this.CanAccess(this.record.creator_title)) {
+        this.record.pre_items = JSON.parse(JSON.stringify(this.record.items));
+
+        if (!this.CanAccess(this.record.creator_title)  && (this.record.creator_id != this._uid)) {
           Swal.fire({
             text:
               "It is not allowed to edit/delete the task which was created by user with higher position.",
@@ -1968,6 +1976,8 @@ var app = new Vue({
       form_Data.append("due_time", this.record.due_time.trim());
       form_Data.append("detail", this.record.detail.trim());
 
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
+
       const token = sessionStorage.getItem("token");
 
       axios({
@@ -2441,6 +2451,8 @@ var app = new Vue({
       form_Data.append('od_name', this.record.od_name.trim());
       form_Data.append('order_type', this.record.od_type.trim());
 
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
+
       const token = sessionStorage.getItem('token');
 
       axios({
@@ -2631,6 +2643,8 @@ var app = new Vue({
       form_Data.append('iq_name', this.record.iq_name.trim());
       form_Data.append('serial_name', this.record.inquiry[0].serial_name);
       form_Data.append('order_type', this.record.iq_type.trim());
+
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
 
       const token = sessionStorage.getItem('token');
 

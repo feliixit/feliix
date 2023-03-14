@@ -596,6 +596,8 @@ var app = new Vue({
           )
         );
 
+        this.record.pre_items = JSON.parse(JSON.stringify(this.record.items));
+
         if (!this.CanAccess(this.record.creator_title)) {
           Swal.fire({
             text:
@@ -994,6 +996,12 @@ var app = new Vue({
           }
         });
       }
+    },
+
+    deleteEditFileItems(index) {
+      this.record.pre_items.splice(index, 1);
+      this.$forceUpdate();
+
     },
 
     do_task_delete(task_id_to_del) {
@@ -1478,6 +1486,8 @@ var app = new Vue({
       form_Data.append("due_date", this.record.due_date.trim());
       form_Data.append("due_time", this.record.due_time.trim());
       form_Data.append("detail", this.record.detail.trim());
+
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
 
       const token = sessionStorage.getItem("token");
 

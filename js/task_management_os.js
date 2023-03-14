@@ -806,6 +806,11 @@ var app = new Vue({
 
 
 
+    deleteEditFileItems(index) {
+      this.record.pre_items.splice(index, 1);
+      this.$forceUpdate();
+
+    },
 
 
     GetPage() {
@@ -1106,6 +1111,8 @@ var app = new Vue({
             (element) => element.task_id == this.task_id_to_load
           )
         );
+
+        this.record.pre_items = JSON.parse(JSON.stringify(this.record.items));
 
         if (!this.CanAccess(this.record.creator_title)) {
           Swal.fire({
@@ -1968,6 +1975,8 @@ var app = new Vue({
       form_Data.append("due_time", this.record.due_time.trim());
       form_Data.append("detail", this.record.detail.trim());
 
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
+
       const token = sessionStorage.getItem("token");
 
       axios({
@@ -2441,6 +2450,8 @@ var app = new Vue({
       form_Data.append('od_name', this.record.od_name.trim());
       form_Data.append('order_type', this.record.od_type.trim());
 
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
+
       const token = sessionStorage.getItem('token');
 
       axios({
@@ -2631,6 +2642,8 @@ var app = new Vue({
       form_Data.append('iq_name', this.record.iq_name.trim());
       form_Data.append('serial_name', this.record.inquiry[0].serial_name);
       form_Data.append('order_type', this.record.iq_type.trim());
+
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
 
       const token = sessionStorage.getItem('token');
 

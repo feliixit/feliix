@@ -444,6 +444,50 @@ $(function(){
                 </div>
             </div>
 
+            <div class="box-content">
+                <ul>
+                    <li><b>Voting Topic Management Level 1</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="vote1"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="Name"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(17)">Cancel</a>
+                    <a class="btn" @click="save(17)">Save</a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <ul>
+                    <li><b>Voting Topic Management Level 2</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="vote2"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="Name"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(18)">Cancel</a>
+                    <a class="btn" @click="save(18)">Save</a>
+                </div>
+            </div>
+
 
         </div>
     </div>

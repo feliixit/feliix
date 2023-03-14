@@ -2595,6 +2595,16 @@ catch (Exception $e) {
                                                         </div>
                                                     </div>
 
+                                                    <div class="file-item" v-for="(item,index) in record.pre_items"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.filename}}
+                                                                <span @click="deleteEditFileItems(index)" class="upload-delete"><i class="fas fa-backspace"></i>
+                                                            </span>
+                                                            </p>
+                                                        
+                                                        </div>
+
                                                 </div>
                                     </dd>
                                 </dl>
@@ -2934,6 +2944,16 @@ catch (Exception $e) {
                                                                             class="fas fa-check-circle"></i></span>
                                                                 </div>
                                                             </div>
+                                                        </div>
+
+                                                        <div class="file-item" v-for="(item,index) in record.pre_items"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.filename}}
+                                                                <span @click="deleteEditFileItems(index)" class="upload-delete"><i class="fas fa-backspace"></i>
+                                                            </span>
+                                                            </p>
+                                                        
                                                         </div>
 
                                                     </div>
@@ -3300,6 +3320,16 @@ catch (Exception $e) {
                                                                             class="fas fa-check-circle"></i></span>
                                                                 </div>
                                                             </div>
+                                                        </div>
+
+                                                        <div class="file-item" v-for="(item,index) in record.pre_items"
+                                                             :key="index">
+                                                            <p>
+                                                                {{item.filename}}
+                                                                <span @click="deleteEditFileItems(index)" class="upload-delete"><i class="fas fa-backspace"></i>
+                                                            </span>
+                                                            </p>
+                                                        
                                                         </div>
 
                                                     </div>

@@ -3559,3 +3559,82 @@ insert into tags(`gtag`, tag, sn) values('BY TYPE / FUNCTION', 'AUDIO EQUIPMENT'
 -- 20230210
 ALTER TABLE access_control
 ADD COLUMN `knowledge` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20230222
+
+-- voting view
+CREATE TABLE IF NOT EXISTS `voting_template` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `topic`  varchar(512) DEFAULT '',
+  `access` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `start_date` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `end_date` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `rule` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `display` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `sort` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE IF NOT EXISTS `voting_template_detail` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `template_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `sn` int(11) DEFAULT 0 NOT NULL,
+  `title`  varchar(512) DEFAULT '',
+  `pic`  varchar(512) DEFAULT '',
+  `description`  varchar(2048) DEFAULT '',
+  `link` varchar(512) DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- voting view
+CREATE TABLE IF NOT EXISTS `voting_review` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `template_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `user_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `review_month`  varchar(20) DEFAULT '',
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `user_complete_at` timestamp NULL,
+  `manager_complete_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+CREATE TABLE IF NOT EXISTS `voting_review_detail` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `template_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `review_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `review_question_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `answer`  varchar(512) DEFAULT '',
+  `score` int(11) DEFAULT 0 NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20230302 access
+ALTER TABLE access_control
+ADD COLUMN `vote1` text COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE access_control
+ADD COLUMN `vote2` text COLLATE utf8mb4_unicode_ci;
+
+-- 20230309 print option
+ALTER TABLE product_category
+ADD COLUMN `print_option` JSON;

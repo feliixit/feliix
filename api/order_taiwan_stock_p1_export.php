@@ -151,6 +151,7 @@ if($jwt){
 
             $status = $row['status'];
         
+            $pid = $row['pid'];
 
             $merged_results[] = array(
             "is_checked" => "",
@@ -191,6 +192,7 @@ if($jwt){
             "status" => $status,
             "confirm_text" => $confirm_text,
     
+            "pid" => $pid,
             );
         }
 
@@ -502,7 +504,7 @@ if($jwt){
                 }
 
 
-                $sheet->setCellValue('C'. $i, $row['code']);
+                $sheet->setCellValue('C'. $i, ($row['pid'] != "0" ? "ID: " . $row['pid'] . "\n" : "") . $row['code']);
                 $sheet->getStyle('C'. $i)->getAlignment()->setWrapText(true);
 
                 $sheet->setCellValue('D'. $i, $row['brief'] . "\n" . $row['listing']);

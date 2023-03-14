@@ -70,11 +70,10 @@ switch ($method) {
         $size = (isset($_GET["size"]) ?  $_GET["size"] : "");
 
         $sql = "SELECT pm.id task_id, pm.title, pm.priority, due_date, due_time, pm.`status` task_status, u.id uid, u.username creator, u.pic_url creator_pic, assignee, collaborator, detail, 
-        pm.created_at task_date, COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name, ut.title creator_title, pp.class_name pp_class, related_order, related_tab
+        pm.created_at task_date, '' filename, '' gcp_name, ut.title creator_title, pp.class_name pp_class, related_order, related_tab
         from project_other_task_c pm 
         LEFT JOIN user u ON u.id = pm.create_id 
         LEFT JOIN user_title ut ON u.title_id = ut.id
-        LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'other_task_c'
         LEFT JOIN project_priority pp
             ON pm.priority = pp.id
         where pm.stage_id = " . $sid . " and pm.`status` <> -1 " . ($id != 0 ? " and pm.id=$id" : ' ');
@@ -240,11 +239,7 @@ switch ($method) {
                 $related_serial_name = "";
             }
 
-            if ($filename != "")
-                $items[] = array(
-                    'filename' => $filename,
-                    'gcp_name' => $gcp_name
-                );
+            $items = GetItemInfo($task_id, 'other_task_c', $db);
         }
 
         if ($task_id != 0) {
@@ -516,6 +511,24 @@ function GetStatus($loc)
     }
 
     return $location;
+}
+
+function GetItemInfo($id, $batch_type, $db)
+{
+    $sql = "SELECT id,  COALESCE(f.filename, '') filename, COALESCE(f.gcp_name, '') gcp_name FROM gcp_storage_file f WHERE batch_id = :id AND batch_type = :batch_type and f.status <> -1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id',  $id);
+    $stmt->bindParam(':batch_type',  $batch_type);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
 }
 
 

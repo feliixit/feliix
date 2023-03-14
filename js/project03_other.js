@@ -561,6 +561,18 @@ var app = new Vue({
       fileTarget.value = "";
     },
 
+    deleteEditFileItems(index) {
+      this.record.pre_items.splice(index, 1);
+      this.$forceUpdate();
+
+    },
+
+    deleteEditFileItems_r(index) {
+      this.record_r.pre_items.splice(index, 1);
+      this.$forceUpdate();
+
+    },
+
     deleteFile_o(index) {
       this.fileArray_o.splice(index, 1);
       var fileTarget = this.$refs.file_o;
@@ -806,6 +818,8 @@ var app = new Vue({
         this.record = {};
         this.record = this.shallowCopy(this.project03_other_task.find(element => element.task_id == this.task_id_to_load));
 
+        this.record.pre_items = JSON.parse(JSON.stringify(this.record.items));
+
         this.getUsersDeleted(this.task_id_to_load);
       }
     },
@@ -815,6 +829,8 @@ var app = new Vue({
       {
         this.record_r = {};
         this.record_r = this.shallowCopy(this.project03_other_task_r.find(element => element.task_id == this.task_id_to_load_r));
+
+        this.record_r.pre_items = JSON.parse(JSON.stringify(this.record_r.items));
 
         this.getUsersDeleted_R(this.task_id_to_load_r);
       }
@@ -2116,6 +2132,8 @@ var app = new Vue({
       form_Data.append('order', this.record.od_name.trim());
       form_Data.append('order_type', this.record.od_type.trim());
 
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
+
       const token = sessionStorage.getItem('token');
 
       axios({
@@ -2190,6 +2208,8 @@ var app = new Vue({
       form_Data.append('serial_name', this.record.inquiry[0].serial_name);
       form_Data.append('order_type', this.record.iq_type.trim());
 
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
+
       const token = sessionStorage.getItem('token');
 
       axios({
@@ -2263,6 +2283,8 @@ var app = new Vue({
       form_Data.append('related_order', this.record.related_order);
       form_Data.append('related_tab', this.record.related_tab);
 
+      form_Data.append('pre_items', JSON.stringify(this.record.pre_items));
+
       const token = sessionStorage.getItem('token');
 
       axios({
@@ -2320,6 +2342,8 @@ var app = new Vue({
       form_Data.append('collaborator', '');
       form_Data.append('due_date', '');
       form_Data.append('detail', this.record_r.detail.trim());
+
+      form_Data.append('pre_items', JSON.stringify(this.record_r.pre_items));
 
       const token = sessionStorage.getItem('token');
 
