@@ -487,6 +487,9 @@ var app = new Vue({
       add_with_image(all) {
 
         var photo = "";
+        var photo2 = "";
+        var photo3 = "";
+
         var price = "";
         var list = "";
 
@@ -503,6 +506,7 @@ var app = new Vue({
         {
           if(item_product.photo != "")
             photo = item_product.photo;
+
             // price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
             price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
             if(this.v1 != "")
@@ -515,6 +519,8 @@ var app = new Vue({
         else
         {
           photo = this.product.photo1;
+          photo2 = this.product.photo2;
+          photo3 = this.product.photo3;
           // price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
           price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
           list = "";
@@ -536,6 +542,9 @@ var app = new Vue({
             list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
 
           photo = this.product.photo1;
+          photo2 = this.product.photo2;
+          photo3 = this.product.photo3;
+
           if(this.product.srp !== null || this.product.srp_quoted !== null)
             price = this.product.srp_quoted !== null ? this.product.srp_quoted : this.product.srp;
             //price = this.product.srp !== null ? this.product.srp : this.product.srp_quoted;
@@ -587,12 +596,17 @@ var app = new Vue({
           item = {
             id: sn,
             url: photo !== '' ? this.img_url + photo  : '',
+            url2 : photo2 !== '' ? this.img_url + photo2 : '',
+            url3 : photo3 !== '' ? this.img_url + photo3 : '',
+
             file: {
               name: "",
             },
             type : block_a_image,
             code: this.product.code,
             photo: photo,
+            photo2: photo2,
+            photo3: photo3,
             qty: "",
             price: price,
             discount: "0",
