@@ -2976,13 +2976,13 @@ header( 'location:index' );
                                 <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
                             </td>
                             <td rowspan="2" v-if="bk.type == 'image'">
-                                <div class="pid noPrint" v-if="bk.pid != 0">{{ bk.pid }}</div>
+                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
                             <td v-if="bk.type == ''">
-                                <div class="pid noPrint" v-if="bk.pid != 0">{{ bk.pid }}</div>
+                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
@@ -3026,7 +3026,12 @@ header( 'location:index' );
 
                         <tr class="desc2" v-if="bk.type == 'image'">
 
-                            <td class="pic" colspan="3" v-if="bk.photo2 != '' || bk.photo3 != ''">
+                            <td class="pic" colspan="3" v-if="(bk.photo2 != '' || bk.photo3 != '') && !(bk.amount != '0.00' && product_vat == 'P')">
+                                <img v-if="bk.photo2 != ''" :src="bk.url2">
+                                <img v-if="bk.photo3 != ''" :src="bk.url3">
+                            </td>
+
+                            <td class="pic" colspan="4" v-if="(bk.photo2 != '' || bk.photo3 != '') && (bk.amount != '0.00' && product_vat == 'P')">
                                 <img v-if="bk.photo2 != ''" :src="bk.url2">
                                 <img v-if="bk.photo3 != ''" :src="bk.url3">
                             </td>
@@ -3041,7 +3046,7 @@ header( 'location:index' );
                         <tr v-for="(bk, index) in tp.blocks">
                             <td>{{ bk.num }}</td>
                             <td colspan="2">
-                                <div class="pid noPrint" v-if="bk.pid != 0">{{ bk.pid }}</div>
+                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
@@ -4097,7 +4102,7 @@ header( 'location:index' );
                                 </td>
 
                                 <td>
-                                    <div class="pid noPrint" v-if="item.pid != 0">{{item.pid}}</div>
+                                    <div class="pid noPrint" v-if="item.pid != 0">{{ "ID: " +  item.pid}}</div>
                                     <div class="code">{{ item.code }}</div>
                                     <div class="brief">{{ item.brief }}</div>
                                     <div class="listing">{{ item.desc }}{{ item.list }}</div>
