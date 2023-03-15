@@ -967,6 +967,8 @@ function GetBlocks($qid, $db){
         `type`,
         code,
         photo,
+        photo2,
+        photo3,
         qty,
         ratio,
         price,
@@ -997,6 +999,8 @@ function GetBlocks($qid, $db){
         $type = $row['type'];
         $code = $row['code'];
         $photo = $row['photo'];
+        $photo2 = $row['photo2'];
+        $photo3 = $row['photo3'];
         $qty = $row['qty'];
         $ratio = $row['ratio'];
         $price = $row['price'];
@@ -1011,7 +1015,9 @@ function GetBlocks($qid, $db){
         $listing = $row['listing'];
     
         $type = $photo == "" ? "" : "image";
-        $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
+        $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
+        $url2 = $photo2 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo2;
+        $url3 = $photo3 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo3;
   
         $merged_results[] = array(
             "id" => $id,
@@ -1019,8 +1025,12 @@ function GetBlocks($qid, $db){
             "code" => $code,
             "type" => $type,
             "photo" => $photo,
+            "photo2" => $photo2,
+            "photo3" => $photo3,
             "type" => $type,
             "url" => $url,
+            "url2" => $url2,
+            "url3" => $url3,
             "qty" => $qty,
             "ratio" => $ratio,
             "num" => $num,

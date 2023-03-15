@@ -1681,11 +1681,25 @@ var app = new Vue({
         form_Data.append("block", JSON.stringify(temp_block));
       
         for (var i = 0; i < temp_block.length; i++) {
-          let file = document.getElementById('block_image_' + temp_block[i].id);
+          let file = document.getElementById('block_image_' + temp_block[i].id + '_1');
           if(file) {
             let f = file.files[0];
             if(typeof f !== 'undefined') 
-              form_Data.append('block_image_' + temp_block[i].id, f);
+              form_Data.append('block_image_' + temp_block[i].id + '_1', f);
+          }
+
+          let file2 = document.getElementById('block_image_' + temp_block[i].id + '_2');
+          if(file2) {
+            let f = file2.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id + '_2', f);
+          }
+
+          let file3 = document.getElementById('block_image_' + temp_block[i].id + '_3');
+          if(file3) {
+            let f = file3.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id + '_3', f);
           }
         }
     
@@ -1881,21 +1895,36 @@ var app = new Vue({
         }
       },
 
-      clear_photo(_id) {
+      clear_photo(_id, num) {
         var item = this.temp_block_a.find(({ id }) => id === _id);
-        item.url = "";
+        
+        if (num == 1)
+          item.url = "";
+
+        if (num == 2)
+          item.url2 = "";
+
+        if (num == 3)
+          item.url3 = "";
   
-        document.getElementById('block_image_'+_id).value = "";
+        document.getElementById('block_image_'+_id + '_' + num).value = "";
       },
       
-      onFileChangeImage(e, _id) {
+      onFileChangeImage(e, _id, num) {
         const file = e.target.files[0];
 
         var item = this.temp_block_a.find(({ id }) => id === _id);
     
         let url = URL.createObjectURL(file);
-  
-        item.url = url;
+        
+        if (num == 1)
+          item.url = url;
+
+        if (num == 2)
+          item.url2 = url;
+
+        if (num == 3)
+          item.url3 = url;
           
       },
 
@@ -2722,11 +2751,25 @@ Installation:`;
         form_Data1.append("block", JSON.stringify(temp_block));
       
         for (var i = 0; i < temp_block.length; i++) {
-          let file = document.getElementById('block_image_' + temp_block[i].id);
+          let file = document.getElementById('block_image_' + temp_block[i].id + '_1');
           if(file) {
             let f = file.files[0];
             if(typeof f !== 'undefined') 
-              form_Data.append('block_image_' + temp_block[i].id, f);
+              form_Data.append('block_image_' + temp_block[i].id + '_1', f);
+          }
+
+          let file2 = document.getElementById('block_image_' + temp_block[i].id + '_2');
+          if(file2) {
+            let f = file2.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id + '_2', f);
+          }
+
+          let file3 = document.getElementById('block_image_' + temp_block[i].id + '_3');
+          if(file3) {
+            let f = file3.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id + '_3', f);
           }
         }
 
