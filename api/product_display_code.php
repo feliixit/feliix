@@ -67,6 +67,7 @@ else
             $sub_category_name = '';
             $brand = '';
             $code = '';
+            $pid = '';
             $price_ntd = '';
             $price_ntd_org = '';
             $price_ntd_change = '';
@@ -112,6 +113,7 @@ else
                 $sub_category = $row['sub_category'];
                 $sub_category_name = GetCategory($row['sub_category'], $db);
                 $brand = $row['brand'];
+                $pid = $row['id'];
                 $code = $row['code'];
                 $price_ntd = $row['price_ntd'];
                 $price_quoted = $row['quoted_price'];
@@ -409,6 +411,7 @@ else
                                     "sub_category" => $sub_category,
                                     "sub_category_name" => $sub_category_name,
                                     "brand" => $brand,
+                                    "pid" => $pid,
                                     "code" => $code,
                                     "price_ntd" => $price_ntd,
                                     "currency" => $currency,

@@ -46,7 +46,7 @@ if (!isset($jwt)) {
     $stmt = $db->prepare($query);
     $stmt->execute();
 
-    $print_option = ['brand' => 'true', 'srp' => 'true', 'qp' => 'true' ];
+    $print_option = ['pid' => 'true', 'brand' => 'true', 'srp' => 'true', 'qp' => 'true' ];
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if($row['print_option'] != '')

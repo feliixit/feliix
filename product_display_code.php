@@ -449,6 +449,7 @@
                 <div class="basic_info">
                     <!-- 網頁載入時，下面的<span>結構不會顯示出來，但當使用者選擇到某一個停產的子規格時，下方的 <span> 結構就會顯示出來；若使用者切換到另一個沒有停產的子規格 或是 沒有選擇任何子規格時，下面的<span>結構不會顯示出來 -->
                     <span class="phasedout" v-if="phased_out == 'F'">Phased Out</span>
+                    <h3 id="print_id">ID: {{ pid }}</h3>
                     <h3 style="word-break: break-all;">{{code}}</h3>
                     <h6 id="print_brand">{{brand}}</h6>
                     <h6 v-if="category == 'Lighting'">{{ category}}</h6>
