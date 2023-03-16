@@ -3645,3 +3645,10 @@ ADD COLUMN `photo2` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
 ALTER TABLE quotation_page_type_block
 ADD COLUMN `photo3` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20230315
+ALTER TABLE quotation_export
+ADD COLUMN `pid` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+ALTER TABLE quotation_export
+ADD COLUMN `brand` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';

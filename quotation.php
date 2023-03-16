@@ -4051,7 +4051,9 @@ header( 'location:index' );
 
                     <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
 
-                        <div class="left_function">
+                        <div class="left_function"> On Specification Sheet:
+                            <input type="checkbox" class="alone" v-model="p_pid"> Show Product ID 
+                            <input type="checkbox" class="alone" v-model="p_brand"> Show Brand Name
                             <input type="checkbox" class="alone" v-model="srp"> Show SRP on Specification Sheet
                             <input type="checkbox" class="alone" v-model="qp"> Show QP on Specification Sheet
                         </div>

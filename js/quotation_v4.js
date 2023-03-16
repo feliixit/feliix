@@ -7,6 +7,9 @@ var app = new Vue({
       l_id:0,
       id:0,
 
+      p_pid:0,
+      p_brand:0,
+
       //img_url: 'https://storage.cloud.google.com/feliiximg/',
 
       img_url: 'https://storage.googleapis.com/feliiximg/',
@@ -464,6 +467,8 @@ var app = new Vue({
         form_Data.append("jwt", token);
         form_Data.append("q_id", this.id);
         form_Data.append("items", JSON.stringify(this.product_array));
+        form_Data.append("pid", this.p_pid);
+        form_Data.append("brand", this.p_brand);
         form_Data.append("qp", this.qp);
         form_Data.append("srp", this.srp);
 

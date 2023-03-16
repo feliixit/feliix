@@ -672,11 +672,10 @@ var app = new Vue({
 
       Swal.fire({
           title: 'Export Setting:',
-          html: '<div class="left_function">On Specification Sheet: <br/>' +
-                'Show Product ID <input class="alone" type="checkbox" id="pid" ' + (pid == 'true' ? 'checked' : '') + ' /> <br/>' +
-                'Show Brand Name <input class="alone" type="checkbox" id="brand" ' + (brand == 'true' ? 'checked' : '') + ' /> <br/>' +
-                'Show SRP <input class="alone" type="checkbox" id="srp" ' + (srp == 'true' ? 'checked' : '') + '  /> <br/>' +
-                'Show QP <input class="alone" type="checkbox" id="qp" ' + (qp == 'true' ? 'checked' : '') + '  /></div>',
+          html: 'Show Product ID <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="pid" ' + (pid == 'true' ? 'checked' : '') + ' /> <br/>' +
+                'Show Brand Name <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="brand" ' + (brand == 'true' ? 'checked' : '') + ' /> <br/>' +
+                'Show SRP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="srp" ' + (srp == 'true' ? 'checked' : '') + '  /> <br/>' +
+                'Show QP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="qp" ' + (qp == 'true' ? 'checked' : '') + '  />',
           confirmButtonText: 'OK',
           showCancelButton: true,
           preConfirm: () => {

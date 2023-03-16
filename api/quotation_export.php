@@ -13,6 +13,8 @@ $q_id = isset($_POST['q_id']) ? $_POST['q_id'] : 0;
 $items = isset($_POST['items']) ? $_POST['items'] : '';
 $qp = isset($_POST['qp']) ? $_POST['qp'] : '';
 $srp = isset($_POST['srp']) ? $_POST['srp'] : '';
+$pid = isset($_POST['pid']) ? $_POST['pid'] : '';
+$brand = isset($_POST['brand']) ? $_POST['brand'] : '';
 
 
 include_once 'config/core.php';
@@ -85,7 +87,8 @@ else
                 `items` = :items,
                 `qp` = :qp,
                 `srp` = :srp,
-              
+                `pid` = :pid,
+                `brand` = :brand,
                 `status` = 0,
                 `create_id` = :create_id,
                 `created_at` =  now() ";
@@ -98,6 +101,8 @@ else
             $stmt->bindParam(':items', $items);
             $stmt->bindParam(':qp', $qp);
             $stmt->bindParam(':srp', $srp);
+            $stmt->bindParam(':pid', $pid);
+            $stmt->bindParam(':brand', $brand);
           
             $stmt->bindParam(':create_id', $user_id);
         

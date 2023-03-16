@@ -444,8 +444,9 @@
 
                 <div class="infobox">
                     <div class="basic_info">
+                        <h3 v-if="record.pid == 1" style="word-break: break-all;">{{ 'ID: ' + it.id }}</h3>
                         <h3 style="word-break: break-all;">{{ it.code }}</h3>
-                        <h6>{{ it.brand }}</h6>
+                        <h6 v-if="record.brand == 1">{{ it.brand }}</h6>
                         <h6 v-if="it.category == 'Lighting'">{{ it.category}}</h6>
                         <h6 v-if="it.category != 'Lighting'">{{ it.category}} >> {{ it.sub_category_name}}</h6>
                         <div class="tags">
