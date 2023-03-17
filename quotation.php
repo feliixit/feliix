@@ -1443,7 +1443,6 @@ header( 'location:index' );
         }
 
         .subtotalbox .subtotal_image{
-            display: inline-block
             display: flex;
             align-items: center;
             margin: 3px 0;
