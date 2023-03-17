@@ -40,6 +40,7 @@ var app = new Vue({
     url3: null,
 
     // data
+    pid : "",
     brand: "",
     code: "",
     price_ntd: "",
@@ -122,6 +123,7 @@ var app = new Vue({
 
     toggle: true,
 
+    print_pid: 'true',
     print_brand: 'true',
     print_srp: 'true',
     print_qp: 'true',
@@ -428,6 +430,7 @@ var app = new Vue({
             _this.special_infomation = _this.record[0]['special_information'][0].lv3[0];
             _this.accessory_infomation = _this.record[0]['accessory_information'];
 
+            _this.pid = _this.record[0]['id'];
             _this.brand = _this.record[0]['brand'];
             _this.code = _this.record[0]['code'];
             _this.price_ntd = _this.record[0]['price_ntd'];
@@ -575,6 +578,7 @@ var app = new Vue({
       var form_Data = new FormData();
 
        form_Data.append('id', this.id)
+       form_Data.append('pid', this.print_pid)
        form_Data.append('brand', this.print_brand)
        form_Data.append('srp', this.print_srp)
       form_Data.append('qp', this.print_qp)
@@ -591,7 +595,7 @@ var app = new Vue({
 
     async get_previous_print_options() {
       let token = localStorage.getItem("accessToken");
-      var res = {brand: true, srp: true, qp: true};
+      var res = {pid: true, brand: true, srp: true, qp: true};
       const params = {
         id: this.id,
       };
@@ -612,14 +616,21 @@ var app = new Vue({
 
     async load_print_option() {
       res = await this.get_previous_print_options();
+      var pid = res.data.pid;
       var brand = res.data.brand;
       var srp = res.data.srp;
       var qp = res.data.qp;
 
-
+      this.print_pid = pid;
       this.print_brand = brand;
       this.print_srp = srp;
       this.print_qp = qp;
+
+      if(pid == true) {
+        $('#print_id').removeClass('noPrint')
+      } else {
+        $('#print_id').addClass('noPrint')
+      }
 
       if(brand == true) {
         $('#print_brand').removeClass('noPrint')
@@ -654,31 +665,41 @@ var app = new Vue({
       let _this = this;
 
       res = await this.get_previous_print_options();
+      var pid = res.data.pid;
       var brand = res.data.brand;
       var srp = res.data.srp;
       var qp = res.data.qp;
 
       Swal.fire({
           title: 'Export Setting:',
-          html: '<div>Show Brand Name <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="brand" ' + (brand == 'true' ? 'checked' : '') + ' /></div><p/>' +
-                '<div>Show SRP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="srp" ' + (srp == 'true' ? 'checked' : '') + '  /></div><p/>' +
-                '<div>Show QP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="qp" ' + (qp == 'true' ? 'checked' : '') + '  /></div>',
+          html: 'Show Product ID <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="pid" ' + (pid == 'true' ? 'checked' : '') + ' /> <br/>' +
+                'Show Brand Name <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="brand" ' + (brand == 'true' ? 'checked' : '') + ' /> <br/>' +
+                'Show SRP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="srp" ' + (srp == 'true' ? 'checked' : '') + '  /> <br/>' +
+                'Show QP <input style="appearance: checkbox !important; display: inline-block !important;" type="checkbox" id="qp" ' + (qp == 'true' ? 'checked' : '') + '  />',
           confirmButtonText: 'OK',
           showCancelButton: true,
           preConfirm: () => {
+            pid = Swal.getPopup().querySelector('#pid').checked
             brand = Swal.getPopup().querySelector('#brand').checked
             srp = Swal.getPopup().querySelector('#srp').checked
             qp = Swal.getPopup().querySelector('#qp').checked
             
 
-            return {brand: brand, srp: srp, qp:qp}
+            return {pid: pid, brand: brand, srp: srp, qp:qp}
           }
         }).then((result) => {
           //Swal.fire("alcool: "+`${result.value.alcool}`+" and Cigarro: "+`${result.value.cigarro}`);
 
+          _this.print_pid = result.value.pid;
           _this.print_brand = result.value.brand;
           _this.print_srp = result.value.srp;
           _this.print_qp = result.value.qp;
+
+          if(result.value.pid == true) {
+            $('#print_id').removeClass('noPrint')
+          } else {
+            $('#print_id').addClass('noPrint')
+          }
 
           if(result.value.brand == true) {
             $('#print_brand').removeClass('noPrint')

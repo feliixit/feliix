@@ -8,6 +8,7 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
+$pid = (isset($_POST['pid']) ?  $_POST['pid'] : false);
 $brand = (isset($_POST['brand']) ?  $_POST['brand'] : false);
 $srp = (isset($_POST['srp']) ?  $_POST['srp'] : false);
 $qp = (isset($_POST['qp']) ?  $_POST['qp'] : false);
@@ -44,6 +45,7 @@ if (!isset($jwt)) {
     $decoded = JWT::decode($jwt, $key, array('HS256'));
 
     $option = [
+        'pid' => $pid,
         'brand' => $brand,
         'srp' => $srp,
         'qp' => $qp

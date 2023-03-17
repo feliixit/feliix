@@ -135,10 +135,33 @@ switch ($method) {
                     `create_id` = :create_id,
                     `created_at` = now()";
 
-                if($block_array[$i]['photo'] !== '')
+                if($block_array[$i]['url'] !== '')
                 {
                     $query .= ", `photo` = :photo";
                 }
+                else
+                {
+                    $query .= ", `photo` = ''";
+                }
+
+                if($block_array[$i]['url2'] !== '')
+                {
+                    $query .= ", `photo2` = :photo2";
+                }
+                else
+                {
+                    $query .= ", `photo2` = ''";
+                }
+
+                if($block_array[$i]['url3'] !== '')
+                {
+                    $query .= ", `photo3` = :photo3";
+                }
+                else
+                {
+                    $query .= ", `photo3` = ''";
+                }
+                
 
                 // prepare the query
                 $stmt = $db->prepare($query);
@@ -184,9 +207,17 @@ switch ($method) {
                 
                 $stmt->bindParam(':create_id', $user_id);
                 
-                if($block_array[$i]['photo'] !== '')
+                if($block_array[$i]['url'] !== '')
                 {
                     $stmt->bindParam(':photo', $block_array[$i]['photo']);
+                }
+                if($block_array[$i]['url2'] !== '')
+                {
+                    $stmt->bindParam(':photo2', $block_array[$i]['photo2']);
+                }
+                if($block_array[$i]['url3'] !== '')
+                {
+                    $stmt->bindParam(':photo3', $block_array[$i]['photo3']);
                 }
             
                 $block_id = 0;
@@ -215,12 +246,26 @@ switch ($method) {
                 $batch_id = $block_id;
                 $batch_type = "block_image";
 
-                $key = "block_image_" . $_id;
+                $key = "block_image_" . $_id . "_1";
                 if (array_key_exists($key, $_FILES))
                 {
                     $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
                     if($update_name != "")
                         UpdateImageNameVariation($update_name, $batch_id, $db);
+                }
+                $key = "block_image_" . $_id . "_2";
+                if (array_key_exists($key, $_FILES))
+                {
+                    $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
+                    if($update_name != "")
+                        UpdateImageNameVariation2($update_name, $batch_id, $db);
+                }
+                $key = "block_image_" . $_id . "_3";
+                if (array_key_exists($key, $_FILES))
+                {
+                    $update_name = SaveImage($key, $batch_id, $batch_type, $user_id, $db, $conf);
+                    if($update_name != "")
+                        UpdateImageNameVariation3($update_name, $batch_id, $db);
                 }
 
             }
@@ -388,6 +433,76 @@ function UpdateImageNameVariation($upload_name, $batch_id, $db){
     
     $query = "update quotation_page_type_block
     SET photo = :gcp_name where id=:id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $batch_id);
+
+    $stmt->bindParam(':gcp_name', $upload_name);
+
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $last_id = $db->lastInsertId();
+        }
+        else
+        {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+        }
+    }
+    catch (Exception $e)
+    {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
+}
+
+function UpdateImageNameVariation2($upload_name, $batch_id, $db){
+    
+    $query = "update quotation_page_type_block
+    SET photo2 = :gcp_name where id=:id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':id', $batch_id);
+
+    $stmt->bindParam(':gcp_name', $upload_name);
+
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $last_id = $db->lastInsertId();
+        }
+        else
+        {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+        }
+    }
+    catch (Exception $e)
+    {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+    }
+}
+
+function UpdateImageNameVariation3($upload_name, $batch_id, $db){
+    
+    $query = "update quotation_page_type_block
+    SET photo3 = :gcp_name where id=:id";
 
     // prepare the query
     $stmt = $db->prepare($query);

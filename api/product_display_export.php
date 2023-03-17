@@ -56,7 +56,7 @@ else
             $merged_results = array();
 
             // product main
-            $sql = "SELECT items, srp, qp FROM quotation_export WHERE quotation_id = " . $id . " AND `STATUS` <> -1";
+            $sql = "SELECT items, srp, qp, pid, brand FROM quotation_export WHERE quotation_id = " . $id . " AND `STATUS` <> -1";
 
             $stmt = $db->prepare( $sql );
             $stmt->execute();
@@ -64,6 +64,8 @@ else
             $items = [];
             $srp = '';
             $qp = '';
+            $brand = '';
+            $pid = '';
             $products = [];
 
             $baseURL = "https://storage.cloud.google.com/feliiximg/";
@@ -74,6 +76,8 @@ else
                 $items = json_decode($row['items'], true);
                 $row['srp'] == 'true' ? $srp = 1 : $srp = 0;
                 $row['qp'] == 'true' ? $qp = 1 : $qp = 0;
+                $row['brand'] == 'true' ? $brand = 1 : $brand = 0;
+                $row['pid'] == 'true' ? $pid = 1 : $pid = 0;
 
                 foreach($items as $item)
                 {
@@ -109,6 +113,8 @@ else
                                     "products" => $products,
                                     "srp" => $srp,
                                     "qp" => $qp,
+                                    "brand" => $brand,
+                                    "pid" => $pid
                                   
 
                 );

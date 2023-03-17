@@ -363,7 +363,7 @@ header( 'location:index' );
             text-align: left;
         }
 
-         #tb_specification_list tbody tr td:nth-of-type(3) div.code {
+         #tb_specification_list tbody tr td:nth-of-type(3) div.pid, #tb_specification_list tbody tr td:nth-of-type(3) div.code {
             font-size: 16px;
             font-weight: 800;
             word-break: break-all;
@@ -890,7 +890,7 @@ header( 'location:index' );
             font-weight: 600;
         }
 
-        .tb_format1 tbody tr td div.code {
+        .tb_format1 tbody tr td div.pid, .tb_format1 tbody tr td div.code {
             font-size: 16px;
             font-weight: 800;
             word-break: break-all;
@@ -946,41 +946,59 @@ header( 'location:index' );
         }
 
 
-        .tb_format1 thead tr:nth-of-type(2) td:nth-of-type(1), .tb_format1 tbody tr td:nth-of-type(1) {
+        .tb_format1 thead tr:nth-of-type(2) td:nth-of-type(1), .tb_format1 tbody tr.desc1 td:nth-of-type(1) {
             width: 70px;
             text-align: center;
         }
 
-        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1 tbody tr td:nth-last-of-type(3) {
+        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
             width: 75px;
             text-align: center;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(2),
-        .tb_format1 tbody tr td:nth-last-of-type(2) {
+        .tb_format1 tbody tr.desc1 td:nth-last-of-type(2) {
             width: 210px;
             text-align: right;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(1),
-        .tb_format1 tbody tr td:nth-last-of-type(1) {
+        .tb_format1 tbody tr.desc1 td:nth-last-of-type(1) {
             width: 210px;
             text-align: right;
         }
 
-        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1.vat tbody tr td:nth-last-of-type(4) {
+        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(4) {
             width: 75px;
             text-align: right;
         }
 
-        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1.vat tbody tr td:nth-last-of-type(3) {
+        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(3) {
             width: 210px;
             text-align: right;
         }
 
-        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(2), .tb_format1.vat tbody tr td:nth-last-of-type(2) {
+        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(2), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(2) {
             width: 135px;
             text-align: right;
+        }
+
+        .tb_format1 tbody tr.desc2 td {
+            text-align: center;
+            vertical-align: middle;
+            max-width: 495px;
+        }
+
+        .tb_format1.vat tbody tr.desc2 td {
+            text-align: center;
+            vertical-align: middle;
+            max-width: 630px;
+        }
+
+        .tb_format1 tbody tr.desc2 td img {
+            max-height: 120px;
+            max-width: 220px;
+            margin: 0 5px;
         }
 
         .area_subtotal .tb_format2 {
@@ -1038,7 +1056,7 @@ header( 'location:index' );
             font-weight: 600;
         }
 
-        .tb_format2 tbody tr td div.code {
+        .tb_format2 tbody tr td div.pid, .tb_format2 tbody tr td div.code {
             font-size: 16px;
             font-weight: 800;
             word-break: break-all;
@@ -1352,7 +1370,7 @@ header( 'location:index' );
 
         .subtotalbox .content_box .itembox {
             display: inline-block;
-            margin: 5px 0;
+            margin: 5px 90px 5px 0;
         }
 
         .subtotalbox .content_box .itembox .photo {
@@ -1422,6 +1440,16 @@ header( 'location:index' );
             position: absolute;
             top: 18px;
             right: -50px;
+        }
+
+        .subtotalbox .subtotal_image{
+            display: flex;
+            align-items: center;
+            margin: 3px 0;
+        }
+
+        .subtotalbox .subtotal_image > span{
+            margin-right: 5px;
         }
 
         #terms_dialog .formbox dl {
@@ -2374,17 +2402,32 @@ header( 'location:index' );
                                         <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num">
                                         <input type="text" v-model="block.pid" hidden><br>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
-                                        <span v-if="block.type == 'image' ">Image:</span>
-                                        <div v-if="block.type == 'image' "
-                                             :class="['itembox', (block.url !== '' ? 'chosen' : '')]">
-                                            <div class="photo">
-                                                <input type="file" :name="'block_image_' + block.id"
-                                                       @change="onFileChangeImage($event, block.id)"
-                                                       :id="'block_image_' + block.id">
-                                                <img v-if="block.url" :src="block.url"/>
-                                                <div @click="clear_photo(block.id)">x</div>
+
+                                        <div class="subtotal_image" v-if="block.type == 'image' ">
+                                            <span>Image:</span>
+                                            <div :class="['itembox', (block.url !== '' ? 'chosen' : '')]">
+                                                <div class="photo">
+                                                    <input type="file" :id="'block_image_' + block.id + '_1'" :name="'block_image_' + block.id + '_1'" @change="onFileChangeImage($event, block.id, 1)">
+                                                    <img v-if="block.url" :src="block.url"/>
+                                                    <div @click="clear_photo(block.id, 1)">x</div>
+                                                </div>
                                             </div>
 
+                                            <div :class="['itembox', (block.url2 !== '' ? 'chosen' : '')]">
+                                                <div class="photo">
+                                                    <input type="file" :id="'block_image_' + block.id + '_2'" :name="'block_image_' + block.id + '_2'"  @change="onFileChangeImage($event, block.id, 2)">
+                                                    <img v-if="block.url2" :src="block.url2"/>
+                                                    <div @click="clear_photo(block.id, 2)">x</div>
+                                                </div>
+                                            </div>
+
+                                            <div :class="['itembox', (block.url3 !== '' ? 'chosen' : '')]">
+                                                <div class="photo">
+                                                    <input type="file" :id="'block_image_' + block.id + '_3'" :name="'block_image_' + block.id + '_3'"  @change="onFileChangeImage($event, block.id, 3)">
+                                                    <img v-if="block.url3" :src="block.url3"/>
+                                                    <div @click="clear_photo(block.id, 3)">x</div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <br v-if="block.type == 'image' ">
@@ -2920,17 +2963,25 @@ header( 'location:index' );
                         </thead>
 
                         <tbody v-if="tp.type == 'A'">
-                        <tr v-for="(bk, index) in tp.blocks">
-                            <td>{{ bk.num }}</td>
-                            <td class="pic" v-if="bk.type == 'image'">
+
+                        <template v-for="(bk, index) in tp.blocks">
+
+                        <tr class="desc1">
+
+                            <td rowspan="2" v-if="bk.type == 'image'">{{ bk.num }}</td>
+                            <td v-if="bk.type == ''">{{ bk.num }}</td>
+
+                            <td rowspan="2" class="pic" v-if="bk.type == 'image'">
                                 <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
                             </td>
-                            <td v-if="bk.type == 'image'">
+                            <td rowspan="2" v-if="bk.type == 'image'">
+                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td colspan="2" v-if="bk.type == ''">
+                            <td v-if="bk.type == ''" colspan="2">
+                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
@@ -2972,12 +3023,29 @@ header( 'location:index' );
                             </td>
                         </tr>
 
+                        <tr class="desc2" v-if="bk.type == 'image'">
+
+                            <td class="pic" colspan="3" v-if="(bk.photo2 != '' || bk.photo3 != '') && !(bk.amount != '0.00' && product_vat == 'P')">
+                                <img v-if="bk.photo2 != ''" :src="bk.url2">
+                                <img v-if="bk.photo3 != ''" :src="bk.url3">
+                            </td>
+
+                            <td class="pic" colspan="4" v-if="(bk.photo2 != '' || bk.photo3 != '') && (bk.amount != '0.00' && product_vat == 'P')">
+                                <img v-if="bk.photo2 != ''" :src="bk.url2">
+                                <img v-if="bk.photo3 != ''" :src="bk.url3">
+                            </td>
+
+                        </tr>
+
+                        </template>
+
                         </tbody>
 
                         <tbody v-if="tp.type == 'B'">
                         <tr v-for="(bk, index) in tp.blocks">
                             <td>{{ bk.num }}</td>
                             <td colspan="2">
+                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
@@ -3982,7 +4050,9 @@ header( 'location:index' );
 
                     <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
 
-                        <div class="left_function">
+                        <div class="left_function"> On Specification Sheet:
+                            <input type="checkbox" class="alone" v-model="p_pid"> Show Product ID 
+                            <input type="checkbox" class="alone" v-model="p_brand"> Show Brand Name
                             <input type="checkbox" class="alone" v-model="srp"> Show SRP on Specification Sheet
                             <input type="checkbox" class="alone" v-model="qp"> Show QP on Specification Sheet
                         </div>
@@ -4033,6 +4103,7 @@ header( 'location:index' );
                                 </td>
 
                                 <td>
+                                    <div class="pid noPrint" v-if="item.pid != 0">{{ "ID: " +  item.pid}}</div>
                                     <div class="code">{{ item.code }}</div>
                                     <div class="brief">{{ item.brief }}</div>
                                     <div class="listing">{{ item.desc }}{{ item.list }}</div>

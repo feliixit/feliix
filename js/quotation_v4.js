@@ -7,6 +7,9 @@ var app = new Vue({
       l_id:0,
       id:0,
 
+      p_pid:0,
+      p_brand:0,
+
       //img_url: 'https://storage.cloud.google.com/feliiximg/',
 
       img_url: 'https://storage.googleapis.com/feliiximg/',
@@ -464,6 +467,8 @@ var app = new Vue({
         form_Data.append("jwt", token);
         form_Data.append("q_id", this.id);
         form_Data.append("items", JSON.stringify(this.product_array));
+        form_Data.append("pid", this.p_pid);
+        form_Data.append("brand", this.p_brand);
         form_Data.append("qp", this.qp);
         form_Data.append("srp", this.srp);
 
@@ -487,6 +492,9 @@ var app = new Vue({
       add_with_image(all) {
 
         var photo = "";
+        var photo2 = "";
+        var photo3 = "";
+
         var price = "";
         var list = "";
 
@@ -503,6 +511,7 @@ var app = new Vue({
         {
           if(item_product.photo != "")
             photo = item_product.photo;
+
             // price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
             price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
             if(this.v1 != "")
@@ -515,6 +524,8 @@ var app = new Vue({
         else
         {
           photo = this.product.photo1;
+          photo2 = this.product.photo2;
+          photo3 = this.product.photo3;
           // price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
           price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
           list = "";
@@ -536,6 +547,9 @@ var app = new Vue({
             list += this.product.variation3 === "custom" ? this.product.variation3_custom : this.product.variation3 + ': ' + this.product.variation3_value.join(', ') + "\n";
 
           photo = this.product.photo1;
+          photo2 = this.product.photo2;
+          photo3 = this.product.photo3;
+
           if(this.product.srp !== null || this.product.srp_quoted !== null)
             price = this.product.srp_quoted !== null ? this.product.srp_quoted : this.product.srp;
             //price = this.product.srp !== null ? this.product.srp : this.product.srp_quoted;
@@ -587,12 +601,17 @@ var app = new Vue({
           item = {
             id: sn,
             url: photo !== '' ? this.img_url + photo  : '',
+            url2 : photo2 !== '' ? this.img_url + photo2 : '',
+            url3 : photo3 !== '' ? this.img_url + photo3 : '',
+
             file: {
               name: "",
             },
             type : block_a_image,
             code: this.product.code,
             photo: photo,
+            photo2: photo2,
+            photo3: photo3,
             qty: "",
             price: price,
             discount: "0",
@@ -740,6 +759,8 @@ var app = new Vue({
           item = {
             id: sn,
             url: "",
+            url2: "",
+            url3: "",
             file: {
               name: "",
             },
@@ -1681,11 +1702,25 @@ var app = new Vue({
         form_Data.append("block", JSON.stringify(temp_block));
       
         for (var i = 0; i < temp_block.length; i++) {
-          let file = document.getElementById('block_image_' + temp_block[i].id);
+          let file = document.getElementById('block_image_' + temp_block[i].id + '_1');
           if(file) {
             let f = file.files[0];
             if(typeof f !== 'undefined') 
-              form_Data.append('block_image_' + temp_block[i].id, f);
+              form_Data.append('block_image_' + temp_block[i].id + '_1', f);
+          }
+
+          let file2 = document.getElementById('block_image_' + temp_block[i].id + '_2');
+          if(file2) {
+            let f = file2.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id + '_2', f);
+          }
+
+          let file3 = document.getElementById('block_image_' + temp_block[i].id + '_3');
+          if(file3) {
+            let f = file3.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id + '_3', f);
           }
         }
     
@@ -1881,21 +1916,36 @@ var app = new Vue({
         }
       },
 
-      clear_photo(_id) {
+      clear_photo(_id, num) {
         var item = this.temp_block_a.find(({ id }) => id === _id);
-        item.url = "";
+        
+        if (num == 1)
+          item.url = "";
+
+        if (num == 2)
+          item.url2 = "";
+
+        if (num == 3)
+          item.url3 = "";
   
-        document.getElementById('block_image_'+_id).value = "";
+        document.getElementById('block_image_'+_id + '_' + num).value = "";
       },
       
-      onFileChangeImage(e, _id) {
+      onFileChangeImage(e, _id, num) {
         const file = e.target.files[0];
 
         var item = this.temp_block_a.find(({ id }) => id === _id);
     
         let url = URL.createObjectURL(file);
-  
-        item.url = url;
+        
+        if (num == 1)
+          item.url = url;
+
+        if (num == 2)
+          item.url2 = url;
+
+        if (num == 3)
+          item.url3 = url;
           
       },
 
@@ -1960,6 +2010,8 @@ Installation:`;
         item = {
           id: sn,
           url: "",
+          url2: "",
+          url3: "",
           file: {
             name: "",
           },
@@ -2722,11 +2774,25 @@ Installation:`;
         form_Data1.append("block", JSON.stringify(temp_block));
       
         for (var i = 0; i < temp_block.length; i++) {
-          let file = document.getElementById('block_image_' + temp_block[i].id);
+          let file = document.getElementById('block_image_' + temp_block[i].id + '_1');
           if(file) {
             let f = file.files[0];
             if(typeof f !== 'undefined') 
-              form_Data.append('block_image_' + temp_block[i].id, f);
+              form_Data.append('block_image_' + temp_block[i].id + '_1', f);
+          }
+
+          let file2 = document.getElementById('block_image_' + temp_block[i].id + '_2');
+          if(file2) {
+            let f = file2.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id + '_2', f);
+          }
+
+          let file3 = document.getElementById('block_image_' + temp_block[i].id + '_3');
+          if(file3) {
+            let f = file3.files[0];
+            if(typeof f !== 'undefined') 
+              form_Data.append('block_image_' + temp_block[i].id + '_3', f);
           }
         }
 
