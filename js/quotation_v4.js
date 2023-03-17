@@ -759,6 +759,8 @@ var app = new Vue({
           item = {
             id: sn,
             url: "",
+            url2: "",
+            url3: "",
             file: {
               name: "",
             },
@@ -2008,6 +2010,8 @@ Installation:`;
         item = {
           id: sn,
           url: "",
+          url2: "",
+          url3: "",
           file: {
             name: "",
           },
