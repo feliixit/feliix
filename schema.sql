@@ -3652,3 +3652,19 @@ ADD COLUMN `pid` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
 
 ALTER TABLE quotation_export
 ADD COLUMN `brand` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20230317
+CREATE TABLE IF NOT EXISTS `signature_codebook` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `position` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pic_url` varchar(1024) COLLATE utf8mb4_unicode_ci  NULL,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `status` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
