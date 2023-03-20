@@ -455,8 +455,8 @@ header( 'location:index' );
 
                         <li><b>Signature</b></li>
                         <li>
-                            <!-- <div :class="itembox', (item.url !== '' ? 'chosen' : '')]"> -->
-                            <div class="itembox">
+                            <div :class="['itembox', (signature_url != '' ? 'chosen' : '')]">
+                            <!-- <div class="itembox"> -->
                                 <div class="photo">
                                     <input type="file" name="sig_image"
                                            @change="onSigFileChangeImage($event)"

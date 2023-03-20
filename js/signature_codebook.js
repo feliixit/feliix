@@ -235,6 +235,10 @@ var app = new Vue({
         console.log("paginate");
         if (this.page < 1) this.page = 1;
         if (this.page > this.pages.length) this.page = this.pages.length;
+
+        if(this.page == 0)
+          this.page = 1;
+
   
         let tenPages = Math.floor((this.page - 1) / 10);
         if(tenPages < 0)
@@ -422,9 +426,12 @@ var app = new Vue({
         .then(function(response) {
           console.log(response.data);
           let res = response.data;
+
+          _this.receive_records = response.data;
+          _this.total = 0;
+
           if(res.length > 0) 
           {
-            _this.receive_records = response.data;
             _this.total = _this.receive_records[0].cnt;
           }
 
@@ -575,9 +582,11 @@ var app = new Vue({
                 html: response.data.message,
                 icon: "info",
                 confirmButtonText: "OK",
+              }).then((result) => {
+                _this.get_records();
               });
 
-              _this.get_records();
+              
             })
             .catch(function(error) {
               //handle error
@@ -703,7 +712,10 @@ var app = new Vue({
                 text: "Success save " + response.data.message,
                 icon: "info",
                 confirmButtonText: "OK",
+              }).then((result) => {
+                
               });
+
               _this.get_records();
 
             })
@@ -769,9 +781,11 @@ var app = new Vue({
               text: "Success save " + response.data.message,
               icon: "info",
               confirmButtonText: "OK",
+            }).then((result) => {
+              
             });
-            _this.get_records();
 
+            _this.get_records();
           })
           .catch(function(response) {
             //handle error
