@@ -392,10 +392,34 @@ header( 'location:index' );
             margin: 0 5px;
         }
 
+        #tb_signature_codebook {
+            width: 100%;
+            margin-top: 0;
+        }
+
+        #tb_signature_codebook thead th, #tb_signature_codebook tbody td {
+            text-align: center;
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+        #tb_signature_codebook thead th {
+            background-color: #E0E0E0;
+            border: 1px solid #C9C9C9;
+        }
+
+        #tb_signature_codebook tbody tr:nth-of-type(even) {
+            background-color: #F6F6F6;
+        }
+
+        #tb_signature_codebook tbody tr td:nth-of-type(5) img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
         .NTD_price {
 
         }
-
 
         .one_half {
             width: 48%;
@@ -1788,8 +1812,9 @@ header( 'location:index' );
             width: 350px;
         }
 
-        .modal .modal_function .left_function > input[type='checkbox']:last-of-type{
-            margin-left: 30px;
+        .modal .modal_function .left_function > input[type='checkbox']{
+            margin-left: 6px;
+            margin-right: -3px;
         }
 
         .modal .modal_function > a.btn {
@@ -2834,6 +2859,7 @@ header( 'location:index' );
 
                                 <div class="function_box">
                                     <a class="btn small green" @click="add_sig_company_item()">Add</a>
+                                    <a class="btn small green" @click="add_signature_codebook()">Signature Codebook</a>
                                 </div>
 
                                 <div class="content_box">
@@ -4129,6 +4155,70 @@ header( 'location:index' );
         </div>
 
     </div>
+
+
+
+    <!-- Modal for Signature Codebook -->
+    <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true" id="modal_signature_codebook">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+
+            <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
+
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myLargeModalLabel">Signature Codebook</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn_close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div>
+                        <table id="tb_signature_codebook" class="table  table-sm table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Signature</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr v-for="(item, index) in signature_codebook">
+                                <td> {{ item.name }} </td>
+                                <td> {{ item.position }} </td>
+                                <td> {{ item.phone }} </td>
+                                <td> {{ item.email }} </td>
+                                <td> <img v-if="item.url != ''" :src="item.url"> </td>
+                                <td>
+                                    <a class="btn small yellow" @click="signature_import(item)">Import</a>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
 
 
 </div>
