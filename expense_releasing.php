@@ -383,5 +383,5 @@ $(function(){
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/expense_releasing.js"></script>
+<script src="js/expense_releasing.js?random=<?php echo uniqid(); ?>"></script>
 </html>
