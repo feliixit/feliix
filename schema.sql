@@ -3668,3 +3668,9 @@ CREATE TABLE IF NOT EXISTS `signature_codebook` (
   `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+
+-- 20230322 
+ALTER TABLE price_comparison_term ADD COLUMN `pixel` VARCHAR(16) DEFAULT '';
+ALTER TABLE price_comparison_signature ADD COLUMN `pixel` VARCHAR(16) DEFAULT '';
+ALTER TABLE price_comparison_payment_term ADD COLUMN `pixel` VARCHAR(16) DEFAULT '';

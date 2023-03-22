@@ -415,6 +415,31 @@ header( 'location:index' );
             margin: 0 5px;
         }
 
+        #tb_signature_codebook {
+            width: 100%;
+            margin-top: 0;
+        }
+
+        #tb_signature_codebook thead th, #tb_signature_codebook tbody td {
+            text-align: center;
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+        #tb_signature_codebook thead th {
+            background-color: #E0E0E0;
+            border: 1px solid #C9C9C9;
+        }
+
+        #tb_signature_codebook tbody tr:nth-of-type(even) {
+            background-color: #F6F6F6;
+        }
+
+        #tb_signature_codebook tbody tr td:nth-of-type(5) img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
         .NTD_price {
 
         }
@@ -1649,6 +1674,14 @@ header( 'location:index' );
             width: 310px;
         }
 
+        #terms_dialog input[type='number'], #payment_dialog input[type='number'], #signature_dialog input[type='number']{
+            height: 30px;
+            border: 1px solid #707070;
+            font-size: 14px;
+            width: 100px;
+            margin: 5px 0;
+        }
+
         .list_function.main {
             border-color: #00811e;
         }
@@ -2605,6 +2638,8 @@ header( 'location:index' );
                                         <option value="1">Yes</option>
                                     </select>
                                 </dd>
+
+                                <dt class="head" v-if="term.page == 1">Distance from Previous Block: <input type="number" v-model="term.pixel"> pixel</dt>
                             </dl>
                         </div>
 
@@ -2671,6 +2706,8 @@ header( 'location:index' );
                                         <option value="1">Yes</option>
                                     </select>
                                 </dd>
+
+                                <dt class="head" v-if="payment_term.page == 1">Distance from Previous Block: <input type="number" v-model="payment_term.pixel"> pixel</dt>
                             </dl>
 
                             <dl>
@@ -2751,6 +2788,10 @@ header( 'location:index' );
                                     <option value="1">Yes</option>
                                     </select>
                                 </dd>
+
+                                <dt class="head" v-if="sig.page == 1">Distance from Previous Block: <input type="number" v-model="sig.pixel"> pixel</dt>
+
+
                             </dl>
                         </div>
 
@@ -2800,6 +2841,7 @@ header( 'location:index' );
 
                                 <div class="function_box">
                                     <a class="btn small green" @click="add_sig_company_item()">Add</a>
+                                    <a class="btn small green" @click="add_signature_codebook()">Signature Codebook</a>
                                 </div>
 
                                 <div class="content_box">
@@ -3295,7 +3337,7 @@ header( 'location:index' );
                         </div>
                         -->
 
-                        <div class="area_terms" v-if="term_disp.page == 1">
+                        <div class="area_terms" :style="'margin-top: ' + term_disp.pixel + 'px;'" v-if="term_disp.page == 1">
                             <div class="terms" v-for="(tt, index) in term_disp.item">
                                 <div class="title">{{ tt.title }}</div>
                                 <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">
@@ -3307,7 +3349,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_payment" v-if="payment_term_display.page == 1">
+                        <div class="area_payment" :style="'margin-top: ' + payment_term_display.pixel + 'px;'" v-if="payment_term_display.page == 1">
                             <table class="tb_payment">
                                 <tbody>
                                 <tr>
@@ -3352,7 +3394,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_conforme" style="margin-top: 60px;" v-if="sig_disp != undefined ? sig_disp.page == 1 : false">
+                        <div class="area_conforme" :style="'margin-top: ' + sig_disp.pixel + 'px;'" v-if="sig_disp != undefined ? sig_disp.page == 1 : false">
                             <div class="conforme"
                                  v-if="(sig_disp != undefined ? sig_disp.item_client.length : 0)  + (sig_disp != undefined ?  sig_disp.item_company.length : 0) > 0">
                                 CONFORME
@@ -4251,6 +4293,68 @@ header( 'location:index' );
                                 <td>
                                     <i class="fas fa-arrow-alt-circle-up" @click="item_up(index, item.id)"></i>
                                     <i class="fas fa-arrow-alt-circle-down" @click="item_down(index, item.id)"></i>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Modal for Signature Codebook -->
+    <div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true" id="modal_signature_codebook">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+
+            <div class="modal-content" style="height: calc( 100vh - 3.75rem); overflow-y: auto;">
+
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myLargeModalLabel">Signature Codebook</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn_close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div>
+                        <table id="tb_signature_codebook" class="table  table-sm table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Signature</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr v-for="(item, index) in signature_codebook">
+                                <td> {{ item.name }} </td>
+                                <td> {{ item.position }} </td>
+                                <td> {{ item.phone }} </td>
+                                <td> {{ item.email }} </td>
+                                <td> <img v-if="item.url != ''" :src="item.url"> </td>
+                                <td>
+                                    <a class="btn small yellow" @click="signature_import(item)">Import</a>
                                 </td>
                             </tr>
 

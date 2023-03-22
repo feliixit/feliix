@@ -911,6 +911,7 @@ function GetTermInfo($qid, $db)
         SELECT 
         id,
         `page`,
+        pixel,
         title,
         brief,
         list 
@@ -930,6 +931,7 @@ function GetTermInfo($qid, $db)
     
     $id = 0;
     $page = 0;
+    $pixel = '0';
     $title = '';
     $brief = '';
     $list = '';
@@ -937,13 +939,19 @@ function GetTermInfo($qid, $db)
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
         $page = $row['page'];
+        $pixel = $row['pixel'];
         $title = $row['title'];
         $brief = $row['brief'];
         $list = $row['list'];
+
+        if($pixel == ''){
+            $pixel = '0';
+        }
        
         $item[] = array(
             "id" => $id,
             "page" => $page,
+            "pixel" => $pixel,
             "title" => $title,
             "brief" => $brief,
             "list" => $list,
@@ -954,6 +962,7 @@ function GetTermInfo($qid, $db)
 
     $merged_results = array(
         "page" => $page,
+        "pixel" => $pixel,
         "item" => $item,
                
     );
@@ -965,6 +974,7 @@ function GetPaymentTerm($qid, $db){
     $query = "
         SELECT 
         `page`,
+        pixel,
         payment_method,
         brief,
         list 
@@ -983,9 +993,14 @@ function GetPaymentTerm($qid, $db){
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $page = $row['page'];
+        $pixel = $row['pixel'];
         $payment = $row['payment_method'];
         $brief = $row['brief'];
         $list = $row['list'];
+
+        if($pixel == ''){
+            $pixel = '0';
+        }
     
         $payment_method = explode (";", $payment);
         $payment_method= array_filter($payment_method);
@@ -994,6 +1009,7 @@ function GetPaymentTerm($qid, $db){
 
         $merged_results = array(
             "page" => $page,
+            "pixel" => $pixel,
             "payment_method" => $payment_method,
             "brief" => $brief,
             "list" => $item,
@@ -1011,6 +1027,7 @@ function GetPaymentTermInfo($qid, $db)
         SELECT 
         id,
         `page`,
+        pixel,
         payment_method,
         brief,
         list 
@@ -1030,6 +1047,7 @@ function GetPaymentTermInfo($qid, $db)
     
     $id = 0;
     $page = 0;
+    $pixel = "0";
     $payment_method = 'Cash; Cheque; Credit Card; Bank Wiring;';
     $brief = '50% Downpayment & another 50% balance a day before the delivery';
     $list = '[{"id":"0", "bank_name": "BDO", "first_line":"Acct. Name: Feliix Inc. Acct no: 006910116614", "second_line":"Branch: V.A Rufino", "third_line":""}, {"id":"1", "bank_name": "SECURITY BANK", "first_line":"Acct. Name: Feliix Inc. Acct no: 0000018155245", "second_line":"Swift code: SETCPHMM", "third_line":"Address: 512 Edsa near Corner Urbano Plata St., Caloocan City"}]';
@@ -1039,16 +1057,22 @@ function GetPaymentTermInfo($qid, $db)
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         $page = $row['page'];
+        $pixel = $row['pixel'];
         $payment_method = $row['payment_method'];
         $brief = $row['brief'];
         $list = $row['list'];
        
         $item = json_decode($list, TRUE); 
+
+        if($pixel == ''){
+            $pixel = '0';
+        }
         
     }
 
     $merged_results = array(
         "page" => $page,
+        "pixel" => $pixel,
         "payment_method" => $payment_method,
         "brief" => $brief,
         "item" => $item,
@@ -1065,6 +1089,7 @@ function GetSigInfo($qid, $db)
         SELECT 
         id,
         `page`,
+        pixel,
         `type`,
         `name`,
         `photo`,
@@ -1088,6 +1113,7 @@ function GetSigInfo($qid, $db)
     
     $id = 0;
     $page = 0;
+    $pixel = '60';
     $type = '';
     $name = '';
     $photo = '';
@@ -1099,12 +1125,17 @@ function GetSigInfo($qid, $db)
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
         $page = $row['page'];
+        $pixel = $row['pixel'];
         $type = $row['type'];
         $name = $row['name'];
         $photo = $row['photo'];
         $position = $row['position'];
         $phone = $row['phone'];
         $email = $row['email'];
+
+        if($pixel == ''){
+            $pixel = '60';
+        }
        
         if($type == 'C'){
             $item_client[] = array(
@@ -1136,6 +1167,7 @@ function GetSigInfo($qid, $db)
 
     $merged_results = array(
         "page" => $page,
+        "pixel" => $pixel,
         "item_client" => $item_client,
         "item_company" => $item_company,
                

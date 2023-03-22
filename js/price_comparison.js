@@ -301,6 +301,8 @@ var app = new Vue({
         ofd1:'',
 
         phased : 0,
+
+        signature_codebook: [],
     },
   
     created() {
@@ -332,6 +334,7 @@ var app = new Vue({
       this.get_product_records();
       this.getUserName();
       this.get_brands();
+      this.get_signature();
     },
   
     computed: {
@@ -1013,6 +1016,30 @@ var app = new Vue({
           });
       },
 
+      get_signature: function() {
+        let _this = this;
+  
+        const params = {
+    
+        };
+  
+        let token = localStorage.getItem("accessToken");
+        axios
+          .get("api/signature_codebook?page=1&size=10000", {
+            params,
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then(function(response) {
+            console.log(response.data);
+       
+              _this.signature_codebook = response.data;
+               
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      },
+
       change_url: function(url) {
         this.url = (url !== '' ? this.img_url + url : '');
       },
@@ -1427,6 +1454,29 @@ var app = new Vue({
         this.sig.item_client.push(obj);
       },
 
+      signature_import(item) {  
+        let order = 0;
+        
+        if(this.sig.item_company.length != 0)
+          order = Math.max.apply(Math, this.sig.item_company.map(function(o) { return o.id; }))
+
+        obj = {
+          "id" : order + 1,
+          "type" : 'F',
+          "photo" : item.pic_url,
+          "url" : item.url,
+          "name" : item.name,
+          "position" : item.position,
+          "phone" : item.phone,
+          "email" : item.email,
+        }, 
+  
+        this.sig.item_company.push(obj);
+
+        alert('Add Successfully');
+      },
+
+
       add_sig_company_item() {
         let order = 0;
         
@@ -1445,6 +1495,10 @@ var app = new Vue({
         }, 
   
         this.sig.item_company.push(obj);
+      },
+
+      add_signature_codebook() {
+        $('#modal_signature_codebook').modal('toggle');
       },
 
       sig_save: async function() {
