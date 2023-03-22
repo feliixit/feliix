@@ -101,6 +101,8 @@ else
         }
 
         $page = $detail_array['page'];
+        $pixel = $detail_array['pixel'];
+
         $page == '' ? $page = 1 : $page = $page;
      
         for($i=0 ; $i < count($detail_array['item']) ; $i++)
@@ -109,6 +111,7 @@ else
             SET
                 `price_id` = :price_id,
                 `page` = :page,
+                pixel = :pixel,
                 `title` = :title,
                 `brief` = :brief,
                 `list` = :list,
@@ -123,6 +126,7 @@ else
             // bind the values
             $stmt->bindParam(':price_id', $price_id);
             $stmt->bindParam(':page', $page);
+            $stmt->bindParam(':pixel', $pixel);
             $stmt->bindParam(':title', $detail_array['item'][$i]['title']);
             $stmt->bindParam(':brief', $detail_array['item'][$i]['brief']);
             $stmt->bindParam(':list', $detail_array['item'][$i]['list']);

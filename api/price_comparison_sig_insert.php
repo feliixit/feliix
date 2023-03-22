@@ -103,6 +103,7 @@ else
         }
 
         $page = $detail_array['page'];
+        $pixel = $detail_array['pixel'];
      
         for($i=0 ; $i < count($detail_array['item_client']) ; $i++)
         {
@@ -110,6 +111,7 @@ else
             SET
                 `price_id` = :price_id,
                 `page` = :page,
+                pixel = :pixel,
                 `type` = 'C',
                 `name` = :name,
                 `position` = :position,
@@ -126,6 +128,7 @@ else
             // bind the values
             $stmt->bindParam(':price_id', $price_id);
             $stmt->bindParam(':page', $page);
+            $stmt->bindParam(':pixel', $pixel);
             $stmt->bindParam(':name', $detail_array['item_client'][$i]['name']);
             $stmt->bindParam(':position', $detail_array['item_client'][$i]['position']);
             $stmt->bindParam(':phone', $detail_array['item_client'][$i]['phone']);
@@ -163,6 +166,7 @@ else
             SET
                 `price_id` = :price_id,
                 `page` = :page,
+                `pixel` = :pixel,
                 `type` = 'F',
                 `name` = :name,
                 `position` = :position,
@@ -184,6 +188,7 @@ else
             // bind the values
             $stmt->bindParam(':price_id', $price_id);
             $stmt->bindParam(':page', $page);
+            $stmt->bindParam(':pixel', $pixel);
             $stmt->bindParam(':name', $detail_array['item_company'][$i]['name']);
             $stmt->bindParam(':position', $detail_array['item_company'][$i]['position']);
             $stmt->bindParam(':phone', $detail_array['item_company'][$i]['phone']);
