@@ -258,6 +258,10 @@ catch (Exception $e) {
             background-image: url(images/ui/btn_calendar_red.svg);
         }
 
+        .list_function.main a.calendar.green {
+            background-image: url(images/ui/btn_calendar_green.svg);
+        }
+
         .list_function.main a.add.purple {
             background-image: url(images/ui/btn_add_purple.svg);
         }
@@ -3570,7 +3574,7 @@ catch (Exception $e) {
                         </div>
 
                         <div class="popupblock">
-                            <a class="calendar" id="btn_cal"></a>
+                            <a class="calendar green" id="btn_cal"></a>
                         </div>
 
                     </div>
@@ -4436,7 +4440,6 @@ catch (Exception $e) {
 
     $(document).on("click", "#btn_arrange", function() {
         $('#cal').hide();
-        $("#cal").css({"visibility": "visible"});
         $('#meeting').show();
         $('#tasks').hide();
     });
