@@ -202,6 +202,28 @@ var app = new Vue({
     handler(val, oldval) {
       console.log("value changed~");
     },
+
+    category() {
+      if (this.category == "Beginning Balance of Current Month") {
+   
+        this.operation_type = "1";
+        $('#todays-date').attr('readonly', false);
+
+        $('#operation_type').attr('disabled', true);
+      }else{
+        this.criterion = "";
+        var today = new Date();
+        var dd = ("0" + (today.getDate())).slice(-2);
+        var mm = ("0" + (today.getMonth() + 1)).slice(-2);
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+        $("#todays-date").val(today);
+        $('#todays-date').attr('readonly', true);
+
+        $('#operation_type').attr('disabled', false);
+      }
+    },
+
     deep: true,
   },
   component: {},
@@ -243,6 +265,7 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       var form_Data = new FormData();
       let _this = this;
+      var tdate = $("#todays-date").val().replace(/-/g, "/");
       var paidat = this.sliceDate(this.paid_date).replace(/-/g, "/");
       var payee = this.payee.toString();
       if (edd == 1) {
@@ -295,6 +318,7 @@ var app = new Vue({
 
           form_Data.append("pic_url", this.filename);
           form_Data.append("payee", payee);
+          form_Data.append("tdate", tdate);
           form_Data.append("paid_date", paidat);
           form_Data.append("cash_in", this.cash_in);
           form_Data.append("cash_out", this.cash_out);
@@ -562,6 +586,7 @@ var app = new Vue({
       var token = localStorage.getItem("token");
       var form_Data = new FormData();
       let _this = this;
+       var tdate = $("#todays-date").val().replace(/-/g, "/");
       var paidat = this.sliceDate(this.paid_date).replace(/-/g, "/");
       var payee = this.payee.toString();
 
@@ -641,6 +666,7 @@ var app = new Vue({
       //}
 
       form_Data.append("payee", payee);
+      form_Data.append("tdate", tdate);
       form_Data.append("paid_date", paidat);
       form_Data.append("cash_in", this.cash_in);
       form_Data.append("cash_out", this.cash_out);
@@ -760,6 +786,11 @@ var app = new Vue({
         data: form_Data,
       })
         .then(function(response) {
+          // created_at only date fields
+          var created_at = response.data[0].created_at;
+          var created_at = created_at.split(" ");
+          $('#todays-date').val(created_at[0]);
+
           //handle success
           _this.id = response.data[0].id;
           if (response.data[0].account == 1) {

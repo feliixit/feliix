@@ -28,6 +28,8 @@ class PriceRecord
     public $created_by;
     public $updated_by;
     public $deleted_by;
+
+    public $tdate;
     // constructor
     public function __construct($db)
     {
@@ -42,6 +44,7 @@ class PriceRecord
                 details = :details, pic_url = :pic_url , payee = :payee, 
                 paid_date = :paid_date, cash_in = :cash_in, cash_out = :cash_out, 
                 remarks = :remarks, is_marked = :is_marked, 
+                created_at = :tdate, 
                 updated_at = now(), updated_by = :updated_by where id = :id";
 
         // prepare the query
@@ -84,6 +87,7 @@ class PriceRecord
         $stmt->bindParam(':cash_out', $this->cash_out);
         $stmt->bindParam(':remarks', $this->remarks);
         $stmt->bindParam(':is_marked',  $marked);
+        $stmt->bindParam(':tdate', $this->tdate);
         $stmt->bindParam(':updated_by', $this->updated_by);
 
     try {
@@ -113,7 +117,7 @@ class PriceRecord
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
                 (`account`,`category`, `sub_category`, `project_name`, `related_account`, `details`, `pic_url`, `payee`, `paid_date`, `cash_in`, `cash_out`, `remarks`,`is_locked`,`is_enabled`,`is_marked`,`created_at`,`created_by`) 
-                VALUES (:account,:category, :sub_category, :project_name, :related_account, :details, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, now(),:created_by)";
+                VALUES (:account,:category, :sub_category, :project_name, :related_account, :details, :pic_url, :payee, :paid_date, :cash_in, :cash_out, :remarks, :is_locked, 1,:is_marked, :tdate, :created_by)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -148,6 +152,8 @@ class PriceRecord
             $stmt->bindParam(':pic_url', $this->pic_url);
             $stmt->bindParam(':payee', $this->payee);
             $stmt->bindParam(':paid_date', $this->paid_date);
+
+            $stmt->bindParam(':tdate', $this->tdate);
 
             $stmt->bindParam(':cash_in', $this->cash_in);
 

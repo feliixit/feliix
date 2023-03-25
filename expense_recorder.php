@@ -233,7 +233,7 @@ try {
                             </td>
 
                             <td style="text-align: left;">
-                                <select class="form-control" style="width:15vw;" v-model="operation_type">
+                                <select class="form-control" style="width:15vw;" v-model="operation_type" id="operation_type">
                                     
                                     <option value="1">Cash In</option>
                                     <option value="2">Cash Out</option>
@@ -251,6 +251,7 @@ try {
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:25vw;" v-model="category">
                                     <option>Accounting and govt payments</option>
+                                    <option>Beginning Balance of Current Month</option>
                                     <option>Bills</option>
                                     <option>Client Refunds</option>
                                     <option>Consignment</option>
@@ -483,6 +484,7 @@ try {
         <select style="width:10vw; margin-left:1vw;" v-model="category">
             <option value="" seleted>All</option>
             <option>Accounting and govt payments</option>
+            <option>Beginning Balance of Current Month</option>
             <option>Bills</option>
             <option>Client Refunds</option>
             <option>Consignment</option>
@@ -1087,6 +1089,7 @@ try {
                         <td style="text-align: left;">
                             <select class="form-control" style="width:25vw;" id="categories" v-model ="split1.category">
                                 <option>Accounting and govt payments</option>
+                                <option>Beginning Balance of Current Month</option>
                                 <option>Bills</option>
                                 <option>Client Refunds</option>
                                 <option>Consignment</option>
@@ -1263,6 +1266,7 @@ try {
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:25vw;" id="categories" v-model ="split2.category">
                                     <option>Accounting and govt payments</option>
+                                    <option>Beginning Balance of Current Month</option>
                                     <option>Bills</option>
                                     <option>Client Refunds</option>
                                     <option>Consignment</option>
@@ -1439,6 +1443,7 @@ try {
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:25vw;" id="categories" v-model ="split3.category">
                                     <option>Accounting and govt payments</option>
+                                    <option>Beginning Balance of Current Month</option>
                                     <option>Bills</option>
                                     <option>Client Refunds</option>
                                     <option>Consignment</option>
@@ -1615,6 +1620,7 @@ try {
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:25vw;" id="categories" v-model ="split4.category">
                                     <option>Accounting and govt payments</option>
+                                    <option>Beginning Balance of Current Month</option>
                                     <option>Bills</option>
                                     <option>Client Refunds</option>
                                     <option>Consignment</option>
@@ -1791,6 +1797,7 @@ try {
                             <td style="text-align: left;">
                                 <select class="form-control" style="width:25vw;" id="categories" v-model ="split5.category">
                                     <option>Accounting and govt payments</option>
+                                    <option>Beginning Balance of Current Month</option>
                                     <option>Bills</option>
                                     <option>Client Refunds</option>
                                     <option>Consignment</option>

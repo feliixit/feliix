@@ -1180,5 +1180,30 @@ var app = new Vue({
       });
     },
 
+    result:function(){
+      if (this.proof_id == 0) {
+          Swal.fire({
+              text: "Please select row to vote",
+              icon: "warning",
+              confirmButtonText: "OK",
+            });
+          return;
+        }
+        
+        if(this.record.vote_status == 'Ongoing'){
+          Swal.fire({
+            text: "Only when voting is finished, user is allowed to view result.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+        return;
+        }
+
+          window.jQuery(".mask").toggle();
+          window.jQuery('#Modal_5').toggle();
+        
+      
+  },
+
   },
 });
