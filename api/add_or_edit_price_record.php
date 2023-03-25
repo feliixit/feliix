@@ -23,6 +23,7 @@ $del_url = preg_replace('/(\w+):/i', '"\1":', $del_url);
 $del_url_array = json_decode($del_url,true);
 
 $payee = (isset($_POST['payee']) ?  $_POST['payee'] : '');
+$tdate = (isset($_POST['tdate']) ?  $_POST['tdate'] : '');
 $paid_date = (isset($_POST['paid_date']) ?  $_POST['paid_date'] : '');
 $cash_in = (isset($_POST['cash_in']) ?  $_POST['cash_in'] : 0);
 $cash_out = (isset($_POST['cash_out']) ?  $_POST['cash_out'] : 0);
@@ -93,6 +94,7 @@ else
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
 
+            $priceRecord->tdate = $tdate;
             $priceRecord->account = $account;
             $priceRecord->category = $category;
             $priceRecord->sub_category = $sub_category;
@@ -130,6 +132,7 @@ else
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
             $priceRecord->id = $id;
+            $priceRecord->tdate = $tdate;
             $priceRecord->account = $account;
             $priceRecord->category = $category;
             $priceRecord->sub_category = $sub_category;
