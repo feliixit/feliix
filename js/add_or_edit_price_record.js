@@ -202,6 +202,28 @@ var app = new Vue({
     handler(val, oldval) {
       console.log("value changed~");
     },
+
+    category() {
+      if (this.category == "Beginning Balance of Current Month") {
+   
+        this.operation_type = "1";
+        $('#todays-date').attr('readonly', false);
+
+        $('#operation_type').attr('disabled', true);
+      }else{
+        this.criterion = "";
+        var today = new Date();
+        var dd = ("0" + (today.getDate())).slice(-2);
+        var mm = ("0" + (today.getMonth() + 1)).slice(-2);
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+        $("#todays-date").val(today);
+        $('#todays-date').attr('readonly', true);
+
+        $('#operation_type').attr('disabled', false);
+      }
+    },
+
     deep: true,
   },
   component: {},
