@@ -151,6 +151,8 @@ try {
                 $("#Modal_2").toggle();
             }else if (target == 3) {
                 $("#Modal_3").toggle();
+            }else if (target == 5) {
+                $("#Modal_5").toggle();
             }
         }
     </script>
@@ -665,6 +667,7 @@ try {
 
                 <div class="btnbox" style="display: flex; justify-content: center;">
                     <a class="btn green" @click="view_detai()">Detail</a>
+                    <a class="btn green" @click="result()">Result</a>
                     <a class="btn green" @click="duplicate()">Duplicate</a>
                     <a class="btn green" @click="edit_detail()">Edit</a>
                     <a class="btn" style="color: #FFF;" @click="remove()">Delete</a>
@@ -1084,6 +1087,84 @@ try {
                             <div class="btnbox">
                                 <a class="btn green" @click="update_template()">Update Voting Topic</a>
                             </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                
+                <div id="Modal_5" class="modal">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h6>Result of Voting Topic</h6>
+                            <a href="javascript: void(0)" onclick="ToggleModal(5)"><i class="fa fa-times fa-lg"
+                                                                                     aria-hidden="true"></i></a>
+                        </div>
+
+
+                        <!-- Voting Topic general description -->
+                        <div class="box-content">
+
+                            <ul>
+                                <li><b>Topic Name</b></li>
+                                <li class="content">{{ record.topic }}</li>
+
+                                <li><b>Voting Time</b></li>
+                                <li class="content">{{ record.start_date}} ~ {{ record.end_date }}</li>
+
+                                <li><b>Voting Rule</b></li>
+                                <li class="content">{{ record.rule_text }}</li>
+
+                                <li><b>Voter Turnout</b></li>
+                                <li class="content">{{ record.votes != undefined ?  record.votes.length : '0' }}</li>
+                            </ul>
+
+                        </div>
+
+
+                        <!-- Option content -->
+                        <div class="box-content" style="border-bottom: none;">
+
+                            <table class="list_table" style="margin-top: 15px;">
+
+                                <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Option Name</th>
+                                    <th>Image</th>
+                                    <th>Description</th>
+                                    <th>Web Link</th>
+                                    <th>Votes</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr v-for='(item, index) in record.votes_cnt' :key="index">
+                                    <!-- {{從1開始，數字會到使用者當初設定的取前多少名為止，例如當初選Top 3，則只會列出前三名}} -->
+                                    <td>{{ item.order }}</td>
+                                    <td>
+                                        {{ item.title }}
+                                    </td>
+                                    <td>
+                                        <img v-if="item.url" :src="item.url"/>
+                                    </td>
+                                    <td style="white-space: pre;">{{ item.description }}</td>
+                                    <td>
+                                    <a v-if="item.link" :href="format_url(item.link)" target="_blank">{{ item.link }}</a>
+                                    </td>
+                                    <td>
+                                        {{ item.score }}
+                                    </td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
                         </div>
 
                     </div>

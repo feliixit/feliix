@@ -268,7 +268,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $sort_text = GetSortText($sort);
 
     $votes = GetVotes($id, $db);
-
+    $votes_cnt = GetVotesCnt($id, $db, $sort, $display);
  
     $merged_results[] = array(
         'id' => $id,
@@ -296,6 +296,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         'details' => $details,
         "vote_status" => GetVotingStatus($start_date, $end_date),
         "votes" => $votes,
+
+        "votes_cnt" => $votes_cnt,
 
         "cnt" => $cnt,
 
@@ -488,5 +490,96 @@ function GetAnswers($review_id, $db)
     return $merged_results;
 }
 
+
+function GetVotesCnt($template_id, $db, $sort, $limit)
+{
+    $query = "select review_question_id, sum(case when answer = '1' then 1 else 0 end) as score, sn, title, pic, description, link from voting_review_detail a 
+    left join voting_template_detail q on q.id = a. review_question_id where a.`status` <> -1  and q.template_id = " . $template_id . "
+    group by review_question_id, sn, title, pic,  description, link  order by sum(case when answer = '1' then 1 else 0 end) ";
+
+    
+    if($sort == "1")
+        $query .= "desc";
+    else if($sort == "2")
+        $query .= "asc";
+
+    // if($limit == "1")
+    //     $query .= " limit 1 ";
+    // if($limit == "2")
+    //     $query .= " limit 3 ";
+    // if($limit == "3")
+    //     $query .= " limit 5 ";
+    // if($limit == "4")
+    //     $query .= " limit 10 ";
+
+
+    $stmt = $db->prepare( $query );
+    $stmt->execute();
+
+    $merged_results = [];
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $review_question_id = $row['review_question_id'];
+        $score = $row['score'];
+
+        $sn = $row['sn'];
+        $title = $row['title'];
+        $pic = $row['pic'];
+        $description = $row['description'];
+        $link = $row['link'];
+
+        $merged_results[] = array(
+            'order' => 0,
+            'review_question_id' => $review_question_id,
+            'score' => $score,
+    
+            'sn' => $sn,
+            'title' => $title,
+            'pic' => $pic,
+            'description' => $description,
+            'link' => $link,
+            'url' => ($pic != '' ? "https://storage.googleapis.com/feliiximg/" . $pic : ''),
+            
+        );
+    }
+
+
+    // get top n by $limit n score group
+    $top_n = [];
+
+    $top_n_cnt = 0;
+
+    if($limit == "1")
+        $top_n_cnt = 1;
+    if($limit == "2")
+        $top_n_cnt = 3;
+    if($limit == "3")
+        $top_n_cnt = 5;
+    if($limit == "4")
+        $top_n_cnt = 10;
+    if($limit == "all")
+        $top_n_cnt = 10000;
+
+    $temp_score = -1;
+    $order = 0;
+
+    foreach($merged_results as $result)
+    {
+        if($temp_score != $result['score'])
+        {
+            $temp_score = $result['score'];
+            $top_n_cnt = $top_n_cnt -1;
+            $order = $order + 1;
+        }
+
+        if($top_n_cnt >= 0)
+        {
+            $result['order'] = $order;
+            $top_n[] = $result;
+        }
+    }
+
+
+    return $top_n;
+}
 
 ?>
