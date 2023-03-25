@@ -256,6 +256,10 @@ catch (Exception $e) {
             background-image: url(images/ui/btn_calendar_red.svg);
         }
 
+        .list_function.main a.calendar.green {
+            background-image: url(images/ui/btn_calendar_green.svg);
+        }
+
         .list_function.main a.filtering {
             width: 30px;
             height: 30px;
@@ -291,6 +295,19 @@ catch (Exception $e) {
             z-index: 100;
             background-color: #fff;
             height: calc( 100vh - 60px);
+        }
+
+        #cal {
+            border: 5px solid #00811e;
+            padding: 10px 20px 20px;
+            width: 1000px;
+            margin: auto;
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background-color: #fff;
         }
 
         .tablebox.lv1 li:nth-of-type(1), .tablebox.lv1 li:nth-of-type(2){
@@ -3364,6 +3381,10 @@ catch (Exception $e) {
                         <a class="calendar" id="btn_arrange"></a>
                     </div>
 
+                    <div class="popupblock">
+                        <a class="calendar green" id="btn_cal"></a>
+                    </div>
+
                     <!-- 篩選 -->
                     <div class="popupblock">
                         <a class="filtering" id="btn_filter"></a>
@@ -3686,6 +3707,16 @@ catch (Exception $e) {
 
             </div>
         </div>
+    </div>
+
+    <div id="cal" style="visibility: hidden;">
+
+        <div style="text-align: right;">
+            <button style="border: none;" onclick="hideWindow('#cal')"><i class="fa fa-times fa-lg"></i></button>
+        </div>
+
+        <div id="cal_calendar" style="margin-bottom: 15px;"><iframe id="myFrame" src='schedule_calendar' ref="iframe" style="width:100%; height:900px;" ></iframe></div>
+
     </div>
 
     <div id="tasks" style="visibility: hidden;">
@@ -4105,6 +4136,15 @@ catch (Exception $e) {
 
         $('#meeting').show();
         $('#tasks').hide();
+        $('#cal').hide();
+    });
+
+    $(document).on("click", "#btn_cal", function() {
+
+        $('#cal').show();
+        $("#cal").css({"visibility": "visible"});
+        $('#meeting').hide();
+        $('#tasks').hide();
     });
 
     $(document).on("click", "#btn_view", function() {
@@ -4177,6 +4217,7 @@ catch (Exception $e) {
 
         $('#meeting').hide();
         $('#tasks').show();
+        $('#cal').hide();
     });
 
     document.addEventListener('DOMContentLoaded', function() {

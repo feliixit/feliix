@@ -2170,6 +2170,14 @@ header('location:index');
             background-image: url(images/ui/btn_calendar_red.svg);
         }
 
+        .list_function.main a.calendar.green {
+            background-image: url(images/ui/btn_calendar_green.svg);
+        }
+
+        .list_function.main a.edit.yellow {
+            background-image: url(images/ui/btn_edit_yellow.svg);
+        }
+
         #tasks {
             border: 5px solid #00811e;
             padding: 10px 20px 20px;
@@ -2196,6 +2204,19 @@ header('location:index');
             z-index: 100;
             background-color: #fff;
             height: calc( 100vh - 60px);
+        }
+
+        #cal {
+            border: 5px solid #00811e;
+            padding: 10px 20px 20px;
+            width: 1000px;
+            margin: auto;
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background-color: #fff;
         }
 
         .other .block.left.second .tablebox a.attch_pic>img {
@@ -2638,6 +2659,10 @@ header('location:index');
                     <!-- Meeting calendar -->
                     <div class="popupblock">
                         <a class="calendar" id="btn_arrange"></a>
+                    </div>
+
+                    <div class="popupblock">
+                        <a class="calendar green" id="btn_cal"></a>
                     </div>
                 </div>
 
@@ -3257,6 +3282,15 @@ header('location:index');
 
 </div>
 
+<div id="cal" style="visibility: hidden;">
+
+        <div style="text-align: right;">
+            <button style="border: none;" onclick="hideWindow('#cal')"><i class="fa fa-times fa-lg"></i></button>
+        </div>
+
+        <div id="cal_calendar" style="margin-bottom: 15px;"><iframe id="myFrame" src='schedule_calendar' ref="iframe" style="width:100%; height:900px;" ></iframe></div>
+
+    </div>
 
 <div id="tasks" style="visibility: hidden;">
 
@@ -3689,6 +3723,15 @@ header('location:index');
 
         $('#meeting').show();
         $('#tasks').hide();
+        $('#cal').hide();
+    });
+
+    $(document).on("click", "#btn_cal", function() {
+
+        $('#cal').show();
+        $("#cal").css({"visibility": "visible"});
+        $('#meeting').hide();
+        $('#tasks').hide();
     });
 
     $(document).on("click", "#btn_view", function() {
@@ -3762,6 +3805,7 @@ header('location:index');
 
         $('#meeting').hide();
         $('#tasks').show();
+        $('#cal').hide();
     });
 
     document.addEventListener('DOMContentLoaded', function() {
