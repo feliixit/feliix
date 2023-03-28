@@ -3019,9 +3019,14 @@ header( 'location:index' );
                                                     </div>
                                                 </td> <!---->
                                                 <td class="qty"><span class="numbers">{{ row.gp1.qty }}</span></td>
-                                                <td class="price"><!----> <span v-if="row.gp1.discount != 0"
+                                                <td class="price" v-if="row.gp1.discount != '100.00'"><!----> <span v-if="row.gp1.discount != 0"
                                                         class="numbers deleted">₱ {{ Number(row.gp1.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span>{{ row.gp1.discount !== undefined ? Math.floor(row.gp1.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="row.gp1.discount != 0">
                                                     <span class="numbers" v-if="row.gp1.id != 0">₱ {{ Number(row.gp1.price - (row.gp1.price * (row.gp1.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
+                                                <td class="price" v-if="row.gp1.discount == '100.00'"><!----> <span v-if="row.gp1.discount != 0"
+                                                        class="numbers deleted">₱ {{ Number(row.gp1.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span><br>
+                                                    <span class="numbers red">FREE AS PACKAGE!</span> <!----></td> <!----> <!----> <!---->
+
+
                                                 <td class="amount"><span class="numbers" v-if="row.gp1.id != 0">₱ {{ row.gp1.amount }} </span></td> <!---->
 
                                                 <td rowspan="2" class="option_space"></td>
@@ -3038,9 +3043,13 @@ header( 'location:index' );
                                                     </div>
                                                 </td> <!---->
                                                 <td class="qty"><span class="numbers">{{ row.gp2.qty }}</span></td>
-                                                <td class="price"><!----> <span v-if="row.gp2.discount != 0"
+                                                <td class="price" v-if="row.gp2.discount != '100.00'"><!----> <span v-if="row.gp2.discount != 0"
                                                         class="numbers deleted">₱ {{ Number(row.gp2.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span>{{ row.gp2.discount !== undefined ? Math.floor(row.gp2.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="row.gp2.discount != 0">
                                                     <span class="numbers" v-if="row.gp2.id != 0">₱ {{ Number(row.gp2.price - (row.gp2.price * (row.gp2.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
+                                                <td class="price" v-if="row.gp2.discount == '100.00'"><!----> <span v-if="row.gp2.discount != 0"
+                                                        class="numbers deleted">₱ {{ Number(row.gp2.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span><br>
+                                                    <span class="numbers red">FREE AS PACKAGE!</span> <!----></td> <!----> <!----> <!---->
+
                                                 <td class="amount"><span class="numbers" v-if="row.gp2.id != 0">₱ {{ row.gp2.amount }}</span></td> <!---->
 
                                                 <td rowspan="2" class="option_space" v-if="org_options.length > 2"></td>
@@ -3057,9 +3066,14 @@ header( 'location:index' );
                                                     </div>
                                                 </td> <!---->
                                                 <td class="qty" v-if="org_options.length == 3"><span class="numbers" v-if="org_options.length == 3">{{ row.gp3.qty }}</span></td>
-                                                <td class="price" v-if="org_options.length == 3"><!----> <span v-if="org_options.length == 3 && row.gp3.discount != 0"
+                                                <td class="price" v-if="org_options.length == 3 &&  row.gp3.discount != '100.00'"><!----> <span v-if="org_options.length == 3 && row.gp3.discount != 0"
                                                         class="numbers deleted">₱ {{ Number(row.gp3.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}<span v-if="org_options.length == 3 && row.gp3.discount !== 0">{{ row.gp3.discount !== undefined ? Math.floor(row.gp3.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br v-if="org_options.length == 3 && row.gp3.discount != 0">
                                                     <span class="numbers" v-if="org_options.length == 3 && row.gp3.id != 0">₱ {{ Number(row.gp3.price - (row.gp3.price * (row.gp3.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> <!----></td> <!----> <!----> <!---->
+                                                
+                                                <td class="price" v-if="org_options.length == 3 && row.gp3.discount == '100.00'"><!----> <span v-if="org_options.length == 3 && row.gp3.discount != 0"
+                                                    class="numbers deleted">₱ {{ Number(row.gp3.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span><br>
+                                                <span class="numbers red">FREE AS PACKAGE!</span> <!----></td> <!----> <!----> <!---->
+
                                                 <td class="amount" v-if="org_options.length == 3"><span class="numbers" v-if="org_options.length == 3 && row.gp3.id != 0">₱ {{ row.gp3.amount }}</span></td> <!---->
 
                                             </tr>
