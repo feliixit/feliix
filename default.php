@@ -63,6 +63,31 @@ if($date % 2 == 0)
             font-size: 14px;
         }
 
+        a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.primary header nav a, body.primary header nav a:link {
+            color: #000;
+        }
+
+        body.primary header nav a:hover {
+            color: #333;
+        }
+
+        body.primary header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
+        body.primary header nav ul.info {
+            margin-bottom: 0;
+        }
+
+        body.primary header nav ul.info b {
+            font-weight: bold;
+        }
+
         .bodybox .mask {
             position: fixed;
             background: rgba(0, 0, 0, 0.5);
