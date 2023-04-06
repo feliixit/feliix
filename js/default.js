@@ -169,8 +169,10 @@ var app = new Vue({
             
             // filter record that has been voted
             _this.receive_records = _this.receive_records.filter(function (el) {
-                return el.vote_status == 'Ongoing';
+                return (el.vote_status == 'Ongoing' && el.review == 0);
             });
+
+
 
             if(_this.receive_records.length > 0)
             {
