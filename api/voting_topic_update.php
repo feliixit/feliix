@@ -539,8 +539,10 @@ function send_mail($_id, $db)
         $cc_id = $row['create_id'];
         $rule = $row['rule'];
 
+        $status_text = GetVotingStatus($review_start_date, $review_end_date);
+
         // if today is review_start_date, send email
-        if ($today == $review_start_date)
+        if ("Ongoing" == $status_text)
         {
             // json to array
             $access = json_decode($row['access'], true);
@@ -552,7 +554,7 @@ function send_mail($_id, $db)
         }
 
         // if today is review_start_date, send email
-        if ($today == $review_end_date)
+        if ("Finished" == $status_text)
         {
             // json to array
             $access = json_decode($row['access'], true);
@@ -566,6 +568,19 @@ function send_mail($_id, $db)
     }
 }
 
+function GetVotingStatus($start_date, $end_date)
+{
+    $status = "";
+    $now = date("Y-m-d");
+    if($now < $start_date)
+        $status = "Not Yet Start";
+    else if($now >= $start_date && $now <= $end_date)
+        $status = "Ongoing";
+    else if($now > $end_date)
+        $status = "Finished";
+
+    return $status;
+}
 
 function knowledge_access_get($access, $db)
 {
