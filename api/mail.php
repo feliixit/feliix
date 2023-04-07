@@ -8707,6 +8707,267 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
 
 }
 
+function knowledge_add_notification($name, $name_at, $access, $access_cc, $title, $creator, $created_at, $category, $view_type, $duration, $watch, $od_id, $action)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $reviser = "";
+    $deletor = "";
+    $url = "";
+
+    // preliminary
+    if($action == 'add')
+    {
+        $mail->Subject = '[Knowledge Notification] ' . $name . ' created new knowledge in Knowledge List';
+        $header = "<p>" . $name . ' created new knowledge in Knowledge List. Below is the details of the knowledge:</p>';
+        $url = "https://feliix.myvnc.com/knowledge_display";
+    }
+
+    if($action == 'edit')
+    {
+        $mail->Subject = '[Knowledge Notification] ' . $name . ' revised existing knowledge in Knowledge List';
+        $header = "<p>" . $name . ' revised existing knowledge in Knowledge List. Below is the details of the knowledge:</p>';
+
+        $reviser = $name;
+
+        $url = "https://feliix.myvnc.com/knowledge_display";
+    }
+    
+    if($action == 'del')
+    {
+        $mail->Subject = '[Knowledge Notification] ' . $name . ' deleted existing knowledge in Knowledge List';
+        $header = "<p>" . $name . ' deleted existing knowledge in Knowledge List. Below is the details of the knowledge:</p>';
+
+        $deletor = $name;
+
+        $url = "https://feliix.myvnc.com/knowledge_display";
+    }
+    
+    $content =  "<p>Dear all,</p>";
+    $content = $content . $header;
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Title: " . $title . "</p>";
+    $content = $content . "<p>Creator: " . $creator . " at " . $created_at . "</p>";
+    if($reviser != "")
+        $content = $content . "<p>Reviser: " . $reviser . " at " . $name_at . "</p>";
+    if($deletor != "")
+        $content = $content . "<p>Deleter: " . $deletor . " at " . $name_at . "</p>";
+    $content = $content . "<p>Category: " . $category . "</p>";
+    $content = $content . "<p>Type: " . $view_type . "</p>";
+    $content = $content . "<p>Duration: " . $duration . " " . $watch . "</p>";	
+
+    $content = $content . "<p> </p>";
+    if($action == "add")
+    {
+        $content = $content . "<p>Please log on to Feliix >> Knowledge Library >> Knowledge List to view new Knowledge.</p>";
+        $content = $content . "<p>URL: " . $url . "</p>";
+    }
+
+    if($action == "edit")
+    {
+        $content = $content . "<p>Please log on to Feliix >> Knowledge Library >> Knowledge List to view revised Knowledge.</p>";
+        $content = $content . "<p>URL: " .$url . "</p>";
+    }
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function batch_voting_system_notify_mail($access, $access_cc, $topic_name, $creator, $created_at, $vote_start, $vote_end, $vote_rule, $od_id, $action)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+
+    $mail->IsHTML(true);
+    
+    $receiver = "";
+    $cc = "";
+
+    $_list = explode(",", $access);
+    foreach($_list as &$c_list)
+    {
+        $notifior = GetNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $receiver .= $list["username"] . ", ";
+            $mail->AddAddress($list["email"], $list["username"]);
+        }
+    }
+
+    $receiver = rtrim($receiver, ", ");
+
+    // explore cc into array
+    $cc_list = explode(",", $access_cc);
+    foreach($cc_list as &$c_list)
+    {
+        $notifior = GetNotifiers($c_list, $serial_name);
+        foreach($notifior as &$list)
+        {
+            $cc = $list["username"];
+            $mail->AddCC($list["email"], $list["username"]);
+        }
+    }
+    
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $mail->Subject = "";
+
+    $header = "";
+    $url = "";
+
+    if($action == 'start')
+    {
+        $mail->Subject = '[Vote Notification] New voting topic starts to vote';
+        $header = "<p>A new voting topic starts to vote. Below is the details of the voting topic:</p>";
+        $url = "https://feliix.myvnc.com/voting_system";
+        
+    }
+
+    if($action == 'end')
+    {
+        $mail->Subject = '[Vote Notification] Result of one voting topic already released';
+        $header = "<p>Result of the below voting topic already released. Below is the details of the voting topic:</p>";
+        $url = "https://feliix.myvnc.com/voting_system";
+    }
+    
+    if($action == 'mgt')
+    {
+        $mail->Subject = '[Vote Notification] Result of one voting topic you created already released';
+        $header = "<p>Result of one voting topic you created already released. Below is the details of the voting topic:</p>";
+        $url = "https://feliix.myvnc.com/voting_topic_mgt";
+    }
+    
+    if($action == 'mgt')
+        $content =  "<p>Dear " . $creator . ",</p>";
+    else
+        $content =  "<p>Dear all,</p>";
+
+    $content = $content . $header;
+    $content = $content . "<p> </p>";
+
+    $content = $content . "<p>Topic Name: " . $topic_name . "</p>";
+    $content = $content . "<p>Creator: " . $creator . " at " . $created_at . "</p>";
+    $content = $content . "<p>Voting Time: " . $vote_start . " ~ " . $vote_end . "</p>";
+    $content = $content . "<p>Voting Rule: " . $vote_rule . "</p>";   
+
+    $content = $content . "<p> </p>";
+    if($action == "start")
+    {
+        $content = $content . "<p>Please log on to Feliix >> Let's Vote >> Voting System to start your vote.</p>";
+        $content = $content . "<p>URL: " . $url . "</p>";
+    }
+
+    if($action == "end")
+    {
+        $content = $content . "<p>Please log on to Feliix >> Let's Vote >> Voting System to view the result.</p>";
+        $content = $content . "<p>URL: " . $url . "</p>";
+    }
+
+    if($action == "mgt")
+    {
+        $content = $content . "<p>Please log on to Feliix >> Let's Vote >> Voting Topic Management to view the result.</p>";
+        $content = $content . "<p>URL: " . $url . "</p>";
+    }
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
 
 
 function order_type_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id, $type)
@@ -13239,8 +13500,8 @@ function SetupMail($mail, $conf)
     // $mail->Port       = 587;
     // $mail->SMTPKeepAlive = true;
     // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'imelda40@ethereal.email';
-    // $mail->Password   = 'R9sQqzpnmYq4dPQrK2';
+    // $mail->Username   = 'jermey.wilkinson@ethereal.email';
+    // $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
 
     return $mail;
 

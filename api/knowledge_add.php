@@ -118,8 +118,6 @@ if (!isset($jwt)) {
         );
     }
 
-
-
     echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 }
 

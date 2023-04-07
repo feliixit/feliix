@@ -27,7 +27,7 @@ include_once 'config/database.php';
 
 include_once 'config/conf.php';
 require_once '../vendor/autoload.php';
-
+include_once 'mail.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -128,9 +128,12 @@ else
         }
         
         
-
-            
         $db->commit();
+
+        $users = knowledge_access_get($access, $db);
+        $cc = array();
+        
+        knowledge_add_notification($user_name, date("Y/m/d") . " " . date("h:i:sa"),  $users, $cc, $title, $user_name, date("Y/m/d") . " " . date("h:i:sa") , category_text($category), type_text($type), duration_text($duration), $watch, $last_id, "add");
         
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") ));
@@ -289,4 +292,85 @@ function SaveImage($type, $batch_id, $batch_type, $user_id, $db, $conf)
         echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " Error uploading, Please use laptop to upload again."));
         die();
     }
+}
+
+function knowledge_access_get($access, $db)
+{
+    $users = array();
+
+    $query = "select `user`.id,
+                username , email, department from `user` 
+            left join `user_department` on `user`.apartment_id = `user_department`.id
+            where `user`.status = 1";
+
+    $username = "";
+    $email = "";
+    $department = "";
+
+    $access_up = strtoupper($access); 
+
+    $stmt_cnt = $db->prepare( $query );
+    $stmt_cnt->execute();
+    while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+        $uid = $row['id'];
+        $username = $row['username'];
+        $email = $row['email'];
+        $department = $row['department'];
+
+        // if username or department part of access then add to uses
+        if(strpos($access_up, strtoupper($username)) !== false || strpos($access_up, strtoupper($department)) !== false || strpos($access_up, "ALL") !== false)
+        {
+            $users[] = $uid;
+        }
+    }
+
+    return implode(",", $users);
+}
+
+function duration_text($duration){
+    $duration_str = '';
+    if($duration > 0){
+        $duration_in_huours = round($duration/60, 1);
+        $duration_in_minutes = floor($duration % 60);
+        
+        if($duration_in_huours > 1){
+            $duration_str = $duration_in_huours . '-hr ';
+        }
+        else
+        {
+            $duration_str = $duration_in_minutes . '-min';
+        }
+
+        //if($duration_in_minutes > 0){
+        //    $duration_str .= $duration_in_minutes . '-min';
+        //}
+    }
+
+    return $duration_str;
+}
+
+function type_text($type)
+{
+    if($type == 'file')
+        return 'File';
+    else if($type == 'link')
+        return 'Web Text';
+    else if($type == 'video')
+        return 'Web Video';
+    else
+        return '';
+}
+
+function category_text($category)
+{
+    // split by comma and concatenate by space and comma
+    $category_arr = explode(",", $category);
+    $category_str = '';
+    foreach($category_arr as $cat)
+    {
+        $category_str .= $cat . ', ';
+    }
+
+    return rtrim($category_str, ", ");
+
 }

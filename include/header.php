@@ -23,6 +23,7 @@ use \Firebase\JWT\JWT;
     $access8 = false;
     $access9 = false;
     $access10 = false;
+    $access11 = false;
 
     $pic_url = "man6.jpg";
 
@@ -106,6 +107,16 @@ try {
         $stmt->execute();
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $access10 = true;
+        }
+
+        $access11 = false;
+        //if($user_id == 1 || $user_id == 4 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41)
+        //    $access2 = true;
+        $query = "SELECT * FROM access_control WHERE (vote1 LIKE '%" . $username . "%' or vote2 LIKE '%" . $username . "%') ";
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $access11 = true;
         }
 
         // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(41), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
@@ -357,7 +368,11 @@ try {
                 <a class="list" href="product_catalog_code">Product Catalog</a>
                 <a class="list" href="frequently_used_options">Attribute’s Frequently Used Options</a>
             </li>
-
+            <li class="sec02">
+                <a class="uni">Let's Vote</a>
+                <a class="list" href="voting_system">Voting System</a>
+                <?=($access11 == true) ? '<a class="list" href="voting_topic_mgt">Voting Topic Management</a>' : '' ?>
+            </li>
             <li class="cyan01" style="border: 3px solid var(--cyan01);">
                 <a class="uni">Knowledge<br>Library</a>
                 <a class="list" href="knowledge_display">Knowledge List</a>

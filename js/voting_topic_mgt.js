@@ -439,6 +439,8 @@ var app = new Vue({
 
           window.jQuery(".mask").toggle();
           window.jQuery('#Modal_1').toggle();
+
+          $('#access').selectpicker('refresh');
         })
         .catch(function(error) {
           //handle error
@@ -940,6 +942,8 @@ var app = new Vue({
 
       this.editing = false;
       this.submit = false;
+
+      $('#access').selectpicker('refresh');
 
       this.getRecords();
     },
