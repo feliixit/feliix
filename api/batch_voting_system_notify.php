@@ -16,6 +16,9 @@ $id = 0;
 // get today by "Y-m-d"
 $today = date("Y-m-d");
 
+// get yesterday by "Y-m-d"
+$yesterday = date("Y-m-d", strtotime("-1 days"));
+
 $sql = "select pm.id,
             pm.topic, 
             pm.access, 
@@ -54,7 +57,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     }
 
     // if today is review_start_date, send email
-    if ($today == $review_end_date)
+    if ($yesterday == $review_end_date)
     {
         // json to array
         $access = json_decode($row['access'], true);

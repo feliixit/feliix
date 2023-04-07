@@ -147,6 +147,8 @@ try {
 
             if (target == 1) {
                 $("#Modal_1").toggle();
+                app.access = [];
+                $('#access').selectpicker('refresh');
             }else if (target == 2) {
                 $("#Modal_2").toggle();
             }else if (target == 3) {
