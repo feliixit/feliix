@@ -8707,7 +8707,7 @@ function inquiry_notification($name, $access,  $access_cc, $project_name, $seria
 
 }
 
-function knowledge_add_notification($name, $name_at, $access, $access_cc, $title, $creator, $created_at, $category, $view_type, $duration, $od_id, $action)
+function knowledge_add_notification($name, $name_at, $access, $access_cc, $title, $creator, $created_at, $category, $view_type, $duration, $watch, $od_id, $action)
 {
     $conf = new Conf();
 
@@ -8803,14 +8803,14 @@ function knowledge_add_notification($name, $name_at, $access, $access_cc, $title
     $content = $content . "<p> </p>";
 
     $content = $content . "<p>Title: " . $title . "</p>";
-    $content = $content . "<p>Creator: " . $name . " at " . $name_at . "</p>";
+    $content = $content . "<p>Creator: " . $creator . " at " . $created_at . "</p>";
     if($reviser != "")
         $content = $content . "<p>Reviser: " . $reviser . " at " . $name_at . "</p>";
     if($deletor != "")
         $content = $content . "<p>Deleter: " . $deletor . " at " . $name_at . "</p>";
     $content = $content . "<p>Category: " . $category . "</p>";
-    $content = $content . "<p>Type: " . $type . "</p>";
-    $content = $content . "<p>Duration: " . $duration . " " . $view_type . "</p>";	
+    $content = $content . "<p>Type: " . $view_type . "</p>";
+    $content = $content . "<p>Duration: " . $duration . " " . $watch . "</p>";	
 
     $content = $content . "<p> </p>";
     if($action == "add")
@@ -13484,24 +13484,24 @@ function GetProjectCategoryByProjectId($id)
 
 function SetupMail($mail, $conf)
 {
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-
-
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
     // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'imelda40@ethereal.email';
-    // $mail->Password   = 'R9sQqzpnmYq4dPQrK2';
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'jermey.wilkinson@ethereal.email';
+    $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
 
     return $mail;
 

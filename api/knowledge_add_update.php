@@ -153,7 +153,7 @@ else
         $users = knowledge_access_get($access, $db);
         $cc = array();
         
-        knowledge_add_notification($user_name, date("Y/m/d") . " " . date("h:i:sa"), $users, $cc, $title, $pre_knowledge["created_by"], $pre_knowledge['created_at'], category_text($category), type_text($type), duration_text($duration), $last_id, "edit");
+        knowledge_add_notification($user_name, date("Y/m/d") . " " . date("h:i:s"), $users, $cc, $title, $pre_knowledge["created_by"], $pre_knowledge['created_at'], category_text($category), type_text($type), duration_text($duration), $watch, $last_id, "edit");
         
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") ));
@@ -360,7 +360,7 @@ function knowledge_access_get($access, $db)
 {
     $users = array();
 
-    $query = "select 
+    $query = "select `user`.id,
                 username , email, department from `user` 
             left join `user_department` on `user`.apartment_id = `user_department`.id
             where `user`.status = 1";
@@ -374,6 +374,7 @@ function knowledge_access_get($access, $db)
     $stmt_cnt = $db->prepare( $query );
     $stmt_cnt->execute();
     while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+        $uid = $row['id'];
         $username = $row['username'];
         $email = $row['email'];
         $department = $row['department'];
@@ -381,7 +382,7 @@ function knowledge_access_get($access, $db)
         // if username or department part of access then add to uses
         if(strpos($access_up, strtoupper($username)) !== false || strpos($access_up, strtoupper($department)) !== false || strpos($access_up, "ALL") !== false)
         {
-            $users[] = $username;
+            $users[] = $uid;
         }
     }
 
