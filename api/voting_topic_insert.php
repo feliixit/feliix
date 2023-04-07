@@ -229,7 +229,7 @@ function send_mail($_id, $db)
                 c_user.username AS created_by, 
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at 
             from voting_template pm 
-            LEFT JOIN user c_user ON pm.create_id = c_user.id and pm.status <> -1 and pm.id = " . $_id;
+            LEFT JOIN user c_user ON pm.create_id = c_user.id where pm.status <> -1 and pm.id = " . $_id;
 
     $stmt = $db->prepare($sql);
     $stmt->execute();
