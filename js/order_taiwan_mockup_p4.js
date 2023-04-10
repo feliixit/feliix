@@ -1383,8 +1383,8 @@ var app = new Vue({
               photo2:this.product.photo2 != '' ? this.product.photo2 : '',
               photo3:this.product.photo3 != '' ? this.product.photo3 : '',
               code:this.product.code,
-              brief:"",
-              listing:list,
+              brief:list,
+            listing:"",
               qty:"",
               backup_qty:"",
               srp:price,
@@ -1394,6 +1394,7 @@ var app = new Vue({
               v2:this.v2,
               v3:this.v3,
               status:"3",
+              btn2:"1",
               notes:[]
             };
 
@@ -1543,8 +1544,8 @@ var app = new Vue({
             photo2:'',
             photo3:'',
             code:this.product.code,
-            brief:"",
-            listing:list,
+            brief:list,
+            listing:"",
             qty:"",
             backup_qty:"",
             srp:price,
@@ -1554,6 +1555,7 @@ var app = new Vue({
             v2:this.v2,
             v3:this.v3,
             status:"3",
+            btn2:"1",
             notes:[]
           };
 

@@ -103,6 +103,7 @@ switch ($method) {
                     `v1` = :v1,
                     `v2` = :v2,
                     `v3` = :v3,
+                    `btn2` = :btn2,
                     `status` = :status,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -134,6 +135,8 @@ switch ($method) {
                 $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
                 $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
 
+                $btn2 = isset($block_array[$i]['btn2']) ? $block_array[$i]['btn2'] : '';
+
                 $status = isset($block_array[$i]['status']) ? $block_array[$i]['status'] : 0;
                 $status = $status == '' ? 0 : $status;
        
@@ -159,6 +162,8 @@ switch ($method) {
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+
+                $stmt->bindParam(':btn2', $btn2);
 
                 $stmt->bindParam(':status', $status);
               
