@@ -1449,7 +1449,7 @@ var app = new Vue({
               confirm_text: "Approved",
               brand:this.product.brand,
               brand_other:"",
-              photo1:this.product.photo1 != '' ? this.product.photo1 : '',
+              photo1:photo != '' ? photo : '',
               photo2:this.product.photo2 != '' ? this.product.photo2 : '',
               photo3:this.product.photo3 != '' ? this.product.photo3 : '',
               code:this.product.code,
