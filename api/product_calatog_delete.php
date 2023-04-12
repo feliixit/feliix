@@ -81,7 +81,8 @@ else
         die();
     }
 
-    EmailNotify($id, $db);
+    if($user_id != 1 && $user_id != 2)
+        EmailNotify($id, $db);
 
     http_response_code(200);
     echo json_encode(array("message" => "Deleted at " . date("Y-m-d") . " " . date("h:i:sa")));

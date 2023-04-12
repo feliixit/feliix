@@ -610,7 +610,7 @@
                     <select class="form-control" v-model="category">
                         <option value="" selected>Select one value</option>
                         <option value="10000000">Lighting</option>
-                        <option value="20000000" style="display: none;">Systems Furniture</option>
+                        <option value="20000000">Systems Furniture</option>
                     </select>
 
                     <select v-if="category == '20000000'" class="form-control" v-model="sub_category">
