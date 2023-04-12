@@ -3051,12 +3051,12 @@ header( 'location:index' );
 
                         <tr class="desc2" v-if="bk.type == 'image'">
 
-                            <td class="pic" colspan="3" v-if="(bk.photo2 != '' || bk.photo3 != '') && !(bk.amount != '0.00' && product_vat == 'P')">
+                            <td class="pic" colspan="3" v-if="!(product_vat == 'P')">
                                 <img v-if="bk.photo2 != ''" :src="bk.url2">
                                 <img v-if="bk.photo3 != ''" :src="bk.url3">
                             </td>
 
-                            <td class="pic" colspan="4" v-if="(bk.photo2 != '' || bk.photo3 != '') && (bk.amount != '0.00' && product_vat == 'P')">
+                            <td class="pic" colspan="4" v-if="(product_vat == 'P')">
                                 <img v-if="bk.photo2 != ''" :src="bk.url2">
                                 <img v-if="bk.photo3 != ''" :src="bk.url3">
                             </td>
