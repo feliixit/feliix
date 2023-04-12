@@ -554,7 +554,8 @@ else
             
         $db->commit();
 
-        EmailNotify($product_id, $db);
+        if($user_id != 1 && $user_id != 2)
+            EmailNotify($product_id, $db);
         
         http_response_code(200);
         echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") ));

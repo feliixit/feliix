@@ -713,7 +713,8 @@ else
             
         $db->commit();
 
-        EmailNotify($product_id, $db);
+        if($user_id != 1 && $user_id != 2)
+            EmailNotify($product_id, $db);
 
         update_product_category_price_date($product_id, $db);
         update_product_category_phased_out_cnt($product_id, $db);
