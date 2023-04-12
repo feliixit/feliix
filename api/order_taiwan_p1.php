@@ -81,6 +81,7 @@ if (!isset($jwt)) {
                     test,
                     delivery,
                     final,
+                    btn2,
                     `status`,
                     test_updated_name,
                     test_updated_at,
@@ -165,6 +166,8 @@ if (!isset($jwt)) {
         $delivery_updated_name = $row['delivery_updated_name'];
         $delivery_updated_at = $row['delivery_updated_at'];
 
+        $btn2 = $row['btn2'];
+
         $status = $row['status'];
         $notes = GetNotes($row['id'], $db);
 
@@ -209,6 +212,7 @@ if (!isset($jwt)) {
             "delivery" => $delivery,
             "final" => $final,
             "status" => $status,
+            "btn2" => $btn2,
             "test_updated_name" => $test_updated_name,
             "test_updated_at" => $test_updated_at,
             "delivery_updated_name" => $delivery_updated_name,

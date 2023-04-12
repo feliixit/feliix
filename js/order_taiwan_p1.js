@@ -1049,12 +1049,12 @@ var app = new Vue({
               confirm_text: "Not Yet Confirmed",
               brand:this.product.brand,
               brand_other:"",
-              photo1:this.product.photo1 != '' ? this.product.photo1 : '',
+              photo1:photo != '' ? photo : '',
               photo2:this.product.photo2 != '' ? this.product.photo2 : '',
               photo3:this.product.photo3 != '' ? this.product.photo3 : '',
               code:this.product.code,
-              brief:"",
-              listing:list,
+              brief:list,
+            listing:"",
               qty:"",
               backup_qty:"",
               srp:price,
@@ -1067,6 +1067,7 @@ var app = new Vue({
               v1:this.v1,
               v2:this.v2,
               v3:this.v3,
+              btn2:"1",
             };
 
             items.push(item);
@@ -1217,8 +1218,8 @@ var app = new Vue({
             photo2:'',
             photo3:'',
             code:this.product.code,
-            brief:"",
-            listing:list,
+            brief:list,
+            listing:"",
             qty:"",
             backup_qty:"",
             srp:price,
@@ -1230,6 +1231,7 @@ var app = new Vue({
             shipping_way:"",
               shipping_number:"",
             status:"",
+            btn2:"1",
             notes:[]
           };
 

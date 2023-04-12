@@ -1545,8 +1545,8 @@ try {
                     </div>
                 </div>
                 <div class="write_block" v-if="item.is_edit">
-                    <input type="text" placeholder="Code" v-model="item.code"><br>
-                    <textarea rows="2" placeholder="Brief" v-model="item.brief"></textarea><br>
+                    <input type="text" placeholder="Code" v-model="item.code" :readonly="item.btn2 == '1'"><br>
+                    <textarea rows="2" placeholder="Brief" v-model="item.brief" :readonly="item.btn2 == '1'"></textarea><br>
                     <textarea rows="4" placeholder="Listing" v-model="item.listing"></textarea>
                 </div>
             </td>

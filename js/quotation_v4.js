@@ -515,6 +515,9 @@ var app = new Vue({
           if(item_product.photo != "")
             photo = item_product.photo;
 
+            photo2 = this.product.photo2;
+            photo3 = this.product.photo3;
+
             // price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
             price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
             if(this.v1 != "")
