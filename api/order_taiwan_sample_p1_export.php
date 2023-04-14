@@ -648,6 +648,12 @@ if($jwt){
                 $short_brand = "TONS";
             if(strtoupper($brand) == 'XCELLENT')
                 $short_brand = "XL";
+            if(strtoupper($brand) == 'DANCELIGHT')
+                $short_brand = "DL";
+            if(strtoupper($brand) == 'LEDOUX')
+                $short_brand = "LD";
+            if(strtoupper($brand) == 'HUANG GONG')
+                $short_brand = "HG";
 
             $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
             $payable = $richText->createTextRun('FELIIX');
