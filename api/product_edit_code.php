@@ -447,7 +447,7 @@ function GetAccessory($id, $db){
 }
 
 function GetSpecialInfomation($cat_id, $db, $special_info_json){
-    $sql = "SELECT * FROM product_category_attribute WHERE LEVEL = 2 AND left(cat_id, 1) = '". substr($cat_id, 0, 1) . "' and STATUS <> -1";
+    $sql = "SELECT * FROM product_category_attribute WHERE LEVEL = 2 AND left(cat_id, 4) = '". substr($cat_id, 0, 4) . "' and STATUS <> -1";
 
     $sql = $sql . " ORDER BY cat_id ";
 
