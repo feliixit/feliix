@@ -430,6 +430,41 @@ else
                             array_push($pro_price_quoted,$product[$i]['quoted_price']);
                         }
 
+                        if($max_price_change == '' && $product[$i]['price_change'] != '')
+                        {
+                            $max_price_change = $product[$i]['price_change'];
+                        }
+
+                        if($min_price_change == '' && $product[$i]['price_change'] != '')
+                        {
+                            $min_price_change = $product[$i]['price_change'];
+                        }
+
+                        if($max_price_ntd_change == '' && $product[$i]['price_ntd_change'] != '')
+                        {
+                            $max_price_ntd_change = $product[$i]['price_ntd_change'];
+                        }
+
+                        if($min_price_ntd_change == '' && $product[$i]['price_ntd_change'] != '')
+                        {
+                            $min_price_ntd_change = $product[$i]['price_ntd_change'];
+                        }
+
+                        if($max_quoted_price_change == '' && $product[$i]['quoted_price_change'] != '')
+                        {
+                            $max_quoted_price_change = $product[$i]['quoted_price_change'];
+                        }
+
+                        if($min_quoted_price_change == '' && $product[$i]['quoted_price_change'] != '')
+                        {
+                            $min_quoted_price_change = $product[$i]['quoted_price_change'];
+                        }
+
+                        if($product[$i]['price'] > $srp)
+                        {
+                            $srp = $product[$i]['price'];
+                        }
+
                         if($product[$i]['price_change'] > $max_price_change)
                         {
                             $max_price_change = $product[$i]['price_change'];
@@ -460,7 +495,7 @@ else
                             $min_quoted_price_change = $product[$i]['quoted_price_change'];
                         }
 
-                        
+
                     }
                 }
 
