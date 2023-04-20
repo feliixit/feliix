@@ -842,8 +842,8 @@ function GetProduct($id, $db){
         $price_ntd = $row['price_ntd'];
         $price_org = $row['price'];
         $price_ntd_org = $row['price_ntd'];
-        $price_change = $row['price_change'];
-        $price_ntd_change = $row['price_ntd_change'];
+        $price_change = $row['price_change'] != '' ? substr($row['price_change'], 0, 10) : '';
+        $price_ntd_change = $row['price_ntd_change'] != '' ? substr($row['price_ntd_change'], 0, 10) : '';
         $status = $row['enabled'];
         $photo = trim($row['photo']);
         $enabled = $row['enabled'];
@@ -853,7 +853,7 @@ function GetProduct($id, $db){
             $url = '';
 
         $quoted_price = $row['quoted_price'];
-        $quoted_price_change = $row['quoted_price_change'];
+        $quoted_price_change = $row['quoted_price_change'] != '' ? substr($row['quoted_price_change'], 0, 10) : '';
 
         $merged_results[] = array(  "id" => $id, 
                                     "k1" => $k1, 
