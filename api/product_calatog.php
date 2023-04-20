@@ -414,18 +414,18 @@ else
                 {
                     for($i = 0; $i < count($product); $i++)
                     {
-                        if (!in_array($product[$i]['price'],$pro_price))
+                        if (!in_array($product[$i]['price'],$pro_price) && $product[$i]['price'] != '')
                         {
                             array_push($pro_price,$product[$i]['price']);
                         }
 
-                        if (!in_array($product[$i]['price_ntd'],$pro_price_ntd))
+                        if (!in_array($product[$i]['price_ntd'],$pro_price_ntd) && $product[$i]['price_ntd'] != '')
                         {
                             array_push($pro_price_ntd,$product[$i]['price_ntd']);
                         }
 
                         // price_quoted
-                        if (!in_array($product[$i]['quoted_price'],$pro_price_quoted))
+                        if (!in_array($product[$i]['quoted_price'],$pro_price_quoted) && $product[$i]['quoted_price'] != '')
                         {
                             array_push($pro_price_quoted,$product[$i]['quoted_price']);
                         }
