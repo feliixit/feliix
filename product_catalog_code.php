@@ -435,6 +435,20 @@
                                 <dt>Code</dt>
                                 <dd><input type="text" v-model="fil_code"></dd>
 
+                                <dt>Category</dt>
+                                <dd>
+                                <select v-model="fil_category">
+                                <option></option>
+                                <option value="10000000">Lighting</option>
+                                <option value="20000000">Systems Furniture</option>
+                                <option value="20010000">Systems Furniture >> Cabinet</option>
+                                <option value="20020000">Systems Furniture >> Chair</option>
+                                <option value="20030000">Systems Furniture >> Table</option>
+                                <option value="20040000">Systems Furniture >> Workstation</option>
+                                <option value="20050000">Systems Furniture >> Partition</option>
+                                </select>
+                                </dd>
+
                                 <dt>Tag</dt>
                                 <dd>
                                     <select class="selectpicker" multiple data-live-search="true" data-size="8"
@@ -784,7 +798,7 @@
                                 Updated:
                             </li>
                             <li>
-                                {{ item.updated_at }} {{ item.updated_name !== null ? '(' + item.updated_name + ')' : '' }}
+                                {{ item.updated_name !== null ? item.updated_at : '' }} {{ item.updated_name !== null ? '(' + item.updated_name + ')' : '' }}
                             </li>
 
                         </ul>

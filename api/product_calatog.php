@@ -50,6 +50,7 @@ else
       $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
       $d = (isset($_GET['d']) ?  $_GET['d'] : "");
+      $g = (isset($_GET['g']) ?  $_GET['g'] : "");
       $c = (isset($_GET['c']) ?  $_GET['c'] : "");
       $c = urldecode($c);
       $t = (isset($_GET['t']) ?  $_GET['t'] : "");
@@ -88,6 +89,12 @@ else
             {
                 $sql = $sql . " and p.id = " . $d . " ";
                 $query_cnt = $query_cnt . " and p.id = " . $d . " ";
+            }
+
+            if($g != "")
+            {
+                $sql = $sql . " and (p.category = '" . $g . "' or p.sub_category = '" . $g . "') ";
+                $query_cnt = $query_cnt . " and (p.category = '" . $g . "' or p.sub_category = '" . $g . "') ";
             }
 
             if($c != "")
@@ -358,19 +365,19 @@ else
 
                 $quoted_price = $row['quoted_price'];
                 $quoted_price_org = $row['quoted_price'];
-                $quoted_price_change = $row['quoted_price_change'];
-                $price_change = $row['price_change'];
-                $price_ntd_change = $row['price_ntd_change'];
+                $quoted_price_change = $row['quoted_price_change'] != '' ? substr($row['quoted_price_change'], 0, 10) : '';
+                $price_change = $row['price_change'] != '' ? substr($row['price_change'], 0, 10) : '';
+                $price_ntd_change = $row['price_ntd_change'] != '' ? substr($row['price_ntd_change'], 0, 10) : '';
 
                 $currency = $row['currency'];
 
                 // max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, max_quoted_price_change, min_quoted_price_change
-                $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : '';
-                $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : '';
-                $max_price_ntd_change = $row['max_price_ntd_change'] ? substr($row['max_price_ntd_change'], 0, 10) : '';
-                $min_price_ntd_change = $row['min_price_ntd_change'] ? substr($row['min_price_ntd_change'], 0, 10) : '';
-                $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : '';
-                $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : '';
+                $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : $price_change;
+                $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : $price_change;
+                $max_price_ntd_change = $row['max_price_ntd_change'] ? substr($row['max_price_ntd_change'], 0, 10) : $price_ntd_change;
+                $min_price_ntd_change = $row['min_price_ntd_change'] ? substr($row['min_price_ntd_change'], 0, 10) : $price_ntd_change;
+                $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : $quoted_price_change;
+                $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : $quoted_price_change;
 
                 $phased_out_cnt = $row['phased_out_cnt'];
 
