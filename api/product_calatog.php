@@ -429,6 +429,38 @@ else
                         {
                             array_push($pro_price_quoted,$product[$i]['quoted_price']);
                         }
+
+                        if($product[$i]['price_change'] > $max_price_change)
+                        {
+                            $max_price_change = $product[$i]['price_change'];
+                        }
+
+                        if($product[$i]['price_change'] < $min_price_change)
+                        {
+                            $min_price_change = $product[$i]['price_change'];
+                        }
+
+                        if($product[$i]['price_ntd_change'] > $max_price_ntd_change)
+                        {
+                            $max_price_ntd_change = $product[$i]['price_ntd_change'];
+                        }
+
+                        if($product[$i]['price_ntd_change'] < $min_price_ntd_change)
+                        {
+                            $min_price_ntd_change = $product[$i]['price_ntd_change'];
+                        }
+
+                        if($product[$i]['quoted_price_change'] > $max_quoted_price_change)
+                        {
+                            $max_quoted_price_change = $product[$i]['quoted_price_change'];
+                        }
+
+                        if($product[$i]['quoted_price_change'] < $min_quoted_price_change)
+                        {
+                            $min_quoted_price_change = $product[$i]['quoted_price_change'];
+                        }
+
+                        
                     }
                 }
 
