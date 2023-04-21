@@ -3676,3 +3676,27 @@ ALTER TABLE price_comparison_payment_term ADD COLUMN `pixel` VARCHAR(16) DEFAULT
 
 -- 20230410
 ALTER TABLE od_item ADD COLUMN `btn2` VARCHAR(5) DEFAULT '';
+
+-- 20230414 duplicate product
+INSERT INTO product_category
+(category, sub_category, brand, `code`, price_ntd, price, `description`, 
+photo1, photo2, photo3, accessory_mode, attributes, variation_mode, variation, notes, price_ntd_change, 
+price_change, quoted_price, quoted_price_change, moq, `tags`, related_product, `OUT`, currency, srp_max, 
+srp_min, qp_max, qp_min, max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, 
+max_quoted_price_change, min_quoted_price_change, phased_out_cnt, print_option, create_id)
+SELECT category, sub_category, brand, `code`, price_ntd, price, `description`, 
+photo1, photo2, photo3, accessory_mode, attributes, variation_mode, variation, notes, price_ntd_change, 
+price_change, quoted_price, quoted_price_change, moq, `tags`, related_product, `OUT`, currency, srp_max, 
+srp_min, qp_max, qp_min, max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, 
+max_quoted_price_change, min_quoted_price_change, phased_out_cnt, print_option, create_id FROM 
+product_category WHERE id = 1578;
+
+INSERT INTO product (category_id, 1st_variation, 2rd_variation, 3th_variation, 
+`code`, photo, price_ntd, price, price_ntd_change, price_change, enabled, 
+quoted_price, quoted_price_change, `status`, create_id, product_id)
+SELECT category_id, 1st_variation, 2rd_variation, 3th_variation, 
+`code`, photo, price_ntd, price, price_ntd_change, price_change, enabled, 
+quoted_price, quoted_price_change, `status`, create_id, 1583 FROM product
+where product_id = 1578;
+
+update product_category set price_change = '2023-01-20 00:00:00', max_price_change = '2023-01-20 00:00:00', min_price_change = '2023-01-20 00:00:00' where id = 1628;

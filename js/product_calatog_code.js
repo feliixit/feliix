@@ -43,6 +43,7 @@ var app = new Vue({
     fil_tag: [],
     fil_brand: "",
     fil_keyword: "",
+    fil_category: "",
 
     // info
     name :"",
@@ -68,6 +69,9 @@ var app = new Vue({
           switch (tmp[0]) {
             case "d":
               _this.fil_id = tmp[1];
+              break;
+            case "g":
+              _this.fil_category = tmp[1];
               break;
             case "c":
               _this.fil_code = decodeURI(tmp[1]);
@@ -249,6 +253,7 @@ var app = new Vue({
 
     filter_remove: function() {
       this.fil_id = '';
+      this.fil_category = '';
       this.fil_code = '';
       this.fil_tag = [];
       this.fil_brand = '';
@@ -302,6 +307,8 @@ var app = new Vue({
         "product_catalog_code?" +
         "d=" +
         _this.fil_id +
+        "&g=" +
+        _this.fil_category +
         "&c=" +
         _this.fil_code +
         "&t=" +
@@ -339,6 +346,8 @@ var app = new Vue({
         "product_catalog_code?" +
         "d=" +
         _this.fil_id +
+        "&g=" +
+        _this.fil_category +
         "&c=" +
         _this.fil_code +
         "&t=" +
@@ -393,6 +402,7 @@ var app = new Vue({
 
       const params = {
         d: _this.fil_id,
+        g: _this.fil_category,
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,

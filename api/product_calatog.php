@@ -50,6 +50,7 @@ else
       $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
       $d = (isset($_GET['d']) ?  $_GET['d'] : "");
+      $g = (isset($_GET['g']) ?  $_GET['g'] : "");
       $c = (isset($_GET['c']) ?  $_GET['c'] : "");
       $c = urldecode($c);
       $t = (isset($_GET['t']) ?  $_GET['t'] : "");
@@ -88,6 +89,12 @@ else
             {
                 $sql = $sql . " and p.id = " . $d . " ";
                 $query_cnt = $query_cnt . " and p.id = " . $d . " ";
+            }
+
+            if($g != "")
+            {
+                $sql = $sql . " and (p.category = '" . $g . "' or p.sub_category = '" . $g . "') ";
+                $query_cnt = $query_cnt . " and (p.category = '" . $g . "' or p.sub_category = '" . $g . "') ";
             }
 
             if($c != "")
@@ -358,19 +365,19 @@ else
 
                 $quoted_price = $row['quoted_price'];
                 $quoted_price_org = $row['quoted_price'];
-                $quoted_price_change = $row['quoted_price_change'];
-                $price_change = $row['price_change'];
-                $price_ntd_change = $row['price_ntd_change'];
+                $quoted_price_change = $row['quoted_price_change'] != '' ? substr($row['quoted_price_change'], 0, 10) : '';
+                $price_change = $row['price_change'] != '' ? substr($row['price_change'], 0, 10) : '';
+                $price_ntd_change = $row['price_ntd_change'] != '' ? substr($row['price_ntd_change'], 0, 10) : '';
 
                 $currency = $row['currency'];
 
                 // max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, max_quoted_price_change, min_quoted_price_change
-                $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : '';
-                $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : '';
-                $max_price_ntd_change = $row['max_price_ntd_change'] ? substr($row['max_price_ntd_change'], 0, 10) : '';
-                $min_price_ntd_change = $row['min_price_ntd_change'] ? substr($row['min_price_ntd_change'], 0, 10) : '';
-                $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : '';
-                $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : '';
+                $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : $price_change;
+                $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : $price_change;
+                $max_price_ntd_change = $row['max_price_ntd_change'] ? substr($row['max_price_ntd_change'], 0, 10) : $price_ntd_change;
+                $min_price_ntd_change = $row['min_price_ntd_change'] ? substr($row['min_price_ntd_change'], 0, 10) : $price_ntd_change;
+                $max_quoted_price_change = $row['max_quoted_price_change'] ? substr($row['max_quoted_price_change'], 0, 10) : $quoted_price_change;
+                $min_quoted_price_change = $row['min_quoted_price_change'] ? substr($row['min_quoted_price_change'], 0, 10) : $quoted_price_change;
 
                 $phased_out_cnt = $row['phased_out_cnt'];
 
@@ -407,21 +414,88 @@ else
                 {
                     for($i = 0; $i < count($product); $i++)
                     {
-                        if (!in_array($product[$i]['price'],$pro_price))
+                        if (!in_array($product[$i]['price'],$pro_price) && $product[$i]['price'] != '')
                         {
                             array_push($pro_price,$product[$i]['price']);
                         }
 
-                        if (!in_array($product[$i]['price_ntd'],$pro_price_ntd))
+                        if (!in_array($product[$i]['price_ntd'],$pro_price_ntd) && $product[$i]['price_ntd'] != '')
                         {
                             array_push($pro_price_ntd,$product[$i]['price_ntd']);
                         }
 
                         // price_quoted
-                        if (!in_array($product[$i]['quoted_price'],$pro_price_quoted))
+                        if (!in_array($product[$i]['quoted_price'],$pro_price_quoted) && $product[$i]['quoted_price'] != '')
                         {
                             array_push($pro_price_quoted,$product[$i]['quoted_price']);
                         }
+
+                        if($max_price_change == '' && $product[$i]['price_change'] != '')
+                        {
+                            $max_price_change = $product[$i]['price_change'];
+                        }
+
+                        if($min_price_change == '' && $product[$i]['price_change'] != '')
+                        {
+                            $min_price_change = $product[$i]['price_change'];
+                        }
+
+                        if($max_price_ntd_change == '' && $product[$i]['price_ntd_change'] != '')
+                        {
+                            $max_price_ntd_change = $product[$i]['price_ntd_change'];
+                        }
+
+                        if($min_price_ntd_change == '' && $product[$i]['price_ntd_change'] != '')
+                        {
+                            $min_price_ntd_change = $product[$i]['price_ntd_change'];
+                        }
+
+                        if($max_quoted_price_change == '' && $product[$i]['quoted_price_change'] != '')
+                        {
+                            $max_quoted_price_change = $product[$i]['quoted_price_change'];
+                        }
+
+                        if($min_quoted_price_change == '' && $product[$i]['quoted_price_change'] != '')
+                        {
+                            $min_quoted_price_change = $product[$i]['quoted_price_change'];
+                        }
+
+                        if($product[$i]['price'] > $srp)
+                        {
+                            $srp = $product[$i]['price'];
+                        }
+
+                        if($product[$i]['price_change'] > $max_price_change && $product[$i]['price_change'] != '')
+                        {
+                            $max_price_change = $product[$i]['price_change'];
+                        }
+
+                        if($product[$i]['price_change'] < $min_price_change && $product[$i]['price_change'] != '')
+                        {
+                            $min_price_change = $product[$i]['price_change'];
+                        }
+
+                        if($product[$i]['price_ntd_change'] > $max_price_ntd_change && $product[$i]['price_ntd_change'] != '')
+                        {
+                            $max_price_ntd_change = $product[$i]['price_ntd_change'];
+                        }
+
+                        if($product[$i]['price_ntd_change'] < $min_price_ntd_change && $product[$i]['price_ntd_change'] != '')
+                        {
+                            $min_price_ntd_change = $product[$i]['price_ntd_change'];
+                        }
+
+                        if($product[$i]['quoted_price_change'] > $max_quoted_price_change && $product[$i]['quoted_price_change'] != '')
+                        {
+                            $max_quoted_price_change = $product[$i]['quoted_price_change'];
+                        }
+
+                        if($product[$i]['quoted_price_change'] < $min_quoted_price_change && $product[$i]['quoted_price_change'] != '')
+                        {
+                            $min_quoted_price_change = $product[$i]['quoted_price_change'];
+                        }
+
+
                     }
                 }
 
@@ -835,8 +909,8 @@ function GetProduct($id, $db){
         $price_ntd = $row['price_ntd'];
         $price_org = $row['price'];
         $price_ntd_org = $row['price_ntd'];
-        $price_change = $row['price_change'];
-        $price_ntd_change = $row['price_ntd_change'];
+        $price_change = $row['price_change'] != '' ? substr($row['price_change'], 0, 10) : '';
+        $price_ntd_change = $row['price_ntd_change'] != '' ? substr($row['price_ntd_change'], 0, 10) : '';
         $status = $row['enabled'];
         $photo = trim($row['photo']);
         $enabled = $row['enabled'];
@@ -846,7 +920,7 @@ function GetProduct($id, $db){
             $url = '';
 
         $quoted_price = $row['quoted_price'];
-        $quoted_price_change = $row['quoted_price_change'];
+        $quoted_price_change = $row['quoted_price_change'] != '' ? substr($row['quoted_price_change'], 0, 10) : '';
 
         $merged_results[] = array(  "id" => $id, 
                                     "k1" => $k1, 
