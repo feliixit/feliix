@@ -1063,6 +1063,13 @@ var app = new Vue({
       document.getElementById('select_all_product').checked = false;
       document.getElementById('bulk_select_all_product').checked = false;
 
+      var f1 = document.getElementById('photo1');
+      if(f1) f1.value = "";
+      var f2 = document.getElementById('photo2');
+      if(f2) f2.value = "";
+      var f3 = document.getElementById('photo3');
+      if(f3) f3.value = "";
+
     },
 
     toggle_product() {

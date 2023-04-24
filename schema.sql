@@ -3700,3 +3700,32 @@ quoted_price, quoted_price_change, `status`, create_id, 1583 FROM product
 where product_id = 1578;
 
 update product_category set price_change = '2023-01-20 00:00:00', max_price_change = '2023-01-20 00:00:00', min_price_change = '2023-01-20 00:00:00' where id = 1628;
+
+-- 20230424
+delete from product_category_attribute where cat_id like '2003%' and level = 3;
+
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030001', 3, 'Type', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030002', 3, 'Function', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030003', 3, 'Dimension of Main', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030004', 3, 'Dimension of Side', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030005', 3, 'Dimension of Table Top', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030006', 3, 'Dimension of Width', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030007', 3, 'Dimension of Depth', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030008', 3, 'Dimension of Height', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030009', 3, 'Materials of Table Top', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030010', 3, 'Materials of Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030011', 3, 'Materials of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030012', 3, 'Materials of Modesty', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030013', 3, 'Finishes of Table Top Only', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030014', 3, 'Finishes of Table Top and Bottom', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030015', 3, 'Finishes of Flat PVC Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030016', 3, 'Finishes of Bullnose Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030017', 3, 'Finishes of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030018', 3, 'Finishes of Modesty', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030019', 3, 'Available Color/Pattern of Table Top Only', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030020', 3, 'Available Color/Pattern of Table Top and Bottom', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030021', 3, 'Available Color/Pattern of Flat PVC Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030022', 3, 'Available Color/Pattern of Bullnose Edging', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030023', 3, 'Available Color/Pattern of Legs', 1);
+insert into product_category_attribute(cat_id, level, category, create_id) values('20030024', 3, 'Available Color/Pattern of Modesty', 1);
+
