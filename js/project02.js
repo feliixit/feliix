@@ -96,6 +96,15 @@ var app = new Vue({
 
     edit_special:'',
 
+    uid_pic1:0,
+    uid_pic2:0,
+
+    org_pic1:0,
+    org_pic2:0,
+
+    pic1:'',
+    pic2:'',
+
     // extend
     edit_project_name:'',
     edit_designer:'',
@@ -1148,6 +1157,7 @@ var app = new Vue({
                   _this.edit_category = res.data[0].category_id;
                   _this.edit_client_type = res.data[0].client_type_id;
                   _this.edit_priority = res.data[0].priority_id;
+             
                   _this.edit_contactor = res.data[0].contactor;
                   _this.edit_location = res.data[0].location;
                   _this.edit_contact_number = res.data[0].contact_number;
@@ -1180,6 +1190,14 @@ var app = new Vue({
                   _this.end_at = res.data[0].updated_at;
 
                   _this.getProjectRelative(keyword, _this.group_id);
+
+                  _this.pic1 = res.data[0].pic1;
+                  _this.pic2 = res.data[0].pic2;
+                  _this.uid_pic1 = res.data[0].uid_pic1;
+                  _this.uid_pic2 = res.data[0].uid_pic2;
+
+                  _this.org_pic1 = res.data[0].uid_pic1;
+                  _this.org_pic2 = res.data[0].uid_pic2;
 
               },
               (err) => {
@@ -1726,6 +1744,9 @@ var app = new Vue({
 
             this.edit_key_person = this.key_person;
             this.edit_party_contactor = this.party_contactor;
+
+            this.uid_pic1 = this.org_uid_pic1;
+            this.uid_pic2 = this.org_uid_pic2;
             
             document.getElementById('project_dialog').classList.remove("show");
             document.getElementById('project_fn2').classList.remove("focus");
@@ -2567,6 +2588,8 @@ var app = new Vue({
             form_Data.append('edit_key_person', JSON.stringify(this.edit_key_person));
             form_Data.append('edit_party_contactor', JSON.stringify(this.edit_party_contactor));
 
+            form_Data.append('pic1', this.uid_pic1);
+            form_Data.append('pic2', this.uid_pic2);
 
             const token = sessionStorage.getItem('token');
 

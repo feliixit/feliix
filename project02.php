@@ -320,8 +320,14 @@ header('location:index');
         }
 
         div.subtitle {
-            font-size: 11px;
+            font-size: 12px;
             margin-top: 1px;
+        }
+
+        div.links > a {
+            font-size: 12px;
+            margin-top: 1px;
+            color: rgb(243, 112, 88);
         }
     </style>
 
@@ -616,6 +622,32 @@ header('location:index');
                                             <!-- <button @click="change_project_creator">Change</button> -->
                                         </div>
                                     </dd>
+                                    <dt>PIC 1:</dt>
+                                    <dd>
+                                        <div class="browser_group">
+                                            <select v-model="uid_pic1">
+                                                <option v-for="(item, index) in users_del" :value="item.id"
+                                                        :key="item.username">
+                                                    {{ item.username }}
+                                                </option>
+                                            </select>
+                                            <!-- <button @click="change_project_creator">Change</button> -->
+                                        </div>
+                                    </dd>
+
+                                    <dt>PIC 2:</dt>
+                                    <dd>
+                                        <div class="browser_group">
+                                            <select v-model="uid_pic2">
+                                                <option v-for="(item, index) in users_del" :value="item.id"
+                                                        :key="item.username">
+                                                    {{ item.username }}
+                                                </option>
+                                            </select>
+                                            <!-- <button @click="change_project_creator">Change</button> -->
+                                        </div>
+                                    </dd>
+
 
                                     <dt>Type:</dt>
                                     <dd><select v-model="edit_type">
@@ -1165,18 +1197,29 @@ header('location:index');
                     </ul>
                 </div>
 
-                <div class="tablebox lv2a b-4">
+                <div class="tablebox lv2a b-3">
                     <ul class="head">
                         <li>Project Status</li>
-                        <li>Execution Period</li>
                         <li>Current Stage</li>
                         <li>Project Creator</li>
                     </ul>
                     <ul>
                         <li>{{ project_status }}</li>
-                        <li>{{ created_at }} ~ {{ end_at }}</li>
                         <li>{{ stage }}</li>
                         <li>{{ username }}</li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a b-3">
+                    <ul class="head">
+                        <li>PIC 1</li>
+                        <li>PIC 2</li>
+                        <li>Execution Period</li>
+                    </ul>
+                    <ul>
+                        <li>{{ pic1 }}</li>
+                        <li>{{ pic2 }}</li>
+                        <li>{{ created_at }} ~ {{ end_at }}</li>
                     </ul>
                 </div>
 
@@ -1448,22 +1491,69 @@ if ($access6 == true) {
                     <li v-if="receive_record.project_stage_id == 1 && receive_record.id <= 2570">
                         <a v-bind:href="'project03_client?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                         <div class="subtitle">{{receive_record.title}}</div>
+                        <div class="links">
+                            <template v-for="(od, idx) in receive_record.order" >
+                                <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'" target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                            <template v-for="(od, idx) in receive_record.inquiry" >
+                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                        </div>
                     </li>
                     <li v-if="receive_record.project_stage_id == 1 && receive_record.id > 2570"><a
                             v-bind:href="'project03_client_v2?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                             <div class="subtitle">{{receive_record.title}}</div>
+                            <div class="links">
+                            <template v-for="(od, idx) in receive_record.order" >
+                                <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                            <template v-for="(od, idx) in receive_record.inquiry" >
+                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                        </div>
                     </li>
 
                     <li v-if="receive_record.project_stage_id == 3 && receive_record.id > 1810"><a
                             v-bind:href="'project03_ameeting?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                             <div class="subtitle">{{receive_record.title}}</div>
+                            <div class="links">
+                            <template v-for="(od, idx) in receive_record.order" >
+                                <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                            <template v-for="(od, idx) in receive_record.inquiry" >
+                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                        </div>
                     </li>
                     <li v-if="receive_record.project_stage_id == 3 && receive_record.id <= 1810"><a
                             v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a>
-                            <div class="subtitle">{{receive_record.title}}</div></li>
+                            <div class="subtitle">{{receive_record.title}}</div>
+                            <div class="links">
+                            <template v-for="(od, idx) in receive_record.order" >
+                                <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                            <template v-for="(od, idx) in receive_record.inquiry" >
+                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                        </div>
+                    </li>
                     <li v-if="receive_record.project_stage_id != 1 && receive_record.project_stage_id != 3"><a
                             v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a>
-                            <div class="subtitle">{{receive_record.title}}</div></li>
+                            <div class="subtitle">{{receive_record.title}}</div>
+                            <div class="links">
+                            <template v-for="(od, idx) in receive_record.order" >
+                                <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                            <template v-for="(od, idx) in receive_record.inquiry" >
+                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                        </div>
+                    </li>
 
                 <?php
                     if ($test_manager[1] == "1") {

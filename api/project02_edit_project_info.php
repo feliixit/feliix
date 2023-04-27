@@ -46,6 +46,10 @@ $db = $database->getConnection();
 $uid = $user_id;
 
 $pid = (isset($_POST['pid']) ?  $_POST['pid'] : 0);
+
+$pic1 = (isset($_POST['pic1']) ?  $_POST['pic1'] : 0);
+$pic2 = (isset($_POST['pic2']) ?  $_POST['pic2'] : 0);
+
 $edit_project_name = (isset($_POST['edit_project_name']) ?  $_POST['edit_project_name'] : '');
 $edit_group = (isset($_POST['edit_group']) ?  $_POST['edit_group'] : 0);
 $edit_category = (isset($_POST['edit_category']) ?  $_POST['edit_category'] : 0);
@@ -156,7 +160,9 @@ $query = "INSERT INTO project_edit_info
                     background_client = :edit_background_client,
                     background_project = :edit_background_project,
                     contractor = :edit_contractor,
-                    send_mail = :edit_send_mail
+                    send_mail = :edit_send_mail,
+                    pic1 = :pic1,
+                    pic2 = :pic2
                 
                 where id = :project_id ";
     
@@ -187,6 +193,8 @@ $query = "INSERT INTO project_edit_info
                 $stmt1->bindParam(':edit_contractor', $edit_contractor);
                 $stmt1->bindParam(':edit_send_mail', $edit_send_mail);
 
+                $stmt1->bindParam(':pic1', $pic1);
+                $stmt1->bindParam(':pic2', $pic2);
 
                 $stmt1->execute();
 
