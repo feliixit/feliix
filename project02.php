@@ -328,6 +328,8 @@ header('location:index');
             font-size: 12px;
             margin-top: 1px;
             color: rgb(243, 112, 88);
+            display: block;
+            min-width: 180px;
         }
     </style>
 
