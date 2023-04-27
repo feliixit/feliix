@@ -1497,7 +1497,7 @@ if ($access6 == true) {
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.inquiry" >
-                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                         </div>
                     </li>
@@ -1510,7 +1510,7 @@ if ($access6 == true) {
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.inquiry" >
-                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                         </div>
                     </li>
@@ -1524,7 +1524,7 @@ if ($access6 == true) {
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.inquiry" >
-                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                         </div>
                     </li>
@@ -1537,7 +1537,7 @@ if ($access6 == true) {
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.inquiry" >
-                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                         </div>
                     </li>
@@ -1550,7 +1550,7 @@ if ($access6 == true) {
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.inquiry" >
-                                <a :href="'inquiry_taiwan?id=' + od.id" v-for="(od, idx) in receive_record.inquiry"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                         </div>
                     </li>
