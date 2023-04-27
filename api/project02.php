@@ -89,7 +89,11 @@ $query = "SELECT pm.id,
             pm.contactor,
             pm.contact_number,
             pm.client,
-            pm.edit_reason
+            pm.edit_reason,
+            pic1.username                         pic1,
+            pm.pic1                               uid_pic1,
+            pic2.username                         pic2,
+            pm.pic2                               uid_pic2
             FROM   project_main pm
             LEFT JOIN project_group pg
                 ON pm.group_id = pg.id
@@ -105,6 +109,10 @@ $query = "SELECT pm.id,
                 ON pm.stage_id = pst.id
             LEFT JOIN user
                 ON pm.create_id = user.id
+            LEFT JOIN user pic1
+                On pm.pic1 = pic1.id
+            LEFT JOIN user pic2
+                On pm.pic2 = pic2.id
             WHERE  1 = 1 ";
 
 if($pid != 0)

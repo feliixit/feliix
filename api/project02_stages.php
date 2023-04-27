@@ -106,6 +106,13 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $post = $row['post'];
     $recent = GetRecentPost($row['id'], $db);
 
+    $order = GetOrderInfo($row['id'], $db);
+    
+
+
+    $inquiry = GetInquiryInfo($row['id'], $db);
+    
+
     $merged_results[] = array(
         "id" => $id,
         "sequence" => $sequence,
@@ -120,6 +127,9 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "replies" => $replies,
         "post" => $post,
         "recent" => $recent,
+
+        "order" => $order,
+        "inquiry" => $inquiry
     );
 }
 
@@ -172,4 +182,50 @@ function GetRecentPost($stage_id, $db){
     }
 
     return $str;
+}
+
+function GetOrderInfo($task_id, $db)
+{
+    $sql = "select id, od_name, order_type, serial_name
+            from od_main
+            where task_id in (select id from project_other_task where stage_id = " . $task_id . ")";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "od_name" => $row['od_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
+function GetInquiryInfo($task_id, $db)
+{
+    $sql = "select id, iq_name, order_type, serial_name
+            from iq_main
+            where task_id in (select id from project_other_task where stage_id = " . $task_id . ")";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "iq_name" => $row['iq_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
 }
