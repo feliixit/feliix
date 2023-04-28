@@ -1275,9 +1275,9 @@ if ($access5 == true) {
                         <li class="morespace">
                             <div v-for='(exp, index) in expense_record'>
                                 • Request No.:<a :href="'expense_application_report?id=' + exp.id" target="_blank"
-                                                 class="attch">{{ exp.request_no }}</a>and Amount: {{ exp.request_type
+                                                 class="attch">{{ exp.request_no }}</a>and Amount:<template v-if="exp.status == 9"> {{ exp.request_type
                                 == 1 ? Number(exp.amount_verified).toLocaleString() :
-                                Number(exp.amount_applied).toLocaleString() }}<br/>({{exp.username}} at {{
+                                Number(exp.amount_applied).toLocaleString() }}</template><br/>({{exp.username}} at {{
                                 exp.created_at }})
                             </div>
 

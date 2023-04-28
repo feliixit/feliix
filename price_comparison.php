@@ -3510,11 +3510,22 @@ header( 'location:index' );
 
                         <div class="left_function">
 
-                            <input type="text" placeholder="ID" v-model="fil_id">
+                            <select v-model="fil_category">
+                                <option value="">Choose Category...</option>
+                                <option value="10000000">Lighting</option>
+                                <option value="20000000">Systems Furniture</option>
+                                <option value="20010000">Systems Furniture >> Cabinet</option>
+                                <option value="20020000">Systems Furniture >> Chair</option>
+                                <option value="20030000">Systems Furniture >> Table</option>
+                                <option value="20040000">Systems Furniture >> Workstation</option>
+                                <option value="20050000">Systems Furniture >> Partition</option>
+                            </select>
 
-                            <input type="text" placeholder="Code" v-model="fil_code">
+                            <input type="text" placeholder="ID" v-model="fil_id" style="width: 240px; margin-right: 0;">
 
-                            <select v-model="fil_brand">
+                            <input type="text" placeholder="Code" v-model="fil_code" style="width: 240px; margin-right: 0;">
+
+                            <select v-model="fil_brand" style="width: 240px;">
                                 <option value="">Choose Brand...</option>
                                 <option v-for="(item, index) in brands">{{ item.brand }}</option>
                             </select>
@@ -3591,7 +3602,7 @@ header( 'location:index' );
             </optgroup>
 
                             </select>
-                            <input type="text" placeholder="Keyword" v-model="fil_keyword" style="margin-left: 20px;">
+                            <input type="text" placeholder="Keyword" v-model="fil_keyword" style="margin-left: 20px; width: 300px;">
                         </div>
 
                         <a class="btn small green" @click="filter_apply_new()">Search</a>
