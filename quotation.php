@@ -2478,7 +2478,7 @@ header( 'location:index' );
                                                                             v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea><br>
                                         <!-- 只有subtotal box Type-A 而且是 Item with Image，才需要顯示下面這個 Notes 欄位出來 -->
-                                        <span>Notes:</span> <textarea rows="2" v-model="block.notes"></textarea>
+                                        <span v-if="block.type == 'image'">Notes:</span> <textarea rows="2" v-model="block.notes" v-if="block.type == 'image'"></textarea>
                                     </li>
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="block_a_up(index, block.id)"></i>
