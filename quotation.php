@@ -1014,14 +1014,10 @@ header( 'location:index' );
         }
 
         .tb_format1 tbody tr.desc2 td {
-            text-align: center;
-            vertical-align: middle;
             max-width: 495px;
         }
 
         .tb_format1.vat tbody tr.desc2 td {
-            text-align: center;
-            vertical-align: middle;
             max-width: 630px;
         }
 
@@ -1031,7 +1027,13 @@ header( 'location:index' );
             margin: 0 5px;
         }
 
-        .tb_format1 tbody tr.desc2 td img {
+        .tb_format1 tbody tr.desc2 td div.picbox {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+
+        .tb_format1 tbody tr.desc2 td div.picbox img {
             max-height: 120px;
             max-width: 220px;
             margin: 0 5px;
@@ -3067,14 +3069,18 @@ header( 'location:index' );
 
                             <td class="pic" colspan="3" v-if="!(product_vat == 'P')">
                                 <div class="notes">{{ bk.notes }}</div>
-                                <img v-if="bk.photo2 != ''" :src="bk.url2">
-                                <img v-if="bk.photo3 != ''" :src="bk.url3">
+                                <div class="picbox">
+                                    <img v-if="bk.photo2 != ''" :src="bk.url2">
+                                    <img v-if="bk.photo3 != ''" :src="bk.url3">
+                                </div>
                             </td>
 
                             <td class="pic" colspan="4" v-if="(product_vat == 'P')">
                                 <div class="notes">{{ bk.notes }}</div>
-                                <img v-if="bk.photo2 != ''" :src="bk.url2">
-                                <img v-if="bk.photo3 != ''" :src="bk.url3">
+                                <div class="picbox">
+                                    <img v-if="bk.photo2 != ''" :src="bk.url2">
+                                    <img v-if="bk.photo3 != ''" :src="bk.url3">
+                                </div>
                             </td>
 
                         </tr>
