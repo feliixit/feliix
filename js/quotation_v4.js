@@ -232,6 +232,7 @@ var app = new Vue({
         fil_tag : [],
         fil_id: "",
         fil_keyword: "",
+        fil_category: "",
 
         special_infomation: [],
         special_infomation_detail: [],
@@ -432,6 +433,7 @@ var app = new Vue({
           this.fil_id = '';
           this.fil_code = '';
           this.fil_keyword = '';
+          this.fil_category = '';
           this.fil_tag = [];
           this.fil_brand = '';
           this.of1 = '';
@@ -626,6 +628,7 @@ var app = new Vue({
             list: list,
             num:"",
             ratio:1.0,
+            notes: "",
             pid: this.product.id,
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
@@ -648,6 +651,7 @@ var app = new Vue({
             desc: "",
             list: list,
             num:"",
+            notes: "",
             pid: this.product.id,
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
@@ -780,6 +784,7 @@ var app = new Vue({
             desc: "",
             list: list,
             num:"",
+            notes: "",
             ratio:1.0,
             pid: this.product.id,
             v1: all == 'all' ? '' : this.v1,
@@ -803,6 +808,7 @@ var app = new Vue({
             desc: "",
             list: list,
             num:"",
+            notes: "",
             pid: this.product.id,
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
@@ -1155,6 +1161,7 @@ var app = new Vue({
         d: _this.fil_id,
         c: _this.fil_code,
         k: _this.fil_keyword,
+        g: _this.fil_category,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
         of1: _this.of1,
@@ -2078,6 +2085,7 @@ Installation:`;
           price: "",
           discount: "0",
           amount: "",
+          notes: "",
           desc: "",
           list: _list,
           num:"",
@@ -2122,7 +2130,7 @@ Installation:`;
           photo: "",
           qty: "1",
           price: "",
- 
+          notes: "",
           discount: "0",
           amount: "",
           desc: "",
@@ -2176,6 +2184,7 @@ Installation:`;
           d: _this.fil_id,
           c: _this.fil_code,
           k: _this.fil_keyword,
+          g: _this.fil_category,
           t: JSON.stringify(_this.fil_tag),
           b: _this.fil_brand,
           of1: _this.of1,

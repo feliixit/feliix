@@ -3510,6 +3510,17 @@ header( 'location:index' );
 
                         <div class="left_function">
 
+                            <select v-model="fil_category">
+                                <option value="">Choose Category...</option>
+                                <option value="10000000">Lighting</option>
+                                <option value="20000000">Systems Furniture</option>
+                                <option value="20010000">Systems Furniture >> Cabinet</option>
+                                <option value="20020000">Systems Furniture >> Chair</option>
+                                <option value="20030000">Systems Furniture >> Table</option>
+                                <option value="20040000">Systems Furniture >> Workstation</option>
+                                <option value="20050000">Systems Furniture >> Partition</option>
+                            </select>
+
                             <input type="text" placeholder="ID" v-model="fil_id">
 
                             <input type="text" placeholder="Code" v-model="fil_code">

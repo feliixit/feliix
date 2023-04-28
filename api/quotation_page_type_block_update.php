@@ -131,6 +131,7 @@ switch ($method) {
                     `listing` = :listing,
                     `num` = :num,
                     `pid` = :pid,
+                    `notes` = :notes,
                     `status` = 0,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -179,6 +180,7 @@ switch ($method) {
                 $listing = isset($block_array[$i]['list']) ? $block_array[$i]['list'] : '';
                 $num = isset($block_array[$i]['num']) ? $block_array[$i]['num'] : '';
                 $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
+                $notes = isset($block_array[$i]['notes']) ? $block_array[$i]['notes'] : '';
 
                 $qty == '' ? $qty = 0 : $qty = $qty;
                 $ratio == '' ? $ratio = 1.0 : $ratio = $ratio;
@@ -203,6 +205,7 @@ switch ($method) {
                 $stmt->bindParam(':listing', $listing);
                 $stmt->bindParam(':num', $num);
                 $stmt->bindParam(':pid', $pid);
+                $stmt->bindParam(':notes', $notes);
                 
                 $stmt->bindParam(':create_id', $user_id);
                 

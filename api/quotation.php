@@ -980,6 +980,7 @@ function GetBlocks($qid, $db){
         v3,
         listing,
         num,
+        notes,
         pid
         FROM   quotation_page_type_block
         WHERE  type_id = " . $qid . "
@@ -1002,6 +1003,7 @@ function GetBlocks($qid, $db){
         $photo2 = $row['photo2'];
         $photo3 = $row['photo3'];
         $qty = $row['qty'];
+        $notes = $row['notes'];
         $ratio = $row['ratio'];
         $price = $row['price'];
         $num = $row['num'];
@@ -1032,6 +1034,7 @@ function GetBlocks($qid, $db){
             "url2" => $url2,
             "url3" => $url3,
             "qty" => $qty,
+            "notes" => $notes,
             "ratio" => $ratio,
             "num" => $num,
             "pid" => $pid,
@@ -1098,6 +1101,7 @@ function GetProductItems($pages, $q_id, $db)
                 $code = $row['code'];
                 $photo = $row['photo'];
                 $qty = $row['qty'];
+                $notes = $row['notes'];
                 $price = $row['price'];
                 $num = $row['num'];
                 $pid = $row['pid'];
@@ -1127,6 +1131,7 @@ function GetProductItems($pages, $q_id, $db)
                     "type" => $type,
                     "url" => $url,
                     "qty" => $qty,
+                    "notes" => $notes,
                     "num" => $num,
                     "pid" => $pid,
                     "price" => $price,

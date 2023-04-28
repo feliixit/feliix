@@ -3732,3 +3732,6 @@ insert into product_category_attribute(cat_id, level, category, create_id) value
 -- 20230426 PIC1 PIC2
 ALTER TABLE project_main ADD COLUMN `pic1` int(11) DEFAULT 0;
 ALTER TABLE project_main ADD COLUMN `pic2` int(11) DEFAULT 0;
+
+-- 20230428 quotation notes
+ALTER TABLE quotation_page_type_block ADD COLUMN `notes` varchar(512) DEFAULT NULL;

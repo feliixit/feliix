@@ -1017,6 +1017,13 @@ header( 'location:index' );
             text-align: center;
             vertical-align: middle;
             max-width: 630px;
+            height: 180px;
+        }
+
+        .tb_format1 tbody tr.desc2 td div.notes {
+            text-align: left;
+            color: red;
+            margin: 0 5px;
         }
 
         .tb_format1 tbody tr.desc2 td img {
@@ -2469,7 +2476,9 @@ header( 'location:index' );
                                         <input type="number" v-model="block.amount"><br>
                                         <span>Description:</span> <textarea rows="2"
                                                                             v-model="block.desc"></textarea><br>
-                                        <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
+                                        <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea><br>
+                                        <!-- 只有subtotal box Type-A 而且是 Item with Image，才需要顯示下面這個 Notes 欄位出來 -->
+                                        <span>Notes:</span> <textarea rows="2" v-model="block.notes"></textarea>
                                     </li>
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="block_a_up(index, block.id)"></i>
@@ -3052,11 +3061,13 @@ header( 'location:index' );
                         <tr class="desc2" v-if="bk.type == 'image'">
 
                             <td class="pic" colspan="3" v-if="!(product_vat == 'P')">
+                                <div class="notes">{{ bk.notes }}</div>
                                 <img v-if="bk.photo2 != ''" :src="bk.url2">
                                 <img v-if="bk.photo3 != ''" :src="bk.url3">
                             </td>
 
                             <td class="pic" colspan="4" v-if="(product_vat == 'P')">
+                                <div class="notes">{{ bk.notes }}</div>
                                 <img v-if="bk.photo2 != ''" :src="bk.url2">
                                 <img v-if="bk.photo3 != ''" :src="bk.url3">
                             </td>
@@ -3317,11 +3328,22 @@ header( 'location:index' );
 
                         <div class="left_function">
 
-                            <input type="text" placeholder="ID" v-model="fil_id">
+                            <select v-model="fil_category">
+                                <option value="">Choose Category...</option>
+                                <option value="10000000">Lighting</option>
+                                <option value="20000000">Systems Furniture</option>
+                                <option value="20010000">Systems Furniture >> Cabinet</option>
+                                <option value="20020000">Systems Furniture >> Chair</option>
+                                <option value="20030000">Systems Furniture >> Table</option>
+                                <option value="20040000">Systems Furniture >> Workstation</option>
+                                <option value="20050000">Systems Furniture >> Partition</option>
+                            </select>
 
-                            <input type="text" placeholder="Code" v-model="fil_code">
+                            <input type="text" placeholder="ID" v-model="fil_id" style="width: 240px; margin-right: 0;">
 
-                            <select v-model="fil_brand">
+                            <input type="text" placeholder="Code" v-model="fil_code" style="width: 240px; margin-right: 0;">
+
+                            <select v-model="fil_brand" style="width: 240px;">
                                 <option value="">Choose Brand...</option>
                                 <option v-for="(item, index) in brands">{{ item.brand }}</option>
                             </select>
@@ -3399,7 +3421,7 @@ header( 'location:index' );
 
                             </select>
 
-                            <input type="text" placeholder="Keyword" v-model="fil_keyword" style="margin-left: 20px;">
+                            <input type="text" placeholder="Keyword" v-model="fil_keyword" style="margin-left: 20px; width: 300px;">
                         </div>
 
                         <a class="btn small green" @click="filter_apply_new()">Search</a>
