@@ -978,33 +978,39 @@ header( 'location:index' );
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
             width: 75px;
             text-align: center;
+            height: 50px;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(2),
         .tb_format1 tbody tr.desc1 td:nth-last-of-type(2) {
             width: 210px;
             text-align: right;
+            height: 50px;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(1),
         .tb_format1 tbody tr.desc1 td:nth-last-of-type(1) {
             width: 210px;
             text-align: right;
+            height: 50px;
         }
 
         .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(4) {
             width: 75px;
             text-align: right;
+            height: 50px;
         }
 
         .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(3) {
             width: 210px;
             text-align: right;
+            height: 50px;
         }
 
         .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(2), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(2) {
             width: 135px;
             text-align: right;
+            height: 50px;
         }
 
         .tb_format1 tbody tr.desc2 td {
@@ -1017,7 +1023,6 @@ header( 'location:index' );
             text-align: center;
             vertical-align: middle;
             max-width: 630px;
-            height: 180px;
         }
 
         .tb_format1 tbody tr.desc2 td div.notes {
