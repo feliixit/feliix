@@ -243,6 +243,7 @@ var app = new Vue({
         fil_kind: '',
         fil_creator: '',
         fil_keyword: '',
+        fil_category: "",
 
         users: [],
         creators: [],
@@ -416,6 +417,7 @@ var app = new Vue({
           this.fil_code = '';
           this.fil_tag = [];
           this.fil_brand = '';
+          this.fil_category = '';
           this.fil_k = '';
           this.of1 = '';
           this.ofd1 = '';
@@ -752,6 +754,7 @@ var app = new Vue({
           d: _this.fil_id,
           c: _this.fil_code,
           t: JSON.stringify(_this.fil_tag),
+          g: _this.fil_category,
           b: _this.fil_brand,
           k: _this.fil_k,
           of1: _this.of1,
@@ -870,6 +873,7 @@ var app = new Vue({
          
                   key: _this.fil_keyword,
                   kind: _this.fil_kind,
+                  g: _this.fil_category,
   
                   op1: _this.od_opt1,
                   od1: _this.od_ord1,
@@ -1409,6 +1413,7 @@ var app = new Vue({
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
+        g: _this.fil_category,
         k: _this.fil_k,
         of1: _this.of1,
         ofd1: _this.ofd1,
@@ -1467,6 +1472,7 @@ var app = new Vue({
        
                 key: _this.fil_keyword,
                 kind: _this.fil_kind,
+                g: _this.fil_category,
 
                 op1: _this.od_opt1,
                 od1: _this.od_ord1,

@@ -1024,12 +1024,13 @@ header( 'location:index' );
         .tb_format1 tbody tr.desc2 td div.notes {
             text-align: left;
             color: red;
-            margin: 0 5px;
+            margin: 0 5px 8px;
         }
 
         .tb_format1 tbody tr.desc2 td div.picbox {
             text-align: center;
             vertical-align: middle;
+            margin-top: 8px;
         }
 
 

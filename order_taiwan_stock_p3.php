@@ -1998,97 +1998,109 @@ try {
 
             <div class="modal-body">
 
-                <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
+            <div class="modal_function" style="width: 100%; display: flex; align-items: center;">
 
-                    <div class="left_function" style="width: 90%;">
+<div class="left_function">
 
-                        <input type="text" placeholder="ID" v-model="fil_id">
+    <select v-model="fil_category">
+        <option value="">Choose Category...</option>
+        <option value="10000000">Lighting</option>
+        <option value="20000000">Systems Furniture</option>
+        <option value="20010000">Systems Furniture >> Cabinet</option>
+        <option value="20020000">Systems Furniture >> Chair</option>
+        <option value="20030000">Systems Furniture >> Table</option>
+        <option value="20040000">Systems Furniture >> Workstation</option>
+        <option value="20050000">Systems Furniture >> Partition</option>
+    </select>
 
-                        <input type="text" placeholder="Code" v-model="fil_code">
+    <input type="text" placeholder="ID" v-model="fil_id" style="width: 240px; margin-right: 0;">
 
-                        <select v-model="fil_brand">
-                            <option value="">Choose Brand...</option>
-                            <option v-for="(item, index) in brands">{{ item.brand }}</option>
-                        </select>
+    <input type="text" placeholder="Code" v-model="fil_code" style="width: 240px; margin-right: 0;">
 
-                        <br>
+    <select v-model="fil_brand" style="width: 240px;">
+        <option value="">Choose Brand...</option>
+        <option v-for="(item, index) in brands">{{ item.brand }}</option>
+    </select>
 
-                        <select class="selectpicker" multiple data-live-search="true" data-size="8"
-                                data-width="585px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
+    <br>
 
-                                <optgroup label="BY INSTALL LOCATION">
-                <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
-                <option value="CABINET">CABINET</option>
-                <option value="CEILING">CEILING</option>
-                <option value="FLOOR">FLOOR</option>
-                <option value="INDOOR">INDOOR</option>
-                <option value="INGROUND">INGROUND</option>
-                <option value="OTHER FURNITURES ">OTHER FURNITURES</option>
-                <option value="OUTDOOR">OUTDOOR</option>
-                <option value="STREET">STREET</option>
-                <option value="TABLE">TABLE</option>
-                <option value="UNDERWATER">UNDERWATER</option>
-                <option value="WALL">WALL</option>
-            </optgroup>
+    <select class="selectpicker" multiple data-live-search="true" data-size="8"
+            data-width="585px" title="Choose Tag(s)..." id="tag01" v-model="fil_tag">
 
-            <optgroup label="INSTALL METHOD">
-                <option value="POLE-MOUNTED">POLE-MOUNTED</option>
-                <option value="RECESSED">RECESSED</option>
-                <option value="STAND-ALONE">STAND-ALONE</option>
-                <option value="SURFACE-MOUNTED">SURFACE-MOUNTED</option>
-                <option value="SUSPENDED">SUSPENDED</option>
-            </optgroup>
+        <optgroup label="BY INSTALL LOCATION">
+            <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
+            <option value="CABINET">CABINET</option>
+            <option value="CEILING">CEILING</option>
+            <option value="FLOOR">FLOOR</option>
+            <option value="INDOOR">INDOOR</option>
+            <option value="INGROUND">INGROUND</option>
+            <option value="OTHER FURNITURES ">OTHER FURNITURES</option>
+            <option value="OUTDOOR">OUTDOOR</option>
+            <option value="STREET">STREET</option>
+            <option value="TABLE">TABLE</option>
+            <option value="UNDERWATER">UNDERWATER</option>
+            <option value="WALL">WALL</option>
+        </optgroup>
 
-            <optgroup label="BY TYPE / FUNCTION">
-    <option value="ALUMINUM PROFILE">ALUMINUM PROFILE</option>
-    <option value="ASSEMBLED">ASSEMBLED</option>
-    <option value="AUDIO EQUIPMENT">AUDIO EQUIPMENT</option>
-    <option value="BATTEN LIGHT">BATTEN LIGHT</option>
-    <option value="BOLLARD">BOLLARD</option>
-    <option value="CONTROLLER">CONTROLLER</option>
-    <option value="CUSTOMIZED">CUSTOMIZED</option>
-    <option value="DIMMABLE">DIMMABLE</option>
-    <option value="DIMMER">DIMMER</option>
-    <option value="DIRECTIONAL">DIRECTIONAL</option>
-    <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
-    <option value="DMX">DMX</option>
-    <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
-    <option value="FLOOD LIGHT">FLOOD LIGHT</option>
-    <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
-    <option value="LED BULB">LED BULB</option>
-    <option value="LED DRIVER">LED DRIVER</option>
-    <option value="LED STRIP">LED STRIP</option>
-    <option value="LED TUBE">LED TUBE</option>
-    <option value="LIGHTBOX">LIGHTBOX</option>
-    <option value="LINEAR LIGHT">LINEAR LIGHT</option>
-    <option value="MAGNETIC TRACK BAR">MAGNETIC TRACK BAR</option>
-    <option value="MAGNETIC TRACK LIGHT">MAGNETIC TRACK LIGHT</option>
-    <option value="PANEL LIGHT">PANEL LIGHT</option>
-    <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
-    <option value="RECEIVER">RECEIVER</option>
-    <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
-    <option value="STAGE LIGHT">STAGE LIGHT</option>
-    <option value="SWITCH">SWITCH</option>
-    <option value="TRACK BAR">TRACK BAR</option>
-    <option value="TRACK LIGHT">TRACK LIGHT</option>
-    <option value="TROFFER LIGHT">TROFFER LIGHT</option>
-    <option value="UV LED">UV LED</option>
-    <option value="WALL WASHER">WALL WASHER</option>
-</optgroup>
+        <optgroup label="INSTALL METHOD">
+            <option value="POLE-MOUNTED">POLE-MOUNTED</option>
+            <option value="RECESSED">RECESSED</option>
+            <option value="STAND-ALONE">STAND-ALONE</option>
+            <option value="SURFACE-MOUNTED">SURFACE-MOUNTED</option>
+            <option value="SUSPENDED">SUSPENDED</option>
+        </optgroup>
 
-            <optgroup label="ACCESSORY">
-                <option value="FUNCTIONAL ACCESSORY">FUNCTIONAL ACCESSORY</option>
-                <option value="INSTALL ACCESSORY">INSTALL ACCESSORY</option>
-                <option value="REPLACEMENT PART">REPLACEMENT PART</option>
-            </optgroup>
+        <optgroup label="BY TYPE / FUNCTION">
+            <option value="ALUMINUM PROFILE">ALUMINUM PROFILE</option>
+            <option value="ASSEMBLED">ASSEMBLED</option>
+            <option value="AUDIO EQUIPMENT">AUDIO EQUIPMENT</option>
+            <option value="BATTEN LIGHT">BATTEN LIGHT</option>
+            <option value="BOLLARD">BOLLARD</option>
+            <option value="CONTROLLER">CONTROLLER</option>
+            <option value="CUSTOMIZED">CUSTOMIZED</option>
+            <option value="DIMMABLE">DIMMABLE</option>
+            <option value="DIMMER">DIMMER</option>
+            <option value="DIRECTIONAL">DIRECTIONAL</option>
+            <option value="DISPLAY SPOTLIGHT">DISPLAY SPOTLIGHT</option>
+            <option value="DMX">DMX</option>
+            <option value="EMERGENCY LIGHT">EMERGENCY LIGHT</option>
+            <option value="FLOOD LIGHT">FLOOD LIGHT</option>
+            <option value="HIGHBAY LIGHT">HIGHBAY LIGHT</option>
+            <option value="LED BULB">LED BULB</option>
+            <option value="LED DRIVER">LED DRIVER</option>
+            <option value="LED STRIP">LED STRIP</option>
+            <option value="LED TUBE">LED TUBE</option>
+            <option value="LIGHTBOX">LIGHTBOX</option>
+            <option value="LINEAR LIGHT">LINEAR LIGHT</option>
+            <option value="MAGNETIC TRACK BAR">MAGNETIC TRACK BAR</option>
+            <option value="MAGNETIC TRACK LIGHT">MAGNETIC TRACK LIGHT</option>
+            <option value="PANEL LIGHT">PANEL LIGHT</option>
+            <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
+            <option value="RECEIVER">RECEIVER</option>
+            <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
+            <option value="STAGE LIGHT">STAGE LIGHT</option>
+            <option value="SWITCH">SWITCH</option>
+            <option value="TRACK BAR">TRACK BAR</option>
+            <option value="TRACK LIGHT">TRACK LIGHT</option>
+            <option value="TROFFER LIGHT">TROFFER LIGHT</option>
+            <option value="UV LED">UV LED</option>
+            <option value="WALL WASHER">WALL WASHER</option>
+        </optgroup>
 
-                        </select>
-                        <input type="text" placeholder="Keyword" v-model="fil_k" style="margin-left: 20px;">
-                    </div>
+        <optgroup label="ACCESSORY">
+            <option value="FUNCTIONAL ACCESSORY">FUNCTIONAL ACCESSORY</option>
+            <option value="INSTALL ACCESSORY">INSTALL ACCESSORY</option>
+            <option value="REPLACEMENT PART">REPLACEMENT PART</option>
+        </optgroup>
 
-                    <a class="btn small green" @click="filter_apply_new()">Search</a>
+    </select>
 
-                </div>
+    <input type="text" placeholder="Keyword" v-model="fil_keyword" style="margin-left: 20px; width: 300px;">
+</div>
+
+<a class="btn small green" @click="filter_apply_new()">Search</a>
+
+</div>
 
                 <div class="list_function" style="margin: 7px 0;">
                     <div class="sort_block">
