@@ -228,6 +228,7 @@ var app = new Vue({
         fil_code: "",
         fil_tag : [],
         fil_id: "",
+        fil_category: "",
 
         special_infomation: [],
         special_infomation_detail: [],
@@ -243,6 +244,7 @@ var app = new Vue({
         fil_kind: '',
         fil_creator: '',
         fil_keyword: '',
+        fil_category: '',
 
         users: [],
         creators: [],
@@ -1085,6 +1087,7 @@ var app = new Vue({
           d: _this.fil_id,
           c: _this.fil_code,
           t: JSON.stringify(_this.fil_tag),
+          g: _this.fil_category,
           b: _this.fil_brand,
           k: _this.fil_k,
           of1: '',
@@ -1733,6 +1736,7 @@ var app = new Vue({
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,
+        g: _this.fil_category,
         k: _this.fil_k,
         of1: '',
         ofd1: '',
