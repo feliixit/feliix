@@ -589,7 +589,7 @@ var app = new Vue({
         this.comment = '';
 
         Swal.fire({
-          text: "Message Sent",
+          text: "Notification Email Sent",
           icon: "info",
           confirmButtonText: "OK",
         });
