@@ -547,6 +547,54 @@ var app = new Vue({
         });
       },
 
+      finish_partial_notes : async function() {
+        let element = [];
+
+        for (let i = 0; i < this.items.length; i++) {
+            //if (this.items[i].is_checked == 1) {
+            //  if(this.items[i].status != "1")
+            //  {
+            //    alert("Please only choose the item(s) with the status of “Waiting Notes from TW”.");
+            //    return;
+            //  }
+            //  else
+                element.push(this.items[i]);
+            //}
+        }
+
+        if(element.length == 0)
+          return;
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        form_Data.append("jwt", token);
+        form_Data.append("iq_id", this.id);
+        form_Data.append("items", JSON.stringify(element));
+        form_Data.append("comment", this.comment);
+        form_Data.append("iq_name", this.iq_name);
+        form_Data.append("project_name", this.project_name);
+        form_Data.append("serial_name", this.serial_name);
+
+        let res = await axios({
+          method: 'post',
+          url: 'api/inquiry_taiwan_p1_partial_complete',
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        this.getRecord();
+        this.comment = '';
+
+        Swal.fire({
+          text: "Message Sent",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+      },
+
       approval : async function() {
         let element = [];
 
@@ -1653,6 +1701,69 @@ var app = new Vue({
         }).then((result) => {
           if (result.value) {
             _this.do_msg_delete(message_id, task_id); // <--- submit form programmatically
+          } else {
+            // swal("Cancelled", "Your imaginary file is safe :)", "error");
+          }
+        });
+      },
+
+      
+      do_inquiry_again() {
+      var token = localStorage.getItem("token");
+      var form_Data = new FormData();
+      let _this = this;
+
+      form_Data.append("jwt", token);
+      form_Data.append("message_id", this.id);
+
+      //var element = this.items.find((element) => element.id == task_id);
+      //form_Data.append("item", JSON.stringify(element));
+
+      form_Data.append("iq_id", this.id);
+      form_Data.append("iq_name", this.iq_name);
+      form_Data.append("project_name", this.project_name);
+      form_Data.append("serial_name", this.serial_name);
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/inquiry_taiwan_p1_inquiry_again",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          Swal.fire({
+            text: "OK",
+            icon: "info",
+            confirmButtonText: "OK",
+          });
+        })
+        .catch(function(response) {
+          //handle error
+          Swal.fire({
+            text: JSON.stringify(response),
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        });
+    },
+
+      inquiry_agian() {
+    
+        let _this = this;
+        Swal.fire({
+          title: "Inquire Agian",
+          text: "Are you sure to change the status of the current inquiry into “Draft”?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+        }).then((result) => {
+          if (result.value) {
+            _this.do_inquiry_again(); // <--- submit form programmatically
           } else {
             // swal("Cancelled", "Your imaginary file is safe :)", "error");
           }
