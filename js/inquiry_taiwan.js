@@ -1739,6 +1739,8 @@ var app = new Vue({
             icon: "info",
             confirmButtonText: "OK",
           });
+
+          _this.getRecord();
         })
         .catch(function(response) {
           //handle error
