@@ -3735,3 +3735,10 @@ ALTER TABLE project_main ADD COLUMN `pic2` int(11) DEFAULT 0;
 
 -- 20230428 quotation notes
 ALTER TABLE quotation_page_type_block ADD COLUMN `notes` varchar(512) DEFAULT NULL;
+
+-- 20230502
+ALTER TABLE apply_for_petty
+ADD COLUMN `rtype` varchar(10) DEFAULT '';
+
+ALTER TABLE apply_for_petty
+ADD COLUMN `dept_name` varchar(24) DEFAULT '';

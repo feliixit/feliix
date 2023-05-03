@@ -78,7 +78,9 @@ switch ($method) {
                         info_category,
                         info_sub_category,
                         info_remark,
-                        info_remark_other
+                        info_remark_other,
+                        rtype,
+                        dept_name
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
@@ -130,6 +132,9 @@ switch ($method) {
         $info_remark = "";
         $info_remark_other = "";
 
+        $rtype = "";
+        $dept_name = "";
+
         $history = [];
         $list = [];
         $items = [];
@@ -158,6 +163,9 @@ switch ($method) {
             $info_sub_category = $row['info_sub_category'];
             $info_remark = $row['info_remark'];
             $info_remark_other = $row['info_remark_other'];
+
+            $rtype = $row['rtype'];
+            $dept_name = $row['dept_name'];
 
             $total = 0;
             foreach ($list as &$value) {
@@ -188,6 +196,9 @@ switch ($method) {
                 "sub_category" => $info_sub_category,
                 "info_remark" => $info_remark,
                 "info_remark_other" => $info_remark_other,
+
+                "rtype" => $rtype,
+                "dept_name" => $dept_name
             );
         }
 
@@ -219,6 +230,9 @@ switch ($method) {
         $items_to_delete = (isset($_POST['items_to_delete']) ?  $_POST['items_to_delete'] : "[]");
         $items_array = json_decode($items_to_delete, true);
 
+        $rtype = (isset($_POST['rtype']) ?  $_POST['rtype'] : '');
+        $dept_name = (isset($_POST['dept_name']) ?  $_POST['dept_name'] : '');
+
         if ($pid == 0) {
             http_response_code(401);
             echo json_encode(array("message" => "Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . "Access denied."));
@@ -236,6 +250,8 @@ switch ($method) {
                     `payable_to` = :payable_to,
                     `payable_other` = :payable_other,
                     `remark` = :remark,
+                    `rtype` = :rtype,
+                    `dept_name` = :dept_name,
                     `status` = 1
                     where id = :id";
 
@@ -250,6 +266,9 @@ switch ($method) {
             $stmt->bindParam(':payable_to', $payable_to);
             if ($payable_to == 1)
                 $payable_other = "";
+
+            $stmt->bindParam(':rtype', $rtype);
+            $stmt->bindParam(':dept_name', $dept_name);
 
             $stmt->bindParam(':payable_other', $payable_other);
             $stmt->bindParam(':remark', $remark);

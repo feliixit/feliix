@@ -17,6 +17,9 @@ $payable_to = (isset($_POST['payable_to']) ?  $_POST['payable_to'] : '');
 $payable_other = (isset($_POST['payable_other']) ?  $_POST['payable_other'] : '');
 $remark = (isset($_POST['remark']) ?  $_POST['remark'] : '');
 
+$rtype = (isset($_POST['rtype']) ?  $_POST['rtype'] : '');
+$dept_name = (isset($_POST['dept_name']) ?  $_POST['dept_name'] : '');
+
 $petty_list = (isset($_POST['petty_list']) ?  $_POST['petty_list'] : '[]');
 $petty_array = json_decode($petty_list,true);
 
@@ -75,6 +78,8 @@ else
             `payable_to` = :payable_to,
             `payable_other` = :payable_other,
             `remark` = :remark,
+            `rtype` = :rtype,
+            `dept_name` = :dept_name,
             `status` = 1,
             `created_at` = now()";
 
@@ -91,6 +96,9 @@ else
         $stmt->bindParam(':payable_to', $payable_to);
         $stmt->bindParam(':payable_other', $payable_other);
         $stmt->bindParam(':remark', $remark);
+
+        $stmt->bindParam(':rtype', $rtype);
+        $stmt->bindParam(':dept_name', $dept_name);
      
 
         $last_id = 0;
