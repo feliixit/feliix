@@ -385,7 +385,7 @@ body.green input[type=date] {
                         </li>
 
                         <!-- 如果上面選項是選 Other, 則下面的 <li> 需要顯示出來 -->
-                        <li><input type="text" style="width:100%" v-model="project_name" v-if="rtype == '' "></li>
+                        <li style="margin-bottom: 10px;"><input type="text" style="width:100%" v-model="project_name" v-if="rtype == '' "></li>
 
                         <!-- 如果上面選項是選 Team Building, 則下面的 <li> 需要顯示出來, li 的 display 要切換的是 none 和 flex -->
                         <li style="display: flex; justify-content: space-between; margin-bottom: 10px;" v-if="rtype == 'team' ">
