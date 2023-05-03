@@ -41,7 +41,13 @@ var app = new Vue({
 
     e_editing: false,
 
+    e_org_rtype: "",
+    e_org_dept_name: "",
+
     projects: [],
+
+    rtype : '',
+    dept_name : '',
   },
 
   created() {
@@ -104,10 +110,16 @@ var app = new Vue({
         this.project_name = "Petty Cash Replenishment";
       
       } 
-    }
+    },
+
+
   },
 
   methods: {
+    clear_projectname: function() {
+      this.project_name = "";
+    },
+
     validateNumber: function(obj) {
       var number = obj;
 
@@ -203,6 +215,8 @@ var app = new Vue({
           _this.project_name1 = response.data[0].project_name1;
           _this.project_name = response.data[0].project_name;
           _this.payable_to = response.data[0].payable_to;
+          _this.rtype = response.data[0].rtype;
+          _this.dept_name = response.data[0].dept_name;
 
           if (_this.payable_to == 1) {
             document.getElementById("specific_payableto").style.display =
@@ -444,6 +458,9 @@ var app = new Vue({
       form_Data.append("payable_other", this.payable_other);
       form_Data.append("remark", this.remark);
 
+      form_Data.append("rtype", this.rtype);
+      form_Data.append("dept_name", this.dept_name);
+
       for (var i = 0; i < this.$refs.file.files.length; i++) {
         let file = this.$refs.file.files[i];
         form_Data.append("files[" + i + "]", file);
@@ -503,6 +520,9 @@ var app = new Vue({
       form_Data.append("payable_to", this.payable_to);
       form_Data.append("payable_other", this.payable_other);
       form_Data.append("remark", this.remark);
+
+      form_Data.append("rtype", this.rtype);
+      form_Data.append("dept_name", this.dept_name);
 
       var favorite = [];
       for(var i = 0; i < this.item_list.length; i++)
@@ -571,6 +591,9 @@ var app = new Vue({
 
       this.remark = "";
 
+      this.rtype = "";
+      this.dept_name = "";
+
       this.pid = 0;
       this.list_sn = 0;
       this.item_list = [];
@@ -619,6 +642,9 @@ var app = new Vue({
       this.e_org_price = element.price;
       this.e_org_qty = element.qty;
       this.e_org_check_remark = element.check_remark;
+
+      this.e_org_rtype = element.rtype;
+      this.e_org_dept_name = element.dept_name;
 
       this.list_id = eid;
       this.list_payee = element.payee;
@@ -669,6 +695,9 @@ var app = new Vue({
       this.e_org_price = element.price;
       this.e_org_qty = element.qty;
       this.e_org_check_remark = element.check_remark;
+
+      this.e_org_rtype = element.rtype;
+      this.e_org_dept_name = element.dept_name;
 
       this.list_id = eid;
       this.list_payee = element.payee;
@@ -832,6 +861,9 @@ var app = new Vue({
       this.e_org_price = 0;
       this.e_org_qty = 0;
       this.e_org_check_remark = "";
+
+      this.e_org_rtype = "";
+      this.e_org_dept_name = "";
 
       this.list_payee = "";
       this.list_particulars = "";

@@ -376,7 +376,30 @@ body.green input[type=date] {
                         </li>
 
                         <li><b>Reason</b></li>
-                        <li><input type="text" style="width:100%" v-model="project_name"></li>
+
+                        <li>
+                            <select style="width: 100%;" v-model="rtype" @change="clear_projectname()">
+                                <option value="">Other</option>
+                                <option value="team">Team Building</option>
+                            </select>
+                        </li>
+
+                        <!-- 如果上面選項是選 Other, 則下面的 <li> 需要顯示出來 -->
+                        <li style="margin-bottom: 10px;" v-if="rtype == '' "><input type="text" style="width:100%" v-model="project_name" ></li>
+
+                        <!-- 如果上面選項是選 Team Building, 則下面的 <li> 需要顯示出來, li 的 display 要切換的是 none 和 flex -->
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 10px;" v-if="rtype == 'team' ">
+                            <select style="width: 47%;" v-model="dept_name">
+                                <option value="admin">Admin Department</option>
+                                <option value="design">Design Department</option>
+                                <option value="engineering">Engineering Department</option>
+                                <option value="lighting">Lighting Department</option>
+                                <option value="office">Office Department</option>
+                                <option value="sales">Sales Department</option>
+                            </select>
+
+                            <input type="text" style="width: 50%;" placeholder="Which month(s) of fund will be used? / Remarks" v-model="project_name" v-if="rtype == 'team' ">
+                        </li>
 
                         <li><b>Listing</b>
                             <a style="background-image: url('images/ui/btn_edit_green.svg'); width: 16px; height: 16px; display: inline-block; margin-left: 10px;"
