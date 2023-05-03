@@ -1380,12 +1380,15 @@ try {
                         </div>
 
                         <div class="btn_block">
-                       
+
                             <a class="btn small green" @click="sendNotesToTw()" v-if="(status == 0 && is_ariel == false)">Send Inquity to TW</a>
                             <a class="btn small" @click="withdrawNotesToTw()" v-if="(status == 1 && is_ariel == false)">Withdraw</a>
                         
+                            <a class="btn small yellow" style="width: 200px;" @click="finish_partial_notes()" v-if="(status == 1 && is_ariel == true)">Complete Partial Inquiry</a>
                             <a class="btn small green" @click="finish_notes()" v-if="(status == 1 && is_ariel == true)">Complete Inquiry</a>
-                           
+
+                            <a class="btn small yellow" v-if="(status == 2 && is_ariel == false)" @click="inquiry_agian()">Inquire Again</a>
+                            
                             <input type="text" placeholder="Comment" v-model="comment" v-if="(status == 0 && is_ariel == false)">
                             <input type="text" placeholder="Comment" v-model="comment" v-if="(status == 1 && is_ariel == false)">
                             <input type="text" placeholder="Comment" v-model="comment" v-if="(status == 1 && is_ariel == true)">
