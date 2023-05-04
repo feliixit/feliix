@@ -63,7 +63,7 @@ else
 
             $apartment_id = (isset($_GET['apartment_id']) ? $_GET['apartment_id'] : "");
 
-            $sql = "SELECT 0 as is_checked, id, username, COALESCE(pic_url, '') pic_url, tel, address FROM user where status = 1 ".($id ? " and id=$id" : '');
+            $sql = "SELECT 0 as is_checked, id, username, COALESCE(pic_url, '') pic_url, tel, date_start_company, seniority FROM user where status = 1 ".($id ? " and id=$id" : '');
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -105,7 +105,7 @@ else
             $db = $database->getConnection();
              
             $tel = $_POST["tel"] ? $_POST["tel"] : "";
-            $address = $_POST["address"] ? $_POST["address"] : "";
+            $date_start_company = $_POST["date_start_company"] ? $_POST["date_start_company"] : "";
             $pic_url = $_POST["pic_url"] ? $_POST["pic_url"] : "";
 
             $crud = $_POST["crud"];
@@ -151,7 +151,7 @@ else
 
                 $query .= "
                     tel = :tel,
-                    `address` = :address
+                    `date_start_company` = :date_start_company
                 WHERE id = :id";
     
                 // prepare the query
@@ -163,7 +163,7 @@ else
                     $stmt->bindParam(':pic_url', $image);
                 }
                 $stmt->bindParam(':tel', $tel);
-                $stmt->bindParam(':address', $address);
+                $stmt->bindParam(':date_start_company', $date_start_company);
               
                 $stmt->bindParam(':id', $id);
             

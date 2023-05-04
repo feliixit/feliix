@@ -204,10 +204,10 @@ try {
                         </li>
 
                         <li>
-                            <b>Address</b>
+                            <b>Date Started in Company</b>
                         </li>
                         <li>
-                            <textarea rows=2 v-model="address" maxlength="255" style="resize: none;"></textarea>
+                            <input type="date" v-model="date_start_company"  style="resize: none;"></input>
                         </li>
                     </ul>
 
@@ -226,7 +226,8 @@ try {
                         <li>Employee Name</li>
                         <li>Photo</li>
                         <li>Contact Number</li>
-                        <li style="max-width: 35%;">Address</li>
+                        <li>Date Started in Company</li>
+                        <li>Seniority</li>
                     </ul>
                     <ul v-for='(record, index) in displayedPosts' :key="index">
                         <li><input type="checkbox" name="record_id" class="alone" :value="record.index" :true-value="1"
@@ -235,7 +236,8 @@ try {
                         <li v-if="record.pic_url !== ''"><a class="man" :style="'background-image: url(../images/man/' + record.pic_url + ');'"></a></li>
                         <li v-if="record.pic_url == ''"><a class="man"></a></li>
                         <li>{{record.tel}}</li>
-                        <li>{{record.address}}</li>
+                        <li>{{record.date_start_company}}</li>
+                        <li>{{record.seniority}}</li>
                     </ul>
                 
 
