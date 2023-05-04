@@ -4275,7 +4275,62 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
 
 }
 
+function batch_date_start_company_notify_mail($user_array)
+{
+    $tab = "<p>Seniority of employee(s) changed. You may need to change the corresponding yearly leave credits for the employee(s). Below is the details of the afftected employee(s) and their seniority change:</p>";
 
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->AddAddress("dennis@feliix.com", "Dennis");
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $title = "[Seniority Change Notification by System]";
+
+    $mail->Subject = $title;
+    $content =  "<p>Dear Sir and Maddam,</p>";
+    $content = $content . $tab;
+    $content = $content . "<p> </p>";
+
+    foreach ($user_array as $user)
+    {
+        $content = $content . "<p>Employee Name: " . $user["username"] . "</p>";
+        $content = $content . "<p>Seniority Change: " . $user["seniority_old"] . " -> " . $user["seniority_new"] . " </p>";
+        $content = $content . "<p> </p>";
+    }
+    
+    $content = $content . "<p>Please log on to Feliix >> System Section >> User to adjust yearly leave credits.";
+    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail("", $content);
+        return true;
+    } else {
+        logMail("", $mail->ErrorInfo . $content);
+        return false;
+    }
+}
 
 function task_notify_type_inquiry($request_type, $project_name, $task_name, $stages_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, $created_at, $order_type, $order_name, $task_type)
 {

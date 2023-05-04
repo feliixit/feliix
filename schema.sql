@@ -3742,3 +3742,9 @@ ADD COLUMN `rtype` varchar(10) DEFAULT '';
 
 ALTER TABLE apply_for_petty
 ADD COLUMN `dept_name` varchar(24) DEFAULT '';
+
+-- 20230504 user address
+ALTER TABLE `user` CHANGE `address` `date_start_company` VARCHAR(10) DEFAULT '';
+
+ALTER TABLE `user`
+ADD COLUMN `seniority` int(11) DEFAULT 0;

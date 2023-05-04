@@ -13,8 +13,8 @@ let mainState = {
     username: '',
     pic_url: '',
     tel: '',
-    address: '',
-
+    date_start_company: '',
+    seniority: '',
 
 
     // paging
@@ -195,7 +195,7 @@ var app = new Vue({
 
             this.pic_url = this.record.pic_url !== '' ? '../images/man/' + this.record.pic_url : '';
             this.tel = this.record.tel;
-            this.address = this.record.address;
+            this.date_start_company = this.record.date_start_company;
 
             $('.block.record').toggleClass('show');
 
@@ -224,7 +224,7 @@ var app = new Vue({
 
 
             formData.append('tel', this.tel)
-            formData.append('address', this.address)
+            formData.append('date_start_company', this.date_start_company)
            
             let file = document.getElementById('photo').files[0];
             if(typeof file !== 'undefined') 
@@ -342,7 +342,7 @@ var app = new Vue({
             this.username = '';
             this.pic_url = '';
             this.tel = '';
-            this.address = '';
+            this.date_start_company = '';
         
 
             this.isEditing = false;
