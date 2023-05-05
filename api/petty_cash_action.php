@@ -675,6 +675,8 @@ if (!isset($jwt)) {
 
             $_id = 0;
 
+            $reason = '';
+
             if(sizeof($_record) > 0)
             {
                 switch ($_record[0]["info_account"]) {
@@ -700,6 +702,15 @@ if (!isset($jwt)) {
                 $_project_name1 = $_record[0]["project_name1"];
                 $_id = $_record[0]["id"];
                 $_amount_verified = $_record[0]["amount_verified"];
+
+                $rtype = $_record[0]['rtype'];
+                $dept_name = $_record[0]['dept_name'];
+                $department = GetDepartment($_record[0]['dept_name']);
+
+                if($rtype == '')
+                    $reason = $_project_name;
+                if($rtype == 'team')
+                    $reason = 'Team Building (' . $department . ') — ' . $_project_name;
             }
 
             $_details_list = "";
@@ -717,7 +728,7 @@ if (!isset($jwt)) {
             $_details = $_details . 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
 
             if($_project_name != "")
-                $_details = $_details . 'Reason: ' . $_project_name . '<br>';
+                $_details = $_details . 'Reason: ' . $reason . '<br>';
 
             $_details = $_details . $_details_list;
 
