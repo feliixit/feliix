@@ -104,7 +104,9 @@ switch ($method) {
                         info_remark,
                         info_remark_other,
                         amount_liquidated,
-                        remark_liquidated
+                        remark_liquidated,
+                        pm.rtype,
+                        pm.dept_name
                 from apply_for_petty pm 
                 LEFT JOIN user u ON u.id = pm.payable_to 
                 LEFT JOIN user p ON p.id = pm.uid 
@@ -169,6 +171,10 @@ switch ($method) {
         $amount_liquidated = 0;
         $remark_liquidated = "";
 
+        $rtype="";
+        $dept_name="";
+        $department = "";
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
             $request_no = $row['request_no'];
@@ -201,6 +207,10 @@ switch ($method) {
             $info_sub_category = $row['info_sub_category'];
             $info_remark = $row['info_remark'];
             $info_remark_other = $row['info_remark_other'];
+
+            $rtype = $row['rtype'];
+            $dept_name = $row['dept_name'];
+            $department = GetDepartment($row['dept_name']);
 
             $total = 0;
             foreach ($list as &$value) {
@@ -238,6 +248,10 @@ switch ($method) {
                 "sub_category" => $info_sub_category,
                 "info_remark" => $info_remark,
                 "info_remark_other" => $info_remark_other,
+
+                "rtype" => $rtype,
+                "dept_name" => $dept_name,
+                "department" => $department,
             );
 
         }
@@ -481,4 +495,29 @@ function GetLiquidateHistory($_id, $db)
     }
 
     return $merged_results;
+}
+
+function GetDepartment($dept_name)
+{
+    $department = "";
+
+    if($dept_name == 'admin')
+        $department = 'Admin Department';
+
+    if($dept_name == 'design')
+        $department = 'Design Department';
+
+    if($dept_name == 'engineering')
+        $department = 'Engineering Department';
+
+    if($dept_name == 'lighting')
+        $department = 'Lighting Department';
+    
+    if($dept_name == 'office')
+        $department = 'Office Department';
+    
+    if($dept_name == 'sales')
+        $department = 'Sales Department';
+
+    return $department;
 }

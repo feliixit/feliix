@@ -420,6 +420,8 @@ if (!isset($jwt)) {
 
             $_id = 0;
 
+            $reason = '';
+
             if(sizeof($_record) > 0)
             {
                 switch ($_record[0]["info_account"]) {
@@ -441,12 +443,21 @@ if (!isset($jwt)) {
                 $_project_name = $_record[0]["project_name"];
                 $_project_name1 = $_record[0]["project_name1"];
                 $_id = $_record[0]["id"];
+
+                $rtype = $_record[0]['rtype'];
+                $dept_name = $_record[0]['dept_name'];
+                $department = GetDepartment($_record[0]['dept_name']);
+
+                if($rtype == '')
+                    $reason = $_project_name;
+                if($rtype == 'team')
+                    $reason = 'Team Building (' . $department . ') —' . $_project_name;
             }
 
             $_details = 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
 
             if($_project_name != "")
-                $_details = $_details . 'Reason: ' . $_project_name . '<br>';
+                $_details = $_details . 'Reason: ' . $reason . '<br>';
             
             foreach ($_record_list as &$list) {
                 $_details .= "● " . $list["payee"] . ", " . $list["particulars"] . ", Price = " . $list["price"]*1 . ", Qty = " . $list["qty"]*1 . ", Amount = " . $list["price"] * $list["qty"] . "<br>";
@@ -541,6 +552,8 @@ if (!isset($jwt)) {
 
             $_id = 0;
 
+            $reason = '';
+
             if(sizeof($_record) > 0)
             {
                 $_account = 1;
@@ -552,12 +565,21 @@ if (!isset($jwt)) {
                 $_project_name = $_record[0]["project_name"];
                 $_project_name1 = $_record[0]["project_name1"];
                 $_id = $_record[0]["id"];
+
+                $rtype = $_record[0]['rtype'];
+                $dept_name = $_record[0]['dept_name'];
+                $department = GetDepartment($_record[0]['dept_name']);
+
+                if($rtype == '')
+                    $reason = $_project_name;
+                if($rtype == 'team')
+                    $reason = 'Team Building (' . $department . ') —' . $_project_name;
             }
 
             $_details = 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
 
             if($_project_name != "")
-                $_details = $_details . 'Reason: ' . $_project_name . '<br>';
+                $_details = $_details . 'Reason: ' . $reason . '<br>';
             
             foreach ($_record_list as &$list) {
                 $_details .= "● " . $list["payee"] . ", " . $list["particulars"] . ", Price = " . $list["price"]*1 . ", Qty = " . $list["qty"]*1 . ", Amount = " . $list["price"] * $list["qty"] . "<br>";
@@ -1242,7 +1264,7 @@ function &GetDesc($loc)
 
 function GetRecordDetail($_id, $db)
 {
-    $sql = "SELECT ap.request_type, ap.id, request_no, project_name1, project_name, info_account, info_category, info_sub_category, u.username, amount_verified
+    $sql = "SELECT ap.request_type, ap.id, request_no, project_name1, project_name, info_account, info_category, info_sub_category, u.username, amount_verified, rtype, dept_name
             FROM apply_for_petty ap 
             LEFT JOIN user u ON ap.uid = u.id 
             where ap.id = :id";
@@ -1331,4 +1353,29 @@ function GetList($_id, $db)
     }
 
     return $merged_results;
+}
+
+function GetDepartment($dept_name)
+{
+    $department = "";
+
+    if($dept_name == 'admin')
+        $department = 'Admin Department';
+
+    if($dept_name == 'design')
+        $department = 'Design Department';
+
+    if($dept_name == 'engineering')
+        $department = 'Engineering Department';
+
+    if($dept_name == 'lighting')
+        $department = 'Lighting Department';
+    
+    if($dept_name == 'office')
+        $department = 'Office Department';
+    
+    if($dept_name == 'sales')
+        $department = 'Sales Department';
+
+    return $department;
 }
