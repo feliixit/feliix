@@ -451,7 +451,7 @@ if (!isset($jwt)) {
                 if($rtype == '')
                     $reason = $_project_name;
                 if($rtype == 'team')
-                    $reason = 'Team Building (' . $department . ') —' . $_project_name;
+                    $reason = 'Team Building (' . $department . ') — ' . $_project_name;
             }
 
             $_details = 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';
@@ -573,7 +573,7 @@ if (!isset($jwt)) {
                 if($rtype == '')
                     $reason = $_project_name;
                 if($rtype == 'team')
-                    $reason = 'Team Building (' . $department . ') —' . $_project_name;
+                    $reason = 'Team Building (' . $department . ') — ' . $_project_name;
             }
 
             $_details = 'Expense Application Request No.: <a target="_blank" href="expense_application_report?id=' . $_id . '">' . $_request_no . '</a><br>';

@@ -198,7 +198,7 @@ $table->addCell(3000, ['borderSize' => 6])->addText("Reason", ['bold' => false],
 if($rtype == '')
     $table->addCell(7500, ['borderSize' => 6])->addText($project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 if($rtype == 'team')
-    $table->addCell(7500, ['borderSize' => 6])->addText('Team Building (' . $department . ') —' . $project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table->addCell(7500, ['borderSize' => 6])->addText('Team Building (' . $department . ') — ' . $project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Total Amount Requested", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);

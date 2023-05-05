@@ -339,7 +339,7 @@ $(function(){
                         <ul>
                             <li class="head">Reason</li>
                             <li v-if="record.rtype==''">{{ record.project_name}}</li>
-                            <li v-if="record.rtype=='team'">{{ 'Team Building (' + record.department + ') —' + record.project_name }}</li>
+                            <li v-if="record.rtype=='team'">{{ 'Team Building (' + record.department + ') — ' + record.project_name }}</li>
                         </ul>
                         <ul>
                             <li class="head">Total Amount Requested
