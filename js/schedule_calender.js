@@ -1539,7 +1539,7 @@ var initial = () =>  {
         customButtons: {
             addEventButton: {
                 text: "Add Schedule",
-                click: function () {
+                click: async function () {
                     document.getElementById("myLargeModalLabel").innerText =
                         "Add Schedule";
                     document.getElementById("last_editor").style.display = "none";
@@ -1564,9 +1564,11 @@ var initial = () =>  {
 
                     resetSchedule();
 
-                    if(project.project_id != 0 && project.stage_id != 0)
+                    if(project.add_project_id != 0 && project.add_stage_id != 0)
                     {
-                        project.getStages(project.project_id);
+                        project.project_id = project.add_project_id;
+                        project.stage_id = project.add_stage_id;
+                        await project.getStages(project.project_id);
                     }
                     else
                     {
@@ -1639,14 +1641,18 @@ var initial = () =>  {
             document.getElementById("sc_etime").value = sc_content.Endtime;
             document.getElementById("sc_project").value = sc_content.Project;
             document.getElementById("sc_sales").value = sc_content.Sales_Executive;
-            document.getElementById("sc_incharge").value =
-                sc_content.Project_in_charge;
+            document.getElementById("sc_incharge").value = sc_content.Project_in_charge;
 
-            $("#sc_related_project_id").val(sc_content.Related_project_id).trigger("change");
+            project.project_id = sc_content.Related_project_id;
+            project.stage_id = sc_content.Related_stage_id;
 
-            await app.setStages(sc_content.Related_project_id);
+            await project.getStages(project.project_id);
 
-            $("#sc_related_stage_id").val(sc_content.Related_stage_id).trigger("change");
+            // $("#sc_related_project_id").val(sc_content.Related_project_id).trigger("change");
+
+            // await app.setStages(sc_content.Related_project_id);
+
+            // $("#sc_related_stage_id").val(sc_content.Related_stage_id).trigger("change");
 
             document.getElementById("sc_relevant").value =
                 sc_content.Project_relevant;
@@ -2226,14 +2232,14 @@ function resetSchedule() {
     document.getElementById("sc_tb_endtime").value = "";
 
     // set selected to false
-    $("input[id='sc_related_project_id']").each(function (i, v) {
-        $(v).prop("selected", false);
-    });
-    $("input[id='sc_related_project_id']").each(function (i, v) {
-        $(v).prop("selected", false);
-    });
-    $(".sc_related_project_id").val(0);
-    $(".sc_related_stage_id").val(0);
+    // $("input[id='sc_related_project_id']").each(function (i, v) {
+    //     $(v).prop("selected", false);
+    // });
+    // $("input[id='sc_related_project_id']").each(function (i, v) {
+    //     $(v).prop("selected", false);
+    // });
+    // $(".sc_related_project_id").val(0);
+    // $(".sc_related_stage_id").val(0);
 
 
     $("input[name='sc_Installer_needed']").each(function (i, v) {
@@ -2457,10 +2463,14 @@ $(document).on("click", "#btn_cancel", async function () {
     document.getElementById("sc_incharge").value = sc_content.Project_in_charge;
 
 
-    $("#sc_related_project_id").val(sc_content.Related_project_id);
+    project.project_id = sc_content.Related_project_id;
+    project.project_name = sc_content.Related_stage_id;
+    await project.getStages(sc_content.Related_project_id);
 
-    await app.setStages(sc_content.Related_project_id);
-    $("#sc_related_stage_id").val(sc_content.Related_stage_id);
+    // $("#sc_related_project_id").val(sc_content.Related_project_id);
+
+    // await app.setStages(sc_content.Related_project_id);
+    // $("#sc_related_stage_id").val(sc_content.Related_stage_id);
     
 
     document.getElementById("sc_relevant").value = sc_content.Project_relevant;
@@ -3332,6 +3342,9 @@ var project = new Vue({
 
         stages: [],
         stage_id : 0,
+
+        add_project_id : 0,
+        add_stage_id : 0,
   
     },
     created() {
@@ -3347,10 +3360,12 @@ var project = new Vue({
                 switch (tmp[0]) {
                     case "project_id":
                         _this.project_id = tmp[1];
+                        _this.add_project_id = tmp[1];
                     break;
 
                     case "stage_id":
                         _this.stage_id = tmp[1];
+                        _this.add_stage_id = tmp[1];
                     break;
                 
                     default:
@@ -3386,11 +3401,11 @@ var project = new Vue({
             let token = localStorage.getItem('accessToken');
 
             // clear select sc_related_stage_id (add by edit)
-            var select = document.getElementById("sc_related_stage_id");
-            var length = select.options.length;
-            for (i = length-1; i >= 0; i--) {
-                select.options[i] = null;
-            }
+            // var select = document.getElementById("sc_related_stage_id");
+            // var length = select.options.length;
+            // for (i = length-1; i >= 0; i--) {
+            //     select.options[i] = null;
+            // }
 
             if(pid != undefined) 
                 _this.project_id = pid;
