@@ -59,7 +59,9 @@ $sql = "SELECT  pm.id,
         info_remark_other,
         pm.amount_verified,
         pm.amount_liquidated,
-        pm.remark_liquidated
+        pm.remark_liquidated,
+        pm.rtype,
+        pm.dept_name
 from apply_for_petty pm 
 LEFT JOIN user u ON u.id = pm.payable_to 
 LEFT JOIN user p ON p.id = pm.uid 
@@ -111,6 +113,9 @@ $history = [];
 $list = [];
 $items = [];
 
+$rtype = "";
+$dept_name = "";
+
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id = $row['id'];
@@ -150,6 +155,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $info_sub_category = $row['info_sub_category'];
     $info_remark = $row['info_remark'];
     $info_remark_other = $row['info_remark_other'];
+
+    $rtype = $row['rtype'];
+    $dept_name = $row['dept_name'];
+    $department = GetDepartment($row['dept_name']);
+
 
     foreach ($list as &$value) {
         $total += $value['price'] * $value['qty'];
@@ -213,7 +223,10 @@ $table->addCell(7500, ['borderSize' => 6])->addText(fiter_str($project_name1), [
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Reason", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText($project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+if($rtype == '')
+    $table->addCell(7500, ['borderSize' => 6])->addText($project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+if($rtype == 'team')
+    $table->addCell(7500, ['borderSize' => 6])->addText('Team Building (' . $department . ') — ' . $project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Total Amount Requested", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
@@ -655,4 +668,29 @@ function fiter_str($str)
 {
     $str = str_replace("&", "AND", $str);
     return $str;
+}
+
+function GetDepartment($dept_name)
+{
+    $department = "";
+
+    if($dept_name == 'admin')
+        $department = 'Admin Department';
+
+    if($dept_name == 'design')
+        $department = 'Design Department';
+
+    if($dept_name == 'engineering')
+        $department = 'Engineering Department';
+
+    if($dept_name == 'lighting')
+        $department = 'Lighting Department';
+    
+    if($dept_name == 'office')
+        $department = 'Office Department';
+    
+    if($dept_name == 'sales')
+        $department = 'Sales Department';
+
+    return $department;
 }
