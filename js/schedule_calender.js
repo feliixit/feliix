@@ -82,6 +82,8 @@ var app = new Vue({
         this.getMonthDay();
         this.getUserName();
         this.getUsers();
+
+        
     
     },
     methods: {
@@ -109,7 +111,6 @@ var app = new Vue({
               });
           },
 
-          
 
         addMain2: function (details, main, du, calendar) {
             if (!main.Allday) {
@@ -171,6 +172,10 @@ var app = new Vue({
             form_Data.append("project_relevant", main.Project_relevant);
             form_Data.append("installer_needed", main.Installer_needed);
             form_Data.append("installer_needed_other", main.Installer_needed_other);
+
+            form_Data.append("related_project_id", main.Related_project_id);
+            form_Data.append("related_stage_id", main.Related_stage_id);
+
             form_Data.append(
                 "installer_needed_location",
                 main.Location_Products_to_Bring
@@ -349,6 +354,9 @@ var app = new Vue({
             
             if(document.getElementById("sc_color_other").checked)
                 form_Data.append("color_other", main.Color_Other);
+
+            form_Data.append("related_project_id", main.Related_project_id);
+            form_Data.append("related_stage_id", main.Related_stage_id);
 
             form_Data.append("color", main.Color);
             form_Data.append("text_color", "white");
@@ -645,6 +653,9 @@ var app = new Vue({
                                 Confirm: response.data[i].confirm,
                                 Agenda: agendas,
                                 Lasteditor: Lasteditor,
+
+                                Related_project_id : response.data[i].related_project_id,
+                                Related_stage_id : response.data[i].related_stage_id,
                             },
                         });
                     }
@@ -803,6 +814,8 @@ var app = new Vue({
                                 Confirm: response.data[i].confirm,
                                 Agenda: agendas,
                                 Lasteditor: Lasteditor,
+                                Related_project_id: response.data[i].related_project_id,
+                                Related_stage_id: response.data[i].related_stage_id,
                             },
                         });
                     }
@@ -845,6 +858,40 @@ var app = new Vue({
                 });
 
         },
+
+        async setStages(pid) {
+            let _this = this;
+            let token = localStorage.getItem('accessToken');
+
+            var stages = [];
+
+            if (pid)
+            {
+                let res = await axios.get('api/project02_stages', { headers: { "Authorization": `Bearer ${token}` }, params: { pid: pid } });
+                    stages = res.data;
+            }
+
+            // clear select sc_related_stage_id
+            var select = document.getElementById("sc_related_stage_id");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+            }
+
+            // dynamic add option to select sc_related_stage_id
+            for (var i = 0; i < stages.length; i++) {
+                var opt = stages[i];
+                var el = document.createElement("option");
+                el.textContent = opt.sequence + " : " + opt.stage;
+                el.value = opt.id;
+                el.selected = (opt.id == _this.sc_related_stage_id);
+                select.appendChild(el);
+            }
+
+            console.log("setStages");
+
+            },
+
 
         getDetail: function () {
             var token = localStorage.getItem("token");
@@ -997,6 +1044,8 @@ var app = new Vue({
             form_Data.append("project", sc_content.Project);
             form_Data.append("sales_executive", sc_content.Sales_Executive);
             form_Data.append("project_in_charge", sc_content.Project_in_charge);
+            form_Data.append("related_project_id", sc_content.Related_project_id);
+            form_Data.append("related_stage_id", sc_content.Related_stage_id);
             form_Data.append("project_relevant", sc_content.Project_relevant);
             form_Data.append("installer_needed", sc_content.Installer_needed);
             form_Data.append("installer_needed_other", sc_content.Installer_needed_other);
@@ -1219,6 +1268,8 @@ var app = new Vue({
             form_Data.append("sales_executive", main.Sales_Executive);
             form_Data.append("project_in_charge", main.Project_in_charge);
             form_Data.append("project_relevant", main.Project_relevant);
+            form_Data.append("related_project_id", main.Related_project_id);
+            form_Data.append("related_stage_id", main.Related_stage_id);
             form_Data.append("installer_needed", main.Installer_needed);
             form_Data.append("installer_needed_other", main.Installer_needed_other);
             form_Data.append(
@@ -1512,6 +1563,18 @@ var initial = () =>  {
                         "display: flex; align-items: center; margin-top:1%;";
 
                     resetSchedule();
+
+                    if(project.project_id != 0 && project.stage_id != 0)
+                    {
+                        project.getStages(project.project_id);
+                    }
+                    else
+                    {
+                        $('#sc_related_project_id').val(0);
+                        $('#sc_related_stage_id').val(0);
+                    }
+                    
+
                     Change_Schedule_State(false, true);
                     icon_function_enable = true;
 
@@ -1521,7 +1584,7 @@ var initial = () =>  {
         },
 
         //Schedule被點擊的方法
-        eventClick: function (info) {
+        eventClick: async function (info) {
             document.getElementById("myLargeModalLabel").innerText =
                 "Schedule Details";
             eventObj = info.event;
@@ -1578,6 +1641,13 @@ var initial = () =>  {
             document.getElementById("sc_sales").value = sc_content.Sales_Executive;
             document.getElementById("sc_incharge").value =
                 sc_content.Project_in_charge;
+
+            $("#sc_related_project_id").val(sc_content.Related_project_id).trigger("change");
+
+            await app.setStages(sc_content.Related_project_id);
+
+            $("#sc_related_stage_id").val(sc_content.Related_stage_id).trigger("change");
+
             document.getElementById("sc_relevant").value =
                 sc_content.Project_relevant;
             app.attendee = (sc_content.Project_relevant.split(",") === "" ? app.attendee = [] : sc_content.Project_relevant.split(","));
@@ -1736,6 +1806,8 @@ var initial = () =>  {
 
             $("#exampleModalScrollable").modal("toggle");
         },
+
+        
 
         //載入日曆初始化時，如果 Schedule 的 confirmed 為True，則加上一個checkbox圖示在 日曆上的 Schedule 前方。
         eventDidMount: function (arg) {
@@ -2068,6 +2140,15 @@ $("button[id='btn_add']").click(function () {
         });
     }
 
+    related_project_id = $('#sc_related_project_id').val()
+    related_stage_id = $('#sc_related_stage_id').val()
+
+    if(related_project_id == undefined || related_project_id == null || related_project_id == "") 
+        related_project_id = 0;
+
+    if(related_stage_id == undefined || related_stage_id == null || related_stage_id == "")
+        related_stage_id = 0;
+
     var sc_content = {
         Date: document.getElementById("sc_date").value,
         Title: document.getElementById("sc_project").value,
@@ -2102,6 +2183,9 @@ $("button[id='btn_add']").click(function () {
         Lock: "",
         Confirm:"",
         is_enable: true,
+
+        Related_project_id : related_project_id,
+        Related_stage_id : related_stage_id,
     };
 
     if (sc_content.Allday) {
@@ -2140,6 +2224,17 @@ function resetSchedule() {
     document.getElementById("sc_tb_agenda").value = "";
     document.getElementById("sc_tb_appointtime").value = "";
     document.getElementById("sc_tb_endtime").value = "";
+
+    // set selected to false
+    $("input[id='sc_related_project_id']").each(function (i, v) {
+        $(v).prop("selected", false);
+    });
+    $("input[id='sc_related_project_id']").each(function (i, v) {
+        $(v).prop("selected", false);
+    });
+    $(".sc_related_project_id").val(0);
+    $(".sc_related_stage_id").val(0);
+
 
     $("input[name='sc_Installer_needed']").each(function (i, v) {
         $(v).prop("checked", false);
@@ -2193,6 +2288,9 @@ function Change_Schedule_State(status, time_status) {
     document.getElementById("sc_sales").disabled = status;
     document.getElementById("sc_incharge").disabled = status;
     document.getElementById("sc_relevant").disabled = status;
+
+    document.getElementById("sc_related_project_id").disabled = status;
+    document.getElementById("sc_related_stage_id").disabled = status;
 
     if (status == false) {
         $("#sc_relevant").removeClass("select_disabled");
@@ -2340,7 +2438,7 @@ $(document).on("click", "#btn_export", function () {
     app.export();
 });
 
-$(document).on("click", "#btn_cancel", function () {
+$(document).on("click", "#btn_cancel", async function () {
     var sc_content = eventObj.extendedProps.description;
 
     document.getElementById("sc_title").value = sc_content.Title;
@@ -2357,6 +2455,14 @@ $(document).on("click", "#btn_cancel", function () {
     document.getElementById("sc_project").value = sc_content.Project;
     document.getElementById("sc_sales").value = sc_content.Sales_Executive;
     document.getElementById("sc_incharge").value = sc_content.Project_in_charge;
+
+
+    $("#sc_related_project_id").val(sc_content.Related_project_id);
+
+    await app.setStages(sc_content.Related_project_id);
+    $("#sc_related_stage_id").val(sc_content.Related_stage_id);
+    
+
     document.getElementById("sc_relevant").value = sc_content.Project_relevant;
     app.attendee = (sc_content.Project_relevant.split(",") === "" ? app.attendee = [] : sc_content.Project_relevant.split(","));
     if(sc_content.Project_relevant === "")
@@ -2710,6 +2816,9 @@ $(document).on("click", "#btn_save", function () {
         Notes: document.getElementById("sc_notes").value,
         Lock: document.getElementById("lock").value,
         Confirm: document.getElementById("confirm").value,
+
+        Related_project_id: $("#sc_related_project_id").val(),
+        Related_stage_id: $("#sc_related_stage_id").val(),
     };
 
     if (sc_content.Allday) {
@@ -3210,5 +3319,94 @@ var msg = new Vue({
             let _this = this;
             clearTimeout(_this.myVar);
         },
+    },
+});
+
+
+
+var project = new Vue({
+    el: "#projects",
+    data: {
+        projects: [],
+        project_id : 0,
+
+        stages: [],
+        stage_id : 0,
+  
+    },
+    created() {
+        let _this = this;
+        let uri = window.location.href.split("?");
+        if (uri.length >= 2) {
+            let vars = uri[1].split("&");
+
+            let tmp = "";
+            vars.forEach(async function(v) {
+                tmp = v.split("=");
+                if (tmp.length == 2) {
+                switch (tmp[0]) {
+                    case "project_id":
+                        _this.project_id = tmp[1];
+                    break;
+
+                    case "stage_id":
+                        _this.stage_id = tmp[1];
+                    break;
+                
+                    default:
+                    console.log(`Too many args`);
+                }
+                }
+            });
+        }
+
+        this.getProjects();
+    },
+
+    methods: {
+        getProjects() {
+            let _this = this;
+            let token = localStorage.getItem('accessToken');
+            axios
+                .get('api/project02_get_project_name_by_keyword', { headers: { "Authorization": `Bearer ${token}` } })  
+                .then(
+                    (res) => {
+                        _this.projects = res.data;
+                    },
+                    (err) => {
+                        alert(err.response);
+                    },
+                )
+                .finally(() => {
+                });
+        },
+
+        async getStages(pid) {
+            let _this = this;
+            let token = localStorage.getItem('accessToken');
+
+            // clear select sc_related_stage_id (add by edit)
+            var select = document.getElementById("sc_related_stage_id");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+            }
+
+            if(pid != undefined) 
+                _this.project_id = pid;
+
+            let res = await axios.get('api/project02_stages', { headers: { "Authorization": `Bearer ${token}` }, params: { pid: _this.project_id } });
+                _this.stages = res.data;
+
+            console.log("getStages");
+            },
+        
+            clear(){
+                let _this = this;
+                _this.project_id = 0;
+                _this.stage_id = 0;
+                _this.stages = [];
+            },
+
     },
 });

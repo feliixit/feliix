@@ -382,6 +382,29 @@ try {
 
                 <br>
 
+                <div class="form-inline row" id="projects">
+                    <div class="col-2 align-self-center" style="text-align: center;">
+
+                        <label>Related Project</label>
+                    </div>
+
+                    <div class="col-10">
+
+                    <!-- dropdown -->
+                    <select class="form-control" style="width:90%;" id="sc_related_project_id" @change="getStages()" v-model="project_id">
+                        <option value=""></option>
+                        <option v-for="project in projects" :value="project.id">{{project.project_name}}</option>
+                    </select>
+                    <select class="form-control" style="width:90%;" id="sc_related_stage_id"  v-model="stage_id">
+                        <option v-for="stage in stages" :value="stage.id">{{stage.sequence}} : {{stage.stage}}</option>
+                    </select>
+
+                    </div>
+
+                </div>
+
+                <br>
+
                 <div class="form-inline row">
                     <div class="col-2 align-self-center" style="text-align: center;">
 

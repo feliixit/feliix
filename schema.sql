@@ -3748,3 +3748,7 @@ ALTER TABLE `user` CHANGE `address` `date_start_company` VARCHAR(10) DEFAULT '';
 
 ALTER TABLE `user`
 ADD COLUMN `seniority` int(11) DEFAULT 0;
+
+-- 20230508
+ALTER TABLE `work_calendar_main` ADD `related_project_id` bigint(20) DEFAULT 0;
+ALTER TABLE `work_calendar_main` ADD `related_stage_id` bigint(20) DEFAULT 0;

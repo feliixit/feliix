@@ -50,6 +50,9 @@ $created_by = (isset($_POST['created_by']) ?  $_POST['created_by'] : '');
 $updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
 $deleted_by = (isset($_POST['deleted_by']) ?  $_POST['deleted_by'] : '');
 
+$related_project_id = (isset($_POST['related_project_id']) ?  $_POST['related_project_id'] : 0);
+$related_stage_id = (isset($_POST['related_stage_id']) ?  $_POST['related_stage_id'] : 0);
+
 $detail_list = (isset($_POST['detail_list']) ?  $_POST['detail_list'] : '');
 $detail_array = json_decode($detail_list, true);
 
@@ -133,6 +136,9 @@ if (!isset($jwt)) {
             $workCalenderMain->installer_needed_location = $installer_needed_location;
             $workCalenderMain->things_to_bring = $things_to_bring;
             $workCalenderMain->things_to_bring_location = $things_to_bring_location;
+
+            $workCalenderMain->related_project_id = $related_project_id;
+            $workCalenderMain->related_stage_id = $related_stage_id;
 
             $workCalenderMain->products_to_bring = $products_to_bring;
             $workCalenderMain->products_to_bring_files = $products_to_bring_files;
@@ -367,6 +373,9 @@ if (!isset($jwt)) {
             $workCalenderMain->things_to_bring = $things_to_bring;
             $workCalenderMain->things_to_bring_location = $things_to_bring_location;
 
+            $workCalenderMain->related_project_id = $related_project_id;
+            $workCalenderMain->related_stage_id = $related_stage_id;
+
             $workCalenderMain->products_to_bring = $products_to_bring;
             $workCalenderMain->products_to_bring_files = $products_to_bring_files;
             $workCalenderMain->service = $service;
@@ -524,6 +533,9 @@ if (!isset($jwt)) {
             $workCalenderMain->installer_needed_location = $installer_needed_location;
             $workCalenderMain->things_to_bring = $things_to_bring;
             $workCalenderMain->things_to_bring_location = $things_to_bring_location;
+
+            $workCalenderMain->related_project_id = $related_project_id;
+            $workCalenderMain->related_stage_id = $related_stage_id;
 
             $workCalenderMain->products_to_bring = $products_to_bring;
             $workCalenderMain->products_to_bring_files = $products_to_bring_files;

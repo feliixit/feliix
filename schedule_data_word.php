@@ -38,10 +38,15 @@ $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
 $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
         project_in_charge, project_relevant, installer_needed, installer_needed_other, things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, driver_other,
-		back_up_driver, back_up_driver_other, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
-		DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files
-		from work_calendar_main main 
-		left join work_calendar_details detail on detail.main_id = main.id where coalesce(detail.is_enabled, 1) = 1 and main.id = " . $id . " order by sort " ;
+        back_up_driver, back_up_driver_other, photoshoot_request, notes, detail.location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
+        DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files,
+        coalesce(pm.project_name, '') project_name, coalesce(pst.stage, '') stage_name, coalesce(`sequence`, '') sequence
+        from work_calendar_main main 
+        left join work_calendar_details detail on detail.main_id = main.id 
+        left join project_main pm on pm.id = main.related_project_id
+        left join project_stages ps on ps.id = main.related_stage_id
+        LEFT JOIN project_stage pst ON ps.stage_id = pst.id
+        where coalesce(detail.is_enabled, 1) = 1 and main.id = " . $id . " order by sort " ;
 
     $stmt = $db->prepare( $sql );
     $stmt->execute();
@@ -72,6 +77,10 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $agenda = '';
     $appoint_time = '';
     $end_time = '';
+
+    $project_name = '';
+    $stage_name = '';
+    $sequence = '';
 
     $onrecord = 0;
 
@@ -107,6 +116,10 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $appoint_time = $row['appoint_time'];
     $end_time = $row['end_time'];
 
+    $project_name = $row['project_name'];
+    $stage_name = $row['stage_name'];
+    $sequence = $row['sequence'];
+
     break;
 }
 
@@ -116,7 +129,8 @@ if($onrecord == 0)
         project_in_charge, project_relevant, installer_needed, installer_needed_other,things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, driver_other,
 		back_up_driver, back_up_driver_other, photoshoot_request, notes, '' location, '' agenda, '' appoint_time, 
-		'' end_time, products_to_bring_files
+		'' end_time, products_to_bring_files,
+        '' project_name, '' stage_name, '' sequence
 		from work_calendar_main main 
 		where main.id = " . $id . " " ;
 
@@ -154,6 +168,10 @@ if($onrecord == 0)
         $appoint_time = $row['appoint_time'];
         $end_time = $row['end_time'];
 
+        $project_name = $row['project_name'];
+        $stage_name = $row['stage_name'];
+        $sequence = $row['sequence'];
+
         break;
     }
 }
@@ -178,6 +196,13 @@ $table = $section->addTable('table', [
     'cellMargin'=> 0
 ]);
 
+$related_project = $project_name . " - " . $sequence . ": " . $stage_name;
+
+if($related_project == " - : ") 
+{
+    $related_project = "";
+}
+
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($start_time);
@@ -185,6 +210,10 @@ $table->addCell(8500, ['borderSize' => 6])->addText($start_time);
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Project:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($title);
+
+$table->addRow();
+$table->addCell(2000, ['borderSize' => 6])->addText("Related Project:", array('bold' => true));
+$table->addCell(8500, ['borderSize' => 6])->addText($related_project);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Sales Executive:", array('bold' => true));
