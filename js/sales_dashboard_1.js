@@ -527,7 +527,7 @@ var app = new Vue({
 
       axios({
         method: "post",
-        url: "api/sales_dashboard_1_report_print",
+        url: "api/sales_dashboard_1_print",
         data: form_Data,
         responseType: "blob",
       })
