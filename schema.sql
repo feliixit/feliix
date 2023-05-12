@@ -3752,3 +3752,6 @@ ADD COLUMN `seniority` int(11) DEFAULT 0;
 -- 20230508
 ALTER TABLE `work_calendar_main` ADD `related_project_id` bigint(20) DEFAULT 0;
 ALTER TABLE `work_calendar_main` ADD `related_stage_id` bigint(20) DEFAULT 0;
+
+-- 20230510
+ALTER TABLE `project_main` ADD COLUMN `archive` int(11) DEFAULT 0;

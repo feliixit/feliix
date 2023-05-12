@@ -26,7 +26,7 @@ try {
             
             // 可以存取Expense Recorder的人員名單如下：Dennis Lin(2), Glendon Wendell Co(4), Kristel Tan(6), Kuan(3), Mary Jude Jeng Articulo(9), Thalassa Wren Benzon(41), Stefanie Mika C. Santos(99)
             // 為了測試先加上testmanager(87) by BB
-            if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87 || $user_id == 139 || $user_id == 143)
+            if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 41 || $user_id == 3 || $user_id == 9 || $user_id == 87 || $user_id == 139 || $user_id == 143 || $user_id == 146)
             {
                 $access3 = true;
             }
