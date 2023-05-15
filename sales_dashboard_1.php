@@ -346,8 +346,8 @@ catch (Exception $e) {
                                 <dt style="margin-top: 5px;">Non-Archived or Archived Porjects</dt>
                                 <dd>
                                     <select v-model="fil_archive">
-                                        <option value="1">Non-Archived Projects</option>
-                                        <option value="0">Archived Projects</option>
+                                        <option value="0">Non-Archived Projects</option>
+                                        <option value="1">Archived Projects</option>
                                         <option value="a">All</option>
                                     </select>
                                 </dd>

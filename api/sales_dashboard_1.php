@@ -279,6 +279,96 @@ function GetMonthSaleReport($PeriodStart, $PeriodEnd, $sale_person, $category, $
                 $close_office_array = array();
                 $disapprove_lighting_array = array();
                 $disapprove_office_array = array();
+
+                // yet
+                if($row['project_status'] != 'Disapproved' && $row['proof_count'] == 0)
+                {
+                    if($row['catagory'] == 'Lighting')
+                    {
+                        array_push($yet_lighting_array, array(
+                            "username" => $username,
+                            "project_name" =>  $row['project_name'],
+                            "final_amount" => $row['final_amount'],
+                            "estimate_close_prob" => $row['estimate_close_prob'],
+                            "archive" =>  $row['archive'],
+                            "created_at" =>  $row['created_at'],
+                            "pid" => $row['pid'],
+                        ));
+                    }
+                    else if($row['catagory'] == 'Office System')
+                    {
+                        array_push($yet_office_array, array(
+                            "username" => $username,
+                            "project_name" =>  $row['project_name'],
+                            "final_amount" => $row['final_amount'],
+                            "estimate_close_prob" => $row['estimate_close_prob'],
+                            "archive" =>  $row['archive'],
+                            "created_at" =>  $row['created_at'],
+                            "pid" => $row['pid'],
+                        ));
+                    }
+                    
+                }
+
+                // close
+                if($row['project_status'] != 'Disapproved' && $row['proof_count'] > 0)
+                {
+                    if($row['catagory'] == 'Lighting')
+                    {
+                        array_push($close_lighting_array, array(
+                            "username" => $username,
+                            "project_name" =>  $row['project_name'],
+                            "final_amount" => $row['final_amount'],
+                            "estimate_close_prob" => $row['estimate_close_prob'],
+                            "archive" =>  $row['archive'],
+                            "created_at" =>  $row['created_at'],
+                            "pid" => $row['pid'],
+                        ));
+                    }
+                    else if($row['catagory'] == 'Office System')
+                    {
+                        array_push($close_office_array, array(
+                            "username" => $username,
+                            "project_name" =>  $row['project_name'],
+                            "final_amount" => $row['final_amount'],
+                            "estimate_close_prob" => $row['estimate_close_prob'],
+                            "archive" =>  $row['archive'],
+                            "created_at" =>  $row['created_at'],
+                            "pid" => $row['pid'],
+                        ));
+                    }
+                    
+                }
+
+                // disapprove
+                if($row['project_status'] == 'Disapproved')
+                {
+                    if($row['catagory'] == 'Lighting')
+                    {
+                        array_push($disapprove_lighting_array, array(
+                            "username" => $username,
+                            "project_name" =>  $row['project_name'],
+                            "final_amount" => $row['final_amount'],
+                            "estimate_close_prob" => $row['estimate_close_prob'],
+                            "archive" =>  $row['archive'],
+                            "created_at" =>  $row['created_at'],
+                            "pid" => $row['pid'],
+                        ));
+                    }
+                    else if($row['catagory'] == 'Office System')
+                    {
+                        array_push($disapprove_office_array, array(
+                            "username" => $username,
+                            "project_name" =>  $row['project_name'],
+                            "final_amount" => $row['final_amount'],
+                            "estimate_close_prob" => $row['estimate_close_prob'],
+                            "archive" =>  $row['archive'],
+                            "created_at" =>  $row['created_at'],
+                            "pid" => $row['pid'],
+                        ));
+                    }
+                    
+                }
             }
         }
 
