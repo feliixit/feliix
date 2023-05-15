@@ -162,42 +162,71 @@ if($fc != "")
     $query_cnt = $query_cnt . " and p.username = '" . $fc . "' ";
 }
 
+$status_array = [];
+
+
 if($fs != "" && $fs != "0")
 {
-    if($fs == "1")
-        $sql = $sql . " and pm.`status` in (1, 2) ";
-    if($fs == "2")
-        $sql = $sql . " and pm.`status` in (3, 4) ";
-    if($fs == "3")
-        $sql = $sql . " and pm.`status` in (5) ";
-    if($fs == "4")
-        $sql = $sql . " and pm.`status` in (6, 7) ";
-    if($fs == "5")
-        $sql = $sql . " and pm.`status` in (8) ";
-    if($fs == "6")
-        $sql = $sql . " and pm.`status` in (9) ";
-    if($fs == "7")
-        $sql = $sql . " and pm.`status` in (0) ";
-    if($fs == "8")
-        $sql = $sql . " and pm.`status` in (-1) ";
-
-    if($fs == "1")
-        $query_cnt = $query_cnt . " and pm.`status` in (1, 2) ";
-    if($fs == "2")
-        $query_cnt = $query_cnt . " and pm.`status` in (3, 4) ";
-    if($fs == "3")
-        $query_cnt = $query_cnt . " and pm.`status` in (5) ";
-    if($fs == "4")
-        $query_cnt = $query_cnt . " and pm.`status` in (6, 7) ";
-    if($fs == "5")
-        $query_cnt = $query_cnt . " and pm.`status` in (8) ";
-    if($fs == "6")
-        $query_cnt = $query_cnt . " and pm.`status` in (9) ";
-    if($fs == "7")
-        $query_cnt = $query_cnt . " and pm.`status` in (0) ";
-    if($fs == "8")
-        $query_cnt = $sql . " and pm.`status` in (-1) ";
+    if(strpos($fs,"1") > -1)
+        $status_array = array_merge($status_array, [1, 2]);
+    if(strpos($fs,"2") > -1)
+        $status_array = array_merge($status_array, [3, 4]);
+    if(strpos($fs,"3") > -1)
+        $status_array = array_merge($status_array, [5]);
+    if(strpos($fs,"4") > -1)
+        $status_array = array_merge($status_array, [6, 7]);
+    if(strpos($fs,"5") > -1)
+        $status_array = array_merge($status_array, [8]);
+    if(strpos($fs,"6") > -1)
+        $status_array = array_merge($status_array, [9]);
+    if(strpos($fs,"7") > -1)
+        $status_array = array_merge($status_array, [0]);
+    if(strpos($fs,"8") > -1)
+        $status_array = array_merge($status_array, [-1]);
 }
+
+if(count($status_array) > 0)
+{
+    $sql = $sql . " and pm.`status` in (" . implode(",", $status_array) . ") ";
+    $query_cnt = $query_cnt . " and pm.`status` in (" . implode(",", $status_array) . ") ";
+}
+
+// if($fs != "" && $fs != "0")
+// {
+//     if(strpos($fs,"1") > -1)
+//         $sql = $sql . " and pm.`status` in (1, 2) ";
+//     if(strpos($fs,"2") > -1)
+//         $sql = $sql . " and pm.`status` in (3, 4) ";
+//     if(strpos($fs,"3") > -1)
+//         $sql = $sql . " and pm.`status` in (5) ";
+//     if(strpos($fs,"4") > -1)
+//         $sql = $sql . " and pm.`status` in (6, 7) ";
+//     if(strpos($fs,"5") > -1)
+//         $sql = $sql . " and pm.`status` in (8) ";
+//     if(strpos($fs,"6") > -1)
+//         $sql = $sql . " and pm.`status` in (9) ";
+//     if(strpos($fs,"7") > -1)
+//         $sql = $sql . " and pm.`status` in (0) ";
+//     if(strpos($fs,"8") > -1)
+//         $sql = $sql . " and pm.`status` in (-1) ";
+
+//     if(strpos($fs,"1") > -1)
+//         $query_cnt = $query_cnt . " and pm.`status` in (1, 2) ";
+//     if(strpos($fs,"2") > -1)
+//         $query_cnt = $query_cnt . " and pm.`status` in (3, 4) ";
+//     if(strpos($fs,"3") > -1)
+//         $query_cnt = $query_cnt . " and pm.`status` in (5) ";
+//     if(strpos($fs,"4") > -1)
+//         $query_cnt = $query_cnt . " and pm.`status` in (6, 7) ";
+//     if(strpos($fs,"5") > -1)
+//         $query_cnt = $query_cnt . " and pm.`status` in (8) ";
+//     if(strpos($fs,"6") > -1)
+//         $query_cnt = $query_cnt . " and pm.`status` in (9) ";
+//     if(strpos($fs,"7") > -1)
+//         $query_cnt = $query_cnt . " and pm.`status` in (0) ";
+//     if(strpos($fs,"8") > -1)
+//         $query_cnt = $query_cnt . " and pm.`status` in (-1) ";
+// }
 
 if($fat == "1" && $fau != "")
 {
@@ -306,6 +335,19 @@ if($ftd == "7" && $fde != "")
     $sql = $sql . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
     $query_cnt = $query_cnt . " and (select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1) <= '" . $fde . "' ";
 }
+
+if($ftd == "8" && $fds != "")
+{
+    $sql = $sql . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') >= '" . $fds . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') >= '" . $fds . "' ";
+}
+
+if($ftd == "8" && $fde != "")
+{
+    $sql = $sql . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') <= '" . $fde . "' ";
+    $query_cnt = $query_cnt . " and DATE_FORMAT(pm.created_at, '%Y/%m/%d') <= '" . $fde . "' ";
+}
+
 
 $sOrder = "";
 if($of1 != "" && $of1 != "0")

@@ -1025,6 +1025,7 @@ header( 'location:index' );
             text-align: left;
             color: red;
             margin: 0 5px 8px;
+            white-space: pre-line;
         }
 
         .tb_format1 tbody tr.desc2 td div.picbox {

@@ -46,7 +46,7 @@ var app = new Vue({
     
     fil_creator: "",
     fil_type: "",
-    fil_status: "",
+    fil_status: [],
     fil_amount_type : "",
     
     fil_amount_upper: "",
@@ -100,7 +100,7 @@ var app = new Vue({
               _this.fil_type = tmp[1];
               break;
             case "fs":
-              _this.fil_status = tmp[1];
+              _this.fil_status = tmp[1].split(",");
               break;
             case "fat":
               _this.fil_amount_type = tmp[1];
@@ -266,7 +266,7 @@ var app = new Vue({
         frl: _this.fil_request_no_lower,
         fc: _this.fil_creator,
         ft: _this.fil_type,
-        fs: _this.fil_status,
+        fs: _this.fil_status.join(','),
         fat: _this.fil_amount_type,
         fau: _this.fil_amount_upper,
         fal: _this.fil_amount_lower,
@@ -420,7 +420,7 @@ var app = new Vue({
         "&ft=" +
         _this.fil_type +
         "&fs=" +
-        _this.fil_status +
+        _this.fil_status.join(',') +
         "&fat=" +
         _this.fil_amount_type +
         "&fau=" +
@@ -467,7 +467,7 @@ var app = new Vue({
         "&ft=" +
         _this.fil_type +
         "&fs=" +
-        _this.fil_status +
+        _this.fil_status.join(',') +
         "&fat=" +
         _this.fil_amount_type +
         "&fau=" +
@@ -505,7 +505,7 @@ var app = new Vue({
       this.fil_request_no_lower = '';
       this.fil_creator = '';
       this.fil_type = "";
-      this.fil_status = "";
+      this.fil_status = [];
       this.fil_amount_type = "";
     
       this.fil_amount_upper = "";
@@ -903,7 +903,7 @@ var app = new Vue({
       form_Data.append("frl", this.fil_request_no_lower);
       form_Data.append("fc", this.fil_creator);
       form_Data.append("ft", this.fil_type);
-      form_Data.append("fs", this.fil_status);
+      form_Data.append("fs", this.fil_status.join(','));
       form_Data.append("fat", this.fil_amount_type);
       form_Data.append("fau", this.fil_amount_upper);
       form_Data.append("fal", this.fil_amount_lower);

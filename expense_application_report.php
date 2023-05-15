@@ -28,15 +28,34 @@
     <!-- Google Analytics -->
 
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="css/default.css" />
-    <link rel="stylesheet" type="text/css" href="css/ui.css" />
-    <link rel="stylesheet" type="text/css" href="css/case.css" />
-    <link rel="stylesheet" type="text/css" href="css/mediaqueries.css" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="css/default.css"/>
+    <link rel="stylesheet" type="text/css" href="css/ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/case.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" type="text/css" href="css/tagsinput.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" type="text/css">
+
+    
+    
 
     <!-- jQuery和js載入 -->
     <script type="text/javascript" src="js/rm/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/rm/realmediaScript.js"></script>
+
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script type="text/javascript" src="js/tagsinput.js"></script>
+    <script type="text/javascript" src="js/bootstrap-select.js" defer></script>
+
+
+
     <script type="text/javascript" src="js/main.js" defer></script>
 
     <!-- import CSS -->
@@ -296,7 +315,7 @@
 
                                     <dt>Status</dt>
                                     <dd>
-                                        <select v-model="fil_status">
+                                        <!-- <select v-model="fil_status">
                                             <option value=""></option>
                                             <option value="1">For Check</option>
                                             <option value="2">For Approve</option>
@@ -306,7 +325,22 @@
                                             <option value="6">Completed</option>
                                             <option value="7">Rejected</option>
                                             <option value="8">Withdrawn</option>
-                                        </select>
+                                        </select> -->
+
+                                        <select class="selectpicker" multiple data-live-search="true" data-size="8"
+                                            data-width="100%" title="No status selected" id="tag01" v-model="fil_status">
+
+                                            <option value=""></option>
+                                            <option value="1">For Check</option>
+                                            <option value="2">For Approve</option>
+                                            <option value="3">For Release</option>
+                                            <option value="4">For Liquidate</option>
+                                            <option value="5">For Verify</option>
+                                            <option value="6">Completed</option>
+                                            <option value="7">Rejected</option>
+                                            <option value="8">Withdrawn</option>
+
+                                    </select>
                                     </dd>
 
                                     <dt style="margin-top: 15px;">Type of Amount</dt>
@@ -330,6 +364,7 @@
                                     <dd style="margin-bottom: -5px;">
                                         <select v-model="fil_type_date">
                                             <option value=""></option>
+                                            <option value="8">Application Time</option>
                                             <option value="1">Date Needed</option>
                                             <option value="2">Date Checked</option>
                                             <option value="3">Date Approved (1st)</option>
