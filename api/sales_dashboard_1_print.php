@@ -121,10 +121,10 @@ if($jwt){
                     $sheet->setCellValue('B' . $i, 'Yet Close-Deal');
                     $sheet->setCellValue('C' . $i, 'Lighting');
                     $sheet->setCellValue('D' . $i, $rp['project_name']);
-                    $sheet->setCellValue('E' . $i, $rp['created_at']);
+                    $sheet->setCellValue('E' . $i, substr($rp['created_at'], 0, 10));
                     $sheet->setCellValue('F' . $i, $rp['estimate_close_prob']);
                     $sheet->setCellValue('G' . $i, number_format((float)$rp['final_amount'], 2, '.', ''));
-                    $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
+                    //$sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
                 }
                 foreach($row['yet_office_array'] as $rp)
                 {
@@ -133,10 +133,10 @@ if($jwt){
                     $sheet->setCellValue('B' . $i, 'Yet Close-Deal');
                     $sheet->setCellValue('C' . $i, 'Office');
                     $sheet->setCellValue('D' . $i, $rp['project_name']);
-                    $sheet->setCellValue('E' . $i, $rp['created_at']);
+                    $sheet->setCellValue('E' . $i, substr($rp['created_at'], 0, 10));
                     $sheet->setCellValue('F' . $i, $rp['estimate_close_prob']);
                     $sheet->setCellValue('G' . $i, number_format((float)$rp['final_amount'], 2, '.', ''));
-                    $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
+                    //$sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
                 }
 
                 foreach($row['close_lighting_array'] as $rp)
@@ -146,10 +146,10 @@ if($jwt){
                     $sheet->setCellValue('B' . $i, 'Close-Deal');
                     $sheet->setCellValue('C' . $i, 'Lighting');
                     $sheet->setCellValue('D' . $i, $rp['project_name']);
-                    $sheet->setCellValue('E' . $i, $rp['created_at']);
+                    $sheet->setCellValue('E' . $i, substr($rp['created_at'], 0, 10));
                     $sheet->setCellValue('F' . $i, $rp['estimate_close_prob']);
                     $sheet->setCellValue('G' . $i, number_format((float)$rp['final_amount'], 2, '.', ''));
-                    $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
+                    //$sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
                 }
                 foreach($row['close_office_array'] as $rp)
                 {
@@ -158,10 +158,10 @@ if($jwt){
                     $sheet->setCellValue('B' . $i, 'Close-Deal');
                     $sheet->setCellValue('C' . $i, 'Office');
                     $sheet->setCellValue('D' . $i, $rp['project_name']);
-                    $sheet->setCellValue('E' . $i, $rp['created_at']);
+                    $sheet->setCellValue('E' . $i, substr($rp['created_at'], 0, 10));
                     $sheet->setCellValue('F' . $i, $rp['estimate_close_prob']);
                     $sheet->setCellValue('G' . $i, number_format((float)$rp['final_amount'], 2, '.', ''));
-                    $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
+                    //$sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
                 }
 
                 foreach($row['disapprove_lighting_array'] as $rp)
@@ -171,10 +171,10 @@ if($jwt){
                     $sheet->setCellValue('B' . $i, 'Disapproved');
                     $sheet->setCellValue('C' . $i, 'Lighting');
                     $sheet->setCellValue('D' . $i, $rp['project_name']);
-                    $sheet->setCellValue('E' . $i, $rp['created_at']);
+                    $sheet->setCellValue('E' . $i, substr($rp['created_at'], 0, 10));
                     $sheet->setCellValue('F' . $i, $rp['estimate_close_prob']);
                     $sheet->setCellValue('G' . $i, number_format((float)$rp['final_amount'], 2, '.', ''));
-                    $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
+                    //$sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
                 }
                 foreach($row['disapprove_office_array'] as $rp)
                 {
@@ -183,15 +183,15 @@ if($jwt){
                     $sheet->setCellValue('B' . $i, 'Disapproved');
                     $sheet->setCellValue('C' . $i, 'Office');
                     $sheet->setCellValue('D' . $i, $rp['project_name']);
-                    $sheet->setCellValue('E' . $i, $rp['created_at']);
+                    $sheet->setCellValue('E' . $i, substr($rp['created_at'], 0, 10));
                     $sheet->setCellValue('F' . $i, $rp['estimate_close_prob']);
                     $sheet->setCellValue('G' . $i, number_format((float)$rp['final_amount'], 2, '.', ''));
-                    $sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
+                    //$sheet->getStyle('A' . $i . ':' . 'G' . $i)->getFont()->setBold(true);
                 }
 
                 $i = $i + 1;
 
-                $sheet->getStyle('A' . $i . ':' . 'J' . $i)->getFont()->setBold(true);
+                //$sheet->getStyle('A' . $i . ':' . 'J' . $i)->getFont()->setBold(true);
                 //$sheet->getStyle('A'. $i. ':' . 'J' . $i)->applyFromArray($styleArray);
             }
 

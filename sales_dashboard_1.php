@@ -428,7 +428,7 @@ catch (Exception $e) {
                             <td v-if="j == 0" :rowspan="item.yet_lighting_array.length + item.yet_office_array.length">Yet Close-Deal: {{ item.yet_lighting_array.length + item.yet_office_array.length }}</td>
                             <td v-if="j == 0" :rowspan="item.yet_lighting_array.length">Lighting</td>
                             <td>{{ it.project_name }}</td>
-                            <td>{{ it.created_at }}</td>
+                            <td>{{ it.created_at.substring(0, 10) }}</td>
                             <td>{{ it.estimate_close_prob }}</td>
                             <td class="money">{{ it.final_amount == 0 ? "" :
                                 Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
@@ -448,7 +448,7 @@ catch (Exception $e) {
                                 :rowspan="item.yet_lighting_array.length + item.yet_office_array.length">Yet Close-Deal: {{ item.yet_lighting_array.length + item.yet_office_array.length }}</td>
                             <td v-if="j == 0" :rowspan="item.yet_office_array.length">Office Systems</td>
                             <td>{{ it.project_name }}</td>
-                            <td>{{ it.created_at }}</td>
+                            <td>{{ it.created_at.substring(0, 10) }}</td>
                             <td>{{ it.estimate_close_prob }}</td>
                             <td class="money">{{ it.final_amount == 0 ? "" :
                                 Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
@@ -469,7 +469,7 @@ catch (Exception $e) {
                             <td v-if="j == 0" :rowspan="item.close_lighting_array.length + item.close_office_array.length">Close-Deal: {{ item.close_lighting_array.length + item.close_office_array.length }}</td>
                             <td v-if="j == 0" :rowspan="item.close_lighting_array.length">Lighting</td>
                             <td>{{ it.project_name }}</td>
-                            <td>{{ it.created_at }}</td>
+                            <td>{{ it.created_at.substring(0, 10) }}</td>
                             <td>{{ it.estimate_close_prob }}</td>
                             <td class="money">{{ it.final_amount == 0 ? "" :
                                 Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
@@ -489,7 +489,7 @@ catch (Exception $e) {
                                 :rowspan="item.close_lighting_array.length + item.close_office_array.length">Close-Deal: {{ item.close_lighting_array.length + item.close_office_array.length }}</td>
                             <td v-if="j == 0" :rowspan="item.close_office_array.length">Office Systems</td>
                             <td>{{ it.project_name }}</td>
-                            <td>{{ it.created_at }}</td>
+                            <td>{{ it.created_at.substring(0, 10) }}</td>
                             <td>{{ it.estimate_close_prob }}</td>
                             <td class="money">{{ it.final_amount == 0 ? "" :
                                 Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
@@ -510,7 +510,7 @@ catch (Exception $e) {
                             <td v-if="j == 0" :rowspan="item.disapprove_lighting_array.length + item.disapprove_office_array.length">Disapproved: {{ item.disapprove_lighting_array.length + item.disapprove_office_array.length }}</td>
                             <td v-if="j == 0" :rowspan="item.disapprove_lighting_array.length">Lighting</td>
                             <td>{{ it.project_name }}</td>
-                            <td>{{ it.created_at }}</td>
+                            <td>{{ it.created_at.substring(0, 10) }}</td>
                             <td>{{ it.estimate_close_prob }}</td>
                             <td class="money">{{ it.final_amount == 0 ? "" :
                                 Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
@@ -530,7 +530,7 @@ catch (Exception $e) {
                                 :rowspan="item.disapprove_lighting_array.length + item.disapprove_office_array.length">Disapproved: {{ item.disapprove_lighting_array.length + item.disapprove_office_array.length }}</td>
                             <td v-if="j == 0" :rowspan="item.disapprove_office_array.length">Office Systems</td>
                             <td>{{ it.project_name }}</td>
-                            <td>{{ it.created_at }}</td>
+                            <td>{{ it.created_at.substring(0, 10) }}</td>
                             <td>{{ it.estimate_close_prob }}</td>
                             <td class="money">{{ it.final_amount == 0 ? "" :
                                 Number(it.final_amount).toLocaleString(undefined, {minimumFractionDigits:
