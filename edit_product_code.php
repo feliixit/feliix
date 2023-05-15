@@ -779,7 +779,7 @@
 
             <ul class="NTD_price" v-show="show_ntd === true">
                 <li>
-                    Cost Price (NTD)
+                    Cost Price
                 </li>
                 <li>
                     <input type="text" class="form-control one_half" v-model.lazy="price_ntd">
@@ -1063,7 +1063,7 @@
                         <th>{{ variation2_text }}</th>
                         <th>{{ variation3_text }}</th>
                      <!--   <th>Code</th> -->
-                        <th class="NTD_price" v-show="show_ntd === true">Cost Price (NTD)</th>
+                        <th class="NTD_price" v-show="show_ntd === true">Cost Price</th>
                         <th>Suggested Retail Price</th>
                         <th>Quoted Price</th>
                         <th>Image</th>
@@ -1322,7 +1322,7 @@
 
                         <tr class="NTD_price" v-show="show_ntd === true">
                             <td><input class="alone" type="checkbox" value="1" v-model="price_ntd_checked"></td>
-                            <td>Price (NTD)</td>
+                            <td>Cost Price</td>
                             <td><input type="text" class="form-control" v-model='bulk_price_ntd'></td>
                             <td>
                                 <select class="form-control" v-model="price_ntd_action">
