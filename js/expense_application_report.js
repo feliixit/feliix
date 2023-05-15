@@ -402,12 +402,16 @@ var app = new Vue({
       
     },
 
-    filter_apply_new: function() {
+    filter_apply_new: function(pg) {
       let _this = this;
 
       if(_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
       _this.page = 1;
+
+      if(pg != undefined) {
+        _this.page = pg;
+      }
 
       window.location.href =
         "expense_application_report?" +
@@ -450,11 +454,15 @@ var app = new Vue({
     },
 
 
-    filter_apply: function() {
+    filter_apply: function(pg) {
       let _this = this;
 
       if(_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
+
+      if(pg != undefined) {
+        _this.page = pg;
+      }
 
       window.location.href =
         "expense_application_report?" +
@@ -523,7 +531,7 @@ var app = new Vue({
       //this.receive_records = [];
 
       //this.getRecords();
-      this.filter_apply_new();
+      this.filter_apply_new(1);
     },
 
     order_remove: function() {
@@ -538,7 +546,7 @@ var app = new Vue({
 
       this.receive_records = [];
 
-      this.filter_apply();
+      this.filter_apply(1);
     },
 
     order_clear() {
