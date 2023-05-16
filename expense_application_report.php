@@ -254,6 +254,21 @@
             background-color: #EA0029;
             color: #FFF;
         }
+
+        ul.dropdown-menu.inner li {
+            display: block;
+            border-right: none;
+            padding: 5px;
+        }
+
+        .dropdown-menu > .bs-searchbox > input[type='search'] {
+            border: 1px solid #ced4da;
+        }
+
+        .bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
+            top: 15px;
+        }
+
     </style>
 
 
