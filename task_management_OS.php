@@ -3432,7 +3432,7 @@ catch (Exception $e) {
                                 </dl>
                                 <div class="btnbox"><a class="btn small" @click="filter_clear()">Cancel</a><a
                                         class="btn small" @click="filter_remove()">Clear</a> <a class="btn small green"
-                                                                                                @click="filter_apply()">Apply</a>
+                                                                                                @click="filter_apply(1)">Apply</a>
                                 </div>
                             </div>
                         </div>

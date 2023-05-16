@@ -600,7 +600,7 @@ try {
                                 <input type="month" v-model="sdate">
                                 <input type="month" v-model="edate">
                                 <input type="text" placeholder="Searching Keyword Here" v-model="keyword">
-                                <button style="border: none;" @click="search()"><i class="fas fa-search-plus"></i></button>
+                                <button style="border: none;" @click="search(1)"><i class="fas fa-search-plus"></i></button>
                             </div>
                         </div>
 

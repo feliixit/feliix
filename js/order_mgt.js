@@ -1046,8 +1046,10 @@ var app = new Vue({
           _this.page;
       },
 
-      apply_filters: function() {
+      apply_filters: function(pg) {
         let _this = this;
+        
+        if(pg != undefined) this.page = pg;
 
         window.location.href =
           "order_mgt?" +
