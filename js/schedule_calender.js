@@ -671,7 +671,7 @@ var app = new Vue({
             var form_Data = new FormData();
             let _this = this;
             _this.items = [];
-            this.action = 1; //select
+            this.action = 10; //select
             form_Data.append("jwt", token);
             form_Data.append("action", this.action);
 
@@ -711,18 +711,18 @@ var app = new Vue({
                                 " at " +
                                 response.data[i].created_at;
                         }
-                        for (var j = 0; j < _this.agenda.length; j++) {
-                            if (_this.agenda[j].main_id == response.data[i].id) {
+                        for (var j = 0; j < response.data[i].detail.length; j++) {
+                            //if (_this.agenda[j].main_id == response.data[i].id) {
                                 agendas.push({
-                                    agenda: UnescapeHTML(_this.agenda[j].agenda),
-                                    appointtime: moment(_this.agenda[j].appoint_time).format(
+                                    agenda: UnescapeHTML(response.data[i].detail[j].agenda),
+                                    appointtime: moment(response.data[i].detail[j].appoint_time).format(
                                         "HH:mm"
                                     ),
-                                    endtime: moment(_this.agenda[j].end_time).format("HH:mm"),
-                                    sort: _this.agenda[j].sort,
-                                    location: UnescapeHTML(_this.agenda[j].location),
+                                    endtime: moment(response.data[i].detail[j].end_time).format("HH:mm"),
+                                    sort: response.data[i].detail[j].sort,
+                                    location: UnescapeHTML(response.data[i].detail[j].location),
                                 });
-                            }
+                            //}
                         }
                         //整理檔案
                         response.data[i].products_to_bring_files = response.data[
@@ -830,32 +830,34 @@ var app = new Vue({
 
         getInitial: function() {
 
-            var token = localStorage.getItem("token");
-            var form_Data = new FormData();
-            let _this = this;
-            this.action = 1; //select all
-            form_Data.append("jwt", token);
-            form_Data.append("action", this.action);
+            this.getInitMain();
 
-            axios({
-                    method: "post",
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                    url: "api/work_calender_detail",
-                    data: form_Data,
-                })
-                .then(function (response) {
-                    //handle success
-                    _this.agenda = response.data;
+            // var token = localStorage.getItem("token");
+            // var form_Data = new FormData();
+            // let _this = this;
+            // this.action = 1; //select all
+            // form_Data.append("jwt", token);
+            // form_Data.append("action", this.action);
 
-                    _this.getInitMain();
-                })
-                .catch(function (response) {
-                    //handle error
-                    //alert(JSON.stringify(response));
-                    console.log(response);
-                });
+            // axios({
+            //         method: "post",
+            //         headers: {
+            //             "Content-Type": "multipart/form-data",
+            //         },
+            //         url: "api/work_calender_detail",
+            //         data: form_Data,
+            //     })
+            //     .then(function (response) {
+            //         //handle success
+            //         _this.agenda = response.data;
+
+            //         _this.getInitMain();
+            //     })
+            //     .catch(function (response) {
+            //         //handle error
+            //         //alert(JSON.stringify(response));
+            //         console.log(response);
+            //     });
 
         },
 

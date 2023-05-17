@@ -92,16 +92,236 @@ if (!isset($jwt)) {
     echo json_encode(array("message" => "Access denied1."));
     die();
 } else {
-    if ($action == 1) {
+    if($action == 1){
         //select all
         try {
-            $query = "SELECT * from work_calendar_main where is_enabled = true";
+            $query = "SELECT * from work_calendar_main main 
+                        where main.is_enabled = true ";
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $merged_results[] = $row;
+            }
+
+            $merged_results = RefactorInstallerNeeded($merged_results, $db);
+
+            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+        } catch (Exception $e) {
+            http_response_code(401);
+
+            echo json_encode(array("message" => ".$e."));
+        }
+    }
+    else if ($action == 10) {
+        //select all
+        try {
+            $query = "SELECT main.id, main.title, main.start_time, main.end_time, 
+                            main.color, main.color_other, main.text_color, main.all_day, main.photoshoot_request, 
+                            main.project, main.sales_executive, main.project_in_charge, main.project_relevant,
+                            main.installer_needed, main.installer_needed_other, main.things_to_bring_location,
+                            main.things_to_bring, main.installer_needed_location,
+                            main.products_to_bring, main.products_to_bring_files,
+                            main.service, main.driver, main.driver_other, main.back_up_driver, main.back_up_driver_other,
+                            main.notes, main.`lock`, main.related_project_id, main.related_stage_id,
+                            main.created_by, main.created_at, main.updated_by, main.updated_at,
+                            detail.main_id, detail.agenda, detail.appoint_time, detail.end_time, detail.sort, detail.location  
+                        from work_calendar_main main 
+                        left join work_calendar_details detail on detail.main_id = main.id 
+                        where main.is_enabled = true 
+                        and detail.is_enabled = true
+                        order by main.id, detail.sort ";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
 
+            $merged_results = array();
+            $detail_array = array();
+
+            // master
+            $id = 0;
+            $title = "";
+            $start_time = "";
+            $end_time = "";
+            $color = "";
+            $color_other = "";
+            $text_color = "";
+            $all_day = "";
+            $photoshoot_request = "";
+            $project = "";
+            $sales_executive = "";
+            $project_in_charge = "";
+            $project_relevant = "";
+            $installer_needed = "";
+            $installer_needed_other = "";
+            $things_to_bring_location = "";
+            $things_to_bring = "";
+            $installer_needed_location = "";
+            $products_to_bring = "";
+            $products_to_bring_files = "";
+            $service = "";
+            $driver = "";
+            $driver_other = "";
+            $back_up_driver = "";
+            $back_up_driver_other = "";
+            $notes = "";
+            $lock = "";
+            $related_project_id = "";
+            $related_stage_id = "";
+            $created_by = "";
+            $created_at = "";
+            $updated_by = "";
+            $updated_at = "";
+
+            // detail
+            $main_id = 0;
+            $agenda = "";
+            $appoint_time = "";
+            $end_time = "";
+            $sort = "";
+            $location = "";
+
+            $old_id = 0;
+
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $merged_results[] = $row;
+
+                if($old_id != $row['id'] && $old_id != 0)
+                {
+                    $merged_results[] = array(
+                        "id" => $id,
+                        "title" => $title,
+                        "start_time" => $start_time,
+                        "end_time" => $end_time,
+                        "color" => $color,
+                        "color_other" => $color_other,
+                        "text_color" => $text_color,
+                        "all_day" => $all_day,
+                        "photoshoot_request" => $photoshoot_request,
+                        "project" => $project,
+                        "sales_executive" => $sales_executive,
+                        "project_in_charge" => $project_in_charge,
+                        "project_relevant" => $project_relevant,
+                        "installer_needed" => $installer_needed,
+                        "installer_needed_other" => $installer_needed_other,
+                        "things_to_bring_location" => $things_to_bring_location,
+                        "things_to_bring" => $things_to_bring,
+                        "installer_needed_location" => $installer_needed_location,
+                        "products_to_bring" => $products_to_bring,
+                        "products_to_bring_files" => $products_to_bring_files,
+                        "service" => $service,
+                        "driver" => $driver,
+                        "driver_other" => $driver_other,
+                        "back_up_driver" => $back_up_driver,
+                        "back_up_driver_other" => $back_up_driver_other,
+                        "notes" => $notes,
+                        "lock" => $lock,
+                        "related_project_id" => $related_project_id,
+                        "related_stage_id" => $related_stage_id,
+                        "created_by" => $created_by,
+                        "created_at" => $created_at,
+                        "updated_by" => $updated_by,
+                        "updated_at" => $updated_at,
+                        "detail" => $detail_array
+                    );
+
+                    $detail_array = array();
+
+                }
+
+                $id = $row['id'];
+                $title = $row['title'];
+                $start_time = $row['start_time'];
+                $end_time = $row['end_time'];
+                $color = $row['color'];
+                $color_other = $row['color_other'];
+                $text_color = $row['text_color'];
+                $all_day = $row['all_day'];
+                $photoshoot_request = $row['photoshoot_request'];
+                $project = $row['project'];
+                $sales_executive = $row['sales_executive'];
+                $project_in_charge = $row['project_in_charge'];
+                $project_relevant = $row['project_relevant'];
+                $installer_needed = $row['installer_needed'];
+                $installer_needed_other = $row['installer_needed_other'];
+                $things_to_bring_location = $row['things_to_bring_location'];
+                $things_to_bring = $row['things_to_bring'];
+                $installer_needed_location = $row['installer_needed_location'];
+                $products_to_bring = $row['products_to_bring'];
+                $products_to_bring_files = $row['products_to_bring_files'];
+                $service = $row['service'];
+                $driver = $row['driver'];
+                $driver_other = $row['driver_other'];
+                $back_up_driver = $row['back_up_driver'];
+                $back_up_driver_other = $row['back_up_driver_other'];
+                $notes = $row['notes'];
+                $lock = $row['lock'];
+                $related_project_id = $row['related_project_id'];
+                $related_stage_id = $row['related_stage_id'];
+                $created_by = $row['created_by'];
+                $created_at = $row['created_at'];
+                $updated_by = $row['updated_by'];
+                $updated_at = $row['updated_at'];
+
+                $main_id = $row['main_id'];
+                $agenda = $row['agenda'];
+                $appoint_time = $row['appoint_time'];
+                $end_time = $row['end_time'];
+                $sort = $row['sort'];
+                $location = $row['location'];
+
+                $old_id = $id;
+
+                $detail_array[] = array(
+                    "main_id" => $main_id,
+                    "agenda" => $agenda,
+                    "appoint_time" => $appoint_time,
+                    "end_time" => $end_time,
+                    "sort" => $sort,
+                    "location" => $location
+                );
+
+            }
+        
+
+            if($old_id != 0)
+            {
+                $merged_results[] = array(
+                    "id" => $id,
+                    "title" => $title,
+                    "start_time" => $start_time,
+                    "end_time" => $end_time,
+                    "color" => $color,
+                    "color_other" => $color_other,
+                    "text_color" => $text_color,
+                    "all_day" => $all_day,
+                    "photoshoot_request" => $photoshoot_request,
+                    "project" => $project,
+                    "sales_executive" => $sales_executive,
+                    "project_in_charge" => $project_in_charge,
+                    "project_relevant" => $project_relevant,
+                    "installer_needed" => $installer_needed,
+                    "installer_needed_other" => $installer_needed_other,
+                    "things_to_bring_location" => $things_to_bring_location,
+                    "things_to_bring" => $things_to_bring,
+                    "installer_needed_location" => $installer_needed_location,
+                    "products_to_bring" => $products_to_bring,
+                    "products_to_bring_files" => $products_to_bring_files,
+                    "service" => $service,
+                    "driver" => $driver,
+                    "driver_other" => $driver_other,
+                    "back_up_driver" => $back_up_driver,
+                    "back_up_driver_other" => $back_up_driver_other,
+                    "notes" => $notes,
+                    "lock" => $lock,
+                    "related_project_id" => $related_project_id,
+                    "related_stage_id" => $related_stage_id,
+                    "created_by" => $created_by,
+                    "created_at" => $created_at,
+                    "updated_by" => $updated_by,
+                    "updated_at" => $updated_at,
+                    "detail" => $detail_array
+                );
             }
 
             $merged_results = RefactorInstallerNeeded($merged_results, $db);
