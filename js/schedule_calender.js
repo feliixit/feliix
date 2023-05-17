@@ -675,6 +675,12 @@ var app = new Vue({
             form_Data.append("jwt", token);
             form_Data.append("action", this.action);
 
+            sdate = $("#sdate").val();
+            edate = $("#edate").val();
+
+            form_Data.append("sdate", sdate);
+            form_Data.append("edate", edate);
+
             axios({
                     method: "post",
                     headers: {
@@ -3156,6 +3162,16 @@ function shallowCopy(obj) {
 }
 
 $(document).ready(function () {
+    // get today's date
+    var begin = new Date();
+    var today = new Date();
+    // get previous 6 months's date
+    var sixMonthsAgo = new Date(today.setMonth(today.getMonth() - 6));
+
+ 
+    $('#sdate').val(sixMonthsAgo.toISOString().slice(0,7));
+    $('#edate').val(begin.toISOString().slice(0,7));
+
     reload();
 });
 

@@ -58,6 +58,9 @@ $detail_array = json_decode($detail_list, true);
 
 $today = (isset($_POST['today']) ?  $_POST['today'] : '');
 
+$sdate = (isset($_POST['sdate']) ?  $_POST['sdate'] : '');
+$edate = (isset($_POST['edate']) ?  $_POST['edate'] : '');
+
 $merged_results = array();
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -128,10 +131,22 @@ if (!isset($jwt)) {
                             main.created_by, main.created_at, main.updated_by, main.updated_at,
                             detail.main_id, detail.agenda, detail.appoint_time, detail.end_time, detail.sort, detail.location  
                         from work_calendar_main main 
-                        left join work_calendar_details detail on detail.main_id = main.id 
-                        where main.is_enabled = true 
-                        and detail.is_enabled = true
-                        order by main.id, detail.sort ";
+                        left join work_calendar_details detail on detail.main_id = main.id and detail.is_enabled = true
+                        where main.is_enabled = true ";
+
+            if($sdate != ""){
+                $query .= " and main.start_time >= '" . $sdate . "-01 00:00:00' ";
+            }
+
+            if($edate != ""){
+                // edate be the last day of the month
+                $edate = date("Y-m-t", strtotime($edate . "-01"));
+
+                $query .= " and main.start_time < '" . $edate . " 23:59:59' ";
+                
+            }
+
+            $query .= " order by main.id, detail.sort ";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
@@ -188,6 +203,11 @@ if (!isset($jwt)) {
 
                 if($old_id != $row['id'] && $old_id != 0)
                 {
+                    // remove item from array where main_id = ''
+                    $detail_array = array_filter($detail_array, function($item) {
+                        return $item['main_id'] != '';
+                    });
+
                     $merged_results[] = array(
                         "id" => $id,
                         "title" => $title,
@@ -286,6 +306,11 @@ if (!isset($jwt)) {
 
             if($old_id != 0)
             {
+                // remove item from array where main_id = ''
+                $detail_array = array_filter($detail_array, function($item) {
+                    return $item['main_id'] != '';
+                });
+
                 $merged_results[] = array(
                     "id" => $id,
                     "title" => $title,
@@ -323,6 +348,7 @@ if (!isset($jwt)) {
                     "detail" => $detail_array
                 );
             }
+            
 
             $merged_results = RefactorInstallerNeeded($merged_results, $db);
     
