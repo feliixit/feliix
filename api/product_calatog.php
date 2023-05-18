@@ -50,6 +50,7 @@ else
       $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
       $d = (isset($_GET['d']) ?  $_GET['d'] : "");
+      $d1 = (isset($_GET['d1']) ?  $_GET['d1'] : "");
       $g = (isset($_GET['g']) ?  $_GET['g'] : "");
       $c = (isset($_GET['c']) ?  $_GET['c'] : "");
       $c = urldecode($c);
@@ -87,8 +88,14 @@ else
 
             if($d != "" && $d != "0")
             {
-                $sql = $sql . " and p.id = " . $d . " ";
-                $query_cnt = $query_cnt . " and p.id = " . $d . " ";
+                $sql = $sql . " and p.id >= " . $d . " ";
+                $query_cnt = $query_cnt . " and p.id >= " . $d . " ";
+            }
+
+            if($d1 != "" && $d1 != "0")
+            {
+                $sql = $sql . " and p.id <= " . $d1 . " ";
+                $query_cnt = $query_cnt . " and p.id <= " . $d1 . " ";
             }
 
             if($g != "")

@@ -172,6 +172,7 @@ var app = new Vue({
 
   methods: {
     search() {
+        this.page = 1;
         this.filter_apply();
     },
 

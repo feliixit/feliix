@@ -459,11 +459,13 @@ var app = new Vue({
       this.view_detail = true;
     },
 
-    filter_apply: function() {
+    filter_apply: function(pg) {
       let _this = this;
 
       if (_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
+
+      if(pg != undefined) _this.page = pg;
 
       var uri = "task_management_AD?" +
       "fp=" +

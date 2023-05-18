@@ -81,6 +81,20 @@ try {
             margin: 2% auto;
         }
 
+        #filter {
+            display: flex;
+            padding: 0 5vw 20px;
+        }
+
+        #filter input {
+            width: 200px;
+            margin-right: 20px;
+        }
+
+        #filter input:nth-of-type(2) {
+            margin-right: 30px;
+        }
+
         .add {
             display: flex;
             justify-content: center;
@@ -222,6 +236,12 @@ try {
 
 <div id='calendar'></div>
 
+<div id="filter">
+    <input type="month" class="form-control" id="sdate">
+    <input type="month" class="form-control" id="edate">
+    <button class="btn btn-primary" onclick="app.getInitial()">Filter Schedules</button>
+</div>
+
 <div id='msg'>
 <div class="messageboard" id="messageboard">
     <h3>Message Board</h3>
@@ -238,17 +258,12 @@ try {
 	</div>
 </div>
 
-
 <div class="add">
     <input class="add__input" type="text" placeholder="Type Message Here" maxlength="100" v-model="txt">
     <div><i class="fas fa-plus-circle" @click="addMessages(txt)" id="add_message"></i></div>
 </div>
 
 </div>
-
-
-
-
 
 
 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -375,6 +390,29 @@ try {
 
 
                         <input type="date" class="form-control" style="width:40%;" id="sc_date">
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="form-inline row" id="projects">
+                    <div class="col-2 align-self-center" style="text-align: center;">
+
+                        <label>Related Project</label>
+                    </div>
+
+                    <div class="col-10">
+
+                    <!-- dropdown -->
+                    <select class="form-control" style="width:90%;" id="sc_related_project_id" @change="getStages()" v-model="project_id">
+                        <option value=""></option>
+                        <option v-for="project in projects" :value="project.id">{{project.project_name}}</option>
+                    </select>
+                    <select class="form-control" style="width:90%;" id="sc_related_stage_id"  v-model="stage_id">
+                        <option v-for="stage in stages" :value="stage.id">{{stage.sequence}} : {{stage.stage}}</option>
+                    </select>
 
                     </div>
 

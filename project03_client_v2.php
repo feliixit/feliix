@@ -3278,19 +3278,22 @@ header('location:index');
             </div>
 
         </div>
+
+        <div id="cal" style="visibility: hidden;">
+
+            <div style="text-align: right;">
+                <button style="border: none;" onclick="hideWindow('#cal')"><i class="fa fa-times fa-lg"></i></button>
+            </div>
+
+            <div id="cal_calendar" style="margin-bottom: 15px;"><iframe id="myFrame" :src="'schedule_calendar?project_id=' + project_id + '&stage_id=' + stage_id" ref="iframe" style="width:100%; height:900px;" ></iframe></div>
+
+        </div>
+        
     </div>
 
 </div>
 
-<div id="cal" style="visibility: hidden;">
 
-        <div style="text-align: right;">
-            <button style="border: none;" onclick="hideWindow('#cal')"><i class="fa fa-times fa-lg"></i></button>
-        </div>
-
-        <div id="cal_calendar" style="margin-bottom: 15px;"><iframe id="myFrame" src='schedule_calendar' ref="iframe" style="width:100%; height:900px;" ></iframe></div>
-
-    </div>
 
 <div id="tasks" style="visibility: hidden;">
 

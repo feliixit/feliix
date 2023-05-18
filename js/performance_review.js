@@ -135,8 +135,8 @@ var app = new Vue({
 
   methods: {
     
-    search() {
-      this.filter_apply();
+    search(pg) {
+      this.filter_apply(pg);
     },
 
     setPages() {
@@ -238,8 +238,12 @@ var app = new Vue({
         });
     },
 
-    filter_apply: function() {
+    filter_apply: function(pg) {
       let _this = this;
+
+      if(pg != undefined) {
+        _this.page = pg;
+      }
 
       if(this.edate == '')
       {

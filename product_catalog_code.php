@@ -429,8 +429,12 @@
                     <div id="filter_dialog" class="dialog A"><h6>Filter Function:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt>ID</dt>
-                                <dd><input type="text" v-model="fil_id"></dd>
+                                <!-- <dt>ID</dt>
+                                <dd><input type="text" v-model="fil_id"></dd> -->
+
+                                <dt style="margin-bottom: -15px;">ID</dt>
+<div class="half"><dt>From</dt> <dd><input type="number" min="1" step="1" v-model="fil_id"></dd></div>
+<div class="half"><dt>To</dt> <dd><input type="number" min="1" step="1" v-model="fil_id_1"></dd></div>
 
                                 <dt>Code</dt>
                                 <dd><input type="text" v-model="fil_code"></dd>

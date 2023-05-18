@@ -726,8 +726,10 @@ var app = new Vue({
           _this.perPage;
       },
 
-      apply_filters: function() {
+      apply_filters: function(pg) {
         let _this = this;
+
+        if(pg != undefined) this.page = pg;
 
         window.location.href =
           "project01_sls?" +

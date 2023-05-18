@@ -46,7 +46,7 @@ var app = new Vue({
     
     fil_creator: "",
     fil_type: "",
-    fil_status: "",
+    fil_status: [],
     fil_amount_type : "",
     
     fil_amount_upper: "",
@@ -100,7 +100,7 @@ var app = new Vue({
               _this.fil_type = tmp[1];
               break;
             case "fs":
-              _this.fil_status = tmp[1];
+              _this.fil_status = tmp[1].split(",");
               break;
             case "fat":
               _this.fil_amount_type = tmp[1];
@@ -266,7 +266,7 @@ var app = new Vue({
         frl: _this.fil_request_no_lower,
         fc: _this.fil_creator,
         ft: _this.fil_type,
-        fs: _this.fil_status,
+        fs: _this.fil_status.join(','),
         fat: _this.fil_amount_type,
         fau: _this.fil_amount_upper,
         fal: _this.fil_amount_lower,
@@ -402,12 +402,16 @@ var app = new Vue({
       
     },
 
-    filter_apply_new: function() {
+    filter_apply_new: function(pg) {
       let _this = this;
 
       if(_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
       _this.page = 1;
+
+      if(pg != undefined) {
+        _this.page = pg;
+      }
 
       window.location.href =
         "expense_application_report?" +
@@ -420,7 +424,7 @@ var app = new Vue({
         "&ft=" +
         _this.fil_type +
         "&fs=" +
-        _this.fil_status +
+        _this.fil_status.join(',') +
         "&fat=" +
         _this.fil_amount_type +
         "&fau=" +
@@ -450,11 +454,15 @@ var app = new Vue({
     },
 
 
-    filter_apply: function() {
+    filter_apply: function(pg) {
       let _this = this;
 
       if(_this.page < 1) _this.page = 1;
       if (_this.page > _this.pages.length) _this.page = _this.pages.length;
+
+      if(pg != undefined) {
+        _this.page = pg;
+      }
 
       window.location.href =
         "expense_application_report?" +
@@ -467,7 +475,7 @@ var app = new Vue({
         "&ft=" +
         _this.fil_type +
         "&fs=" +
-        _this.fil_status +
+        _this.fil_status.join(',') +
         "&fat=" +
         _this.fil_amount_type +
         "&fau=" +
@@ -505,7 +513,7 @@ var app = new Vue({
       this.fil_request_no_lower = '';
       this.fil_creator = '';
       this.fil_type = "";
-      this.fil_status = "";
+      this.fil_status = [];
       this.fil_amount_type = "";
     
       this.fil_amount_upper = "";
@@ -523,7 +531,7 @@ var app = new Vue({
       //this.receive_records = [];
 
       //this.getRecords();
-      this.filter_apply_new();
+      this.filter_apply_new(1);
     },
 
     order_remove: function() {
@@ -538,7 +546,7 @@ var app = new Vue({
 
       this.receive_records = [];
 
-      this.filter_apply();
+      this.filter_apply(1);
     },
 
     order_clear() {
@@ -903,7 +911,7 @@ var app = new Vue({
       form_Data.append("frl", this.fil_request_no_lower);
       form_Data.append("fc", this.fil_creator);
       form_Data.append("ft", this.fil_type);
-      form_Data.append("fs", this.fil_status);
+      form_Data.append("fs", this.fil_status.join(','));
       form_Data.append("fat", this.fil_amount_type);
       form_Data.append("fau", this.fil_amount_upper);
       form_Data.append("fal", this.fil_amount_lower);
