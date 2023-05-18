@@ -236,6 +236,12 @@ try {
 
 <div id='calendar'></div>
 
+<div id="filter">
+    <input type="month" class="form-control" id="sdate">
+    <input type="month" class="form-control" id="edate">
+    <button class="btn btn-primary" onclick="app.getInitial()">Filter Schedules</button>
+</div>
+
 <div id='msg'>
 <div class="messageboard" id="messageboard">
     <h3>Message Board</h3>
@@ -250,12 +256,6 @@ try {
 	<i class="fas fa-trash-alt" @click="deleteMessages(msg.id)"></i>
 	</div>
 	</div>
-</div>
-
-<div id="filter">
-    <input type="month" class="form-control" id="sdate">
-    <input type="month" class="form-control" id="edate">
-    <button class="btn btn-primary" onclick="app.getInitial()">Filter Schedules</button>
 </div>
 
 <div class="add">
