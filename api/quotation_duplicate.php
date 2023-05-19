@@ -274,8 +274,13 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                         `v2` = :v2,
                         `v3` = :v3,
                         `photo` = :photo,
+                        `photo2` = :photo2,
+                        `photo3` = :photo3,
+                        `notes` = :notes,
                         `listing` = :listing,
                         `status` = 0,
+                        `num` = :num,
+                        `pid` = :pid,
                         `create_id` = :create_id,
                         `created_at` = now()";
 
@@ -292,6 +297,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $v2 = isset($block_array[$k]['v2']) ? $block_array[$k]['v2'] : '';
                     $v3 = isset($block_array[$k]['v3']) ? $block_array[$k]['v3'] : '';
                     $listing = isset($block_array[$k]['list']) ? $block_array[$k]['list'] : '';
+
+                    $notes = isset($block_array[$k]['notes']) ? $block_array[$k]['notes'] : '';
 
                     $qty == '' ? $qty = 0 : $qty = $qty;
                     $ratio == '' ? $ratio = 0 : $ratio = $ratio;
@@ -318,6 +325,12 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     $stmt->bindParam(':create_id', $user_id);
                  
                     $stmt->bindParam(':photo', $block_array[$k]['photo']);
+                    $stmt->bindParam(':photo2', $block_array[$k]['photo2']);
+                    $stmt->bindParam(':photo3', $block_array[$k]['photo3']);
+                    $stmt->bindParam(':notes', $notes);
+
+                    $stmt->bindParam(':num', $block_array[$k]['num']);
+                    $stmt->bindParam(':pid', $block_array[$k]['pid']);
                     
                 
                     $block_id = 0;
@@ -580,6 +593,7 @@ function GetSubTotalInfo($qid, $db)
     $query = "
             select sum(amount) amt from quotation_page_type_block
             WHERE type_id in (select id from quotation_page_type where quotation_id = " . $qid . ")
+            and status <> -1
     ";
 
     // prepare the query
@@ -1133,7 +1147,15 @@ function GetBlocks($qid, $db){
         discount,
         amount,
         description,
-        listing
+        listing,
+        v1,
+        v2,
+        v3,
+        notes,
+        photo2,
+        photo3,
+        num,
+        pid
         FROM   quotation_page_type_block
         WHERE  type_id = " . $qid . "
         AND `status` <> -1 
@@ -1159,6 +1181,15 @@ function GetBlocks($qid, $db){
         $amount = $row['amount'];
         $description = $row['description'];
         $listing = $row['listing'];
+        $v1 = $row['v1'];
+        $v2 = $row['v2'];
+        $v3 = $row['v3'];
+        $notes = $row['notes'];
+        $photo2 = $row['photo2'];
+        $photo3 = $row['photo3'];
+        $num = $row['num'];
+        $pid = $row['pid'];
+
     
         $type = $photo == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
@@ -1178,6 +1209,15 @@ function GetBlocks($qid, $db){
             "amount" => $amount,
             "desc" => $description,
             "list" => $listing,
+            "v1" => $v1,
+            "v2" => $v2,
+            "v3" => $v3,
+            "notes" => $notes,
+            "photo2" => $photo2,
+            "photo3" => $photo3,
+            "num" => $num,
+            "pid" => $pid,
+
           
         );
     }

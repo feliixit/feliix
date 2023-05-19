@@ -78,7 +78,7 @@ switch ($method) {
         $last_id = $id;
     
         // quotation_page
-        $query = "DELETE FROM quotation_page_type_block
+        $query = "UPDATE quotation_page_type_block set `status` = -1
                     WHERE
                     `quotation_id` = :quotation_id
                     AND 
@@ -275,7 +275,7 @@ switch ($method) {
             }
 
             // update quotation_page_type.real_amount
-            $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block GROUP BY type_id) as s
+            $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block where `status` <> -1 GROUP BY type_id ) as s
                     SET p.real_amount = s.mysum
                     WHERE p.id = s.type_id
                     and p.quotation_id = :id
