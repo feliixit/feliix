@@ -77,6 +77,31 @@
 
     <!-- CSS for current webpage -->
     <style type="text/css">
+        a, a:link, a:visited, a:active, a:hover, area {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.fifth header nav a, body.fifth header nav a:link {
+            color: #000;
+        }
+
+        body.fifth header nav a:hover {
+            color: #333;
+        }
+
+        body.fifth header nav {
+            font-family: 'M PLUS 1p', Arial, Helvetica, 'LiHei Pro', "微軟正黑體", 'Microsoft JhengHei', "新細明體", sans-serif;
+        }
+
+        body.fifth header nav ul.info {
+            margin-bottom: 0;
+        }
+
+        body.fifth header nav ul.info b {
+            font-weight: bold;
+        }
+    
         body.fifth .mainContent>.tags a.focus {
             background-color: #EA0029;
         }
@@ -205,6 +230,7 @@
             right: 0;
             margin: auto;
             z-index: 2;
+            display: block;
         }
 
         .bodybox .mask {
