@@ -2522,6 +2522,11 @@ header( 'location:index' );
                         <div class="formbox">
 
                             <dl>
+                                <dt class="head">Choose whether to show the block of grand total in this document:</dt>
+                                <dd><select v-model="total.show_t"><option value="N">No</option> <option value="">Yes</option></select></dd>
+                            </dl>
+
+                            <dl>
                                 <dt class="head">Discount:</dt>
                                 <dd>
                                     <input type="number" v-model="total.discount" min="0" max="100" step="1"
@@ -3124,7 +3129,7 @@ header( 'location:index' );
 
 
 
-                                    <tr class="tfoot1">
+                                    <tr class="tfoot1" v-if="total_disp.show_t == ''">
                                         <!-- 如果有 DISCOUNT 和 12%VAT，則rowspan=3：有 DISCOUNT 或 12%VAT，則rowspan=2；沒有 DISCOUNT 和 12%VAT ，則rowspan=1-->
                                         <td colspan="3" :rowspan="total_disp.vat != '' && total_disp.discount != 0 ? 3 : (total_disp.vat != '' || total_disp.discount != 0 ? 2 : 1)">
                                             <div>Remarks: Quotation valid for <span class="valid_for">{{ total_disp.valid }}</span></div>
@@ -3155,7 +3160,7 @@ header( 'location:index' );
                                         <td  v-if="org_options.length == 3"><span class="numbers">₱ {{ Number(subtotal_c).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
                                     </tr>
 
-                                    <tr class="tfoot2" v-if="total_disp.discount != 0">
+                                    <tr class="tfoot2" v-if="total_disp.discount != 0 && total_disp.show_t == ''">
                                       
                                         <!-- 第一個option -->
                                         <td colspan="2">{{ total_disp.discount }}% DISCOUNT</td> <!---->
@@ -3170,7 +3175,7 @@ header( 'location:index' );
                                         <td  v-if="org_options.length == 3"><span class="numbers">₱ {{ Number(subtotal_c * (total_disp.discount / 100)).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span></td>
                                     </tr>
 
-                                    <tr class="tfoot3" v-if="total_disp.vat != '' ">
+                                    <tr class="tfoot3" v-if="total_disp.vat != '' && total_disp.show_t == ''">
                                        
                                         <!-- 第一個option -->
                                         <td colspan="2">(12% VAT)</td> <!---->
@@ -3185,7 +3190,7 @@ header( 'location:index' );
                                         <td  v-if="org_options.length == 3"><span class="numbers">₱ {{ ((subtotal_c * (100 - total_disp.discount) / 100) * 12 / 100) !== undefined ? ((subtotal_c * (100 - total_disp.discount) / 100) * 12 / 100).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0.00" }}</span></td>
                                     </tr>
 
-                                    <tr class="tfoot4">
+                                    <tr class="tfoot4" v-if="total_disp.show_t == ''">
                                         <td colspan="3">
                                             <span class="total_discount" v-if="total_disp.show_vat == 'Y'">*price inclusive of VAT</span>
                                         </td>

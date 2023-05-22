@@ -183,7 +183,7 @@ function GetSubTotal($qid, $oid, $db)
 
     $query = "
             select sum(amount) amt from price_comparison_item
-            WHERE od_id  = " . $qid . " and option_id = " . $oid . " 
+            WHERE od_id  = " . $qid . " and `status` <> -1 and option_id = " . $oid . " 
     ";
 
     // prepare the query
@@ -847,6 +847,7 @@ function GetTotalInfo($qid, $db){
         discount,
         vat,
         show_vat,
+        show_t,
         valid,
         coalesce(total1, '') total1,
         coalesce(total2, '') total2,
@@ -868,6 +869,7 @@ function GetTotalInfo($qid, $db){
     $discount = 0;
     $vat = '';
     $show_vat = '';
+    $show_t = '';
     $valid = '';
     $total1 = '';
     $total2 = '';
@@ -879,6 +881,7 @@ function GetTotalInfo($qid, $db){
         $discount = $row['discount'];
         $vat = $row['vat'];
         $show_vat = $row['show_vat'];
+        $show_t = $row['show_t'];
         $valid = $row['valid'];
         $total1 = $row['total1'];
         $total2 = $row['total2'];
@@ -891,6 +894,7 @@ function GetTotalInfo($qid, $db){
         "discount" => $discount,
         "vat" => $vat,
         "show_vat" => $show_vat,
+        "show_t" => $show_t,
         "valid" => $valid,
         "total1" => $total1,
         "total2" => $total2,

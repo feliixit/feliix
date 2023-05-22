@@ -107,7 +107,8 @@ switch ($method) {
             $query = "DELETE FROM price_comparison_item
             WHERE od_id = :od_id 
             AND legend_id = :legend_id
-            and option_id = :option_id";
+            and option_id = :option_id
+            and `status` = -1";
 
             // prepare the query
             $stmt = $db->prepare($query);
@@ -136,6 +137,38 @@ switch ($method) {
                 die();
             }
 
+            // update previous item to -1
+            $query = "update price_comparison_item set status = -1
+            WHERE od_id = :od_id 
+            AND legend_id = :legend_id
+            and option_id = :option_id";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            // bind the values
+            $stmt->bindParam(':od_id', $id);
+            $stmt->bindParam(':option_id', $option['id']);
+            $stmt->bindParam(':legend_id', $legend_id);
+    
+        
+            try {
+                // execute the query, also check if query was successful
+                if (!$stmt->execute()) {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
         
         } 
         

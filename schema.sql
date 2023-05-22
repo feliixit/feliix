@@ -3758,3 +3758,6 @@ ALTER TABLE `project_main` ADD COLUMN `archive` int(11) DEFAULT 0;
 
 -- 20230517
 CREATE INDEX work_calendar_details_is_enabled_IDX USING BTREE ON work_calendar_details (main_id, is_enabled);
+
+-- 20230522
+ALTER TABLE price_comparison_total ADD COLUMN `show_t` VARCHAR(10) DEFAULT '';
