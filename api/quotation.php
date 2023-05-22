@@ -1016,7 +1016,7 @@ function GetBlocks($qid, $db){
         $v3 = $row['v3'];
         $listing = $row['listing'];
     
-        $type = $photo == "" ? "" : "image";
+        $type == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
         $url2 = $photo2 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo2;
         $url3 = $photo3 == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo3;
@@ -1118,7 +1118,7 @@ function GetProductItems($pages, $q_id, $db)
                 $v3 = $row['v3'];
                 $listing = $row['list'];
             
-                $type = $photo == "" ? "" : "image";
+                $type == "" ? "" : "image";
                 $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
             
                 $merged_results[] = array(

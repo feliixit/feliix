@@ -1793,7 +1793,7 @@ function GetBlocks($qid, $db){
         $description = $row['description'];
         $listing = $row['listing'];
         
-        $type = $photo == "" ? "" : "image";
+        $type == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
         
         $merged_results[] = array(

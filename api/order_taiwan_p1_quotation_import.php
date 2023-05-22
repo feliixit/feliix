@@ -343,7 +343,7 @@ function GetBlocks($qid, $db){
         $v3 = $row['v3'];
         $listing = $row['listing'];
     
-        $type = $photo == "" ? "" : "image";
+        $type == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
   
         $merged_results[] = array(
@@ -435,7 +435,7 @@ function GetQuotationItems($qid, $db){
                 $v3 = $row['v3'];
                 $listing = $row['list'];
             
-                $type = $photo == "" ? "" : "image";
+                $type == "" ? "" : "image";
                 $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
             
                 $merged_results[] = array(

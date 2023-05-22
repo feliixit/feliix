@@ -432,6 +432,46 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             // bind the values
             $stmt->bindParam(':quotation_id', $id);
             $stmt->bindParam(':create_id', $user_id);
+
+            try {
+                // execute the query, also check if query was successful
+                if ($stmt->execute()) {
+                    $last_id = $db->lastInsertId();
+                } else {
+                    $arr = $stmt->errorInfo();
+                    error_log($arr[2]);
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                die();
+            }
+
+            // payment term
+            $query = "INSERT INTO quotation_payment_term
+                    (
+                        quotation_id,
+                        page,
+                        payment_method,
+                        brief,
+                        list,
+                        `create_id`,
+                        created_at
+                    )
+                        select " . $quotation_id . ", page, payment_method, brief, list, :create_id, now() 
+                    from quotation_payment_term where quotation_id = :quotation_id";
+            // prepare the query
+            $stmt = $db->prepare($query);
+
+            // bind the values
+            $stmt->bindParam(':quotation_id', $id);
+            $stmt->bindParam(':create_id', $user_id);
               
             try {
                 // execute the query, also check if query was successful
@@ -1191,7 +1231,7 @@ function GetBlocks($qid, $db){
         $pid = $row['pid'];
 
     
-        $type = $photo == "" ? "" : "image";
+        $type == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
   
         $merged_results[] = array(
