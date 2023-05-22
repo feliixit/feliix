@@ -76,9 +76,41 @@ switch ($method) {
         }
 
         $last_id = $id;
+
+        // delete previous -1
+        $query = "delete from quotation_page_type_block 
+                    WHERE
+                    `quotation_id` = :quotation_id
+                    AND `status` = -1 and
+                    `type_id` = :type_id";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':quotation_id', $last_id);
+        $stmt->bindParam(':type_id', $type_id);
+
+        try {
+            // execute the query, also check if query was successful
+            if (!$stmt->execute()) {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                die();
+            }
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+            die();
+        }
     
         // quotation_page
-        $query = "DELETE FROM quotation_page_type_block
+        $query = "UPDATE quotation_page_type_block set `status` = -1
                     WHERE
                     `quotation_id` = :quotation_id
                     AND 
@@ -275,7 +307,7 @@ switch ($method) {
             }
 
             // update quotation_page_type.real_amount
-            $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block GROUP BY type_id) as s
+            $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block where `status` <> -1 GROUP BY type_id ) as s
                     SET p.real_amount = s.mysum
                     WHERE p.id = s.type_id
                     and p.quotation_id = :id

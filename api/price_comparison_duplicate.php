@@ -188,7 +188,7 @@ function insert_sig_info($price_id, $user_id, $sigs, $db) {
         $query = "INSERT INTO price_comparison_signature
             SET
         `price_id` = :price_id,
-        `page` = 0,
+        `page` = 1,
         `type` = :type,
         `photo` = :photo,
         `name` = :name,
@@ -245,7 +245,7 @@ function insert_term_info($price_id, $user_id, $terms, $db) {
         $query = "INSERT INTO price_comparison_term
             SET
         `price_id` = :price_id,
-        `page` = 0,
+        `page` = 1,
         `title` = :title,
         `brief` = :brief,
         `list` = :list,
@@ -296,7 +296,11 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     `discount` = :discount,
     `vat` = :vat,
     `show_vat` = :show_vat,
+    `show_t` = :show_t,
     `valid` = :valid,
+    `total1` = :total1,
+    `total2` = :total2,
+    `total3` = :total3,
     `status` = 0,
     `create_id` = :create_id,
     `created_at` =  now() ";
@@ -309,6 +313,12 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     $stmt->bindParam(':discount', $total_info['discount']);
     $stmt->bindParam(':vat', $total_info['vat']);
     $stmt->bindParam(':show_vat', $total_info['show_vat']);
+    $stmt->bindParam(':show_t', $total_info['show_t']);
+
+    $stmt->bindParam(':total1', $total_info['total1']);
+    $stmt->bindParam(':total2', $total_info['total2']);
+    $stmt->bindParam(':total3', $total_info['total3']);
+
     $stmt->bindParam(':valid', $total_info['valid']);
 
     $stmt->bindParam(':create_id', $user_id);
@@ -1648,6 +1658,7 @@ function GetTotalInfo($qid, $db){
     discount,
     vat,
     show_vat,
+    show_t,
     valid,
     total1,
     total2,
@@ -1669,6 +1680,7 @@ function GetTotalInfo($qid, $db){
     $discount = 0;
     $vat = '';
     $show_vat = '';
+    $show_t = '';
     $valid = '';
     $total1 = '';
     $total2 = '';
@@ -1680,6 +1692,7 @@ function GetTotalInfo($qid, $db){
         $discount = $row['discount'];
         $vat = $row['vat'];
         $show_vat = $row['show_vat'];
+        $show_t = $row['show_t'];
         $valid = $row['valid'];
         $total1 = $row['total1'];
         $total2 = $row['total2'];
@@ -1694,6 +1707,7 @@ function GetTotalInfo($qid, $db){
         "discount" => $discount,
         "vat" => $vat,
         "show_vat" => $show_vat,
+        "show_t" => $show_t,
         "valid" => $valid,
         "total1" => $total1,
         "total2" => $total2,
@@ -1793,7 +1807,7 @@ function GetBlocks($qid, $db){
         $description = $row['description'];
         $listing = $row['listing'];
         
-        $type = $photo == "" ? "" : "image";
+        $type == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.cloud.google.com/feliiximg/" . $photo;
         
         $merged_results[] = array(

@@ -235,7 +235,7 @@ else
         if(($pre_vat == 'P' && $vat !== 'P') || ($pre_vat != 'P' && $vat == 'P'))
         {
             // update quotation_page_type.real_amount
-            $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block GROUP BY type_id) as s
+            $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block where `status` <> -1 GROUP BY type_id) as s
                         SET p.real_amount = s.mysum
                         WHERE p.id = s.type_id
                         and p.quotation_id = :id

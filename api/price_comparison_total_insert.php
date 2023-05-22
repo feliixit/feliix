@@ -14,6 +14,7 @@ $page = isset($_POST['page']) ? $_POST['page'] : 1;
 $discount = isset($_POST['discount']) ? $_POST['discount'] : 0;
 $vat = isset($_POST['vat']) ? $_POST['vat'] : '';
 $show_vat = isset($_POST['show_vat']) ? $_POST['show_vat'] : '';
+$show_t = isset($_POST['show_t']) ? $_POST['show_t'] : '';
 $valid = isset($_POST['valid']) ? $_POST['valid'] : '';
 $total1 = isset($_POST['total1']) ? $_POST['total1'] : '';
 $total2 = isset($_POST['total2']) ? $_POST['total2'] : '';
@@ -94,6 +95,7 @@ else
                 `discount` = :discount,
                 `vat` = :vat,
                 `show_vat` = :show_vat,
+                `show_t` = :show_t,
                 `valid` = :valid, ";
 if($total1 != '')
 {
@@ -122,6 +124,7 @@ if($total3 != '')
             $stmt->bindParam(':discount', $discount);
             $stmt->bindParam(':vat', $vat);
             $stmt->bindParam(':show_vat', $show_vat);
+            $stmt->bindParam(':show_t', $show_t);
             $stmt->bindParam(':valid', $valid);
             if($total1 != '')
             {
@@ -169,6 +172,7 @@ if($total3 != '')
                     `discount` = :discount,
                     `vat` = :vat,
                     `show_vat` = :show_vat,
+                    `show_t` = :show_t,
                     `valid` = :valid,";
                     if($total1 != '')
                     {
@@ -207,6 +211,7 @@ if($total3 != '')
             $stmt->bindParam(':discount', $discount);
             $stmt->bindParam(':vat', $vat);
             $stmt->bindParam(':show_vat', $show_vat);
+            $stmt->bindParam(':show_t', $show_t);
             $stmt->bindParam(':valid', $valid);
             
             if($total1 != '')

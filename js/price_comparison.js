@@ -131,6 +131,7 @@ var app = new Vue({
         discount:'0',
         vat : '',
         show_vat : '',
+        show_t: '',
         valid : '',
         total1 : '',
         total2 : '',
@@ -150,6 +151,7 @@ var app = new Vue({
         discount:'0',
         vat : '',
         show_vat : '',
+        show_t: '',
         valid : '',
         total1 : '',
         total2 : '',
@@ -1796,6 +1798,7 @@ var app = new Vue({
             discount:'',
             vat : '',
             show_vat : '',
+            show_t: '',
             valid : '',
             total : '',
           };
@@ -1830,6 +1833,7 @@ var app = new Vue({
         form_Data.append("discount", this.total.discount);
         form_Data.append("vat", this.total.vat);
         form_Data.append("show_vat", this.total.show_vat);
+        form_Data.append("show_t", this.total.show_t);
         form_Data.append("valid", this.total.valid);
         form_Data.append("total1", this.total.total1);
         form_Data.append("total2", this.total.total2);
