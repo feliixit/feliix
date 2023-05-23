@@ -53,6 +53,12 @@ $deleted_by = (isset($_POST['deleted_by']) ?  $_POST['deleted_by'] : '');
 $related_project_id = (isset($_POST['related_project_id']) ?  $_POST['related_project_id'] : 0);
 $related_stage_id = (isset($_POST['related_stage_id']) ?  $_POST['related_stage_id'] : 0);
 
+if($related_project_id == null || $related_project_id == "" || $related_project_id == "null")
+    $related_project_id = 0;
+
+if($related_stage_id == null || $related_stage_id == "" || $related_stage_id == "null")
+    $related_stage_id = 0;
+
 $detail_list = (isset($_POST['detail_list']) ?  $_POST['detail_list'] : '');
 $detail_array = json_decode($detail_list, true);
 
