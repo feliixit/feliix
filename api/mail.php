@@ -2392,9 +2392,10 @@ function batch_liquidate_notify_mail($request_no, $user_name, $user_email, $depa
 
     $mail->AddAddress($user_email, $user_name);
 
-    $notifior = GetNotifiers($checker);
+    $notifior = GetExpenseFlowVerifiers();
     foreach($notifior as &$list)
     {
+        // verifier
         $mail->AddCC($list["email"], $list["username"]);
     }
 
@@ -7141,6 +7142,30 @@ function GetNotifiers($id)
     $sql = "SELECT user.id, username, email, title, department FROM user 
     LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id
         WHERE user.id in (" . $id . ")  and user.status = 1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetExpenseFlowVerifiers()
+{
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $sql = "SELECT user.id, username, email, title, department, flow 
+            FROM user 
+            LEFT JOIN user_department ON user.apartment_id = user_department.id 
+            LEFT JOIN user_title ON user.title_id = user_title.id
+            LEFT JOIN expense_flow ON user.id = expense_flow.uid
+            WHERE user.status = 1 and flow = 7";
 
     $merged_results = array();
 
@@ -13683,24 +13708,24 @@ function GetProjectCategoryByProjectId($id)
 
 function SetupMail($mail, $conf)
 {
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-
-
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
     // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'jermey.wilkinson@ethereal.email';
-    // $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'jermey.wilkinson@ethereal.email';
+    $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
 
     return $mail;
 
