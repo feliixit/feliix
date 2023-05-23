@@ -128,7 +128,7 @@ if (!isset($jwt)) {
                             main.products_to_bring, main.products_to_bring_files,
                             main.service, main.driver, main.driver_other, main.back_up_driver, main.back_up_driver_other,
                             main.notes, main.`lock`, main.related_project_id, main.related_stage_id,
-                            main.created_by, main.created_at, main.updated_by, main.updated_at,
+                            main.created_by, main.created_at, main.updated_by, main.updated_at, main.confirm,
                             detail.main_id, detail.agenda, detail.appoint_time, detail.end_time, detail.sort, detail.location  
                         from work_calendar_main main 
                         left join work_calendar_details detail on detail.main_id = main.id and detail.is_enabled = true
@@ -189,6 +189,8 @@ if (!isset($jwt)) {
             $updated_by = "";
             $updated_at = "";
 
+            $confirm = "";
+
             // detail
             $main_id = 0;
             $agenda = "";
@@ -217,6 +219,7 @@ if (!isset($jwt)) {
                         "color_other" => $color_other,
                         "text_color" => $text_color,
                         "all_day" => $all_day,
+                        "confirm" => $confirm,
                         "photoshoot_request" => $photoshoot_request,
                         "project" => $project,
                         "sales_executive" => $sales_executive,
@@ -257,6 +260,7 @@ if (!isset($jwt)) {
                 $color_other = $row['color_other'];
                 $text_color = $row['text_color'];
                 $all_day = $row['all_day'];
+                $confirm = $row['confirm'];
                 $photoshoot_request = $row['photoshoot_request'];
                 $project = $row['project'];
                 $sales_executive = $row['sales_executive'];
@@ -320,6 +324,7 @@ if (!isset($jwt)) {
                     "color_other" => $color_other,
                     "text_color" => $text_color,
                     "all_day" => $all_day,
+                    "confirm" => $confirm,
                     "photoshoot_request" => $photoshoot_request,
                     "project" => $project,
                     "sales_executive" => $sales_executive,
