@@ -666,7 +666,7 @@ var app = new Vue({
                 });
         },
 
-        getInitMain: function () {
+        getInitMain: function (id) {
             var token = localStorage.getItem("token");
             var form_Data = new FormData();
             let _this = this;
@@ -834,9 +834,9 @@ var app = new Vue({
                 });
         },
 
-        getInitial: function() {
+        getInitial: function(id) {
 
-            this.getInitMain();
+            this.getInitMain(id);
 
             // var token = localStorage.getItem("token");
             // var form_Data = new FormData();
@@ -1526,7 +1526,7 @@ var app = new Vue({
 var eventObj;
 var icon_function_enable = true;
 
-var initial = () =>  {
+var initial = async (_id) =>  {
     var calendarEl = document.getElementById("calendar");
 
     calendar = new FullCalendar.Calendar(calendarEl, {
@@ -1896,7 +1896,7 @@ var initial = () =>  {
         document.getElementById("btn_unconfirm").style.visibility = "hidden";
     }
 
-    /*
+    
 
     if(app.sid != 0)
     {
@@ -1973,6 +1973,12 @@ var initial = () =>  {
             document.getElementById("sc_sales").value = sc_content.Sales_Executive;
             document.getElementById("sc_incharge").value =
                 sc_content.Project_in_charge;
+
+            project.project_id = sc_content.Related_project_id;
+            project.stage_id = sc_content.Related_stage_id;
+
+            await project.getStages(project.project_id);
+
             document.getElementById("sc_relevant").value =
                 sc_content.Project_relevant;
             app.attendee = (sc_content.Project_relevant.split(",") === "" ? app.attendee = [] : sc_content.Project_relevant.split(","));
@@ -1981,9 +1987,32 @@ var initial = () =>  {
                 
             document.getElementById("sc_Installer_needed_other").value = sc_content.Installer_needed_other;
 
-            
+            app.users = app.users_org.concat(app.attendee);
+
+            app.users = app.users.filter((item,index)=>{
+                return (app.users.indexOf(item) == index)
+             })
+
+            app.users.sort(function (a, b) {
+                return a.toLowerCase().localeCompare(b.toLowerCase());
+            });
             
             var installer = sc_content.Installer_needed.split(",");
+
+            var elements = document.getElementsByName("sc_Installer_needed");
+
+            for (var i = 0; i < elements.length; i++)
+                elements[i].checked = false;
+
+            for (var i = 0; i < installer.length; i++) {
+                for (var j = 0; j < elements.length; j++) {
+                    if (elements[j].value == installer[i]) {
+                        elements[j].checked = true;
+                    }
+                }
+            }
+            
+            /*
 
             for (i = 0; i < 5; i++) {
                 document.getElementsByName("sc_Installer_needed")[i].checked = false;
@@ -2011,6 +2040,7 @@ var initial = () =>  {
                 if (installer[i] == "JM")
                     document.getElementsByName("sc_Installer_needed")[6].checked = true;
             }
+            */
 
             //加入Agenda內容(先刪除未儲存的)
             var agenda_object = document
@@ -2102,10 +2132,19 @@ var initial = () =>  {
                 document.getElementById("btn_unlock").style.display = "none";
             }
 
+            document.getElementById("confirm").value = sc_content.Confirm;
+            if (sc_content.Confirm != "") {
+                document.getElementById("btn_confirm").style.display = "none";
+                document.getElementById("btn_unconfirm").style.display = "inline";
+            } else {
+                document.getElementById("btn_confirm").style.display = "inline";
+                document.getElementById("btn_unconfirm").style.display = "none";
+            }
+
             $("#exampleModalScrollable").modal("toggle");
     }
 
-    */
+    
 }
 
 function onChangeFileUpload(e) {
@@ -3122,7 +3161,7 @@ var timeOut1;
 var timeOut2;
 var timeOut3;
 
-function reload() {
+function reload(id) {
     //timeOut3 = setTimeout(function () {
     //    app.getDetail();
     //}, 500);
@@ -3133,7 +3172,7 @@ function reload() {
     //    initial();
     //}, 1500);
 
-    app.getInitial();
+    app.getInitial(id);
 }
 
 function clearTimeOut() {
@@ -3168,11 +3207,30 @@ $(document).ready(function () {
     // get previous 6 months's date
     var sixMonthsAgo = new Date(today.setMonth(today.getMonth() - 6));
 
+    let _id = "";
+    let uri = window.location.href.split("?");
+      if (uri.length >= 2) {
+        let vars = uri[1].split("&");
+
+        let tmp = "";
+        vars.forEach(async function(v) {
+          tmp = v.split("=");
+          if (tmp.length == 2) {
+            switch (tmp[0]) {
+              case "id":
+                _id = tmp[1];
+                break;
+              default:
+                console.log(`Too many args`);
+            }
+          }
+        });
+      }
  
     $('#sdate').val(sixMonthsAgo.toISOString().slice(0,7));
     $('#edate').val(begin.toISOString().slice(0,7));
 
-    reload();
+    reload(_id);
 });
 
 var msg = new Vue({

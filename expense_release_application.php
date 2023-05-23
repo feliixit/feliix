@@ -240,7 +240,7 @@ $table1->addCell(1000, ['borderSize' => 6, 'bgColor' => 'EFEFEF'])->addText("Amo
 foreach ($list as &$value) {
     $table1->addRow();
     $table1->addCell(2600, ['borderSize' => 6])->addText($value['payee'], [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(6100, ['borderSize' => 6])->addText($value['particulars'], [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(6100, ['borderSize' => 6])->addText(htmlspecialchars($value['particulars']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['price'], 2), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['qty']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['price'] * $value['qty'], 2), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);

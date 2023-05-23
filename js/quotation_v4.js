@@ -1158,7 +1158,7 @@ var app = new Vue({
       _this.pg = 1;
 
       const params = {
-        d: _this.fil_id,
+        sd: _this.fil_id,
         c: _this.fil_code,
         k: _this.fil_keyword,
         g: _this.fil_category,
@@ -2181,7 +2181,7 @@ Installation:`;
         pg !== undefined ? this.pg  = pg : this.pg = this.product_page;
   
         const params = {
-          d: _this.fil_id,
+          sd: _this.fil_id,
           c: _this.fil_code,
           k: _this.fil_keyword,
           g: _this.fil_category,

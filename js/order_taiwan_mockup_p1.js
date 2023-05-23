@@ -751,7 +751,7 @@ var app = new Vue({
         pg !== undefined ? this.pg  = pg : this.pg = this.product_page;
   
         const params = {
-          d: _this.fil_id,
+          sd: _this.fil_id,
           c: _this.fil_code,
           t: JSON.stringify(_this.fil_tag),
           g: _this.fil_category,
@@ -1409,7 +1409,7 @@ var app = new Vue({
       _this.pg = 1;
 
       const params = {
-        d: _this.fil_id,
+        sd: _this.fil_id,
         c: _this.fil_code,
         t: JSON.stringify(_this.fil_tag),
         b: _this.fil_brand,

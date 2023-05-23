@@ -49,6 +49,7 @@ else
       $page = (isset($_GET['page']) ?  $_GET['page'] : "");
       $size = (isset($_GET['size']) ?  $_GET['size'] : "");
 
+      $sd = (isset($_GET['sd']) ?  $_GET['sd'] : "");
       $d = (isset($_GET['d']) ?  $_GET['d'] : "");
       $d1 = (isset($_GET['d1']) ?  $_GET['d1'] : "");
       $g = (isset($_GET['g']) ?  $_GET['g'] : "");
@@ -84,6 +85,12 @@ else
                 if (false === $page) {
                     $page = 1;
                 }
+            }
+
+            if($sd != "" && $sd != "0")
+            {
+                $sql = $sql . " and p.id = " . $sd . " ";
+                $query_cnt = $query_cnt . " and p.id = " . $sd . " ";
             }
 
             if($d != "" && $d != "0")
