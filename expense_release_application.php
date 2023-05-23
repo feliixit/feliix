@@ -170,11 +170,11 @@ $table->addCell(7500, ['borderSize' => 6])->addText($created_at, ['bold' => fals
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Requestor", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText($requestor, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText(htmlspecialchars($requestor), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Status", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText($desc, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText(htmlspecialchars($desc), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Processing History", ['bold' => false], ['align' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => \PhpOffice\PhpWord\SimpleType\Jc::BOTH]);
@@ -191,14 +191,14 @@ $table->addCell(7500, ['borderSize' => 6])->addText($request_type, ['bold' => fa
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Project Name", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText(fiter_str($project_name1), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText(htmlspecialchars($project_name1), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Reason", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 if($rtype == '')
-    $table->addCell(7500, ['borderSize' => 6])->addText($project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table->addCell(7500, ['borderSize' => 6])->addText(htmlspecialchars($project_name), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 if($rtype == 'team')
-    $table->addCell(7500, ['borderSize' => 6])->addText('Team Building (' . $department . ') — ' . $project_name, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table->addCell(7500, ['borderSize' => 6])->addText('Team Building (' . $department . ') — ' . htmlspecialchars($project_name), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Total Amount Requested", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
@@ -211,11 +211,11 @@ addMultiLineAttach($cell, $items);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Payable to", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText(($payable_other != '') ? 'Other:' . $payable_other : 'Requestor', ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText(($payable_other != '') ? 'Other:' . htmlspecialchars($payable_other) : 'Requestor', ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table->addRow();
 $table->addCell(3000, ['borderSize' => 6])->addText("Remarks or Payment Instructions", ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table->addCell(7500, ['borderSize' => 6])->addText($remark, ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table->addCell(7500, ['borderSize' => 6])->addText(htmlspecialchars($remark), ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $section->addText("");
 
@@ -239,7 +239,7 @@ $table1->addCell(1000, ['borderSize' => 6, 'bgColor' => 'EFEFEF'])->addText("Amo
 
 foreach ($list as &$value) {
     $table1->addRow();
-    $table1->addCell(2600, ['borderSize' => 6])->addText($value['payee'], [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText(htmlspecialchars($value['payee']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     $table1->addCell(6100, ['borderSize' => 6])->addText(htmlspecialchars($value['particulars']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['price'], 2), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     $table1->addCell(600, ['borderSize' => 6])->addText(number_format($value['qty']), [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
@@ -261,15 +261,15 @@ $table2 = $section->addTable('table2', [
 
 $table2->addRow();
 $table2->addCell(5250, ['borderSize' => 6])->addText("Account", [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table2->addCell(5250, ['borderSize' => 6])->addText($info_account,  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table2->addCell(5250, ['borderSize' => 6])->addText(htmlspecialchars($info_account),  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table2->addRow();
 $table2->addCell(5250, ['borderSize' => 6])->addText("Category", [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table2->addCell(5250, ['borderSize' => 6])->addText($info_category . (($info_sub_category != '') ? ' >> ' . $info_sub_category : ''),  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table2->addCell(5250, ['borderSize' => 6])->addText(htmlspecialchars($info_category) . (($info_sub_category != '') ? ' >> ' . htmlspecialchars($info_sub_category) : ''),  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 $table2->addRow();
 $table2->addCell(5250, ['borderSize' => 6])->addText("Remarks or Payment Instructions", [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-$table2->addCell(5250, ['borderSize' => 6])->addText($info_remark . (($info_remark_other != '') ? ' : ' . $info_remark_other : ''),  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+$table2->addCell(5250, ['borderSize' => 6])->addText(htmlspecialchars($info_remark) . (($info_remark_other != '') ? ' : ' . $info_remark_other : ''),  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 
 $section->addText("");
@@ -343,7 +343,7 @@ function addMultiLineText($cell, $strArr)
 {
     // add text line together
     foreach ($strArr as $v) {
-        $cell->addText($v['action'] . ' ' . $v['reason'] . ' (' . $v['actor'] . ' at ' . $v['created_at'] . ')', ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+        $cell->addText($v['action'] . ' ' . htmlspecialchars($v['reason']) . ' (' . $v['actor'] . ' at ' . $v['created_at'] . ')', ['bold' => false], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
     }
 }
 
@@ -351,7 +351,7 @@ function addMultiLineAttach($cell, $strArr)
 {
     // add text line together
     foreach ($strArr as $v) {
-        $cell->addLink("https://storage.cloud.google.com/feliiximg/" . $v['gcp_name'], $v['filename'], 'Link', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+        $cell->addLink("https://storage.cloud.google.com/feliiximg/" . $v['gcp_name'], htmlspecialchars($v['filename']), 'Link', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
     }
 }
 
