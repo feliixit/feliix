@@ -324,6 +324,12 @@ header('location:index');
             margin-top: 1px;
         }
 
+        div.links {
+            max-width: 300px;
+            text-align: left;
+            padding-left: 5px;
+        }
+
         div.links > a {
             font-size: 12px;
             margin-top: 1px;
