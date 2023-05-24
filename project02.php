@@ -1587,7 +1587,7 @@ if ($access6 == true) {
                                 <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.schedule" >
-                                <a :href="'schedule_calendar?id=' + od.id"  target="_blank">• Schedule -  {{ od.title }} </a>
+                                <a :href="'schedule_calendar?id=' + od.id"  target="_blank">• Schedule -  {{ od.title }} on {{ od.start_time }}</a>
                             </template>
                         </div>
                     </li>

@@ -237,7 +237,7 @@ function GetInquiryInfo($task_id, $db)
 function GetScheduleInfo($task_id, $db)
 {
     // get recent 2 months
-    $sql = "select id, title
+    $sql = "select id, title, date_format(start_time, '%Y-%m-%d') start_time, date_format(end_time, '%Y-%m-%d') end_time, is_enabled
             from work_calendar_main
             where related_stage_id = " . $task_id . "
             and start_time >= DATE_ADD(CURDATE(), INTERVAL -7 MONTH)
@@ -253,6 +253,9 @@ function GetScheduleInfo($task_id, $db)
         $_result[] = array(
             "id" => $row['id'],
             "title" => $row['title'],
+            "start_time" => $row['start_time'],
+            "end_time" => $row['end_time'],
+            "is_enabled" => $row['is_enabled'],
         );
     }
 

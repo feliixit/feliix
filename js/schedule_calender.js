@@ -949,7 +949,7 @@ var app = new Vue({
                 .then(function (response) {
                     console.log(details);
                     console.log(response);
-                    console.log(response.data[0]);
+                    //console.log(response.data[0]);
 
                     //handle success
                 })
@@ -980,7 +980,7 @@ var app = new Vue({
                 .then(function (response) {
                     //console.log(details);
                     console.log(response);
-                    console.log(response.data[0]);
+                    //console.log(response.data[0]);
 
                     //handle success
                 })
@@ -1131,7 +1131,7 @@ var app = new Vue({
                 .then(function (response) {
                     console.log(details);
                     console.log(response);
-                    console.log(response.data[0]);
+                   // console.log(response.data[0]);
 
                     //_this.updateDetail(_this.id, details, sc_content.Date);
                     //_this.deleteDetail(_this.id);
@@ -1319,7 +1319,7 @@ var app = new Vue({
                 .then(function (response) {
                     console.log(details);
                     console.log(response);
-                    console.log(response.data[0]);
+                    //console.log(response.data[0]);
 
                     _this.updateDetail(_this.id, details, main.Date);
                     //_this.deleteDetail(_this.id);
@@ -1595,6 +1595,9 @@ var initial = async (_id) =>  {
 
         //Schedule被點擊的方法
         eventClick: async function (info) {
+
+            app.sid = 0;
+            
             document.getElementById("myLargeModalLabel").innerText =
                 "Schedule Details";
             eventObj = info.event;
@@ -2112,10 +2115,10 @@ var initial = async (_id) =>  {
 
             document.getElementById("btn_reset").style.display = "none";
             document.getElementById("btn_add").style.display = "none";
-            document.getElementById("btn_duplicate").style.display = "inline";
-            document.getElementById("btn_export").style.display = "inline";
-            document.getElementById("btn_edit").style.display = "inline";
-            document.getElementById("btn_delete").style.display = "inline";
+            document.getElementById("btn_duplicate").style.display = "none";
+            document.getElementById("btn_export").style.display = "none";
+            document.getElementById("btn_edit").style.display = "none";
+            document.getElementById("btn_delete").style.display = "none";
             document.getElementById("btn_cancel").style.display = "none";
             document.getElementById("btn_save").style.display = "none";
 
@@ -2123,21 +2126,21 @@ var initial = async (_id) =>  {
             document.getElementById("lock").value = sc_content.Lock;
             if (sc_content.Lock != "") {
                 document.getElementById("btn_lock").style.display = "none";
-                document.getElementById("btn_unlock").style.display = "inline";
+                document.getElementById("btn_unlock").style.display = "none";
 
                 document.getElementById("btn_edit").style.display = "none";
                 document.getElementById("btn_delete").style.display = "none";
             } else {
-                document.getElementById("btn_lock").style.display = "inline";
+                document.getElementById("btn_lock").style.display = "none";
                 document.getElementById("btn_unlock").style.display = "none";
             }
 
             document.getElementById("confirm").value = sc_content.Confirm;
             if (sc_content.Confirm != "") {
                 document.getElementById("btn_confirm").style.display = "none";
-                document.getElementById("btn_unconfirm").style.display = "inline";
+                document.getElementById("btn_unconfirm").style.display = "none";
             } else {
-                document.getElementById("btn_confirm").style.display = "inline";
+                document.getElementById("btn_confirm").style.display = "none";
                 document.getElementById("btn_unconfirm").style.display = "none";
             }
 
@@ -3208,24 +3211,24 @@ $(document).ready(function () {
     var sixMonthsAgo = new Date(today.setMonth(today.getMonth() - 6));
 
     let _id = "";
-    let uri = window.location.href.split("?");
-      if (uri.length >= 2) {
-        let vars = uri[1].split("&");
+    // let uri = window.location.href.split("?");
+    //   if (uri.length >= 2) {
+    //     let vars = uri[1].split("&");
 
-        let tmp = "";
-        vars.forEach(async function(v) {
-          tmp = v.split("=");
-          if (tmp.length == 2) {
-            switch (tmp[0]) {
-              case "id":
-                _id = tmp[1];
-                break;
-              default:
-                console.log(`Too many args`);
-            }
-          }
-        });
-      }
+    //     let tmp = "";
+    //     vars.forEach(async function(v) {
+    //       tmp = v.split("=");
+    //       if (tmp.length == 2) {
+    //         switch (tmp[0]) {
+    //           case "id":
+    //             _id = tmp[1];
+    //             break;
+    //           default:
+    //             console.log(`Too many args`);
+    //         }
+    //       }
+    //     });
+    //   }
  
     $('#sdate').val(sixMonthsAgo.toISOString().slice(0,7));
     $('#edate').val(begin.toISOString().slice(0,7));
