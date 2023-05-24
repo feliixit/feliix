@@ -111,6 +111,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
     $inquiry = GetInquiryInfo($row['id'], $db);
+
+    $schedule = GetScheduleInfo($row['id'], $db);
     
 
     $merged_results[] = array(
@@ -129,7 +131,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "recent" => $recent,
 
         "order" => $order,
-        "inquiry" => $inquiry
+        "inquiry" => $inquiry,
+        "schedule" => $schedule
     );
 }
 
@@ -224,6 +227,35 @@ function GetInquiryInfo($task_id, $db)
             "iq_name" => $row['iq_name'],
             "order_type" => $row['order_type'],
             "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
+
+function GetScheduleInfo($task_id, $db)
+{
+    // get recent 2 months
+    $sql = "select id, title, date_format(start_time, '%Y-%m-%d') start_time, date_format(end_time, '%Y-%m-%d') end_time, is_enabled
+            from work_calendar_main
+            where related_stage_id = " . $task_id . "
+            and start_time >= DATE_ADD(CURDATE(), INTERVAL -7 MONTH)
+            and is_enabled = true 
+            ";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "title" => $row['title'],
+            "start_time" => $row['start_time'],
+            "end_time" => $row['end_time'],
+            "is_enabled" => $row['is_enabled'],
         );
     }
 

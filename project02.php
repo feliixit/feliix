@@ -324,6 +324,12 @@ header('location:index');
             margin-top: 1px;
         }
 
+        div.links {
+            max-width: 300px;
+            text-align: left;
+            padding-left: 5px;
+        }
+
         div.links > a {
             font-size: 12px;
             margin-top: 1px;
@@ -1484,8 +1490,9 @@ if ($access6 == true) {
                     <li>Stage</li>
                     <li>Status</li>
                     <li>Execution Period</li>
-                    <li>Created by</li>
+                    <!-- <li>Created by</li> -->
                     <!-- <li>Post/Reply</li> -->
+                    <li>Inquiry / Order / Schedule</li>
                     <li>Recent Message</li>
                 </ul>
                 <ul v-for='(receive_record, index) in displayedStagePosts'>
@@ -1493,7 +1500,7 @@ if ($access6 == true) {
                     <li v-if="receive_record.project_stage_id == 1 && receive_record.id <= 2570">
                         <a v-bind:href="'project03_client?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                         <div class="subtitle">{{receive_record.title}}</div>
-                        <div class="links">
+                        <!-- <div class="links">
                             <template v-for="(od, idx) in receive_record.order" >
                                 <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'" target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
@@ -1501,12 +1508,12 @@ if ($access6 == true) {
                             <template v-for="(od, idx) in receive_record.inquiry" >
                                 <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
-                        </div>
+                        </div> -->
                     </li>
                     <li v-if="receive_record.project_stage_id == 1 && receive_record.id > 2570"><a
                             v-bind:href="'project03_client_v2?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                             <div class="subtitle">{{receive_record.title}}</div>
-                            <div class="links">
+                            <!-- <div class="links">
                             <template v-for="(od, idx) in receive_record.order" >
                                 <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
@@ -1514,13 +1521,13 @@ if ($access6 == true) {
                             <template v-for="(od, idx) in receive_record.inquiry" >
                                 <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
-                        </div>
+                        </div> -->
                     </li>
 
                     <li v-if="receive_record.project_stage_id == 3 && receive_record.id > 1810"><a
                             v-bind:href="'project03_ameeting?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                             <div class="subtitle">{{receive_record.title}}</div>
-                            <div class="links">
+                            <!-- <div class="links">
                             <template v-for="(od, idx) in receive_record.order" >
                                 <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
@@ -1528,12 +1535,12 @@ if ($access6 == true) {
                             <template v-for="(od, idx) in receive_record.inquiry" >
                                 <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
-                        </div>
+                        </div> -->
                     </li>
                     <li v-if="receive_record.project_stage_id == 3 && receive_record.id <= 1810"><a
                             v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                             <div class="subtitle">{{receive_record.title}}</div>
-                            <div class="links">
+                            <!-- <div class="links">
                             <template v-for="(od, idx) in receive_record.order" >
                                 <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
@@ -1541,12 +1548,12 @@ if ($access6 == true) {
                             <template v-for="(od, idx) in receive_record.inquiry" >
                                 <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
-                        </div>
+                        </div> -->
                     </li>
                     <li v-if="receive_record.project_stage_id != 1 && receive_record.project_stage_id != 3"><a
                             v-bind:href="'project03_other?sid='+ receive_record.id">{{ receive_record.stage }}</a>
                             <div class="subtitle">{{receive_record.title}}</div>
-                            <div class="links">
+                            <!-- <div class="links">
                             <template v-for="(od, idx) in receive_record.order" >
                                 <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
@@ -1554,7 +1561,7 @@ if ($access6 == true) {
                             <template v-for="(od, idx) in receive_record.inquiry" >
                                 <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank"> {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
-                        </div>
+                        </div> -->
                     </li>
 
                 <?php
@@ -1576,7 +1583,21 @@ if ($access6 == true) {
 
                     
                     <li>{{ receive_record.start }} ~</li>
-                    <li>{{ receive_record.created_at }} {{ receive_record.username }}</li>
+                    <li>
+                        <div class="links">
+                            <template v-for="(od, idx) in receive_record.order" >
+                                <a :href="'order_taiwan_p4?id=' + od.id" v-if="od.order_type == 'taiwan'"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
+                            </template>
+                            <template v-for="(od, idx) in receive_record.inquiry" >
+                                <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank">• {{ od.serial_name }} {{ od.iq_name }} </a>
+                            </template>
+                            <template v-for="(od, idx) in receive_record.schedule" >
+                                <a :href="'schedule_calendar?id=' + od.id"  target="_blank">• Schedule -  {{ od.title }} on {{ od.start_time }}</a>
+                            </template>
+                        </div>
+                    </li>
+                    <!-- <li>{{ receive_record.created_at }} {{ receive_record.username }}</li> -->
                     <!-- <li>{{ receive_record.replies }}/{{ receive_record.post }}</li> -->
                     <li v-if="receive_record.recent != ''">{{ receive_record.recent }}</li>
                     <li v-else>{{ receive_record.created_at }} {{ receive_record.username }}</li>
