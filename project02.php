@@ -1584,7 +1584,7 @@ if ($access6 == true) {
                                 <a :href="'order_taiwan_mockup_p4?id=' + od.id"  v-if="od.order_type == 'mockup'"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.inquiry" >
-                                <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank">• {{ od.serial_name }} {{ od.od_name }} </a>
+                                <a :href="'inquiry_taiwan?id=' + od.id"  target="_blank">• {{ od.serial_name }} {{ od.iq_name }} </a>
                             </template>
                             <template v-for="(od, idx) in receive_record.schedule" >
                                 <a :href="'schedule_calendar?id=' + od.id"  target="_blank">• Schedule -  {{ od.title }} on {{ od.start_time }}</a>
