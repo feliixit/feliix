@@ -1893,7 +1893,8 @@ var initial = async (_id) =>  {
         app.title != 'Sr. Project Engineer' &&
         app.title != 'Jr. Project Architect' &&
         app.title != 'Project Architect' &&
-        app.title != 'Sr. Project Architect'
+        app.title != 'Sr. Project Architect' &&
+        app.title != 'Office Systems Designer'
     ) {
         document.getElementById("btn_confirm").style.visibility = "hidden";
         document.getElementById("btn_unconfirm").style.visibility = "hidden";
