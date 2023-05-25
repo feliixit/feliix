@@ -961,7 +961,7 @@ var app = new Vue({
 
 
       const params = {
-        d: id,
+        sd: id,
         c: '',
         t: '',
         b: '',
