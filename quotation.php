@@ -3013,7 +3013,7 @@ header( 'location:index' );
                         <tr class="desc1">
 
                             <td rowspan="2" v-if="bk.type == 'image'">{{ bk.num }}</td>
-                            <td v-if="bk.type == ''">{{ bk.num }}</td>
+                            <td v-if="bk.type == '' || bk.type== 'noimage' ">{{ bk.num }}</td>
 
                             <td rowspan="2" class="pic" v-if="bk.type == 'image'">
                                 <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
@@ -3024,7 +3024,7 @@ header( 'location:index' );
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
                             </td>
-                            <td v-if="bk.type == '' || bk.type == 'noimage'" colspan="2">
+                            <td v-if="bk.type == '' || bk.type== 'noimage'" colspan="2">
                                 <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
