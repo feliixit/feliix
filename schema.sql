@@ -3768,13 +3768,12 @@ mysqldump -u root -p feliix product > product.sql
 
 update product_category
 set quoted_price = CEIL(price * 1.15), quoted_price_change = '2023-05-24 00:00:10'
-where price is not null;
+where price is not null and category = '10000000';
 
 
-update product
-set quoted_price = CEIL(price * 1.15), quoted_price_change = '2023-05-24 00:00:10'
-where price is not null;
-
+update product p left join product_category pc on p.product_id = pc.id and pc.category = '10000000'
+set p.quoted_price = CEIL(p.price * 1.15), p.quoted_price_change = '2023-05-24 00:00:10'
+where p.price is not null ;
 
 update product_category pc 
 set 
