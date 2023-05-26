@@ -3761,3 +3761,30 @@ CREATE INDEX work_calendar_details_is_enabled_IDX USING BTREE ON work_calendar_d
 
 -- 20230522
 ALTER TABLE price_comparison_total ADD COLUMN `show_t` VARCHAR(10) DEFAULT '';
+
+-- 20230524
+mysqldump -u root -p feliix product_category > product_category.sql
+mysqldump -u root -p feliix product > product.sql
+
+update product_category
+set quoted_price = CEIL(price * 1.15), quoted_price_change = '2023-05-24 00:00:10'
+where price is not null;
+
+
+update product
+set quoted_price = CEIL(price * 1.15), quoted_price_change = '2023-05-24 00:00:10'
+where price is not null;
+
+
+update product_category pc 
+set 
+max_quoted_price_change = now(), min_quoted_price_change = now(), 
+qp_max = quoted_price, qp_min = quoted_price
+where quoted_price_change = '2023-05-24 00:00:10';
+
+
+update product_category pc set 
+max_quoted_price_change = now(), min_quoted_price_change = now(), 
+qp_max = (select max(p.quoted_price) from product p where p.product_id = pc.id ),
+qp_min = (select min(p.quoted_price) from product p where p.product_id = pc.id ) 
+ where (select count(*) from product p where p.product_id = pc.id and quoted_price_change = '2023-05-24 00:00:10' ) > 0;
