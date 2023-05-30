@@ -71,6 +71,12 @@ else
       $database = new Database();
       $db = $database->getConnection();
 
+      if($d != "" && $d1 == "" && $sd == "")
+      {
+          $sd = $d;
+          $d = "";
+      }
+
       switch ($method) {
           case 'GET':
             $merged_results = array();
