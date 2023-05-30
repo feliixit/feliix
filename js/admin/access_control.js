@@ -29,6 +29,8 @@ var app = new Vue({
     vote2: [],
 
     payees: [],
+
+    schedule_confirm:[],
   },
 
   created() {
@@ -129,6 +131,10 @@ var app = new Vue({
               _this.vote2 = res.data[0]["vote2"].split(",").filter(function (el) {
                 return el != "";
               });
+              if (kind === 19 || kind === undefined)
+              _this.schedule_confirm = res.data[0]["schedule_confirm"].split(",").filter(function (el) {
+                return el != "";
+              });
 
           },
           (err) => {
@@ -192,6 +198,7 @@ var app = new Vue({
       form_Data.append("knowledge", this.knowledge.toString());
       form_Data.append("vote1", this.vote1.toString());
       form_Data.append("vote2", this.vote2.toString());
+      form_Data.append("schedule_confirm", this.schedule_confirm.toString());
 
       axios({
         method: "post",
