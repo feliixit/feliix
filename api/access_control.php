@@ -29,6 +29,7 @@ $access7 = (isset($_POST['access7']) ?  $_POST['access7'] : '');
 $knowledge = (isset($_POST['knowledge']) ?  $_POST['knowledge'] : '');
 $vote1 = (isset($_POST['vote1']) ?  $_POST['vote1'] : '');
 $vote2 = (isset($_POST['vote2']) ?  $_POST['vote2'] : '');
+$schedule_confirm = (isset($_POST['schedule_confirm']) ?  $_POST['schedule_confirm'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -54,7 +55,7 @@ if (!isset($jwt)) {
     if ($action == 1) {
         //select all
         try {
-            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8, access1, access2, access3, access4, access5, access6, access7, knowledge, vote1, vote2 from access_control where id = 1";
+            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8, access1, access2, access3, access4, access5, access6, access7, knowledge, vote1, vote2, schedule_confirm from access_control where id = 1";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
@@ -89,7 +90,8 @@ if (!isset($jwt)) {
                             access7 = :access7,
                             knowledge = :knowledge,
                             vote1 = :vote1,
-                            vote2 = :vote2
+                            vote2 = :vote2,
+                            schedule_confirm = :schedule_confirm
                         where id = :id";
 
             // prepare the query
@@ -116,6 +118,7 @@ if (!isset($jwt)) {
             $knowledge = htmlspecialchars(strip_tags($knowledge));
             $vote1 = htmlspecialchars(strip_tags($vote1));
             $vote2 = htmlspecialchars(strip_tags($vote2));
+            $schedule_confirm = htmlspecialchars(strip_tags($schedule_confirm));
 
 
             // bind the values
@@ -138,6 +141,7 @@ if (!isset($jwt)) {
             $stmt->bindParam(':knowledge', $knowledge);
             $stmt->bindParam(':vote1', $vote1);
             $stmt->bindParam(':vote2', $vote2);
+            $stmt->bindParam(':schedule_confirm', $schedule_confirm);
 
             try {
                 // execute the query, also check if query was successful

@@ -54,6 +54,8 @@ var app = new Vue({
 
         users: [],
         users_org: [],
+
+        schedule_confirm: false,
     },
     created() {
 
@@ -83,7 +85,7 @@ var app = new Vue({
         this.getUserName();
         this.getUsers();
 
-        
+        this.getAccess();
     
     },
     methods: {
@@ -958,6 +960,14 @@ var app = new Vue({
                     console.log(response);
                 });
         },
+
+        getAccess: async function() {
+            var token = localStorage.getItem('token');
+            var form_Data = new FormData();
+
+            let res = await axios.get('api/access_control_kind_get', { headers: { "Authorization": `Bearer ${token}` }, params: { kind: 'schedule_confirm' } });
+            this.schedule_confirm = res.data.schedule_confirm;
+          },
 
         updateConfirm: function (vlock) {
             this.action = 9; //update lock status
@@ -1884,17 +1894,7 @@ var initial = async (_id) =>  {
     }
 
     if (
-        app.name != "Dennis Lin" &&
-        app.name != "dereck" &&
-        app.name != "Kristel Tan" &&
-        app.department != 'Service' && 
-        app.title != 'Jr. Project Engineer' &&
-        app.title != 'Project Engineer' &&
-        app.title != 'Sr. Project Engineer' &&
-        app.title != 'Jr. Project Architect' &&
-        app.title != 'Project Architect' &&
-        app.title != 'Sr. Project Architect' &&
-        app.title != 'Office Systems Designer'
+        app.schedule_confirm != true 
     ) {
         document.getElementById("btn_confirm").style.visibility = "hidden";
         document.getElementById("btn_unconfirm").style.visibility = "hidden";

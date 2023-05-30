@@ -3767,23 +3767,27 @@ mysqldump -u root -p feliix product_category > product_category.sql
 mysqldump -u root -p feliix product > product.sql
 
 update product_category
-set quoted_price = CEIL(price * 1.15), quoted_price_change = '2023-05-24 00:00:10'
+set quoted_price = CEIL(price * 1.15), quoted_price_change = '2023-05-26 00:00:10'
 where price is not null and category = '10000000';
 
 
-update product p left join product_category pc on p.product_id = pc.id and pc.category = '10000000'
-set p.quoted_price = CEIL(p.price * 1.15), p.quoted_price_change = '2023-05-24 00:00:10'
-where p.price is not null ;
+update product p left join product_category pc on p.product_id = pc.id
+set p.quoted_price = CEIL(p.price * 1.15), p.quoted_price_change = '2023-05-26 00:00:10'
+where p.price is not null  and pc.category = '10000000';
 
 update product_category pc 
 set 
 max_quoted_price_change = now(), min_quoted_price_change = now(), 
 qp_max = quoted_price, qp_min = quoted_price
-where quoted_price_change = '2023-05-24 00:00:10';
+where quoted_price_change = '2023-05-26 00:00:10';
 
 
 update product_category pc set 
 max_quoted_price_change = now(), min_quoted_price_change = now(), 
 qp_max = (select max(p.quoted_price) from product p where p.product_id = pc.id ),
 qp_min = (select min(p.quoted_price) from product p where p.product_id = pc.id ) 
- where (select count(*) from product p where p.product_id = pc.id and quoted_price_change = '2023-05-24 00:00:10' ) > 0;
+ where (select count(*) from product p where p.product_id = pc.id and quoted_price_change = '2023-05-26 00:00:10' ) > 0;
+
+-- 20230302 access
+ALTER TABLE access_control
+ADD COLUMN `schedule_confirm` text COLLATE utf8mb4_unicode_ci;

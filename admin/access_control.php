@@ -488,6 +488,28 @@ $(function(){
                 </div>
             </div>
 
+            <div class="box-content">
+                <ul>
+                    <li><b>Schedule Calendar Confirm</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="schedule_confirm"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="Name"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(19)">Cancel</a>
+                    <a class="btn" @click="save(19)">Save</a>
+                </div>
+            </div>
+
 
         </div>
     </div>
