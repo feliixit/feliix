@@ -235,7 +235,8 @@ if($jwt){
             $sheet->setCellValue('Q1', 'Arrival Date');
             $sheet->setCellValue('R1', 'Warehouse In Charge');
             $sheet->setCellValue('S1', 'Testing');
-            //$sheet->setCellValue('S1', 'Delivery');
+            $sheet->setCellValue('T1', 'Delivery');
+            $sheet->setCellValue('U1', 'Final');
 
             $sheet->getColumnDimension('A')->setWidth(4.82);
             $sheet->getColumnDimension('B')->setWidth(12.82);
@@ -256,7 +257,8 @@ if($jwt){
             $sheet->getColumnDimension('Q')->setWidth(13.82);
             $sheet->getColumnDimension('R')->setWidth(30.82);
             $sheet->getColumnDimension('S')->setWidth(30.82);
-            //$sheet->getColumnDimension('S')->setWidth(30.82);
+            $sheet->getColumnDimension('T')->setWidth(30.82);
+            $sheet->getColumnDimension('U')->setWidth(30.82);
 
             $i = 2;
             foreach($merged_results as $row)
@@ -373,17 +375,22 @@ if($jwt){
                 $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('S'. $i)->applyFromArray($center_style);
 
-                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                // $sheet->setCellValue('S'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                // $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
-                // $sheet->getStyle('S'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('T'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->setCellValue('T'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->getStyle('T'. $i)->applyFromArray($center_style);
+
+                $sheet->setCellValue('U' . $i,  $row['final']);
+                $sheet->getStyle('U'. $i)->applyFromArray($center_style);
+
+                $sheet->getStyle('U'. $i)->getAlignment()->setWrapText(true);
+                $sheet->getStyle('U'. $i)->applyFromArray($center_style);
 
 
                 $i++;
             }
         
-            $sheet->getStyle('A1:' . 'S1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'S' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'U1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'U' . --$i)->applyFromArray($styleArray);
 
             ob_end_clean();
 

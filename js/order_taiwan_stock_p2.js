@@ -244,6 +244,8 @@ var app = new Vue({
         fil_creator: '',
         fil_keyword: '',
 
+        fil_category: '',
+
         users: [],
         creators: [],
 
