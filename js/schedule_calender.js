@@ -3210,7 +3210,6 @@ $(document).ready(function () {
     var today = new Date();
     // get previous 6 months's date
     var sixMonthsAgo = new Date(today.setMonth(today.getMonth() - 6));
-    var netmonth = new Date(begin.getFullYear(), begin.getMonth()+2, 0)
 
     let _id = "";
     // let uri = window.location.href.split("?");
@@ -3233,7 +3232,7 @@ $(document).ready(function () {
     //   }
  
     $('#sdate').val(sixMonthsAgo.toISOString().slice(0,7));
-    $('#edate').val(netmonth.toISOString().slice(0,7));
+    $('#edate').val(begin.toISOString().slice(0,7));
 
     reload(_id);
 });
