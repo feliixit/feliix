@@ -235,7 +235,8 @@ if($jwt){
             $sheet->setCellValue('Q1', 'Arrival Date');
             $sheet->setCellValue('R1', 'Warehouse In Charge');
             $sheet->setCellValue('S1', 'Testing');
-            //$sheet->setCellValue('S1', 'Delivery');
+            $sheet->setCellValue('T1', 'Delivery');
+            $sheet->setCellValue('U1', 'Final');
 
             $sheet->getColumnDimension('A')->setWidth(4.82);
             $sheet->getColumnDimension('B')->setWidth(12.82);
@@ -256,7 +257,8 @@ if($jwt){
             $sheet->getColumnDimension('Q')->setWidth(13.82);
             $sheet->getColumnDimension('R')->setWidth(30.82);
             $sheet->getColumnDimension('S')->setWidth(30.82);
-            //$sheet->getColumnDimension('S')->setWidth(30.82);
+            $sheet->getColumnDimension('T')->setWidth(30.82);
+            $sheet->getColumnDimension('U')->setWidth(30.82);
 
             $i = 2;
             foreach($merged_results as $row)
@@ -282,12 +284,12 @@ if($jwt){
 
                 if($row['photo1'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo1']), $conf::$upload_path . str_replace(' ', '%20', $row['photo1']));
+                    grab_image(str_replace(' ', '%20', $row['photo1']), $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo1']));
+                    $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
                     $objDrawing->setCoordinates('G' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -302,12 +304,12 @@ if($jwt){
 
                 if($row['photo2'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo2']), $conf::$upload_path . str_replace(' ', '%20', $row['photo2']));
+                    grab_image(str_replace(' ', '%20', $row['photo2']), $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo2']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo2');
                     $objDrawing->setDescription('photo2');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo2']));
+                    $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo2']));
                     $objDrawing->setCoordinates('H' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -322,12 +324,12 @@ if($jwt){
 
                 if($row['photo3'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo3']), $conf::$upload_path . str_replace(' ', '%20', $row['photo3']));
+                    grab_image(str_replace(' ', '%20', $row['photo3']), $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo3']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo3');
                     $objDrawing->setDescription('photo3');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo3']));
+                    $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo3']));
                     $objDrawing->setCoordinates('I' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -373,17 +375,22 @@ if($jwt){
                 $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('S'. $i)->applyFromArray($center_style);
 
-                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                // $sheet->setCellValue('S'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                // $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
-                // $sheet->getStyle('S'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('T'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->setCellValue('T'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->getStyle('T'. $i)->applyFromArray($center_style);
+
+                $sheet->setCellValue('U' . $i,  $row['final']);
+                $sheet->getStyle('U'. $i)->applyFromArray($center_style);
+
+                $sheet->getStyle('U'. $i)->getAlignment()->setWrapText(true);
+                $sheet->getStyle('U'. $i)->applyFromArray($center_style);
 
 
                 $i++;
             }
         
-            $sheet->getStyle('A1:' . 'S1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'S' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'U1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'U' . --$i)->applyFromArray($styleArray);
 
             ob_end_clean();
 

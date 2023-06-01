@@ -485,7 +485,7 @@ if($jwt){
                     $row['photo1'] = urlencode($row['photo1']);
                     $row['photo1'] = str_replace('+', '%20', $row['photo1']);
 
-                    grab_image($row['photo1'], $conf::$upload_path . $row['photo1']);
+                    grab_image($row['photo1'], $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');

@@ -45,7 +45,7 @@ try {
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Overview of Order – Stock</title>
+    <title>Overview of Order – Sample</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -545,7 +545,9 @@ try {
         }
 
         .block.D .tb_order tbody tr td:nth-of-type(18),
-        .block.D .tb_order tbody tr td:nth-of-type(19) {
+        .block.D .tb_order tbody tr td:nth-of-type(19),
+        .block.D .tb_order tbody tr td:nth-of-type(20),
+        .block.D .tb_order tbody tr td:nth-of-type(21) {
             min-width: 400px;
         }
 
@@ -1407,7 +1409,8 @@ try {
                         <th>Arrival Date</th>
                         <th>Warehouse In Charge</th>
                         <th>Testing</th>
-                       
+                        <th>Delivery</th>
+                        <th>Final</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -1631,7 +1634,45 @@ try {
                 </div>
             </td>
 
-          
+            <td>
+                <div class="read_block" v-if="DeliveryRead(item)">
+                    <select v-model="item.delivery" disabled v-if="1==0">
+                        <option>Choose Assignee for Delivery...</option>
+                        <option v-for="item in charge" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
+                    Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
+                    <textarea rows="3" v-model="item.remark_d" readonly></textarea>
+                    <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
+                    <i v-if="item.delivery_updated_name != ''">({{ item.delivery_updated_name }} at {{ item.delivery_updated_at }})</i>
+                </div>
+
+                <div class="write_block" v-if="DeliveryWrite(item)">
+                    <select v-model="item.delivery" class="assign_delivery" v-if="info_type == 'assign_delivery' && 1==0">
+                        <option>Choose Assignee for Delivery...</option>
+                        <option v-for="item in charge" :value="item.username" :key="item.username">
+                            {{ item.username }}
+                        </option>
+                    </select>
+
+                    <div class="edit_delivery_info" v-if="info_type == 'edit_delivery'">
+                        Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone">
+                        <textarea rows="3" v-model="item.remark_d" placeholder="Remarks"></textarea>
+                    </div>
+                    
+                </div>
+            </td>
+
+            <td>
+                <div class="read_block" v-if="FinalRead(item)">
+                    <textarea rows="3" v-model="item.final" readonly></textarea>
+                </div>
+                <div class="write_block" v-if="FinalWrite(item)">
+                    <textarea rows="3" v-model="item.final" placeholder="Remarks"></textarea>
+                </div>
+
+            </td>
 
             <td>
                 <div class="btnbox">
