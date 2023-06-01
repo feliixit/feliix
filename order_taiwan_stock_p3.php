@@ -539,7 +539,9 @@ try {
         }
 
         .block.C .tb_order tbody tr td:nth-of-type(16),
-        .block.C .tb_order tbody tr td:nth-of-type(17){
+        .block.C .tb_order tbody tr td:nth-of-type(17),
+        .block.C .tb_order tbody tr td:nth-of-type(18),
+        .block.C .tb_order tbody tr td:nth-of-type(19) {
             min-width: 400px;
         }
 

@@ -45,7 +45,7 @@ try {
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Overview of Order – Stock</title>
+    <title>Overview of Order – Sample</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -545,7 +545,9 @@ try {
         }
 
         .block.D .tb_order tbody tr td:nth-of-type(18),
-        .block.D .tb_order tbody tr td:nth-of-type(19) {
+        .block.D .tb_order tbody tr td:nth-of-type(19),
+        .block.D .tb_order tbody tr td:nth-of-type(20),
+        .block.D .tb_order tbody tr td:nth-of-type(21) {
             min-width: 400px;
         }
 

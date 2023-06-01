@@ -546,7 +546,9 @@ try {
         }
 
         .block.D .tb_order tbody tr td:nth-of-type(19),
-        .block.D .tb_order tbody tr td:nth-of-type(20) {
+        .block.D .tb_order tbody tr td:nth-of-type(20),
+        .block.D .tb_order tbody tr td:nth-of-type(21),
+        .block.D .tb_order tbody tr td:nth-of-type(22) {
             min-width: 400px;
         }
 
