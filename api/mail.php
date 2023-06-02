@@ -13444,7 +13444,6 @@ function GetProject01NotifiersByCatagory($catagory)
             LEFT JOIN user_title ut
             ON u.title_id = ut.id 
             WHERE title IN(
-                'Assistant Sales Manager',
                 'Sales Manager',
                 'Office Systems Manager',
                 'Office Systems Assistant Manager',
@@ -13459,7 +13458,6 @@ function GetProject01NotifiersByCatagory($catagory)
             LEFT JOIN user_title ut
             ON u.title_id = ut.id 
             WHERE title IN(
-                'Assistant Sales Manager',
                 'Sales Manager',
                 'Lighting Manager',
                 'Lighting Assistant Manager',

@@ -272,12 +272,12 @@ if($jwt){
 
                 if($row['photo1'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo1']), $conf::$upload_path . str_replace(' ', '%20', $row['photo1']));
+                    grab_image(str_replace(' ', '%20', $row['photo1']), $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo1']));
+                    $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
                     $objDrawing->setCoordinates('D' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -292,12 +292,12 @@ if($jwt){
 
                 if($row['photo2'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo2']), $conf::$upload_path . str_replace(' ', '%20', $row['photo2']));
+                    grab_image(str_replace(' ', '%20', $row['photo2']), $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo2']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo2');
                     $objDrawing->setDescription('photo2');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo2']));
+                    $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo2']));
                     $objDrawing->setCoordinates('E' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -312,12 +312,12 @@ if($jwt){
 
                 if($row['photo3'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo3']), $conf::$upload_path . str_replace(' ', '%20', $row['photo3']));
+                    grab_image(str_replace(' ', '%20', $row['photo3']), $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo3']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo3');
                     $objDrawing->setDescription('photo3');
-                    $objDrawing->setPath($conf::$upload_path  . str_replace(' ', '%20', $row['photo3']));
+                    $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo3']));
                     $objDrawing->setCoordinates('F' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
