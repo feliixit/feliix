@@ -282,7 +282,7 @@ if($jwt){
 
                 if($row['photo1'] != '')
                 {
-                    grab_image(str_replace(' ', '%20', $row['photo1']), $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
+                    grab_image(htmlspecialchars(' ', '%20', $row['photo1']), $conf::$upload_path . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
 
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
