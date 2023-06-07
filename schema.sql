@@ -3791,3 +3791,35 @@ qp_min = (select min(p.quoted_price) from product p where p.product_id = pc.id )
 -- 20230302 access
 ALTER TABLE access_control
 ADD COLUMN `schedule_confirm` text COLLATE utf8mb4_unicode_ci;
+
+-- 20230601
+CREATE TABLE IF NOT EXISTS `product_spec_sheet` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `code` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `legend` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `option` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `category` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `indoor` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `type` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `grade` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo1` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo2` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo3` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo4` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo5` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo6` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `variation` text,
+  `related_product` JSON,
+  `reserved` JSON,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `status` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20230602
+alter table project_stage_client_task_comment MODIFY COLUMN `message` VARCHAR(1536) DEFAULT '';
