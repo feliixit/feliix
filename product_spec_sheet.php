@@ -505,7 +505,7 @@
             }
 
             .noPrint {
-                display: none;
+                display: none!important;
             }
         }
 
@@ -657,7 +657,7 @@
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_1'"  @change="onFileChangeImage($event, item, 1)">
                                 <img v-if="item.photo1" :src="item.photo1"/>
-                                <div @click="clear_photo(item, 1)">x</div>
+                                <span @click="clear_photo(item, 1)">x</span>
                             </div>
                         </div>
                     </td>
@@ -669,7 +669,7 @@
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_2'"  @change="onFileChangeImage($event, item, 2)">
                                 <img v-if="item.photo2" :src="item.photo2"/>
-                                <div @click="clear_photo(item, 2)">x</div>
+                                <span @click="clear_photo(item, 2)">x</span>
                             </div>
                         </div>
                     </td>
@@ -688,7 +688,7 @@
         </div>
 
 
-        <div class="spec_section read">
+        <div class="spec_section read" v-if="mode != 'write'">
 
             <div>SPECIFICATIONS:</div>
 
@@ -745,41 +745,41 @@
             <table>
                 <tr>
                     <td>
-                    <div :class="['itembox', (item.photo3 !== '' ? 'chosen' : '')]">
+                    <div :class="['itembox', (item.photo3 !== '' ? 'chosen' : '')]" style="height: 155px;">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_3'"  @change="onFileChangeImage($event, item, 3)">
                                 <img v-if="item.photo3" :src="item.photo3"/>
-                                <div @click="clear_photo(item, 3)">x</div>
+                                <span @click="clear_photo(item, 3)">x</span>
                             </div>
                         </div>
                     </td>
                     <td></td>
                     <td>
-                    <div :class="['itembox', (item.photo4 !== '' ? 'chosen' : '')]">
+                    <div :class="['itembox', (item.photo4 !== '' ? 'chosen' : '')]" style="height: 155px;">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_4'"  @change="onFileChangeImage($event, item, 4)">
                                 <img v-if="item.photo4" :src="item.photo4"/>
-                                <div @click="clear_photo(item, 4)">x</div>
+                                <span @click="clear_photo(item, 4)">x</span>
                             </div>
                         </div>
                     </td>
                     <td></td>
                     <td>
-                    <div :class="['itembox', (item.photo5 !== '' ? 'chosen' : '')]">
+                    <div :class="['itembox', (item.photo5 !== '' ? 'chosen' : '')]" style="height: 155px;">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_5'"  @change="onFileChangeImage($event, item, 5)">
                                 <img v-if="item.photo5" :src="item.photo5"/>
-                                <div @click="clear_photo(item, 5)">x</div>
+                                <span @click="clear_photo(item, 5)">x</span>
                             </div>
                         </div>
                     </td>
                     <td></td>
                     <td>
-                    <div :class="['itembox', (item.photo6 !== '' ? 'chosen' : '')]">
+                    <div :class="['itembox', (item.photo6 !== '' ? 'chosen' : '')]" style="height: 155px;">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_6'"  @change="onFileChangeImage($event, item, 6)">
                                 <img v-if="item.photo6" :src="item.photo6"/>
-                                <div @click="clear_photo(item, 6)">x</div>
+                                <span @click="clear_photo(item, 6)">x</span>
                             </div>
                         </div>
                     </td>
