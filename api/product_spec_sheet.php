@@ -58,6 +58,9 @@ else
         $sd = $d;
         $d = "";
     }
+
+    if($sd == "")
+        $sd = "0";
     
     switch ($method) {
         case 'GET':
@@ -92,6 +95,7 @@ else
                 $variation_array = ParseTextAsVariant($row['variation']);
 
                 $attribute_list_by_two = [];
+                $two_array = [];
                 for($i=0; $i<count($variation_array); $i++)
                 {
                     if($i % 2 == 0)
@@ -146,7 +150,7 @@ else
             
             
             
-            if($sd != "" && $sd != "0")
+            if($sd != "")
             {
                 $sql = $sql . " and p.id = " . $sd . " ";
                 
@@ -155,7 +159,29 @@ else
             $stmt = $db->prepare( $sql );
             $stmt->execute();
             
-            
+            $variation1 = "";
+            $variation1_custom = "";
+            $variation2 = "";
+            $variation2_custom = "";
+            $variation3 = "";
+            $variation3_custom = "";
+            $cat = "";
+            $related_product = [];
+            $attribute_list = [];
+            $product_id = 0;
+            $id = 0;
+            $code = "";
+            $photo1 = "";
+            $photo2 = "";
+            $photo3 = "";
+            $photo4 = "";
+            $photo5 = "";
+            $photo6 = "";
+            $description = "";
+            $reserved = [];
+            $indoor = "";
+            $type = "";
+            $grade = "";
             
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 
@@ -165,11 +191,11 @@ else
                 $photo1 = $row['photo1'];
                 $photo2 = $row['photo2'];
                 if($row['description'] != '' && $row['notes'] != '')
-                    $description = $row['description'] . PHP_EOL . $row['notes'];
+                    $description = "Description:" . PHP_EOL . $row['description'] . PHP_EOL . PHP_EOL . "Notes:" . PHP_EOL .$row['notes'];
                 else if($row['description'] != '')
-                    $description = $row['description'];
+                    $description = "Description:" . PHP_EOL . $row['description'];
                 else if($row['notes'] != '')
-                    $description = $row['notes'];
+                    $description = "Notes:" . PHP_EOL . $row['notes'];
                 else
                     $description = '';
                 
@@ -223,7 +249,11 @@ else
                 $created_name = $row['created_name'];
                 $updated_name = $row['updated_name'];
                 
-                $product = GetProduct($id, $db);
+                if($d != '')
+                    $product = GetProductWithId($id, $d, $db);
+                else
+                    $product = GetProduct($id, $db);
+                
                 $related_product = GetRelatedProductCode($id, $db);
                 
                 
@@ -425,6 +455,7 @@ else
             }
 
             $attribute_list_by_two = [];
+            $two_array = [];
             for($i=0; $i<count($attribute_list); $i++)
             {
                 if($i % 2 == 0)
@@ -497,6 +528,74 @@ function GetValue($str)
 
 function GetProduct($id, $db){
     $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
+    
+    $merged_results = array();
+    
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+    
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row['id'];
+        $k1 = GetKey($row['1st_variation']);
+        $k2 = GetKey($row['2rd_variation']);
+        $k3 = GetKey($row['3th_variation']);
+        $v1 = GetValue($row['1st_variation']);
+        $v2 = GetValue($row['2rd_variation']);
+        $v3 = GetValue($row['3th_variation']);
+        $checked = '';
+        $code = $row['code'];
+        $price = $row['price'];
+        $price_ntd = $row['price_ntd'];
+        $price_org = $row['price'];
+        $price_ntd_org = $row['price_ntd'];
+        $price_change = $row['price_change'] != '' ? substr($row['price_change'], 0, 10) : '';
+        $price_ntd_change = $row['price_ntd_change'] != '' ? substr($row['price_ntd_change'], 0, 10) : '';
+        $status = $row['enabled'];
+        $photo = trim($row['photo']);
+        $enabled = $row['enabled'];
+        if($photo != '')
+        $url = $row['url'];
+        else
+        $url = '';
+        
+        $quoted_price = $row['quoted_price'];
+        $quoted_price_change = $row['quoted_price_change'] != '' ? substr($row['quoted_price_change'], 0, 10) : '';
+        
+        $merged_results[] = array(  "id" => $id, 
+        "k1" => $k1, 
+        "k2" => $k2, 
+        "k3" => $k3, 
+        "v1" => $v1, 
+        "v2" => $v2, 
+        "v3" => $v3, 
+        "checked" => $checked, 
+        "code" => $code, 
+        "price" => $price, 
+        "price_ntd" => $price_ntd, 
+        "price_org" => $price_org, 
+        "price_ntd_org" => $price_ntd_org, 
+        "price_change" => $price_change, 
+        "price_ntd_change" => $price_ntd_change, 
+        "status" => $status, 
+        "url" => $url, 
+        "photo" => $photo, 
+        "enabled" => $enabled,
+        
+        "quoted_price" => $quoted_price, 
+        "quoted_price_org" => $quoted_price, 
+        "quoted_price_change" => substr($quoted_price_change, 0, 10), 
+        
+        "file" => array( "value" => ''),
+        
+    );
+}
+
+return $merged_results;
+}
+
+
+function GetProductWithId($id, $d, $db){
+    $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and id = " . $d . " and STATUS <> -1";
     
     $merged_results = array();
     
@@ -810,7 +909,7 @@ return $merged_results;
 function GetRelatedProductCode($id, $db){
     $sql = "SELECT * FROM product_category where code in (SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1)";
     
-    $sql = $sql . " ORDER BY code ";
+    $sql = $sql . " ORDER BY created_at desc ";
     
     $merged_results = [];
     
