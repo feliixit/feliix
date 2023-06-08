@@ -250,11 +250,11 @@ else
                 $updated_name = $row['updated_name'];
                 
                 if($d != '')
-                    $product = GetProductWithId($id, $d, $db);
+                    $product = GetProductWithId($sd, $d, $db);
                 else
-                    $product = GetProduct($id, $db);
+                    $product = GetProduct($sd, $db);
                 
-                $related_product = GetRelatedProductCode($id, $db);
+                $related_product = GetRelatedProductCode($sd, $db);
                 
                 
                 $variation1_value = [];
@@ -288,13 +288,13 @@ else
                     }
                 }
                 
-                $accessory = GetAccessory($id, $db);
+                $accessory = GetAccessory($sd, $db);
                 $sub_category_item = GetSubCategoryItem($category, $db);
                 
                 $special_info_json = json_decode($attributes);
                 
                 $special_information = GetSpecialInfomation($sub_category, $db, $special_info_json);
-                $accessory_information = GetAccessoryInfomation($sub_category, $db, $id);
+                $accessory_information = GetAccessoryInfomation($sub_category, $db, $sd);
                 
                 $variation1 = 'custom';
                 $variation1_custom = $variation1_text;
