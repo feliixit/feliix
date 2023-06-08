@@ -529,7 +529,7 @@
 
     <div class="commandbox">
         <button class="btn btn-primary" v-if="mode == 'write'" @click="preview()">Preview</button>
-        <button class="btn btn-primary" v-if="mode == 'write'" @click="confirmItem()">Save and Preview</button>
+        <button class="btn btn-primary" v-if="mode == 'write' && fil_id != ''" @click="confirmItem()">Save and Preview</button>
         <button class="btn btn-primary" v-if="mode != 'write' && show_title == true" @click="edit()">Edit</button>
         <button class="btn btn-primary" v-if="mode != 'write' && show_title == true" @click="print_page()">Export</button>
     </div>

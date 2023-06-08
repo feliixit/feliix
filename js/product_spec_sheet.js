@@ -47,6 +47,8 @@ var app = new Vue({
     reserved : {},
 
     show_title : true,
+    fil_id : '',
+    fil_id_1 : '',
   },
 
   created() {
@@ -422,6 +424,7 @@ var app = new Vue({
     },
 
     converTextToArray: function(text) {
+      if(text == null || text == "") return [];
       // split by newline
       let lines = text.split("\n");
       let result = [];
