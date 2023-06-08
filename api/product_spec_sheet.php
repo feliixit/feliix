@@ -46,21 +46,21 @@ else
     
     include_once 'config/database.php';
     
-    $sd = (isset($_GET['sd']) ?  $_GET['sd'] : "");
-    $d = (isset($_GET['d']) ?  $_GET['d'] : "");
+    $sd = (isset($_GET['sd']) ?  $_GET['sd'] : 0);
+    $d = (isset($_GET['d']) ?  $_GET['d'] : '');
     
     
     $database = new Database();
     $db = $database->getConnection();
     
-    if($d != "" && $sd == "")
+    if($d != '' && $sd == 0)
     {
         $sd = $d;
         $d = "";
     }
 
     if($sd == "")
-        $sd = "0";
+        $sd = 0;
     
     switch ($method) {
         case 'GET':
