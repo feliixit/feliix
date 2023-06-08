@@ -346,27 +346,45 @@ var app = new Vue({
 
       if (num === 1) {
         item.photo1 = "";
-        document.getElementById('photo_' + item.id + '_1').value = "";
+        var file = document.getElementById('photo_' + item.id + '_1');
+        if(file) {
+          file.value = "";
+        }
       }
       if (num === 2) {
         item.photo2 = "";
-        document.getElementById('photo_' + item.id + '_2').value = "";
+        var file = document.getElementById('photo_' + item.id + '_2');
+        if(file) {
+          file.value = "";
+        }
       }
       if (num === 3) {
         item.photo3 = "";
-        document.getElementById('photo_' + item.id + '_3').value = "";
+        var file = document.getElementById('photo_' + item.id + '_3');
+        if(file) {
+          file.value = "";
+        }
       }
       if (num === 4) {
         item.photo4 = "";
-        document.getElementById('photo_' + item.id + '_4').value = "";
+        var file = document.getElementById('photo_' + item.id + '_4');
+        if(file) {
+          file.value = "";
+        }
       }
       if (num === 5) {
         item.photo5 = "";
-        document.getElementById('photo_' + item.id + '_5').value = "";
+        var file = document.getElementById('photo_' + item.id + '_5');
+        if(file) {
+          file.value = "";
+        }
       }
       if (num === 6) {
         item.photo6 = "";
-        document.getElementById('photo_' + item.id + '_6').value = "";
+        var file = document.getElementById('photo_' + item.id + '_6');
+        if(file) {
+          file.value = "";
+        }
       }
 
       
@@ -533,7 +551,7 @@ var app = new Vue({
         .then(function(response) {
           //handle success
 
-          _this.getRecord();
+          _this.get_records();
           _this.mode = '';
 
         })

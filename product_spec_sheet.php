@@ -117,7 +117,7 @@
         }
 
         div.commandbox button{
-            width: 150px;
+            width: 160px;
             margin: 5px 0;
             border: 2px solid white;
         }
@@ -253,6 +253,7 @@
             padding: 0 3px;
             width: 100px;
             text-align: center;
+            font-size: 14px;
         }
 
         .photo_section {
@@ -261,7 +262,6 @@
         }
 
         .photo_section table{
-            height: 385px;
             text-align: center;
             vertical-align:middle;
             width: 100%;
@@ -484,6 +484,7 @@
             background-color: white;
             padding: 0 3px;
             width: 150px;
+            font-size: 14px;
         }
 
         .footer_section.write div:nth-of-type(2) {
@@ -653,9 +654,9 @@
                 <tr>
                     <td>
 
-                        <div :class="['itembox', (item.photo1 !== '' ? 'chosen' : '')]">
+                        <div :class="['itembox', (item.photo1 !== '' ? 'chosen' : '')]" style="height: 385px;">
                             <div class="photo">
-                                <input type="file" :id="'photo_' + item.id + '_1'"  @change="onFileChangeImage($event, item, 1)">
+                                <input type="file" :id="'photo_' + item.id + '_1'"  @change="onFileChangeImage($event, item, 1)" v-show="item.photo1 == ''">
                                 <img v-if="item.photo1" :src="item.photo1"/>
                                 <span @click="clear_photo(item, 1)">x</span>
                             </div>
@@ -665,9 +666,9 @@
                     <td></td>
 
                     <td>
-                        <div :class="['itembox', (item.photo2 !== '' ? 'chosen' : '')]">
+                        <div :class="['itembox', (item.photo2 !== '' ? 'chosen' : '')]" style="height: 385px;">
                             <div class="photo">
-                                <input type="file" :id="'photo_' + item.id + '_2'"  @change="onFileChangeImage($event, item, 2)">
+                                <input type="file" :id="'photo_' + item.id + '_2'"  @change="onFileChangeImage($event, item, 2)"  v-show="item.photo2 == ''">
                                 <img v-if="item.photo2" :src="item.photo2"/>
                                 <span @click="clear_photo(item, 2)">x</span>
                             </div>
@@ -725,12 +726,18 @@
                     <td>
                         <img :src="item.photo3" v-if="item.photo3 != ''">
                     </td>
-                    <td><img :src="item.photo4" v-if="item.photo4 != ''"></td>
-                    <td><img :src="item.photo5" v-if="item.photo5 != ''"></td>
-                    <td><img :src="item.photo6" v-if="item.photo6 != ''"></td>
                     <td></td>
+                    <td>
+                        <img :src="item.photo4" v-if="item.photo4 != ''">
+                    </td>
                     <td></td>
+                    <td>
+                        <img :src="item.photo5" v-if="item.photo5 != ''">
+                    </td>
                     <td></td>
+                    <td>
+                        <img :src="item.photo6" v-if="item.photo6 != ''">
+                    </td>
                 </tr>
             </table>
 
@@ -747,7 +754,7 @@
                     <td>
                     <div :class="['itembox', (item.photo3 !== '' ? 'chosen' : '')]" style="height: 155px;">
                             <div class="photo">
-                                <input type="file" :id="'photo_' + item.id + '_3'"  @change="onFileChangeImage($event, item, 3)">
+                                <input type="file" :id="'photo_' + item.id + '_3'"  @change="onFileChangeImage($event, item, 3)"  v-show="item.photo3 == ''">
                                 <img v-if="item.photo3" :src="item.photo3"/>
                                 <span @click="clear_photo(item, 3)">x</span>
                             </div>
@@ -757,7 +764,7 @@
                     <td>
                     <div :class="['itembox', (item.photo4 !== '' ? 'chosen' : '')]" style="height: 155px;">
                             <div class="photo">
-                                <input type="file" :id="'photo_' + item.id + '_4'"  @change="onFileChangeImage($event, item, 4)">
+                                <input type="file" :id="'photo_' + item.id + '_4'"  @change="onFileChangeImage($event, item, 4)"  v-show="item.photo4 == ''">
                                 <img v-if="item.photo4" :src="item.photo4"/>
                                 <span @click="clear_photo(item, 4)">x</span>
                             </div>
@@ -767,7 +774,7 @@
                     <td>
                     <div :class="['itembox', (item.photo5 !== '' ? 'chosen' : '')]" style="height: 155px;">
                             <div class="photo">
-                                <input type="file" :id="'photo_' + item.id + '_5'"  @change="onFileChangeImage($event, item, 5)">
+                                <input type="file" :id="'photo_' + item.id + '_5'"  @change="onFileChangeImage($event, item, 5)"  v-show="item.photo5 == ''">
                                 <img v-if="item.photo5" :src="item.photo5"/>
                                 <span @click="clear_photo(item, 5)">x</span>
                             </div>
@@ -777,7 +784,7 @@
                     <td>
                     <div :class="['itembox', (item.photo6 !== '' ? 'chosen' : '')]" style="height: 155px;">
                             <div class="photo">
-                                <input type="file" :id="'photo_' + item.id + '_6'"  @change="onFileChangeImage($event, item, 6)">
+                                <input type="file" :id="'photo_' + item.id + '_6'"  @change="onFileChangeImage($event, item, 6)" v-show="item.photo6 == ''">
                                 <img v-if="item.photo6" :src="item.photo6"/>
                                 <span @click="clear_photo(item, 6)">x</span>
                             </div>
