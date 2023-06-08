@@ -66,7 +66,7 @@ else
         case 'GET':
             $merged_results = array();
             
-            $sql = "select id, product_id, code, photo1, photo2, photo3, photo4, photo5, photo6, description, variation, related_product, reserved, legend, option, category, indoor, type, grade from product_spec_sheet where product_id = " . $sd . " and status <> -1";
+            $sql = "select id, product_id, code, photo1, photo2, photo3, photo4, photo5, photo6, description, variation, related_product, reserved, legend, `option`, category, indoor, type, grade from product_spec_sheet where product_id = " . $sd . " and status <> -1";
             $stmt = $db->prepare( $sql );
             $stmt->execute();
             
