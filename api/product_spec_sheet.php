@@ -1043,6 +1043,9 @@ function GetVariantAsText($variants)
 {
     $strVariant = "";
 
+    if(count($variants) == 0)
+    return $strVariant;
+
     // category as key : values as value
     foreach($variants as $variant)
     {
