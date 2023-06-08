@@ -527,7 +527,7 @@
     <header class="noPrint">header</header>
     <!-- header end -->
 
-    <div class="commandbox">
+    <div class="commandbox noPrint">
         <button class="btn btn-primary" v-if="mode == 'write'" @click="preview()">Preview</button>
         <button class="btn btn-primary" v-if="mode == 'write' && fil_id != ''" @click="confirmItem()">Save and Preview</button>
         <button class="btn btn-primary" v-if="mode != 'write' && show_title == true" @click="edit()">Edit</button>
