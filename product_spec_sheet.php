@@ -369,6 +369,14 @@
             margin: auto;
         }
 
+        .photo_section.read td img {
+            max-height: 385px;
+        }
+
+        .photo_section.write div.itembox {
+            height: 385px;
+        }
+
         .feature_section {
             margin: 30px 150px 20px;
             border-bottom: 1px solid black;
@@ -458,6 +466,14 @@
 
         .related_product_section > table tr td:nth-of-type(even) {
             width: 1.53%;
+        }
+
+        .related_product_section.read td img {
+            max-height: 155px;
+        }
+
+        .related_product_section.write .itembox {
+            height: 155px;
         }
 
         .footer_section {
@@ -654,7 +670,7 @@
                 <tr>
                     <td>
 
-                        <div :class="['itembox', (item.photo1 !== '' ? 'chosen' : '')]" style="height: 385px;">
+                        <div :class="['itembox', (item.photo1 !== '' ? 'chosen' : '')]">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_1'"  @change="onFileChangeImage($event, item, 1)" v-show="item.photo1 == ''">
                                 <img v-if="item.photo1" :src="item.photo1"/>
@@ -666,7 +682,7 @@
                     <td></td>
 
                     <td>
-                        <div :class="['itembox', (item.photo2 !== '' ? 'chosen' : '')]" style="height: 385px;">
+                        <div :class="['itembox', (item.photo2 !== '' ? 'chosen' : '')]">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_2'"  @change="onFileChangeImage($event, item, 2)"  v-show="item.photo2 == ''">
                                 <img v-if="item.photo2" :src="item.photo2"/>
@@ -752,7 +768,7 @@
             <table>
                 <tr>
                     <td>
-                    <div :class="['itembox', (item.photo3 !== '' ? 'chosen' : '')]" style="height: 155px;">
+                    <div :class="['itembox', (item.photo3 !== '' ? 'chosen' : '')]">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_3'"  @change="onFileChangeImage($event, item, 3)"  v-show="item.photo3 == ''">
                                 <img v-if="item.photo3" :src="item.photo3"/>
@@ -762,7 +778,7 @@
                     </td>
                     <td></td>
                     <td>
-                    <div :class="['itembox', (item.photo4 !== '' ? 'chosen' : '')]" style="height: 155px;">
+                    <div :class="['itembox', (item.photo4 !== '' ? 'chosen' : '')]">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_4'"  @change="onFileChangeImage($event, item, 4)"  v-show="item.photo4 == ''">
                                 <img v-if="item.photo4" :src="item.photo4"/>
@@ -772,7 +788,7 @@
                     </td>
                     <td></td>
                     <td>
-                    <div :class="['itembox', (item.photo5 !== '' ? 'chosen' : '')]" style="height: 155px;">
+                    <div :class="['itembox', (item.photo5 !== '' ? 'chosen' : '')]">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_5'"  @change="onFileChangeImage($event, item, 5)"  v-show="item.photo5 == ''">
                                 <img v-if="item.photo5" :src="item.photo5"/>
@@ -782,7 +798,7 @@
                     </td>
                     <td></td>
                     <td>
-                    <div :class="['itembox', (item.photo6 !== '' ? 'chosen' : '')]" style="height: 155px;">
+                    <div :class="['itembox', (item.photo6 !== '' ? 'chosen' : '')]">
                             <div class="photo">
                                 <input type="file" :id="'photo_' + item.id + '_6'"  @change="onFileChangeImage($event, item, 6)" v-show="item.photo6 == ''">
                                 <img v-if="item.photo6" :src="item.photo6"/>
