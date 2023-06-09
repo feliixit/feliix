@@ -849,6 +849,12 @@ var app = new Vue({
             let price_ntd_change = this.variation_product[i].price_ntd_change;
             let status = this.variation_product[i].status;
 
+            if(price * 1.15 > quoted_price) 
+            {
+              quoted_price = (price * 1.15).toFixed(2);
+              quoted_price_change = new Date().toISOString().slice(0, 10);
+            }
+
             let file = document.getElementById('variation_' + id).files[0];
               if(typeof file !== 'undefined') 
                 form_Data.append('variation_' + id, file);
@@ -883,6 +889,12 @@ var app = new Vue({
 
             variation.push(obj);
             
+          }
+
+          if(_this.price * 1.15 > _this.quoted_price)
+          {
+            _this.quoted_price = (_this.price * 1.15).toFixed(2);
+            _this.quoted_price_change = new Date().toISOString().slice(0, 10);
           }
           
           form_Data.append("jwt", token);
