@@ -849,7 +849,7 @@ var app = new Vue({
             let price_ntd_change = this.variation_product[i].price_ntd_change;
             let status = this.variation_product[i].status;
 
-            if(price * 1.15 > quoted_price) 
+            if((price * 1.15 > quoted_price) && _this.category == '10000000')
             {
               quoted_price = (price * 1.15).toFixed(2);
               quoted_price_change = new Date().toISOString().slice(0, 10);
@@ -891,7 +891,7 @@ var app = new Vue({
             
           }
 
-          if(_this.price * 1.15 > _this.quoted_price)
+          if((_this.price * 1.15 > _this.quoted_price) && _this.category == '10000000')
           {
             _this.quoted_price = (_this.price * 1.15).toFixed(2);
             _this.quoted_price_change = new Date().toISOString().slice(0, 10);
