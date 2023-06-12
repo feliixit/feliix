@@ -508,33 +508,39 @@ header( 'location:index' );
         .qn_header .left_block img.logo {
             display: block;
             width: 166px;
-            margin-top: 35px;
+            margin-top: 25px;
         }
 
         .qn_header .left_block .af_project {
-            margin-top: 40px;
-            font-size: 14px;
+            margin-top: 25px;
+            font-size: 13px;
             font-weight: 500;
         }
 
         .qn_header .left_block .af_project > span.af_project_name {
-            font-size: 20px;
+            display: block;
+            font-size: 18px;
             font-weight: 700;
+            margin: 1px 0 4px 5px;
+            height: 27px;
         }
 
         .qn_header .left_block .af_project > span.af_project_location {
-            font-size: 20px;
+            display: block;
+            font-size: 18px;
             font-weight: 700;
+            margin-left: 5px;
+            height: 27px;
         }
 
         .qn_header .left_block .af_requested {
-            margin-top: 40px;
-            font-size: 14px;
+            margin-top: 18px;
+            font-size: 13px;
             font-weight: 500;
         }
 
         .qn_header .left_block .af_requested > table tr td:nth-of-type(1) {
-            width: 200px;
+            width: 120px;
         }
 
         .qn_header .right_block {
@@ -544,31 +550,39 @@ header( 'location:index' );
         }
 
         .qn_header .right_block .af_category {
-            margin-top: 35px;
-            font-size: 28px;
-            font-weight: 700;
+            margin-top: 33px;
+            font-size: 18px;
+            font-weight: 500;
             line-height: 1.2;
         }
 
 
         .qn_header .right_block .af_qo_po {
-            margin-top: 35px;
-            font-size: 14px;
+            margin-top: 55px;
+            font-size: 13px;
             font-weight: 500;
         }
 
         .qn_header .right_block .af_qo_po > table tr td:nth-of-type(1) {
-            width: 200px;
+            width: 125px;
+            padding-right: 5px;
+            text-align: right;
+        }
+
+        .qn_header .right_block .af_qo_po > table tr td:nth-of-type(2) {
+            border-bottom: 2px solid black;
+            width: 190px;
+            padding: 3px 10px;
         }
 
         .qn_header .right_block .af_submitted {
-            margin-top: 35px;
-            font-size: 14px;
+            margin-top: 41px;
+            font-size: 13px;
             font-weight: 500;
         }
 
         .qn_header .right_block .af_submitted > table tr td:nth-of-type(1) {
-            width: 200px;
+            width: 120px;
         }
 
         .qn_page .qn_body {
@@ -663,11 +677,22 @@ header( 'location:index' );
         }
 
         .qn_body .area_client_signature table tr td:nth-of-type(odd) {
-            width: 15%;
+            width: 10%;
+            text-align: right;
+            padding: 0 5px;
         }
 
-        .qn_body .area_client_signature table tr td:nth-of-type(even) {
-            width: 35%;
+        .qn_body .area_client_signature table tr:nth-of-type(2) td:nth-of-type(odd) {
+            padding-top: 10px;
+        }
+
+        .qn_body .area_client_signature table tr td:nth-of-type(2) {
+            width: 50%;
+            border-bottom: 2px solid black;
+        }
+
+        .qn_body .area_client_signature table tr td:nth-of-type(4) {
+            width: 30%;
             border-bottom: 2px solid black;
         }
 
@@ -676,6 +701,7 @@ header( 'location:index' );
             font-size: 14px;
             font-weight: 500;
             text-align: right;
+            margin-top: 50px;
         }
 
         .area_terms {
@@ -989,6 +1015,14 @@ header( 'location:index' );
             font-weight: 500;
         }
 
+        .tb_format1 tbody tr td div.approval_box {
+            display: flex;
+        }
+
+        .tb_format1 tbody tr td div.approval_box > span {
+            display: block;
+            width: 50px;
+        }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-of-type(1), .tb_format1 tbody tr.desc1 td:nth-of-type(1) {
             width: 70px;
@@ -2253,13 +2287,11 @@ header( 'location:index' );
                                 <dt class="head">Project Name:</dt>
                                 <dd>
                                     <input type="text" placeholder="First Line" v-model="temp_first_line">
-                                    <input type="text" placeholder="Second Line" v-model="temp_second_line">
                                 </dd>
 
                                 <dt class="head">Project Location:</dt>
                                 <dd>
                                     <input type="text" placeholder="First Line" v-model="temp_first_line">
-                                    <input type="text" placeholder="Second Line" v-model="temp_second_line">
                                 </dd>
 
                                 <dt>Quotation Number:</dt>
@@ -2609,7 +2641,7 @@ header( 'location:index' );
 
                     <div class="af_project">
                         Project Name:<br>
-                        <span class="af_project_name">{{}}</span><br>
+                        <span class="af_project_name">{{}}</span>
                         Porject Location:<br>
                         <span class="af_project_location">{{}}</span>
                     </div>
@@ -2775,10 +2807,26 @@ header( 'location:index' );
                             </td>
 
                             <td rowspan="2">
-                                <input type="checkbox" class="alone" disabled> Approved
-                                <input type="checkbox" class="alone" disabled> Approved with comments
-                                <input type="checkbox" class="alone" disabled> Incorporate comments and resubmit
-                                <input type="checkbox" class="alone" disabled> Not Approved
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Approved</span>
+                                </div>
+
+                                <div>
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Approved with comments</span>
+                                </div>
+
+                                <div>
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Incorporate comments and resubmit</span>
+                                </div>
+
+                                <div>
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Not Approved</span>
+                                </div>
+
                             </td>
                         </tr>
 
@@ -2886,7 +2934,7 @@ header( 'location:index' );
                 </div>
 
 
-                <div class="area_client_signature" :style="'margin-top: ' + sig.pixel + 'px;'" v-if="sig.page !== 0">>
+                <div class="area_client_signature" :style="'margin-top: ' + sig.pixel + 'px;'" v-if="sig.page !== 0">
                     <table>
                         <tbody>
                             <tr>
