@@ -3828,8 +3828,24 @@ alter table project_stage_client_task_comment MODIFY COLUMN `message` VARCHAR(15
 ALTER TABLE quotation_total
 ADD COLUMN `pixa` varchar(10)  DEFAULT '';
 
-ALTER TABLE quotation_signature
-ADD COLUMN `pixa` varchar(10)  DEFAULT '';
-
-ALTER TABLE quotation_signature
+ALTER TABLE quotation_total
 ADD COLUMN `show` varchar(10)  DEFAULT '';
+
+--
+ALTER TABLE quotation
+ADD COLUMN `pixa_s` varchar(10)  DEFAULT '';
+
+ALTER TABLE quotation
+ADD COLUMN `show_s` varchar(10)  DEFAULT '';
+
+ALTER TABLE quotation
+ADD COLUMN `pixa_t` varchar(10)  DEFAULT '';
+
+ALTER TABLE quotation
+ADD COLUMN `show_t` varchar(10)  DEFAULT '';
+
+ALTER TABLE quotation
+ADD COLUMN `pixa_p` varchar(10)  DEFAULT '';
+
+ALTER TABLE quotation
+ADD COLUMN `show_p` varchar(10)  DEFAULT '';

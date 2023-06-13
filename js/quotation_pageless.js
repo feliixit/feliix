@@ -255,6 +255,17 @@ var app = new Vue({
         signature_codebook: [],
 
         pixa : 0,
+        show : '',
+
+        pixa_s : 0,
+        show_s : '',
+
+        pixa_t : 0,
+        show_t : '',
+
+        pixa_p : 0,
+        show_p : '',
+
         pag: {},
     },
   
@@ -1404,6 +1415,8 @@ var app = new Vue({
  
         form_Data.append("quotation_id", this.id);
         form_Data.append("detail", JSON.stringify(this.sig));
+        form_Data.append("pixa", this.pixa_s);
+        form_Data.append("show", this.show_s);
 
         for (var i = 0; i < this.sig.item_company.length; i++) {
           let file = document.getElementById('sig_image_' + this.sig.item_company[i].id);
@@ -1473,6 +1486,9 @@ var app = new Vue({
         form_Data.append("quotation_id", this.id);
         form_Data.append("detail", JSON.stringify(this.term));
 
+        form_Data.append("pixa", this.pixa_t);
+        form_Data.append("show", this.show_t);
+
         try {
           let res = await axios({
             method: 'post',
@@ -1527,6 +1543,9 @@ var app = new Vue({
  
         form_Data.append("quotation_id", this.id);
         form_Data.append("detail", JSON.stringify(this.payment_term));
+
+        form_Data.append("pixa", this.pixa_p);
+        form_Data.append("show", this.show_p);
 
         try {
           let res = await axios({
@@ -1684,6 +1703,7 @@ var app = new Vue({
             valid : '',
             total : '',
             pixa: 0,
+            show: '',
           };
         }
       },
@@ -1718,7 +1738,8 @@ var app = new Vue({
         form_Data.append("show_vat", this.total.show_vat);
         form_Data.append("valid", this.total.valid);
         form_Data.append("total", this.total.total);
-        form_Data.append("pixa", this.total.pixa);
+        form_Data.append("pixa", this.pixa);
+        form_Data.append("show", this.show);
       
         axios({
           method: "post",
@@ -2355,6 +2376,14 @@ Installation:`;
               _this.footer_first_line = _this.receive_records[0].footer_first_line;
               _this.footer_second_line = _this.receive_records[0].footer_second_line;
 
+              
+              _this.pixa_s = _this.receive_records[0].pixa_s;
+              _this.show_s = _this.receive_records[0].show_s;
+              _this.pixa_t = _this.receive_records[0].pixa_t;
+              _this.show_t = _this.receive_records[0].show_t;
+              _this.pixa_p = _this.receive_records[0].pixa_p;
+              _this.show_p = _this.receive_records[0].show_p;
+
               // page
               _this.pages = _this.receive_records[0].pages;
               _this.pag = _this.receive_records[0].pages[0];
@@ -2370,6 +2399,8 @@ Installation:`;
               // total
               _this.total = _this.receive_records[0].total_info;
               _this.pixa = _this.total.pixa;
+              _this.show = _this.total.show;
+
               // get product_vat from total.vat
               _this.total.vat !== undefined ? _this.product_vat = _this.total.vat : _this.product_vat = '';
 

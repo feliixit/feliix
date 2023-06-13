@@ -2594,13 +2594,13 @@ header( 'location:index' );
                             <dl style="margin-bottom: 0px; border-bottom: 1px solid black;">
                                 <dt class="head">Choose whether to show the block of grand total in this document:</dt>
                                 <dd>
-                                    <select v-model="total.show_t">
+                                    <select v-model="show">
                                         <option value="N">No</option>
                                         <option value="">Yes</option>
                                     </select>
                                 </dd>
 
-                                <dt class="head">Distance from Previous Block: <input type="number" v-model="total.pixa"> pixel</dt>
+                                <dt class="head">Distance from Previous Block: <input type="number" v-model="pixa"> pixel</dt>
                             </dl>
 
                             <dl>
@@ -2688,13 +2688,13 @@ header( 'location:index' );
                             <dl>
                                 <dt class="head">Choose whether to show the block of terms and condition in this document:</dt>
                                 <dd>
-                                    <select v-model="term.page">
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
+                                    <select v-model="show_t">
+                                        <option value="N">No</option>
+                                        <option value="">Yes</option>
                                     </select>
                                 </dd>
 
-                                <dt class="head">Distance from Previous Block: <input type="number" v-model="term.pixel"> pixel</dt>
+                                <dt class="head">Distance from Previous Block: <input type="number" v-model="pixa_t"> pixel</dt>
                             </dl>
                         </div>
 
@@ -2756,13 +2756,13 @@ header( 'location:index' );
                             <dl>
                                 <dt class="head">Choose whether to show the block of payment terms in this document:</dt>
                                 <dd>
-                                    <select v-model="payment_term.page">
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
+                                    <select v-model="show_p">
+                                        <option value="N">No</option>
+                                        <option value="">Yes</option>
                                     </select>
                                 </dd>
 
-                                <dt class="head">Distance from Previous Block: <input type="number" v-model="payment_term.pixel"> pixel</dt>
+                                <dt class="head">Distance from Previous Block: <input type="number" v-model="pixa_p"> pixel</dt>
                             </dl>
 
                             <dl>
@@ -2838,13 +2838,13 @@ header( 'location:index' );
                             <dl>
                                 <dt class="head">Choose whether to show the block of signature in this document:</dt>
                                 <dd>
-                                    <select v-model="sig.page">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
+                                    <select v-model="show_s">
+                                    <option value="N">No</option>
+                                    <option value="">Yes</option>
                                     </select>
                                 </dd>
 
-                                <dt class="head" v-if="sig.page == 1">Distance from Previous Block: <input type="number" v-model="sig.pixel"> pixel</dt>
+                                <dt class="head">Distance from Previous Block: <input type="number" v-model="pixa_s"> pixel</dt>
                             </dl>
                         </div>
 
@@ -3189,7 +3189,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_total" v-bind:style="{ 'margin-top': pixa + 'px' }" v-if="total.show_t == 'Y'">
+                        <div class="area_total" v-bind:style="{ 'margin-top': pixa + 'px' }" v-if="show == ''">
                             <table class="tb_total" v-for="(tt, index) in pag.total">
                                 <tbody>
                                 <tr>
@@ -3246,7 +3246,7 @@ header( 'location:index' );
 
 
 
-                        <div class="area_terms" v-bind:style="{ 'margin-top': pixa + 'px' }">
+                        <div class="area_terms" v-bind:style="{ 'margin-top': pixa_t + 'px' }" v-if="show_t == ''">
                             <div class="terms" v-for="(tt, index) in pag.term">
                                 <div class="title">{{ tt.title }}</div>
                                 <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">
@@ -3258,7 +3258,7 @@ header( 'location:index' );
 
 
 
-                        <div class="area_payment" v-bind:style="{ 'margin-top': pixa + 'px' }" v-if="pag.payment_term !== undefined">
+                        <div class="area_payment" v-bind:style="{ 'margin-top': pixa_p + 'px' }" v-if="pag.payment_term !== undefined && show_p == ''">
                             <table class="tb_payment">
                                 <tbody>
                                 <tr>
@@ -3301,7 +3301,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_conforme" v-bind:style="{ 'margin-top': pixa + 'px' }">
+                        <div class="area_conforme" v-bind:style="{ 'margin-top': pixa_s + 'px' }" v-if="show_s == ''">
                             <div class="conforme"
                                 v-if="(pag.sig != undefined ? pag.sig.item_client.length : 0)  + (pag.sig != undefined ?  pag.sig.item_company.length : 0) > 0">
                                 CONFORME

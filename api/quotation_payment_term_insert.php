@@ -13,6 +13,9 @@ $quotation_id = isset($_POST['quotation_id']) ? $_POST['quotation_id'] : 0;
 $detail = isset($_POST['detail']) ? $_POST['detail'] : [];
 $detail_array = json_decode($detail, true);
 
+$pixa = isset($_POST['pixa']) ? $_POST['pixa'] : 0;
+$show = isset($_POST['show']) ? $_POST['show'] : '';
+
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';
@@ -47,6 +50,37 @@ else
   
         // now you can apply
         $uid = $user_id;
+
+        // quotation_page
+        $query = "UPDATE quotation set pixa_p = :pixa_p, show_p = :show_p
+                WHERE
+                `id` = :quotation_id";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':pixa_p', $pixa);
+        $stmt->bindParam(':show_p', $show);
+        $stmt->bindParam(':quotation_id', $quotation_id);
+
+        try {
+        // execute the query, also check if query was successful
+        if (!$stmt->execute()) {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+            die();
+        }
+        } catch (Exception $e) {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+        }
 
         // quotation_page
         $query = "DELETE FROM quotation_payment_term

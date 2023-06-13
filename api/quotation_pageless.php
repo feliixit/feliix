@@ -66,6 +66,12 @@ if (!isset($jwt)) {
                     prepare_by_second_line,
                     footer_first_line,
                     footer_second_line,
+                    pixa_s,
+                    show_s,
+                    pixa_t,
+                    show_t,
+                    pixa_p,
+                    show_p,
                     1 page_count
                     FROM quotation
                     WHERE status <> -1 and id=$id";
@@ -108,6 +114,14 @@ if (!isset($jwt)) {
         $prepare_by_second_line = $row['prepare_by_second_line'];
         $footer_first_line = $row['footer_first_line'];
         $footer_second_line = $row['footer_second_line'];
+
+        $pixa_s = $row['pixa_s'] == '' ? 0 : $row['pixa_s'];
+        $show_s = $row['show_s'];
+        $pixa_t = $row['pixa_t'] == '' ? 0 : $row['pixa_t'];
+        $show_t = $row['show_t'];
+        $pixa_p = $row['pixa_p'] == '' ? 0 : $row['pixa_p'];
+        $show_p = $row['show_p'];
+
         $page_count = $row['page_count'];
         $pages = GetPages($row['id'], $db);
 
@@ -147,6 +161,14 @@ if (!isset($jwt)) {
             "prepare_by_second_line" => $prepare_by_second_line,
             "footer_first_line" => $footer_first_line,
             "footer_second_line" => $footer_second_line,
+
+            "pixa_s" => $pixa_s,
+            "show_s" => $show_s,
+            "pixa_t" => $pixa_t,
+            "show_t" => $show_t,
+            "pixa_p" => $pixa_p,
+            "show_p" => $show_p,
+
             "page_count" => $page_count,
             "pages" => $pages,
             "block_names" => $block_names,
@@ -946,7 +968,8 @@ function GetTotalInfo($qid, $db){
         show_vat,
         valid,
         total,
-        pixa
+        pixa,
+        `show`
         FROM   quotation_total
         WHERE  quotation_id = " . $qid . "
         AND `status` <> -1 
@@ -967,6 +990,7 @@ function GetTotalInfo($qid, $db){
     $valid = '';
     $total = '';
     $pixa = 0;
+    $show = '';
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
@@ -977,7 +1001,7 @@ function GetTotalInfo($qid, $db){
         $valid = $row['valid'];
         $total = $row['total'];
         $pixa = $row['pixa'];
-        
+        $show = $row['show'];
     }
 
     $merged_results = array(
@@ -989,7 +1013,8 @@ function GetTotalInfo($qid, $db){
         "valid" => $valid,
         "total" => $total,
         "pixa" => $pixa == '' ? 0 : $pixa,
-        
+        "show" => $show,
+
         "real_total" => 0,
 
         "back_total" => 0,
