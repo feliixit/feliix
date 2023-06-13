@@ -2547,7 +2547,7 @@ header( 'location:index' );
                                         <span v-if="block.type == 'image'">Notes:</span> <textarea rows="2" v-model="block.notes" v-if="block.type == 'image'"></textarea><br>
 
                                         <span style="vertical-align: top;">Approval Status:</span>
-                                        <div style=" display: inline-block; height: 108px; width: calc(100% - 110px);">
+                                        <div style="display: inline-block; height: 108px; width: calc(100% - 110px);">
                                             <input type="checkbox" class="alone"> Approved<br>
                                             <input type="checkbox" class="alone"> Approved with comments<br>
                                             <input type="checkbox" class="alone"> Incorporate comments and resubmit<br>
@@ -2600,12 +2600,12 @@ header( 'location:index' );
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
 
                                         <span style="vertical-align: top;">Approval Status:</span>
-                                        <div style=" display: inline-block; height: 108px; width: calc(100% - 110px);">
+                                        <div style="display: inline-block; height: 108px; width: calc(100% - 110px);">
                                             <input type="checkbox" class="alone"> Approved<br>
                                             <input type="checkbox" class="alone"> Approved with comments<br>
                                             <input type="checkbox" class="alone"> Incorporate comments and resubmit<br>
                                             <input type="checkbox" class="alone"> Not Approved
-                                        </div> 
+                                        </div>
                                     </li>
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="block_b_up(index, block.id)"></i>
@@ -2853,7 +2853,7 @@ header( 'location:index' );
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
 
-                            <td :rowspan="bk.type == 'image' ? 2 : 1">
+                            <td rowspan="2" v-if="bk.type == 'image'">
                                 <div class="approval_box">
                                     <input type="checkbox" class="alone" disabled>
                                      <span>Approved</span>
@@ -2874,6 +2874,29 @@ header( 'location:index' );
                                      <span>Not Approved</span>
                                 </div>
                             </td>
+
+                            <td v-if="bk.type !== 'image'">
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Approved</span>
+                                </div>
+
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Approved with comments</span>
+                                </div>
+
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Incorporate comments and resubmit</span>
+                                </div>
+
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Not Approved</span>
+                                </div>
+                            </td>
+
                         </tr>
 
                         <tr class="desc2" v-if="bk.type == 'image'">
