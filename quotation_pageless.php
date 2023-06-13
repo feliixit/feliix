@@ -2575,7 +2575,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head" v-if="total.show_t == ??">Distance from Previous Block: <input type="number" v-model="???"> pixel</dt>
+                                <dt class="head">Distance from Previous Block: <input type="number" v-model="total.pixa"> pixel</dt>
                             </dl>
 
                             <dl>
@@ -2669,7 +2669,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head" v-if="term.page == 1">Distance from Previous Block: <input type="number" v-model="term.pixel"> pixel</dt>
+                                <dt class="head">Distance from Previous Block: <input type="number" v-model="term.pixel"> pixel</dt>
                             </dl>
                         </div>
 
@@ -2737,7 +2737,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head" v-if="payment_term.page == 1">Distance from Previous Block: <input type="number" v-model="payment_term.pixel"> pixel</dt>
+                                <dt class="head">Distance from Previous Block: <input type="number" v-model="payment_term.pixel"> pixel</dt>
                             </dl>
 
                             <dl>
@@ -2983,18 +2983,17 @@ header( 'location:index' );
                         <div class="area_subtotal">
 
                             <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']"
-                                v-for="(tp, index) in pg.types">
+                                v-for="(tp, index) in pag.types">
 
                                 <tbody>
 
                                 <!-- 表格標題列 -->
-                                <template v-if="tp.type == 'A'">
 
-                                <tr class="thead1">
+                                <tr class="thead1" v-if="tp.type == 'A'">
                                     <td class="title" :colspan="product_vat == 'P' ? 7 : 6">{{ tp.name }}</td>
                                 </tr>
 
-                                <tr class="thead2">
+                                <tr class="thead2" v-if="tp.type == 'A'">
                                     <td>No</td>
                                     <td colspan="2">Description</td>
                                     <td>Qty.</td>
@@ -3003,19 +3002,12 @@ header( 'location:index' );
                                     <td>Amount</td>
                                 </tr>
 
-                                </template>
-
-                                <template v-if="tp.type == 'B'">
-
-                                <tr class="thead1">
+                                <tr class="thead1" v-if="tp.type == 'B'">
                                     <td class="title" :colspan="product_vat == 'P' ? 4 : 4">{{ tp.name }}</td>
                                 </tr>
 
-                                </template>
-
-
+                                <template v-for="(bk, index) in tp.blocks"  v-if="tp.type == 'A'">
                                 <!-- 表格內容物 -->
-                                <template v-for="(bk, index) in tp.blocks" v-if="tp.type == 'A'">
 
                                 <tr class="desc1">
 
@@ -3173,8 +3165,8 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_total" :style="'margin-top: ' + ?? + 'px;'" v-if="total.show_t == ??">
-                            <table class="tb_total" v-for="(tt, index) in pg.total">
+                        <div class="area_total" :style="'margin-top: ' + total.pixa + 'px;'" v-if="total.show_t == 'Y'">
+                            <table class="tb_total" v-for="(tt, index) in pag.total">
                                 <tbody>
                                 <tr>
                                     <td :rowspan="(tt.vat == 'Y' && tt.discount !== '0' ? 3 :  2)">
@@ -3230,8 +3222,8 @@ header( 'location:index' );
 
 
 
-                        <div class="area_terms" :style="'margin-top: ' + term_disp.pixel + 'px;'" v-if="term_disp.page == 1">
-                            <div class="terms" v-for="(tt, index) in pg.term">
+                        <div class="area_terms" :style="'margin-top: ' + pixa + 'px;'">
+                            <div class="terms" v-for="(tt, index) in pag.term">
                                 <div class="title">{{ tt.title }}</div>
                                 <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">
                                     {{ tt.brief }}
@@ -3242,20 +3234,20 @@ header( 'location:index' );
 
 
 
-                        <div class="area_payment" :style="'margin-top: ' + payment_term_display.pixel + 'px;'" v-if="payment_term_display.page == 1">
+                        <div class="area_payment" :style="'margin-top: ' + pixa + 'px;'" v-if="pag.payment_term !== undefined">
                             <table class="tb_payment">
                                 <tbody>
                                 <tr>
                                     <td colspan="2">Payment Terms:</td>
                                     <td>
                                         <div>
-                                            <span v-for="(tt, index) in pg.payment_term.payment_method">{{ tt }}</span>
+                                            <span v-for="(tt, index) in pag.payment_term.payment_method">{{ tt }}</span>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="3">
-                                        {{ pg.payment_term.brief }}
+                                        {{ pag.payment_term.brief }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -3268,7 +3260,7 @@ header( 'location:index' );
                                     <td>
                                         <b>For Bank Details for Wiring</b>
 
-                                        <div class="acount_info" v-for="(tt, index) in pg.payment_term.list">
+                                        <div class="acount_info" v-for="(tt, index) in pag.payment_term.list">
                                             <span class="account_name">{{ tt.bank_name }}</span>
                                             <span>: </span>
                                             <div class="first_line">
@@ -3285,15 +3277,15 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_conforme" :style="'margin-top: ' + sig_disp.pixel + 'px;'" v-if="sig_disp != undefined ? sig_disp.page == 1 : false">
+                        <div class="area_conforme" :style="'margin-top: ' + pixa + 'px;'">
                             <div class="conforme"
-                                v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0)  + (pg.sig != undefined ?  pg.sig.item_company.length : 0) > 0">
+                                v-if="(pag.sig != undefined ? pag.sig.item_client.length : 0)  + (pag.sig != undefined ?  pag.sig.item_company.length : 0) > 0">
                                 CONFORME
                             </div>
 
-                            <div class="client_signature" v-if="(pg.sig != undefined ? pg.sig.item_client.length : 0) > 0">
+                            <div class="client_signature" v-if="(pag.sig != undefined ? pag.sig.item_client.length : 0) > 0">
 
-                                <div class="signature" v-for="(tt, index) in pg.sig.item_client">
+                                <div class="signature" v-for="(tt, index) in pag.sig.item_client">
                                     <div class="pic"></div>
                                     <div class="name">{{ tt.name }}</div>
                                     <div class="line1">{{ tt.position }}</div>
@@ -3303,9 +3295,9 @@ header( 'location:index' );
 
                             </div>
 
-                            <div class="company_signature" v-if="(pg.sig != undefined ? pg.sig.item_company.length : 0) > 0">
+                            <div class="company_signature" v-if="(pag.sig != undefined ? pag.sig.item_company.length : 0) > 0">
 
-                                <div class="signature" v-for="(tt, index) in pg.sig.item_company">
+                                <div class="signature" v-for="(tt, index) in pag.sig.item_company">
                                     <div class="pic"><img :src="img_url + tt.photo" v-if="tt.photo != ''"></div>
                                     <div class="name">{{ tt.name }}</div>
                                     <div class="line1">{{ tt.position }}</div>
@@ -3477,9 +3469,9 @@ header( 'location:index' );
                         <div class="pagenation">
                             <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev
                                 10</a>
-                            <a class="page" v-for="pg in product_pages_10" @click="product_page=pg; filter_apply(pg);"
-                               v-bind:style="[pg == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{
-                                pg
+                            <a class="page" v-for="pag in product_pages_10" @click="product_page=pag; filter_apply(pag);"
+                               v-bind:style="[pag == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{
+                                pag
                                 }}</a>
                             <a class="next" :disabled="product_page == product_pages.length"
                                @click="nex_page(); filter_apply();">Next
@@ -4150,9 +4142,9 @@ header( 'location:index' );
                         <div class="pagenation">
                             <a class="prev" :disabled="product_page == 1" @click="pre_page(); filter_apply();">Prev
                                 10</a>
-                            <a class="page" v-for="pg in product_pages_10" @click="product_page=pg; filter_apply(pg);"
-                               v-bind:style="[pg == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{
-                                pg
+                            <a class="page" v-for="pag in product_pages_10" @click="product_page=pag; filter_apply(pag);"
+                               v-bind:style="[pag == product_page ? { 'background':'#707071', 'color': 'white'} : { }]">{{
+                                pag
                                 }}</a>
                             <a class="next" :disabled="product_page == product_pages.length"
                                @click="nex_page(); filter_apply();">Next
@@ -4303,5 +4295,5 @@ header( 'location:index' );
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/quotation_v4.js"></script>
+<script defer src="js/quotation_pageless.js"></script>
 </html>

@@ -3823,3 +3823,13 @@ CREATE TABLE IF NOT EXISTS `product_spec_sheet` (
 
 -- 20230602
 alter table project_stage_client_task_comment MODIFY COLUMN `message` VARCHAR(1536) DEFAULT '';
+
+-- 20230612
+ALTER TABLE quotation_total
+ADD COLUMN `pixa` varchar(10)  DEFAULT '';
+
+ALTER TABLE quotation_signature
+ADD COLUMN `pixa` varchar(10)  DEFAULT '';
+
+ALTER TABLE quotation_signature
+ADD COLUMN `show` varchar(10)  DEFAULT '';
