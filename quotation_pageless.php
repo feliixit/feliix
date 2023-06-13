@@ -968,7 +968,7 @@ header( 'location:index' );
             letter-spacing: 0.5px;
             color: rgb(0, 117, 58);
             text-align: right;
-            padding-right: 30px;
+            padding: 5px 30px 5px 15px;
         }
 
         .tb_format1 tbody tr.tfoot1 td:nth-of-type(3) {
@@ -984,39 +984,61 @@ header( 'location:index' );
             text-align: center;
         }
 
-        .tb_format1 tbody tr.thead2 td:nth-last-of-type(3), .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
+        .tb_format1 tbody tr.thead2 td:nth-last-of-type(3) {
+            width: 75px;
+        }
+
+        .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
             width: 75px;
             text-align: center;
             height: 50px;
         }
 
-        .tb_format1 tbody tr.thead2 td:nth-last-of-type(2),
+        .tb_format1 tbody tr.thead2 td:nth-last-of-type(2) {
+            width: 210px;
+        }
+
         .tb_format1 tbody tr.desc1 td:nth-last-of-type(2) {
             width: 210px;
             text-align: right;
             height: 50px;
         }
 
-        .tb_format1 tbody tr.thead2 td:nth-last-of-type(1),
+        .tb_format1 tbody tr.thead2 td:nth-last-of-type(1) {
+            width: 210px;
+        }
+
         .tb_format1 tbody tr.desc1 td:nth-last-of-type(1) {
             width: 210px;
             text-align: right;
             height: 50px;
         }
 
-        .tb_format1.vat tbody tr.thead2 td:nth-last-of-type(4), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(4) {
+        .tb_format1.vat tbody tr.thead2 td:nth-last-of-type(4) {
             width: 75px;
-            text-align: right;
+        }
+
+        .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(4) {
+            width: 75px;
+            text-align: center;
             height: 50px;
         }
 
-        .tb_format1.vat tbody tr.thead2 td:nth-last-of-type(3), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(3) {
+        .tb_format1.vat tbody tr.thead2 td:nth-last-of-type(3) {
+            width: 210px;
+        }
+
+        .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(3) {
             width: 210px;
             text-align: right;
             height: 50px;
         }
 
-        .tb_format1.vat tbody tr.thead2 td:nth-last-of-type(2), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(2) {
+        .tb_format1.vat tbody tr.thead2 td:nth-last-of-type(2) {
+            width: 135px;
+        }
+
+        .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(2) {
             width: 135px;
             text-align: right;
             height: 50px;
@@ -1177,7 +1199,7 @@ header( 'location:index' );
         .tb_format2 tbody tr.tfoot1 td:nth-last-of-type(2) {
             width: 135px;
             text-align: right;
-            padding-right: 30px;
+            padding: 5px 30px 5px 15px;
         }
 
         .pagebox {
@@ -3167,7 +3189,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_total" :style="'margin-top: ' + total.pixa + 'px;'" v-if="total.show_t == 'Y'">
+                        <div class="area_total" v-bind:style="{ 'margin-top': pixa + 'px' }" v-if="total.show_t == 'Y'">
                             <table class="tb_total" v-for="(tt, index) in pag.total">
                                 <tbody>
                                 <tr>
@@ -3224,7 +3246,7 @@ header( 'location:index' );
 
 
 
-                        <div class="area_terms" :style="'margin-top: ' + pixa + 'px;'">
+                        <div class="area_terms" v-bind:style="{ 'margin-top': pixa + 'px' }">
                             <div class="terms" v-for="(tt, index) in pag.term">
                                 <div class="title">{{ tt.title }}</div>
                                 <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">
@@ -3236,7 +3258,7 @@ header( 'location:index' );
 
 
 
-                        <div class="area_payment" :style="'margin-top: ' + pixa + 'px;'" v-if="pag.payment_term !== undefined">
+                        <div class="area_payment" v-bind:style="{ 'margin-top': pixa + 'px' }" v-if="pag.payment_term !== undefined">
                             <table class="tb_payment">
                                 <tbody>
                                 <tr>
@@ -3279,7 +3301,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_conforme" :style="'margin-top: ' + pixa + 'px;'">
+                        <div class="area_conforme" v-bind:style="{ 'margin-top': pixa + 'px' }">
                             <div class="conforme"
                                 v-if="(pag.sig != undefined ? pag.sig.item_client.length : 0)  + (pag.sig != undefined ?  pag.sig.item_company.length : 0) > 0">
                                 CONFORME

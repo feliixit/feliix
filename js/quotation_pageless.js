@@ -254,7 +254,7 @@ var app = new Vue({
 
         signature_codebook: [],
 
-        pixa : '',
+        pixa : 0,
         pag: {},
     },
   
@@ -2369,6 +2369,7 @@ Installation:`;
 
               // total
               _this.total = _this.receive_records[0].total_info;
+              _this.pixa = _this.total.pixa;
               // get product_vat from total.vat
               _this.total.vat !== undefined ? _this.product_vat = _this.total.vat : _this.product_vat = '';
 
