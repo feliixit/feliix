@@ -945,7 +945,8 @@ function GetTotalInfo($qid, $db){
         vat,
         show_vat,
         valid,
-        total
+        total,
+        pixa
         FROM   quotation_total
         WHERE  quotation_id = " . $qid . "
         AND `status` <> -1 
@@ -965,6 +966,7 @@ function GetTotalInfo($qid, $db){
     $show_vat = '';
     $valid = '';
     $total = '';
+    $pixa = 0;
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
@@ -974,7 +976,7 @@ function GetTotalInfo($qid, $db){
         $show_vat = $row['show_vat'];
         $valid = $row['valid'];
         $total = $row['total'];
-        
+        $pixa = $row['pixa'];
         
     }
 
@@ -986,6 +988,7 @@ function GetTotalInfo($qid, $db){
         "show_vat" => $show_vat,
         "valid" => $valid,
         "total" => $total,
+        "pixa" => $pixa == '' ? 0 : $pixa,
         
         "real_total" => 0,
 

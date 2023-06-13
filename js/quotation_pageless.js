@@ -123,6 +123,7 @@ var app = new Vue({
         total : '',
         real_total : '',
         back_total : '',
+        pixa: 0,
       },
 
       
@@ -1682,6 +1683,7 @@ var app = new Vue({
             show_vat : '',
             valid : '',
             total : '',
+            pixa: 0,
           };
         }
       },
@@ -1716,6 +1718,7 @@ var app = new Vue({
         form_Data.append("show_vat", this.total.show_vat);
         form_Data.append("valid", this.total.valid);
         form_Data.append("total", this.total.total);
+        form_Data.append("pixa", this.total.pixa);
       
         axios({
           method: "post",

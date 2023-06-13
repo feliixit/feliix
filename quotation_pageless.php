@@ -948,12 +948,14 @@ header( 'location:index' );
             font-weight: 800;
             letter-spacing: 0.5px;
             color: rgb(0, 117, 58);
+            padding: 5px 20px;
         }
 
         .tb_format1 tbody tr.thead2 td {
             text-align: center;
             font-weight: 600;
             font-size: 16px;
+            padding: 5px 20px;
         }
 
         .tb_format1 tbody tr.tfoot1 td:nth-of-type(1) {
@@ -1138,13 +1140,14 @@ header( 'location:index' );
             text-align: right;
         }
 
-        .tb_format2 tbody tr.thead1 th.title {
+        .tb_format2 tbody tr.thead1 td.title {
             border-top: 2px solid #A0A0A0;
             text-align: center;
             font-size: 16px;
             font-weight: 800;
             letter-spacing: 0.5px;
             color: rgb(0, 117, 58);
+            padding: 5px 20px;
         }
 
         .tb_format2 tbody tr.tfoot1 td:nth-of-type(1) {
@@ -3087,7 +3090,6 @@ header( 'location:index' );
 
                                 </template>
 
-                                </tbody>
 
                                 <template v-if="tp.type == 'B'">
                                 <tr v-for="(bk, index) in tp.blocks">
