@@ -586,7 +586,7 @@ header( 'location:index' );
         }
 
         .qn_page .qn_body {
-            padding: 305px 30px 30px;
+            padding: 305px 20px 30px;
         }
 
         .qn_page .qn_footer {
@@ -1017,11 +1017,16 @@ header( 'location:index' );
 
         .tb_format1 tbody tr td div.approval_box {
             display: flex;
+            align-items: center;
+            margin: 15px 0;
         }
 
         .tb_format1 tbody tr td div.approval_box > span {
             display: block;
             width: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: left;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-of-type(1), .tb_format1 tbody tr.desc1 td:nth-of-type(1) {
@@ -1029,15 +1034,22 @@ header( 'location:index' );
             text-align: center;
         }
 
-        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
-            width: 75px;
+        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1 tbody tr.desc1 td:nth-last-of-type(4) {
+            width: 70px;
             text-align: center;
+            height: 50px;
+        }
+
+        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3),
+        .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
+            width: 200px;
+            text-align: right;
             height: 50px;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(2),
         .tb_format1 tbody tr.desc1 td:nth-last-of-type(2) {
-            width: 210px;
+            width: 200px;
             text-align: right;
             height: 50px;
         }
@@ -1045,23 +1057,22 @@ header( 'location:index' );
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(1),
         .tb_format1 tbody tr.desc1 td:nth-last-of-type(1) {
             width: 210px;
-            text-align: right;
+            text-align: left;
+        }
+
+        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(5), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(5) {
+            width: 70px;
+            text-align: center;
             height: 50px;
         }
 
         .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(4) {
-            width: 75px;
+            width: 200px;
             text-align: right;
             height: 50px;
         }
 
         .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(3) {
-            width: 210px;
-            text-align: right;
-            height: 50px;
-        }
-
-        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(2), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(2) {
             width: 135px;
             text-align: right;
             height: 50px;
@@ -1205,14 +1216,33 @@ header( 'location:index' );
             font-weight: 500;
         }
 
+        .tb_format2 tbody tr td div.approval_box {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .tb_format2 tbody tr td div.approval_box > span {
+            display: block;
+            width: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: left;
+        }
+
         .tb_format2 tbody tr td:nth-of-type(1) {
             width: 70px;
             text-align: center;
         }
 
+        .tb_format2 tbody tr td:nth-last-of-type(2) {
+            width: 200px;
+            text-align: right;
+        }
+
         .tb_format2 tbody tr td:nth-last-of-type(1) {
             width: 210px;
-            text-align: right;
+            text-align: left;
         }
 
         .tb_format2 tfoot tr td:nth-last-of-type(1) {
@@ -2286,12 +2316,12 @@ header( 'location:index' );
 
                                 <dt class="head">Project Name:</dt>
                                 <dd>
-                                    <input type="text" placeholder="First Line" v-model="temp_first_line">
+                                    <input type="text" placeholder="Project Name" v-model="???temp_project_name">
                                 </dd>
 
                                 <dt class="head">Project Location:</dt>
                                 <dd>
-                                    <input type="text" placeholder="First Line" v-model="temp_first_line">
+                                    <input type="text" placeholder="Project Location" v-model="???temp_project_location">
                                 </dd>
 
                                 <dt>Quotation Number:</dt>
@@ -2301,19 +2331,19 @@ header( 'location:index' );
 
                                 <dt>P.O. Number:</dt>
                                 <dd>
-                                    <input type="text" v-model="temp_quotation_date">
+                                    <input type="text" v-model="temp_po_no">
                                 </dd>
 
                                 <dt>Requested by:</dt>
                                 <dd>
-                                    <input type="text" placeholder="Client Name" v-model="temp_prepare_for_first_line">
-                                    <input type="date" v-model="temp_prepare_for_second_line">
+                                    <input type="text" placeholder="Client Name" v-model="temp_request_by_name">
+                                    <input type="date" v-model="temp_request_by_date">
                                 </dd>
 
                                 <dt>Submitted by:</dt>
                                 <dd>
-                                    <input type="text" placeholder="Our Staff Name" v-model="temp_prepare_by_first_line">
-                                    <input type="date" v-model="temp_prepare_by_second_line">
+                                    <input type="text" placeholder="Our Staff Name" v-model="temp_submit_by_name">
+                                    <input type="date" v-model="temp_submit_by_date">
                                 </dd>
                                 <div class="btnbox">
                                     <a class="btn small" @click="cancel_header()">Close</a>
@@ -2514,7 +2544,16 @@ header( 'location:index' );
                                                                             v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea><br>
                                         <!-- 只有subtotal box Type-A 而且是 Item with Image，才需要顯示下面這個 Notes 欄位出來 -->
-                                        <span v-if="block.type == 'image'">Notes:</span> <textarea rows="2" v-model="block.notes" v-if="block.type == 'image'"></textarea>
+                                        <span v-if="block.type == 'image'">Notes:</span> <textarea rows="2" v-model="block.notes" v-if="block.type == 'image'"></textarea><br>
+
+                                        <span style="vertical-align: top;">Approval Status:</span>
+                                        <div style=" display: inline-block; height: 108px; width: calc(100% - 110px);">
+                                            <input type="checkbox" class="alone"> Approved<br>
+                                            <input type="checkbox" class="alone"> Approved with comments<br>
+                                            <input type="checkbox" class="alone"> Incorporate comments and resubmit<br>
+                                            <input type="checkbox" class="alone"> Not Approved
+                                        </div>
+
                                     </li>
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="block_a_up(index, block.id)"></i>
@@ -2559,6 +2598,14 @@ header( 'location:index' );
                                         <span>Description:</span> <textarea rows="2"
                                                                             v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
+
+                                        <span style="vertical-align: top;">Approval Status:</span>
+                                        <div style=" display: inline-block; height: 108px; width: calc(100% - 110px);">
+                                            <input type="checkbox" class="alone"> Approved<br>
+                                            <input type="checkbox" class="alone"> Approved with comments<br>
+                                            <input type="checkbox" class="alone"> Incorporate comments and resubmit<br>
+                                            <input type="checkbox" class="alone"> Not Approved
+                                        </div> 
                                     </li>
                                     <li>
                                         <i class="fas fa-arrow-alt-circle-up" @click="block_b_up(index, block.id)"></i>
@@ -2806,27 +2853,26 @@ header( 'location:index' );
                                 <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
 
-                            <td rowspan="2">
+                            <td :rowspan="bk.type == 'image' ? 2 : 1">
                                 <div class="approval_box">
                                     <input type="checkbox" class="alone" disabled>
                                      <span>Approved</span>
                                 </div>
 
-                                <div>
+                                <div class="approval_box">
                                     <input type="checkbox" class="alone" disabled>
                                      <span>Approved with comments</span>
                                 </div>
 
-                                <div>
+                                <div class="approval_box">
                                     <input type="checkbox" class="alone" disabled>
                                      <span>Incorporate comments and resubmit</span>
                                 </div>
 
-                                <div>
+                                <div class="approval_box">
                                     <input type="checkbox" class="alone" disabled>
                                      <span>Not Approved</span>
                                 </div>
-
                             </td>
                         </tr>
 
@@ -2888,10 +2934,25 @@ header( 'location:index' );
                             </td>
 
                             <td>
-                                <input type="checkbox" class="alone" disabled> Approved
-                                <input type="checkbox" class="alone" disabled> Approved with comments
-                                <input type="checkbox" class="alone" disabled> Incorporate comments and resubmit
-                                <input type="checkbox" class="alone" disabled> Not Approved
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Approved</span>
+                                </div>
+
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Approved with comments</span>
+                                </div>
+
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Incorporate comments and resubmit</span>
+                                </div>
+
+                                <div class="approval_box">
+                                    <input type="checkbox" class="alone" disabled>
+                                     <span>Not Approved</span>
+                                </div>
                             </td>
                         </tr>
 
