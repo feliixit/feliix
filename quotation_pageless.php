@@ -3189,7 +3189,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_total" v-bind:style="{ 'margin-top': (show == '' ? pixa : 0) + 'px' }" >
+                        <div class="area_total" v-bind:style="{ 'margin-top': (show == '' ? pixa : 0) + 'px' }" v-if="show == ''">
                             <table class="tb_total" v-for="(tt, index) in pag.total">
                                 <tbody>
                                 <tr>
@@ -3246,7 +3246,7 @@ header( 'location:index' );
 
 
 
-                        <div class="area_terms" v-bind:style="{ 'margin-top': (show_t == '' ? pixa_t : 0) + 'px' }" >
+                        <div class="area_terms" v-bind:style="{ 'margin-top': (show_t == '' ? pixa_t : 0) + 'px' }" v-if="show_t == ''">
                             <div class="terms" v-for="(tt, index) in pag.term">
                                 <div class="title">{{ tt.title }}</div>
                                 <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">
@@ -3258,7 +3258,7 @@ header( 'location:index' );
 
 
 
-                        <div class="area_payment" v-bind:style="{ 'margin-top': (show_p == '' ? pixa_p : 0) + 'px' }" v-if="pag.payment_term !== undefined ">
+                        <div class="area_payment" v-bind:style="{ 'margin-top': (show_p == '' ? pixa_p : 0) + 'px' }" v-if="pag.payment_term !== undefined && show_p == ''">
                             <table class="tb_payment">
                                 <tbody>
                                 <tr>
@@ -3301,7 +3301,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_conforme" v-bind:style="{ 'margin-top': (show_s == '' ? pixa_s : 0) + 'px' }" >
+                        <div class="area_conforme" v-bind:style="{ 'margin-top': (show_s == '' ? pixa_s : 0) + 'px' }" v-if="show_s == ''">
                             <div class="conforme"
                                 v-if="(pag.sig != undefined ? pag.sig.item_client.length : 0)  + (pag.sig != undefined ?  pag.sig.item_company.length : 0) > 0">
                                 CONFORME
