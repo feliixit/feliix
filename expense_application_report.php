@@ -165,6 +165,10 @@
             width: 120%;
         }
 
+        body.fifth .block .details .tablebox {
+            width: 100%;
+        }
+
         body.fifth .block .tablebox ul.head {
             background-color: rgba(255, 89, 90, 0.4);
         }
