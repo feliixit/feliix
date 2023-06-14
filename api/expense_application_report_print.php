@@ -46,7 +46,7 @@ $fat = (isset($_POST['fat']) ?  $_POST['fat'] : '');
 $fau = (isset($_POST['fau']) ?  $_POST['fau'] : '');
 $fal = (isset($_POST['fal']) ?  $_POST['fal'] : '');
 
-$fp = (isset($_GET['fp']) ? $_GET['fp'] : '');
+$fp = (isset($_POST['fp']) ? $_POST['fp'] : '');
 $fp = urldecode($fp);
 
 $ftd = (isset($_POST['ftd']) ?  $_POST['ftd'] : '');
