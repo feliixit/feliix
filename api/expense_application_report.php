@@ -434,7 +434,7 @@ if($of1 != "" && $of1 != "0")
                 if($ofd1 == 2)
                     $sOrder = "pm.project_name1 desc ";
                 else
-                    $sOrder = "pm.project_name1 ";
+                    $sOrder = "CONCAT(trim(pm.project_name1), 'ZZZZZZZZZZZZZZZZZZZZ') ";
                 break;
         
         default:
@@ -515,7 +515,7 @@ if($of2 != "" && $of2 != "0" && $sOrder != "")
             if($ofd2 == 2)
                 $sOrder .= ", pm.project_name1 desc ";
             else
-                $sOrder .= ", pm.project_name1 ";
+                $sOrder .= ", CONCAT(trim(pm.project_name1), 'ZZZZZZZZZZZZZZZZZZZZ') ";
             break;
         default:
     }
@@ -595,7 +595,7 @@ if($of2 != "" && $of2 != "0" && $sOrder == "")
             if($ofd2 == 2)
                 $sOrder = "pm.project_name1 desc";
             else
-                $sOrder = "pm.project_name1 ";
+                $sOrder = "CONCAT(trim(pm.project_name1), 'ZZZZZZZZZZZZZZZZZZZZ') ";
             break;
         default:
     }
