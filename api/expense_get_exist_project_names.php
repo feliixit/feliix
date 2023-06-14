@@ -54,7 +54,7 @@ else
       switch ($method) {
           case 'GET':
 
-            $sql = "SELECT distinct project_name1 FROM  apply_for_petty pm where pm.status <> -1 and project_name1 <> '' order by project_name1";
+            $sql = "SELECT distinct project_name1 project_name FROM  apply_for_petty pm where pm.status <> -1 and project_name1 <> '' order by project_name1";
 
             $merged_results = array();
 
