@@ -557,7 +557,7 @@ var app = new Vue({
       };
 
       axios
-      .get("api/expense_get_project_names", {
+      .get("api/expense_get_exist_project_names", {
         params,
         headers: { Authorization: `Bearer ${token}` },
       })
