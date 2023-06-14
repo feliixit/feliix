@@ -60,6 +60,9 @@ switch ($method) {
 
         $fc = urldecode($fc);
 
+        $fp = (isset($_GET['fp']) ? $_GET['fp'] : '');
+        $fp = urldecode($fp);
+
         $ft = (isset($_GET['ft']) ?  $_GET['ft'] : '');
         $fs = (isset($_GET['fs']) ?  $_GET['fs'] : '');
         $fat = (isset($_GET['fat']) ?  $_GET['fat'] : '');
@@ -160,6 +163,12 @@ if($fc != "")
 {
     $sql = $sql . " and p.username = '" . $fc . "' ";
     $query_cnt = $query_cnt . " and p.username = '" . $fc . "' ";
+}
+
+if($fp != "")
+{
+    $sql = $sql . " and pm.project_name1 = '" . $fp . "' ";
+    $query_cnt = $query_cnt . " and pm.project_name1 = '" . $fp . "' ";
 }
 
 $status_array = [];
@@ -420,6 +429,13 @@ if($of1 != "" && $of1 != "0")
             else
                 $sOrder = "Coalesce((select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1), '9999-99-99') ";
             break;
+
+        case 12:
+                if($ofd1 == 2)
+                    $sOrder = "pm.project_name1 desc ";
+                else
+                    $sOrder = "pm.project_name1 ";
+                break;
         
         default:
     }
@@ -495,6 +511,12 @@ if($of2 != "" && $of2 != "0" && $sOrder != "")
             else
                 $sOrder .= ", Coalesce((select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1), '9999-99-99') ";
             break;
+        case 12:
+            if($ofd2 == 2)
+                $sOrder .= ", pm.project_name1 desc ";
+            else
+                $sOrder .= ", pm.project_name1 ";
+            break;
         default:
     }
 }
@@ -568,6 +590,12 @@ if($of2 != "" && $of2 != "0" && $sOrder == "")
                 $sOrder = "Coalesce((select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1), '0000-00-00') desc";
             else
                 $sOrder = "Coalesce((select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1), '9999-99-99') ";
+            break;
+        case 12:
+            if($ofd2 == 2)
+                $sOrder = "pm.project_name1 desc";
+            else
+                $sOrder = "pm.project_name1 ";
             break;
         default:
     }

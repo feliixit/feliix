@@ -2600,7 +2600,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head">Distance from Previous Block: <input type="number" v-model="pixa"> pixel</dt>
+                                <dt class="head" v-if="show == ''">Distance from Previous Block: <input type="number" v-model="pixa"> pixel</dt>
                             </dl>
 
                             <dl>
@@ -2694,7 +2694,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head">Distance from Previous Block: <input type="number" v-model="pixa_t"> pixel</dt>
+                                <dt class="head" v-if="show_t == ''">Distance from Previous Block: <input type="number" v-model="pixa_t"> pixel</dt>
                             </dl>
                         </div>
 
@@ -2762,7 +2762,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head">Distance from Previous Block: <input type="number" v-model="pixa_p"> pixel</dt>
+                                <dt class="head" v-if="show_p == ''">Distance from Previous Block: <input type="number" v-model="pixa_p"> pixel</dt>
                             </dl>
 
                             <dl>
@@ -2844,7 +2844,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head">Distance from Previous Block: <input type="number" v-model="pixa_s"> pixel</dt>
+                                <dt class="head" v-if="show_s == ''">Distance from Previous Block: <input type="number" v-model="pixa_s"> pixel</dt>
                             </dl>
                         </div>
 
@@ -3189,7 +3189,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_total" v-bind:style="{ 'margin-top': pixa + 'px' }" v-if="show == ''">
+                        <div class="area_total" v-bind:style="{ 'margin-top': (show == '' ? pixa : 0) + 'px' }" >
                             <table class="tb_total" v-for="(tt, index) in pag.total">
                                 <tbody>
                                 <tr>
@@ -3246,7 +3246,7 @@ header( 'location:index' );
 
 
 
-                        <div class="area_terms" v-bind:style="{ 'margin-top': pixa_t + 'px' }" v-if="show_t == ''">
+                        <div class="area_terms" v-bind:style="{ 'margin-top': (show_t == '' ? pixa_t : 0) + 'px' }" >
                             <div class="terms" v-for="(tt, index) in pag.term">
                                 <div class="title">{{ tt.title }}</div>
                                 <div class="brief" :style="tt.brief == '' ? 'white-space: pre-line; display: none;' : 'white-space: pre-line;'">
@@ -3258,7 +3258,7 @@ header( 'location:index' );
 
 
 
-                        <div class="area_payment" v-bind:style="{ 'margin-top': pixa_p + 'px' }" v-if="pag.payment_term !== undefined && show_p == ''">
+                        <div class="area_payment" v-bind:style="{ 'margin-top': (show_p == '' ? pixa_p : 0) + 'px' }" v-if="pag.payment_term !== undefined ">
                             <table class="tb_payment">
                                 <tbody>
                                 <tr>
@@ -3301,7 +3301,7 @@ header( 'location:index' );
                         </div>
 
 
-                        <div class="area_conforme" v-bind:style="{ 'margin-top': pixa_s + 'px' }" v-if="show_s == ''">
+                        <div class="area_conforme" v-bind:style="{ 'margin-top': (show_s == '' ? pixa_s : 0) + 'px' }" >
                             <div class="conforme"
                                 v-if="(pag.sig != undefined ? pag.sig.item_client.length : 0)  + (pag.sig != undefined ?  pag.sig.item_company.length : 0) > 0">
                                 CONFORME

@@ -63,6 +63,10 @@ var app = new Vue({
     od_factor2: "",
     od_factor2_order: "",
     
+    projects: [],
+    fil_project_name: "",
+    od_project_name: "",
+
   },
 
   created() {
@@ -120,6 +124,9 @@ var app = new Vue({
             case "fde":
               _this.fil_date_end = tmp[1];
               break;
+            case "fp":
+              _this.fil_project_name = decodeURI(tmp[1]);
+              break;
         
             case "of1":
               _this.od_factor1 = tmp[1];
@@ -151,7 +158,7 @@ var app = new Vue({
     }
 
     this.getLeaveCredit(id);
-
+    this.getProjectNames();
     this.getCreators();
   },
 
@@ -273,6 +280,7 @@ var app = new Vue({
         ftd: _this.fil_type_date,
         fds: _this.fil_date_start,
         fde: _this.fil_date_end,
+        fp: _this.fil_project_name,
         of1: _this.od_factor1,
         ofd1: _this.od_factor1_order,
         of2: _this.od_factor2,
@@ -433,6 +441,8 @@ var app = new Vue({
         _this.fil_amount_lower +
         "&ftd=" +
         _this.fil_type_date +
+        "&fp=" +
+        _this.fil_project_name +
         "&fds=" +
         _this.fil_date_start +
         "&fde=" +
@@ -484,6 +494,8 @@ var app = new Vue({
         _this.fil_amount_lower +
         "&ftd=" +
         _this.fil_type_date +
+        "&fp=" +
+        _this.fil_project_name +
         "&fds=" +
         _this.fil_date_start +
         "&fde=" +
@@ -522,6 +534,8 @@ var app = new Vue({
       this.fil_type_date = "";
       this.fil_date_start = "";
       this.fil_date_end = "";
+
+      this.fil_project_name = "";
  
       this.fil_keyowrd = "";
       
@@ -532,6 +546,27 @@ var app = new Vue({
 
       //this.getRecords();
       this.filter_apply_new(1);
+    },
+
+    getProjectNames: function() {
+      let _this = this;
+      let token = localStorage.getItem("accessToken");
+
+      const params = {
+        pid: 0,
+      };
+
+      axios
+      .get("api/expense_get_project_names", {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(function(response) {
+          _this.projects = response.data;
+        })
+        .catch(function(error) {
+          //handle error
+        });
     },
 
     order_remove: function() {
@@ -916,6 +951,7 @@ var app = new Vue({
       form_Data.append("fau", this.fil_amount_upper);
       form_Data.append("fal", this.fil_amount_lower);
       form_Data.append("ftd", this.fil_type_date);
+      form_Data.append("fp", this.fil_project_name);
       form_Data.append("fds", this.fil_date_start);
       form_Data.append("fde", this.fil_date_end);
       form_Data.append("of1", this.od_factor1);
