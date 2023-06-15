@@ -307,17 +307,17 @@ switch ($method) {
         }
 
         if($type == 'ship_info')
-            order_type_notification($user_name, 'access4', 'access2,access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, 'stock');
+            order_type_notification($user_name, 'access4', 'access2,access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
         if($type == 'ware_info')
-            order_type_notification($user_name, 'access5', 'access2,access1,access3,access4', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, 'stock');
+            order_type_notification($user_name, 'access5', 'access2,access1,access3,access4', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
         if($type == 'assing_test')
-            order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, 'stock');
+            order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
         if($type == 'edit_test')
-            order_sample_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, 'stock');
+            order_sample_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
         if($type == 'assign_delivery')
-            order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, 'stock');
+            order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
         if($type == 'edit_delivery')
-            order_sample_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, 'stock');
+            order_sample_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
         
         echo $jsonEncodedReturnArray;
 

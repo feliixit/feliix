@@ -1435,8 +1435,8 @@ try {
                             <a class="btn small green" @click="edit_shipping_info('ware_info')" v-if="EditWarehouseInfo() && no_privlege() != true">Edit Warehouse Info</a>
                             <a class="btn small green" @click="edit_shipping_info('assing_test')" v-if="AssignTesting() && no_privlege() != true && 1==0">Assign Testing</a>
                             <a class="btn small green" @click="edit_shipping_info('edit_test')" v-if="EditTestingInfo() && no_privlege() != true">Edit Testing Info</a>
-                            <a class="btn small green" @click="edit_shipping_info('assign_delivery')" v-if="AssignDelivery() && no_privlege() != true && 1==0">Assign Delivery</a>
-                            <a class="btn small green" @click="edit_shipping_info('edit_delivery')" v-if="EditDeliveryInfo() && no_privlege() != true">Edit Delivery Info</a>
+                            <a class="btn small green" @click="edit_shipping_info('assign_delivery')" v-if="AssignDelivery() && no_privlege() != true && 1==0">Assign Inventory</a>
+                            <a class="btn small green" @click="edit_shipping_info('edit_delivery')" v-if="EditDeliveryInfo() && no_privlege() != true">Edit Inventory Info</a>
                             <a class="btn small green" @click="edit_shipping_info('edit_final')" v-if="EditFinalInfo() && no_privlege() != true">Edit Final Info</a>
                             <a class="btn small" @click="cancel_shipping_info()" v-if="Cancel()">Cancel</a>
                             <a class="btn small green" @click="save_shipping_info()" v-if="Save()">Save</a>
@@ -1469,7 +1469,7 @@ try {
                         <th>Arrival Date</th>
                         <th>Warehouse In Charge</th>
                         <th>Testing</th>
-                        <th>Delivery</th>
+                        <th>Inventory</th>
                         <th>Final</th>
                         <th>Action</th>
                     </tr>
@@ -1784,28 +1784,28 @@ try {
 
             <td>
                 <div class="read_block" v-if="DeliveryRead(item)">
-                    <select v-model="item.delivery" disabled v-if="1==0">
-                        <option>Choose Assignee for Delivery...</option>
+                    <select v-model="item.delivery" disabled>
+                        <option>Choose Assignee for Inventory...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
                         </option>
                     </select>
-                    Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
+                    Inventory is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone" disabled>
                     <textarea rows="3" v-model="item.remark_d" readonly></textarea>
                     <!-- <i>(更新者的名字 at 儲存日期和時間，範例如下)</i> -->
                     <i v-if="item.delivery_updated_name != ''">({{ item.delivery_updated_name }} at {{ item.delivery_updated_at }})</i>
                 </div>
 
                 <div class="write_block" v-if="DeliveryWrite(item)">
-                    <select v-model="item.delivery" class="assign_delivery" v-if="info_type == 'assign_delivery' && 1==0">
-                        <option>Choose Assignee for Delivery...</option>
+                    <select v-model="item.delivery" class="assign_delivery" v-if="info_type == 'assign_delivery'">
+                        <option>Choose Assignee for Inventory...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
                         </option>
                     </select>
 
                     <div class="edit_delivery_info" v-if="info_type == 'edit_delivery'">
-                        Delivery is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone">
+                    Inventory is OK: <input type="checkbox" :value="item.check_d" :true-value="1" v-model:checked="item.check_d" class="alone">
                         <textarea rows="3" v-model="item.remark_d" placeholder="Remarks"></textarea>
                     </div>
                     

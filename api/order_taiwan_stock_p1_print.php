@@ -235,7 +235,7 @@ if($jwt){
             $sheet->setCellValue('Q1', 'Arrival Date');
             $sheet->setCellValue('R1', 'Warehouse In Charge');
             $sheet->setCellValue('S1', 'Testing');
-            $sheet->setCellValue('T1', 'Delivery');
+            $sheet->setCellValue('T1', 'Inventory');
             $sheet->setCellValue('U1', 'Final');
 
             $sheet->getColumnDimension('A')->setWidth(4.82);
@@ -375,8 +375,8 @@ if($jwt){
                 $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('S'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('T'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                $sheet->setCellValue('T'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->setCellValue('T'. $i, "Assignee: " . $row['delivery'] . "\n" . "Inventory is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->setCellValue('T'. $i, "Inventory is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
                 $sheet->getStyle('T'. $i)->applyFromArray($center_style);
 
                 $sheet->setCellValue('U' . $i,  $row['final']);
