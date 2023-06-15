@@ -676,7 +676,7 @@ var app = new Vue({
     bulk_apply: function(){
       if(this.code_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
-          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
             continue;
           this.variation_product[i].code = this.bulk_code;
         }
@@ -684,7 +684,7 @@ var app = new Vue({
 
       if(this.price_ntd_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
-          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
             continue;
           if(this.price_ntd_action == "assign")
             this.variation_product[i].price_ntd = this.bulk_price_ntd;
@@ -697,7 +697,7 @@ var app = new Vue({
 
       if(this.price_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
-          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
             continue;
           if(this.price_action == "assign")
             this.variation_product[i].price = this.bulk_price;
@@ -710,7 +710,7 @@ var app = new Vue({
 
       if(this.quoted_price_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
-          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
             continue;
           if(this.quoted_price_action == "assign")
             this.variation_product[i].quoted_price = this.bulk_quoted_price;
@@ -725,7 +725,7 @@ var app = new Vue({
 
       if(this.price_ntd_last_change_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
-          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
             continue;
           this.variation_product[i].price_ntd_change = this.bulk_price_ntd_last_change;
         }
@@ -733,7 +733,7 @@ var app = new Vue({
 
       if(this.price_last_change_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
-          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
             continue;
           this.variation_product[i].price_change = this.bulk_price_last_change;
         }
@@ -741,7 +741,7 @@ var app = new Vue({
 
       if(this.quoted_price_last_change_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
-          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
             continue;
           this.variation_product[i].quoted_price_change = this.bulk_quoted_price_last_change;
         }
@@ -752,7 +752,7 @@ var app = new Vue({
         if(typeof file !== 'undefined') 
         {
           for (let i=0; i<this.variation_product.length; i++) {
-            if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+            if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
               continue;
             this.variation_product[i].url = this.bulk_url;
             document.getElementById('variation_' + this.variation_product[i].id).files[0] = file;
@@ -762,7 +762,7 @@ var app = new Vue({
 
       if(this.status_checked == true) {
         for (let i=0; i<this.variation_product.length; i++) {
-          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0)
+          if(this.variation_product[i].checked === "" || this.variation_product[i].checked === 0 || this.variation_product[i].checked == false)
             continue;
           this.variation_product[i].status = this.bulk_status;
         }
@@ -965,6 +965,12 @@ var app = new Vue({
 
             let status = this.variation_product[i].status;
 
+            if((price * 1.15 > quoted_price) && _this.category == '10000000')
+            {
+              quoted_price = (price * 1.15).toFixed(2);
+              quoted_price_change = new Date().toISOString().slice(0, 10);
+            }
+
             let file = document.getElementById('variation_' + id).files[0];
             if(typeof file !== 'undefined') 
               form_Data.append('variation_' + id, file);
@@ -1004,6 +1010,12 @@ var app = new Vue({
             variation.push(obj);
           
 
+          }
+
+          if((_this.price * 1.15 > _this.quoted_price) && _this.category == '10000000')
+          {
+            _this.quoted_price = (_this.price * 1.15).toFixed(2);
+            _this.quoted_price_change = new Date().toISOString().slice(0, 10);
           }
 
           form_Data.append("jwt", token);
