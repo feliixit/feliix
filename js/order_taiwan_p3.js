@@ -601,7 +601,7 @@ var app = new Vue({
 
       EditDeliveryInfo()
       {
-        if((this.access5 == true || this.access6 == true) && this.is_info == false)
+        if((this.dept == 'Engineering' && this.access6 == true) && this.is_info == false)
           return true;
         else
           return false;
