@@ -10776,8 +10776,10 @@ function order_sample_delievery_notification($name, $access,  $access_cc, $proje
         $notifior = GetAccessNotifiersByDepartment("Admin");
         foreach($notifior as &$list)
         {
-            $receiver .= $list["username"] . ", ";
-            $mail->AddAddress($list["email"], $list["username"]);
+            if( $list["username"] == 'Gina Donato' || $list["username"] == 'Ronnie Fernando Dela Cruz'){
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
         }
 
         // CC收件人：執行動作的人, 角色1, 角色3, 職位為Sales Manager的使用者, 角色5
