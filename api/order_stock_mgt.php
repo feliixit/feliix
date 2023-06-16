@@ -293,7 +293,8 @@ function GetTaskDetail($task_id, $task_type, $db)
     $stmt = $db->prepare( $query );
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $title = $row['title'];
+    if($row)
+        $title = $row['title'];
   
     return $title;
 }

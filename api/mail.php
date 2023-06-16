@@ -10998,7 +10998,7 @@ function order_stock_delievery_notification($name, $access,  $access_cc, $projec
         $notifior = GetChargeNotifiersByTitle('Sales Manager');
         foreach($notifior as &$list)
         {
-            $mail->AddCC($list["email"], $list["username"]);
+            $mail->AddAddress($list["email"], $list["username"]);
         }
 
         // CC收件人：執行動作的人
