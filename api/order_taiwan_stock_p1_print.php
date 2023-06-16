@@ -212,8 +212,8 @@ if($jwt){
             $sheet->getStyle('J2:J300')->getAlignment()->setHorizontal('left');
             $sheet->getStyle('J2:J300')->getAlignment()->setVertical('top');
 
-            $sheet->getStyle('K1:S300')->getAlignment()->setHorizontal('center');
-            $sheet->getStyle('K1:S300')->getAlignment()->setVertical('center');
+            $sheet->getStyle('K1:U300')->getAlignment()->setHorizontal('center');
+            $sheet->getStyle('K1:U300')->getAlignment()->setVertical('center');
 
 
             $sheet->setCellValue('A1', '#');
