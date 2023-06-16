@@ -10764,7 +10764,7 @@ function order_sample_delievery_notification($name, $access,  $access_cc, $proje
         $_list = explode(",", $access);
         foreach($_list as &$c_list)
         {
-            $notifior = GetAccessNotifiers($c_list, "");
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
             foreach($notifior as &$list)
             {
                 $receiver .= $list["username"] . ", ";
@@ -10784,7 +10784,7 @@ function order_sample_delievery_notification($name, $access,  $access_cc, $proje
         $cc_list = explode(",", $access_cc);
         foreach($cc_list as &$c_list)
         {
-            $notifior = GetAccessNotifiers($c_list, "");
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
             foreach($notifior as &$list)
             {
                 $cc = $list["username"];
@@ -10986,7 +10986,7 @@ function order_stock_delievery_notification($name, $access,  $access_cc, $projec
         $_list = explode(",", $access);
         foreach($_list as &$c_list)
         {
-            $notifior = GetAccessNotifiers($c_list, "");
+            $notifior = GetAccessNotifiers($c_list, $serial_name);
             foreach($notifior as &$list)
             {
                 $receiver .= $list["username"] . ", ";

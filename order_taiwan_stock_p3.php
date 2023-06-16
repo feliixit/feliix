@@ -1784,7 +1784,7 @@ try {
 
             <td>
                 <div class="read_block" v-if="DeliveryRead(item)">
-                    <select v-model="item.delivery" disabled>
+                    <select v-model="item.delivery" disabled v-if="1==0">
                         <option>Choose Assignee for Inventory...</option>
                         <option v-for="item in charge" :value="item.username" :key="item.username">
                             {{ item.username }}
