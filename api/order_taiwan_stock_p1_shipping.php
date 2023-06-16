@@ -317,7 +317,7 @@ switch ($method) {
         if($type == 'assign_delivery')
             order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
         if($type == 'edit_delivery')
-            order_sample_notification02($user_name, 'access5', 'access1,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
+            order_stock_delievery_notification($user_name, 'access1,access3,access4,access5', '', $project_name, $serial_name, $od_name, 'Order - Stocks', $comment, $type, $items_array, $o_id, 'stock');
         
         echo $jsonEncodedReturnArray;
 
