@@ -46,6 +46,9 @@ $fat = (isset($_POST['fat']) ?  $_POST['fat'] : '');
 $fau = (isset($_POST['fau']) ?  $_POST['fau'] : '');
 $fal = (isset($_POST['fal']) ?  $_POST['fal'] : '');
 
+$fp = (isset($_POST['fp']) ? $_POST['fp'] : '');
+$fp = urldecode($fp);
+
 $ftd = (isset($_POST['ftd']) ?  $_POST['ftd'] : '');
 $fds = (isset($_POST['fds']) ?  $_POST['fds'] : '');
 $fds = str_replace('-', '/', $fds);
@@ -121,6 +124,12 @@ if($fru != "")
 if($fc != "")
 {
     $sql = $sql . " and p.username = '" . $fc . "' ";
+}
+
+if($fp != "")
+{
+    $sql = $sql . " and pm.project_name1 = '" . $fp . "' ";
+    $query_cnt = $query_cnt . " and pm.project_name1 = '" . $fp . "' ";
 }
 
 $status_array = [];
@@ -323,7 +332,12 @@ if($of1 != "" && $of1 != "0")
             else
                 $sOrder = "Coalesce((select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1), '9999-99-99') ";
             break;
-        
+            case 12:
+                if($ofd1 == 2)
+                    $sOrder = "pm.project_name1 desc ";
+                else
+                $sOrder = "CONCAT(trim(pm.project_name1), 'ZZZZZZZZZZZZZZZZZZZZ') ";
+                break;
         default:
     }
 }
@@ -398,6 +412,12 @@ if($of2 != "" && $of2 != "0" && $sOrder != "")
             else
                 $sOrder .= ", Coalesce((select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1), '9999-99-99') ";
             break;
+            case 12:
+                if($ofd2 == 2)
+                    $sOrder .= ", pm.project_name1 desc ";
+                else
+                    $sOrder .= ", CONCAT(trim(pm.project_name1), 'ZZZZZZZZZZZZZZZZZZZZ') ";
+                break;
         default:
     }
 }
@@ -472,6 +492,12 @@ if($of2 != "" && $of2 != "0" && $sOrder == "")
             else
                 $sOrder = "Coalesce((select DATE_FORMAT(ph.created_at, '%Y/%m/%d')  from petty_history ph where ph.`status` <> -1 and ph.petty_id = pm.id and ph.`action` = 'Verifier Verified' order by ph.created_at desc LIMIT 1), '9999-99-99') ";
             break;
+            case 12:
+                if($ofd2 == 2)
+                    $sOrder = "pm.project_name1 desc";
+                else
+                    $sOrder = "CONCAT(trim(pm.project_name1), 'ZZZZZZZZZZZZZZZZZZZZ') ";
+                break;
         default:
     }
 }
@@ -653,14 +679,15 @@ else
             $sheet->setCellValue('C1', 'Application Time');
             $sheet->setCellValue('D1', 'Type');
             $sheet->setCellValue('E1', 'Status');
-            $sheet->setCellValue('F1', 'Requested Amount');
-            $sheet->setCellValue('G1', 'Actual Amount');
-            $sheet->setCellValue('H1', 'Date Needed');
-            $sheet->setCellValue('I1', 'Date Checked');
-            $sheet->setCellValue('J1', 'Date Approved');
-            $sheet->setCellValue('K1', 'Date Released');
-            $sheet->setCellValue('L1', 'Date Liquidated');
-            $sheet->setCellValue('M1', 'Date Verified');
+            $sheet->setCellValue('F1', 'Project Name');
+            $sheet->setCellValue('G1', 'Requested Amount');
+            $sheet->setCellValue('H1', 'Actual Amount');
+            $sheet->setCellValue('I1', 'Date Needed');
+            $sheet->setCellValue('J1', 'Date Checked');
+            $sheet->setCellValue('K1', 'Date Approved');
+            $sheet->setCellValue('L1', 'Date Released');
+            $sheet->setCellValue('M1', 'Date Liquidated');
+            $sheet->setCellValue('N1', 'Date Verified');
 
             $i = 2;
             foreach($merged_results as $row)
@@ -670,10 +697,11 @@ else
                 $sheet->setCellValue('C' . $i, $row['created_at']);
                 $sheet->setCellValue('D' . $i, $row['request_type']);
                 $sheet->setCellValue('E' . $i, $row['desc']);
-                $sheet->setCellValue('F' . $i, number_format($row['total']));
-                $sheet->setCellValue('G' . $i, number_format($row['amount_verified']));
-                $sheet->setCellValue('H' . $i, $row['date_requested']);
-                $sheet->setCellValue('I' . $i, $row['checked_date']);
+                $sheet->setCellValue('F' . $i, $row['project_name1']);
+                $sheet->setCellValue('G' . $i, number_format($row['total']));
+                $sheet->setCellValue('H' . $i, number_format($row['amount_verified']));
+                $sheet->setCellValue('I' . $i, $row['date_requested']);
+                $sheet->setCellValue('J' . $i, $row['checked_date']);
 
                 $checked_date = '';
                 if($row['approve1_date'] != '' || $row['approve2_date'] != '')
@@ -681,23 +709,23 @@ else
                     $checked_date = ($row['approve1_date'] == "" ? "---" : $row['approve1_date']) . "\n" . ($row['approve2_date'] == "" ? "---" : $row['approve2_date']);
                 }
 
-                $sheet->getStyle('J' . $i)->getAlignment()->setWrapText(true);
-                $sheet->getColumnDimension('J')->setWidth(20);
+                $sheet->getStyle('K' . $i)->getAlignment()->setWrapText(true);
+                $sheet->getColumnDimension('K')->setWidth(20);
 
-                $sheet->setCellValue('J' . $i, $checked_date);
+                $sheet->setCellValue('K' . $i, $checked_date);
 
-                $sheet->setCellValue('K' . $i, $row['release_date']);
-                $sheet->setCellValue('L' . $i, $row['liquidate_date']);
-                $sheet->setCellValue('M' . $i, $row['verified_date']);
+                $sheet->setCellValue('L' . $i, $row['release_date']);
+                $sheet->setCellValue('M' . $i, $row['liquidate_date']);
+                $sheet->setCellValue('N' . $i, $row['verified_date']);
            
 
-                $sheet->getStyle('A'. $i. ':' . 'M' . $i)->applyFromArray($styleArray);
+                $sheet->getStyle('A'. $i. ':' . 'N' . $i)->applyFromArray($styleArray);
 
                 $i++;
             }
 
-            $sheet->getStyle('A1:' . 'M1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'M' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'N1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'N' . --$i)->applyFromArray($styleArray);
 
             ob_end_clean();
 

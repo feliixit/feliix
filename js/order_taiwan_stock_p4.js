@@ -571,8 +571,11 @@ var app = new Vue({
 
       EditDeliveryInfo()
       {
-        if((this.access5 == true || this.access6 == true) && this.is_info == false)
+        if((this.access4 == true) && this.is_info == false)
+        {
+      
           return true;
+        }
         else
           return false;
       },
@@ -689,7 +692,7 @@ var app = new Vue({
         if(this.info_type == 'edit_test')
          return false;
 
-        if(item.is_info && (this.info_type == 'assign_delivery' || this.info_type == 'edit_delivery') && (this.access2 == true || this.access5 == true || this.access6 == true))
+        if(item.is_info && (this.info_type == 'assign_delivery' || this.info_type == 'edit_delivery') && (this.access4 == true))
           return true;
         else
           return false;

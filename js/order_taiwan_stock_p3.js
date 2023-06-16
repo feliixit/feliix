@@ -220,7 +220,7 @@ var app = new Vue({
         name :"",
         title: "",
         is_manager: "",
-
+        dept: "",
         url : "",
 
         brands: [],
@@ -587,7 +587,7 @@ var app = new Vue({
 
       EditTestingInfo()
       {
-        if((this.access5 == true || this.access6 == true) && this.is_info == false)
+        if((this.dept == 'Engineering' && this.access6 == true) && this.is_info == false)
           return true;
         else
           return false;
@@ -603,8 +603,11 @@ var app = new Vue({
 
       EditDeliveryInfo()
       {
-        if((this.access5 == true || this.access6 == true) && this.is_info == false)
+        if((this.access4 == true) && this.is_info == false)
+        {
+      
           return true;
+        }
         else
           return false;
       },
@@ -721,7 +724,7 @@ var app = new Vue({
         if(this.info_type == 'edit_test')
          return false;
 
-        if(item.is_info && (this.info_type == 'assign_delivery' || this.info_type == 'edit_delivery') && (this.access2 == true || this.access5 == true || this.access6 == true))
+        if(item.is_info && (this.info_type == 'assign_delivery' || this.info_type == 'edit_delivery') && (this.access4 == true))
           return true;
         else
           return false;
@@ -2525,6 +2528,7 @@ var app = new Vue({
             _this.is_manager = response.data.is_manager;
             _this.title = response.data.title.toLowerCase();
             _this.uid = response.data.user_id;
+            _this.dept = response.data.department;
   
         })
         .catch(function(response) {

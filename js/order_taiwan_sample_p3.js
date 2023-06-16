@@ -220,7 +220,7 @@ var app = new Vue({
         name :"",
         title: "",
         is_manager: "",
-
+        dept: "",
         url : "",
 
         brands: [],
@@ -587,7 +587,7 @@ var app = new Vue({
 
       EditTestingInfo()
       {
-        if((this.access5 == true || this.access6 == true) && this.is_info == false)
+        if((this.dept == 'Engineering' && this.access6 == true) && this.is_info == false)
           return true;
         else
           return false;
@@ -604,7 +604,15 @@ var app = new Vue({
       EditDeliveryInfo()
       {
         if((this.access5 == true || this.access6 == true) && this.is_info == false)
-          return true;
+        {
+          // serial_name start with 'L' need to be lignting department
+          if(this.serial_name[0] == 'L' && this.dept == 'Lighting')
+            return true;
+          if(this.serial_name[0] == 'O' && this.dept == 'Office')
+            return true;
+
+          return false;
+        }
         else
           return false;
       },
@@ -2521,6 +2529,7 @@ var app = new Vue({
             _this.is_manager = response.data.is_manager;
             _this.title = response.data.title.toLowerCase();
             _this.uid = response.data.user_id;
+            _this.dept = response.data.department;
   
         })
         .catch(function(response) {

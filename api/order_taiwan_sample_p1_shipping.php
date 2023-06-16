@@ -307,17 +307,17 @@ switch ($method) {
         }
 
         if($type == 'ship_info')
-            order_sample_notification($user_name, 'access4', 'access2,access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, "sample");
+            order_sample_notification($user_name, 'access4', 'access2,access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Samples', $comment, $type, $items_array, $o_id, "sample");
         if($type == 'ware_info')
-            order_sample_notification($user_name, 'access1', 'access2,access5,access3,access4', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, "sample");
+            order_sample_notification($user_name, 'access1', 'access2,access5,access3,access4', $project_name, $serial_name, $od_name, 'Order - Samples', $comment, $type, $items_array, $o_id, "sample");
         if($type == 'assing_test')
-            order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, "sample");
+            order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Samples', $comment, $type, $items_array, $o_id, "sample");
         if($type == 'edit_test')
-            order_sample_notification02($user_name, 'access1', 'access5,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, "sample");
+            order_sample_notification02($user_name, 'access1', 'access5,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Samples', $comment, $type, $items_array, $o_id, "sample");
         if($type == 'assign_delivery')
-            order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, "sample");
+            order_sample_notification02($user_name, '', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Samples', $comment, $type, $items_array, $o_id, "sample");
         if($type == 'edit_delivery')
-            order_sample_notification02($user_name, 'access1', 'access5,access2,access3,access4', $project_name, $serial_name, $od_name, 'Order - Close Deal', $comment, $type, $items_array, $o_id, "sample");
+            order_sample_delievery_notification($user_name, 'access4', 'access1,access3,access5', $project_name, $serial_name, $od_name, 'Order - Samples', $comment, $type, $items_array, $o_id, "sample");
         
         echo $jsonEncodedReturnArray;
 

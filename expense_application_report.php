@@ -162,6 +162,11 @@
         body.fifth .block .tablebox {
             border-top: 2px solid #EA0029;
             border-left: 2px solid #EA0029;
+            width: 120%;
+        }
+
+        body.fifth .block .details .tablebox {
+            width: 100%;
         }
 
         body.fifth .block .tablebox ul.head {
@@ -172,6 +177,10 @@
             border-bottom: 2px solid #EA0029;
             border-right: 2px solid #EA0029;
             font-size: 12px;
+        }
+
+        body.fifth .block .tablebox>ul>li:nth-of-type(6) {
+            max-width: 260px;
         }
 
         body.fifth .block .tablebox>ul>li i {
@@ -384,6 +393,16 @@
                                     </select>
                                     </dd>
 
+                                    <dt>Project Name</dt>
+                                    <dd>
+                                        <select v-model="fil_project_name">
+                                            <option value=""></option>
+                                            <option v-for="(item, index) in projects" :value="item.project_name" :key="item.project_name">
+                                                {{ item.project_name }}
+                                            </option>
+                                        </select>
+                                    </dd>
+
                                     <dt style="margin-top: 15px;">Type of Amount</dt>
                                     <dd style="margin-bottom: -5px;">
                                         <select v-model="fil_amount_type">
@@ -447,6 +466,9 @@
                                                 <option value="1">
                                                     Request No.
                                                 </option>
+                                                <option value="12">
+                                                    Project Name
+                                                </option>
                                                 <option value="2">
                                                     Application Time
                                                 </option>
@@ -502,6 +524,9 @@
                                                 <option value="0"></option>
                                                 <option value="1">
                                                     Request No.
+                                                </option>
+                                                <option value="12">
+                                                    Project Name
                                                 </option>
                                                 <option value="2">
                                                     Application Time
@@ -585,6 +610,7 @@
                             <li>Application Time</li>
                             <li>Type</li>
                             <li>Status</li>
+                            <li>Project Name</li>
                             <li>Requested Amount</li>
                             <li>Actual Amount</li>
 
@@ -603,6 +629,7 @@
                             <li>{{ record.created_at }}</li>
                             <li>{{ record.request_type }}</li>
                             <li>{{ record.desc }}</li>
+                            <li>{{ record.project_name1 }}</li>
                             <li>{{ !(record.total) ? '' : Number(record.total).toLocaleString() }}</li>
                             <li>{{ !(record.amount_verified) ? '' : Number(record.amount_verified).toLocaleString() }}</li>
                             <li>{{ record.date_requested }}</li>
