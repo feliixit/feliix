@@ -758,12 +758,15 @@ var app = new Vue({
         return;
       }
 
+      let show_confirm = true;
+
       if(this.code.trim() != '')
       {
         let ret = await axios.get("api/product_code_check", { params: { code: this.code.trim(), id: 0 } });
 
         if(ret.data.length > 0)
         {
+          show_confirm = false;
           // sweet alert whith yes no and html product code list
           let html = '<div class="text-left">This code already existed in the product database. Please check the below link first before you save the current product info into the product database.';
           for(let i=0; i<ret.data.length; i++)
@@ -787,224 +790,13 @@ var app = new Vue({
             return;
           else
           {
-            if (_this.submit == true) return;
+            _this.save_confirm();
 
-            _this.submit = true;
-  
-            var token = localStorage.getItem("token");
-            var form_Data = new FormData();
-  
-            let attributes = [];
-            // special_infomation -> attributes
-            for (var i = 0; i < this.special_infomation.length; i++) {
-              let category = this.special_infomation[i].category;
-              let cat_id = this.special_infomation[i].cat_id;
-              let value = this.$refs[cat_id][0].value
-              
-              var obj = {
-                category: category,
-                cat_id: cat_id,
-                value: value
-              };
-              attributes.push(obj);
-            }
-  
-            let accessory = [];
-            for(var i = 0; i < this.accessory_infomation.length; i++) {
-              let category = this.accessory_infomation[i].category;
-              let cat_id = this.accessory_infomation[i].cat_id;
-              let detail = this.accessory_infomation[i].detail[0];
-              
-              let item = [];
-              for(var j = 0; j < detail.length; j++) {
-                let id = detail[j].id;
-                let code = detail[j].code;
-                let name = detail[j].name;
-                let price = detail[j].price;
-                let price_ntd = detail[j].price_ntd;
-                let url = detail[j].url;
-                
-                let file = document.getElementById('accessory_' + cat_id + '_' + id).files[0];
-                if(typeof file !== 'undefined') 
-                  form_Data.append('accessory_' + cat_id + '_' + id, file);
-  
-                var obj = {
-                  id: id,
-                  code: code,
-                  name: name,
-                  price: price,
-                  price_ntd: price_ntd,
-                  url: url,
-                };
-                item.push(obj);
-              }
-  
-              var obj = {
-                category: category,
-                cat_id: cat_id,
-                detail: item,
-              };
-  
-              accessory.push(obj);
-  
-            }
-  
-            let variation = [];
-            // variation
-            for(var i = 0; i < this.variation_product.length; i++) {
-              let id = this.variation_product[i].id;
-              let checked = this.variation_product[i].checked;
-              let code = this.variation_product[i].code;
-              let k1 = this.variation_product[i].k1;
-              let k2 = this.variation_product[i].k2;
-              let k3 = this.variation_product[i].k3;
-              let v1 = this.variation_product[i].v1;
-              let v2 = this.variation_product[i].v2;
-              let v3 = this.variation_product[i].v3;
-              let price = this.variation_product[i].price;
-              let quoted_price = this.variation_product[i].quoted_price;
-              let price_ntd = this.variation_product[i].price_ntd;
-         
-              let price_change = this.variation_product[i].price_change;
-              let quoted_price_change = this.variation_product[i].quoted_price_change;
-              let price_ntd_change = this.variation_product[i].price_ntd_change;
-              let status = this.variation_product[i].status;
-  
-              if((price * 1.15 > quoted_price) && _this.category == '10000000')
-              {
-                quoted_price = (price * 1.15).toFixed(2);
-                quoted_price_change = new Date().toISOString().slice(0, 10);
-              }
-  
-              let file = document.getElementById('variation_' + id).files[0];
-                if(typeof file !== 'undefined') 
-                  form_Data.append('variation_' + id, file);
-                else{
-                  if(this.image_checked == true) {
-                    let file = document.getElementById('bulk_image').files[0];
-                    if(typeof file !== 'undefined' && this.variation_product[i].url !== '') 
-                    {
-                      form_Data.append('variation_' + id, file);
-                    }
-                  }
-                }
-  
-              var obj = {
-                id: id,
-                checked: checked,
-                code: code,
-                k1: k1,
-                k2: k2,
-                k3: k3,
-                v1: v1,
-                v2: v2,
-                v3: v3,
-                price: price,
-                quoted_price: quoted_price,
-                price_ntd: price_ntd,
-                price_change: price_change,
-                quoted_price_change: quoted_price_change,
-                price_ntd_change: price_ntd_change,
-                status: status,
-              };
-  
-              variation.push(obj);
-              
-            }
-  
-            if((_this.price * 1.15 > _this.quoted_price) && _this.category == '10000000')
-            {
-              _this.quoted_price = (_this.price * 1.15).toFixed(2);
-              _this.quoted_price_change = new Date().toISOString().slice(0, 10);
-            }
-            
-            form_Data.append("jwt", token);
-            form_Data.append("category", _this.category);
-            form_Data.append("sub_category", _this.sub_category);
-            form_Data.append("brand", _this.brand);
-  
-            let tag01 = $('#tag01').val();
-           // let tag02 = $('#tag02').val();
-            if( _this.category === '10000000')
-              form_Data.append("tags", tag01.join());
-            else
-              form_Data.append("tags", "");
-  
-            form_Data.append("code", _this.code);
-            form_Data.append("price_ntd", _this.price_ntd);
-            form_Data.append("price", _this.price);
-            form_Data.append("quoted_price", _this.quoted_price);
-            form_Data.append("price_ntd_change", _this.price_ntd_change);
-            form_Data.append("price_change", _this.price_change);
-            form_Data.append("quoted_price_change", _this.quoted_price_change);
-            form_Data.append("moq", _this.moq);
-            form_Data.append("description", _this.description);
-  
-            form_Data.append("out", _this.out);
-            form_Data.append("currency", _this.currency);
-  
-            let related_product = $('#related_product').val();
-            form_Data.append("related_product", related_product);
-  
-            form_Data.append("notes", _this.notes);
-  
-            form_Data.append("accessory_mode", _this.accessory_mode === true || _this.accessory_mode === "1" ? 1 : 0);
-            form_Data.append("variation_mode", _this.variation_mode === true || _this.variation_mode === "1" ? 1 : 0);
-  
-            form_Data.append("attributes", JSON.stringify(attributes));
-            form_Data.append("accessory", JSON.stringify(accessory));
-            form_Data.append("variation", JSON.stringify(variation));
-  
-            for (var i = 1; i < 4; i++) {
-              let file = document.getElementById('photo' + i).files[0];
-              if(typeof file !== 'undefined') 
-                form_Data.append('photo' + i, file);
-            }
-  
-            //for (var i = 0; i < this.$refs.file.files.length; i++) {
-            //  let file = this.$refs.file.files[i];
-            //   form_Data.append("files[" + i + "]", file);
-            // }
-  
-            axios({
-              method: "post",
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-              url: "api/add_product_insert_code",
-              data: form_Data,
-            })
-              .then(function(response) {
-                //handle success
-                Swal.fire({
-                  html: response.data.message,
-                  icon: "info",
-                  confirmButtonText: "OK",
-                });
-  
-                _this.reset();
-
-                return;
-  
-              })
-              .catch(function(error) {
-                //handle error
-                Swal.fire({
-                  text: JSON.stringify(error),
-                  icon: "info",
-                  confirmButtonText: "OK",
-                });
-  
-                _this.submit = false;
-
-                return;
-  
-              });
-
-            
           }
         }
       }
+
+      if(!show_confirm)  return;
 
       Swal.fire({
         title: "Submit",
@@ -1016,7 +808,17 @@ var app = new Vue({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.value) {
-          if (_this.submit == true) return;
+          _this.save_confirm();
+        } else {
+          return;
+        }
+      });
+
+    },
+
+    save_confirm: async function() {
+      let _this = this;
+      if (_this.submit == true) return;
 
           _this.submit = true;
 
@@ -1225,11 +1027,6 @@ var app = new Vue({
               _this.submit = false;
 
             });
-        } else {
-          return;
-        }
-      });
-
     },
 
     reset: function() {
