@@ -1289,6 +1289,10 @@ header( 'location:index' );
             width: 272px;
         }
 
+        .pagebox .content_box ul li:nth-of-type(1) > input:nth-of-type(4) {
+            width: 150px;
+        }
+
         .pagebox .content_box ul li:nth-of-type(1) input[type='checkbox'] {
             display: inline-block;
             margin-left: 20px;
@@ -1538,6 +1542,14 @@ header( 'location:index' );
             width: 370px;
         }
 
+        #terms_dialog div.formbox dt > input[type='number'] {
+            height: 30px;
+            border: 1px solid #707070;
+            font-size: 14px;
+            width: 100px;
+            margin: 5px 0;
+        }
+
         .termsbox {
             margin: 10px 0 5px;
 
@@ -1629,6 +1641,14 @@ header( 'location:index' );
 
         #payment_dialog .formbox dl dd select {
             width: 370px;
+        }
+
+        #payment_dialog div.formbox dt > input[type='number'] {
+            height: 30px;
+            border: 1px solid #707070;
+            font-size: 14px;
+            width: 100px;
+            margin: 5px 0;
         }
 
         #payment_dialog .termsbox .content_box ul li:nth-of-type(1) span {
@@ -1795,6 +1815,14 @@ header( 'location:index' );
 
         #signature_dialog .formbox dl dd select {
             width: 310px;
+        }
+
+        #signature_dialog div.formbox dt > input[type='number'] {
+            height: 30px;
+            border: 1px solid #707070;
+            font-size: 14px;
+            width: 100px;
+            margin: 5px 0;
         }
 
         .list_function.main {
