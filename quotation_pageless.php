@@ -2231,6 +2231,10 @@ header( 'location:index' );
                 overflow-y: hidden;
             }
 
+            .qn_page .qn_header, .qn_page .qn_footer {
+                position: fixed;
+            }
+
             .noPrint {
                 display: none;
             }
