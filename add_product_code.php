@@ -576,6 +576,14 @@
         .NTD_price{
 
         }
+
+        .swal2-content .text-left > div:nth-of-type(1) > a {
+            margin-top: 10px;
+        }
+
+        .swal2-content .text-left > div > a, .swal2-content .text-left > div > a:visited {
+            color: #000!important;
+        }
     </style>
 
 </head>
