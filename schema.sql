@@ -3852,3 +3852,7 @@ ADD COLUMN `show_p` varchar(10)  DEFAULT '';
 
 -- 20230617
 ALTER TABLE `quotation_page_type` ADD `pixa` varchar(10)  DEFAULT '';
+
+-- for calendar color
+update work_calendar_main set color_other = color where color_other = '';
+update work_calendar_main set color = '1' where color = color_other;
