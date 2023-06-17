@@ -760,7 +760,7 @@ var app = new Vue({
 
       if(this.code.trim() != '')
       {
-        let ret = await axios.get("api/product_code_check", { params: { code: this.code, id: 0 } });
+        let ret = await axios.get("api/product_code_check", { params: { code: this.code.trim(), id: 0 } });
 
         if(ret.data.length > 0)
         {
