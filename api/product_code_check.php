@@ -52,9 +52,17 @@ else
       $database = new Database();
       $db = $database->getConnection();
 
+      $code = trim($code);
+
       switch ($method) {
           case 'GET':
             $merged_results = array();
+
+            if($code == '')
+            {
+              echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+              break;
+            }
 
             $sql = "SELECT id, code  FROM product_category p  WHERE  p.STATUS <> -1 and p.code like ? and p.id <> ? order by code limit 10";
 
