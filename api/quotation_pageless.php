@@ -378,6 +378,7 @@ function GetBlockNames($qid, $db){
                 block_name,
                 not_show,
                 real_amount,
+                pixa,
                 page_id
             FROM   quotation_page_type qpt
             left join quotation_page qp on qpt.page_id = qp.id
@@ -400,7 +401,7 @@ function GetBlockNames($qid, $db){
         $block_type = $row['block_type'];
         $block_name = $row['block_name'];
         $page_id = $row['page_id'];
-
+        $pixa = $row['pixa'];
         $not_show = $row['not_show'];
         $real_amount = $row['real_amount'];
 
@@ -416,6 +417,7 @@ function GetBlockNames($qid, $db){
             "name" => $block_name,
             "not_show" => $not_show,
             "real_amount" => $real_amount,
+            "pixa" => $pixa == '' ? 0 : $pixa,
             "blocks" => $blocks,
             "page_id" => $page_id,
             "subtotal" => $subtotal,
@@ -1029,6 +1031,7 @@ function GetTypes($qid, $db){
         block_type,
         block_name,
         not_show,
+        pixa,
         real_amount
         FROM   quotation_page_type
         WHERE  page_id = " . $qid . "
@@ -1047,7 +1050,7 @@ function GetTypes($qid, $db){
         $id = $row['id'];
         $block_type = $row['block_type'];
         $block_name = $row['block_name'];
-
+        $pixa = $row['pixa'];
         $not_show = $row['not_show'];
         $real_amount = $row['real_amount'];
 
@@ -1063,6 +1066,7 @@ function GetTypes($qid, $db){
             "name" => $block_name,
             "not_show" => $not_show,
             "real_amount" => $real_amount,
+            "pixa" => $pixa == '' ? 0 : $pixa,
             "blocks" => $blocks,
             "subtotal" => $subtotal,
         );

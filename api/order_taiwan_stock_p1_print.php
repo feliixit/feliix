@@ -212,8 +212,8 @@ if($jwt){
             $sheet->getStyle('J2:J300')->getAlignment()->setHorizontal('left');
             $sheet->getStyle('J2:J300')->getAlignment()->setVertical('top');
 
-            $sheet->getStyle('K1:U300')->getAlignment()->setHorizontal('center');
-            $sheet->getStyle('K1:U300')->getAlignment()->setVertical('center');
+            $sheet->getStyle('K1:T300')->getAlignment()->setHorizontal('center');
+            $sheet->getStyle('K1:T300')->getAlignment()->setVertical('center');
 
 
             $sheet->setCellValue('A1', '#');
@@ -236,7 +236,7 @@ if($jwt){
             $sheet->setCellValue('R1', 'Warehouse In Charge');
             $sheet->setCellValue('S1', 'Testing');
             $sheet->setCellValue('T1', 'Inventory');
-            $sheet->setCellValue('U1', 'Final');
+
 
             $sheet->getColumnDimension('A')->setWidth(4.82);
             $sheet->getColumnDimension('B')->setWidth(12.82);
@@ -258,7 +258,7 @@ if($jwt){
             $sheet->getColumnDimension('R')->setWidth(30.82);
             $sheet->getColumnDimension('S')->setWidth(30.82);
             $sheet->getColumnDimension('T')->setWidth(30.82);
-            $sheet->getColumnDimension('U')->setWidth(30.82);
+
 
             $i = 2;
             foreach($merged_results as $row)
@@ -375,15 +375,11 @@ if($jwt){
                 $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('S'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('T'. $i, "Assignee: " . $row['delivery'] . "\n" . "Inventory is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                //$sheet->setCellValue('T'. $i, "Assignee: " . $row['delivery'] . "\n" . "Inventory is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
                 $sheet->setCellValue('T'. $i, "Inventory is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->getStyle('T'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('T'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('U' . $i,  $row['final']);
-                $sheet->getStyle('U'. $i)->applyFromArray($center_style);
-
-                $sheet->getStyle('U'. $i)->getAlignment()->setWrapText(true);
-                $sheet->getStyle('U'. $i)->applyFromArray($center_style);
 
 
                 $i++;

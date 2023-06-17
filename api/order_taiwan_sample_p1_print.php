@@ -236,7 +236,7 @@ if($jwt){
             $sheet->setCellValue('Q1', 'Warehouse In Charge');
             $sheet->setCellValue('R1', 'Testing');
             $sheet->setCellValue('S1', 'Delivery');
-            $sheet->setCellValue('T1', 'Final');
+
 
             $sheet->getColumnDimension('A')->setWidth(4.82);
             $sheet->getColumnDimension('B')->setWidth(12.82);
@@ -258,7 +258,7 @@ if($jwt){
             $sheet->getColumnDimension('Q')->setWidth(30.82);
             $sheet->getColumnDimension('R')->setWidth(30.82);
             $sheet->getColumnDimension('S')->setWidth(30.82);
-            $sheet->getColumnDimension('T')->setWidth(30.82);
+
 
             $i = 2;
             foreach($merged_results as $row)
@@ -375,13 +375,12 @@ if($jwt){
                 $sheet->getStyle('R'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('R'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
                 $sheet->setCellValue('S'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
                 $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('S'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('T' . $i,  $row['final']);
-                $sheet->getStyle('T'. $i)->applyFromArray($center_style);
+
 
                 $i++;
             }

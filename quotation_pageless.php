@@ -2372,7 +2372,8 @@ header( 'location:index' );
                                             Name: <input type="text" v-model="block.name"><br>
                                             Subtotal Amount: <input type="number" v-model="block.real_amount"> <input
                                                 type="checkbox" class="alone" value="1" v-model="block.not_show"> Not
-                                            Show "Subtotal Amount"
+                                            Show "Subtotal Amount"<br>
+                                            Distance from Previous Block: <input type="number" v-model="block.pixa"> pixel
                                         </li>
                                         <li>
                                             <i class="fas fa-arrow-alt-circle-up"
@@ -3007,7 +3008,7 @@ header( 'location:index' );
 
                         <div class="area_subtotal">
 
-                            <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']"
+                            <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']" v-bind:style="{ 'margin-top': (tp.pixa == '' ? 0 : tp.pixa) + 'px' }" 
                                 v-for="(tp, index) in pag.types">
 
                                 <tbody>

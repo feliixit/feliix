@@ -3849,3 +3849,6 @@ ADD COLUMN `pixa_p` varchar(10)  DEFAULT '';
 
 ALTER TABLE quotation
 ADD COLUMN `show_p` varchar(10)  DEFAULT '';
+
+-- 20230617
+ALTER TABLE `quotation_page_type` ADD `pixa` varchar(10)  DEFAULT '';
