@@ -71,38 +71,39 @@ else
             die();
         }
 
-        // // price_comparison_option
-        // $query = "DELETE FROM price_comparison_legend
-        //         WHERE
-        //         `group_id` in (select id from price_comparison_group where p_id = :p_id)";
+        // price_comparison_option
+        $query = "UPDATE price_comparison_legend set `status` = -1, `updated_id` = :updated_id,  `updated_at` = now()
+                WHERE
+                `group_id` in (select id from price_comparison_group where p_id = :p_id)";
 
-        // // prepare the query
-        // $stmt = $db->prepare($query);
+        // prepare the query
+        $stmt = $db->prepare($query);
 
-        // // bind the values
-        // $stmt->bindParam(':p_id', $_id);
-
-        // try {
-        // // execute the query, also check if query was successful
-        // if (!$stmt->execute()) {
-        //     $arr = $stmt->errorInfo();
-        //     error_log($arr[2]);
-        //     $db->rollback();
-        //     http_response_code(501);
-        //     echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
-        //     die();
-        // }
-        // } catch (Exception $e) {
-        // error_log($e->getMessage());
-        // $db->rollback();
-        // http_response_code(501);
-        // echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-        // die();
-        // }
+        // bind the values
+        $stmt->bindParam(':p_id', $_id);
+        $stmt->bindParam(':updated_id', $user_id);
+        
+        try {
+        // execute the query, also check if query was successful
+        if (!$stmt->execute()) {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+            die();
+        }
+        } catch (Exception $e) {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+        }
 
 
         // delete price_comparison_group
-        $query = "DELETE FROM price_comparison_group
+        $query = "UPDATE price_comparison_group set `status` = -1, `updated_id` = :updated_id,  `updated_at` = now()
                 WHERE
                 `p_id` = :p_id";
 
@@ -111,6 +112,7 @@ else
 
         // bind the values
         $stmt->bindParam(':p_id', $_id);
+        $stmt->bindParam(':updated_id', $user_id);
 
         try {
         // execute the query, also check if query was successful
@@ -240,7 +242,8 @@ else
                         `group_id` = :group_id,
                         `title` = :title,
                         `sn` = :sn,
-                        `color` = :color
+                        `color` = :color,
+                        `status` = 0
                     WHERE
                         `id` = :id
                          ";
