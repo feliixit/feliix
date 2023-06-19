@@ -313,8 +313,8 @@ try {
                     <div class="col-10" style="display:flex; align-items: center;">
 
                         <div class="custom-control custom-radio" style="display:inline-block;">
-                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_orange" value="#F7ED93" onchange="enable_forOther(this);" >
-                            <label class="custom-control-label" for="sc_color_orange" style="background-color: #F7ED93; width: 18px; height: 18px; margin-left: 2px;"></label>
+                            <input type="radio" class="custom-control-input" name="sc_color" id="sc_color_orange" value="#FECC28" onchange="enable_forOther(this);" >
+                            <label class="custom-control-label" for="sc_color_orange" style="background-color: #FECC28; width: 18px; height: 18px; margin-left: 2px;"></label>
                         </div>
 
                         <div class="custom-control custom-radio" style="display:inline-block; margin-left: 20px;">
