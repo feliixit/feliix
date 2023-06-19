@@ -159,21 +159,32 @@ $(function(){
     body {
         background-color: #F0F0F0;
     }
+
     #app {
         text-align: center;
         color: #2c3e50;
         margin-top: 60px;
     }
+
     #video {
         background-color: #000000;
     }
+
     #canvas {
         display: none;
     }
+
     li {
         display: inline;
         padding: 5px;
     }
+
+    input[type='date'] {
+        background-color: transparent;
+        padding: 8px;
+        vertical-align: middle;
+    }
+
 </style>
 
 <body class="primary">
@@ -195,11 +206,11 @@ $(function(){
                         <dt>Employee Name</dt>
                         <dd><input type="text" placeholder="" v-model="name" :readonly="true"></dd>
                         <dt>Date</dt>
-                        <dd><input type="text" placeholder="" v-model="today" ></dd>
+                        <dd><input type="date" v-model="today" id="duty_date" @change="change_date()"></dd>
                         <dt>Type</dt>
                         <dd>
                             <select name="" id="" v-model="type">
-                                <option value="A">On Duty</option>
+                                <option value="A" v-if="today != min_date">On Duty</option>
                                 <option value="B">Off Duty</option>
                                 
                             </select>

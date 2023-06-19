@@ -49,15 +49,36 @@ $(function(){
 
 <style type="text/css"> 
 
-li.a
-{ 
-overflow-x:hidden;
-white-space:nowrap; 
-height: 1em;
-width: 100%;
-display:inline; 
-}       
-    </style>
+    li.a
+    {
+        overflow-x:hidden;
+        white-space:nowrap;
+        height: 1em;
+        width: 100%;
+        display:inline;
+    }
+
+    .block.C .function {
+        margin-top: 4px;
+    }
+
+    .block.C .function > input[type='date'] {
+        background-color: transparent;
+        padding: 8px;
+        width: 200px;
+    }
+
+    div.nextday {
+        position: relative;
+    }
+
+    div.nextday::after{
+        content: '(D+1)';
+        color: gray;
+        position: absolute;
+        right: -65%;
+    }
+</style>
     
 <body class="second">
  	
@@ -143,6 +164,7 @@ display:inline;
             <h6>Attendance
 
                 <div class="function">
+                    <input type='date' v-model="today" id="duty_date" @change="change_date()">
                     <!--
                    <input type="radio" value="0" class="green" checked=""><label for="B">All</label>
                    <input type="radio" value="1" class="blue"><label for="B">Same Dpt.</label>
@@ -166,6 +188,7 @@ display:inline;
                     <ul v-for='(record, index) in displayedRecord'>
                         <li><b :class="record.is_checked == 1 && record.leave == 0 ? 'light green' : 'light ungreen'"></b></li>
                         <li>{{ record.username }}</li>
+                        <!-- 這邊需要加入"如果考勤事隔一天的話，則 div 要加上 class='nextday' " -->
                         <li class="a"><p v-html="record.duty_date.split('<br>').join('<br />')"></li>
                         <li class="a"><p v-html="record.location.split('<br>').join('<br />')"></p></li>
                         <li><a v-bind:href="'attendance_detail?uid='+ record.id + '&date=' + record.date"><b class="light blue"></b></a></li>
