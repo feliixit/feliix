@@ -186,7 +186,7 @@ function GetSubTotal($qid, $oid, $db)
     //         WHERE od_id  = " . $qid . " and `status` <> -1 and option_id = " . $oid . " 
     // ";
 
-    $query = "SELECT sum(amount) FROM price_comparison_item where legend_id in 
+    $query = "SELECT sum(amount) amt FROM price_comparison_item where legend_id in 
                 (select id from price_comparison_legend where group_id in 
                 (select id from price_comparison_group where p_id = " . $qid . ") 
                 ) and status <> -1 and option_id = " . $oid;
