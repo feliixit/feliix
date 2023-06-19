@@ -100,6 +100,35 @@ else
         // die();
         // }
 
+        // price_comparison_option
+        $query = "UPDATE price_comparison_legend SET `staus` = -1
+                WHERE
+                `group_id` in (select id from price_comparison_group where p_id = :p_id)";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+
+        // bind the values
+        $stmt->bindParam(':p_id', $_id);
+
+        try {
+        // execute the query, also check if query was successful
+        if (!$stmt->execute()) {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+            die();
+        }
+        } catch (Exception $e) {
+        error_log($e->getMessage());
+        $db->rollback();
+        http_response_code(501);
+        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        die();
+        }
+
         // delete price_comparison_group
         $query = "DELETE FROM price_comparison_group
                 WHERE
