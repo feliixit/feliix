@@ -100,6 +100,7 @@ else
         // die();
         // }
 
+
         // delete price_comparison_group
         $query = "DELETE FROM price_comparison_group
                 WHERE
