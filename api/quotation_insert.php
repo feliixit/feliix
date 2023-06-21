@@ -194,6 +194,7 @@ else
                     `block_name` = :block_name,
                     `not_show` = :not_show,
                     `real_amount` = :real_amount,
+                    `pixa` = :pixa,
                     `status` = 0,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -206,7 +207,7 @@ else
                 $stmt->bindParam(':page_id', $page_id);
                 $stmt->bindParam(':block_type', $types_array[$j]['type']);
                 $stmt->bindParam(':block_name', $types_array[$j]['name']);
-
+                $stmt->bindParam(':pixa', $types_array[$j]['pixa']);
                 $stmt->bindParam(':not_show', $types_array[$j]['not_show']);
                 $stmt->bindParam(':real_amount', $types_array[$j]['real_amount']);
               

@@ -67,6 +67,8 @@ var app = new Vue({
 
     phased_out: "",
 
+    sheet_url: "",
+
     // accessory
 
     // variation
@@ -274,6 +276,8 @@ var app = new Vue({
         this.str_quoted_price_change = (item_product.quoted_price_change != "" ? "(" + item_product.quoted_price_change + ")" : "");
 
         this.phased_out = (item_product.enabled == 0 ? "F" : "");
+
+        this.sheet_url = 'product_spec_sheet?sd=' + this.pid + '&d=' + item_product.id;
       }
       else
       {
@@ -287,8 +291,14 @@ var app = new Vue({
         this.str_quoted_price_change = this.record[0]['str_quoted_price_change'];
 
         this.phased_out = "";
+
+        this.sheet_url = 'product_spec_sheet?sd=' + this.pid;
       }
 
+    },
+
+    goto_sheet(){
+      window.open(this.sheet_url, '_blank');
     },
 
     set_up_specification() {
@@ -455,6 +465,8 @@ var app = new Vue({
             _this.str_price_ntd_change = _this.record[0]['str_price_ntd_change'];
             _this.str_price_change = _this.record[0]['str_price_change'];
             _this.str_quoted_price_change = _this.record[0]['str_quoted_price_change'];
+
+            _this.sheet_url = 'product_spec_sheet?sd=' + _this.record[0]['id'];
 
             //var select_items = _this.record[0]['tags'].split(',');
 

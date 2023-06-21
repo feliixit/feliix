@@ -744,7 +744,9 @@ var app = new Vue({
       return "";
     },
 
-    save: function() {
+
+
+    save: async function() {
       let _this = this;
       let reason = this.check_input();
       if (reason !== "") {
@@ -756,6 +758,46 @@ var app = new Vue({
         return;
       }
 
+      let show_confirm = true;
+
+      if(this.code.trim() != '')
+      {
+        let ret = await axios.get("api/product_code_check", { params: { code: this.code.trim(), id: 0 } });
+
+        if(ret.data.length > 0)
+        {
+          show_confirm = false;
+          // sweet alert whith yes no and html product code list
+          let html = '<div class="text-left">This code already existed in the product database. Please check the below link first before you save the current product info into the product database.';
+          for(let i=0; i<ret.data.length; i++)
+          {
+            html += '<div><a href="product_display_code?id=' + ret.data[i].id + '" target="_blank">' + ret.data[i].code + '</a></div>';
+          }
+          html += '</div>';
+
+          const alert =  await Swal.fire({
+            title: "Warning",
+            html: html,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Continue Saving",
+            cancelButtonText: "Cancel Saving",
+          });
+
+          if(!(alert.value && alert.value == true))
+            return;
+          else
+          {
+            _this.save_confirm();
+
+          }
+        }
+      }
+
+      if(!show_confirm)  return;
+
       Swal.fire({
         title: "Submit",
         text: "Are you sure to save?",
@@ -766,7 +808,17 @@ var app = new Vue({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.value) {
-          if (_this.submit == true) return;
+          _this.save_confirm();
+        } else {
+          return;
+        }
+      });
+
+    },
+
+    save_confirm: async function() {
+      let _this = this;
+      if (_this.submit == true) return;
 
           _this.submit = true;
 
@@ -975,11 +1027,6 @@ var app = new Vue({
               _this.submit = false;
 
             });
-        } else {
-          return;
-        }
-      });
-
     },
 
     reset: function() {

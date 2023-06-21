@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>FELIIX template</title>
+    <title>Spec Sheet Management</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -107,6 +107,15 @@
             padding-top: 100px;
         }
 
+        body.gray .mainContent > h6.title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #707071;
+            border-bottom: 2px solid #707071;
+            padding: 0 0 7px 7px;
+            margin: -10px 0 30px;
+        }
+
         body.gray .mainContent > .block {
             display: block;
             width: 100%;
@@ -194,53 +203,44 @@
         }
 
         #tb_product_list tbody tr td:nth-of-type(1) {
-            width: 50px;
-        }
-
-        #tb_product_list tbody tr td:nth-of-type(2) {
-            width: 130px;
-        }
-
-        #tb_product_list tbody tr td:nth-of-type(3) {
-            width: 380px;
-        }
-
-        #tb_product_list tbody tr td:nth-of-type(4) {
-            width: 430px;
-        }
-
-        #tb_product_list tbody tr td:nth-of-type(5) {
             width: 220px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(6) {
-            width: 100px;
+        #tb_product_list tbody tr td:nth-of-type(2) {
+            width: 430px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(2) img {
-            max-width: 100px;
-            max-height: 100px;
+        #tb_product_list tbody tr td:nth-of-type(3) {
+            width: 480px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(3) ul {
+        #tb_product_list tbody tr td:nth-of-type(4) {
+            width: 180px;
+        }
+
+        #tb_product_list tbody tr td:nth-of-type(1) img {
+            max-width: 160px;
+            max-height: 160px;
+        }
+
+        #tb_product_list tbody tr td:nth-of-type(2) ul {
             margin-bottom: 0;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(4) ul {
+        #tb_product_list tbody tr td:nth-of-type(3) ul {
             margin-bottom: 0;
             border-bottom: 1px solid #dee2e6;
             padding-bottom: 3px;
         }
 
-        #tb_product_list tbody tr td:nth-of-type(6) button {
+        #tb_product_list tbody tr td:nth-of-type(4) button {
             border: 2px solid black;
             width: 34px;
             box-sizing: border-box;
             padding: 6px
-
         }
 
-        #tb_product_list tbody tr td:nth-of-type(4) ul:last-of-type {
+        #tb_product_list tbody tr td:nth-of-type(3) ul:last-of-type {
             border-bottom: none;
         }
 
@@ -254,6 +254,7 @@
             font-weight: 600;
             padding: 1px 7px 1px 5px;
             max-width: 230px;
+            vertical-align: top;
         }
 
         #tb_product_list ul li:nth-of-type(2) span {
@@ -272,6 +273,36 @@
 
         #tb_product_list tbody td ul li:nth-of-type(2) a {
             color: #007bff;
+        }
+
+        #tb_product_list tbody tr td:nth-of-type(2) ul li span.phasedout{
+            background-color: red;
+            color: white;
+            padding: 0px 5px 3px;
+            border-radius: 10px;
+        }
+
+        #tb_product_list tbody td div.phasedout_variant {
+            text-align: left;
+            color: red;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px 0 0 3px;
+        }
+
+        #tb_product_list tbody td div.phasedout_variant button {
+            font-size: 14px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-left: 3px;
+            padding: 0 5px 3px;
+            border-radius: 10px;
+        }
+
+        #tb_product_list tbody td div.phasedout_variant button:focus {
+            outline-color: transparent;
         }
 
         .NTD_price {
@@ -344,6 +375,20 @@
             border-radius: 0;
         }
 
+        button.btn_switch{
+            position: fixed;
+            right: 10px;
+            top: 10px;
+            width: 50px;
+            height: 50px;
+            border: 1px solid rgb(153,153,153);
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 700;
+            background-color: rgba(7, 220, 237, 0.8);
+            z-index: 999;
+        }
+
         ul.dropdown-menu.inner li {
             display: block;
             border-right: none;
@@ -365,14 +410,19 @@
     <!-- header -->
     <header>header</header>
     <!-- header end -->
+
+    <button @click="toggle_price()" class="btn_switch" v-show="show_ntd === true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" class="bi bi-toggles"><path d="M4.5 9a3.5 3.5 0 1 0 0 7h7a3.5 3.5 0 1 0 0-7h-7zm7 6a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm-7-14a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zm2.45 0A3.49 3.49 0 0 1 8 3.5 3.49 3.49 0 0 1 6.95 6h4.55a2.5 2.5 0 0 0 0-5H6.95zM4.5 0h7a3.5 3.5 0 1 1 0 7h-7a3.5 3.5 0 1 1 0-7z"></path></svg></button>
+
     <div class="mainContent">
+
+        <h6 class="title">Specification Sheet Management</h6>
 
         <div class="block">
             <div class="list_function">
 
                 <!-- 點擊後跳轉去建立產品頁面 -->
                 <div class="new_function">
-                    <a class="add" href="add_product"></a>
+                    <a class="add" href="product_spec_sheet" target="_blank"></a>
                 </div>
 
                 <!-- 篩選功能 -->
@@ -381,11 +431,29 @@
                     <div id="filter_dialog" class="dialog A"><h6>Filter Function:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt>ID</dt>
-                                <dd><input type="text" v-model="fil_id"></dd>
+                                <!-- <dt>ID</dt>
+                                <dd><input type="text" v-model="fil_id"></dd> -->
+
+                                <dt style="margin-bottom: -15px;">ID</dt>
+<div class="half"><dt>From</dt> <dd><input type="number" min="1" step="1" v-model="fil_id"></dd></div>
+<div class="half"><dt>To</dt> <dd><input type="number" min="1" step="1" v-model="fil_id_1"></dd></div>
 
                                 <dt>Code</dt>
                                 <dd><input type="text" v-model="fil_code"></dd>
+
+                                <dt>Category</dt>
+                                <dd>
+                                <select v-model="fil_category">
+                                <option></option>
+                                <option value="10000000">Lighting</option>
+                                <option value="20000000">Systems Furniture</option>
+                                <option value="20010000">Systems Furniture >> Cabinet</option>
+                                <option value="20020000">Systems Furniture >> Chair</option>
+                                <option value="20030000">Systems Furniture >> Table</option>
+                                <option value="20040000">Systems Furniture >> Workstation</option>
+                                <option value="20050000">Systems Furniture >> Partition</option>
+                                </select>
+                                </dd>
 
                                 <dt>Tag</dt>
                                 <dd>
@@ -473,6 +541,9 @@
                                     </select>
                                 </dd>
 <!--
+                                <dt>Keyword (only for description and notes)</dt>
+                                <dd><input type="text" v-model="fil_keyword"></dd>
+
                                 <div class="half">
                                     <dt></dt>
                                     <dd><input type="text"></dd>
@@ -549,13 +620,6 @@
                                             <option value="3">
                                                 Updated Time
                                             </option>
-                                            <option value="4">
-                                                SRP
-                                            </option>
-                                            <option value="5">
-                                                QP
-                                            </option>
-                                          
                                         </select>
                                     </dd>
                                 </div>
@@ -588,12 +652,6 @@
                                             <option value="3">
                                                 Updated Time
                                             </option>
-                                            <option value="4">
-                                                SRP
-                                            </option>
-                                            <option value="5">
-                                                QP
-                                            </option>
                                         </select>
                                     </dd>
                                 </div>
@@ -622,11 +680,11 @@
                 <!-- 分頁功能 -->
                 <!-- 分頁 -->
                 <div class="pagenation">
-                    <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
+                    <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply_new();">Prev 10</a>
 
-                    <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply();" v-bind:style="[pg == page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply_new();" v-bind:style="[pg == page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg }}</a>
 
-                    <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply();">Next 10</a>
+                    <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply_new();">Next 10</a>
                 </div>
             </div>
         </div>
@@ -638,17 +696,11 @@
                 <thead>
                 <tr>
 
-                    <th><input type="checkbox" class="alone"></th>
-
                     <th>Image</th>
 
                     <th>Information</th>
 
-                    <th >Specification</th>
-
-                    <th >Price</th>
-
-                   <!-- <th >Stock</th> -->
+                    <th>Specification</th>
 
                     <th>Action</th>
 
@@ -658,19 +710,23 @@
 
                 <tbody>
                 <tr v-for="(item, index) in displayedPosts">
+
                     <td>
-                        <input type="checkbox" class="alone">
+                        <a target="_blank" :href="'product_display_code?id='+item.product_id"><img :src="baseURL + item.photo1" v-if="item.photo1"></a>
                     </td>
                     <td>
-                        <a target="_blank" :href="'product_display?id='+item.id"><img :src="baseURL + item.photo1" v-if="item.photo1"></a>
-                    </td>
-                    <td>
+                        <ul v-if="item.out == 'Y'">
+                        <li>
+                                <span class="phasedout">Phased Out</span>
+                        </li>
+                        <li></li>
+                        </ul>
                         <ul>
                             <li>
                                 ID:
                             </li>
                             <li>
-                               {{ item.id }}
+                               {{ item.product_id }}
                             </li>
 
                         </ul>
@@ -679,7 +735,7 @@
                                 Code:
                             </li>
                             <li>
-                               <a target="_blank" :href="'product_display?id='+item.id">{{ item.code }}</a>
+                               <a target="_blank" :href="'product_display_code?id='+item.product_id">{{ item.code }}</a>
                             </li>
 
                         </ul>
@@ -720,7 +776,7 @@
                                 Created:
                             </li>
                             <li>
-                                {{ item.created_at }}
+                                {{ item.created_at }} {{ item.created_name !== null ? '(' + item.created_name + ')' : '' }}
                             </li>
 
                         </ul>
@@ -730,15 +786,14 @@
                                 Updated:
                             </li>
                             <li>
-                                {{ item.updated_at }}
+                                {{ item.updated_name !== null ? item.updated_at : '' }} {{ item.updated_name !== null ? '(' + item.updated_name + ')' : '' }}
                             </li>
 
                         </ul>
                     </td>
 
-
                     <td>
-                        <ul v-for="(att, index) in item.attribute_list">
+                        <ul v-for="(att, index) in item.variation_array">
                             <li>
                                 {{ att.category }}:
                             </li>
@@ -750,21 +805,11 @@
                             </li>
 
                         </ul>
-
                     </td>
-                    <td>
-                        <span v-show="show_ntd === true">CP: {{ item.price_ntd }}<br></span>
-                        <span>SRP: {{ item.price }}<br></span>
-                        <span>QP: {{ item.quoted_price }}<br></span>
-                    </td>
-                    <!-- <td></td> -->
-                    <td>
-                        <button id="edit01" @click="btnEditClick(item.id)"><i class="fas fa-edit"></i>
-                        </button>
 
-                        <!--<button id="copy01" @click="btnDuplicateClick(item.id)"><i class="fas fa-copy"></i></button>-->
-
-                        <!--<button @click="btnDelClick(item.id)"><i class="fas fa-times"></i></button>-->
+                    <td>
+                        <button id="edit01" @click="btnEditClick(item.product_id, item.p_id)"><i class="fas fa-edit"></i></button>
+                        <button @click="btnDelClick(item.id)"><i class="fas fa-times"></i></button>
 
                     </td>
                 </tr>
@@ -780,16 +825,14 @@
                 <!-- 分頁功能 -->
                 <!-- 分頁 -->
                 <div class="pagenation">
-                    <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply();">Prev 10</a>
+                    <a class="prev" :disabled="page == 1" @click="pre_page(); filter_apply_new();">Prev 10</a>
 
-                    <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply();" v-bind:style="[pg == page ? { 'background':'#1e6ba8', 'color': 'white'} : { }]">{{ pg }}</a>
+                    <a class="page" v-for="pg in pages_10" @click="page=pg; filter_apply_new();" v-bind:style="[pg == page ? { 'background':'#707071', 'color': 'white'} : { }]">{{ pg }}</a>
 
-                    <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply();">Next 10</a>
+                    <a class="next" :disabled="page == pages.length" @click="nex_page(); filter_apply_new();">Next 10</a>
                 </div>
             </div>
         </div>
-
-
 
 
     </div>
@@ -825,6 +868,6 @@
 
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="js/product_calatog.js"></script>
+<script src="js/spec_sheet_mgt.js"></script>
 
 </html>

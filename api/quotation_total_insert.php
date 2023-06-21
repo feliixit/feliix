@@ -16,6 +16,8 @@ $vat = isset($_POST['vat']) ? $_POST['vat'] : '';
 $show_vat = isset($_POST['show_vat']) ? $_POST['show_vat'] : '';
 $valid = isset($_POST['valid']) ? $_POST['valid'] : '';
 $total = isset($_POST['total']) ? $_POST['total'] : 0;
+$pixa = isset($_POST['pixa']) ? $_POST['pixa'] : 0;
+$show = isset($_POST['show']) ? $_POST['show'] : '';
 
 
 $total == '' ? $total = 0 : $total = $total;
@@ -72,6 +74,8 @@ else
                 `show_vat` = :show_vat,
                 `valid` = :valid,
                 `total` = :total,
+                `pixa` = :pixa,
+                `show` = :show,
             
                 `status` = 0,
                 `create_id` = :create_id,
@@ -88,6 +92,8 @@ else
             $stmt->bindParam(':show_vat', $show_vat);
             $stmt->bindParam(':valid', $valid);
             $stmt->bindParam(':total', $total);
+            $stmt->bindParam(':pixa', $pixa);
+            $stmt->bindParam(':show', $show);
 
             $stmt->bindParam(':create_id', $user_id);
         
@@ -123,7 +129,9 @@ else
                     `show_vat` = :show_vat,
                     `valid` = :valid,
                     `total` = :total,
-     
+                    `pixa` = :pixa,
+                    `show` = :show,
+
                     `updated_id` = :updated_id,
                     `updated_at` = now()
                     where id = :id";
@@ -138,7 +146,8 @@ else
             $stmt->bindParam(':show_vat', $show_vat);
             $stmt->bindParam(':valid', $valid);
             $stmt->bindParam(':total', $total);
-     
+            $stmt->bindParam(':pixa', $pixa);
+            $stmt->bindParam(':show', $show);
             
             $stmt->bindParam(':updated_id', $user_id);
 

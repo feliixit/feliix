@@ -83,6 +83,7 @@ switch ($method) {
                         `block_name` = :block_name,
                         `not_show` = :not_show,
                         `real_amount` = :real_amount,
+                        `pixa` = :pixa,
                         `status` = 0,
                         `create_id` = :create_id,
                         `created_at` = now()";
@@ -95,7 +96,7 @@ switch ($method) {
                     $stmt->bindParam(':page_id', $types_array['page_id']);
                     $stmt->bindParam(':block_type', $types_array['type']);
                     $stmt->bindParam(':block_name', $types_array['name']);
-
+                    $stmt->bindParam(':pixa', $types_array['pixa']);
                     $stmt->bindParam(':not_show', $types_array['not_show']);
                     $stmt->bindParam(':real_amount', $types_array['real_amount']);
                 
