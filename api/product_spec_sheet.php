@@ -66,13 +66,14 @@ else
         case 'GET':
             $merged_results = array();
             
-            $sql = "select id, product_id, code, photo1, photo2, photo3, photo4, photo5, photo6, description, variation, related_product, reserved, legend, `option`, category, indoor, type, grade from product_spec_sheet where product_id = " . $sd . " and status <> -1";
+            $sql = "select id, product_id, p_id, code, photo1, photo2, photo3, photo4, photo5, photo6, description, variation, related_product, reserved, legend, `option`, category, indoor, type, grade from product_spec_sheet where product_id = " . $sd . " and p_id = '" . $d . "' and status <> -1";
             $stmt = $db->prepare( $sql );
             $stmt->execute();
             
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $id = $row['id'];
                 $product_id = $row['product_id'];
+                $p_id = $row['p_id'];
                 $code = $row['code'];
 
                 $photo1 = ($row['photo1'] != '') ? 'https://storage.googleapis.com/feliiximg/' . $row['photo1'] : '';
@@ -116,6 +117,7 @@ else
                 
                 $merged_results[] = array( "id" => $id,
                 "product_id" => $product_id,
+                "p_id" => $p_id,
                 "code" => $code,
                 "legend" => $legend,
                 "option" => $option,
@@ -143,17 +145,12 @@ else
         }
         else
         {
-            
-            
             // product main
             $sql = "SELECT p.*, cu.username created_name, uu.username updated_name FROM product_category p left join `user` cu on cu.id = p.create_id left join `user` uu on uu.id = p.updated_id WHERE  p.STATUS <> -1";
-            
-            
             
             if($sd != "")
             {
                 $sql = $sql . " and p.id = " . $sd . " ";
-                
             }
             
             $stmt = $db->prepare( $sql );
@@ -187,6 +184,7 @@ else
                 
                 $id = 0;
                 $product_id = $sd;
+                $p_id = $d;
                 $code = $row['code'];
                 $photo1 = $row['photo1'];
                 $photo2 = $row['photo2'];
@@ -479,6 +477,7 @@ else
             "legend" => $legend,
             "option" => $option,
             "product_id" => $product_id,
+            "p_id" => $p_id,
             "code" => $code,
             "photo1" => ($photo1 != '') ? 'https://storage.googleapis.com/feliiximg/' . $photo1: '',
             "photo2" => ($photo2 != '') ? 'https://storage.googleapis.com/feliiximg/' . $photo2: '',

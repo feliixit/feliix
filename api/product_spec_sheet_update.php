@@ -73,6 +73,7 @@ if (!isset($jwt)) {
                 $query = "INSERT INTO product_spec_sheet
                 SET
                 `product_id` = :product_id,
+                `p_id` = :p_id,
                 `code` = :code,
                 `photo1` = :photo1,
                 `photo2` = :photo2,
@@ -100,6 +101,7 @@ if (!isset($jwt)) {
                 
                 //$sn = isset($block_array[$i]['sn']) ? $block_array[$i]['sn'] : 0;
                 $product_id = isset($item_array['product_id']) ? $item_array['product_id'] : 0;
+                $p_id = isset($item_array['p_id']) ? $item_array['p_id'] : '';
                 $code = isset($item_array['code']) ? $item_array['code'] : '';
                 $photo1 = isset($item_array['photo1']) ? $item_array['photo1'] : '';
                 $photo2 = isset($item_array['photo2']) ? $item_array['photo2'] : '';
@@ -130,6 +132,7 @@ if (!isset($jwt)) {
                 $reserved_json = json_encode($reserved);
                 
                 $stmt->bindParam(':product_id', $product_id);
+                $stmt->bindParam(':p_id', $p_id);
                 $stmt->bindParam(':code', $code);
                 $stmt->bindParam(':photo1', $photo1);
                 $stmt->bindParam(':photo2', $photo2);
