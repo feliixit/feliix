@@ -163,8 +163,12 @@ $(function(){
     }
 
     input[type='date'], input[type='time'] {
-        -webkit-appearance: none;
-        -webkit-min-logical-width: calc(100% - 16px);
+        display:block;
+  
+    /* Solution 1 */
+     -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    min-height: 1.2em; 
     }
 
 
