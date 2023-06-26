@@ -164,7 +164,7 @@ $(function(){
 
     input[type='date'], input[type='time'] {
         -webkit-appearance: none;
-        -webkit-min-logical-width: auto;
+        -webkit-min-logical-width: calc(100% - 16px);
     }
 
 
