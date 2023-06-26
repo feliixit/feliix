@@ -162,6 +162,10 @@ $(function(){
         display: block;
     }
 
+    input[type='date'], input[type='time'] {
+        -webkit-appearance: none;
+    }
+
 
 </style>
 
