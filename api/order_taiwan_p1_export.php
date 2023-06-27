@@ -875,7 +875,7 @@ if($jwt){
     //         "error" => $e->getMessage()
     //     ));
     // }
-}
+
 // show error message if jwt is empty
 else{
  
