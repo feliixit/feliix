@@ -46,7 +46,7 @@ $conf = new Conf();
 if($jwt){
  
     // if decode succeed, show user details
-    try {
+    //try {
  
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -494,7 +494,7 @@ if($jwt){
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
-                    $objDrawing->setPath($conf::$upload_path  . $row['photo1']);
+                    $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
                     $objDrawing->setCoordinates('B' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
@@ -863,19 +863,19 @@ if($jwt){
             exit;
     }
  
-    // if decode fails, it means jwt is invalid
-    catch (Exception $e){
+    // // if decode fails, it means jwt is invalid
+    // catch (Exception $e){
     
-        // set response code
-        http_response_code(401);
+    //     // set response code
+    //     http_response_code(401);
     
-        // show error message
-        echo json_encode(array(
-            "message" => "Access denied.",
-            "error" => $e->getMessage()
-        ));
-    }
-}
+    //     // show error message
+    //     echo json_encode(array(
+    //         "message" => "Access denied.",
+    //         "error" => $e->getMessage()
+    //     ));
+    // }
+
 // show error message if jwt is empty
 else{
  
