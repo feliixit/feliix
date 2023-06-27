@@ -46,7 +46,7 @@ $conf = new Conf();
 if($jwt){
  
     // if decode succeed, show user details
-    //try {
+    try {
  
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -857,20 +857,20 @@ if($jwt){
 
 
             exit;
-    // }
+    }
  
-    // // if decode fails, it means jwt is invalid
-    // catch (Exception $e){
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
     
-    //     // set response code
-    //     http_response_code(401);
+        // set response code
+        http_response_code(401);
     
-    //     // show error message
-    //     echo json_encode(array(
-    //         "message" => "Access denied.",
-    //         "error" => $e->getMessage()
-    //     ));
-    // }
+        // show error message
+        echo json_encode(array(
+            "message" => "Access denied.",
+            "error" => $e->getMessage()
+        ));
+    }
 }
 // show error message if jwt is empty
 else{
