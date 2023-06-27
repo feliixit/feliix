@@ -493,7 +493,7 @@ if($jwt){
                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
-                    $objDrawing->setPath($conf::$upload_path  . $row['photo1']);
+                    $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
                     $objDrawing->setCoordinates('B' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
