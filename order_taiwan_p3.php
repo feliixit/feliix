@@ -328,8 +328,7 @@ try {
 
         .tb_order tbody tr.canceled > td {
             background: rgba(255, 0, 0, 0.2);
-            }
-
+        }
 
         .NTD_price {
 
