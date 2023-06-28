@@ -346,8 +346,8 @@ var app = new Vue({
       if(this.salary_mgt['salary'] != null)
       {
         this.salary_per_month = this.salary_mgt['salary'].toLocaleString('en-US', {maximumFractionDigits:2});
-        this.salary_per_day = (this.salary_mgt['salary'] * 12 / 313).toLocaleString('en-US', {maximumFractionDigits:2});
-        this.salary_per_minute = (this.salary_mgt['salary'] * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_day = (this.salary_mgt['salary'] / 22).toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_minute = (this.salary_mgt['salary'] / 22 / 480).toLocaleString('en-US', {maximumFractionDigits:2});
       }
     }
   
@@ -756,8 +756,8 @@ var app = new Vue({
       if(salary != null && salary != '')
       {
         this.salary_per_month = salary.toLocaleString('en-US', {maximumFractionDigits:2});
-        this.salary_per_day = (salary * 12 / 313).toLocaleString('en-US', {maximumFractionDigits:2});
-        this.salary_per_minute = (salary * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_day = (salary / 22).toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_minute = (salary / 22 / 480).toLocaleString('en-US', {maximumFractionDigits:2});
       }
 
       this.date_start = this.record.start_date;

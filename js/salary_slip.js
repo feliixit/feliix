@@ -700,8 +700,8 @@ var app = new Vue({
       if(salary != null && salary != '')
       {
         this.salary_per_month = salary.toLocaleString('en-US', {maximumFractionDigits:2});
-        this.salary_per_day = (salary * 12 / 313).toLocaleString('en-US', {maximumFractionDigits:2});
-        this.salary_per_minute = (salary * 12 / 150240).toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_day = (salary / 22).toLocaleString('en-US', {maximumFractionDigits:2});
+        this.salary_per_minute = (salary / 22 / 480).toLocaleString('en-US', {maximumFractionDigits:2});
       }
 
       this.employee = this.shallowCopy(
