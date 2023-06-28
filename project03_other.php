@@ -148,15 +148,10 @@ catch (Exception $e) {
 
         $(function() {
             $('header').load('include/header.php');
-            //
-            <?php
-            if ($test_manager[2]  == "1") {
-            ?>
-                dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
-                dialogshow($('.list_function a.edit.red'), $('.list_function .dialog.r-edit'));
-            <?php
-            }
-            ?>
+
+            dialogshow($('.list_function a.add.red'), $('.list_function .dialog.r-add'));
+            dialogshow($('.list_function a.edit.red'), $('.list_function .dialog.r-edit'));
+
             dialogshow($('.list_function a.add.blue'), $('.list_function .dialog.d-add'));
             dialogshow($('.list_function a.edit.blue'), $('.list_function .dialog.d-edit'));
 

@@ -325,6 +325,9 @@ try {
             color: #0056b3;
         }
 
+        .tb_order tbody tr.canceled > td {
+            background: rgba(255, 0, 0, 0.2);
+        }
 
         .NTD_price {
 
@@ -1415,7 +1418,7 @@ try {
                     </thead>
 
                     <tbody>
-                    <tr v-for="(item, index) in items" :class="['print_area_' + item.id]">
+                    <tr v-for="(item, index) in items" :class="['print_area_' + item.id, (item.confirm == 'E' ? 'canceled' : '')]">
                         <td><input type="checkbox" class="alone" :value="item.index" :true-value="1" v-model:checked="item.is_checked"></td>
                         <td> {{item.serial_number}} </td>
                         <td>{{item.status <= 1 ? '●' : ''}}</td>
