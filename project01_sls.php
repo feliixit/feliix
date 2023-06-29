@@ -288,6 +288,7 @@ $(function(){
                                     <option v-for="item in statuses" :value="item.id" :key="item.project_status">
                                         {{ item.project_status }}
                                     </option>
+                                    <option value="downpayment">Verified Downpayment</option>
                                     </select>
                                 </dd>
 

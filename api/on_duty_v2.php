@@ -92,8 +92,11 @@ else
             //die();
         }
 
+        $time = strtotime($today);
+        $mdate = date('Y/m/d',$time);
+
         $onduty->uid = $user_id;
-        $onduty->duty_date = date("Y/m/d");
+        $onduty->duty_date = $mdate;
         $onduty->duty_type = $type;
         $onduty->location = $location;
         $onduty->remark = $remark;

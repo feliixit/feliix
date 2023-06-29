@@ -24,6 +24,9 @@ var app = new Vue({
     photo_gps:'',
     submit: false,
 
+    max_date:'',
+    min_date:'',
+
   },
 
   created () {
@@ -46,11 +49,54 @@ var app = new Vue({
   mounted(){
     this.getTimeNow();
     this.getToday();
-   
+    this.setDutyDate();
   },
+
 
   methods:{
 
+    change_date: function() {
+      this.type = "";
+    },
+
+    setDutyDate: function() {
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1; //January is 0!
+      var yyyy = today.getFullYear();
+
+
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+
+      if (mm < 10) {
+        mm = '0' + mm;
+      } 
+
+      this.max_date = yyyy + '-' + mm + '-' + dd;
+      document.getElementById("duty_date").setAttribute("max", this.max_date);
+
+      // min date is yesterday
+      var date = new Date();
+      date.setDate(date.getDate() - 1);
+      dd = date.getDate();
+      mm = date.getMonth() + 1; //January is 0!
+      yyyy = date.getFullYear();
+
+
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+
+      if (mm < 10) {
+        mm = '0' + mm;
+      } 
+
+      this.min_date = yyyy + '-' + mm + '-' + dd;
+      document.getElementById("duty_date").setAttribute("min", this.min_date);
+
+    },
 
     getLocation: function() {
       if (navigator.geolocation) {
@@ -79,7 +125,7 @@ var app = new Vue({
       var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
       var yyyy = today.getFullYear();
 
-      this.today = yyyy + '/' + mm + '/' + dd;
+      this.today = yyyy + '-' + mm + '-' + dd;
 
       //setInterval(self.getToday, 1000 * 60)
     },
@@ -359,7 +405,7 @@ var app = new Vue({
                   headers: {
                       'Content-Type': 'multipart/form-data'
                   },
-                  url: 'api/on_duty',
+                  url: 'api/on_duty_v2',
                   data: form_Data
               })
               .then(function(response) {

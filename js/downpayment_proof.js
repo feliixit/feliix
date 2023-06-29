@@ -435,8 +435,8 @@ var app = new Vue({
       if(this.record.special == '' && this.name == 'Glendon Wendell Co')
         this.who_detail = 'g';
 
-      if(this.name == 'dereck')
-      this.who_detail = 'g';
+      // if(this.name == 'dereck')
+      // this.who_detail = 'g';
     },
 
     approve: function() {

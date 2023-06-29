@@ -43,6 +43,8 @@ $db = $database->getConnection();
 
 $subquery = "";
 
+$start_date =  (isset($_GET['start_date']) ?  $_GET['start_date'] : '');
+
 $merged_results = array();
 
 $sql = "SELECT * FROM user where user.status = 1 and need_punch = 1 order by username";
@@ -54,9 +56,16 @@ $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
     if (isset($row)){
 
-        $mdate = date("Y/m/d");
+        if($start_date == '')
+            $mdate = date("Y/m/d");
+        else
+        {
+            $time = strtotime($start_date);
+            $mdate = date('Y/m/d',$time);
+        }
+
         //$mdate = "2020/05/11";
-        $subquery = " SELECT user.id, username, duty_date, duty_time, location, duty_type FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE  duty_date = '" . $mdate . "' AND on_duty.duty_type in('A', 'B') and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
+        $subquery = " SELECT user.id, username, duty_date, duty_time, location, duty_type, date_format(on_duty.created_at, '%Y/%m/%d') created_at FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE  duty_date = '" . $mdate . "' AND on_duty.duty_type in('A', 'B') and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
         //$subquery = " SELECT user.id, username, duty_date, duty_time, location FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE duty_date = '2020/05/11' AND on_duty.duty_type = 'A' and on_duty.uid = 1 ORDER BY on_duty.created_at ";
 
         $stmt1 = $db->prepare( $subquery );
@@ -68,24 +77,33 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         $row_date = "";
         $row_time = "";
         $row_location = "";
+        $created_at = "";
 
         while($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+            $nextday = "";
             $row_id = $row1['id'];
             $row_name = $row1['username'];
 
             $dateObject = new DateTime($row1['duty_date'] . " " . $row1['duty_time']);
 
+            $created_at = $row1['created_at'];
+
+            if($row1['duty_date'] < $created_at)
+                $nextday = "class='nextday'";
+
             if($row1['duty_type'] == 'A')
-                $row_date .= "<div style='color:green; display:inline;'>" . $dateObject->format('h:i A') . "</div><br>";
+                $row_date .= "<div style='color:green; display:inline;' " . $nextday . " >" . $dateObject->format('h:i A') . "</div><br>";
             if($row1['duty_type'] == 'B')
-                $row_date .= "<div style='color:grey; display:inline;'>" . $dateObject->format('h:i A') . "</div><br>";
+                $row_date .= "<div style='color:grey; display:inline;' " . $nextday . " >" . $dateObject->format('h:i A') . "</div><br>";
 
             $row_location .= GetLocation($row1['location']) . "<br>";
+
+            
 
             $row_count++;
         }
 
-        $subquery2 = " SELECT user.id, username, duty_date, duty_time, location FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE  duty_date = '" . $mdate . "' AND on_duty.duty_type = 'B' and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
+        $subquery2 = " SELECT user.id, username, duty_date, duty_time, location, on_duty.created_at FROM user LEFT JOIN on_duty ON user.id = on_duty.uid WHERE  duty_date = '" . $mdate . "' AND on_duty.duty_type = 'B' and on_duty.uid = " . $row['id']. " ORDER BY on_duty.created_at ";
         $stmt2 = $db->prepare( $subquery2 );
         $stmt2->execute();
 
