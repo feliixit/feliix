@@ -116,9 +116,14 @@ if($fp != "")
     $query = $query . " and pm.priority_id = '" . $fp . "' ";
 }
 
-if($fs != "")
+if($fs != "" && $fs != "downpayment")
 {
     $query = $query . " and pm.project_status_id = '" . $fs . "' ";
+}
+
+if($fs == "downpayment")
+{
+    $query = $query . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0) > 0 ";
 }
 
 if($ft == "s")
