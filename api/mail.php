@@ -814,6 +814,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    $mail->AddCC('ariel@feliix.com', 'Ariel Lin');
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     //if($kind == 0)
     //    $mail->AddCC('argel.feliix@gmail.com', 'Argel Argana');
@@ -1160,6 +1161,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    $mail->AddCC('ariel@feliix.com', 'Ariel Lin'); 
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
 
