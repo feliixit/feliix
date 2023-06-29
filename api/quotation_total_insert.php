@@ -18,7 +18,7 @@ $valid = isset($_POST['valid']) ? $_POST['valid'] : '';
 $total = isset($_POST['total']) ? $_POST['total'] : 0;
 $pixa = isset($_POST['pixa']) ? $_POST['pixa'] : 0;
 $show = isset($_POST['show']) ? $_POST['show'] : '';
-
+$pageless = isset($_POST['pageless']) ? $_POST['pageless'] : '';
 
 $total == '' ? $total = 0 : $total = $total;
 $discount == '' ? $discount = 0 : $discount = $discount;
@@ -273,6 +273,19 @@ else
                 echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                 die();
             }
+        }
+        
+        $query = "UPDATE quotation SET `pageless` = :pageless WHERE `id` = :id";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':pageless', $pageless);
+        $stmt->bindParam(':id', $quotation_id);
+        if (!$stmt->execute()) {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+            $db->rollback();
+            http_response_code(501);
+            echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+            die();
         }
         
 

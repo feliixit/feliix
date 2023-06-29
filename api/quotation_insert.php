@@ -32,6 +32,7 @@ $project_id == 0 ? $project_id = 0 : $project_id = $project_id;
 
 $pages = (isset($_POST['pages']) ?  $_POST['pages'] : '[]');
 $pages_array = json_decode($pages,true);
+$pageless = isset($_POST['pageless']) ? $_POST['pageless'] : '';
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -88,6 +89,7 @@ else
             `prepare_by_second_line` = :prepare_by_second_line,
             `footer_first_line` = :footer_first_line,
             `footer_second_line` = :footer_second_line,
+            `pageless` = :pageless,
             
             `status` = 0,
             `create_id` = :create_id,
@@ -112,6 +114,7 @@ else
         $stmt->bindParam(':prepare_by_second_line', $prepare_by_second_line);
         $stmt->bindParam(':footer_first_line', $footer_first_line);
         $stmt->bindParam(':footer_second_line', $footer_second_line);
+        $stmt->bindParam(':pageless', $pageless);
 
         $stmt->bindParam(':create_id', $user_id);
        

@@ -72,7 +72,7 @@ switch ($method) {
         $prepare_for_third_line = isset($_POST['prepare_for_third_line']) ? $_POST['prepare_for_third_line'] : '';
         $prepare_by_first_line = isset($_POST['prepare_by_first_line']) ? $_POST['prepare_by_first_line'] : '';
         $prepare_by_second_line = isset($_POST['prepare_by_second_line']) ? $_POST['prepare_by_second_line'] : '';
-    
+        $pageless = isset($_POST['pageless']) ? $_POST['pageless'] : '';
 
         if ($id == 0) {
             http_response_code(401);
@@ -94,6 +94,7 @@ switch ($method) {
                     `prepare_for_third_line` = :prepare_for_third_line,
                     `prepare_by_first_line` = :prepare_by_first_line,
                     `prepare_by_second_line` = :prepare_by_second_line,
+                    `pageless` = :pageless,
      
                     `updated_id` = :updated_id,
                     `updated_at` = now()
@@ -113,7 +114,7 @@ switch ($method) {
             $stmt->bindParam(':prepare_for_third_line', $prepare_for_third_line);
             $stmt->bindParam(':prepare_by_first_line', $prepare_by_first_line);
             $stmt->bindParam(':prepare_by_second_line', $prepare_by_second_line);
-     
+            $stmt->bindParam(':pageless', $pageless);
             
             $stmt->bindParam(':updated_id', $user_id);
 

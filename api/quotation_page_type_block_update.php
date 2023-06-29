@@ -65,6 +65,8 @@ switch ($method) {
         $type_id = (isset($_POST['type_id']) ? $_POST['type_id'] : 0);
         $block = (isset($_POST['block']) ? $_POST['block'] : []);
 
+        $pageless = (isset($_POST['pageless']) ? $_POST['pageless'] : '');
+
         $block_array = json_decode($block,true);
 
         
@@ -338,6 +340,19 @@ switch ($method) {
                 die();
             }
 
+            $query = "UPDATE quotation SET `pageless` = :pageless WHERE `id` = :id";
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':pageless', $pageless);
+            $stmt->bindParam(':id', $last_id);
+            if (!$stmt->execute()) {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                die();
+            }
+            
             $db->commit();
 
             http_response_code(200);

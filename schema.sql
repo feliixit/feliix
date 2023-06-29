@@ -3860,3 +3860,24 @@ update work_calendar_main set color = '1' where color = color_other;
 -- 20230620 product_spec_sheet mgt
 ALTER TABLE product_spec_sheet
 ADD COLUMN `p_id` varchar(10)  DEFAULT '';
+
+-- 20230626 approval_form 
+CREATE TABLE IF NOT EXISTS `approval_form` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `header` JSON,
+  `page` JSON,
+  `subtotal` JSON,
+  `signature` JSON,
+  `upload` JSON,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int(11) DEFAULT 0,
+  `updated_at` timestamp NULL,
+  `status` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20230629 pageless mark
+ALTER TABLE quotation
+ADD COLUMN `pageless` varchar(10)  DEFAULT '';

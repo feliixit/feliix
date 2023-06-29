@@ -15,6 +15,7 @@ $detail_array = json_decode($detail, true);
 
 $pixa = isset($_POST['pixa']) ? $_POST['pixa'] : 0;
 $show = isset($_POST['show']) ? $_POST['show'] : '';
+$pageless = isset($_POST['pageless']) ? $_POST['pageless'] : '';
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -52,7 +53,7 @@ else
         $uid = $user_id;
 
         // quotation_page
-        $query = "UPDATE quotation set pixa_s = :pixa_s, show_s = :show_s
+        $query = "UPDATE quotation set pixa_s = :pixa_s, show_s = :show_s, pageless = :pageless
                 WHERE
                 `id` = :quotation_id";
 
@@ -62,6 +63,7 @@ else
         // bind the values
         $stmt->bindParam(':pixa_s', $pixa);
         $stmt->bindParam(':show_s', $show);
+        $stmt->bindParam(':pageless', $pageless);
         $stmt->bindParam(':quotation_id', $quotation_id);
 
         try {
