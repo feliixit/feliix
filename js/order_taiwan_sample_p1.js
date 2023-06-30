@@ -883,6 +883,8 @@ var app = new Vue({
                   od1: _this.od_ord1,
                   op2: _this.od_opt2,
                   od2: _this.od_ord2,
+
+                  all: 'all',
               };
   
         
@@ -1480,6 +1482,8 @@ var app = new Vue({
                 od1: _this.od_ord1,
                 op2: _this.od_opt2,
                 od2: _this.od_ord2,
+
+                all: 'all',
             };
 
       

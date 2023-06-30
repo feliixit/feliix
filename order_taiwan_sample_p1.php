@@ -2564,7 +2564,9 @@ try {
                         <tr v-for="(item, index) in displayedQuoMasterPosts">
 
                             <td>
-                                <a :href="'quotation?id=' + item.id" target="_blank">{{
+                            <a :href="'quotation?id=' + item.id" target="_blank" v-if="item.pageless == ''">{{
+                                item.title }}</a>
+                                <a :href="'quotation_pageless?id=' + item.id" target="_blank" v-if="item.pageless == 'Y'">{{
                                 item.title }}</a>
                             </td>
 
