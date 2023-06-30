@@ -162,6 +162,15 @@ $(function(){
         display: block;
     }
 
+    input[type='date'], input[type='time'] {
+        display:block;
+        height: 40px;
+        border-color: var(--black01);
+        padding-top: 5px;
+        -webkit-appearance: none;
+
+    }
+
 
 </style>
 
