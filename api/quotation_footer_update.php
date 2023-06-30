@@ -63,7 +63,7 @@ switch ($method) {
         $id = (isset($_POST['id']) ?  $_POST['id'] : 0);
         $footer_first_line = isset($_POST['footer_first_line']) ? $_POST['footer_first_line'] : '';
         $footer_second_line = isset($_POST['footer_second_line']) ? $_POST['footer_second_line'] : '';
-
+        $pageless = isset($_POST['pageless']) ? $_POST['pageless'] : '';
 
         if ($id == 0) {
             http_response_code(401);
@@ -79,6 +79,7 @@ switch ($method) {
                     `footer_first_line` = :footer_first_line,
                     `footer_second_line` = :footer_second_line,
                     `updated_id` = :updated_id,
+                    `pageless` = :pageless,
                     `updated_at` = now()
                     where id = :id";
 
@@ -88,7 +89,7 @@ switch ($method) {
             // bind the values
             $stmt->bindParam(':footer_first_line', $footer_first_line);
             $stmt->bindParam(':footer_second_line', $footer_second_line);
-            
+            $stmt->bindParam(':pageless', $pageless);
             $stmt->bindParam(':updated_id', $user_id);
 
             $stmt->bindParam(':id', $id);

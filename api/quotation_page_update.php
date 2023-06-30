@@ -64,7 +64,7 @@ switch ($method) {
         
         $types = (isset($_POST['types']) ?  $_POST['types'] : '[]');
         $types_array = json_decode($types,true);
-
+        $pageless = (isset($_POST['pageless']) ?  $_POST['pageless'] : '');
 
         if ($id == 0) {
             http_response_code(401);
@@ -123,7 +123,18 @@ switch ($method) {
                         die();
                     }
                     
-                
+            $query = "UPDATE quotation SET `pageless` = :pageless WHERE `id` = :id";
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':pageless', $pageless);
+            $stmt->bindParam(':id', $id);
+            if (!$stmt->execute()) {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                $db->rollback();
+                http_response_code(501);
+                echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                die();
+            }
             
 
             $db->commit();

@@ -69,8 +69,6 @@ $kind = (isset($_GET['kind']) ?  urldecode($_GET['kind']) : "");
 
 $type = (isset($_GET['type']) ?  urldecode($_GET['type']) : '');
 
-$all = (isset($_GET['all']) ?  urldecode($_GET['all']) : '');
-
 $merged_results = array();
 
 $query = "SELECT pm.id, 
@@ -89,18 +87,13 @@ $query = "SELECT pm.id,
                 c_user.username AS created_by, 
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
-                DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at,
-                pm.pageless
+                DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at
           FROM quotation pm 
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
                 left join project_main p on pm.project_id = p.id
-                where pm.status <> -1  ";
+                where pm.status <> -1 and pageless = 'Y' ";
 
-if($all != "all")
-{
-    $query = $query . " and pageless = '' ";
-}
 
 if($fpt != "")
 {
@@ -239,7 +232,6 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_by = $row['updated_by'];
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
-    $pageless = $row['pageless'];
    
     $post = GetRecentPost($row['id'], $db);
 
@@ -263,7 +255,6 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "created_at" => $created_at,
         "updated_at" => $updated_at,
         "post" => $post,
-        "pageless" => $pageless
      
     );
 }

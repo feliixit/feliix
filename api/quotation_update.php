@@ -75,6 +75,8 @@ switch ($method) {
         $footer_first_line = isset($_POST['footer_first_line']) ? $_POST['footer_first_line'] : '';
         $footer_second_line = isset($_POST['footer_second_line']) ? $_POST['footer_second_line'] : '';
 
+        $pageless = (isset($_POST['pageless']) ?  $_POST['pageless'] : '');
+
         $pages = (isset($_POST['pages']) ?  $_POST['pages'] : '[]');
         $pages_array = json_decode($pages,true);
 
@@ -104,7 +106,7 @@ switch ($method) {
                         `prepare_by_second_line` = :prepare_by_second_line,
                         `footer_first_line` = :footer_first_line,
                         `footer_second_line` = :footer_second_line,
-                        
+                        `pageless` = :pageless,
                         `status` = 0,
                         `create_id` = :create_id,
                         `created_at` =  now() ";
@@ -125,6 +127,7 @@ switch ($method) {
                     $stmt->bindParam(':prepare_by_second_line', $prepare_by_second_line);
                     $stmt->bindParam(':footer_first_line', $footer_first_line);
                     $stmt->bindParam(':footer_second_line', $footer_second_line);
+                    $stmt->bindParam(':pageless', $pageless);
 
                     $stmt->bindParam(':create_id', $user_id);
                 
@@ -167,6 +170,7 @@ switch ($method) {
                         `prepare_by_second_line` = :prepare_by_second_line,
                         `footer_first_line` = :footer_first_line,
                         `footer_second_line` = :footer_second_line,
+                        `pageless` = :pageless,
                         `updated_id` = :updated_id,
                         `updated_at` = now()
                         where id = :id";
@@ -187,6 +191,7 @@ switch ($method) {
                 $stmt->bindParam(':prepare_by_second_line', $prepare_by_second_line);
                 $stmt->bindParam(':footer_first_line', $footer_first_line);
                 $stmt->bindParam(':footer_second_line', $footer_second_line);
+                $stmt->bindParam(':pageless', $pageless);
                 
                 $stmt->bindParam(':updated_id', $user_id);
 

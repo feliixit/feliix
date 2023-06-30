@@ -11,6 +11,7 @@ $jwt = (isset($_POST['jwt']) ?  $_POST['jwt'] : null);
 
 $footer_first_line = isset($_POST['footer_first_line']) ? $_POST['footer_first_line'] : '';
 $footer_second_line = isset($_POST['footer_second_line']) ? $_POST['footer_second_line'] : '';
+$pageless = isset($_POST['pageless']) ? $_POST['pageless'] : '';
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -51,7 +52,7 @@ else
         SET
             `footer_first_line` = :footer_first_line,
             `footer_second_line` = :footer_second_line,
-            
+            `pageless` = :pageless,
             `status` = 0,
             `create_id` = :create_id,
             `created_at` =  now() ";
@@ -62,7 +63,7 @@ else
         // bind the values
         $stmt->bindParam(':footer_first_line', $footer_first_line);
         $stmt->bindParam(':footer_second_line', $footer_second_line);
-
+        $stmt->bindParam(':pageless', $pageless);
         $stmt->bindParam(':create_id', $user_id);
        
         $last_id = 0;
