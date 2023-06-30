@@ -164,11 +164,11 @@ $(function(){
 
     input[type='date'], input[type='time'] {
         display:block;
-  
-    /* Solution 1 */
-     -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    min-height: 1.2em; 
+        height: 40px;
+        border-color: var(--black01);
+        padding-top: 5px;
+        -webkit-appearance: none;
+
     }
 
 
