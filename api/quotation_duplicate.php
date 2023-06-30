@@ -88,6 +88,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
     $prepare_by_second_line = $merged_results[0]['prepare_by_second_line'];
     $footer_first_line = $merged_results[0]['footer_first_line'];
     $footer_second_line = $merged_results[0]['footer_second_line'];
+    $pageless = $merged_results[0]['pageless'];
 
     $pages_array = $merged_results[0]['pages'];
 
@@ -108,7 +109,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             `prepare_by_second_line` = :prepare_by_second_line,
             `footer_first_line` = :footer_first_line,
             `footer_second_line` = :footer_second_line,
-            
+            `pageless` = :pageless,
+
             `status` = 0,
             `create_id` = :create_id,
             `created_at` =  now() ";
@@ -132,6 +134,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
         $stmt->bindParam(':prepare_by_second_line', $prepare_by_second_line);
         $stmt->bindParam(':footer_first_line', $footer_first_line);
         $stmt->bindParam(':footer_second_line', $footer_second_line);
+        $stmt->bindParam(':pageless', $pageless);
 
         $stmt->bindParam(':create_id', $user_id);
        
@@ -558,7 +561,8 @@ function GetQuotation($id, $db) {
                     prepare_by_second_line,
                     footer_first_line,
                     footer_second_line,
-                    (SELECT COUNT(*) FROM quotation_page WHERE quotation_id = quotation.id and quotation_page.status <> -1) page_count
+                    (SELECT COUNT(*) FROM quotation_page WHERE quotation_id = quotation.id and quotation_page.status <> -1) page_count,
+                    pageless
                     FROM quotation
                     WHERE status <> -1 and id=$id";
 
@@ -592,6 +596,7 @@ function GetQuotation($id, $db) {
         $total_info = GetTotalInfo($row['id'], $db);
         $term_info = GetTermInfo($row['id'], $db);
         $sig_info = GetSigInfo($row['id'], $db);
+        $pageless = $row['pageless'];
 
         $subtotal_info = GetSubTotalInfo($row['id'], $db);
 
@@ -619,6 +624,7 @@ function GetQuotation($id, $db) {
             "term_info" => $term_info,
             "sig_info" => $sig_info,
             "subtotal_info" => $subtotal_info,
+            "pageless" => $pageless
         );
     }
 

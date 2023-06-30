@@ -366,6 +366,7 @@ try {
             <li class="gray02">
                 <a class="uni">Product<br>Database</a>
                 <a class="list" href="product_catalog_code">Product Catalog</a>
+                <a class="list" href="spec_sheet_mgt">Specification Sheet Management</a>
                 <a class="list" href="frequently_used_options">Attribute’s Frequently Used Options</a>
             </li>
             <li class="sec02">
