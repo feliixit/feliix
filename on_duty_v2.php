@@ -210,7 +210,7 @@ $(function(){
                         <dt>Type</dt>
                         <dd>
                             <select name="" id="" v-model="type">
-                                <option value="A" v-if="today != min_date">On Duty</option>
+                                <option value="A">On Duty</option>
                                 <option value="B">Off Duty</option>
                                 
                             </select>
