@@ -754,7 +754,7 @@ var app = new Vue({
                             var file_str =
                                 "<input type='checkbox' class='custom-control-input' id='" + element + "' checked name='file_elements' value='" + element + "' />" + 
                                 "<label class='custom-control-label' style='justify-content: flex-start;' for='" + element + "'>" +
-                                "<a href='" +
+                                "<a href='https://storage.cloud.google.com/calendarfile/" +
                                 element +
                                 "' target='_blank'>" +
                                 element +
