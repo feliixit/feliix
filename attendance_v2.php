@@ -78,6 +78,14 @@ $(function(){
         position: absolute;
         right: -65%;
     }
+
+    .block.C .tablebox2 ul > li:nth-of-type(3) {
+        padding-left: 0;
+    }
+
+    .block.C .tablebox2 ul.head > li:nth-of-type(3) {
+        padding-left: 10px;
+    }
 </style>
     
 <body class="second">
