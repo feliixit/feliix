@@ -3862,14 +3862,178 @@ ALTER TABLE product_spec_sheet
 ADD COLUMN `p_id` varchar(10)  DEFAULT '';
 
 -- 20230626 approval_form 
-CREATE TABLE IF NOT EXISTS `approval_form` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `quotation_id` bigint(20)  DEFAULT 0 NOT NULL,
-  `header` JSON,
-  `page` JSON,
-  `subtotal` JSON,
-  `signature` JSON,
-  `upload` JSON,
+CREATE TABLE `approval_form_quotation` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `q_id` bigint DEFAULT '0',
+  `title` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `kind` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `project_id` bigint DEFAULT '0',
+  `first_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `second_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `project_category` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `quotation_no` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `quotation_date` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_first_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_second_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_for_third_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_by_first_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `prepare_by_second_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `footer_first_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `footer_second_line` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int DEFAULT '0',
+  `create_id` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int DEFAULT '0',
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `pixa_s` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `show_s` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pixa_t` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `show_t` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pixa_p` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `show_p` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pageless` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE `approval_form_quotation_page` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint unsigned NOT NULL,
+  `page` int DEFAULT '0',
+  `status` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `approval_form_quotation_page_type` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint unsigned NOT NULL,
+  `page_id` bigint unsigned NOT NULL,
+  `block_type` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `block_name` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `not_show` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `real_amount` decimal(10,2) DEFAULT '0.00',
+  `status` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `pixa` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `approval_form_quotation_page_type_block` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint unsigned NOT NULL,
+  `type_id` bigint unsigned NOT NULL,
+  `code` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `type` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `qty` int DEFAULT '0',
+  `price` decimal(10,2) DEFAULT '0.00',
+  `discount` int DEFAULT '0',
+  `amount` decimal(12,2) DEFAULT '0.00',
+  `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `listing` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `num` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `pid` bigint DEFAULT '0',
+  `v1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `v2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `v3` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `ratio` decimal(12,2) DEFAULT '1.00',
+  `photo2` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo3` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `notes` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `approval` varchar(24) COLLATE utf8mb4_unicode_ci DEFAULT '',
+
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `approval_form_quotation_total` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint unsigned NOT NULL,
+  `page` int DEFAULT '0',
+  `discount` int DEFAULT '0',
+  `vat` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `show_vat` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `valid` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `total` decimal(12,2) DEFAULT '0.00',
+  `status` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int DEFAULT '0',
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `pixa` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `show` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `approval_form_quotation_term` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint unsigned NOT NULL,
+  `page` int DEFAULT '0',
+  `title` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brief` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `list` varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int DEFAULT '0',
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `approval_form_quotation_signature` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint unsigned NOT NULL,
+  `page` int DEFAULT '0',
+  `type` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `photo` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `position` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `phone` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `email` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int DEFAULT '0',
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `approval_form_quotation_payment_term` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` bigint unsigned NOT NULL,
+  `page` int DEFAULT '0',
+  `payment_method` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `brief` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `list` json DEFAULT NULL,
+  `status` varchar(2) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `create_id` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_id` int DEFAULT '0',
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE approval_form_quotation ADD COLUMN `project_name` varchar(512) DEFAULT '';
+ALTER TABLE approval_form_quotation ADD COLUMN `project_location` varchar(512) DEFAULT '';
+ALTER TABLE approval_form_quotation ADD COLUMN `po` varchar(64) DEFAULT '';
+ALTER TABLE approval_form_quotation ADD COLUMN `request_by` varchar(128) DEFAULT '';
+ALTER TABLE approval_form_quotation ADD COLUMN `request_date` varchar(24) DEFAULT '';
+ALTER TABLE approval_form_quotation ADD COLUMN `submit_by` varchar(128) DEFAULT '';
+ALTER TABLE approval_form_quotation ADD COLUMN `submit_date` varchar(24) DEFAULT '';
+ALTER TABLE approval_form_quotation ADD COLUMN `signature_page` varchar(24) DEFAULT '';
+ALTER TABLE approval_form_quotation ADD COLUMN `signature_pixel` varchar(24) DEFAULT '';
+
+CREATE TABLE IF NOT EXISTS `approval_form_project_approve` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `batch_id` int(11) DEFAULT 0 NOT NULL,
+  `final_approve` int(11) DEFAULT 0 NOT NULL,
+  `remark` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `status` int(11) DEFAULT 0,
   `create_id` int(11) DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_id` int(11) DEFAULT 0,
@@ -3877,6 +4041,7 @@ CREATE TABLE IF NOT EXISTS `approval_form` (
   `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
 
 -- 20230629 pageless mark
 ALTER TABLE quotation

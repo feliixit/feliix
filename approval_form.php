@@ -1023,7 +1023,7 @@ header( 'location:index' );
 
         .tb_format1 tbody tr td div.approval_box > span {
             display: block;
-            width: 50px;
+            width: 125px;
             font-size: 12px;
             font-weight: 500;
             text-align: left;
@@ -1056,7 +1056,7 @@ header( 'location:index' );
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(1),
         .tb_format1 tbody tr.desc1 td:nth-last-of-type(1) {
-            width: 210px;
+            width: 185px;
             text-align: left;
         }
 
@@ -1224,7 +1224,7 @@ header( 'location:index' );
 
         .tb_format2 tbody tr td div.approval_box > span {
             display: block;
-            width: 50px;
+            width: 125px;
             font-size: 12px;
             font-weight: 500;
             text-align: left;
@@ -1241,7 +1241,7 @@ header( 'location:index' );
         }
 
         .tb_format2 tbody tr td:nth-last-of-type(1) {
-            width: 210px;
+            width: 185px;
             text-align: left;
         }
 
@@ -1844,6 +1844,14 @@ header( 'location:index' );
             width: 310px;
         }
 
+        #signature_dialog .formbox dl dt input[type='number'] {
+            height: 30px;
+            border: 1px solid #707070;
+            font-size: 14px;
+            width: 100px;
+            margin: 5px 0;
+        }
+
         .list_function.main {
             border-color: #00811e;
         }
@@ -2232,6 +2240,226 @@ header( 'location:index' );
             outline-color: transparent!important;
         }
 
+        .extendex-top {
+            background: none;
+            box-shadow: none;
+        }
+
+        .bg-whi {
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .top-box {
+
+            background-size: 100%;
+        }
+
+        .pub-con {
+            box-sizing: border-box;
+            background-size: 100%;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+
+        .input-zone {
+            margin: 0 5px 5px 0;
+            background-size: 2.13rem;
+            border-radius: 0.38rem;
+            border: 0.06rem solid rgba(112, 112, 112, 1);
+            position: relative;
+            color: var(--fth04);
+            font-size: 0.88rem;
+            box-sizing: border-box;
+        }
+
+        .input {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 2;
+        }
+
+        .pad {
+            margin-top: -10px;
+            font-size: 0.88rem;
+        }
+
+        .btn-container {
+            margin: 0.69rem auto;
+            text-align: center;
+        }
+
+        .btn-container .btn {
+            width: 10.56rem;
+            height: 2.5rem;
+            border-radius: 1.25rem;
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-container .btn.btn-gray {
+            background: rgba(201, 201, 201, 1);
+        }
+
+        .btn-container .btn.btn-blue {
+            background: linear-gradient(180deg,
+                    rgba(128, 137, 229, 1) 0%,
+                    rgba(87, 84, 196, 1) 100%);
+            font-size: 1rem;
+        }
+
+        .tips {
+            margin-top: 1.69rem;
+        }
+
+        .file-list {
+            font-size: 0.88rem;
+            color: #5a5cc6;
+        }
+
+        .file-list .file-item {
+            margin-top: 0.63rem;
+        }
+
+        .file-list .file-item p {
+            line-height: 1.25rem;
+            position: relative;
+        }
+
+        .file-list img {
+            width: 1.25rem;
+            cursor: pointer;
+        }
+
+        .file-list img.upload-delete {
+            position: absolute;
+            bottom: 0;
+            margin: 0 auto;
+            margin-left: 1rem;
+        }
+
+        .progress-wrapper {
+            position: relative;
+            height: 0.5rem;
+            border: 0.06rem solid rgba(92, 91, 200, 1);
+            border-radius: 1px;
+            box-sizing: border-box;
+            width: 87%;
+        }
+
+        .progress-wrapper .progress-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            border-radius: 1px;
+            background-color: #5c5bc8;
+            z-index: 1;
+        }
+
+        .progress-rate {
+            font-size: 14px;
+            height: 100%;
+            z-index: 2;
+            width: 12%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-rate span {
+            display: inline-block;
+            width: 100%;
+            text-align: right;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-list img.upload-success {
+            margin-left: 0;
+        }
+
+        #vs1__combobox, #vs2__combobox, #vs3__combobox, #vs4__combobox, #vs5__combobox, #vs6__combobox, #vs7__combobox, #vs8__combobox, #vs9__combobox, #vs10__combobox, #vs11__combobox, #vs12__combobox {
+            border: 1px solid #707070;
+            border-radius: 0;
+        }
+
+        #vs1__listbox, #vs2__listbox, #vs3__listbox, #vs4__listbox, #vs5__listbox, #vs6__listbox, #vs7__listbox, #vs8__listbox, #vs9__listbox, #vs10__listbox, #vs11__listbox, #vs12__listbox {
+            border: none;
+            border-radius: 0;
+            margin-top: 0;
+        }
+
+        #vs1__listbox li, #vs2__listbox li, #vs3__listbox li, #vs4__listbox li, #vs5__listbox li, #vs6__listbox li, #vs7__listbox li, #vs8__listbox li, #vs9__listbox li, #vs10__listbox li, #vs11__listbox li, #vs12__listbox li {
+            border-right: 2px solid #707070;
+            font-size: 12px;
+        }
+
+        .swal2-popup.swal2-toast {
+            flex-direction: row;
+            align-items: center;
+            width: auto;
+            padding: .625em;
+            overflow-y: hidden;
+            background: #fff;
+            box-shadow: 0 0 .625em #d9d9d9
+        }
+
+        .swal2-popup.swal2-toast .swal2-header {
+            flex-direction: row;
+            padding: 0
+        }
+
+        .swal2-popup.swal2-toast .swal2-title {
+            flex-grow: 1;
+            justify-content: flex-start;
+            margin: 0 .6em;
+            font-size: 1em
+        }
+
+        .swal2-popup.swal2-toast .swal2-footer {
+            margin: .5em 0 0;
+            padding: .5em 0 0;
+            font-size: .8em
+        }
+
+        .swal2-popup.swal2-toast .swal2-close {
+            position: static;
+            width: .8em;
+            height: .8em;
+            line-height: .8
+        }
+
+        .swal2-popup.swal2-toast .swal2-content {
+            justify-content: flex-start;
+            padding: 0;
+            font-size: 1em
+        }
+
+        .swal2-popup.swal2-toast .swal2-icon {
+            width: 2em;
+            min-width: 2em;
+            height: 2em;
+            margin: 0
+        }
+
+        .swal2-popup.swal2-toast .swal2-icon .swal2-icon-content {
+            display: flex;
+            align-items: center;
+            font-size: 1.8em;
+            font-weight: 700
+        }
+
 
         @media print {
             * {
@@ -2283,9 +2511,11 @@ header( 'location:index' );
                     <a id="" class="print" @click="print_page()"></a>
                 </div>
 
+                <!--
                 <div class="popupblock">
                     <a id="" class="specification" @click="specification_sheet()"></a>
                 </div>
+                -->
             </div>
 
             <div class="block fn">
@@ -2316,12 +2546,12 @@ header( 'location:index' );
 
                                 <dt class="head">Project Name:</dt>
                                 <dd>
-                                    <input type="text" placeholder="Project Name" v-model="???temp_project_name">
+                                    <input type="text" placeholder="Project Name" v-model="temp_project_name">
                                 </dd>
 
                                 <dt class="head">Project Location:</dt>
                                 <dd>
-                                    <input type="text" placeholder="Project Location" v-model="???temp_project_location">
+                                    <input type="text" placeholder="Project Location" v-model="temp_project_location">
                                 </dd>
 
                                 <dt>Quotation Number:</dt>
@@ -2331,19 +2561,19 @@ header( 'location:index' );
 
                                 <dt>P.O. Number:</dt>
                                 <dd>
-                                    <input type="text" v-model="temp_po_no">
+                                    <input type="text" v-model="temp_po">
                                 </dd>
 
                                 <dt>Requested by:</dt>
                                 <dd>
-                                    <input type="text" placeholder="Client Name" v-model="temp_request_by_name">
-                                    <input type="date" v-model="temp_request_by_date">
+                                    <input type="text" placeholder="Client Name" v-model="temp_request_by">
+                                    <input type="date" v-model="temp_request_date">
                                 </dd>
 
                                 <dt>Submitted by:</dt>
                                 <dd>
-                                    <input type="text" placeholder="Our Staff Name" v-model="temp_submit_by_name">
-                                    <input type="date" v-model="temp_submit_by_date">
+                                    <input type="text" placeholder="Our Staff Name" v-model="temp_submit_by">
+                                    <input type="date" v-model="temp_submit_date">
                                 </dd>
                                 <div class="btnbox">
                                     <a class="btn small" @click="cancel_header()">Close</a>
@@ -2548,10 +2778,10 @@ header( 'location:index' );
 
                                         <span style="vertical-align: top;">Approval Status:</span>
                                         <div style="display: inline-block; height: 108px; width: calc(100% - 110px);">
-                                            <input type="checkbox" class="alone"> Approved<br>
-                                            <input type="checkbox" class="alone"> Approved with comments<br>
-                                            <input type="checkbox" class="alone"> Incorporate comments and resubmit<br>
-                                            <input type="checkbox" class="alone"> Not Approved
+                                            <input type="checkbox" class="alone" value="ap" v-model="block.approval"> Approved<br>
+                                            <input type="checkbox" class="alone" value="ac" v-model="block.approval"> Approved with comments<br>
+                                            <input type="checkbox" class="alone" value="ic" v-model="block.approval"> Incorporate comments and resubmit<br>
+                                            <input type="checkbox" class="alone" value="na" v-model="block.approval"> Not Approved
                                         </div>
 
                                     </li>
@@ -2601,10 +2831,10 @@ header( 'location:index' );
 
                                         <span style="vertical-align: top;">Approval Status:</span>
                                         <div style="display: inline-block; height: 108px; width: calc(100% - 110px);">
-                                            <input type="checkbox" class="alone"> Approved<br>
-                                            <input type="checkbox" class="alone"> Approved with comments<br>
-                                            <input type="checkbox" class="alone"> Incorporate comments and resubmit<br>
-                                            <input type="checkbox" class="alone"> Not Approved
+                                            <input type="checkbox" class="alone" value="ap" v-model="block.approval"> Approved<br>
+                                            <input type="checkbox" class="alone" value="ac" v-model="block.approval"> Approved with comments<br>
+                                            <input type="checkbox" class="alone" value="ic" v-model="block.approval"> Incorporate comments and resubmit<br>
+                                            <input type="checkbox" class="alone" value="na" v-model="block.approval"> Not Approved
                                         </div>
                                     </li>
                                     <li>
@@ -2674,6 +2904,91 @@ header( 'location:index' );
                     </div>
                 </div>
 
+
+                <div class="popupblock">
+
+                    <?php
+                    if ($test_manager[0]  == "1")
+                    {
+                    ?>
+                    <a id="project_fn2" class="fn2" :ref="'a_fn2'"
+                       @click="show_approval = !show_approval">Upload Approved Form</a>
+                    <?php
+                    } else {
+                    ?>
+                    <a>Upload Approved Form</a>
+                    <?php
+                    }
+                    ?>
+                    <div id="approval_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_approval">
+                        <h6>Upload Approved Form</h6>
+
+                        <div class="formbox">
+                            <dl>
+                                <dd style="display: flex; justify-content: flex_start; margin-top: 15px;">
+                                    <span style="color: green; font-size: 14px; font-weight: 500; padding-bottom: 5px; margin-right:10px;">Files: </span>
+
+                                    <div class="pub-con" ref="bg">
+                                        <div class="input-zone">
+                                            <span class="upload-des">choose file</span>
+                                            <input class="input" type="file" :ref="'approve_file'" name="approve_file" 
+                                                placeholder="choose file" @change="approve_changeFile()"
+                                                multiple/>
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+
+
+                            <dl>
+                                <dd>
+                                    <div class="browser_group">
+                                        <div class="pad">
+                                            <div class="file-list">
+                                                <div class="file-item" v-for="(item,index) in approve_fileArray" :key="index">
+                                                    <p>
+                                                        {{item.name}}
+                                                        <span @click="approve_deleteFile(index)" v-show="item.progress==0" class="upload-delete">
+                                                            <i class="fas fa-backspace"></i>
+                                                        </span>
+                                                    </p>
+                                                    <div class="progress-container" v-show="item.progress!=0">
+                                                        <div class="progress-wrapper">
+                                                            <div class="progress-progress" :style="'width:'+item.progress*100+'%'"></div>
+                                                        </div>
+                                                        <div class="progress-rate">
+                                                            <span v-if="item.progress!=1">{{(item.progress*100).toFixed(0)}}%</span>
+                                                            <span v-else><i class="fas fa-check-circle"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="file-item" v-for="(item,index) in project_approves" :key="index">
+                                                    <p>
+                                                        {{item.filename}}
+                                                        <span @click="deleteEditFileItems(index)" class="upload-delete">
+                                                            <i class="fas fa-backspace"></i>
+                                                        </span>
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+                                </dd>
+                            </dl>
+
+                        </div>
+
+                        <div class="formbox">
+                            <div class="btnbox">
+                                <a class="btn small" @click="close_approval()">Close</a>
+                                <a class="btn small green" @click="approve_create()">Save</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -2688,9 +3003,9 @@ header( 'location:index' );
 
                     <div class="af_project">
                         Project Name:<br>
-                        <span class="af_project_name">{{}}</span>
+                        <span class="af_project_name">{{project_name}}</span>
                         Porject Location:<br>
-                        <span class="af_project_location">{{}}</span>
+                        <span class="af_project_location">{{project_location}}</span>
                     </div>
 
                     <div class="af_requested">
@@ -2703,12 +3018,12 @@ header( 'location:index' );
 
                             <tr>
                                 <td>Client Name:</td>
-                                <td><span class="af_client_name">{{}}</span></td>
+                                <td><span class="af_client_name">{{request_by}}</span></td>
                             </tr>
 
                             <tr>
                                 <td>Date:</td>
-                                <td><span class="af_client_date">{{}}</span></td>
+                                <td><span class="af_client_date">{{request_date}}</span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -2718,19 +3033,19 @@ header( 'location:index' );
 
                 <div class="right_block">
 
-                    <div class="af_category">{{ project_category }} APPROVAL FORM</div>
+                    <div class="af_category">{{ project_category == 'Lighting' ? 'Fixture' : (project_category == 'Office Systems' ? 'Furniture' : '' ) }} APPROVAL FORM</div>
 
                     <div class="af_qo_po">
                         <table>
                             <tbody>
                             <tr>
                                 <td>Quotation Number:</td>
-                                <td><span class="af_qo">{{}}</span></td>
+                                <td><span class="af_qo">{{quotation_no}}</span></td>
                             </tr>
 
                             <tr>
                                 <td>P.O. Number:</td>
-                                <td><span class="af_po">{{}}</span></td>
+                                <td><span class="af_po">{{po}}</span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -2746,12 +3061,12 @@ header( 'location:index' );
 
                             <tr>
                                 <td>Name:</td>
-                                <td><span class="af_staff_name">{{}}</span></td>
+                                <td><span class="af_staff_name">{{submit_by}}</span></td>
                             </tr>
 
                             <tr>
                                 <td>Date:</td>
-                                <td><span class="af_staff_date">{{}}</span></td>
+                                <td><span class="af_staff_date">{{submit_date}}</span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -2855,44 +3170,44 @@ header( 'location:index' );
 
                             <td rowspan="2" v-if="bk.type == 'image'">
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
                                      <span>Approved</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ac" v-model="bk.approval">
                                      <span>Approved with comments</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ic" v-model="bk.approval">
                                      <span>Incorporate comments and resubmit</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="na" v-model="bk.approval">
                                      <span>Not Approved</span>
                                 </div>
                             </td>
 
                             <td v-if="bk.type !== 'image'">
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
                                      <span>Approved</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ac" v-model="bk.approval">
                                      <span>Approved with comments</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ic" v-model="bk.approval">
                                      <span>Incorporate comments and resubmit</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="na" v-model="bk.approval">
                                      <span>Not Approved</span>
                                 </div>
                             </td>
@@ -2958,22 +3273,22 @@ header( 'location:index' );
 
                             <td>
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
                                      <span>Approved</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ac" v-model="bk.approval">
                                      <span>Approved with comments</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="ic" v-model="bk.approval">
                                      <span>Incorporate comments and resubmit</span>
                                 </div>
 
                                 <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled>
+                                    <input type="checkbox" class="alone" disabled value="na" v-model="bk.approval">
                                      <span>Not Approved</span>
                                 </div>
                             </td>
@@ -3018,7 +3333,7 @@ header( 'location:index' );
                 </div>
 
 
-                <div class="area_client_signature" :style="'margin-top: ' + sig.pixel + 'px;'" v-if="sig.page !== 0">
+                <div class="area_client_signature" :style="'margin-top: ' + signature_pixel + 'px;'" v-if="signature_page == pg.page">
                     <table>
                         <tbody>
                             <tr>
@@ -4018,5 +4333,5 @@ header( 'location:index' );
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/quotation_v4.js"></script>
+<script defer src="js/approval_form.js"></script>
 </html>
