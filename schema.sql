@@ -4038,7 +4038,6 @@ CREATE TABLE IF NOT EXISTS `approval_form_project_approve` (
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `updated_id` int(11) DEFAULT 0,
   `updated_at` timestamp NULL,
-  `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
 
