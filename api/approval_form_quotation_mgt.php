@@ -74,6 +74,7 @@ $all = (isset($_GET['all']) ?  urldecode($_GET['all']) : '');
 $merged_results = array();
 
 $query = "SELECT pm.id, 
+                pm.q_id,
                 pm.title,
                 pm.status, 
                 pm.project_id,
@@ -97,10 +98,10 @@ $query = "SELECT pm.id,
                 left join project_main p on pm.project_id = p.id
                 where pm.status <> -1  ";
 
-if($all != "all")
-{
-    $query = $query . " and pageless = '' ";
-}
+// if($all != "all")
+// {
+//     $query = $query . " and pageless = '' ";
+// }
 
 if($fpt != "")
 {
@@ -223,6 +224,7 @@ $stmt->execute();
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id = $row['id'];
+    $q_id = $row['q_id'];
     $title = $row['title'];
     $kind = $row['kind'];
     $status = $row['status'];
@@ -246,6 +248,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $merged_results[] = array(
         "is_edited" => 1,
         "id" => $id,
+        "q_id" => $q_id,
         "title" => $title,
         "kind" => $kind,
         "status" => $status,

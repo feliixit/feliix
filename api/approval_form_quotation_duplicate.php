@@ -603,7 +603,7 @@ function GetQuotation($id, $db) {
                     submit_date,
                     signature_page,
                     signature_pixel,
-                    (SELECT COUNT(*) FROM approval_form_quotation_page WHERE quotation_id = quotation.id and approval_form_quotation_page.status <> -1) page_count,
+                    (SELECT COUNT(*) FROM approval_form_quotation_page WHERE quotation_id = approval_form_quotation.id and approval_form_quotation_page.status <> -1) page_count,
                     pageless
                     FROM approval_form_quotation
                     WHERE status <> -1 and id=$id";
