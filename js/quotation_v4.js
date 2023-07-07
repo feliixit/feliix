@@ -1845,13 +1845,13 @@ var app = new Vue({
         var element = this.receive_records[0].pages.find(({ page }) => page === _page);
         var type = element.types.find(({ id }) => id === _id);
         
-        if(_type == "A" && this.temp_block_a.length > 0) {
+        if(_type == "A" && this.temp_block_a.length >= 0) {
           type.block_a = this.temp_block_a;
 
           this.subtotal_save_changes(this.id, _id, this.temp_block_a);
         }
 
-        if(_type == "B" && this.temp_block_b.length > 0) {
+        if(_type == "B" && this.temp_block_b.length >= 0) {
           type.block_b = this.temp_block_b;
 
           this.subtotal_save_changes(this.id, _id, this.temp_block_b);
