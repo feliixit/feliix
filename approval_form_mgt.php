@@ -575,7 +575,7 @@ header( 'location:index' );
                     </ul>
                     <ul v-for='(receive_record, index) in displayedPosts'>
                         <li>
-                            <a v-show="receive_record.is_edited == 1" v-bind:href="'quotation?id=' + receive_record.id">{{
+                            <a v-show="receive_record.is_edited == 1" v-bind:href="'approval_form?id=' + receive_record.id">{{
                                 receive_record.title }}</a>
                             <input name="title" type="text"
                                    v-show="receive_record.is_edited == 0"
