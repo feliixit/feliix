@@ -294,6 +294,7 @@ var app = new Vue({
         approve_fileArray: [],
 
         project_approves: {},
+        temp_project_approves: {},
     },
   
     created() {
@@ -550,6 +551,24 @@ var app = new Vue({
                   confirmButtonText: "OK",
                 });
             });
+
+          // compare project_approves and temp_project_approves
+          for(var i = 0; i < this.temp_project_approves.length; i++) {
+            var id = this.temp_project_approves[i].id;
+            var found = false;
+            for(var j = 0; j < this.project_approves.length; j++) {
+              if(id == this.project_approves[j].id) {
+                found = true;
+                break;
+              }
+            }
+
+            if(!found) {
+              this.deleteEditFileItems(id);
+              break;
+            }
+          }
+          this.getProjectApprove(this.id);
     },
 
     
@@ -583,6 +602,7 @@ var app = new Vue({
             .then(
             (res) => {
                 _this.project_approves = res.data;
+                _this.temp_project_approves = JSON.parse(JSON.stringify(_this.project_approves));
             },
             (err) => {
                 alert(err.response);
@@ -593,6 +613,12 @@ var app = new Vue({
             });
     },
 
+    deleteFileItems_before: function(id) {
+      // remove project_approve by id
+      this.project_approves = this.project_approves.filter(
+        (item) => item.id !== id
+      );
+    },
     
     deleteEditFileItems: function(keyword) {
     let _this = this;
@@ -611,7 +637,7 @@ var app = new Vue({
             .get('api/approval_form_project_approve_delete', { params, headers: {"Authorization" : `Bearer ${token}`} })
             .then(
             (res) => {
-                _this.project_approves = res.data;
+             
             },
             (err) => {
                 alert(err.response);
@@ -1666,6 +1692,11 @@ var app = new Vue({
       },
 
       close_approval() {
+        this.approve_fileArray = [];
+        var fileTarget = this.$refs.approve_file;
+        fileTarget.value = "";
+
+        this.project_approves = JSON.parse(JSON.stringify(this.temp_project_approves));
         this.show_approval = false;
       },
 

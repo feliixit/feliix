@@ -2965,8 +2965,9 @@ header( 'location:index' );
 
                                                 <div class="file-item" v-for="(item,index) in project_approves" :key="index">
                                                     <p>
-                                                        {{item.filename}}
-                                                        <span @click="deleteEditFileItems(index)" class="upload-delete">
+                                                        <a :href="img_url + item.gcp_name" target="_blank">{{item.filename}}</a>
+                                                       
+                                                        <span @click="deleteFileItems_before(item.id)" class="upload-delete">
                                                             <i class="fas fa-backspace"></i>
                                                         </span>
                                                     </p>

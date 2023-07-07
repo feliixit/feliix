@@ -58,40 +58,11 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "update approval_form_project_approve set status = -1 where id = " . $id . " and project_id = " . $pid . " and status = 0";
+            $sql = "update gcp_storage_file set status = -1 where id = " . $id . " and status = 0";
             $stmt = $db->prepare( $sql );
             $stmt->execute();
-
-            $sql = "SELECT pm.id, pm.remark comment, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at, pm.final_approve final_quotation FROM approval_form_project_approve pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'approval_form' where project_id = " . $pid . " and pm.status <> -1 ";
-
-            if(!empty($_GET['page'])) {
-                $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
-                if(false === $page) {
-                    $page = 1;
-                }
-            }
-
-            $sql = $sql . " ORDER BY pm.id ";
-
-            if(!empty($_GET['size'])) {
-                $size = filter_input(INPUT_GET, 'size', FILTER_VALIDATE_INT);
-                if(false === $size) {
-                    $size = 10;
-                }
-
-                $offset = ($page - 1) * $size;
-
-                $sql = $sql . " LIMIT " . $offset . "," . $size;
-            }
 
             $merged_results = array();
-
-            $stmt = $db->prepare( $sql );
-            $stmt->execute();
-
-            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $merged_results[] = $row;
-            }
 
             echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
