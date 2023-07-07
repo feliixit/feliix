@@ -253,6 +253,9 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
     $footer_second_line = $merged_results[0]['footer_second_line'];
     $pageless = $merged_results[0]['pageless'];
 
+    $project_name = $merged_results[0]['first_line'] . ' ' . $merged_results[0]['second_line'];
+    $project_name = trim($project_name);
+
     $pages_array = $merged_results[0]['pages'];
 
     $query = "INSERT INTO approval_form_quotation
@@ -261,6 +264,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             `title` = :title,
             `kind` = :kind,
             `project_id` = :project_id,
+            `project_name` = :project_name,
             `first_line` = :first_line,
             `second_line` = :second_line,
             `project_category` = :project_category,
@@ -287,6 +291,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':kind', $kind);
         $stmt->bindParam(':project_id', $project_id);
+        $stmt->bindParam(':project_name', $project_name);
         $stmt->bindParam(':first_line', $first_line);
         $stmt->bindParam(':second_line', $second_line);
         $stmt->bindParam(':project_category', $project_category);
@@ -1625,8 +1630,12 @@ function GetBlocks($qid, $db, $prefix){
         v3,
         listing,
         num,
-        notes,
-        approval,
+        notes, ";
+if($prefix == 'approval_form_'){
+    $query .= "
+        approval, ";
+}
+$query .= "
         pid
         FROM  " . $prefix . "quotation_page_type_block
         WHERE  type_id = " . $qid . "
@@ -1661,8 +1670,11 @@ function GetBlocks($qid, $db, $prefix){
         $v2 = $row['v2'];
         $v3 = $row['v3'];
         $listing = $row['listing'];
+        $approval = [];
+if($prefix == 'approval_form_'){
         // split by comma
         $approval = explode(",", $row['approval']);
+}
     
         $type == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;

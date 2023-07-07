@@ -490,6 +490,12 @@ var app = new Vue({
 
       },
 
+      approval_form : async function() {
+
+        window.open("approval_form?qid=" + this.id, '_blank');
+
+      },
+
         specification_sheet() {
             $('#modal_specification_sheet').modal('toggle');
         },

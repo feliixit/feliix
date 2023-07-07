@@ -3004,7 +3004,7 @@ header( 'location:index' );
                     <div class="af_project">
                         Project Name:<br>
                         <span class="af_project_name">{{project_name}}</span>
-                        Porject Location:<br>
+                        Project Location:<br>
                         <span class="af_project_location">{{project_location}}</span>
                     </div>
 
