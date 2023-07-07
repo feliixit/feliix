@@ -867,6 +867,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            approval:[],
           };
         }
 
@@ -890,6 +891,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            approval:[],
           };
         }
 
@@ -1024,6 +1026,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            approval:[],
           };
         }
 
@@ -1047,6 +1050,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            approval:[],
           };
         }
 
