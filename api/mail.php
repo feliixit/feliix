@@ -823,8 +823,6 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
     //if($kind == 0 || $kind == 1)
         //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-    //if($category == '2' && ($kind == 0 || $kind == 1))
-        //$mail->AddCC('aiza@feliix.com', 'Aiza Eisma');
 
     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
@@ -835,8 +833,11 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
     if($status == 'True'){
         $mail->Subject = "[PAYMENT CONFIRMED] Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
 
-        if($category == '2')
-            $mail->AddAddress('cristina@feliix.com', 'Cristina Matining');
+        if($category == '2' && ($kind == 0 || $kind == 1)){
+            $mail->AddAddress('aiza@feliix.com', 'Aiza Eisma');
+            $mail->AddCC('cristina@feliix.com', 'Cristina Matining');
+            $mail->AddCC('alleah.feliix@gmail.com', 'Alleah Belmonte');
+        }
     }
     if($status == 'False')
         $mail->Subject = "Checked: " . $status . " for " . $payment . " Proof submitted by " . $name . "(" . $projectname . ")";
@@ -1161,7 +1162,7 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     $mail->AddCC('kuan@feliix.com', 'Kuan');
     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
-    $mail->AddCC('ariel@feliix.com', 'Ariel Lin'); 
+    $mail->AddCC('ariel@feliix.com', 'Ariel Lin');
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
 
@@ -1175,8 +1176,12 @@ function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime,
     if($status == 'True'){
         $mail->Subject = "[PAYMENT CONFIRMED] Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
 
-        if($category == '2')
-            $mail->AddAddress('cristina@feliix.com', 'Cristina Matining');
+        if($category == '2'){
+            $mail->AddAddress('aiza@feliix.com', 'Aiza Eisma');
+            $mail->AddCC('cristina@feliix.com', 'Cristina Matining');
+            $mail->AddCC('alleah.feliix@gmail.com', 'Alleah Belmonte');
+        }
+
     }
     if($status == 'False')
         $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
@@ -8093,8 +8098,52 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver .= $list["username"] . ", ";
-            $mail->AddAddress($list["email"], $list["username"]);
+            if($action == 'finish_notes')
+            {
+                if($list["username"] == 'Nestor Rosales')
+                {
+                    $receiver .= "Aiza Eisma" . ", ";
+                    $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                }
+                else{
+                    if($list["username"] == 'Cristina Matining'){
+                        $receiver .= "Alleah Belmonte" . ", ";
+                        $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
+                    }
+                    else{
+                        $receiver .= $list["username"] . ", ";
+                        $mail->AddAddress($list["email"], $list["username"]);
+                    }
+                }
+            }
+            else{
+                if($action == 'reject')
+                {
+                    if($list["username"] == 'Nestor Rosales')
+                    {
+                        $receiver .= "Aiza Eisma" . ", ";
+                        $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                        $receiver .= $list["username"] . ", ";
+                        $mail->AddAddress($list["email"], $list["username"]);
+                    }
+                    else{
+                        if($list["username"] == 'Cristina Matining'){
+                            $receiver .= "Alleah Belmonte" . ", ";
+                            $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                        else{
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                    }
+                }
+                else{
+                    $receiver .= $list["username"] . ", ";
+                    $mail->AddAddress($list["email"], $list["username"]);
+                }
+            }
         }
     }
 
@@ -8107,8 +8156,52 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $cc = $list["username"];
-            $mail->AddCC($list["email"], $list["username"]);
+            if($action == 'send_note' || $action == 'withdraw_note_tw')
+            {
+                if($list["username"] == 'Nestor Rosales')
+                {
+                    $cc .= "Aiza Eisma" . ", ";
+                    $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+                }
+                else{
+                    if($list["username"] == 'Cristina Matining'){
+                        $cc .= "Alleah Belmonte" . ", ";;
+                        $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
+                    }
+                    else{
+                        $cc .= $list["username"];
+                        $mail->AddCC($list["email"], $list["username"]);
+                    }
+                }
+            }
+            else{
+                if($action == 'approval' || $action == 'approved' || $action == 'withdraw')
+                {
+                    if($list["username"] == 'Nestor Rosales')
+                    {
+                        $cc .= "Aiza Eisma" . ", ";
+                        $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+                        $cc .= $list["username"];
+                        $mail->AddCC($list["email"], $list["username"]);
+                    }
+                    else{
+                        if($list["username"] == 'Cristina Matining'){
+                            $cc .= "Alleah Belmonte";
+                            $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
+                            $cc .= $list["username"];
+                            $mail->AddCC($list["email"], $list["username"]);
+                        }
+                        else{
+                            $cc .= $list["username"];
+                            $mail->AddCC($list["email"], $list["username"]);
+                        }
+                    }
+                }
+                else{
+                    $cc .= $list["username"];
+                    $mail->AddCC($list["email"], $list["username"]);
+                }
+            }
         }
     }
 
@@ -8340,7 +8433,6 @@ function order_notification($name, $access,  $access_cc, $project_name, $serial_
     }
 
 }
-
 
 function mockup_notification($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
 {
@@ -11183,10 +11275,55 @@ function order_notification03($name, $access,  $access_cc, $project_name, $seria
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
+            if($order_type == 'Order - Close Deal'){
 
-            $receiver .= $list["username"] . ", ";
-            $mail->AddAddress($list["email"], $list["username"]);
+                if($action == 'new_message_17' || $action == 'new_message_18'){
 
+                    if($list["username"] == 'Nestor Rosales')
+                    {
+                        $receiver .= "Aiza Eisma" . ", ";
+                        $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                    }
+                    else{
+                        if($list["username"] == 'Cristina Matining')
+                        {
+                            $receiver .= "Alleah Belmonte" . ", ";
+                            $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
+                        }
+                        else{
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                    }
+                }
+                else{
+                    if($list["username"] == 'Nestor Rosales')
+                    {
+                        $receiver .= "Aiza Eisma" . ", ";
+                        $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                        $receiver .= $list["username"] . ", ";
+                        $mail->AddAddress($list["email"], $list["username"]);
+                    }
+                    else{
+                        if($list["username"] == 'Cristina Matining')
+                        {
+                            $receiver .= "Alleah Belmonte" . ", ";
+                            $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                        else{
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
         }
     }
 
@@ -12057,8 +12194,55 @@ function order_notification03Access7($name, $access,  $access_cc, $project_name,
         $notifior = GetAccessNotifiers($c_list, $serial_name);
         foreach($notifior as &$list)
         {
-            $receiver .= $list["username"] . ", ";
-            $mail->AddAddress($list["email"], $list["username"]);
+            if($order_type == 'Order - Close Deal'){
+
+                if($action == 'new_message_17' || $action == 'new_message_18'){
+
+                    if($list["username"] == 'Nestor Rosales')
+                    {
+                        $receiver .= "Aiza Eisma" . ", ";
+                        $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                    }
+                    else{
+                        if($list["username"] == 'Cristina Matining')
+                        {
+                            $receiver .= "Alleah Belmonte" . ", ";
+                            $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
+                        }
+                        else{
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                    }
+                }
+                else{
+                    if($list["username"] == 'Nestor Rosales')
+                    {
+                        $receiver .= "Aiza Eisma" . ", ";
+                        $mail->AddAddress("aiza@feliix.com", "Aiza Eisma");
+                        $receiver .= $list["username"] . ", ";
+                        $mail->AddAddress($list["email"], $list["username"]);
+                    }
+                    else{
+                        if($list["username"] == 'Cristina Matining')
+                        {
+                            $receiver .= "Alleah Belmonte" . ", ";
+                            $mail->AddAddress("alleah.feliix@gmail.com", "Alleah Belmonte");
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                        else{
+                            $receiver .= $list["username"] . ", ";
+                            $mail->AddAddress($list["email"], $list["username"]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $receiver .= $list["username"] . ", ";
+                $mail->AddAddress($list["email"], $list["username"]);
+            }
         }
     }
 
@@ -13571,6 +13755,15 @@ function product_notify($action, $_record)
             $mail->AddCC($list["email"], $list["username"]);
         }
 
+        if($_record["category"] == "10000000")
+        {
+            // Aiza 放入cc收件人名單
+            $receiver .= "Aiza Eisma" . ", ";
+            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+            $receiver .= "Alleah Belmonte" . ", ";
+            $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
+        }
+
     }
 
     if( $action == "update" ){
@@ -13582,6 +13775,15 @@ function product_notify($action, $_record)
             $mail->AddCC($list["email"], $list["username"]);
         }
 
+        if($_record["category"] == "10000000")
+        {
+            // Aiza 放入cc收件人名單
+            $receiver .= "Aiza Eisma" . ", ";
+            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+            $receiver .= "Alleah Belmonte" . ", ";
+            $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
+        }
+
     }
 
     if( $action == "delete" ){
@@ -13591,6 +13793,15 @@ function product_notify($action, $_record)
         {
             $receiver .= $list["username"] . ", ";
             $mail->AddCC($list["email"], $list["username"]);
+        }
+
+        if($_record["category"] == "10000000")
+        {
+            // Aiza 放入cc收件人名單
+            $receiver .= "Aiza Eisma" . ", ";
+            $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+            $receiver .= "Alleah Belmonte" . ", ";
+            $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
         }
 
     }
