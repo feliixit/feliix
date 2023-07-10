@@ -1128,104 +1128,105 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
 }
 
-function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category)
-{
-    $conf = new Conf();
+// 2023/07/10 因為目前無任何地方會呼叫此函數，因此將其註解起來
+// function send_check_notify_mail($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category)
+// {
+//     $conf = new Conf();
 
-    $mail = new PHPMailer();
-    $mail->IsSMTP();
-    $mail->Mailer = "smtp";
-    $mail->CharSet = 'UTF-8';
-    $mail->Encoding = 'base64';
+//     $mail = new PHPMailer();
+//     $mail->IsSMTP();
+//     $mail->Mailer = "smtp";
+//     $mail->CharSet = 'UTF-8';
+//     $mail->Encoding = 'base64';
 
-    // $mail->SMTPDebug  = 0;
-    // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "ssl";
-    // $mail->Port       = 465;
-    // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = $conf::$mail_host;
-    // $mail->Username   = $conf::$mail_username;
-    // $mail->Password   = $conf::$mail_password;
+//     // $mail->SMTPDebug  = 0;
+//     // $mail->SMTPAuth   = true;
+//     // $mail->SMTPSecure = "ssl";
+//     // $mail->Port       = 465;
+//     // $mail->SMTPKeepAlive = true;
+//     // $mail->Host       = $conf::$mail_host;
+//     // $mail->Username   = $conf::$mail_username;
+//     // $mail->Password   = $conf::$mail_password;
 
-    $mail = SetupMail($mail, $conf);
+//     $mail = SetupMail($mail, $conf);
 
-    $mail->IsHTML(true);
-    $mail->AddAddress($email1, $name);
-
-
-    if($category == '1')
-        $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
-
-    if($category == '2')
-        $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
-
-    $mail->AddCC('kuan@feliix.com', 'Kuan');
-    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
-    $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
-    $mail->AddCC('ariel@feliix.com', 'Ariel Lin');
-    //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
-    //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
-
-    $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
-
-    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
-    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
-    // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
+//     $mail->IsHTML(true);
+//     $mail->AddAddress($email1, $name);
 
 
-    if($status == 'True'){
-        $mail->Subject = "[PAYMENT CONFIRMED] Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
+//     if($category == '1')
+//         $mail->AddAddress('johmar@feliix.com', 'Johmar Maximo');
 
-        if($category == '2'){
-            $mail->AddAddress('aiza@feliix.com', 'Aiza Eisma');
-            $mail->AddCC('cristina@feliix.com', 'Cristina Matining');
-            $mail->AddCC('alleah.feliix@gmail.com', 'Alleah Belmonte');
-        }
+//     if($category == '2')
+//         $mail->AddAddress('nestor@feliix.com', 'Nestor Rosales');
 
-    }
-    if($status == 'False')
-        $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
+//     $mail->AddCC('kuan@feliix.com', 'Kuan');
+//     $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+//     $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+//     $mail->AddCC('ariel@feliix.com', 'Ariel Lin');
+//     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
+//     //$mail->AddCC('edneil@feliix.com', 'Edneil Fernandez');
 
-    $content =  "<p>Dear " . $name . ",</p>";
-    $content = $content . "<p>Glen has checked downpayment proof, Following are the details:</p>";
+//     $mail->AddCC('dennis@feliix.com', 'Dennis Lin');
 
-    $content = $content . "<p>Project Name: " . $projectname . "</p>";
-    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
-    $content = $content . "<p>Submitter: " . $name . "</p>";
-    $content = $content . "<p>Remark: " . $remark . "</p>";
+//     $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+//     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+//     // $mail->AddCC("tryhelpbuy@gmail.com", "tryhelpbuy");
 
 
-    $content = $content . "<p>Status: Checked: " . $status . "</p>";
-    /*
-    $content = $content . "<p>Project Name: " . $projectname . "</p>";
-    $content = $content . "<p>Submission Time: " . $subtime . "</p>";
-    $content = $content . "<p>Submitter: " . $leaver . "</p>";
-    $content = $content . "<p>Checked: " . $status . "</p>";
-    $content = $content . "<p>Remark: " . $remark . "</p>";
-    */
+//     if($status == 'True'){
+//         $mail->Subject = "[PAYMENT CONFIRMED] Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
 
-    if($reason != "")
-        $content = $content . "<p>Additional Remark: " . $reason . "</p>";
+//         if($category == '2'){
+//             $mail->AddAddress('aiza@feliix.com', 'Aiza Eisma');
+//             $mail->AddCC('cristina@feliix.com', 'Cristina Matining');
+//             $mail->AddCC('alleah.feliix@gmail.com', 'Alleah Belmonte');
+//         }
 
-    $content = $content . "<p> </p>";
+//     }
+//     if($status == 'False')
+//         $mail->Subject = "Checked: " . $status . " for Downpayment Proof submitted by " . $name . "(" . $projectname . ")";
 
-    $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to view the downpayment proof.</p>";
-    $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+//     $content =  "<p>Dear " . $name . ",</p>";
+//     $content = $content . "<p>Glen has checked downpayment proof, Following are the details:</p>";
+
+//     $content = $content . "<p>Project Name: " . $projectname . "</p>";
+//     $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+//     $content = $content . "<p>Submitter: " . $name . "</p>";
+//     $content = $content . "<p>Remark: " . $remark . "</p>";
 
 
-    $mail->MsgHTML($content);
-    if($mail->Send()) {
-        logMail($email1, $content);
-        return true;
-//        echo "Error while sending Email.";
-//        var_dump($mail);
-    } else {
-        logMail($email1, $mail->ErrorInfo . $content);
-        return false;
-//        echo "Email sent successfully";
-    }
+//     $content = $content . "<p>Status: Checked: " . $status . "</p>";
+//     /*
+//     $content = $content . "<p>Project Name: " . $projectname . "</p>";
+//     $content = $content . "<p>Submission Time: " . $subtime . "</p>";
+//     $content = $content . "<p>Submitter: " . $leaver . "</p>";
+//     $content = $content . "<p>Checked: " . $status . "</p>";
+//     $content = $content . "<p>Remark: " . $remark . "</p>";
+//     */
 
-}
+//     if($reason != "")
+//         $content = $content . "<p>Additional Remark: " . $reason . "</p>";
+
+//     $content = $content . "<p> </p>";
+
+//     $content = $content . "<p>Please log on to Feliix >> Admin Section >> Verify and Review to view the downpayment proof.</p>";
+//     $content = $content . "<p>URL: " . $conf::$mail_ip . "</p>";
+
+
+//     $mail->MsgHTML($content);
+//     if($mail->Send()) {
+//         logMail($email1, $content);
+//         return true;
+// //        echo "Error while sending Email.";
+// //        var_dump($mail);
+//     } else {
+//         logMail($email1, $mail->ErrorInfo . $content);
+//         return false;
+// //        echo "Email sent successfully";
+//     }
+
+// }
 
 function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special)
 {
@@ -14348,24 +14349,24 @@ function GetProjectCategoryByProjectId($id)
 
 function SetupMail($mail, $conf)
 {
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-
-
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
     // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'jermey.wilkinson@ethereal.email';
-    // $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'jermey.wilkinson@ethereal.email';
+    $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
 
     return $mail;
 
