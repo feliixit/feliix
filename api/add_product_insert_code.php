@@ -595,6 +595,10 @@ function GetProductCategory($id, $db){
         $variation2_value = [];
         $variation3_value = [];
 
+        $variation1_text = "";
+        $variation2_text = "";
+        $variation3_text = "";
+
         if(count($product) > 0)
         {
             $variation1_text = $product[0]['k1'];
