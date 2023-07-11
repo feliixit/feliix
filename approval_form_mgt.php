@@ -66,7 +66,7 @@ header( 'location:index' );
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Quotation Creation and Management</title>
+    <title>Approval Form Management</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -166,16 +166,16 @@ header( 'location:index' );
             width: 400px;
         }
 
-        .tablebox.lv1 ul li:nth-of-type(3) {
+        .tablebox.lv1 ul li:nth-of-type(3), .tablebox.lv1 ul li:nth-of-type(4) {
             min-width: 60px;
         }
 
-        .tablebox.lv1 ul li:nth-of-type(4), .tablebox.lv1 ul li:nth-of-type(5) {
+        .tablebox.lv1 ul li:nth-of-type(5), .tablebox.lv1 ul li:nth-of-type(6) {
             color: #000;
             min-width: 200px;
         }
 
-        .tablebox.lv1 ul li:nth-of-type(6) {
+        .tablebox.lv1 ul li:nth-of-type(7) {
             min-width: 200px;
         }
 
@@ -192,7 +192,21 @@ header( 'location:index' );
             background-image: url(../images/ui/icon_form_select_arrow_blue.svg)
         }
 
-        .tableframe .tablebox ul li:nth-of-type(6) button {
+        .tableframe .tablebox ul li:nth-of-type(4) > a {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .tableframe .tablebox ul li:nth-of-type(4) > a:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .tableframe .tablebox ul li:nth-of-type(4) > a > i.fa-file {
+            color: var(--fth01);
+        }
+
+        .tableframe .tablebox ul li:nth-of-type(7) button {
             border: 2px solid black;
             width: 34px;
             box-sizing: border-box;
@@ -246,10 +260,10 @@ header( 'location:index' );
   {
 ?>
                     <div id="insert_dialog" class="dialog d-add">
-                        <h6>Create New Quotation:</h6>
+                        <h6>Create New Approval Form:</h6>
                         <div class="formbox">
                             <dl>
-                                <dt>Quotation Name</dt>
+                                <dt>Approval Form Name</dt>
                                 <dd><input type="text" placeholder="" v-model="ins_title"></dd>
 
                                 <dt>Relate To</dt>
@@ -411,7 +425,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt>Quotation Creator</dt>
+                                <dt>Approval Form Creator</dt>
                                 <dd>
                                     <select v-model="fil_creator">
                                         <option value=""></option>
@@ -421,7 +435,19 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt>Keyword (only for quotation name, project name or quotation no.)</dt>
+                                <dt>Has Approved Files?</dt>
+                                <dd>
+                                    <select v-model="fil_approval">
+                                        <option value=""></option>
+                                        <option value="Y">Yes</option>
+                                        <option value="N">No</option>
+                                    </select>
+                                </dd>
+
+                                <!-- 這裡輸入的關鍵字，在搜尋 quotation no. 的部分，是需要去表格中的「Related Quotation」這個欄位裡面列出的值做搜尋，會需要做的事情是: 因為客戶
+                                同意書記錄的資料表中有相關聯的報價單 ID 欄位，首先會用這個 ID 去 JOIN 資料表 quotation 來得到 quotation no. 資料，然後這張 join 之後的資料表裡
+                                面，再比對使用者輸入的關鍵字是否有出現在這張 join 過後的資料表的 quotation no. 欄位裡 -->
+                                <dt>Keyword (for approval form name, project name or quotation no.)</dt>
                                 <dd><input type="text" v-model="fil_keyword"></dd>
 
                             </dl>
@@ -566,9 +592,10 @@ header( 'location:index' );
             <div class="tableframe">
                 <div class="tablebox lv1">
                     <ul class="head">
-                        <li>Quotation Name</li>
+                        <li>Approval Form Name</li>
                         <li>Related Project / Related Task Mgt.</li>
-                        <li>Quotation Number</li>
+                        <li>Related Quotation</li>
+                        <li>Approved Files</li>
                         <li>Created Time</li>
                         <li>Last Updated Time</li>
                         <li>Action</li>
@@ -658,7 +685,16 @@ header( 'location:index' );
                             </dd>
 
                         </li>
-                        <li>{{ receive_record.quotation_no }}</li>
+
+                        <!-- 如果使用者是從報價單頁面中，建立出客戶同意書記錄，則在下列的 li 中要呈現出超連結，而且在超連結裡面的報價單號碼文
+                        字，是需要從報價單 id 反查它最新的報價單號碼，用這個最新的報價單號碼來當作超連結的文字部分；如果使用者是透過 + 按鈕建立客戶同意書記錄，則 li 標籤裡面留空白即可 -->
+                        <li><a :href="'quotation?id=' + receive_record.q_id" v-if="receive_record.q_id != 0 && receive_record.pageless == ''" target="_blank">{{ receive_record.q_id }}</a><a :href="'quotation_pageless?id=' + receive_record.q_id" v-if="receive_record.q_id != 0 && receive_record.pageless != ''" target="_blank">{{ receive_record.q_id }}</a></li>
+
+                        <!-- 如果使用者已經有上傳檔案到這個客戶同意書記錄中，則需要把每一個上傳的檔案用 a 標籤列出來；如果沒有任何已上傳的檔案，則 li 標籤裡面留空白即可 -->
+                        <li>
+                            <a :href="img_url + file.gcp_name" v-for="(file, index) in receive_record.files" target="_blank"><i aria-hidden="true" class="fas fa-file fa-lg"></i></a>
+                        </li>
+
                         <li>{{receive_record.created_at}}<br>{{receive_record.created_by}}</li>
                         <li>{{receive_record.post[0].updated_at}}<br>{{receive_record.post[0].username}}</li>
                         <li>

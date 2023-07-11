@@ -1545,6 +1545,12 @@ function GetTotalInfo($qid, $db, $prefix){
         
     }
 
+    if($prefix == '')
+    {
+        $vat = '';
+        $show_vat = '';
+    }
+
     $merged_results = array(
         "id" => $id,
         "page" => $page,
@@ -1589,6 +1595,11 @@ function GetTypes($qid, $db, $prefix){
 
         $not_show = $row['not_show'];
         $real_amount = $row['real_amount'];
+
+        if($prefix == ''){
+            $not_show = '';
+            $real_amount = 0;
+        }
 
         $blocks = [];
 

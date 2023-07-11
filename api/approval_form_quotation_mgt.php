@@ -56,6 +56,8 @@ $key = (isset($_GET['key']) ?  $_GET['key'] : '');
 
 $key = urldecode($key);
 
+$app = (isset($_GET['app']) ? $_GET['app'] : '');
+
 $op1 = (isset($_GET['op1']) ?  urldecode($_GET['op1']) : '');
 $od1 = (isset($_GET['od1']) ?  urldecode($_GET['od1']) : '');
 
@@ -91,7 +93,8 @@ $query = "SELECT pm.id,
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
                 DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at,
-                pm.pageless
+                COALESCE((SELECT title FROM quotation WHERE id = pm.q_id), '') AS q_title,
+                COALESCE((SELECT pageless FROM quotation WHERE id = pm.q_id), '') AS pageless
           FROM approval_form_quotation pm 
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
@@ -241,9 +244,11 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_by = $row['updated_by'];
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
+    $q_title = $row['q_title'];
     $pageless = $row['pageless'];
    
     $post = GetRecentPost($row['id'], $db);
+    $files = GetRecentFiles($row['id'], $db);
 
     $merged_results[] = array(
         "is_edited" => 1,
@@ -266,6 +271,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "created_at" => $created_at,
         "updated_at" => $updated_at,
         "post" => $post,
+        "files" => $files,
+        "q_title" => $q_title,
         "pageless" => $pageless
      
     );
@@ -273,9 +280,36 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 $filter_result = [];
 
+if($app != "")
+{
+    if($app == "Y")
+    {
+        foreach ($merged_results as &$value) {
+            if(count($value['files']) > 0)
+            {
+                $filter_result[] = $value;
+            }
+        }
+    }
+    
+    if($app == "N")
+    {
+        foreach ($merged_results as &$value) {
+            if(count($value['files']) == 0)
+            {
+                $filter_result[] = $value;
+            }
+        }
+    }
+}
+else
+    $filter_result = $merged_results;
+
+$key_results = array();
+
 if($key != "")
 {
-    foreach ($merged_results as &$value) {
+    foreach ($filter_result as &$value) {
         if(
             preg_match("/{$key}/i", $value['project_name']) ||
             preg_match("/{$key}/i", $value['project_name_a']) ||
@@ -285,18 +319,41 @@ if($key != "")
             preg_match("/{$key}/i", $value['project_name_sl']) ||
             preg_match("/{$key}/i", $value['project_name_sv']) ||
             preg_match("/{$key}/i", $value['title']) ||
+            preg_match("/{$key}/i", $value['q_title']) ||
             preg_match("/{$key}/i", $value['quotation_no']))
         {
-            $filter_result[] = $value;
+            $key_results[] = $value;
         }
     }
 }
 else
-    $filter_result = $merged_results;
+    $key_results = $filter_result;
 
-echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
+echo json_encode($key_results, JSON_UNESCAPED_SLASHES);
 
+function GetRecentFiles($pid, $db){
+    $sql = "SELECT f.id, pm.remark comment, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at, pm.final_approve final_quotation FROM approval_form_project_approve pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'approval_form' where pm.project_id = " . $pid . " and pm.status <> -1 and f.status <> -1";
+    $stmt = $db->prepare( $sql );
 
+    $stmt->execute();
+
+    $result = [];
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $result[] = array(
+            "id" => $row['id'],
+            "comment" => $row['comment'],
+            "filename" => $row['filename'],
+            "bucket" => $row['bucket'],
+            "gcp_name" => $row['gcp_name'],
+            "username" => $row['username'],
+            "created_at" => $row['created_at'],
+            "final_quotation" => $row['final_quotation']
+        );
+    }
+
+    return $result;
+}
 
 function GetRecentPost($quotation_id, $db){
     $query = "SELECT username, p.updated_at FROM approval_form_quotation p LEFT JOIN user u ON p.updated_id = u.id  WHERE p.id = " . $quotation_id . " and p.status <> -1  

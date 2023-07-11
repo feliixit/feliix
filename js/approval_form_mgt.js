@@ -14,6 +14,8 @@ var app = new Vue({
     
     type: 'project',
 
+    img_url: 'https://storage.googleapis.com/feliiximg/',
+
     project_id : 0,
     task_id : 0,
     projects : [],
@@ -44,6 +46,8 @@ var app = new Vue({
     fil_lower : '',
     fil_upper : '',
     fil_kind : '',
+
+    fil_approval : '',
 
     od_opt1 : '',
     od_ord1 : '',
@@ -116,6 +120,9 @@ var app = new Vue({
               break;
             case "key":
               _this.fil_keyword = decodeURI(tmp[1]);
+              break;
+            case "app":
+              _this.fil_approval = decodeURI(tmp[1]);
               break;
             case "kind":
               _this.fil_kind = decodeURI(tmp[1]);
@@ -624,6 +631,7 @@ var app = new Vue({
                 fpt: _this.fil_creator,
        
                 key: _this.fil_keyword,
+                app: _this.fil_approval,
                 kind: _this.fil_kind,
 
                 op1: _this.od_opt1,
@@ -875,6 +883,8 @@ var app = new Vue({
           _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
+          "&app=" +
+          _this.fil_approval +
           "&kind=" +
           _this.fil_kind +
           "&op1=" +
@@ -901,6 +911,7 @@ var app = new Vue({
         this.fil_lower = '';
         this.fil_upper = '';
         this.fil_keyword = '';
+        this.fil_approval = '';
         this.fil_kind = '';
 
         let _this = this;
@@ -916,6 +927,8 @@ var app = new Vue({
           _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
+          "&app=" +
+          _this.fil_approval +
           "&kind=" +
           _this.fil_kind +
           "&op1=" +
@@ -946,6 +959,8 @@ var app = new Vue({
           _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
+          "&app=" +
+          _this.fil_approval +
           "&kind=" +
           _this.fil_kind +
           "&op1=" +
@@ -974,6 +989,8 @@ var app = new Vue({
           _this.fil_project_creator +
           "&key=" +
           _this.fil_keyword +
+          "&app=" +
+          _this.fil_approval +
           "&kind=" +
           _this.fil_kind +
           "&op1=" +

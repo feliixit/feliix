@@ -898,8 +898,7 @@ header( 'location:index' );
         }
 
         .tb_format1 thead tr th:first-of-type,
-        .tb_format1 tbody tr td:first-of-type,
-        .tb_format1 tfoot tr td:first-of-type {
+        .tb_format1 tbody tr td:first-of-type {
             border-left: 2px solid #A0A0A0;
         }
 
@@ -920,12 +919,12 @@ header( 'location:index' );
 
 
         .tb_format1 tbody tr td img {
-            max-height: 90px;
-            max-width: 90px;
+            max-height: 240px;
+            max-width: 160px;
         }
 
         .tb_format1 tbody tr td.pic {
-            width: 125px;
+            width: 190px;
             text-align: center;
         }
 
@@ -933,27 +932,6 @@ header( 'location:index' );
             font-size: 14px;
             vertical-align: top;
             padding: 15px;
-        }
-
-        .tb_format1 tfoot tr td:nth-of-type(1) {
-            border-right: none;
-        }
-
-        .tb_format1 tfoot tr td:nth-of-type(2) {
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: rgb(0, 117, 58);
-            text-align: right;
-            padding-right: 30px;
-        }
-
-        .tb_format1 tfoot tr td:nth-of-type(3) {
-            text-align: right;
-            font-size: 16px;
-            font-weight: 800;
-            color: rgb(0, 117, 58);
-            padding: 5px 15px;
         }
 
         .tb_format1 tbody tr td:nth-of-type(1) {
@@ -1034,24 +1012,14 @@ header( 'location:index' );
             text-align: center;
         }
 
-        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1 tbody tr.desc1 td:nth-last-of-type(4) {
-            width: 70px;
+        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
+            width: 75px;
             text-align: center;
-            height: 50px;
-        }
-
-        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3),
-        .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
-            width: 200px;
-            text-align: right;
-            height: 50px;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(2),
         .tb_format1 tbody tr.desc1 td:nth-last-of-type(2) {
-            width: 200px;
-            text-align: right;
-            height: 50px;
+            width: 240px;
         }
 
         .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(1),
@@ -1060,49 +1028,22 @@ header( 'location:index' );
             text-align: left;
         }
 
-        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(5), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(5) {
-            width: 70px;
-            text-align: center;
-            height: 50px;
-        }
-
-        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(4), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(4) {
-            width: 200px;
-            text-align: right;
-            height: 50px;
-        }
-
-        .tb_format1.vat thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1.vat tbody tr.desc1 td:nth-last-of-type(3) {
-            width: 135px;
-            text-align: right;
-            height: 50px;
-        }
-
-        .tb_format1 tbody tr.desc2 td {
-            max-width: 495px;
-        }
-
-        .tb_format1.vat tbody tr.desc2 td {
-            max-width: 630px;
-        }
-
-        .tb_format1 tbody tr.desc2 td div.notes {
+        .tb_format1 tbody td.desc2 div.notes {
             text-align: left;
             color: red;
             margin: 0 5px 8px;
             white-space: pre-line;
         }
 
-        .tb_format1 tbody tr.desc2 td div.picbox {
+        .tb_format1 tbody td.desc2 div.picbox {
             text-align: center;
             vertical-align: middle;
             margin-top: 8px;
         }
 
-
-        .tb_format1 tbody tr.desc2 td div.picbox img {
+        .tb_format1 tbody td.desc2 div.picbox img {
             max-height: 120px;
-            max-width: 220px;
+            max-width: 160px;
             margin: 0 5px;
         }
 
@@ -1119,8 +1060,7 @@ header( 'location:index' );
         }
 
         .tb_format2 thead tr th:first-of-type,
-        .tb_format2 tbody tr td:first-of-type,
-        .tb_format2 tfoot tr td:first-of-type {
+        .tb_format2 tbody tr td:first-of-type {
             border-left: 2px solid #A0A0A0;
         }
 
@@ -1137,24 +1077,6 @@ header( 'location:index' );
             font-size: 14px;
             vertical-align: top;
             padding: 15px;
-        }
-
-        .tb_format2 tfoot tr td:nth-of-type(1) {
-            border-right: none;
-        }
-
-        .tb_format2 tfoot tr td:nth-of-type(2) {
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: rgb(0, 117, 58);
-        }
-
-        .tb_format2 tfoot tr td:nth-of-type(3) {
-            text-align: right;
-            font-size: 16px;
-            font-weight: 800;
-            color: rgb(0, 117, 58);
         }
 
         .tb_format2 tbody tr td:nth-of-type(1) {
@@ -1235,26 +1157,9 @@ header( 'location:index' );
             text-align: center;
         }
 
-        .tb_format2 tbody tr td:nth-last-of-type(2) {
-            width: 200px;
-            text-align: right;
-        }
-
         .tb_format2 tbody tr td:nth-last-of-type(1) {
             width: 185px;
             text-align: left;
-        }
-
-        .tb_format2 tfoot tr td:nth-last-of-type(1) {
-            width: 210px;
-            text-align: right;
-            padding: 5px 15px;
-        }
-
-        .tb_format2 tfoot tr td:nth-last-of-type(2) {
-            width: 135px;
-            text-align: right;
-            padding-right: 30px;
         }
 
         .pagebox {
@@ -2631,10 +2536,15 @@ header( 'location:index' );
                                     <ul v-for="(block, block_index) in page.types">
                                         <li>
                                             Type-{{block.type}} Subtotal Block<br>
-                                            Name: <input type="text" v-model="block.name"><br>
+                                            Name: <input type="text" v-model="block.name">
+
+                                            <!-- 不需要再呈現 「小計金額 」和「Not Show Subtotal Amount」，後續可以把這邊的程式碼直接刪掉
+                                            <br>
                                             Subtotal Amount: <input type="number" v-model="block.real_amount"> <input
                                                 type="checkbox" class="alone" value="1" v-model="block.not_show"> Not
                                             Show "Subtotal Amount"
+                                            -->
+
                                         </li>
                                         <li>
                                             <i class="fas fa-arrow-alt-circle-up"
@@ -2761,6 +2671,8 @@ header( 'location:index' );
                                         <br v-if="block.type == 'image' ">
                                         <span>Qty:</span> <input type="number" min="1" step="1" v-model="block.qty"
                                                                  @change="chang_amount(block)" oninput="this.value|=0">
+
+                                        <!-- 不需要再呈現 「Product Price」和「Ratio」和「Discount」和「Amount」，後續可以把這邊的程式碼直接刪掉
                                         Product Price: <input type="number" v-model="block.price"
                                                               @change="chang_amount(block)">
 
@@ -2769,7 +2681,10 @@ header( 'location:index' );
                                         <br>
                                         <span>Discount: </span> <input type="number" v-model="block.discount" min="0" max="100"
                                                          @change="chang_amount(block)" oninput="this.value|=0"> Amount:
-                                        <input type="number" v-model="block.amount"><br>
+                                        <input type="number" v-model="block.amount">
+                                        -->
+
+                                        <br>
                                         <span>Description:</span> <textarea rows="2"
                                                                             v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea><br>
@@ -2816,6 +2731,8 @@ header( 'location:index' );
                                         <span>No.:</span> <input style="width: 95px;" type="text" v-model="block.num">
                                         <input type="text" v-model="block.pid" hidden><br>
                                         <span>Code:</span> <input type="text" v-model="block.code"><br>
+
+                                        <!-- 不需要再呈現 「Price」和「Ratio」和「Discount」和「Amount」，後續可以把這邊的程式碼直接刪掉
                                         <span>Price:</span> <input type="number" v-model="block.price"
                                                                    @change="chang_discount(block)">
                                         Ratio: <input
@@ -2824,6 +2741,8 @@ header( 'location:index' );
                                             type="number" v-model="block.discount" @change="chang_discount(block)"
                                             min="0" max="100" oninput="this.value|=0"> Amount: <input type="number"
                                                                                                       v-model="block.amount"><br>
+                                        -->
+
                                         <!-- <span>Discount:</span> <input type="number" v-model="block.discount" @change="chang_discount(block)" min="0" max="100" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br> -->
                                         <span>Description:</span> <textarea rows="2"
                                                                             v-model="block.desc"></textarea><br>
@@ -3081,21 +3000,24 @@ header( 'location:index' );
 
                 <div class="area_subtotal">
 
+                    <!-- 因為不需要帶入價格資訊，以及 不需要判斷 12%vat 和 不需要帶入 12%vat 的資訊，因此會移除掉所有價格和 12%vat 的東西，後續這邊的程式碼可以刪除掉
                     <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']"
                            v-for="(tp, index) in pg.types">
+                    -->
+
+                    <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2']" v-for="(tp, index) in pg.types">
+
                         <thead v-if="tp.type == 'A'">
 
                         <tr>
-                            <th class="title" :colspan="product_vat == 'P' ? 8 : 7">{{ tp.name }}</th>
+                            <th class="title" colspan="6">{{ tp.name }}</th>
                         </tr>
 
                         <tr>
                             <th>No</th>
                             <th colspan="2">Description</th>
                             <th>Qty.</th>
-                            <th>Product Price</th>
-                            <th v-if="product_vat == 'P'">12% VAT</th>
-                            <th>Amount</th>
+                            <th>Notes</th>
                             <th>Approval Status</th>
                         </tr>
 
@@ -3104,7 +3026,7 @@ header( 'location:index' );
                         <thead v-if="tp.type == 'B'">
 
                         <tr>
-                            <th class="title" :colspan="product_vat == 'P' ? 5 : 5">{{ tp.name }}</th>
+                            <th class="title" colspan="3">{{ tp.name }}</th>
                         </tr>
 
                         </thead>
@@ -3115,13 +3037,13 @@ header( 'location:index' );
 
                         <tr class="desc1">
 
-                            <td rowspan="2" v-if="bk.type == 'image'">{{ bk.num }}</td>
+                            <td v-if="bk.type == 'image'">{{ bk.num }}</td>
                             <td v-if="bk.type == '' || bk.type== 'noimage' ">{{ bk.num }}</td>
 
-                            <td rowspan="2" class="pic" v-if="bk.type == 'image'">
+                            <td class="pic" v-if="bk.type == 'image'">
                                 <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
                             </td>
-                            <td rowspan="2" v-if="bk.type == 'image'">
+                            <td v-if="bk.type == 'image'">
                                 <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
@@ -3135,63 +3057,18 @@ header( 'location:index' );
                             </td>
                             <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
                             </td>
-                            <td><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                <span class="numbers deleted"
-                                      v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ (bk.price * bk.ratio  !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                        v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                        v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">
-                                <span class="numbers"
-                                      v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio - (bk.price * bk.ratio * (bk.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                <span class="numbers"
-                                      v-if="bk.discount != 0 && (bk.discount == 100 || bk.amount == '0.00')">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                            </td>
-                            <td v-if="product_vat == 'P'"><span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                <span class="numbers" v-if="bk.discount != 0 && bk.amount != '0.00'">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio - (bk.price * bk.ratio * (bk.discount / 100))) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                <span class="numbers" v-if="bk.discount != 0 && bk.amount == '0.00'">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                            </td>
 
-                            <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-
-                                <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
-                            </td>
-                            <td v-if="bk.amount == '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.qty * bk.ratio * bk.price  !== undefined ? Number(bk.qty * bk.ratio * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
-                                <span class="numbers red">FREE AS PACKAGE!</span>
-                            </td>
-
-
-                            <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
-
-                                <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
-                            </td>
-                            <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.qty * bk.ratio * bk.price  !== undefined ? Number(bk.qty * bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
-                                <span class="numbers red">FREE AS PACKAGE!</span>
-                            </td>
-
-                            <td rowspan="2" v-if="bk.type == 'image'">
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
-                                     <span>Approved</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ac" v-model="bk.approval">
-                                     <span>Approved with comments</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ic" v-model="bk.approval">
-                                     <span>Incorporate comments and resubmit</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="na" v-model="bk.approval">
-                                     <span>Not Approved</span>
+                            <td class="desc2 pic" v-if="bk.type == 'image'">
+                                <div class="notes">{{ bk.notes }}</div>
+                                <div class="picbox">
+                                    <img v-if="bk.photo2 != ''" :src="bk.url2">
+                                    <img v-if="bk.photo3 != ''" :src="bk.url3">
                                 </div>
                             </td>
 
-                            <td v-if="bk.type !== 'image'">
+                            <td class="desc2 pic" v-if="bk.type !== 'image'"></td>
+
+                            <td v-if="bk.type == 'image' || bk.type !== 'image'">
                                 <div class="approval_box">
                                     <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
                                      <span>Approved</span>
@@ -3215,25 +3092,6 @@ header( 'location:index' );
 
                         </tr>
 
-                        <tr class="desc2" v-if="bk.type == 'image'">
-
-                            <td class="pic" colspan="3" v-if="!(product_vat == 'P')">
-                                <div class="notes">{{ bk.notes }}</div>
-                                <div class="picbox">
-                                    <img v-if="bk.photo2 != ''" :src="bk.url2">
-                                    <img v-if="bk.photo3 != ''" :src="bk.url3">
-                                </div>
-                            </td>
-
-                            <td class="pic" colspan="4" v-if="(product_vat == 'P')">
-                                <div class="notes">{{ bk.notes }}</div>
-                                <div class="picbox">
-                                    <img v-if="bk.photo2 != ''" :src="bk.url2">
-                                    <img v-if="bk.photo3 != ''" :src="bk.url3">
-                                </div>
-                            </td>
-
-                        </tr>
 
                         </template>
 
@@ -3242,34 +3100,11 @@ header( 'location:index' );
                         <tbody v-if="tp.type == 'B'">
                         <tr v-for="(bk, index) in tp.blocks">
                             <td>{{ bk.num }}</td>
-                            <td colspan="2">
+                            <td>
                                 <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
                                 <div class="code">{{ bk.code }}</div>
                                 <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
                                 <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
-                            </td>
-
-                            <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.ratio * bk.price  !== undefined ? (Number(bk.ratio * bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                    v-if="bk.discount != 0">
-                                <span class="numbers">₱ {{ bk.amount !== undefined ? (Number(bk.amount)).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
-                            </td>
-                            <td v-if="bk.amount == '0.00' && product_vat == 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.ratio * bk.price  !== undefined ? (Number(bk.ratio * bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
-                                <span class="numbers red">FREE AS PACKAGE!</span>
-                            </td>
-
-
-                            <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
-                                <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.ratio * bk.price  !== undefined ? Number(bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                        v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                    v-if="bk.discount != 0">
-                                <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
-                            </td>
-                            <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
-                                <span class="numbers deleted">₱ {{ (bk.ratio * bk.price  !== undefined ? Number(bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
-                                <span class="numbers red">FREE AS PACKAGE!</span>
                             </td>
 
                             <td>
@@ -3296,38 +3131,6 @@ header( 'location:index' );
                         </tr>
 
                         </tbody>
-
-                        <tfoot v-if="tp.type == 'A' && tp.not_show != '1'">
-                        <tr>
-                            <td :colspan="product_vat == 'P' ? 5 : 4"></td>
-                            <td>SUBTOTAL</td>
-                            <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
-                                Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
-                                "$1,") : '0.00' }}
-                            </td>
-                            <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
-                                Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
-                                "$1,") : '0.00' }}
-                            </td>
-                        </tr>
-
-                        </tfoot>
-
-                        <tfoot v-if="tp.type == 'B' && tp.not_show != '1'">
-                        <tr>
-                            <td :colspan="product_vat == 'P' ? 2 : 2"></td>
-                            <td>SUBTOTAL</td>
-                            <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
-                                Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
-                                "$1,") : '0.00' }}
-                            </td>
-                            <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
-                                Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
-                                "$1,") : '0.00' }}
-                            </td>
-                        </tr>
-
-                        </tfoot>
 
                     </table>
 
