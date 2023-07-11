@@ -266,6 +266,7 @@ try {
                 <a class="list" href="../project01_sls">Project Management (Sales)</a>
                 <a class="list" href="../quotation_mgt">Quotation Creation and Management</a>
                 <a class="list" href="../quotation_pageless_mgt">Quotation Creation and Management (Pageless)</a>
+                <a class="list" href="../approval_form_mgt">Approval Form Management</a>
                 <?php 
                 if($access6 == true)
                 {

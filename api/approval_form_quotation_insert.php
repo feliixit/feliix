@@ -22,6 +22,14 @@ $prepare_by_second_line = isset($_POST['prepare_by_second_line']) ? $_POST['prep
 $footer_first_line = isset($_POST['footer_first_line']) ? $_POST['footer_first_line'] : '';
 $footer_second_line = isset($_POST['footer_second_line']) ? $_POST['footer_second_line'] : '';
 
+$project_name = isset($_POST['project_name']) ? $_POST['project_name'] : '';
+$project_location = isset($_POST['project_location']) ? $_POST['project_location'] : '';
+$po = isset($_POST['po']) ? $_POST['po'] : '';
+$request_by = isset($_POST['request_by']) ? $_POST['request_by'] : '';
+$request_date = isset($_POST['request_date']) ? $_POST['request_date'] : '';
+$submit_by = isset($_POST['submit_by']) ? $_POST['submit_by'] : '';
+$submit_date = isset($_POST['submit_date']) ? $_POST['submit_date'] : '';
+
 $add_term = isset($_POST['add_term']) ? $_POST['add_term'] : '';
 
 $title = isset($_POST['title']) ? $_POST['title'] : '';
@@ -72,7 +80,7 @@ else
         // now you can apply
         $uid = $user_id;
     
-        $query = "INSERT INTO quotation
+        $query = "INSERT INTO approval_form_quotation
         SET
             `title` = :title,
             `kind` = :kind,
@@ -89,6 +97,15 @@ else
             `prepare_by_second_line` = :prepare_by_second_line,
             `footer_first_line` = :footer_first_line,
             `footer_second_line` = :footer_second_line,
+
+            `project_name` = :project_name,
+            `project_location` = :project_location,
+            `po` = :po,
+            `request_by` = :request_by,
+            `request_date` = :request_date,
+            `submit_by` = :submit_by,
+            `submit_date` = :submit_date,
+            
             `pageless` = :pageless,
             
             `status` = 0,
@@ -114,6 +131,16 @@ else
         $stmt->bindParam(':prepare_by_second_line', $prepare_by_second_line);
         $stmt->bindParam(':footer_first_line', $footer_first_line);
         $stmt->bindParam(':footer_second_line', $footer_second_line);
+
+        $stmt->bindParam(':project_name', $project_name);
+        $stmt->bindParam(':project_location', $project_location);
+        $stmt->bindParam(':po', $po);
+        $stmt->bindParam(':request_by', $request_by);
+        $stmt->bindParam(':request_date', $request_date);
+        $stmt->bindParam(':submit_by', $submit_by);
+        $stmt->bindParam(':submit_date', $submit_date);
+
+        
         $stmt->bindParam(':pageless', $pageless);
 
         $stmt->bindParam(':create_id', $user_id);
@@ -145,7 +172,7 @@ else
         {
             $pg = $i + 1;
             // insert quotation_page
-            $query = "INSERT INTO quotation_page
+            $query = "INSERT INTO approval_form_quotation_page
             SET
                 `quotation_id` = :quotation_id,
     
@@ -189,7 +216,7 @@ else
             $types_array = $pages_array[$i]['types'];
             for($j=0; $j < count($types_array); $j++)
             {
-                $query = "INSERT INTO quotation_page_type
+                $query = "INSERT INTO approval_form_quotation_page_type
                 SET
                     `quotation_id` = :quotation_id,
                     `page_id` = :page_id,
@@ -252,7 +279,7 @@ else
 【*Does not cover defects resulting from normal wear, improper use, or improper installation which does not conform to the installation instructions.】
 【*Warranty is null and void when tampered/seal is broken】";
 
-                $query = "INSERT INTO quotation_term
+                $query = "INSERT INTO approval_form_quotation_term
                 SET
                     `quotation_id` = :quotation_id,
                     `page` = 0,
@@ -307,7 +334,7 @@ else
 【*Custom items- approval of specs by client and/or designer】
 【*Installation of items is not part of the service unless requested by client for additional cost.】';
 
-                $query = "INSERT INTO quotation_term
+                $query = "INSERT INTO approval_form_quotation_term
                 SET
                     `quotation_id` = :quotation_id,
                     `page` = 0,
@@ -351,7 +378,7 @@ else
                 $brief = "";
                 $list = "Feliix Inc. is not responsible for specification and layout revisions that may affect lux outcomes, unless it is a proposal produced and approved by the company itself.";
 
-                $query = "INSERT INTO quotation_term
+                $query = "INSERT INTO approval_form_quotation_term
                 SET
                     `quotation_id` = :quotation_id,
                     `page` = 0,
@@ -405,7 +432,7 @@ Any returned deliveries due to unfinished site and/or resulting for items not to
 5. Covid related requirements (e.g. Swab Test, etc.) are reimbursable to the client.
 6. Delivery of items is free of charge within Metro Manila only. Out of town delivery shall be billed accordingly.";
 
-                $query = "INSERT INTO quotation_term
+                $query = "INSERT INTO approval_form_quotation_term
                 SET
                     `quotation_id` = :quotation_id,
                     `page` = 0,
