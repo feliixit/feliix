@@ -93,6 +93,7 @@ $query = "SELECT pm.id,
                 u_user.username AS updated_by,
                 DATE_FORMAT(pm.created_at, '%Y-%m-%d %H:%i:%s') created_at, 
                 DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at,
+                COALESCE((SELECT quotation_no FROM quotation WHERE id = pm.q_id), '') AS q_quotation_no,
                 COALESCE((SELECT title FROM quotation WHERE id = pm.q_id), '') AS q_title,
                 COALESCE((SELECT pageless FROM quotation WHERE id = pm.q_id), '') AS pageless
           FROM approval_form_quotation pm 
@@ -244,6 +245,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_by = $row['updated_by'];
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
+    $q_quotation_no = $row['q_quotation_no'];
     $q_title = $row['q_title'];
     $pageless = $row['pageless'];
    
@@ -272,6 +274,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "updated_at" => $updated_at,
         "post" => $post,
         "files" => $files,
+        "q_quotation_no" => $q_quotation_no,
         "q_title" => $q_title,
         "pageless" => $pageless
      

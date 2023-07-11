@@ -688,7 +688,7 @@ header( 'location:index' );
 
                         <!-- 如果使用者是從報價單頁面中，建立出客戶同意書記錄，則在下列的 li 中要呈現出超連結，而且在超連結裡面的報價單號碼文
                         字，是需要從報價單 id 反查它最新的報價單號碼，用這個最新的報價單號碼來當作超連結的文字部分；如果使用者是透過 + 按鈕建立客戶同意書記錄，則 li 標籤裡面留空白即可 -->
-                        <li><a :href="'quotation?id=' + receive_record.q_id" v-if="receive_record.q_id != 0 && receive_record.pageless == ''" target="_blank">{{ receive_record.q_id }}</a><a :href="'quotation_pageless?id=' + receive_record.q_id" v-if="receive_record.q_id != 0 && receive_record.pageless != ''" target="_blank">{{ receive_record.q_id }}</a></li>
+                        <li><a :href="'quotation?id=' + receive_record.q_id" v-if="receive_record.q_id != 0 && receive_record.pageless == ''" target="_blank">{{ receive_record.q_quotation_no }}</a><a :href="'quotation_pageless?id=' + receive_record.q_id" v-if="receive_record.q_id != 0 && receive_record.pageless != ''" target="_blank">{{ receive_record.q_quotation_no }}</a></li>
 
                         <!-- 如果使用者已經有上傳檔案到這個客戶同意書記錄中，則需要把每一個上傳的檔案用 a 標籤列出來；如果沒有任何已上傳的檔案，則 li 標籤裡面留空白即可 -->
                         <li>
