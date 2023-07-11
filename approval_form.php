@@ -671,7 +671,7 @@ header( 'location:index' );
         }
 
         .qn_body .area_client_signature table {
-            width: 100%;
+            width: 97%;
             font-size: 14px;
             font-weight: 500;
         }
@@ -697,7 +697,7 @@ header( 'location:index' );
         }
 
         .qn_body .area_client_signature .copyright {
-            width: 100%;
+            width: 97%;
             font-size: 14px;
             font-weight: 500;
             text-align: right;
@@ -1044,7 +1044,7 @@ header( 'location:index' );
         .tb_format1 tbody td.desc2 div.picbox img {
             max-height: 120px;
             max-width: 160px;
-            margin: 0 5px;
+            margin: 5px;
         }
 
         .area_subtotal .tb_format2 {
@@ -2953,7 +2953,7 @@ header( 'location:index' );
 
                 <div class="right_block">
 
-                    <div class="af_category">{{ project_category == 'Lighting' ? 'Fixture' : (project_category == 'Office Systems' ? 'Furniture' : '' ) }} APPROVAL FORM</div>
+                    <div class="af_category">{{ project_category == 'Lighting' ? 'FIXTURE' : (project_category == 'Office Systems' ? 'FURNITURE' : '' ) }} APPROVAL FORM</div>
 
                     <div class="af_qo_po">
                         <table>
