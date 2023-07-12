@@ -510,6 +510,28 @@ $(function(){
                 </div>
             </div>
 
+            <div class="box-content">
+                <ul>
+                    <li><b>Manager Halfday Planning</b></li>
+                    <br>
+                    <li>
+                        <div>
+                        <v-select v-model="halfday"
+                                              :options="payees"
+                                              attach
+                                              chips
+                                              label="Name"
+                                              multiple></v-select>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="btnbox">
+                <a class="btn" @click="cancel(20)">Cancel</a>
+                    <a class="btn" @click="save(20)">Save</a>
+                </div>
+            </div>
+
 
         </div>
     </div>

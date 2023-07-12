@@ -175,6 +175,12 @@ $(function(){
                                                                  onfocus="this.placeholder = ''" maxlength="5"  v-model="sl"
                                                                  onblur="this.placeholder = ''" style="width: 100%;">
                         </li>
+                        
+                        <li><b>Yearly Credit: Manager Halfday Planning</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"  v-model="halfday"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;">
+                        </li>
 
                     </ul>
 
@@ -290,6 +296,12 @@ $(function(){
                         <li><b>Yearly Credit: Sick Leave (SL)</b></li>
                         <li style="padding-bottom: 10px;"><input type="text" required="required"
                                                                  onfocus="this.placeholder = ''" maxlength="5"  v-model="record.sl"
+                                                                 onblur="this.placeholder = ''" style="width: 100%;">
+                        </li>
+
+                        <li><b>Yearly Credit: Manager Halfday Planning</b></li>
+                        <li style="padding-bottom: 10px;"><input type="text" required="required"
+                                                                 onfocus="this.placeholder = ''" maxlength="5"  v-model="record.halfday"
                                                                  onblur="this.placeholder = ''" style="width: 100%;">
                         </li>
                     </ul>

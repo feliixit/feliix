@@ -89,10 +89,11 @@ else
         $vl_sl_credit = 0;
         $vl_credit = 0;
         $sl_credit = 0;
+        $halfday_credit = 0;
         $leave_level = 0; 
         $head_of_department = 0; // leave apply without approval
 
-        $query = "SELECT leave_level, sil, vl_sl, vl, sl, head_of_department from user where id = " . $user_id;
+        $query = "SELECT leave_level, sil, vl_sl, vl, sl, halfday, head_of_department from user where id = " . $user_id;
 
         $stmt = $db->prepare( $query );
         $stmt->execute();
@@ -103,6 +104,7 @@ else
             $vl_credit = $row['vl'];
             $sl_credit = $row['sl'];
             $leave_level  = $row['leave_level'];
+            $halfday_credit  = $row['halfday'];
 
             $head_of_department  = $row['head_of_department'];
         }
@@ -152,9 +154,9 @@ else
             $tailPeriodEnd = date("Y-m-d",strtotime("next year Nov 30"));
 
             if($timeStart > $headPeriodEnd)
-                $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id where a.uid = " . $user_id . " and a.status in (0, 1) and apply_date >= '" . str_replace('-', '', $tailPeriodStart) . "' and apply_date <= '" . str_replace('-', '', $tailPeriodEnd) . "' ";
+                $query = "SELECT apply_date, apply_period, a.leave_type from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id where a.uid = " . $user_id . " and a.status in (0, 1) and apply_date >= '" . str_replace('-', '', $tailPeriodStart) . "' and apply_date <= '" . str_replace('-', '', $tailPeriodEnd) . "' ";
             else
-                $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id where a.uid = " . $user_id . " and a.status in (0, 1) and apply_date >= '" . str_replace('-', '', $headPeriodStart) . "' and apply_date <= '" . str_replace('-', '', $headPeriodEnd) . "' ";
+                $query = "SELECT apply_date, apply_period, a.leave_type from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id where a.uid = " . $user_id . " and a.status in (0, 1) and apply_date >= '" . str_replace('-', '', $headPeriodStart) . "' and apply_date <= '" . str_replace('-', '', $headPeriodEnd) . "' ";
         }
         else
             $query = "SELECT apply_date, apply_period, a.leave_type  from `leave` l LEFT JOIN `apply_for_leave` a ON l.apply_id = a.id WHERE a.uid = " . $user_id . " and a.status in (0, 1) and SUBSTRING(apply_date, 1, 4) = '" . $startYear . "'";
@@ -183,6 +185,13 @@ else
                     $sl_credit -= 0.5;
                 else
                     $vl_sl_credit -= 0.5;
+            }
+
+            if($row['leave_type'] == 'H')
+            {
+                if($halfday_credit > 0)
+                    $halfday_credit -= 0.5;
+          
             }
         
             array_push($applied, $apply_date . " " . $apply_period);
@@ -217,6 +226,7 @@ else
         $sl_consume = 0;
         $vl_sl_consume = 0;
         $ul_consume = 0;
+        $halfday_consume = 0;
 
         for($i=0; $i<count($result); $i++)
         {
@@ -263,9 +273,22 @@ else
             {
                 $ul_consume += 0.5;
             }
+
+            if($leave_type == 'H')
+            {
+                $halfday_credit -= 0.5;
+                $halfday_consume += 0.5;
+            }
             
         }
 
+        if($halfday_consume < 0)
+        {
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Your yearly credit of manager halfday planning is not enough."));
+            die();
+        }
 
         if($sil_credit < 0 || $vl_sl_credit < 0 || $vl_credit < 0 || $sl_credit < 0)
         {
@@ -345,6 +368,7 @@ else
         $afl->sl = $sl_consume;
         $afl->vl_sl = $vl_sl_consume;
         $afl->ul = $ul_consume;
+        $afl->halfday = $halfday_consume;
 
         if($second_flag == true)
             $afl->too_many = "Y";

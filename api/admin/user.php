@@ -63,7 +63,7 @@ else
 
             $apartment_id = (isset($_GET['apartment_id']) ? $_GET['apartment_id'] : "");
 
-            $sql = "SELECT 0 as is_checked, user.id, username, email, user.status, COALESCE(is_admin, '0') is_admin, need_punch, COALESCE(department, '') department, apartment_id, title_id, COALESCE(title, '') title, user.head_of_department, annual_leave, sick_leave, manager_leave, is_manager, test_manager, is_viewer, leave_level, sil, vl_sl, vl, sl FROM user LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id where user.status <> -1 ".($id ? " and id=$id" : '') . ($apartment_id ? " and user.apartment_id=$apartment_id" : '');
+            $sql = "SELECT 0 as is_checked, user.id, username, email, user.status, COALESCE(is_admin, '0') is_admin, need_punch, COALESCE(department, '') department, apartment_id, title_id, COALESCE(title, '') title, user.head_of_department, annual_leave, sick_leave, manager_leave, is_manager, test_manager, is_viewer, leave_level, sil, vl_sl, vl, sl, halfday FROM user LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id where user.status <> -1 ".($id ? " and id=$id" : '') . ($apartment_id ? " and user.apartment_id=$apartment_id" : '');
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
@@ -135,6 +135,8 @@ else
             $vl = $vl == '' ? 0 : $vl;
             $sl = stripslashes(isset($_POST["sl"]) ? $_POST["sl"] : 0);
             $sl = $sl == '' ? 0 : $sl;
+            $halfday = stripslashes(isset($_POST["halfday"]) ? $_POST["halfday"] : 0);
+            $halfday = $halfday == '' ? 0 : $halfday;
 
             $crud = $_POST["crud"];
             $id = $_POST["id"];
@@ -167,6 +169,7 @@ else
                 $user->vl_sl = $vl_sl;
                 $user->vl = $vl;
                 $user->sl = $sl;
+                $user->halfday = $halfday;
 
                 $user->create();
 
@@ -196,6 +199,7 @@ else
                 $user->vl_sl = $vl_sl;
                 $user->vl = $vl;
                 $user->sl = $sl;
+                $user->halfday = $halfday;
 
                 $user->id = $id;
 

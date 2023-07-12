@@ -77,10 +77,12 @@ $sil_credit = 0;
 $vl_sl_credit = 0;
 $vl_credit = 0;
 $sl_credit = 0;
+$halfday_credit = 0;
+
 $leave_level = 0; 
 $head_of_department = 0; // leave apply without approval
 
-$query = "SELECT leave_level, sil, vl_sl, vl, sl, head_of_department from user where id = " . $user_id;
+$query = "SELECT leave_level, sil, vl_sl, vl, sl, halfday, head_of_department from user where id = " . $user_id;
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -90,6 +92,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $vl_sl_credit = $row['vl_sl'];
     $vl_credit = $row['vl'];
     $sl_credit = $row['sl'];
+    $halfday_credit = $row['halfday'];
     $leave_level  = $row['leave_level'];
 
     $head_of_department  = $row['head_of_department'];
@@ -176,6 +179,13 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $vl_sl_credit -= 0.5;
     }
 
+    if($row['leave_type'] == 'H')
+    {
+        if($halfday_credit > 0)
+            $halfday_credit -= 0.5;
+    }
+
+
     array_push($applied, $apply_date . " " . $apply_period);
 }
 
@@ -206,6 +216,7 @@ $sil_consume = 0;
 $vl_consume = 0;
 $sl_consume = 0;
 $vl_sl_consume = 0;
+$halfday_consume = 0;
 
 for($i=0; $i<count($result); $i++)
 {
@@ -247,15 +258,24 @@ for($i=0; $i<count($result); $i++)
             $vl_sl_consume += 0.5;
         }
     }
+
+    if($leave_type == 'H')
+    {
+        if($halfday_credit > 0)
+        {
+            $halfday_credit -= 0.5;
+            $halfday_consume += 0.5;
+        }
+    }
 }
 
 
-if($sil_credit < 0 || $vl_sl_credit < 0 || $vl_credit < 0 || $sl_credit < 0)
+if($sil_credit < 0 || $vl_sl_credit < 0 || $vl_credit < 0 || $sl_credit < 0 || $halfday_credit < 0)
 {
-    echo json_encode(array("message" => "Leave credit is not enough.", "sil_consume" => $sil_consume, "vl_consume" => $vl_consume, "sl_consume" => $sl_consume, "vl_sl_consume" => $vl_sl_consume, "period" => count($result) * 0.5));
+    echo json_encode(array("message" => "Leave credit is not enough.", "sil_consume" => $sil_consume, "vl_consume" => $vl_consume, "sl_consume" => $sl_consume, "vl_sl_consume" => $vl_sl_consume, "halfday_consume" => $halfday_consume, "period" => count($result) * 0.5));
     die();
 }
 
-echo json_encode(array("message" => "", "sil_consume" => $sil_consume, "vl_consume" => $vl_consume, "sl_consume" => $sl_consume, "vl_sl_consume" => $vl_sl_consume, "period" => count($result) * 0.5));
+echo json_encode(array("message" => "", "sil_consume" => $sil_consume, "vl_consume" => $vl_consume, "sl_consume" => $sl_consume, "vl_sl_consume" => $vl_sl_consume, "halfday_consume" => $halfday_consume, "period" => count($result) * 0.5));
 
 
