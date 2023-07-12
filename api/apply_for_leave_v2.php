@@ -132,7 +132,7 @@ else
 
         array_push($leaves, $end->format("Ymd") . " A");
 
-        if($leave_level == "B" || $leave_level == "C")
+        if($leave_level == "B" || $leave_level == "C" || $leave_type == "H")
         {
             if($amStart == "P")
                 unset($leaves[0]);
@@ -589,6 +589,8 @@ function getLeaveType($type){
         $leave_type = "Unpaid Leave";
     if($type =="D")
         $leave_type = "Absence";
+    if($type =="H")
+        $leave_type = "Service Incentive Leave";
     
     return $leave_type;
 }

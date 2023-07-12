@@ -163,6 +163,18 @@ let _this = this;
             return false;
           } 
 
+          if(this.leave_type == 'H' && this.period != 0.5)
+          {
+            Swal.fire({
+              text: 'Only the leave with halfday leave length is allowed by using  Vacation Leave --- Manager Halfday Planning',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+            //this.err_msg = 'Choose Punch location';
+            //$(window).scrollTop(0);
+            return false;
+          } 
+
           if (this.leave_type == "") 
           {
             Swal.fire({
@@ -221,6 +233,7 @@ let _this = this;
 
           if(this.leave_type == 'U') message = "Confirm to apply?";
             
+          if(this.leave_type == 'H') message = "Your current leave application will consume<br>Manager Halfday Planning: 0.5 day(s)<br><br>Do you want to continue?";
 
           // sweet alter to confirm submit yes no
           Swal.fire({
@@ -255,7 +268,7 @@ let _this = this;
           this.apply_end = this.normalize(this.apply_end);
 
 
-          if(this.leave_level == 'B' || this.leave_level == 'C')
+          if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
           {
             var timeStart = this.apply_start.slice(0, 10);
 
@@ -498,7 +511,7 @@ let _this = this;
     var amEnd = 'P';
 
 
-    if(this.leave_level == 'B' || this.leave_level == 'C')
+    if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
     {
       var timeStart = this.apply_start.slice(0, 10);
 
@@ -567,7 +580,7 @@ let _this = this;
     var d_manager =  new Date(today.getFullYear(), "11", 0);
     var d_next_year =  new Date(today.getFullYear() + 1, 10, 0);
 
-    if(this.leave_level == 'B' || this.leave_level == 'C')
+    if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
     {
       if(d1 > d_manager)
       {

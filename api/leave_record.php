@@ -56,10 +56,10 @@ if($sdate1 == '')
 }
 
 if($type == 'A' || $type == 'N')
-    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE when STATUS = -3 then 'V'  when STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, pic_url, created_at, leave_level, sil, vl_sl, vl, sl FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' and start_date < '" . $edate1 . "' and   uid = " . $user_id ;
+    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE when STATUS = -3 then 'V'  when STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, pic_url, created_at, leave_level, sil, vl_sl, vl, sl, halfday FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' and start_date < '" . $edate1 . "' and   uid = " . $user_id ;
 else {
     # code...
-    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE when STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, pic_url, created_at, leave_level, sil, vl_sl, vl, sl  FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' and start_date < '" . $edate1 . "' and status in (0, 1) and uid = " . $user_id . " and approval_id * re_approval_id = 0 and reject_id + re_reject_id = 0 ";
+    $query = "SELECT 0 is_checked, id, `leave` le, leave_type, start_date, start_time, end_date, end_time, CASE when STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, reason, pic_url, created_at, leave_level, sil, vl_sl, vl, sl, halfday  FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' and start_date < '" . $edate1 . "' and status in (0, 1) and uid = " . $user_id . " and approval_id * re_approval_id = 0 and reject_id + re_reject_id = 0 ";
 }
 
 $stmt = $db->prepare( $query );
@@ -68,7 +68,7 @@ $stmt->execute();
 
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $message = GetLeaveMessage($row['le'], $row['leave_type'],  $row['sil'], $row['vl_sl'], $row['vl'], $row['sl']);
+    $message = GetLeaveMessage($row['le'], $row['leave_type'],  $row['sil'], $row['vl_sl'], $row['vl'], $row['sl'], $row['halfday']);
 
     $merged_results[] = array(
         "is_checked" => $row['is_checked'],
@@ -88,6 +88,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "vl_sl" => $row['vl_sl'],
         "vl" => $row['vl'],
         "sl" => $row['sl'],
+        "halfday" => $row['halfday'],
         "message" => $message
 
     );
@@ -96,7 +97,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
 
-function GetLeaveMessage($leave, $leave_type, $sil, $vl_sl, $vl, $sl)
+function GetLeaveMessage($leave, $leave_type, $sil, $vl_sl, $vl, $sl, $halfday)
 {
 
     $message = "Consume" . "\r\n";
@@ -114,6 +115,9 @@ function GetLeaveMessage($leave, $leave_type, $sil, $vl_sl, $vl, $sl)
 
     if($leave_type == 'U')
         $message .=  "Unpaid Leave: " . $leave . " day(s)"  . "\r\n";
+
+    if($halfday > 0)
+        $message .=  "Consume Manager Halfday Planning: 0.5 day(s)"  . "\r\n";
 
     if($leave_type == 'A' || $leave_type == 'B' || $leave_type == 'C' || $leave_type == 'D')
         $message =  "";

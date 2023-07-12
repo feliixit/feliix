@@ -4050,7 +4050,7 @@ ADD COLUMN `pageless` varchar(10)  DEFAULT '';
 ALTER TABLE od_item
 modify COLUMN `sn` varchar(4) DEFAULT '';
 
-- 20230712 access
+-- 20230712 access
 ALTER TABLE access_control
 ADD COLUMN `halfday` text COLLATE utf8mb4_unicode_ci;
 
