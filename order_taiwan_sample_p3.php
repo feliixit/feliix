@@ -2074,6 +2074,14 @@ try {
         <option value="ALTERNATIVE">ALTERNATIVE</option>
         <option value="ECONOMICAL">ECONOMICAL</option>
     </optgroup>
+    <optgroup label="BY PROJECT TYPE">
+        <option value="RESIDENTIAL">RESIDENTIAL</option>
+        <option value="COMMERCIAL">COMMERCIAL</option>
+        <option value="OFFICE">OFFICE</option>
+	<option value="INDUSTRIAL">INDUSTRIAL</option>
+        <option value="INSTITUTIONAL">INSTITUTIONAL</option>
+        <option value="SPECIAL">SPECIAL</option>
+    </optgroup>
     <optgroup label="BY INSTALL LOCATION">
         <option value="BLDG. FAÇADE">BLDG. FAÇADE</option>
         <option value="CABINET">CABINET</option>
