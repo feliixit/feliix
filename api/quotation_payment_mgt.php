@@ -53,6 +53,8 @@ $fal = (isset($_GET['fal']) ?  $_GET['fal'] : '');
 $fau = (isset($_GET['fau']) ?  $_GET['fau'] : '');
 $fpl = (isset($_GET['fpl']) ?  $_GET['fpl'] : '');
 $fpu = (isset($_GET['fpu']) ?  $_GET['fpu'] : '');
+$frl = (isset($_GET['frl']) ?  $_GET['frl'] : '');
+$fru = (isset($_GET['fru']) ?  $_GET['fru'] : '');
 
 $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
 $fk = urldecode($fk);
@@ -180,6 +182,19 @@ if($fpu != "" && $fpu != "0")
     $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
     $query_cnt = $query_cnt . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
 }
+
+if($frl != "" && $frl != "0")
+{
+    $query = $query . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) >= " . $frl . " ";
+    $query_cnt = $query_cnt . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) >= " . $frl . " ";
+}
+
+if($fru != "" && $fru != "0")
+{
+    $query = $query . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) <= " . $fru . " ";
+    $query_cnt = $query_cnt . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) <= " . $fru . " ";
+}
+
 
 if($fkp != "")
 {

@@ -2217,7 +2217,7 @@ header( 'location:index' );
                 </div>
 
                 <div class="popupblock">
-                    <a id="" class="approvalform" @click="approval_form()"></a>
+                    <a id="" class="approvalform" @click="approval_form_post()"></a>
                 </div>
             </div>
 

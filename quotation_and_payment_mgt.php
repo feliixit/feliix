@@ -689,6 +689,18 @@ $(function(){
 
                                 </div>
 
+                                <dt style="margin-bottom:-18px;">A/R</dt>
+                                <div class="half">
+                                    <dt>lower bound</dt>
+                                    <dd><input type="number" v-model="fil_ar_lower"></dd>
+                                </div>
+
+                                <div class="half">
+                                    <dt>upper bound</dt>
+                                    <dd><input type="number" v-model="fil_ar_upper"></dd>
+
+                                </div>
+
                                 <dt>Keyword (only for project name)</dt>
                                 <dd><input type="text" v-model="fil_keyowrd_p"></dd>
 
