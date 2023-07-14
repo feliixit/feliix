@@ -54,11 +54,11 @@ else
           case 'GET':
             $pid = (isset($_GET['pid']) ?  $_GET['pid'] : "");
     
-            $sql = "SELECT ap.id, ap.request_no, ap.date_requested, ap.request_type, ap.amount_verified, ap.uid, u.username, ap.created_at,
-                        (select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = ap.id AND pl.`status` <> -1) amount_applied, ap.status
+            $sql = "SELECT ap.id, ap.request_no, ap.date_requested, ap.request_type, Coalesce(ap.amount_verified, 0) amount_verified, ap.uid, u.username, ap.created_at,
+                        Coalesce((select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = ap.id AND pl.`status` <> -1), 0) amount_applied, ap.status
                     FROM apply_for_petty ap left join user u on u.id = ap.uid
                     where project_name1 = (SELECT project_name FROM project_main WHERE id = " . $pid . ") 
-                    and ap.status <> -1";
+                    and ap.status > 0";
 
             $sql = $sql . " ORDER BY ap.id ";
 

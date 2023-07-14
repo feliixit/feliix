@@ -739,7 +739,7 @@ var app = new Vue({
                     price_record_cash_in += parseFloat(_this.price_record[index].cash_in);
                 }
                 price_record_cash_balance = price_record_cash_out - price_record_cash_in;
-                _this.price_record_total = price_record_cash_out;
+                // _this.price_record_total = price_record_cash_out;
             
             })
             .catch(function(response) {
@@ -765,7 +765,17 @@ var app = new Vue({
                 .get('api/project_expense', { params, headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
+                    _this.price_record_total = -1;
                     _this.expense_record = res.data;
+                    for(let i = 0; i < _this.expense_record.length; i++) {
+                      if(_this.expense_record[i].status == 9)
+                      {
+                        if(_this.expense_record[i].request_type == 1)
+                        _this.price_record_total += parseFloat(_this.expense_record[i].amount_verified);
+                        if(_this.expense_record[i].request_type == 2)
+                        _this.price_record_total += parseFloat(_this.expense_record[i].amount_applied);
+                      }
+                    }
                 },
                 (err) => {
                     alert(err.response);
