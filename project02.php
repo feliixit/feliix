@@ -1288,7 +1288,7 @@ if ($access5 == true) {
                             </div>
 
                             <!-- 如果這個專案沒有任何的費用記錄，則下面這行<div>也不用顯示。如果這個專案有費用記錄，則下面這行<div>才需要顯示 -->
-                            <div style="color: rgb(243, 112, 88);" v-if="price_record.length > 0">Total Expense Amount in this Project is {{ price_record_total.toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</div>
+                            <div style="color: rgb(243, 112, 88);" v-if="price_record_total >= 0">Total Expense Amount in this Project is {{ price_record_total.toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</div>
                         </li>
 
                     </ul>

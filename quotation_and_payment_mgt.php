@@ -677,7 +677,7 @@ $(function(){
 
                                 </div>
 
-                                <dt style="margin-bottom:-18px;">Down Payment</dt>
+                                <dt style="margin-bottom:-18px; margin-top: 3px;">Down Payment</dt>
                                 <div class="half">
                                     <dt>lower bound</dt>
                                     <dd><input type="number" v-model="fil_payment_lower"></dd>
@@ -689,7 +689,7 @@ $(function(){
 
                                 </div>
 
-                                <dt style="margin-bottom:-18px;">A/R</dt>
+                                <dt style="margin-bottom:-18px; margin-top: 3px;">A/R</dt>
                                 <div class="half">
                                     <dt>lower bound</dt>
                                     <dd><input type="number" v-model="fil_ar_lower"></dd>
