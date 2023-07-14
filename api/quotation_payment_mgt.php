@@ -53,6 +53,8 @@ $fal = (isset($_GET['fal']) ?  $_GET['fal'] : '');
 $fau = (isset($_GET['fau']) ?  $_GET['fau'] : '');
 $fpl = (isset($_GET['fpl']) ?  $_GET['fpl'] : '');
 $fpu = (isset($_GET['fpu']) ?  $_GET['fpu'] : '');
+$frl = (isset($_GET['frl']) ?  $_GET['frl'] : '');
+$fru = (isset($_GET['fru']) ?  $_GET['fru'] : '');
 
 $fk = (isset($_GET['fk']) ?  $_GET['fk'] : '');
 $fk = urldecode($fk);
@@ -180,6 +182,19 @@ if($fpu != "" && $fpu != "0")
     $query = $query . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
     $query_cnt = $query_cnt . " and Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) <= " . $fpu . " ";
 }
+
+if($frl != "" && $frl != "0")
+{
+    $query = $query . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) >= " . $frl . " ";
+    $query_cnt = $query_cnt . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) >= " . $frl . " ";
+}
+
+if($fru != "" && $fru != "0")
+{
+    $query = $query . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) <= " . $fru . " ";
+    $query_cnt = $query_cnt . " and Coalesce(final_amount, 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 1), 0) - Coalesce((SELECT sum(pp.amount) FROM  project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status = 1  AND pp.kind = 0), 0) - Coalesce(tax_withheld, 0) <= " . $fru . " ";
+}
+
 
 if($fkp != "")
 {
@@ -394,6 +409,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $payment_amount = GetPaymentAmount($row['id'], $db);
     $down_payment_amount = GetDownPaymentAmount($row['id'], $db);
 
+    $apply_for_petty = GetApplyForPetty($row['id'], $db);
+
     $ar = null;
     if($final_amount != null)
     {
@@ -468,6 +485,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "expense" => $expense,
         "quote_file_string" => $quote_file_string,
         "special" => $special,
+        "apply_for_petty" => $apply_for_petty,
         "cnt" => $cnt,
     );
 }
@@ -504,6 +522,35 @@ else
 
 
 echo json_encode($return_result, JSON_UNESCAPED_SLASHES);
+
+function GetApplyForPetty($project_id, $db)
+{
+    $sql = "SELECT  Coalesce(ap.amount_verified, 0) amount_verified, ap.request_type,
+                        Coalesce((select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = ap.id AND pl.`status` <> -1), 0) amount_applied
+                    FROM apply_for_petty ap 
+                    where project_name1 = (SELECT project_name FROM project_main WHERE id = " . $project_id . ") 
+                    and ap.status = 9";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    $amount_verified = 0;
+
+    foreach ($merged_results as &$value) {
+        if($value['request_type'] == "1")
+        $amount_verified += $value['amount_verified'];
+        if($value['request_type'] == "2")
+        $amount_verified += $value['amount_applied'];
+    }
+
+    return $amount_verified;
+}
 
 function GetFinalQuote($project_id, $db){
     $query = "

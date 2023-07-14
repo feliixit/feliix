@@ -677,7 +677,7 @@ $(function(){
 
                                 </div>
 
-                                <dt style="margin-bottom:-18px;">Down Payment</dt>
+                                <dt style="margin-bottom:-18px; margin-top: 3px;">Down Payment</dt>
                                 <div class="half">
                                     <dt>lower bound</dt>
                                     <dd><input type="number" v-model="fil_payment_lower"></dd>
@@ -686,6 +686,18 @@ $(function(){
                                 <div class="half">
                                     <dt>upper bound</dt>
                                     <dd><input type="number" v-model="fil_payment_upper"></dd>
+
+                                </div>
+
+                                <dt style="margin-bottom:-18px; margin-top: 3px;">A/R</dt>
+                                <div class="half">
+                                    <dt>lower bound</dt>
+                                    <dd><input type="number" v-model="fil_ar_lower"></dd>
+                                </div>
+
+                                <div class="half">
+                                    <dt>upper bound</dt>
+                                    <dd><input type="number" v-model="fil_ar_upper"></dd>
 
                                 </div>
 
@@ -841,7 +853,7 @@ $(function(){
                       <li>{{ isNaN(parseInt(receive_record.down_payment_amount)) ? "" : Number(receive_record.down_payment_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.payment_amount)) ? "" : Number(receive_record.payment_amount).toLocaleString() }}</li>
                       <li>{{ isNaN(parseInt(receive_record.ar)) ? "" : Number(receive_record.ar).toLocaleString() }}</li>
-                      <li>{{ isNaN(parseInt(receive_record.expense)) ? "" : Number(receive_record.expense).toLocaleString() }}</li>
+                      <li>{{ parseInt(receive_record.apply_for_petty) == 0 ? "" : Number(receive_record.apply_for_petty).toLocaleString() }}</li>
                       <li class="display_file">
                         <span v-for="item in receive_record.final_quotation">
                             <a :href="baseURL + item.bucket + '\\' + item.gcp_name" target="_blank" class="attch">•{{item.filename}}</a>

@@ -100,6 +100,8 @@ var app = new Vue({
     fil_amount_lower: "",
     fil_payment_upper: "",
     fil_payment_lower: "",
+    fil_ar_upper: "",
+    fil_ar_lower: "",
     fil_keyowrd: "",
     fil_keyowrd_p: "",
 
@@ -154,6 +156,12 @@ var app = new Vue({
               break;
             case "fpu":
               _this.fil_payment_upper = tmp[1];
+              break;
+            case "frl":
+              _this.fil_ar_lower = tmp[1];
+              break;
+            case "fru":
+              _this.fil_ar_upper = tmp[1];
               break;
             case "fk":
               _this.fil_keyowrd = decodeURI(tmp[1]);
@@ -529,6 +537,10 @@ var app = new Vue({
         _this.fil_payment_lower +
         "&fpu=" +
         _this.fil_payment_upper +
+        "&frl=" +
+        _this.fil_ar_lower +
+        "&fru=" +
+        _this.fil_ar_upper +
         "&fk=" +
         _this.fil_keyowrd +
         "&fkp=" +
@@ -571,6 +583,10 @@ var app = new Vue({
         _this.fil_payment_lower +
         "&fpu=" +
         _this.fil_payment_upper +
+        "&frl=" +
+        _this.fil_ar_lower +
+        "&fru=" +
+        _this.fil_ar_upper +
         "&fk=" +
         _this.fil_keyowrd +
         "&fkp=" +
@@ -603,6 +619,8 @@ var app = new Vue({
         fau: _this.fil_amount_upper,
         fpl: _this.fil_payment_lower,
         fpu: _this.fil_payment_upper,
+        frl: _this.fil_ar_lower,
+        fru: _this.fil_ar_upper,
         fk: _this.fil_keyowrd,
         fkp: _this.fil_keyowrd_p,
         of1: _this.od_factor1,
@@ -971,6 +989,8 @@ var app = new Vue({
       this.fil_amount_lower = '';
       this.fil_payment_upper = '';
       this.fil_payment_lower = '';
+      this.fil_ar_upper = '';
+      this.fil_ar_lower = '';
       this.fil_keyowrd = '';
       this.fil_keyowrd_p = '';
       
@@ -2176,6 +2196,8 @@ var app = new Vue({
         fau: _this.fil_amount_upper,
         fpl: _this.fil_payment_lower,
         fpu: _this.fil_payment_upper,
+        frl: _this.fil_ar_lower,
+        fru: _this.fil_ar_upper,
         fk: _this.fil_keyowrd,
         fkp: _this.fil_keyowrd_p,
         of1: _this.od_factor1,
