@@ -388,6 +388,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $final_quotation = GetFinalQuote($row['id'], $db);
 
+    $apply_for_petty = GetApplyForPetty($row['id'], $db);
+
     $down_pay_amount = RetriveDownPaymentAmount($payment);
     $down_pay_date = RetriveDownPaymentDate($payment);
 
@@ -433,6 +435,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "pm" => $pm,
         "dpm" => $dpm,
         "expense" => $expense,
+        "apply_for_petty" => $apply_for_petty,
         "quote_file_string" => $quote_file_string,
         
     );
@@ -514,7 +517,7 @@ foreach($return_result as $row)
     $sheet->setCellValue('H' . $i, $row['down_payment_amount'] === null ? '' : number_format((float)$row['down_payment_amount'], 2, '.', ''));
     $sheet->setCellValue('I' . $i, $row['payment_amount'] === null ? '' : number_format((float)$row['payment_amount'], 2, '.', ''));
     $sheet->setCellValue('J' . $i, $row['ar'] === null ? '' : number_format((float)$row['ar'], 2, '.', ''));
-    $sheet->setCellValue('K' . $i, $row['expense'] === null ? '' : number_format((float)$row['expense'], 2, '.', ''));
+    $sheet->setCellValue('K' . $i, $row['apply_for_petty'] == 0 ? '' : number_format((float)$row['apply_for_petty'], 2, '.', ''));
 
     $files = $row['payment'];
 
@@ -602,6 +605,35 @@ function GetFinalQuote($project_id, $db){
     }
 
     return $merged_results;
+}
+
+function GetApplyForPetty($project_id, $db)
+{
+    $sql = "SELECT  Coalesce(ap.amount_verified, 0) amount_verified, ap.request_type,
+                        Coalesce((select SUM(pl.price * pl.qty) from petty_list pl WHERE pl.petty_id = ap.id AND pl.`status` <> -1), 0) amount_applied
+                    FROM apply_for_petty ap 
+                    where project_name1 = (SELECT project_name FROM project_main WHERE id = " . $project_id . ") 
+                    and ap.status = 9";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare( $sql );
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    $amount_verified = 0;
+
+    foreach ($merged_results as &$value) {
+        if($value['request_type'] == "1")
+        $amount_verified += $value['amount_verified'];
+        if($value['request_type'] == "2")
+        $amount_verified += $value['amount_applied'];
+    }
+
+    return $amount_verified;
 }
 
 function GetClientOtherFile($project_id, $db){
