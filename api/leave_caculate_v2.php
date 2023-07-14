@@ -261,11 +261,9 @@ for($i=0; $i<count($result); $i++)
 
     if($leave_type == 'H')
     {
-        if($halfday_credit > 0)
-        {
-            $halfday_credit -= 0.5;
-            $halfday_consume += 0.5;
-        }
+        $halfday_credit -= 0.5;
+        $halfday_consume += 0.5;
+        
     }
 }
 

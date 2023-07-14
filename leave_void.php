@@ -232,7 +232,7 @@ $(function(){
                 <div class="tablebox" v-if="view_void_detail">
                     <ul class="head">
                         <li class="head">Leave Type</li>
-                        <li>{{ (void_record.leave_type == 'A') ? "Service Incentive Leave" : ((void_record.leave_type == 'B' || void_record.leave_type == 'S') ? "Sick Leave" : ((void_record.leave_type == 'C' || void_record.leave_type == 'U') ? "Unpaid Leave" : (void_record.leave_type == 'N' ? 'Vaction Leave' : (record.leave_type == 'H' ? 'Vacation Leave --- Manager Halfday Planning' : 'Absence')))) }}</li>
+                        <li>{{ (void_record.leave_type == 'A') ? "Service Incentive Leave" : ((void_record.leave_type == 'B' || void_record.leave_type == 'S') ? "Sick Leave" : ((void_record.leave_type == 'C' || void_record.leave_type == 'U') ? "Unpaid Leave" : (void_record.leave_type == 'N' ? 'Vaction Leave' : (void_record.leave_type == 'H' ? 'Vacation Leave --- Manager Halfday Planning' : 'Absence')))) }}</li>
                     </ul>
                     <ul>
                         <li class="head">Application Time</li>

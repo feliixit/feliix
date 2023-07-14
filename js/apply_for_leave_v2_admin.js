@@ -191,6 +191,18 @@ let _this = this;
             return false;
           } 
 
+          if(this.leave_type == 'H' && this.period != 0.5)
+          {
+            Swal.fire({
+              text: 'When using Vacation Leave --- Manager Halfday Planning, leave length per application is only allowed to be halfday.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+            //this.err_msg = 'Choose Punch location';
+            //$(window).scrollTop(0);
+            return false;
+          } 
+
           if (this.reason == "") 
           {
             Swal.fire({

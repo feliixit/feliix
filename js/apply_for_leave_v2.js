@@ -166,7 +166,7 @@ let _this = this;
           if(this.leave_type == 'H' && this.period != 0.5)
           {
             Swal.fire({
-              text: 'Only the leave with halfday leave length is allowed by using  Vacation Leave --- Manager Halfday Planning',
+              text: 'When using Vacation Leave --- Manager Halfday Planning, leave length per application is only allowed to be halfday.',
               icon: 'error',
               confirmButtonText: 'OK'
             })
