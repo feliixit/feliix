@@ -765,7 +765,7 @@ var app = new Vue({
                 .get('api/project_expense', { params, headers: {"Authorization" : `Bearer ${token}`} })
                 .then(
                 (res) => {
-                    _this.price_record_total = -1;
+                    _this.price_record_total = 0;
                     _this.expense_record = res.data;
                     for(let i = 0; i < _this.expense_record.length; i++) {
                       if(_this.expense_record[i].status == 9)
