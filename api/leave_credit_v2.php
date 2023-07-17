@@ -66,6 +66,10 @@ if($sdate1 == '' && $sdate2 == '')
 
         "ab_taken" => 0,
         "ab_approval" => 0,
+
+        "halfday_credit" => 0,
+        "halfday_taken" => 0,
+        "halfday_approval" => 0,
     );
 
     echo json_encode($merged_results, JSON_UNESCAPED_SLASHES); 
@@ -78,10 +82,11 @@ $sil_credit = 0;
 $vl_sl_credit = 0;
 $vl_credit = 0;
 $sl_credit = 0;
+$halfday_credit = 0;
 
 $leave_level = '';
 
-$query = "SELECT leave_level, sil, vl_sl, vl, sl from user where id = " . $user_id ;
+$query = "SELECT leave_level, sil, vl_sl, vl, sl, halfday from user where id = " . $user_id ;
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -93,15 +98,16 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $sl_credit = $row['sl'];
 
     $leave_level = $row['leave_level'];
+    $halfday_credit = $row['halfday'];
 
 }
 
 
 /* fetch data */
 if($edate2 != "")
-    $query = "SELECT SUM(`sil`) sil, sum(`vl_sl`) vl_sl, sum(`vl`) vl, sum(`sl`) sl, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate2 . "' and status in (0, 1) and uid = " . $user_id . " group by  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
+    $query = "SELECT SUM(`sil`) sil, sum(`vl_sl`) vl_sl, sum(`vl`) vl, sum(`sl`) sl, sum(`halfday`) halfday, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate2 . "' and status in (0, 1) and uid = " . $user_id . " group by  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
 else
-    $query = "SELECT SUM(`sil`) sil, sum(`vl_sl`) vl_sl, sum(`vl`) vl, sum(`sl`) sl, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE and start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate1 . "' and status in (0, 1) and uid = " . $user_id . " group by  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
+    $query = "SELECT SUM(`sil`) sil, sum(`vl_sl`) vl_sl, sum(`vl`) vl, sum(`sl`) sl, sum(`halfday`) halfday, CASE  WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END approval FROM apply_for_leave WHERE and start_date >= '" . $sdate1 . "' AND start_date <= '" . $edate1 . "' and status in (0, 1) and uid = " . $user_id . " group by  CASE WHEN re_approval_id > 0 THEN 'A'  WHEN re_approval_id = 0 THEN 'P' END";
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -123,11 +129,15 @@ $sl_approval = 0;
 $ul_taken = 0;
 $ul_approval = 0;
 
+$halfday_taken = 0;
+$halfday_approval = 0;
+
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $sil = $row['sil'];
     $vl_sl = $row['vl_sl'];
     $vl = $row['vl'];
     $sl = $row['sl'];
+    $halfday = $row['halfday'];
 
     $approval = $row['approval'];
   
@@ -140,6 +150,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $vl_sl_taken += $vl_sl;
         $vl_taken += $vl;
         $sl_taken += $sl;
+        $halfday_taken += $halfday;
     }
     else
     {
@@ -147,6 +158,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $vl_sl_approval += $vl_sl;
         $vl_approval += $vl;
         $sl_approval += $sl;
+        $halfday_approval += $halfday;
 
     }
 }
@@ -172,6 +184,10 @@ if($sil_credit < 0 || $vl_sl_credit < 0 || $vl_credit < 0 || $sl_credit < 0)
     
         "ul_taken" => $ul_taken,
         "ul_approval" => $ul_approval,
+
+        "halfday_credit" => $halfday_credit,
+        "halfday_taken" => $halfday_taken,
+        "halfday_approval" => $halfday_approval,
     
         "leave_level" => $leave_level,
     
@@ -202,6 +218,10 @@ $merged_results[] = array(
 
     "ul_taken" => $ul_taken,
     "ul_approval" => $ul_approval,
+
+    "halfday_credit" => $halfday_credit,
+    "halfday_taken" => $halfday_taken,
+    "halfday_approval" => $halfday_approval,
 
     "leave_level" => $leave_level,
 

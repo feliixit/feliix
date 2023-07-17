@@ -32,6 +32,7 @@ class User{
     public $vl_sl;
     public $vl;
     public $sl;
+    public $halfday;
  
     // constructor
     public function __construct($db){
@@ -64,7 +65,8 @@ class User{
                     sil = :sil,
                     vl_sl = :vl_sl,
                     vl = :vl,
-                    sl = :sl";
+                    sl = :sl,
+                    halfday = :halfday";
     
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -111,6 +113,7 @@ class User{
         $stmt->bindParam(':vl_sl', $this->vl_sl);
         $stmt->bindParam(':vl', $this->vl);
         $stmt->bindParam(':sl', $this->sl);
+        $stmt->bindParam(':halfday', $this->halfday);
     
         // hash the password before saving to database
         $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
@@ -384,6 +387,7 @@ class User{
                     vl_sl = :vl_sl,
                     vl = :vl,
                     sl = :sl,
+                    halfday = :halfday,
 
                     updated_id = :updated_id,
                     updated_at = now()
@@ -421,6 +425,7 @@ class User{
         $stmt->bindParam(':vl_sl', $this->vl_sl);
         $stmt->bindParam(':vl', $this->vl);
         $stmt->bindParam(':sl', $this->sl);
+        $stmt->bindParam(':halfday', $this->halfday);
 
         $stmt->bindParam(':updated_id', $this->updated_id);
         // unique ID of record to be edited

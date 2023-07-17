@@ -12,6 +12,7 @@ var app = new Vue({
     vl_consume:0,
     sl_consume:0,
     vlsl_consume:0,
+    halfday_consume:0,
 
     leave_type : '',
     reason : '',
@@ -34,6 +35,10 @@ var app = new Vue({
     sl_taken: 0,
     sl_approval: 0,
 
+    halfday_credit: 0,
+    halfday_taken: 0,
+    halfday_approval: 0,
+
     message: '',
 
     ul_taken: 0,
@@ -50,11 +55,14 @@ var app = new Vue({
     min_start_date: '',
     max_start_date: '',
 
+    is_halfday : false,
+
   },
 
   created () {
     this.getRecords();
     this.getUserName();
+    this.getIsHalfday();
   },
 
   computed: {
@@ -155,6 +163,18 @@ let _this = this;
             return false;
           } 
 
+          if(this.leave_type == 'H' && this.period != 0.5)
+          {
+            Swal.fire({
+              text: 'When using Vacation Leave --- Manager Halfday Planning, leave length per application is only allowed to be halfday.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+            //this.err_msg = 'Choose Punch location';
+            //$(window).scrollTop(0);
+            return false;
+          } 
+
           if (this.leave_type == "") 
           {
             Swal.fire({
@@ -213,6 +233,7 @@ let _this = this;
 
           if(this.leave_type == 'U') message = "Confirm to apply?";
             
+          if(this.leave_type == 'H') message = "Your current leave application will consume<br>Manager Halfday Planning: 0.5 day(s)<br><br>Do you want to continue?";
 
           // sweet alter to confirm submit yes no
           Swal.fire({
@@ -247,7 +268,7 @@ let _this = this;
           this.apply_end = this.normalize(this.apply_end);
 
 
-          if(this.leave_level == 'B' || this.leave_level == 'C')
+          if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
           {
             var timeStart = this.apply_start.slice(0, 10);
 
@@ -334,6 +355,37 @@ let _this = this;
     });
   },
 
+  getIsHalfday: function() {
+    var token = localStorage.getItem('token');
+    var form_Data = new FormData();
+    let _this = this;
+
+    form_Data.append('jwt', token);
+
+    axios({
+        method: 'get',
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        url: 'api/apply_for_leave_get_halfday',
+        data: form_Data
+    })
+    .then(function(response) {
+        //handle success
+        _this.is_halfday = response.data.halfday;
+      
+
+    })
+    .catch(function(response) {
+        //handle error
+        Swal.fire({
+          text: JSON.stringify(response),
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+    });
+  },
+
   getLeaveCredit: function() {
     let _this = this;
 
@@ -392,6 +444,10 @@ let _this = this;
       _this.sl_credit = response.data[0].sl_credit;
       _this.sl_taken = response.data[0].sl_taken;
       _this.sl_approval = response.data[0].sl_approval;
+
+      _this.halfday_credit = response.data[0].halfday_credit;
+      _this.halfday_taken = response.data[0].halfday_taken;
+      _this.halfday_approval = response.data[0].halfday_approval;
 
       _this.ul_taken = response.data[0].ul_taken;
       _this.ul_approval = response.data[0].ul_approval;
@@ -455,7 +511,7 @@ let _this = this;
     var amEnd = 'P';
 
 
-    if(this.leave_level == 'B' || this.leave_level == 'C')
+    if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
     {
       var timeStart = this.apply_start.slice(0, 10);
 
@@ -499,6 +555,7 @@ let _this = this;
             _this.vlsl_consume = response.data.vl_sl_consume;
             _this.vl_consume = response.data.vl_consume;
             _this.sl_consume = response.data.sl_consume;
+            _this.halfday_consume = response.data.halfday_consume;
 
             _this.message = response.data.message;
           })
@@ -523,7 +580,7 @@ let _this = this;
     var d_manager =  new Date(today.getFullYear(), "11", 0);
     var d_next_year =  new Date(today.getFullYear() + 1, 10, 0);
 
-    if(this.leave_level == 'B' || this.leave_level == 'C')
+    if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
     {
       if(d1 > d_manager)
       {
@@ -615,6 +672,7 @@ let _this = this;
     this.vlsl_consume = 0;
     this.vl_consume = 0;
     this.sl_consume = 0;
+    this.halfday_consume = 0;
 
     this.leave_type = '';
     this.reason = '';

@@ -35,6 +35,7 @@ class ApplyForLeave
     public $vl;
     public $sl;
     public $ul;
+    public $halfday;
 
     // constructor
     public function __construct($db)
@@ -111,8 +112,8 @@ class ApplyForLeave
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`uid`, `start_date`, `start_time`, `end_date`, `end_time`, `leave_type`, `leave`, `too_many`, `pic_url`, `reason`, `created_at`, `leave_level`, `sil`, `vl_sl`, `vl`, `sl`, `ul`) 
-                VALUES (:uid, :start_date, :start_time, :end_date, :end_time, :leave_type, :leave, :too_many, :pic_url, :reason, now(), :leave_level, :sil, :vl_sl, :vl, :sl, :ul)";
+                (`uid`, `start_date`, `start_time`, `end_date`, `end_time`, `leave_type`, `leave`, `too_many`, `pic_url`, `reason`, `created_at`, `leave_level`, `sil`, `vl_sl`, `vl`, `sl`, `ul`, `halfday`) 
+                VALUES (:uid, :start_date, :start_time, :end_date, :end_time, :leave_type, :leave, :too_many, :pic_url, :reason, now(), :leave_level, :sil, :vl_sl, :vl, :sl, :ul, :halfday)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -154,7 +155,7 @@ class ApplyForLeave
             $stmt->bindParam(':vl', $this->vl);
             $stmt->bindParam(':sl', $this->sl);
             $stmt->bindParam(':ul', $this->ul);
-
+            $stmt->bindParam(':halfday', $this->halfday);
 
         try {
             // execute the query, also check if query was successful

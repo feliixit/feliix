@@ -154,6 +154,12 @@ $(function(){
                     <td>{{ ul_taken }} Days</td>
                     <td>{{ ul_approval }} Days</td>
                   </tr>
+                  <tr v-if="is_halfday">
+                    <td>Manager Halfday Planning</td>
+                    <td>{{ halfday_credit }} Days</td>
+                    <td>{{ halfday_taken }} Days</td>
+                    <td>{{ halfday_approval }} Days</td>
+                  </tr>
                 </table>
 
 
@@ -175,7 +181,7 @@ $(function(){
                                 <option value="N">Vacation Leave</option>
                                 <option value="S">Sick Leave</option>
                                 <option value="U">Unpaid Leave</option>
-                              
+                                <option value="H" v-if="is_halfday">Vacation Leave --- Manager Halfday Planning</option>
                             </select>
                         </li>
                     </ul>

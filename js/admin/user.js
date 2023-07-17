@@ -34,7 +34,8 @@ let mainState = {
     vl_sl:0,
     vl:0,
     sl:0,
-    
+    halfday:0.0,
+
     ed_apartment_id: 0,
 
         // paging
@@ -470,6 +471,7 @@ var app = new Vue({
             formData.append('vl_sl', this.record.vl_sl)
             formData.append('vl', this.record.vl)
             formData.append('sl', this.record.sl)
+            formData.append('halfday', this.record.halfday)
 
             formData.append('apartment_id', this.ed_apartment_id)
             formData.append('title_id', this.record.title_id)
@@ -597,6 +599,7 @@ var app = new Vue({
             formData.append('vl_sl', this.vl_sl)
             formData.append('vl', this.vl)
             formData.append('sl', this.sl)
+            formData.append('halfday', this.halfday)
 
             formData.append('apartment_id', this.apartment_id)
             formData.append('title_id', this.title_id)
@@ -650,7 +653,7 @@ var app = new Vue({
             this.vl_sl = 0;
             this.vl = 0;
             this.sl = 0;
-
+            this.halfday = 0.0;
 
             this.isEditing = false;
             this.record = {};

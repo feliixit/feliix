@@ -60,7 +60,7 @@ while($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
 $query = "
     SELECT 0 is_checked, a.id, u.username, a.created_at, `leave` le, leave_type, start_date, start_time, end_date, end_time, 
         CASE when a.STATUS = -1 then 'W' when leave_type = 'D' then 'D' WHEN reject_id + re_reject_id > 0 THEN 'R' WHEN approval_id * re_approval_id > 0 THEN 'A'  WHEN approval_id * re_approval_id = 0 THEN 'P' END approval, 
-        reason, a.pic_url, a.created_at , a.leave_level, a.sil, a.vl_sl, a.vl, a.sl 
+        reason, a.pic_url, a.created_at , a.leave_level, a.sil, a.vl_sl, a.vl, a.sl, a.halfday
         FROM apply_for_leave a LEFT JOIN user u ON a.uid = u.id 
         WHERE a.STATUS not in (-1, -2, -3, 1) AND approval_id * re_approval_id > 0 AND reject_id = 0 AND re_reject_id = 0 
         and ( approval_id = " . $user_id . "  or re_approval_id = " . $user_id . " ) and a.uid <> " . $user_id . " ORDER BY a.created_at desc ";
@@ -73,7 +73,7 @@ $stmt->execute();
 
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $message = GetLeaveMessage($row['le'], $row['leave_type'],  $row['sil'], $row['vl_sl'], $row['vl'], $row['sl']);
+    $message = GetLeaveMessage($row['le'], $row['leave_type'],  $row['sil'], $row['vl_sl'], $row['vl'], $row['sl'], $row['halfday']);
 
     $merged_results[] = array(
         "is_checked" => $row['is_checked'],
@@ -95,6 +95,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "vl_sl" => $row['vl_sl'],
         "vl" => $row['vl'],
         "sl" => $row['sl'],
+        "halfday" => $row['halfday'],
         "message" => $message
 
     );
@@ -103,7 +104,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
 
-function GetLeaveMessage($leave, $leave_type, $sil, $vl_sl, $vl, $sl)
+function GetLeaveMessage($leave, $leave_type, $sil, $vl_sl, $vl, $sl, $halfday)
 {
 
     $message = "Consume" . "\r\n";
@@ -121,6 +122,9 @@ function GetLeaveMessage($leave, $leave_type, $sil, $vl_sl, $vl, $sl)
 
     if($leave_type == 'U')
         $message .=  "Unpaid Leave: " . $leave . " day(s)"  . "\r\n";
+    
+    if($halfday > 0)
+        $message .=  "Consume Manager Halfday Planning: 0.5 day(s)"  . "\r\n";
 
     if($leave_type == 'A' || $leave_type == 'B' || $leave_type == 'C' || $leave_type == 'D')
         $message =  "";

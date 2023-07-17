@@ -191,6 +191,18 @@ let _this = this;
             return false;
           } 
 
+          if(this.leave_type == 'H' && this.period != 0.5)
+          {
+            Swal.fire({
+              text: 'When using Vacation Leave --- Manager Halfday Planning, leave length per application is only allowed to be halfday.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+            //this.err_msg = 'Choose Punch location';
+            //$(window).scrollTop(0);
+            return false;
+          } 
+
           if (this.reason == "") 
           {
             Swal.fire({
@@ -237,6 +249,7 @@ let _this = this;
 
           if(this.leave_type == 'U') message = "Confirm to apply?";
             
+          if(this.leave_type == 'H') message = "Your current leave application will consume<br>Manager Halfday Planning: 0.5 day(s)<br><br>Do you want to continue?";
 
           // sweet alter to confirm submit yes no
           Swal.fire({
@@ -271,7 +284,7 @@ let _this = this;
           this.apply_end = this.normalize(this.apply_end);
 
 
-          if(this.leave_level == 'B' || this.leave_level == 'C')
+          if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
           {
             var timeStart = this.apply_start.slice(0, 10);
 
@@ -419,6 +432,10 @@ let _this = this;
       _this.sl_taken = response.data[0].sl_taken;
       _this.sl_approval = response.data[0].sl_approval;
 
+      _this.halfday_credit = response.data[0].halfday_credit;
+      _this.halfday_taken = response.data[0].halfday_taken;
+      _this.halfday_approval = response.data[0].halfday_approval;
+
       _this.ul_taken = response.data[0].ul_taken;
       _this.ul_approval = response.data[0].ul_approval;
 
@@ -481,7 +498,7 @@ let _this = this;
     var amEnd = 'P';
 
 
-    if(this.leave_level == 'B' || this.leave_level == 'C')
+    if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
     {
       var timeStart = this.apply_start.slice(0, 10);
 
@@ -551,7 +568,7 @@ let _this = this;
     var d_manager =  new Date(today.getFullYear(), "11", 0);
     var d_next_year =  new Date(today.getFullYear() + 1, 10, 0);
 
-    if(this.leave_level == 'B' || this.leave_level == 'C')
+    if(this.leave_level == 'B' || this.leave_level == 'C' || this.leave_type == 'H')
     {
       if(d1 > d_manager)
       {

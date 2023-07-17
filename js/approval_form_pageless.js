@@ -7,6 +7,8 @@ var app = new Vue({
       l_id:0,
       id:0,
 
+      qid:0,
+
       p_pid:0,
       p_brand:0,
 
@@ -267,6 +269,32 @@ var app = new Vue({
         show_p : '',
 
         pag: {},
+
+        temp_project_name:'',
+        temp_project_location:'',
+        temp_po:'',
+        temp_request_by:'',
+        temp_request_date:'',
+        temp_submit_by:'',
+        temp_submit_date:'',
+        temp_signature_page:'',
+        temp_signature_pixel:'',
+
+        project_name:'',
+        project_location:'',
+        po:'',
+        request_by:'',
+        request_date:'',
+        submit_by:'',
+        submit_date:'',
+        signature_page:'',
+        signature_pixel:'',
+
+        show_approval:false,
+        approve_fileArray: [],
+
+        project_approves: {},
+        temp_project_approves: {},
     },
   
     created() {
@@ -285,7 +313,12 @@ var app = new Vue({
 
                 if(_this.id != 0)
                  _this.l_id = _this.id;
-
+              case "qid":
+                  _this.qid = tmp[1];
+  
+                break;
+            case "name":
+                _this.qid = tmp[1];
                 break;
               default:
                 console.log(`Too many args`);
@@ -299,6 +332,7 @@ var app = new Vue({
       this.getUserName();
       this.get_brands();
       this.get_signature();
+      this.getProjectApprove(this.id);
     },
   
     computed: {
@@ -333,6 +367,7 @@ var app = new Vue({
           this.show_term = false;
           this.show_payment_term = false;
           this.show_signature = false;
+          this.show_approval = false;
         }
       },
 
@@ -345,6 +380,7 @@ var app = new Vue({
           this.show_term = false;
           this.show_payment_term = false;
           this.show_signature = false;
+          this.show_approval = false;
         }
       },
 
@@ -357,6 +393,7 @@ var app = new Vue({
           this.show_term = false;
           this.show_payment_term = false;
           this.show_signature = false;
+          this.show_approval = false;
         }
       },
 
@@ -368,6 +405,7 @@ var app = new Vue({
           this.show_total = false;
           this.show_term = false;
           this.show_signature = false;
+          this.show_approval = false;
         }
       },
 
@@ -380,6 +418,7 @@ var app = new Vue({
           this.show_term = false;
           this.show_payment_term = false;
           this.show_signature = false;
+          this.show_approval = false;
         }
       },
 
@@ -392,6 +431,7 @@ var app = new Vue({
           this.show_header = false;
           this.show_payment_term = false;
           this.show_signature = false;
+          this.show_approval = false;
         }
       },
 
@@ -404,6 +444,7 @@ var app = new Vue({
           this.show_header = false;
           this.show_term = false;
           this.show_signature = false;
+          this.show_approval = false;
         }
       },
 
@@ -416,7 +457,21 @@ var app = new Vue({
           this.show_term = false;
           this.show_payment_term = false;
           this.show_header = false;
+          this.show_approval = false;
         }
+      },
+
+        show_approval() {
+          if(this.show_approval) {
+            this.show_footer = false;
+            this.show_page = false;
+            this.show_subtotal = false;
+            this.show_total = false;
+            this.show_term = false;
+            this.show_payment_term = false;
+            this.show_header = false;
+            this.show_signature = false;
+          }
       },
       
       department() {
@@ -429,6 +484,170 @@ var app = new Vue({
     },
   
     methods: {
+
+      approve_changeFile() {
+        var fileTarget = this.$refs.approve_file;
+  
+        for (i = 0; i < fileTarget.files.length; i++) {
+            // remove duplicate
+            if (
+              this.approve_fileArray.indexOf(fileTarget.files[i]) == -1 ||
+              this.approve_fileArray.length == 0
+            ) {
+              var fileItem = Object.assign(fileTarget.files[i], { progress: 0 });
+              this.approve_fileArray.push(fileItem);
+            }else{
+              fileTarget.value = "";
+            }
+          }
+      },
+
+      approve_deleteFile(index) {
+        this.approve_fileArray.splice(index, 1);
+        var fileTarget = this.$refs.approve_file;
+        fileTarget.value = "";
+      },
+
+      
+      approve_create() {
+        let _this = this;
+
+        var token = localStorage.getItem("token");
+
+        _this.submit = true;
+        var form_Data = new FormData();
+
+        form_Data.append('pid', this.id);
+
+        form_Data.append("jwt", token);
+
+        for (var i = 0; i < this.approve_fileArray.length; i++) {
+          let file = this.approve_fileArray[i];
+          form_Data.append("files[" + i + "]", file);
+        }
+
+        axios({
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                },
+                url: 'api/approval_form_project_approve',
+                data: form_Data
+            })
+            .then(function(response) {
+                Swal.fire({
+                  text: response.data.message,
+                  icon: "info",
+                  confirmButtonText: "OK",
+                });
+                _this.approve_clear();
+            })
+            .catch(function(response) {
+                //handle error
+                Swal.fire({
+                  text: response.data,
+                  icon: "info",
+                  confirmButtonText: "OK",
+                });
+            });
+
+          // compare project_approves and temp_project_approves
+          for(var i = 0; i < this.temp_project_approves.length; i++) {
+            var id = this.temp_project_approves[i].id;
+            var found = false;
+            for(var j = 0; j < this.project_approves.length; j++) {
+              if(id == this.project_approves[j].id) {
+                found = true;
+                break;
+              }
+            }
+
+            if(!found) {
+              this.deleteEditFileItems(id);
+              break;
+            }
+          }
+          this.getProjectApprove(this.id);
+    },
+
+    
+    approve_clear() {
+
+      this.approve_fileArray = [];
+      this.$refs.approve_file.value = '';
+
+      //this.getProjectDetail(this.project_id);
+      //this.approve_canSub = true;
+
+      this.getProjectApprove(this.id);
+      
+      this.show_approval = false;
+  },
+
+  getProjectApprove: function(keyword) {
+    let _this = this;
+
+    if(keyword == 0)
+      return;
+
+    const params = {
+            pid : keyword,
+          };
+
+        let token = localStorage.getItem('accessToken');
+  
+        axios
+            .get('api/approval_form_project_approve_get', { params, headers: {"Authorization" : `Bearer ${token}`} })
+            .then(
+            (res) => {
+                _this.project_approves = res.data;
+                _this.temp_project_approves = JSON.parse(JSON.stringify(_this.project_approves));
+            },
+            (err) => {
+                alert(err.response);
+            },
+            )
+            .finally(() => {
+                
+            });
+    },
+
+    deleteFileItems_before: function(id) {
+      // remove project_approve by id
+      this.project_approves = this.project_approves.filter(
+        (item) => item.id !== id
+      );
+    },
+    
+    deleteEditFileItems: function(keyword) {
+    let _this = this;
+
+    if(keyword == 0)
+      return;
+
+    const params = {
+            pid : this.id,
+            id: keyword
+          };
+
+        let token = localStorage.getItem('accessToken');
+  
+        axios
+            .get('api/approval_form_project_approve_delete', { params, headers: {"Authorization" : `Bearer ${token}`} })
+            .then(
+            (res) => {
+             
+            },
+            (err) => {
+                alert(err.response);
+            },
+            )
+            .finally(() => {
+                
+            });
+    },
+
 
       sort_me(type) {
 
@@ -648,6 +867,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            approval:[],
           };
         }
 
@@ -671,6 +891,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            approval:[],
           };
         }
 
@@ -805,6 +1026,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            approval:[],
           };
         }
 
@@ -828,6 +1050,7 @@ var app = new Vue({
             v1: all == 'all' ? '' : this.v1,
             v2: all == 'all' ? '' : this.v2,
             v3: all == 'all' ? '' : this.v3,
+            approval:[],
           };
         }
 
@@ -1415,7 +1638,8 @@ var app = new Vue({
  
         form_Data.append("quotation_id", this.id);
         form_Data.append("detail", JSON.stringify(this.sig));
-        form_Data.append("pixa", this.pixa_s);
+        form_Data.append("page", this.sig.page);
+        form_Data.append("pixa", this.sig.pixel);
         form_Data.append("show", this.show_s);
         form_Data.append("pageless", 'Y');
 
@@ -1431,7 +1655,7 @@ var app = new Vue({
         try {
           let res = await axios({
             method: 'post',
-            url: 'api/quotation_sig_insert',
+            url: 'api/approval_form_quotation_sig_insert',
             data: form_Data,
             headers: {
               "Content-Type": "multipart/form-data",
@@ -1469,6 +1693,15 @@ var app = new Vue({
       close_sig() {
         this.show_signature = false;
 
+      },
+
+      close_approval() {
+        this.approve_fileArray = [];
+        var fileTarget = this.$refs.approve_file;
+        fileTarget.value = "";
+
+        this.project_approves = JSON.parse(JSON.stringify(this.temp_project_approves));
+        this.show_approval = false;
       },
 
       term_save: async function() {
@@ -1823,7 +2056,7 @@ var app = new Vue({
         try {
           let res = await axios({
             method: 'post',
-            url: 'api/quotation_page_type_block_update',
+            url: 'api/approval_form_quotation_page_type_block_update',
             data: form_Data,
             headers: {
               "Content-Type": "multipart/form-data",
@@ -2123,6 +2356,7 @@ Installation:`;
           num:"",
           pid:0,
           ratio:1.0,
+          approval:[],
         };
 
         items.push(item);
@@ -2170,6 +2404,7 @@ Installation:`;
           num:"",
           pid:0,
           ratio:1.0,
+          approval:[],
         };
 
         items.push(item);
@@ -2345,17 +2580,18 @@ Installation:`;
       getRecord: function() {
         let _this = this;
 
-        if(_this.id == 0)
+        if(_this.id == 0 && _this.qid == 0) 
           return;
   
         const params = {
           id: _this.id,
+          qid : _this.qid,
         };
   
         let token = localStorage.getItem("accessToken");
   
         axios
-          .get("api/quotation_pageless", {
+          .get("api/approval_form_pageless", {
               params,
               headers: { Authorization: `Bearer ${token}` },
             })
@@ -2376,6 +2612,16 @@ Installation:`;
 
               _this.prepare_by_first_line = _this.receive_records[0].prepare_by_first_line;
               _this.prepare_by_second_line = _this.receive_records[0].prepare_by_second_line;
+
+              _this.project_name = _this.receive_records[0].project_name;
+              _this.project_location = _this.receive_records[0].project_location;
+              _this.po = _this.receive_records[0].po;
+              _this.request_by = _this.receive_records[0].request_by;
+              _this.request_date = _this.receive_records[0].request_date;
+              _this.submit_by = _this.receive_records[0].submit_by;
+              _this.submit_date = _this.receive_records[0].submit_date;
+              _this.signature_page = _this.receive_records[0].signature_page;
+              _this.signature_pixel = _this.receive_records[0].signature_pixel;
 
               // footer
               _this.footer_first_line = _this.receive_records[0].footer_first_line;
@@ -2438,6 +2684,19 @@ Installation:`;
 
               _this.temp_prepare_by_first_line = _this.receive_records[0].prepare_by_first_line;
               _this.temp_prepare_by_second_line = _this.receive_records[0].prepare_by_second_line;
+
+              _this.temp_project_name = _this.receive_records[0].project_name;
+              _this.temp_project_location = _this.receive_records[0].project_location;
+              _this.temp_po = _this.receive_records[0].po;
+              _this.temp_request_by = _this.receive_records[0].request_by;
+              _this.temp_request_date = _this.receive_records[0].request_date;
+              _this.temp_submit_by = _this.receive_records[0].submit_by;
+              _this.temp_submit_date = _this.receive_records[0].submit_date;
+              _this.temp_signature_page = _this.receive_records[0].signature_page;
+              _this.temp_signature_pixel = _this.receive_records[0].signature_pixel;
+
+              _this.signature_page = _this.receive_records[0].signature_page;
+              _this.signature_pixel = _this.receive_records[0].signature_pixel;
 
               // footer
               _this.temp_footer_first_line = _this.receive_records[0].footer_first_line;
@@ -2688,6 +2947,15 @@ Installation:`;
         form_Data.append("prepare_for_third_line", this.prepare_for_third_line);
         form_Data.append("prepare_by_first_line", this.prepare_by_first_line);
         form_Data.append("prepare_by_second_line", this.prepare_by_second_line);
+
+        form_Data.append("project_name", this.temp_project_name);
+        form_Data.append("project_location", this.temp_project_location);
+        form_Data.append("po", this.temp_po);
+        form_Data.append("request_by", this.temp_request_by);
+        form_Data.append("request_date", this.temp_request_date);
+        form_Data.append("submit_by", this.temp_submit_by);
+        form_Data.append("submit_date", this.temp_submit_date);
+
     
         form_Data.append("pageless", 'Y');
   
@@ -2697,7 +2965,7 @@ Installation:`;
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            url: "api/quotation_header_insert",
+            url: "api/approval_form_header_insert",
             data: form_Data,
           })
             .then(function(response) {
@@ -2732,7 +3000,7 @@ Installation:`;
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            url: "api/quotation_header_update",
+            url: "api/approval_form_header_update",
             data: form_Data,
           })
             .then(function(response) {
@@ -2942,6 +3210,14 @@ Installation:`;
         form_Data.append("prepare_by_first_line", this.prepare_by_first_line);
         form_Data.append("prepare_by_second_line", this.prepare_by_second_line);
 
+        form_Data.append("project_name", this.temp_project_name);
+        form_Data.append("project_location", this.temp_project_location);
+        form_Data.append("po", this.temp_po);
+        form_Data.append("request_by", this.temp_request_by);
+        form_Data.append("request_date", this.temp_request_date);
+        form_Data.append("submit_by", this.temp_submit_by);
+        form_Data.append("submit_date", this.temp_submit_date);
+
         form_Data.append("footer_first_line", this.footer_first_line);
         form_Data.append("footer_second_line", this.footer_second_line);
 
@@ -2954,7 +3230,7 @@ Installation:`;
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            url: "api/quotation_insert",
+            url: "api/approval_form_quotation_insert",
             data: form_Data,
           })
             .then(function(response) {
@@ -2989,7 +3265,7 @@ Installation:`;
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            url: "api/quotation_update",
+            url: "api/approval_form_quotation_update",
             data: form_Data,
           })
             .then(function(response) {

@@ -4045,3 +4045,19 @@ CREATE TABLE IF NOT EXISTS `approval_form_project_approve` (
 -- 20230629 pageless mark
 ALTER TABLE quotation
 ADD COLUMN `pageless` varchar(10)  DEFAULT '';
+
+-- 20230712 od_item column
+ALTER TABLE od_item
+modify COLUMN `sn` varchar(4) DEFAULT '';
+
+-- 20230712 access
+ALTER TABLE access_control
+ADD COLUMN `halfday` text COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE user
+ADD COLUMN `halfday` decimal(10, 1) default 0.0;
+
+ALTER TABLE apply_for_leave
+ADD COLUMN `halfday` decimal(10, 2) default 0.0;
+
+-- quotation pageless
