@@ -217,6 +217,10 @@ $(function(){
             min-width: auto;
         }
 
+        .bodybox {
+            min-height: 130vh!important;
+        }
+
         .bodybox .mask {
             position: absolute;
             background: rgba(0, 0, 0, 0.6);
