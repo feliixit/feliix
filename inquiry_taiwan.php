@@ -1700,8 +1700,10 @@ try {
         <option value="PANEL LIGHT">PANEL LIGHT</option>
         <option value="PROJECTION LIGHT">PROJECTION LIGHT</option>
         <option value="RECEIVER">RECEIVER</option>
+	<option value="SENSOR">SENSOR</option>
         <option value="SPECIALTY LIGHT">SPECIALTY LIGHT</option>
         <option value="STAGE LIGHT">STAGE LIGHT</option>
+	<option value="STEP LIGHT">STEP LIGHT</option>
         <option value="SWITCH">SWITCH</option>
         <option value="TRACK BAR">TRACK BAR</option>
         <option value="TRACK LIGHT">TRACK LIGHT</option>
