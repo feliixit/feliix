@@ -4059,3 +4059,5 @@ ADD COLUMN `halfday` decimal(10, 1) default 0.0;
 
 ALTER TABLE apply_for_leave
 ADD COLUMN `halfday` decimal(10, 2) default 0.0;
+
+-- quotation pageless

@@ -67,7 +67,7 @@ header( 'location:index' );
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>Approval Form</title>
+    <title>Approval Form (Pageless)</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -890,37 +890,21 @@ header( 'location:index' );
         }
 
 
-        .tb_format1 th, .tb_format1 td {
+        .tb_format1 td {
             text-align: left;
             padding: 5px 20px;
             border-right: 2px solid #A0A0A0;
             border-bottom: 2px solid #A0A0A0;
         }
 
-        .tb_format1 thead tr th:first-of-type,
         .tb_format1 tbody tr td:first-of-type {
             border-left: 2px solid #A0A0A0;
         }
 
-        .tb_format1 thead tr th.title {
-            border-top: 2px solid #A0A0A0;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: rgb(0, 117, 58);
-        }
-
-        .tb_format1 thead tr:nth-of-type(2) th {
-            text-align: center;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-
-        .tb_format1 tbody tr td img {
-            max-height: 240px;
-            max-width: 160px;
+        .tb_format1 tbody tr td {
+            font-size: 14px;
+            vertical-align: top;
+            padding: 15px;
         }
 
         .tb_format1 tbody tr td.pic {
@@ -928,10 +912,9 @@ header( 'location:index' );
             text-align: center;
         }
 
-        .tb_format1 tbody tr td {
-            font-size: 14px;
-            vertical-align: top;
-            padding: 15px;
+        .tb_format1 tbody tr td img {
+            max-height: 240px;
+            max-width: 160px;
         }
 
         .tb_format1 tbody tr td:nth-of-type(1) {
@@ -1007,44 +990,61 @@ header( 'location:index' );
             text-align: left;
         }
 
-        .tb_format1 thead tr:nth-of-type(2) td:nth-of-type(1), .tb_format1 tbody tr.desc1 td:nth-of-type(1) {
-            width: 70px;
+        .tb_format1 tbody tr.thead1 td.title {
+            border-top: 2px solid #A0A0A0;
             text-align: center;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: rgb(0, 117, 58);
+            padding: 5px 20px;
         }
 
-        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(3), .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
-            width: 75px;
+        .tb_format1 tbody tr.thead2 td {
             text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 5px 20px;
         }
 
-        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(2),
-        .tb_format1 tbody tr.desc1 td:nth-last-of-type(2) {
-            width: 240px;
-        }
-
-        .tb_format1 thead tr:nth-of-type(2) td:nth-last-of-type(1),
-        .tb_format1 tbody tr.desc1 td:nth-last-of-type(1) {
-            width: 185px;
-            text-align: left;
-        }
-
-        .tb_format1 tbody td.desc2 div.notes {
+        .tb_format1 tbody tr td.desc2 div.notes {
             text-align: left;
             color: red;
             margin: 0 5px 8px;
             white-space: pre-line;
         }
 
-        .tb_format1 tbody td.desc2 div.picbox {
+        .tb_format1 tbody tr td.desc2 div.picbox {
             text-align: center;
             vertical-align: middle;
             margin-top: 8px;
         }
 
-        .tb_format1 tbody td.desc2 div.picbox img {
+        .tb_format1 tbody tr td.desc2 div.picbox img {
             max-height: 120px;
             max-width: 160px;
             margin: 5px;
+        }
+
+        .tb_format1 tbody tr.thead2 td:nth-of-type(1), .tb_format1 tbody tr.desc1 td:nth-of-type(1) {
+            width: 70px;
+            text-align: center;
+        }
+
+        .tb_format1 tbody tr.thead2 td:nth-last-of-type(3), .tb_format1 tbody tr.desc1 td:nth-last-of-type(3) {
+            width: 75px;
+            text-align: center;
+        }
+
+        .tb_format1 tbody tr.thead2 td:nth-last-of-type(2),
+        .tb_format1 tbody tr.desc1 td:nth-last-of-type(2) {
+            width: 240px;
+        }
+
+        .tb_format1 tbody tr.thead2 td:nth-last-of-type(1),
+        .tb_format1 tbody tr.desc1 td:nth-last-of-type(1) {
+            width: 185px;
+            text-align: left;
         }
 
         .area_subtotal .tb_format2 {
@@ -1052,25 +1052,15 @@ header( 'location:index' );
             margin-bottom: 30px;
         }
 
-        .tb_format2 th, .tb_format2 td {
+        .tb_format2 td {
             text-align: left;
             padding: 5px 20px;
             border-right: 2px solid #A0A0A0;
             border-bottom: 2px solid #A0A0A0;
         }
 
-        .tb_format2 thead tr th:first-of-type,
         .tb_format2 tbody tr td:first-of-type {
             border-left: 2px solid #A0A0A0;
-        }
-
-        .tb_format2 thead tr th.title {
-            border-top: 2px solid #A0A0A0;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: rgb(0, 117, 58);
         }
 
         .tb_format2 tbody tr td {
@@ -1162,6 +1152,16 @@ header( 'location:index' );
             text-align: left;
         }
 
+        .tb_format2 tbody tr.thead1 td.title {
+            border-top: 2px solid #A0A0A0;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: rgb(0, 117, 58);
+            padding: 5px 20px;
+        }
+
         .pagebox {
             border: 1px solid black;
             margin-bottom: 20px;
@@ -1246,7 +1246,7 @@ header( 'location:index' );
             height: 30px;
             border: 1px solid #707070;
             font-size: 14px;
-            width: 272px;
+            width: 150px;
         }
 
         .pagebox .content_box ul li:nth-of-type(1) input[type='checkbox'] {
@@ -1749,7 +1749,7 @@ header( 'location:index' );
             width: 310px;
         }
 
-        #signature_dialog .formbox dl dt input[type='number'] {
+        #signature_dialog .formbox dl dt input[type='number']  {
             height: 30px;
             border: 1px solid #707070;
             font-size: 14px;
@@ -2383,6 +2383,10 @@ header( 'location:index' );
                 overflow-y: hidden;
             }
 
+            .qn_page .qn_header {
+                position: fixed;
+            }
+
             .noPrint {
                 display: none;
             }
@@ -2415,12 +2419,6 @@ header( 'location:index' );
                 <div class="popupblock">
                     <a id="" class="print" @click="print_page()"></a>
                 </div>
-
-                <!--
-                <div class="popupblock">
-                    <a id="" class="specification" @click="specification_sheet()"></a>
-                </div>
-                -->
             </div>
 
             <div class="block fn">
@@ -2496,34 +2494,22 @@ header( 'location:index' );
                     if ($test_manager[0]  == "1")
                     {
                     ?>
-                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_page = !show_page">Page</a>
+                    <a id="project_fn2" class="fn2" :ref="'a_fn2'" @click="show_page = !show_page">Subtotal Block</a>
                     <?php
                     } else {
                     ?>
-                    <a>Page</a>
+                    <a>Subtotal Block</a>
                     <?php
                     }
                     ?>
                     <div id="page_dialog" class="dialog fn2 show" :ref="'dlg_fn2'" v-show="show_page">
-                        <h6>Page
-                            <a class="add_page" @click="add_page()"></a>
-                        </h6>
+                        <h6>Subtotal Block</h6>
 
                         <div class="page_form">
 
+                            <!-- 在 pageless 的客戶同意書中，因為只允許從 pageless 的報價單中生成 pageless 的客戶同意書，而在 pageless 的報價單中只會存在第一頁，所以在 pageless 的客戶同意書中也不再需要使用者自行分頁的功能，因此在 pageless 的客戶同意書頁面的這個表單裡，所有Subtotal區塊的所在頁碼都直接設定為第一頁即可 -->
                             <div class="pagebox" v-for="(page, page_index) in temp_pages">
 
-                                <div class="title_box">
-                                    <ul>
-                                        <li>Page {{page_index + 1}}</li>
-                                        <li><i class="fas fa-arrow-alt-circle-up"
-                                               @click="page_up(page_index, page.id)"></i>
-                                            <i class="fas fa-arrow-alt-circle-down"
-                                               @click="page_down(page_index, page.id)"></i>
-                                            <i class="fas fa-trash-alt" @click="page_del(page.id)"></i>
-                                        </li>
-                                    </ul>
-                                </div>
                                 <div class="function_box">
                                     <select :id="'block_type_' + page.id">
                                         <option value="A">Type-A Subtotal Block</option>
@@ -2536,30 +2522,16 @@ header( 'location:index' );
                                     <ul v-for="(block, block_index) in page.types">
                                         <li>
                                             Type-{{block.type}} Subtotal Block<br>
-                                            Name: <input type="text" v-model="block.name">
-
-                                            <!-- 不需要再呈現 「小計金額 」和「Not Show Subtotal Amount」，後續可以把這邊的程式碼直接刪掉
-                                            <br>
-                                            Subtotal Amount: <input type="number" v-model="block.real_amount"> <input
-                                                type="checkbox" class="alone" value="1" v-model="block.not_show"> Not
-                                            Show "Subtotal Amount"
-                                            -->
-
+                                            Name: <input type="text" v-model="block.name"><br>
+                                            Distance from Previous Block: <input type="number" v-model="block.pixa"> pixel
                                         </li>
                                         <li>
                                             <i class="fas fa-arrow-alt-circle-up"
                                                @click="set_up(page.id, block_index, block.id)"></i>
+
                                             <i class="fas fa-arrow-alt-circle-down"
                                                @click="set_down(page.id, block_index, block.id)"></i>
-                                            <i class="fas fa-file-upload"
-                                               @click="set_up_page(page.id, page_index, block_index, block.id)"></i>
-                                            <i class="fas fa-file-download"
-                                               @click="set_down_page(page.id, page_index, block_index, block.id)"></i>
-                                            <!--
-                                            <i class="fas fa-save" @click="page_save()"></i>
-                                            -->
 
-                                            
                                             <i class="fas fa-copy" @click="page_copy(page.id, block.id)"></i>
                                            
                                             <i class="fas fa-trash-alt" @click="del_block(page.id, block.id)"></i>
@@ -2798,18 +2770,15 @@ header( 'location:index' );
 
                         <div class="formbox">
                             <dl>
-                                <dt class="head">Choose where the block of signature locates at:</dt>
+                                <dt class="head">Choose whether to show the block of signature in this document:</dt>
                                 <dd>
-                                    <select v-model="sig.page">
-                                        <option value="0"></option>
-                                        <option v-for="(page, page_index) in pages" :value="page.page">Page {{ page.page
-                                            }}
-                                        </option>
+                                    <select v-model="show_s">
+                                    <option value="N">No</option>
+                                    <option value="">Yes</option>
                                     </select>
                                 </dd>
 
-                                <dt class="head" v-if="sig.page!== 0">Distance from Previous Block: <input type="number" v-model="sig.pixel"> pixel</dt>
-
+                                <dt class="head" v-if="show_s == ''">Distance from Previous Block: <input type="number" v-model="pixa_s"> pixel</dt>
                             </dl>
                         </div>
 
@@ -2912,262 +2881,271 @@ header( 'location:index' );
             </div>
         </div>
 
+        <table class="qn_page" v-for="(pg, index) in pages">
 
-        <div class="qn_page" v-for="(pg, index) in pages">
+            <thead>
+            <tr>
+                <td>
+                    <div class="qn_header_space">&nbsp;</div>
 
-            <div class="qn_header" v-if="show_title">
+                    <div class="qn_header" v-if="show_title">
 
-                <div class="left_block">
+                        <div class="left_block">
 
-                    <img class="logo" src="images/Feliix-Logo-Black.png">
+                            <img class="logo" src="images/Feliix-Logo-Black.png">
 
-                    <div class="af_project">
-                        Project Name:<br>
-                        <span class="af_project_name">{{project_name}}</span>
-                        Project Location:<br>
-                        <span class="af_project_location">{{project_location}}</span>
+                            <div class="af_project">
+                                Project Name:<br>
+                                <span class="af_project_name">{{project_name}}</span>
+                                Project Location:<br>
+                                <span class="af_project_location">{{project_location}}</span>
+                            </div>
+
+                            <div class="af_requested">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>Requested by:</td>
+                                        <td></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Client Name:</td>
+                                        <td><span class="af_client_name">{{request_by}}</span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Date:</td>
+                                        <td><span class="af_client_date">{{request_date}}</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div class="right_block">
+
+                            <div class="af_category">{{ project_category == 'Lighting' ? 'FIXTURE' : (project_category == 'Office Systems' ? 'FURNITURE' : '' ) }} APPROVAL FORM</div>
+
+                            <div class="af_qo_po">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>Quotation Number:</td>
+                                        <td><span class="af_qo">{{quotation_no}}</span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>P.O. Number:</td>
+                                        <td><span class="af_po">{{po}}</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="af_submitted">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>Submitted by:</td>
+                                        <td></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Name:</td>
+                                        <td><span class="af_staff_name">{{submit_by}}</span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Date:</td>
+                                        <td><span class="af_staff_date">{{submit_date}}</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <div class="af_requested">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td>Requested by:</td>
-                                <td></td>
-                            </tr>
+                </td>
+            </tr>
+            </thead>
 
-                            <tr>
-                                <td>Client Name:</td>
-                                <td><span class="af_client_name">{{request_by}}</span></td>
-                            </tr>
 
-                            <tr>
-                                <td>Date:</td>
-                                <td><span class="af_client_date">{{request_date}}</span></td>
-                            </tr>
-                            </tbody>
-                        </table>
+            <tbody>
+            <tr>
+                <td style="vertical-align: top;">
+
+                    <div class="qn_body">
+
+                        <div class="area_subtotal">
+
+                            <!-- 因為不需要帶入價格資訊，以及 不需要判斷 12%vat 和 不需要帶入 12%vat 的資訊，因此會移除掉所有價格和 12%vat 的東西，後續這邊的程式碼可以刪除掉
+                            <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']"
+                                v-for="(tp, index) in pg.types">
+                            -->
+
+                            <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2']" v-for="(tp, index) in pg.types">
+
+                                <tbody>
+
+                                <!-- 商品表格的標題列 -->
+                                <tr class="thead1" v-if="tp.type == 'A'">
+                                    <th class="title" colspan="6">{{ tp.name }}</th>
+                                </tr>
+
+                                <tr class="thead2" v-if="tp.type == 'A'">
+                                    <th>No</th>
+                                    <th colspan="2">Description</th>
+                                    <th>Qty.</th>
+                                    <th>Notes</th>
+                                    <th>Approval Status</th>
+                                </tr>
+
+
+                                <tr class="thead1" v-if="tp.type == 'B'">
+                                    <th class="title" colspan="3">{{ tp.name }}</th>
+                                </tr>
+
+
+                                <!-- 商品表格內容物 -->
+                                <template v-if="tp.type == 'A'">
+
+                                <tr class="desc1" v-for="(bk, index) in tp.blocks">
+
+                                    <td v-if="bk.type == 'image'">{{ bk.num }}</td>
+                                    <td v-if="bk.type == '' || bk.type== 'noimage' ">{{ bk.num }}</td>
+
+                                    <td class="pic" v-if="bk.type == 'image'">
+                                        <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
+                                    </td>
+                                    <td v-if="bk.type == 'image'">
+                                        <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
+                                        <div class="code">{{ bk.code }}</div>
+                                        <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
+                                        <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
+                                    </td>
+                                    <td v-if="bk.type == '' || bk.type== 'noimage'" colspan="2">
+                                        <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
+                                        <div class="code">{{ bk.code }}</div>
+                                        <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
+                                        <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
+                                    </td>
+                                    <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
+                                    </td>
+
+                                    <td class="desc2 pic" v-if="bk.type == 'image'">
+                                        <div class="notes">{{ bk.notes }}</div>
+                                        <div class="picbox">
+                                            <img v-if="bk.photo2 != ''" :src="bk.url2">
+                                            <img v-if="bk.photo3 != ''" :src="bk.url3">
+                                        </div>
+                                    </td>
+
+                                    <td class="desc2 pic" v-if="bk.type !== 'image'"></td>
+
+                                    <td v-if="bk.type == 'image' || bk.type !== 'image'">
+                                        <div class="approval_box">
+                                            <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
+                                            <span>Approved</span>
+                                        </div>
+
+                                        <div class="approval_box">
+                                            <input type="checkbox" class="alone" disabled value="ac" v-model="bk.approval">
+                                            <span>Approved with comments</span>
+                                        </div>
+
+                                        <div class="approval_box">
+                                            <input type="checkbox" class="alone" disabled value="ic" v-model="bk.approval">
+                                            <span>Incorporate comments and resubmit</span>
+                                        </div>
+
+                                        <div class="approval_box">
+                                            <input type="checkbox" class="alone" disabled value="na" v-model="bk.approval">
+                                            <span>Not Approved</span>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                </template>
+
+
+                                <template v-if="tp.type == 'B'">
+
+                                <tr v-for="(bk, index) in tp.blocks">
+                                    <td>{{ bk.num }}</td>
+                                    <td>
+                                        <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
+                                        <div class="code">{{ bk.code }}</div>
+                                        <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
+                                        <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
+                                    </td>
+
+                                    <td>
+                                        <div class="approval_box">
+                                            <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
+                                            <span>Approved</span>
+                                        </div>
+
+                                        <div class="approval_box">
+                                            <input type="checkbox" class="alone" disabled value="ac" v-model="bk.approval">
+                                            <span>Approved with comments</span>
+                                        </div>
+
+                                        <div class="approval_box">
+                                            <input type="checkbox" class="alone" disabled value="ic" v-model="bk.approval">
+                                            <span>Incorporate comments and resubmit</span>
+                                        </div>
+
+                                        <div class="approval_box">
+                                            <input type="checkbox" class="alone" disabled value="na" v-model="bk.approval">
+                                            <span>Not Approved</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </template>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+                        <!-- 簽名區塊 -->
+                        <div class="area_client_signature" :style="'margin-top: ' + signature_pixel + 'px;'" v-if="show_s == ''">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Name:</td>
+                                        <td></td>
+                                        <td>Signature:</td>
+                                        <td></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Designation:</td>
+                                        <td></td>
+                                        <td>Date:</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="copyright">© Feliix Inc.</div>
+
+                        </div>
+
                     </div>
 
-                </div>
+                </td>
 
-                <div class="right_block">
+            </tr>
+            </tbody>
 
-                    <div class="af_category">{{ project_category == 'Lighting' ? 'FIXTURE' : (project_category == 'Office Systems' ? 'FURNITURE' : '' ) }} APPROVAL FORM</div>
-
-                    <div class="af_qo_po">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td>Quotation Number:</td>
-                                <td><span class="af_qo">{{quotation_no}}</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>P.O. Number:</td>
-                                <td><span class="af_po">{{po}}</span></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="af_submitted">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td>Submitted by:</td>
-                                <td></td>
-                            </tr>
-
-                            <tr>
-                                <td>Name:</td>
-                                <td><span class="af_staff_name">{{submit_by}}</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>Date:</td>
-                                <td><span class="af_staff_date">{{submit_date}}</span></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="qn_body">
-
-                <div class="area_subtotal">
-
-                    <!-- 因為不需要帶入價格資訊，以及 不需要判斷 12%vat 和 不需要帶入 12%vat 的資訊，因此會移除掉所有價格和 12%vat 的東西，後續這邊的程式碼可以刪除掉
-                    <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']"
-                           v-for="(tp, index) in pg.types">
-                    -->
-
-                    <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2']" v-for="(tp, index) in pg.types">
-
-                        <thead v-if="tp.type == 'A'">
-
-                        <tr>
-                            <th class="title" colspan="6">{{ tp.name }}</th>
-                        </tr>
-
-                        <tr>
-                            <th>No</th>
-                            <th colspan="2">Description</th>
-                            <th>Qty.</th>
-                            <th>Notes</th>
-                            <th>Approval Status</th>
-                        </tr>
-
-                        </thead>
-
-                        <thead v-if="tp.type == 'B'">
-
-                        <tr>
-                            <th class="title" colspan="3">{{ tp.name }}</th>
-                        </tr>
-
-                        </thead>
-
-                        <tbody v-if="tp.type == 'A'">
-
-                        <template v-for="(bk, index) in tp.blocks">
-
-                        <tr class="desc1">
-
-                            <td v-if="bk.type == 'image'">{{ bk.num }}</td>
-                            <td v-if="bk.type == '' || bk.type== 'noimage' ">{{ bk.num }}</td>
-
-                            <td class="pic" v-if="bk.type == 'image'">
-                                <img v-show="bk.photo !== ''" :src=" bk.photo !== '' ? img_url + bk.photo : ''">
-                            </td>
-                            <td v-if="bk.type == 'image'">
-                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
-                                <div class="code">{{ bk.code }}</div>
-                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
-                                <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
-                            </td>
-                            <td v-if="bk.type == '' || bk.type== 'noimage'" colspan="2">
-                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
-                                <div class="code">{{ bk.code }}</div>
-                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
-                                <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
-                            </td>
-                            <td><span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
-                            </td>
-
-                            <td class="desc2 pic" v-if="bk.type == 'image'">
-                                <div class="notes">{{ bk.notes }}</div>
-                                <div class="picbox">
-                                    <img v-if="bk.photo2 != ''" :src="bk.url2">
-                                    <img v-if="bk.photo3 != ''" :src="bk.url3">
-                                </div>
-                            </td>
-
-                            <td class="desc2 pic" v-if="bk.type !== 'image'"></td>
-
-                            <td v-if="bk.type == 'image' || bk.type !== 'image'">
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
-                                     <span>Approved</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ac" v-model="bk.approval">
-                                     <span>Approved with comments</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ic" v-model="bk.approval">
-                                     <span>Incorporate comments and resubmit</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="na" v-model="bk.approval">
-                                     <span>Not Approved</span>
-                                </div>
-                            </td>
-
-                        </tr>
-
-
-                        </template>
-
-                        </tbody>
-
-                        <tbody v-if="tp.type == 'B'">
-                        <tr v-for="(bk, index) in tp.blocks">
-                            <td>{{ bk.num }}</td>
-                            <td>
-                                <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
-                                <div class="code">{{ bk.code }}</div>
-                                <div class="brief" style="white-space: pre-line;">{{ bk.desc }}</div>
-                                <div class="listing" style="white-space: pre-line;">{{ bk.list }}</div>
-                            </td>
-
-                            <td>
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ap" v-model="bk.approval">
-                                     <span>Approved</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ac" v-model="bk.approval">
-                                     <span>Approved with comments</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="ic" v-model="bk.approval">
-                                     <span>Incorporate comments and resubmit</span>
-                                </div>
-
-                                <div class="approval_box">
-                                    <input type="checkbox" class="alone" disabled value="na" v-model="bk.approval">
-                                     <span>Not Approved</span>
-                                </div>
-                            </td>
-                        </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-
-                <div class="area_client_signature" :style="'margin-top: ' + signature_pixel + 'px;'" v-if="signature_page == pg.page">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Name:</td>
-                                <td></td>
-                                <td>Signature:</td>
-                                <td></td>
-                            </tr>
-
-                            <tr>
-                                <td>Designation:</td>
-                                <td></td>
-                                <td>Date:</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="copyright">© Feliix Inc.</div>
-
-                </div>
-            </div>
-
-
-            <div class="qn_footer">
-
-            </div>
-
-        </div>
-
+        </table>
 
     </div>
 
@@ -4147,5 +4125,5 @@ header( 'location:index' );
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script defer src="js/axios.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="js/approval_form.js"></script>
+<script defer src="js/approval_form_pageless.js"></script>
 </html>
