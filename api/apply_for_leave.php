@@ -419,13 +419,13 @@ else
                 $mail_email = $second_email;
                 $mail_id = $second_uid;
 
-                $ret = false;
-                $ret = $afl->approval($id, $user_id);
-                if(!$ret)
-                {
-                    http_response_code(401);
-                    echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
-                }
+                // $ret = false;
+                // $ret = $afl->approval($id, $user_id);
+                // if(!$ret)
+                // {
+                //     http_response_code(401);
+                //     echo json_encode(array("message" => "Apply Fail at" . date("Y-m-d") . " " . date("h:i:sa")));
+                // }
 
             }
 
