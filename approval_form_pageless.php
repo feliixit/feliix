@@ -2993,20 +2993,20 @@ header( 'location:index' );
 
                                 <!-- 商品表格的標題列 -->
                                 <tr class="thead1" v-if="tp.type == 'A'">
-                                    <th class="title" colspan="6">{{ tp.name }}</th>
+                                    <td class="title" colspan="6">{{ tp.name }}</td>
                                 </tr>
 
                                 <tr class="thead2" v-if="tp.type == 'A'">
-                                    <th>No</th>
-                                    <th colspan="2">Description</th>
-                                    <th>Qty.</th>
-                                    <th>Notes</th>
-                                    <th>Approval Status</th>
+                                    <td>No</td>
+                                    <td colspan="2">Description</td>
+                                    <td>Qty.</td>
+                                    <td>Notes</td>
+                                    <td>Approval Status</td>
                                 </tr>
 
 
                                 <tr class="thead1" v-if="tp.type == 'B'">
-                                    <th class="title" colspan="3">{{ tp.name }}</th>
+                                    <td class="title" colspan="3">{{ tp.name }}</td>
                                 </tr>
 
 
