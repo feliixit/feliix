@@ -1833,7 +1833,7 @@ header( 'location:index' );
             border-bottom-color: rgb(230, 230, 230);
         }
 
-        .list_function.main a.print, .list_function.main a.specification {
+        .list_function.main a.print, .list_function.main a.specification, .list_function.main a.approvalform {
             width: 30px;
             height: 30px;
             background-color: #00811e;
@@ -1863,7 +1863,20 @@ header( 'location:index' );
             left: 4px;
         }
 
-        .list_function.main a.print:hover, .list_function.main a.specification:hover {
+        .list_function.main a.approvalform::after {
+            content: " ";
+            background: url(images/ui/btn_approvalform.svg);
+            background-size: 22px 22px;
+            background-repeat: no-repeat;
+            width: 45px;
+            height: 45px;
+            position: absolute;
+            top: 3px;
+            left: 4px;
+        }
+
+
+        .list_function.main a.print:hover, .list_function.main a.specification:hover, .list_function.main a.approvalform:hover {
             background-color: #707071;
         }
 
@@ -2270,6 +2283,10 @@ header( 'location:index' );
 
                 <div class="popupblock">
                     <a id="" class="specification" @click="specification_sheet()"></a>
+                </div>
+
+                <div class="popupblock">
+                    <a id="" class="approvalform" @click="approval_form_post()"></a>
                 </div>
             </div>
 
