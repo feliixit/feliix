@@ -480,13 +480,16 @@ header( 'location:index' );
             display: none;
         }
 
-
         .qn_page {
             width: 1200px;
             height: 1697px;
             background-color: white;
             position: relative;
             margin-bottom: 80px;
+        }
+
+        .qn_page .qn_header_space {
+            height: 305px;
         }
 
         .qn_page .qn_header {
@@ -586,7 +589,11 @@ header( 'location:index' );
         }
 
         .qn_page .qn_body {
-            padding: 305px 20px 30px;
+            padding: 0 30px;
+        }
+
+        .qn_page .qn_footer_space {
+            height: 30px;
         }
 
         .qn_page .qn_footer {
@@ -3144,6 +3151,15 @@ header( 'location:index' );
 
             </tr>
             </tbody>
+
+
+            <tfoot>
+            <tr>
+                <th>
+                    <div class="qn_footer_space">&nbsp;</div>
+                </th>
+            </tr>
+            </tfoot>
 
         </table>
 
