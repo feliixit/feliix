@@ -171,7 +171,11 @@ switch ($method) {
                     `create_id` = :create_id,
                     `created_at` = now()";
 
-                if($block_array[$i]['url'] !== '')
+                $url = isset($block_array[$i]['url']) ? $block_array[$i]['url'] : '';
+                $url2 = isset($block_array[$i]['url2']) ? $block_array[$i]['url2'] : '';
+                $url3 = isset($block_array[$i]['url3']) ? $block_array[$i]['url3'] : '';
+
+                if($url !== '')
                 {
                     $query .= ", `photo` = :photo";
                 }
@@ -180,7 +184,7 @@ switch ($method) {
                     $query .= ", `photo` = ''";
                 }
 
-                if($block_array[$i]['url2'] !== '')
+                if($url2 !== '')
                 {
                     $query .= ", `photo2` = :photo2";
                 }
@@ -189,7 +193,7 @@ switch ($method) {
                     $query .= ", `photo2` = ''";
                 }
 
-                if($block_array[$i]['url3'] !== '')
+                if($url3 !== '')
                 {
                     $query .= ", `photo3` = :photo3";
                 }
@@ -248,16 +252,17 @@ switch ($method) {
                 $stmt->bindParam(':approval', $approval);
                 
                 $stmt->bindParam(':create_id', $user_id);
-                
-                if($block_array[$i]['url'] !== '')
+
+
+                if($url !== '')
                 {
                     $stmt->bindParam(':photo', $block_array[$i]['photo']);
                 }
-                if($block_array[$i]['url2'] !== '')
+                if($url2 !== '')
                 {
                     $stmt->bindParam(':photo2', $block_array[$i]['photo2']);
                 }
-                if($block_array[$i]['url3'] !== '')
+                if($url3 !== '')
                 {
                     $stmt->bindParam(':photo3', $block_array[$i]['photo3']);
                 }

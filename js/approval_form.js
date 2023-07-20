@@ -1641,7 +1641,7 @@ var app = new Vue({
         form_Data.append("page", this.sig.page);
         form_Data.append("pixa", this.sig.pixel);
         form_Data.append("show", this.show_s);
-        form_Data.append("pageless", 'Y');
+        form_Data.append("pageless", '');
 
         for (var i = 0; i < this.sig.item_company.length; i++) {
           let file = document.getElementById('sig_image_' + this.sig.item_company[i].id);
@@ -1722,7 +1722,7 @@ var app = new Vue({
 
         form_Data.append("pixa", this.pixa_t);
         form_Data.append("show", this.show_t);
-        form_Data.append("pageless", 'Y');
+        form_Data.append("pageless", '');
 
         try {
           let res = await axios({
@@ -1781,7 +1781,7 @@ var app = new Vue({
 
         form_Data.append("pixa", this.pixa_p);
         form_Data.append("show", this.show_p);
-        form_Data.append("pageless", 'Y');
+        form_Data.append("pageless", '');
 
         try {
           let res = await axios({
@@ -1976,7 +1976,7 @@ var app = new Vue({
         form_Data.append("total", this.total.total);
         form_Data.append("pixa", this.pixa);
         form_Data.append("show", this.show);
-        form_Data.append("pageless", 'Y');
+        form_Data.append("pageless", '');
       
         axios({
           method: "post",
@@ -2027,7 +2027,7 @@ var app = new Vue({
         form_Data.append("id", id);
         form_Data.append("type_id", type_id);
         form_Data.append("block", JSON.stringify(temp_block));
-        form_Data.append("pageless", 'Y');
+        form_Data.append("pageless", '');
       
         for (var i = 0; i < temp_block.length; i++) {
           let file = document.getElementById('block_image_' + temp_block[i].id + '_1');
@@ -3044,7 +3044,7 @@ Installation:`;
 
         form_Data.append("footer_first_line", this.footer_first_line);
         form_Data.append("footer_second_line", this.footer_second_line);
-        form_Data.append("pageless", 'Y');
+        form_Data.append("pageless", '');
   
         if(this.id == 0) {
           axios({
@@ -3130,7 +3130,7 @@ Installation:`;
         form_Data.append("id", this.id);
 
         form_Data.append("types", JSON.stringify(page));
-        form_Data.append("pageless", 'Y');
+        form_Data.append("pageless", '');
 
         let res = await axios({
           method: 'post',
@@ -3222,7 +3222,7 @@ Installation:`;
         form_Data.append("footer_second_line", this.footer_second_line);
 
         form_Data.append("pages", JSON.stringify(this.temp_pages));
-        form_Data.append("pageless", 'Y');
+        form_Data.append("pageless", '');
   
         if(this.id == 0) {
           axios({

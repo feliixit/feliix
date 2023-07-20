@@ -1639,7 +1639,7 @@ var app = new Vue({
         form_Data.append("quotation_id", this.id);
         form_Data.append("detail", JSON.stringify(this.sig));
         form_Data.append("page", this.sig.page);
-        form_Data.append("pixa", this.sig.pixel);
+        form_Data.append("pixa", this.pixa_s);
         form_Data.append("show", this.show_s);
         form_Data.append("pageless", 'Y');
 

@@ -87,34 +87,34 @@ else
         die();
         }
 
-        // quotation_page
-        $query = "DELETE FROM approval_form_quotation_signature
-                WHERE
-                `quotation_id` = :quotation_id";
+        // // quotation_page
+        // $query = "DELETE FROM approval_form_quotation_signature
+        //         WHERE
+        //         `quotation_id` = :quotation_id";
 
-        // prepare the query
-        $stmt = $db->prepare($query);
+        // // prepare the query
+        // $stmt = $db->prepare($query);
 
-        // bind the values
-        $stmt->bindParam(':quotation_id', $quotation_id);
+        // // bind the values
+        // $stmt->bindParam(':quotation_id', $quotation_id);
 
-        try {
-        // execute the query, also check if query was successful
-        if (!$stmt->execute()) {
-            $arr = $stmt->errorInfo();
-            error_log($arr[2]);
-            $db->rollback();
-            http_response_code(501);
-            echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
-            die();
-        }
-        } catch (Exception $e) {
-        error_log($e->getMessage());
-        $db->rollback();
-        http_response_code(501);
-        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
-        die();
-        }
+        // try {
+        // // execute the query, also check if query was successful
+        // if (!$stmt->execute()) {
+        //     $arr = $stmt->errorInfo();
+        //     error_log($arr[2]);
+        //     $db->rollback();
+        //     http_response_code(501);
+        //     echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+        //     die();
+        // }
+        // } catch (Exception $e) {
+        // error_log($e->getMessage());
+        // $db->rollback();
+        // http_response_code(501);
+        // echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+        // die();
+        // }
 
         // quotation_page
         $query = "DELETE FROM approval_form_quotation_signature
