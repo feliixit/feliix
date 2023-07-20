@@ -465,6 +465,7 @@
         <option value="PROPOSED">PROPOSED</option>
         <option value="ALTERNATIVE">ALTERNATIVE</option>
         <option value="ECONOMICAL">ECONOMICAL</option>
+	<option value="DECORATIVE LIGHTING">DECORATIVE LIGHTING</option>
     </optgroup>
     <optgroup label="BY PROJECT TYPE">
         <option value="RESIDENTIAL">RESIDENTIAL</option>
