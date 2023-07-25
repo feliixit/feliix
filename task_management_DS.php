@@ -32,10 +32,10 @@ try {
 
     if(trim(strtoupper($department)) == 'DESIGN')
     {
-        if(trim(strtoupper($position)) == 'BRAND MANAGER' || trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER')
-        {
-            $access6 = true;
-        }
+        // if(trim(strtoupper($position)) == 'BRAND MANAGER' || trim(strtoupper($position)) == 'ASSISTANT BRAND MANAGER')
+        // {
+        $access6 = true;
+        // }
     }
 
     if(trim(strtoupper($position)) == 'SUPPLY CHAIN MANAGER')
