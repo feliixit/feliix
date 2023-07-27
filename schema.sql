@@ -4060,4 +4060,24 @@ ADD COLUMN `halfday` decimal(10, 1) default 0.0;
 ALTER TABLE apply_for_leave
 ADD COLUMN `halfday` decimal(10, 2) default 0.0;
 
--- quotation pageless
+-- 20230726 tag management
+CREATE TABLE tag_group (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `sn` int(11) DEFAULT 0,
+  `group_name` VARCHAR(256) NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+CREATE TABLE tag_item (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `sn` int(11) DEFAULT 0,
+  `group_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `item_name` VARCHAR(256) NOT NULL,
+  `status` int(11) DEFAULT 0,
+  `create_id` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
