@@ -47,6 +47,7 @@ var app = new Vue({
     name :"",
     title: "",
     is_manager: "",
+    tag_group : [],
   },
 
   created() {
@@ -108,6 +109,7 @@ var app = new Vue({
     this.get_records();
     this.getUserName();
     this.get_brands();
+    this.getTagGroup();
 
   },
 
@@ -140,6 +142,29 @@ var app = new Vue({
 
 
   methods: {
+    getTagGroup: function() {
+      let _this = this;
+        
+          let token = localStorage.getItem('accessToken');
+          const params = {
+
+        };
+          axios
+              .get('api/tag_mgt_get', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.tag_group = res.data;
+
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
     getUserName: function() {
       var token = localStorage.getItem('token');
       var form_Data = new FormData();

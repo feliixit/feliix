@@ -43,8 +43,33 @@ if (!isset($jwt)) {
     $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $items = GetItems($row['id'], $db);
+        $row['items'] = $items;
         $merged_results[] = $row;
     }
 
     echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+}
+
+
+function GetItems($group_id, $db) 
+{
+    $query = "SELECT id,
+                    `item_name`, 
+                    sn
+                    FROM tag_item
+                    WHERE status <> -1 and group_id = :group_id  order by sn
+                    ";
+
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':group_id', $group_id);
+    $stmt->execute();
+
+    $items = array();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $items[] = $row;
+    }
+
+    return $items;
 }

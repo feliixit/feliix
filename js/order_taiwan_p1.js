@@ -292,6 +292,7 @@ var app = new Vue({
 
         phased : 0,
         fil_k : '',
+        tag_group : [],
     },
   
     created() {
@@ -353,6 +354,7 @@ var app = new Vue({
       this.getCreators();
       this.getAccess();
       this.getOdMain();
+      this.getTagGroup();
     },
   
     computed: {
@@ -397,7 +399,28 @@ var app = new Vue({
     },
   
     methods: {
+      getTagGroup: function() {
+        let _this = this;
+          
+            let token = localStorage.getItem('accessToken');
+            const params = {
 
+          };
+            axios
+                .get('api/tag_mgt_get', { params, headers: {"Authorization" : `Bearer ${token}`} })
+                .then(
+                (res) => {
+                    _this.tag_group = res.data;
+  
+                },
+                (err) => {
+                    alert(err.response);
+                },
+                )
+                .finally(() => {
+                    
+                });
+        },
       sort_me(type) {
 
         if(type == 1) {
@@ -1561,6 +1584,7 @@ var app = new Vue({
       product_catalog() {
 
         $('#modal_product_catalog').modal('toggle');
+        $("#tag01").selectpicker("refresh");
       },
 
       get_brands: function() {

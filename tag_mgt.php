@@ -521,9 +521,9 @@
                     </li>
 
                     <li>
-                        <button class="btn btn-info" @click="_add_criterion" v-if="!editing">Add2</button>
-                        <button class="btn btn-secondary" v-if="editing" @click="_cancel_criterion">Cancel2</button>
-                        <button class="btn btn-info" v-if="editing" @click="_update_criterion">Update2</button>
+                        <button class="btn btn-info" @click="_add_criterion" v-if="!editing">Add</button>
+                        <button class="btn btn-secondary" v-if="editing" @click="_cancel_criterion">Cancel</button>
+                        <button class="btn btn-info" v-if="editing" @click="_update_criterion">Update</button>
                     </li>
                 </ul>
 
@@ -558,7 +558,7 @@
 
             <div class="btnbox" v-if="editing == false">
                 <button class="btn btn-secondary" @click="reset">Cancel</button>
-                <button class="btn btn-primary" :disabled="submit == true"  @click="apply">Save1</button>
+                <button class="btn btn-primary" :disabled="submit == true"  @click="apply">Save</button>
 
             </div>
 

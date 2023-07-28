@@ -555,6 +555,18 @@ var app = new Vue({
     _del: function(eid) {
       var index = this.level1.findIndex(({ sn }) => sn === eid);
       if (index > -1) {
+
+        var element = this.level1.find(({ sn }) => sn === eid);
+        if(element.items.length == 0) {
+          Swal.fire({
+            text: "User only allows to delete the group which doesn’t contain any tag.",
+            icon: 'warning',
+            confirmButtonText: 'OK'
+          });
+          
+          return;
+        }
+
         this.level1.splice(index, 1);
       }
     },

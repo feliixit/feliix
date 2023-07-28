@@ -98,12 +98,15 @@ var app = new Vue({
 
     submit: false,
 
+    tag_group : [],
+
   },
 
   created() {
     this.product_get_category_item();
     this.accessory_get_category_item();
     this.getUserName();
+    this.getTagGroup();
   },
 
   computed: {
@@ -164,6 +167,29 @@ var app = new Vue({
   },
 
   methods: {
+    getTagGroup: function() {
+      let _this = this;
+        
+          let token = localStorage.getItem('accessToken');
+          const params = {
+
+        };
+          axios
+              .get('api/tag_mgt_get', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.tag_group = res.data;
+
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
+
     getUserName: function() {
       var token = localStorage.getItem('token');
       var form_Data = new FormData();
@@ -202,7 +228,7 @@ var app = new Vue({
 
     edit_category() {
       this.edit_mode = true;
-
+$("#tag01").selectpicker("refresh");
       console.log("edit category");
     },
 
