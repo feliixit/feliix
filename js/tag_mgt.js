@@ -358,6 +358,8 @@ var app = new Vue({
       this.view_detail = false;
       this.lv1 = {};
       this.level2 = [];
+
+      this.getLevel1();
     },
 
     reset: function() {
