@@ -413,6 +413,7 @@ var app = new Vue({
           sn: ++max_sn,
           group_name: this.option,
           status : 1,
+          items: []
         };
         this.level1.push(ad);
       
@@ -557,7 +558,7 @@ var app = new Vue({
       if (index > -1) {
 
         var element = this.level1.find(({ sn }) => sn === eid);
-        if(element.items.length == 0) {
+        if(element.items.length > 0) {
           Swal.fire({
             text: "User only allows to delete the group which doesn’t contain any tag.",
             icon: 'warning',
