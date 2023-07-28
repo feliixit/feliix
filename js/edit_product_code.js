@@ -239,7 +239,7 @@ var app = new Vue({
 
     edit_category() {
       this.edit_mode = true;
-      $("#tag01").selectpicker("refresh");
+ 
       console.log("edit category");
     },
 
@@ -321,6 +321,8 @@ var app = new Vue({
             _this.moq = _this.record[0]['moq'];
 
             var select_items = _this.record[0]['tags'].split(',');
+
+            $("#tag01").selectpicker("refresh");
 
             if(_this.category === '10000000')
               $('#tag01').selectpicker('val', select_items);
