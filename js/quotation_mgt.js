@@ -92,6 +92,8 @@ var app = new Vue({
     ],
     perPage: 20,
 
+    total : 0,
+
   },
 
   created () {
@@ -138,6 +140,12 @@ var app = new Vue({
             case "pg":
               _this.pg = tmp[1];
               break;
+            case "page":
+              _this.page = tmp[1];
+              break;
+            case "size":
+              _this.perPage = tmp[1];
+              break;
             default:
               console.log(`Too many args`);
           }
@@ -160,8 +168,8 @@ var app = new Vue({
 
   computed: {
     displayedPosts () {
-      if(this.pg == 0)
-        this.apply_filters();
+      // if(this.pg == 0)
+      //   this.apply_filters();
 
       this.setPages();
         return this.paginate(this.receive_records);
@@ -240,7 +248,7 @@ var app = new Vue({
 
     receive_records () {
         console.log('Vue watch receive_records');
-        // this.setPages();
+        this.setPages();
       },
 
       status (value) {
@@ -544,17 +552,19 @@ var app = new Vue({
     },
 
     setPages () {
-          console.log('setPages');
-          this.pages = [];
-          let numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+      console.log('setPages');
+      this.pages = [];
 
-          if(numberOfPages == 1)
-            this.page = 1;
-          for (let index = 1; index <= numberOfPages; index++) {
-            this.pages.push(index);
-          }
+      let numberOfPages = Math.ceil(this.total / this.perPage);
 
-          // this.setupChosen();
+
+      if(numberOfPages == 1)
+        this.page = 1;
+      for (let index = 1; index <= numberOfPages; index++) {
+        this.pages.push(index);
+      }
+
+      this.paginate(this.receive_records);
         },
 
         paginate: function (posts) {
@@ -564,20 +574,17 @@ var app = new Vue({
           if(this.page > this.pages.length)
             this.page = this.pages.length;
 
-            let page = this.page;
-          let perPage = this.perPage;
-          let from_d = (page * perPage) - perPage;
-          let to_d = (page * perPage);
-
             let tenPages = Math.floor((this.page - 1) / 10);
             if(tenPages < 0)
               tenPages = 0;
             this.pages_10 = [];
             let from = tenPages * 10;
             let to = (tenPages + 1) * 10;
+
             this.pages_10 = this.pages.slice(from, to);
 
-          return  this.receive_records.slice(from_d, to_d);
+          
+            return  this.receive_records;
         },
 
         
@@ -630,9 +637,12 @@ var app = new Vue({
                 od1: _this.od_ord1,
                 op2: _this.od_opt2,
                 od2: _this.od_ord2,
+
+                page: _this.page,
+                size: _this.perPage,
             };
 
-      
+            this.total = 0;
     
           let token = localStorage.getItem('accessToken');
     
@@ -641,6 +651,9 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.receive_records = res.data;
+
+                  if(_this.receive_records.length > 0)
+                   _this.total = _this.receive_records[0].cnt;
 
                   if(_this.pg !== 0)
                   { 
@@ -861,6 +874,7 @@ var app = new Vue({
         this.od_ord1 = '';
         this.od_opt2 = '';
         this.od_ord2 = '';
+        this.page = 1;
 
         let _this = this;
 
@@ -886,7 +900,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
       clear_filters: function() {
@@ -902,6 +920,7 @@ var app = new Vue({
         this.fil_upper = '';
         this.fil_keyword = '';
         this.fil_kind = '';
+        this.page = 1;
 
         let _this = this;
 
@@ -927,7 +946,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
       apply_filters: function(pg) {
@@ -957,7 +980,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
       apply_orders: function() {
@@ -985,7 +1012,11 @@ var app = new Vue({
           "&od2=" +
           _this.od_ord2 +
           "&pg=" +
-          _this.page;
+          _this.page + 
+          "&page=" +
+          _this.page +
+          "&size=" +
+          _this.perPage;
       },
 
         shallowCopy(obj) {
