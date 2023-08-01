@@ -69,6 +69,7 @@ $kind = (isset($_GET['kind']) ?  urldecode($_GET['kind']) : "");
 
 $type = (isset($_GET['type']) ?  urldecode($_GET['type']) : '');
 
+
 $merged_results = array();
 
 $query = "SELECT pm.id, 
@@ -94,26 +95,42 @@ $query = "SELECT pm.id,
                 left join project_main p on pm.project_id = p.id
                 where pm.status <> -1 and pageless = 'Y' ";
 
+$query_cnt = "SELECT count(*) cnt 
+FROM quotation pm 
+    LEFT JOIN user c_user ON pm.create_id = c_user.id 
+    LEFT JOIN user u_user ON pm.updated_id = u_user.id 
+    left join project_main p on pm.project_id = p.id
+where pm.status <> -1  and pageless = 'Y'  ";
 
 if($fpt != "")
 {
     $query = $query . " and c_user.username = '" . $fpt . "' ";
+    $query_cnt = $query_cnt . " and c_user.username = '" . $fpt . "' ";
 }
 
 if($fpc != "")
 {
     $query = $query . " and p.create_id = " . $fpc . " ";
+    $query_cnt = $query_cnt . " and p.create_id = " . $fpc . " ";
 }
 
 if($kind != "")
 {
     $query = $query . " and pm.kind = '" . $kind . "' ";
+    $query_cnt = $query_cnt . " and pm.kind = '" . $kind . "' ";
 }
 
 
 if($fc != "")
 {
     $query = $query . " and p.catagory_id = " . $fc . " ";
+    $query_cnt = $query_cnt . " and p.catagory_id = " . $fc . " ";
+}
+
+if($key != "")
+{
+    $query = $query . " and (COALESCE((SELECT project_name FROM project_main WHERE id = pm.project_id and pm.kind = ''), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_a WHERE id = pm.project_id and pm.kind = 'a'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_d WHERE id = pm.project_id and pm.kind = 'd'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_l WHERE id = pm.project_id and pm.kind = 'l'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_o WHERE id = pm.project_id and pm.kind = 'o'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_sl WHERE id = pm.project_id and pm.kind = 'sl'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_sv WHERE id = pm.project_id and pm.kind = 'sv'), '') like '%" . $key . "%' or pm.quotation_no like '%" . $key . "%'  or pm.title like '%" . $key . "%' ) ";
+    $query_cnt = $query_cnt . " and (COALESCE((SELECT project_name FROM project_main WHERE id = pm.project_id and pm.kind = ''), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_a WHERE id = pm.project_id and pm.kind = 'a'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_d WHERE id = pm.project_id and pm.kind = 'd'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_l WHERE id = pm.project_id and pm.kind = 'l'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_o WHERE id = pm.project_id and pm.kind = 'o'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_sl WHERE id = pm.project_id and pm.kind = 'sl'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_sv WHERE id = pm.project_id and pm.kind = 'sv'), '') like '%" . $key . "%' or pm.quotation_no like '%" . $key . "%'  or pm.title like '%" . $key . "%' ) ";
 }
 
 $sOrder = "";
@@ -212,7 +229,12 @@ if(!empty($_GET['size'])) {
 $stmt = $db->prepare( $query );
 $stmt->execute();
 
-
+$cnt = 0;
+$stmt_cnt = $db->prepare( $query_cnt );
+$stmt_cnt->execute();
+while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+    $cnt = $row['cnt'];
+}
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id = $row['id'];
@@ -255,34 +277,36 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "created_at" => $created_at,
         "updated_at" => $updated_at,
         "post" => $post,
+        "cnt" => $cnt,
      
     );
 }
 
-$filter_result = [];
+// $filter_result = [];
 
-if($key != "")
-{
-    foreach ($merged_results as &$value) {
-        if(
-            preg_match("/{$key}/i", $value['project_name']) ||
-            preg_match("/{$key}/i", $value['project_name_a']) ||
-            preg_match("/{$key}/i", $value['project_name_d']) ||
-            preg_match("/{$key}/i", $value['project_name_l']) ||
-            preg_match("/{$key}/i", $value['project_name_o']) ||
-            preg_match("/{$key}/i", $value['project_name_sl']) ||
-            preg_match("/{$key}/i", $value['project_name_sv']) ||
-            preg_match("/{$key}/i", $value['title']) ||
-            preg_match("/{$key}/i", $value['quotation_no']))
-        {
-            $filter_result[] = $value;
-        }
-    }
-}
-else
-    $filter_result = $merged_results;
+// if($key != "")
+// {
+//     foreach ($merged_results as &$value) {
+//         if(
+//             preg_match("/{$key}/i", $value['project_name']) ||
+//             preg_match("/{$key}/i", $value['project_name_a']) ||
+//             preg_match("/{$key}/i", $value['project_name_d']) ||
+//             preg_match("/{$key}/i", $value['project_name_l']) ||
+//             preg_match("/{$key}/i", $value['project_name_o']) ||
+//             preg_match("/{$key}/i", $value['project_name_sl']) ||
+//             preg_match("/{$key}/i", $value['project_name_sv']) ||
+//             preg_match("/{$key}/i", $value['title']) ||
+//             preg_match("/{$key}/i", $value['quotation_no']))
+//         {
+//             $filter_result[] = $value;
+//         }
+//     }
+// }
+// else
+//     $filter_result = $merged_results;
 
-echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
+echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
 
 
 
