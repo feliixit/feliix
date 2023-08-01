@@ -96,7 +96,7 @@ $query = "SELECT pm.id,
                 COALESCE((SELECT quotation_no FROM quotation WHERE id = pm.q_id), '') AS q_quotation_no,
                 COALESCE((SELECT title FROM quotation WHERE id = pm.q_id), '') AS q_title,
                 COALESCE((SELECT pageless FROM quotation WHERE id = pm.q_id), '') AS pageless,
-                (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1) AS q_count
+                (SELECT count(*) FROM approval_form_project_approve pa LEFT JOIN gcp_storage_file f ON f.batch_id = pa.id AND f.batch_type = 'approval_form' where pa.project_id = pm.id  and pa.status <> -1 and f.status <> -1) AS q_count
           FROM approval_form_quotation pm 
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
@@ -148,14 +148,14 @@ if($key != "")
 
 if($app == "Y")
 {
-    $query = $query . " and (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1)  > 0 ";
-    $query_cnt = $query_cnt . " and (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1)  > 0";
+    $query = $query . " and (SELECT count(*) FROM approval_form_project_approve pa LEFT JOIN gcp_storage_file f ON f.batch_id = pa.id AND f.batch_type = 'approval_form' where pa.project_id = pm.id  and pa.status <> -1 and f.status <> -1) > 0 ";
+    $query_cnt = $query_cnt . " and (SELECT count(*) FROM approval_form_project_approve pa LEFT JOIN gcp_storage_file f ON f.batch_id = pa.id AND f.batch_type = 'approval_form' where pa.project_id = pm.id  and pa.status <> -1 and f.status <> -1) > 0";
 }
 
 if($app == "N")
 {
-    $query = $query . " and (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1)  = 0 ";
-    $query_cnt = $query_cnt . " and (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1)  = 0";
+    $query = $query . " and (SELECT count(*) FROM approval_form_project_approve pa LEFT JOIN gcp_storage_file f ON f.batch_id = pa.id AND f.batch_type = 'approval_form' where pa.project_id = pm.id  and pa.status <> -1 and f.status <> -1) = 0 ";
+    $query_cnt = $query_cnt . " and (SELECT count(*) FROM approval_form_project_approve pa LEFT JOIN gcp_storage_file f ON f.batch_id = pa.id AND f.batch_type = 'approval_form' where pa.project_id = pm.id  and pa.status <> -1 and f.status <> -1) = 0";
 }
 
 

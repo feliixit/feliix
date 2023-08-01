@@ -71,9 +71,6 @@ $type = (isset($_GET['type']) ?  urldecode($_GET['type']) : '');
 
 $all = (isset($_GET['all']) ?  urldecode($_GET['all']) : '');
 
-$page = (isset($_GET['page']) ?  urldecode($_GET['page']) : "");
-$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : "");
-
 $merged_results = array();
 
 $query = "SELECT pm.id, 

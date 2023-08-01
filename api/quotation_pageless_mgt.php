@@ -69,8 +69,6 @@ $kind = (isset($_GET['kind']) ?  urldecode($_GET['kind']) : "");
 
 $type = (isset($_GET['type']) ?  urldecode($_GET['type']) : '');
 
-$page = (isset($_GET['page']) ?  urldecode($_GET['page']) : "");
-$size = (isset($_GET['size']) ?  urldecode($_GET['size']) : "");
 
 $merged_results = array();
 
