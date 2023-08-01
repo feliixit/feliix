@@ -95,7 +95,8 @@ $query = "SELECT pm.id,
                 DATE_FORMAT(pm.updated_at, '%Y-%m-%d %H:%i:%s') updated_at,
                 COALESCE((SELECT quotation_no FROM quotation WHERE id = pm.q_id), '') AS q_quotation_no,
                 COALESCE((SELECT title FROM quotation WHERE id = pm.q_id), '') AS q_title,
-                COALESCE((SELECT pageless FROM quotation WHERE id = pm.q_id), '') AS pageless
+                COALESCE((SELECT pageless FROM quotation WHERE id = pm.q_id), '') AS pageless,
+                (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1) AS q_count
           FROM approval_form_quotation pm 
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
@@ -107,26 +108,56 @@ $query = "SELECT pm.id,
 //     $query = $query . " and pageless = '' ";
 // }
 
+$query_cnt = "SELECT count(*) cnt 
+                FROM approval_form_quotation pm 
+                LEFT JOIN user c_user ON pm.create_id = c_user.id 
+                LEFT JOIN user u_user ON pm.updated_id = u_user.id 
+                left join project_main p on pm.project_id = p.id
+                where pm.status <> -1 and pageless = 'Y' ";
+
 if($fpt != "")
 {
     $query = $query . " and c_user.username = '" . $fpt . "' ";
+    $query_cnt = $query_cnt . " and c_user.username = '" . $fpt . "' ";
 }
 
 if($fpc != "")
 {
     $query = $query . " and p.create_id = " . $fpc . " ";
+    $query_cnt = $query_cnt . " and p.create_id = " . $fpc . " ";
 }
 
 if($kind != "")
 {
     $query = $query . " and pm.kind = '" . $kind . "' ";
+    $query_cnt = $query_cnt . " and pm.kind = '" . $kind . "' ";
 }
 
 
 if($fc != "")
 {
     $query = $query . " and p.catagory_id = " . $fc . " ";
+    $query_cnt = $query_cnt . " and p.catagory_id = " . $fc . " ";
 }
+
+if($key != "")
+{
+    $query = $query . " and (COALESCE((SELECT project_name FROM project_main WHERE id = pm.project_id and pm.kind = ''), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_a WHERE id = pm.project_id and pm.kind = 'a'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_d WHERE id = pm.project_id and pm.kind = 'd'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_l WHERE id = pm.project_id and pm.kind = 'l'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_o WHERE id = pm.project_id and pm.kind = 'o'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_sl WHERE id = pm.project_id and pm.kind = 'sl'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_sv WHERE id = pm.project_id and pm.kind = 'sv'), '') like '%" . $key . "%' or pm.quotation_no like '%" . $key . "%'  or pm.title like '%" . $key . "%' or  COALESCE((SELECT title FROM quotation WHERE id = pm.q_id), '')  like '%" . $key . "%' ) ";
+    $query_cnt = $query_cnt . " and (COALESCE((SELECT project_name FROM project_main WHERE id = pm.project_id and pm.kind = ''), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_a WHERE id = pm.project_id and pm.kind = 'a'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_d WHERE id = pm.project_id and pm.kind = 'd'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_l WHERE id = pm.project_id and pm.kind = 'l'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_o WHERE id = pm.project_id and pm.kind = 'o'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_sl WHERE id = pm.project_id and pm.kind = 'sl'), '') like '%" . $key . "%' or COALESCE((SELECT title FROM project_other_task_sv WHERE id = pm.project_id and pm.kind = 'sv'), '') like '%" . $key . "%' or pm.quotation_no like '%" . $key . "%'  or pm.title like '%" . $key . "%' or  COALESCE((SELECT title FROM quotation WHERE id = pm.q_id), '')  like '%" . $key . "%' ) ";
+}
+
+if($app == "Y")
+{
+    $query = $query . " and (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1)  > 0 ";
+    $query_cnt = $query_cnt . " and (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1)  > 0";
+}
+
+if($app == "N")
+{
+    $query = $query . " and (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1)  = 0 ";
+    $query_cnt = $query_cnt . " and (SELECT count(*) FROM approval_form_project_approve pa where pa.project_id = pm.id and pa.status <> -1)  = 0";
+}
+
 
 $sOrder = "";
 if($op1 != "" && $op1 != "0")
@@ -224,7 +255,12 @@ if(!empty($_GET['size'])) {
 $stmt = $db->prepare( $query );
 $stmt->execute();
 
-
+$cnt = 0;
+$stmt_cnt = $db->prepare( $query_cnt );
+$stmt_cnt->execute();
+while($row = $stmt_cnt->fetch(PDO::FETCH_ASSOC)) {
+    $cnt = $row['cnt'];
+}
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id = $row['id'];
@@ -248,6 +284,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $q_quotation_no = $row['q_quotation_no'];
     $q_title = $row['q_title'];
     $pageless = $row['pageless'];
+
+    $q_count = $row['q_count'];
    
     $post = GetRecentPost($row['id'], $db);
     $files = GetRecentFiles($row['id'], $db);
@@ -276,63 +314,64 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         "files" => $files,
         "q_quotation_no" => $q_quotation_no,
         "q_title" => $q_title,
-        "pageless" => $pageless
-     
+        "pageless" => $pageless,
+        "cnt" => $cnt,
+        "q_count" => $q_count,
     );
 }
 
-$filter_result = [];
+// $filter_result = [];
 
-if($app != "")
-{
-    if($app == "Y")
-    {
-        foreach ($merged_results as &$value) {
-            if(count($value['files']) > 0)
-            {
-                $filter_result[] = $value;
-            }
-        }
-    }
+// if($app != "")
+// {
+//     if($app == "Y")
+//     {
+//         foreach ($merged_results as &$value) {
+//             if(count($value['files']) > 0)
+//             {
+//                 $filter_result[] = $value;
+//             }
+//         }
+//     }
     
-    if($app == "N")
-    {
-        foreach ($merged_results as &$value) {
-            if(count($value['files']) == 0)
-            {
-                $filter_result[] = $value;
-            }
-        }
-    }
-}
-else
-    $filter_result = $merged_results;
+//     if($app == "N")
+//     {
+//         foreach ($merged_results as &$value) {
+//             if(count($value['files']) == 0)
+//             {
+//                 $filter_result[] = $value;
+//             }
+//         }
+//     }
+// }
+// else
+//     $filter_result = $merged_results;
 
-$key_results = array();
+// $key_results = array();
 
-if($key != "")
-{
-    foreach ($filter_result as &$value) {
-        if(
-            preg_match("/{$key}/i", $value['project_name']) ||
-            preg_match("/{$key}/i", $value['project_name_a']) ||
-            preg_match("/{$key}/i", $value['project_name_d']) ||
-            preg_match("/{$key}/i", $value['project_name_l']) ||
-            preg_match("/{$key}/i", $value['project_name_o']) ||
-            preg_match("/{$key}/i", $value['project_name_sl']) ||
-            preg_match("/{$key}/i", $value['project_name_sv']) ||
-            preg_match("/{$key}/i", $value['title']) ||
-            preg_match("/{$key}/i", $value['q_title']) ||
-            preg_match("/{$key}/i", $value['quotation_no']))
-        {
-            $key_results[] = $value;
-        }
-    }
-}
-else
-    $key_results = $filter_result;
+// if($key != "")
+// {
+//     foreach ($filter_result as &$value) {
+//         if(
+//             preg_match("/{$key}/i", $value['project_name']) ||
+//             preg_match("/{$key}/i", $value['project_name_a']) ||
+//             preg_match("/{$key}/i", $value['project_name_d']) ||
+//             preg_match("/{$key}/i", $value['project_name_l']) ||
+//             preg_match("/{$key}/i", $value['project_name_o']) ||
+//             preg_match("/{$key}/i", $value['project_name_sl']) ||
+//             preg_match("/{$key}/i", $value['project_name_sv']) ||
+//             preg_match("/{$key}/i", $value['title']) ||
+//             preg_match("/{$key}/i", $value['q_title']) ||
+//             preg_match("/{$key}/i", $value['quotation_no']))
+//         {
+//             $key_results[] = $value;
+//         }
+//     }
+// }
+// else
+//     $key_results = $filter_result;
 
-echo json_encode($key_results, JSON_UNESCAPED_SLASHES);
+echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
 function GetRecentFiles($pid, $db){
     $sql = "SELECT f.id, pm.remark comment, COALESCE(f.filename, '') filename, COALESCE(f.bucketname, '') bucket, COALESCE(f.gcp_name, '') gcp_name, u.username, pm.created_at, pm.final_approve final_quotation FROM approval_form_project_approve pm left join user u on u.id = pm.create_id LEFT JOIN gcp_storage_file f ON f.batch_id = pm.id AND f.batch_type = 'approval_form' where pm.project_id = " . $pid . " and pm.status <> -1 and f.status <> -1";
