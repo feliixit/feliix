@@ -69,8 +69,9 @@ if (!isset($jwt)) {
             $petty_array = json_decode($petty_list, true);
             
             try {
-                
-                
+                $pre_array = GetPreTags($gid, $db);
+                $diff = show_diff($pre_array, $petty_array);
+
                 // petty_list
                 $query = "update tag_item
                 set status = -1, sn = 0 where group_id = :gid";
@@ -182,7 +183,7 @@ if (!isset($jwt)) {
                 $db->commit();
                 
                 http_response_code(200);
-                echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
+                echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") . " Tag Diff: " . json_encode($diff)));
             } catch (Exception $e) {
                 
                 error_log($e->getMessage());
@@ -193,4 +194,58 @@ if (!isset($jwt)) {
             }
             break;
         }
+
+        function GetPreTags($group_id, $db) {
+            $query = "SELECT id, sn, item_name from tag_item where group_id = " . $group_id . " and status <> -1 order by sn";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            
+            $result = array();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $result[] = $row;
+            }
+
+            return $result;
+        }
         
+        function show_diff($pre_item, $item)
+        {
+            $new_diff = [];
+            $upd_diff = [];
+            $del_diff = [];
+
+            // 1. check if the item is new
+            foreach ($item as $it) {
+                if($it['id'] == 0)
+                    $new_diff[] = "'item':"  . $it['item_name'];
+            }
+            // 2. check if the value is different
+            foreach($pre_item as $it) {
+                foreach($item as $i) {
+                    if($it['id'] == $i['id'] && $it['item_name'] != $i['item_name'])
+                        $upd_diff[] = "'item':"  . $it['item_name'] . " -> " . $i['item_name'];
+                }
+            }
+            // 3. check if the key is deleted
+            foreach($pre_item as $it) {
+                $found = false;
+                foreach($item as $i) {
+                    if($it['id'] == $i['id'])
+                        $found = true;
+                }
+                if(!$found)
+                    $del_diff[] = "'item':"  . $it['item_name'] . " -> 'deleted'";
+            }
+
+            $ret = array();
+
+            $ret = array(
+                'new' => $new_diff,
+                'update' => $upd_diff,
+                'delete' => $del_diff
+            );
+            
+            return $ret;
+        }
