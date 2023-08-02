@@ -13114,6 +13114,380 @@ function order_type_notification03Access7($name, $access,  $access_cc, $project_
 
 }
 
+
+
+function tag_group_notification($name, $user_id, $items)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+    $mail->IsHTML(true);
+
+    // Lighting Department 所有的人、Sales Department 所有的人、Ariel Lin 需要放入收件人名單
+    $receiver = "";
+    $notifior = GetAccessNotifiersByDepartment("Lighting");
+    foreach($notifior as &$list)
+    {
+        $receiver .= $list["username"] . ", ";
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetAccessNotifiersByDepartment("Sales");
+    foreach($notifior as &$list)
+    {
+        $receiver .= $list["username"] . ", ";
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $mail->AddAddress("ariel@feliix.com", "Ariel Lin");
+
+
+
+    //cc收件人名單
+    // 異動者(也就是點擊 Save 按鈕的人) 放入 cc收件人名單名字
+    $notifior = GetNotifiers($user_id);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    // Engineering Department 的 Aiza 和 Alleah 放入cc收件人名單
+    $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+    $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
+
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+
+    // Tag 群組 的 Save 動作
+    $mail->Subject = '[Product Tag Notification] ' . $name . ' updated groups of tag';
+    $header = $name . ' updated groups of tag. Please check the affected groups of tag below:';
+    $url = "https://feliix.myvnc.com/tag_mgt";
+    
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear all,";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Groups of Tag
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 360px;">
+                    Before Update
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 360px;">
+                    After Update
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個異動的東西 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $before = explode(",", $items[$i]);
+
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 360px;">
+                        ';
+                        $content = $content . $before[0] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 360px;">
+                        ';
+                        $content = $content . $before[1] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            $before = explode(",", $items[$i]);
+
+            /* 最後一個異動的東西 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 360px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $before[0] . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 360px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $before[1] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Click this link to visit the webpage of Tag Management: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function tag_notification($name, $user_id, $tag_group, $items)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+    $mail->IsHTML(true);
+
+    // Lighting Department 所有的人、Sales Department 所有的人、Ariel Lin 需要放入收件人名單
+    $receiver = "";
+    $notifior = GetAccessNotifiersByDepartment("Lighting");
+    foreach($notifior as &$list)
+    {
+        $receiver .= $list["username"] . ", ";
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetAccessNotifiersByDepartment("Sales");
+    foreach($notifior as &$list)
+    {
+        $receiver .= $list["username"] . ", ";
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $mail->AddAddress("ariel@feliix.com", "Ariel Lin");
+
+
+
+    //cc收件人名單
+    // 異動者(也就是點擊 Save 按鈕的人) 放入 cc收件人名單名字
+    $notifior = GetNotifiers($_record["create_id"]);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    // Engineering Department 的 Aiza 和 Alleah 放入cc收件人名單
+    $mail->AddCC("aiza@feliix.com", "Aiza Eisma");
+    $mail->AddCC("alleah.feliix@gmail.com", "Alleah Belmonte");
+
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    // Tag 群組 的 Save 動作
+    $mail->Subject = '[Product Tag Notification] ' . $name . ' updated tags for the group "' . $tag_group . '"';
+    $header = $name . ' updated tags for the group "' . $tag_group . '". Please check the affected tags in the group "' . $tag_group . '" below:';
+    $url = "https://feliix.myvnc.com/tag_mgt";
+
+
+
+    $content = '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+
+    <div style="width: 766px; padding: 25px 70px 20px 70px; border: 2px solid rgb(230,230,230); color: black;">
+
+        <table style="width: 100%;">
+            <tbody>
+            <tr>
+                <td style="font-size: 16px; padding: 10px 0 10px 5px;">';
+                    $content = $content . "Dear all,";
+                    $content = $content . '
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 16px; padding: 0 0 20px 5px; text-align: justify;">';
+                    $content = $content . $header;
+                    $content = $content . '
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+        <table style="margin-left: 15px; width: 96%;">
+            <tbody>
+            <tr>
+                <td colspan="2"
+                    style="background-color: #DFEAEA; border: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; border-top-left-radius: 9px; border-top-right-radius: 9px;">
+                    Affected Tags
+                </td>
+
+            </tr>
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 360px;">
+                    Before Update
+                </td>
+
+                <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; font-weight: 600; text-align: center; width: 360px;">
+                    After Update
+                </td>
+            </tr>
+            ';
+
+            /* 除了最後一個異動的東西 */
+            $i = 0;
+            for($i=0; $i<count($items)-1; $i++)
+            {
+                $before = explode(",", $items[$i]);
+
+                $content = $content . '
+                <tr>
+                    <td style="border-left: 2px solid #94BABB; border-bottom: 1px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 360px;">
+                        ';
+                        $content = $content . $before[0] . '';
+                        $content = $content . '
+                    </td>
+                    <td style="border-left: 1px solid #94BABB; border-bottom: 1px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 360px;">
+                        ';
+                        $content = $content . $before[1] . '';
+                        $content = $content . '
+                    </td>
+                </tr>
+                ';
+            }
+
+            $before = explode(",", $items[$i]);
+
+            /* 最後一個異動的東西 */
+            $content = $content . '
+            <tr>
+                <td style="border-left: 2px solid #94BABB; border-bottom: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 360px; border-bottom-left-radius: 9px;">
+                    ';
+                    $content = $content . $before[0] . '';
+                    $content = $content . '
+                </td>
+                <td style="border-left: 1px solid #94BABB; border-bottom: 2px solid #94BABB; border-right: 2px solid #94BABB; padding: 8px; font-size: 14px; text-align: center; width: 360px; border-bottom-right-radius: 9px;">
+                    ';
+                    $content = $content . $before[1] . '';
+                    $content = $content . '
+                </td>
+            </tr>
+            ';
+
+
+        $content = $content . '
+            </tbody>
+                </table>
+                <hr style="margin-top: 45px;">
+                <table style="width: 100%;">
+                    <tbody>
+                    <tr>
+                        <td style="font-size: 16px; padding: 5px 0 0 5px; line-height: 1.5;">
+                            Click this link to visit the webpage of Tag Management: ';
+                            $content = $content . '<a href="' . $url . '">' . $url . '</a> ';
+                            $content = $content . '
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            </body>
+            </html>';
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($receiver, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($receiver, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 function order_notification04($name, $access,  $access_cc, $project_name, $serial_name, $order_name, $order_type, $remark, $action, $items, $od_id)
 {
     $conf = new Conf();
@@ -14349,24 +14723,24 @@ function GetProjectCategoryByProjectId($id)
 
 function SetupMail($mail, $conf)
 {
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-
-
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
     // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'jermey.wilkinson@ethereal.email';
-    // $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'jermey.wilkinson@ethereal.email';
+    $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
 
     return $mail;
 

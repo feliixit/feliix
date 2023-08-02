@@ -181,9 +181,16 @@ if (!isset($jwt)) {
                 }
                 
                 $db->commit();
+
+                // 有不同才寄信
+                if(count($diff) > 0)
+                {
+                    $group_name = GetGroup($gid, $db);
+                    tag_notification($user_name, $user_id, $group_name, $diff);
+                }
                 
                 http_response_code(200);
-                echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") . " Tag Diff: " . json_encode($diff)));
+                echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
             } catch (Exception $e) {
                 
                 error_log($e->getMessage());
@@ -209,23 +216,37 @@ if (!isset($jwt)) {
 
             return $result;
         }
+
+        function GetGroup($group_id, $db) {
+            $ret = "";
+            $query = "SELECT group_name from tag_group where id = " . $group_id . " and status <> -1 ";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            
+            $result = array();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $ret = $row['group_name'];
+            }
+
+            return $ret;
+        }
         
         function show_diff($pre_item, $item)
         {
-            $new_diff = [];
-            $upd_diff = [];
-            $del_diff = [];
+            $diff = [];
 
             // 1. check if the item is new
             foreach ($item as $it) {
                 if($it['id'] == 0)
-                    $new_diff[] = "'item':"  . $it['item_name'];
+                    $diff[] = "," . $it['item_name'];
             }
             // 2. check if the value is different
             foreach($pre_item as $it) {
                 foreach($item as $i) {
                     if($it['id'] == $i['id'] && $it['item_name'] != $i['item_name'])
-                        $upd_diff[] = "'item':"  . $it['item_name'] . " -> " . $i['item_name'];
+                        $diff[] =  $it['item_name'] . "," . $i['item_name'];
                 }
             }
             // 3. check if the key is deleted
@@ -236,16 +257,8 @@ if (!isset($jwt)) {
                         $found = true;
                 }
                 if(!$found)
-                    $del_diff[] = "'item':"  . $it['item_name'] . " -> 'deleted'";
+                    $diff[] = $it['item_name']  . ",";
             }
 
-            $ret = array();
-
-            $ret = array(
-                'new' => $new_diff,
-                'update' => $upd_diff,
-                'delete' => $del_diff
-            );
-            
-            return $ret;
+            return $diff;
         }

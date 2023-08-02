@@ -178,8 +178,12 @@ if (!isset($jwt)) {
                 
                 $db->commit();
                 
+                // 有不同才寄信
+                if(count($diff) > 0)
+                    tag_group_notification($user_name, $user_id, $diff);
+
                 http_response_code(200);
-                echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa") . " Tag Diff: " . json_encode($diff)));
+                echo json_encode(array("message" => "Success at " . date("Y-m-d") . " " . date("h:i:sa")));
             } catch (Exception $e) {
                 
                 error_log($e->getMessage());
@@ -209,20 +213,18 @@ if (!isset($jwt)) {
 
         function show_diff($pre_item, $item)
         {
-            $new_diff = [];
-            $upd_diff = [];
-            $del_diff = [];
+            $diff = [];
 
             // 1. check if the item is new
             foreach ($item as $it) {
                 if($it['id'] == 0)
-                    $new_diff[] = "'item':"  . $it['group_name'];
+                    $diff[] = "," . $it['group_name'];
             }
             // 2. check if the value is different
             foreach($pre_item as $it) {
                 foreach($item as $i) {
                     if($it['id'] == $i['id'] && $it['group_name'] != $i['group_name'])
-                        $upd_diff[] = "'item':"  . $it['group_name'] . " -> " . $i['group_name'];
+                        $diff[] =  $it['group_name'] . "," . $i['group_name'];
                 }
             }
             // 3. check if the key is deleted
@@ -233,16 +235,8 @@ if (!isset($jwt)) {
                         $found = true;
                 }
                 if(!$found)
-                    $del_diff[] = "'item':"  . $it['group_name'] . " -> 'deleted'";
+                    $diff[] = $it['group_name'] . ",";
             }
 
-            $ret = array();
-
-            $ret = array(
-                'new' => $new_diff,
-                'update' => $upd_diff,
-                'delete' => $del_diff
-            );
-            
-            return $ret;
+            return $diff;
         }
