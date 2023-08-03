@@ -318,6 +318,9 @@ function GetTaskDetail($task_id, $task_type, $db)
     if($task_type == 'OS')
         $table = "project_other_task_o";
 
+    if($task_type == 'SVC')
+        $table = "project_other_task_sv";
+
     $query = "select title from " . $table . " where id = " . $task_id;
     $stmt = $db->prepare( $query );
     $stmt->execute();

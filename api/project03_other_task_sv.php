@@ -135,6 +135,24 @@ switch ($method) {
         $items = [];
         $message = [];
 
+        // order
+        $related_order = "";
+        $related_tab = "";
+        $related_kind = "";
+        $related_category = "";
+        $order = [];
+        $od_name = "";
+        $od_type = "";
+        $related_order_name = "";
+        $related_serial_name = "";
+
+        $inquiry = [];
+        $iq_name = "";
+        $iq_type = "";
+        $related_inquiry = "";
+        $related_inquiry_name = "";
+        $related_inquiry_serial_name = "";
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             if ($task_id != $row['task_id'] && $task_id != 0) {
@@ -162,6 +180,23 @@ switch ($method) {
                     "nearest_msg" => $_nearest_msg,
                     "creator_title" => $creator_title,
                     "pp_class" => $pp_class,
+
+                    "order" => $order,
+                    "od_type" => $od_type,
+                    "od_name" => $od_name,
+                    "related_order" => $related_order,
+                    "related_tab" => $related_tab,
+                    "related_kind" => $related_kind,
+                    "related_category" => $related_category,
+                    "related_order_name" => $related_order_name,
+                    "related_serial_name" => $related_serial_name,
+
+                    "inquiry" => $inquiry,
+                    "iq_type" => $iq_type,
+                    "iq_name" => $iq_name,
+                    "related_inquiry" => $related_inquiry,
+                    "related_inquiry_name" => $related_inquiry_name,
+                    "related_inquiry_serial_name" => $related_inquiry_serial_name,
                 );
 
                 $message = [];
@@ -210,6 +245,55 @@ switch ($method) {
             }
 
             $items = GetItemInfo($task_id, 'other_task_sv', $db);
+            $related_order = $row['related_order'];
+            $related_tab = $row['related_tab'];
+            $related_kind = $row['related_kind'];
+            $related_category = $row['related_category'];
+
+            $order = GetOrderInfo($task_id, $db);
+
+
+            if(count($order) > 0)
+            {
+                $od_name = $order[0]['od_name'];
+                $od_type = $order[0]['order_type'];
+            }
+
+            $related_order_data = [];
+            if($related_order != '')
+                $related_order_data = GetRelatedOrderInfo($related_order, $db);
+
+            if(count($related_order_data) > 0)
+            {
+                $related_order_name = $related_order_data[0]['od_name'];
+                $related_serial_name = $related_order_data[0]['serial_name'];
+            }
+            else
+            {
+                $related_order_name = "";
+                $related_serial_name = "";
+            }
+
+            $inquiry = GetInquiryInfo($task_id, $db);
+            if(count($inquiry) > 0)
+            {
+                $iq_name = $inquiry[0]['iq_name'];
+                $iq_type = $inquiry[0]['order_type'];
+            }
+            $related_inquiry_data = [];
+            if($related_inquiry != '')
+                $related_inquiry_data = GetRelatedInquiryInfo($related_inquiry, $db);
+
+            if(count($related_inquiry_data) > 0)
+            {
+                $related_inquiry_name = $related_inquiry_data[0]['iq_name'];
+                $related_inquiry_serial_name = $related_inquiry_data[0]['serial_name'];
+            }
+            else
+            {
+                $related_inquiry_name = "";
+                $related_inquiry_serial_name = "";
+            }
         }
 
         if ($task_id != 0) {
@@ -237,9 +321,67 @@ switch ($method) {
                 "nearest_msg" => $_nearest_msg,
                 "creator_title" => $creator_title,
                 "pp_class" => $pp_class,
+
+                "order" => $order,
+                "od_type" => $od_type,
+                "od_name" => $od_name,
+                "related_order" => $related_order,
+                "related_tab" => $related_tab,
+                "related_kind" => $related_kind,
+                "related_category" => $related_category,
+                "related_order_name" => $related_order_name,
+                "related_serial_name" => $related_serial_name,
+
+                "inquiry" => $inquiry,
+                "iq_type" => $iq_type,
+                "iq_name" => $iq_name,
+                "related_inquiry" => $related_inquiry,
+                "related_inquiry_name" => $related_inquiry_name,
+                "related_inquiry_serial_name" => $related_inquiry_serial_name,
             );
         }
 
+        if($ft == "r")  // regular test
+        {
+            $_result = array();
+            
+            foreach ($merged_results as &$value) {
+                if(count($value['order']) == 0 && count($value['inquiry']) == 0)
+                {
+                    $_result[] = $value;
+                }
+            }
+
+                $merged_results = $_result;
+        }
+
+        if($ft == "o")  // Order Task
+        {
+            $_result = array();
+            
+            foreach ($merged_results as &$value) {
+                if(count($value['order']) > 0)
+                {
+                    $_result[] = $value;
+                }
+            }
+
+                $merged_results = $_result;
+        }
+
+        if($ft == "i")  // Inquiry Task
+        {
+            $_result = array();
+            
+            foreach ($merged_results as &$value) {
+                if(count($value['inquiry']) > 0)
+                {
+                    $_result[] = $value;
+                }
+            }
+
+                $merged_results = $_result;
+        }
         
         if($fk != "" && $id == 0)
         {
@@ -838,3 +980,98 @@ function GetRefMsgValue($ref_id, $db)
 }
 
 
+
+function GetOrderInfo($task_id, $db)
+{
+    $sql = "select id, od_name, order_type, serial_name
+            from od_main
+            where task_type = 'SVC' and task_id = " . $task_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "od_name" => $row['od_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
+
+
+function GetRelatedOrderInfo($_id, $db)
+{
+    $sql = "select id, od_name, order_type, serial_name
+            from od_main
+            where id = " . $_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "od_name" => $row['od_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
+
+function GetInquiryInfo($task_id, $db)
+{
+    $sql = "select id, iq_name, order_type, serial_name
+            from iq_main
+            where task_type = 'SVC' and task_id = " . $task_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "iq_name" => $row['iq_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}
+
+function GetRelatedInquiryInfo($_id, $db)
+{
+    $sql = "select id, iq_name, order_type, serial_name
+            from iq_main
+            where id = " . $_id;
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $_result = [];
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_result[] = array(
+            "id" => $row['id'],
+            "iq_name" => $row['iq_name'],
+            "order_type" => $row['order_type'],
+            "serial_name" => $row['serial_name'],
+        );
+    }
+
+    return $_result;
+}

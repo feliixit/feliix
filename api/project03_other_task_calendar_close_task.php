@@ -407,7 +407,7 @@ function GetTaskDetail_svc($id, $db)
             '' stage,
             (CASE pt.`status` WHEN '0' THEN 'Ongoing' WHEN '1' THEN 'Pending' WHEN '2' THEN 'Close' when '-1' then 'DEL' END ) as `task_status`, 
             detail
-            FROM project_other_task_svc pt
+            FROM project_other_task_sv pt
             WHERE pt.id = :id";
 
     $merged_results = array();
