@@ -112,6 +112,7 @@ var app = new Vue({
   
 
     submit: false,
+    tag_group : [],
   },
 
   created() {
@@ -144,7 +145,7 @@ var app = new Vue({
 
     this.get_records(this.id);
     this.getUserName();
-
+    this.getTagGroup();
   },
 
   computed: {
@@ -178,6 +179,28 @@ var app = new Vue({
   },
 
   methods: {
+    getTagGroup: function() {
+      let _this = this;
+        
+          let token = localStorage.getItem('accessToken');
+          const params = {
+
+        };
+          axios
+              .get('api/tag_mgt_get', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.tag_group = res.data;
+
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
     getUserName: function() {
       var token = localStorage.getItem('token');
       var form_Data = new FormData();
@@ -216,7 +239,7 @@ var app = new Vue({
 
     edit_category() {
       this.edit_mode = true;
-
+ 
       console.log("edit category");
     },
 
@@ -298,6 +321,8 @@ var app = new Vue({
             _this.moq = _this.record[0]['moq'];
 
             var select_items = _this.record[0]['tags'].split(',');
+
+            $("#tag01").selectpicker("refresh");
 
             if(_this.category === '10000000')
               $('#tag01').selectpicker('val', select_items);

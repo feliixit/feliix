@@ -52,6 +52,7 @@ var app = new Vue({
     is_manager: "",
 
     toggle: true,
+    tag_group : [],
   },
 
   created() {
@@ -122,7 +123,7 @@ var app = new Vue({
     this.get_records();
     this.getUserName();
     this.get_brands();
-
+    this.getTagGroup();
   },
 
   computed: {
@@ -154,6 +155,28 @@ var app = new Vue({
 
 
   methods: {
+    getTagGroup: function() {
+      let _this = this;
+        
+          let token = localStorage.getItem('accessToken');
+          const params = {
+
+        };
+          axios
+              .get('api/tag_mgt_get', { params, headers: {"Authorization" : `Bearer ${token}`} })
+              .then(
+              (res) => {
+                  _this.tag_group = res.data;
+
+              },
+              (err) => {
+                  alert(err.response);
+              },
+              )
+              .finally(() => {
+                  
+              });
+      },
     toggle_price : function() {
       this.toggle = !this.toggle;
     },
