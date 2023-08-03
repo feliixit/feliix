@@ -2518,7 +2518,7 @@ catch (Exception $e) {
                                     <li class="head">Target Task:</li>
                                     <li class="mix">
                                         <select v-model="task_id_to_del">
-                                            <option v-for="(it, index) in displayedStagePosts" :value="it.task_id" v-if="it.task_status != '-1'">
+                                            <option v-for="(it, index) in displayedStagePosts" :value="it.task_id" v-if="it.task_status != '-1' && it.inquiry.length == 0 && it.order.length == 0">
                                                 {{ it.title }}
                                             </option>
                                         </select>
@@ -2531,7 +2531,7 @@ catch (Exception $e) {
                                     <li class="head">Target Sequence:</li>
                                     <li class="mix">
                                         <select v-model="task_id_to_load">
-                                            <option v-for="(it, index) in displayedStagePosts" :value="it.task_id" v-if="it.task_status != '-1'">
+                                            <option v-for="(it, index) in displayedStagePosts" :value="it.task_id" v-if="it.task_status != '-1' && it.inquiry.length == 0 && it.order.length == 0">
                                                 {{ it.title }}
                                             </option>
                                         </select>
@@ -3487,7 +3487,10 @@ catch (Exception $e) {
                                 <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
                                 <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
                             </li>
-                            <li><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
+                            <li v-if="receive_record.order.length == 0 && receive_record.inquiry.length == 0"><a @click="show_detail(receive_record.task_id)">{{ receive_record.title }}</a></li>
+                            <li v-if="receive_record.order.length > 0"><a @click="show_detail(receive_record.task_id)" style="color: rgb(253,183,47);">{{ receive_record.title }}</a><!-- <a :href="(receive_record.order[0].order_type == 'stock' ? 'order_taiwan_stock_p1' : 'order_taiwan_p1') + '?id=' + receive_record.order[0].id" style="color: rgb(253,183,47);">{{ receive_record.order[0].order_type == 'stock' ? 'Order – Stocks' : ''}} {{ receive_record.order[0].od_name }}</a> --></li>
+                            <li v-if="receive_record.inquiry.length > 0"><a @click="show_detail(receive_record.task_id)" style="color: rgb(163, 73, 164);">{{ receive_record.title }}</a><!-- <a :href="(receive_record.order[0].order_type == 'stock' ? 'order_taiwan_stock_p1' : 'order_taiwan_p1') + '?id=' + receive_record.order[0].id" style="color: rgb(253,183,47);">{{ receive_record.order[0].order_type == 'stock' ? 'Order – Stocks' : ''}} {{ receive_record.order[0].od_name }}</a> --></li>
+                            
                             <li>{{ receive_record.due_date }} {{ receive_record.due_time }}</li>
                             <li>{{ receive_record.creator }}</li>
                             <li>{{ receive_record.nearest_user }}<br>{{ receive_record.nearest_time }}</li>
@@ -3514,11 +3517,37 @@ catch (Exception $e) {
                         <a class="btn small yellow" v-if="receive_record.task_status == '0'">Ongoing</a>
                         <a class="btn small yellow" v-if="receive_record.task_status == '1'">Pending</a>
                         <a class="btn small green" v-if="receive_record.task_status == '2'">Close</a>
-                        <b>[Task] {{ receive_record.title }}</b>
+                        <b v-if="receive_record.order.length == 0 && receive_record.inquiry.length == 0">[Task] {{ receive_record.title }}</b>
+                        <!-- 如果是訂單類的任務，任務標題前的字樣會從 Task 變成 Order Task，如下 -->
+                        <b v-if="receive_record.order.length > 0">{{ receive_record.order.length > 0 ? '[Order Task]' : '' }} {{ receive_record.title }}</b>
+                        <b v-if="receive_record.inquiry.length > 0">{{ receive_record.inquiry.length > 0 ? '[Inquiry Task]' : '' }} {{ receive_record.title }}</b>
                         <!-- <a class="btn small blue right" id="btn_arrange">Arrange Meeting</a> -->
                     </div>
                     <div class="teskbox dialogclear" style="margin-top:-2px !important">
                         <div class="tablebox m01">
+
+                        <!-- 如果是訂單類的任務，需要多出 Order Type欄位 -->
+                        <ul v-if="receive_record.order.length > 0">
+                                <li><b>Order Type</b></li>
+                                <li>Order – {{ receive_record.order[0].order_type == 'stock' ? 'Stocks' : receive_record.order[0].order_type == 'sample' ? 'Samples' : '' }}</li>
+                            </ul>
+                            <!-- 如果是訂單類的任務，需要多出 Order Name欄位，內容值的範例: LOTW-0001 LIGHTING FIXTURE -->
+                            <ul v-if="receive_record.order.length > 0">
+                                <li><b>Order Name</b></li>
+                                <li>
+                                    <a v-if="receive_record.order[0].order_type == ''" style="color: #25a2b8" :href="'order_taiwan_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
+                                    <a v-if="receive_record.order[0].order_type == 'stock'" style="color: #25a2b8" :href="'order_taiwan_stock_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
+                                    <a v-if="receive_record.order[0].order_type == 'sample'" style="color: #25a2b8" :href="'order_taiwan_sample_p1?id=' + receive_record.order[0].id">{{ receive_record.order[0].serial_name }} {{ receive_record.order[0].od_name }}</a>
+                                </li>
+                            </ul>
+                            <!-- 如果是Inquiry的任務，需要多出 Inquiry Name欄位，內容值的範例: LOTW-0001 LIGHTING FIXTURE -->
+                            <ul v-if="receive_record.inquiry.length > 0">
+                                <li><b>Inquiry Name</b></li>
+                                <li>
+                                    <a style="color: #25a2b8" :href="'inquiry_taiwan?id=' + receive_record.inquiry[0].id">{{ receive_record.inquiry[0].serial_name }} {{ receive_record.inquiry[0].iq_name }}</a>
+                                </li>
+                            </ul>
+                            
                             <ul>
                                 <li><b>Creator</b></li>
                                 <li><a class="man" :style="'background-image: url(images/man/' +  receive_record.creator_pic  + ');'" :title="receive_record.creator"></a></li>
