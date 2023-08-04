@@ -1482,7 +1482,7 @@ var app = new Vue({
             )
           );
 
-        if (!this.CanAccess(this.record.creator_title, this.record.creator_id))) {
+        if (!this.CanAccess(this.record.creator_title, this.record.creator_id)) {
           Swal.fire({
             text:
               "It is not allowed to edit/delete the task which was created by user with higher position.",
