@@ -4166,6 +4166,8 @@ function task_notify_type_order($request_type, $project_name, $task_name, $stage
         $task_department = "Office Systems";
     if($task_type == 'SLS')
         $task_department = "Sales";
+    if($task_type == 'SVC')
+        $task_department = "Engineering Department";
 
     $conf = new Conf();
 
@@ -4370,6 +4372,8 @@ function task_notify_type_inquiry($request_type, $project_name, $task_name, $sta
         $task_department = "Office Systems";
     if($task_type == 'SLS')
         $task_department = "Sales";
+    if($task_type == 'SVC')
+        $task_department = "Engineering Department";
 
     $conf = new Conf();
 
@@ -6098,6 +6102,8 @@ if($task_type == 'OS')
     $task_department = "Office Systems";
 if($task_type == 'SLS')
     $task_department = "Sales";
+if($task_type == 'SVC')
+    $task_department = "Engineering Department";
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
@@ -6234,6 +6240,8 @@ if($task_type == 'OS')
     $task_department = "Office Systems";
 if($task_type == 'SLS')
     $task_department = "Sales";
+if($task_type == 'SVC')
+    $task_department = "Engineering Department";
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
@@ -6918,6 +6926,8 @@ function task_notify02_type_order($old_status, $task_status, $project_name, $tas
         $task_department = "Office Systems";
     if($task_type == 'SLS')
         $task_department = "Sales";
+    if($task_type == 'SVC')
+        $task_department = "Engineering Department";
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");
@@ -7062,6 +7072,8 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
         $task_department = "Office Systems";
     if($task_type == 'SLS')
         $task_department = "Sales";
+    if($task_type == 'SVC')
+        $task_department = "Engineering Department";
 
     $creators = rtrim($creators, ", ");
     $assignees = rtrim($assignees, ", ");

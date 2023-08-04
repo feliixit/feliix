@@ -4081,3 +4081,16 @@ CREATE TABLE tag_item (
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+
+-- 20230803 project svc
+ALTER TABLE project_other_task_sv
+ADD COLUMN `related_order` VARCHAR(128) DEFAULT '';
+
+ALTER TABLE project_other_task_sv
+ADD COLUMN `related_tab` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_sv
+ADD COLUMN `related_kind` VARCHAR(64) DEFAULT '';
+
+ALTER TABLE project_other_task_sv
+ADD COLUMN `related_category` VARCHAR(64) DEFAULT '';
