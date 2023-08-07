@@ -152,8 +152,17 @@ header( 'location:index' );
             font-weight: bold;
         }
 
+        body.gray header{
+            position: fixed;
+            z-index: 999;
+        }
+
         body.gray select {
             background-image: url(../images/ui/icon_form_select_arrow_gray.svg);
+        }
+
+        body.gray .mainContent{
+            padding: 185px 12px 30px;
         }
 
         body.gray .mainContent > .block {
@@ -1760,6 +1769,14 @@ header( 'location:index' );
             width: 310px;
         }
 
+        .functionbar{
+            position: fixed;
+            z-index: 998;
+            width: 100%;
+            background: rgb(230, 230, 230);
+            padding: 80px 12px 0;
+        }
+
         .list_function.main {
             border-color: #00811e;
         }
@@ -2202,9 +2219,10 @@ header( 'location:index' );
     <!-- header -->
     <header class="noPrint">header</header>
     <!-- header end -->
-    <div class="mainContent" style="background-color: rgb(230,230,230)">
 
-        <div class="list_function main noPrint">
+    <!-- Function Bar start-->
+    <div class="functionbar noPrint">
+        <div class="list_function main">
 
             <div class="block">
                 <!-- print -->
@@ -2379,9 +2397,9 @@ header( 'location:index' );
                                             <i class="fas fa-save" @click="page_save()"></i>
                                             -->
 
-                                            
+
                                             <i class="fas fa-copy" @click="page_copy(page.id, block.id)"></i>
-                                           
+
                                             <i class="fas fa-trash-alt" @click="del_block(page.id, block.id)"></i>
                                         </li>
                                     </ul>
@@ -2947,6 +2965,12 @@ header( 'location:index' );
             </div>
         </div>
 
+    </div>
+
+
+    <!-- Function Bar end-->
+
+    <div class="mainContent" style="background-color: rgb(230,230,230)">
 
         <div class="qn_page" v-for="(pg, index) in pages">
 
