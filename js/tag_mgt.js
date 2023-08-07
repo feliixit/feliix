@@ -82,12 +82,14 @@ var app = new Vue({
     title_id: 0,
 
     view_promotion: false,
+    tag_management: false,
 
   },
 
   created() {
 
     this.getLevel1();
+    this.getAccess();
     
   },
 
@@ -122,6 +124,14 @@ var app = new Vue({
   },
 
   methods: {
+
+    getAccess: async function() {
+      var token = localStorage.getItem('token');
+      var form_Data = new FormData();
+
+      let res = await axios.get('api/access_control_kind_get', { headers: { "Authorization": `Bearer ${token}` }, params: { kind: 'tag_management' } });
+      this.tag_management = res.data.tag_management;
+    },
 
 
     getLevel1: function() {
@@ -243,6 +253,15 @@ var app = new Vue({
    
       if(this.submit == true) return;
 
+      if(this.tag_management == false) {
+        Swal.fire({
+          text: "User is not allowed to add/edit/delete groups of tag.",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
       this.submit = true;
 
       var token = localStorage.getItem("token");
@@ -289,6 +308,15 @@ var app = new Vue({
     e_apply: function() {
    
       if(this.submit == true) return;
+
+      if(this.tag_management == false) {
+        Swal.fire({
+          text: "User is not allowed to add/edit/delete tags.",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
 
       this.submit = true;
 

@@ -32,6 +32,7 @@ var app = new Vue({
 
     schedule_confirm:[],
     halfday: [],
+    tag_management: [],
   },
 
   created() {
@@ -140,6 +141,10 @@ var app = new Vue({
               _this.halfday = res.data[0]["halfday"].split(",").filter(function (el) {
                 return el != "";
               });
+              if (kind === 21 || kind === undefined)
+              _this.tag_management = res.data[0]["tag_management"].split(",").filter(function (el) {
+                return el != "";
+              });
 
           },
           (err) => {
@@ -205,6 +210,7 @@ var app = new Vue({
       form_Data.append("vote2", this.vote2.toString());
       form_Data.append("schedule_confirm", this.schedule_confirm.toString());
       form_Data.append("halfday", this.halfday.toString());
+      form_Data.append("tag_management", this.tag_management.toString());
 
       axios({
         method: "post",

@@ -31,6 +31,7 @@ $vote1 = (isset($_POST['vote1']) ?  $_POST['vote1'] : '');
 $vote2 = (isset($_POST['vote2']) ?  $_POST['vote2'] : '');
 $schedule_confirm = (isset($_POST['schedule_confirm']) ?  $_POST['schedule_confirm'] : '');
 $halfday = (isset($_POST['halfday']) ?  $_POST['halfday'] : '');
+$tag_management = (isset($_POST['tag_management']) ?  $_POST['tag_management'] : '');
 
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -56,7 +57,7 @@ if (!isset($jwt)) {
     if ($action == 1) {
         //select all
         try {
-            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8, access1, access2, access3, access4, access5, access6, access7, knowledge, vote1, vote2, schedule_confirm, halfday from access_control where id = 1";
+            $query = "SELECT payess1, payess2, payess3, salary payess4, salary_mgt payess5, salary_slip_mgt payess6, payess7, payess8, access1, access2, access3, access4, access5, access6, access7, knowledge, vote1, vote2, schedule_confirm, halfday, tag_management from access_control where id = 1";
 
             $stmt = $db->prepare($query);
             $stmt->execute();
@@ -93,7 +94,8 @@ if (!isset($jwt)) {
                             vote1 = :vote1,
                             vote2 = :vote2,
                             schedule_confirm = :schedule_confirm,
-                            halfday = :halfday
+                            halfday = :halfday,
+                            tag_management = :tag_management
                         where id = :id";
 
             // prepare the query
@@ -122,6 +124,7 @@ if (!isset($jwt)) {
             $vote2 = htmlspecialchars(strip_tags($vote2));
             $schedule_confirm = htmlspecialchars(strip_tags($schedule_confirm));
             $halfday = htmlspecialchars(strip_tags($halfday));
+            $tag_management = htmlspecialchars(strip_tags($tag_management));
 
             // bind the values
             $stmt->bindParam(':id', $id);
@@ -145,6 +148,7 @@ if (!isset($jwt)) {
             $stmt->bindParam(':vote2', $vote2);
             $stmt->bindParam(':schedule_confirm', $schedule_confirm);
             $stmt->bindParam(':halfday', $halfday);
+            $stmt->bindParam(':tag_management', $tag_management);
 
             try {
                 // execute the query, also check if query was successful
