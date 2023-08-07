@@ -72,7 +72,7 @@ if (!isset($jwt)) {
             
             try {
                 $pre_array = GetPreTags($gid, $db);
-                $diff = show_diff($pre_array, $petty_array);
+                $diff = show_diff($pre_array, $petty_array, $db);
 
                 // petty_list
                 $query = "update tag_item
@@ -235,7 +235,7 @@ if (!isset($jwt)) {
             return $ret;
         }
         
-        function show_diff($pre_item, $item)
+        function show_diff($pre_item, $item, $db)
         {
             $diff = [];
 
@@ -270,21 +270,21 @@ if (!isset($jwt)) {
 
         function UpdateProductTags($old_item, $new_item, $db)
         {
-            if($tag_read == false)
+            if($GLOBALS['tag_read'] == false)
             {
-                ReadProductTags($db);
-                $tag_read = true;
+                $GLOBALS['product_tags'] = ReadProductTags($db);
+                $GLOBALS['tag_read'] = true;
             }
 
-            for($i = 0; $i < count($product_tags); $i++)
+            for($i = 0; $i < count($GLOBALS['product_tags']); $i++)
             {
-                $tags = explode(",", $product_tags[$i]['tags']);
+                $tags = explode(",", $GLOBALS['product_tags'][$i]['tags']);
                 for($j = 0; $j < count($tags); $j++)
                 {
                     if($tags[$j] == $old_item)
                     {
                         $tags[$j] = $new_item;
-                        UpdateProductTableTags($db, $product_tags[$i]['id'], implode(",", $tags));
+                        UpdateProductTableTags($db, $GLOBALS['product_tags'][$i]['id'], implode(",", $tags));
                         break;
                     }
                 }
