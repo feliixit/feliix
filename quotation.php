@@ -2185,7 +2185,7 @@ header( 'location:index' );
             }
 
             .mainContent {
-                padding: 0;
+                padding: 0 !important;;
                 background-color: #FFF !important;
             }
 
