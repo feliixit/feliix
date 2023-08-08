@@ -1321,20 +1321,20 @@ header( 'location:index' );
             cursor: pointer;
         }
 
-        #header_dialog, #total_dialog{
-            zoom: 85%;
+        #header_dialog, #footer_dialog, #total_dialog{
+            zoom: 80%;
         }
 
         #page_dialog, #subtotal_dialog, #terms_dialog, #payment_dialog {
             min-width: 1000px;
             pointer-events: auto;
-            zoom: 85%;
+            zoom: 80%;
         }
 
         #signature_dialog {
             min-width: 700px;
             pointer-events: auto;
-            zoom: 85%;
+            zoom: 80%;
         }
 
         #total_dialog {
@@ -1680,7 +1680,6 @@ header( 'location:index' );
             width: calc(100% - 155px);
             margin: 5px 0;
         }
-
 
         .signaturebox {
             margin-bottom: 5px;

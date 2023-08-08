@@ -1288,7 +1288,7 @@ header( 'location:index' );
             cursor: pointer;
         }
 
-        #header_dialog, #total_dialog{
+        #header_dialog, #footer_dialog, #total_dialog {
             zoom: 85%;
         }
 
