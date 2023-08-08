@@ -1321,14 +1321,20 @@ header( 'location:index' );
             cursor: pointer;
         }
 
+        #header_dialog, #total_dialog{
+            zoom: 85%;
+        }
+
         #page_dialog, #subtotal_dialog, #terms_dialog, #payment_dialog {
             min-width: 1000px;
             pointer-events: auto;
+            zoom: 85%;
         }
 
         #signature_dialog {
             min-width: 700px;
             pointer-events: auto;
+            zoom: 85%;
         }
 
         #total_dialog {
