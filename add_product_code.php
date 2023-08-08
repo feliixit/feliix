@@ -668,7 +668,7 @@
                 <li>
                     Tag
                 </li>
-                <li v-show="category == '10000000'">
+                <li>
                 <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected"
         id="tag01">
 
@@ -681,11 +681,11 @@
 
 </select>
                 </li>
-                <li v-show="category == '20000000'">
+                <!-- <li v-show="category == '20000000'">
                     <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected">
                         
                     </select>
-                </li>
+                </li> -->
             </ul>
 
             <ul>

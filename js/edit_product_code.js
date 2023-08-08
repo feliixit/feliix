@@ -324,7 +324,7 @@ var app = new Vue({
 
             //$("#tag01").selectpicker("refresh");
 
-            if(_this.category === '10000000')
+         //   if(_this.category === '10000000')
               $('#tag01').selectpicker('val', select_items);
            // if(_this.category === '20000000')
            //   $('#tag02').selectpicker('val', select_items);
@@ -1196,10 +1196,10 @@ var app = new Vue({
 
           let tag01 = $('#tag01').val();
        //   let tag02 = $('#tag02').val();
-          if( _this.category === '10000000')
+        //  if( _this.category === '10000000')
             form_Data.append("tags", tag01.join());
-          else
-            form_Data.append("tags", "");
+          // else
+          //   form_Data.append("tags", "");
 
           let related_product = $('#related_product').val();
           form_Data.append("related_product", related_product);
