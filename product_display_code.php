@@ -475,9 +475,9 @@
                     <!-- 網頁載入時，調整成需要根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span>結構要顯示哪一個 -->
                     <!-- 但當使用者選擇到某一個停產的子規格組合時，下方的 <span> 結構就會變成要顯示第一個<span>結構；若使用者切換到另一個沒有停產的子規格組合，則沒有任何<span>結構需要顯示出來 -->
                     <!-- 但當使用者本來選擇了某一個子規格組合，後來變成沒有選擇任何子規格時，下方的 <span> 結構要顯示哪一個，則又回到第一個註解的判斷方式 -->
-                    <span class="phasedout" v-if="phased_out == 'F'">Phased Out</span>
-                    <span class="phasedout1" v-if="phased_out == '???'">1 variant is phased out</span>
-                    <span class="phasedout1" v-if="phased_out == '???'">{{}} variants are phased out</span>
+                    <span class="phasedout" v-if="out == 'Y' && out_cnt == 0">Phased Out</span>
+                    <span class="phasedout1" v-if="out_cnt == 1">1 variant is phased out</span>
+                    <span class="phasedout1" v-if="out_cnt > 1">{{ out_cnt }} variants are phased out</span>
 
                     <h3 id="print_id">ID: {{ pid }}</h3>
                     <h3 style="word-break: break-all;">{{code}}</h3>
@@ -608,9 +608,9 @@
                                 </div>
                                 <div>
                                     <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
-                                    <span class="phasedout2" v-if="phased_out == 'F'">Phased Out</span>
-                                    <span class="phasedout2" v-if="phased_out == '???'">1 variant is phased out</span>
-                                    <span class="phasedout2" v-if="phased_out == '???'">{{}} variants are phased out</span>
+                                    <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                    <span class="phasedout2" v-if="item.phased_out_cnt == 1">1 variant is phased out</span>
+                                    <span class="phasedout2" v-if="item.phased_out_cnt > 1">{{ item.phased_out_cnt }} variants are phased out</span>
                                 </div>
                             </div>
 
