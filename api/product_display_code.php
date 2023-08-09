@@ -97,6 +97,8 @@ else
             $quoted_price = '';
             $quoted_price_change = '';
 
+            $phased_out_cnt = 0;
+
             $variation1_text = "1st Variation";
             $variation2_text = "2nd Variation";
             $variation3_text = "3rd Variation";
@@ -105,6 +107,8 @@ else
             $accessory_information = [];
 
             $sub_cateory_item = [];
+
+            $out = "";
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -143,6 +147,8 @@ else
 
                 $currency = $row['currency'];
 
+                $out = $row['out'];
+
                 // max_price_change, min_price_change, max_price_ntd_change, min_price_ntd_change, max_quoted_price_change, min_quoted_price_change
                 $max_price_change = $row['max_price_change'] ? substr($row['max_price_change'], 0, 10) : '';
                 $min_price_change = $row['min_price_change'] ? substr($row['min_price_change'], 0, 10) : '';
@@ -153,6 +159,14 @@ else
 
 
                 $product = GetProduct($id, $db, $currency);
+                $phased_out_cnt = 0;
+                for($i = 0; $i < count($product); $i++)
+                {
+                    if($product[$i]['enabled'] != 1)
+                        $phased_out_cnt++;
+                }
+                $phased_out_cnt = $phased_out_cnt;
+
                 $related_product = GetRelatedProductCode($id, $db);
 
                 $variation1_value = [];
@@ -467,6 +481,9 @@ else
                                     "str_price_change" => $str_price_change,
                                     "str_price_ntd_change" => $str_price_ntd_change,
                                     "str_quoted_price_change" => $str_quoted_price_change,
+
+                                    "out" => $out,
+                                    "phased_out_cnt" => $phased_out_cnt,
 
             );
             }
@@ -925,7 +942,7 @@ function GetCategory($cat_id, $db){
 }
 
 function GetRelatedProductCode($id, $db){
-    $sql = "SELECT * FROM product_category where code in (SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1)";
+    $sql = "SELECT * FROM product_category where code in (SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1) and status <> -1";
 
     $sql = $sql . " ORDER BY code ";
 

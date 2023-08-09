@@ -4094,3 +4094,11 @@ ADD COLUMN `related_kind` VARCHAR(64) DEFAULT '';
 
 ALTER TABLE project_other_task_sv
 ADD COLUMN `related_category` VARCHAR(64) DEFAULT '';
+
+-- 20230807 access
+ALTER TABLE access_control
+ADD COLUMN `tag_management` text COLLATE utf8mb4_unicode_ci;
+
+-- 20230809 notes
+ALTER TABLE price_comparison_item
+ADD COLUMN `notes` VARCHAR(1024) DEFAULT '';

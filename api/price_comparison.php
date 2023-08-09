@@ -579,6 +579,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'qty' => "",
                 'price' => "",
                 'ratio' => "",
+                'notes' => "",
                 'discount' => "",
                 'amount' => "",
                 'desc' => "",
@@ -609,6 +610,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'qty' => "",
                 'price' => "",
                 'ratio' => "",
+                'notes' => "",
                 'discount' => "",
                 'amount' => "",
                 'desc' => "",
@@ -639,6 +641,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'qty' => "",
                 'price' => "",
                 'ratio' => "",
+                'notes' => "",
                 'discount' => "",
                 'amount' => "",
                 'desc' => "",
@@ -677,6 +680,7 @@ function GetItems($option_id, $legend_id, $db){
         qty,
         price,
         ratio,
+        notes,
         discount,
         amount,
         `desc`,
@@ -715,6 +719,7 @@ function GetItems($option_id, $legend_id, $db){
       
         $price = $row['price'];
         $ratio = $row['ratio'];
+        $notes = $row['notes'];
 
         $discount = $row['discount'];
 
@@ -746,6 +751,7 @@ function GetItems($option_id, $legend_id, $db){
             'qty' => $qty,
             'price' => $price,
             'ratio' => $ratio,
+            'notes' => $notes,
             'discount' => $discount,
             'amount' => $amount,
             'desc' => $desc,
@@ -806,6 +812,7 @@ function FloorGroups($groups)
                         'qty' => 0,
                         'price' => 0,
                         'ratio' => 0,
+                        'notes' => "",
                         'amount' => 0,
                         'desc' => "",
                         'pid' => 0,

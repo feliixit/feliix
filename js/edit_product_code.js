@@ -145,7 +145,7 @@ var app = new Vue({
 
     this.get_records(this.id);
     this.getUserName();
-    this.getTagGroup();
+    //this.getTagGroup();
   },
 
   computed: {
@@ -322,9 +322,9 @@ var app = new Vue({
 
             var select_items = _this.record[0]['tags'].split(',');
 
-            $("#tag01").selectpicker("refresh");
+            //$("#tag01").selectpicker("refresh");
 
-            if(_this.category === '10000000')
+         //   if(_this.category === '10000000')
               $('#tag01').selectpicker('val', select_items);
            // if(_this.category === '20000000')
            //   $('#tag02').selectpicker('val', select_items);
@@ -335,7 +335,7 @@ var app = new Vue({
             {
               $('#related_product').tagsinput('add', related_product[i]);
             }
-            $('#related_product').selectpicker('refresh');
+            //$('#related_product').selectpicker('refresh');
          
             if(_this.variation_mode == 1)
                 $("#variation_mode").bootstrapToggle("on");
@@ -1196,10 +1196,10 @@ var app = new Vue({
 
           let tag01 = $('#tag01').val();
        //   let tag02 = $('#tag02').val();
-          if( _this.category === '10000000')
+        //  if( _this.category === '10000000')
             form_Data.append("tags", tag01.join());
-          else
-            form_Data.append("tags", "");
+          // else
+          //   form_Data.append("tags", "");
 
           let related_product = $('#related_product').val();
           form_Data.append("related_product", related_product);

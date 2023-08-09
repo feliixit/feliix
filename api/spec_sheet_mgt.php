@@ -736,7 +736,7 @@ function GetLevel3($cat_id, $db){
 }
 
 function GetRelatedProductCode($id, $db){
-    $sql = "SELECT * FROM product_category where code in (SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1)";
+    $sql = "SELECT * FROM product_category where code in (SELECT code FROM product_related WHERE product_id = '". $id . "' and STATUS <> -1) and status <> -1";
 
     $sql = $sql . " ORDER BY code ";
 

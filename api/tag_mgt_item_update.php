@@ -17,6 +17,8 @@ use Google\Cloud\Storage\StorageClient;
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+$tag_array = array();
+$tag_read = false;
 
 if (!isset($jwt)) {
     http_response_code(401);
@@ -70,7 +72,7 @@ if (!isset($jwt)) {
             
             try {
                 $pre_array = GetPreTags($gid, $db);
-                $diff = show_diff($pre_array, $petty_array);
+                $diff = show_diff($pre_array, $petty_array, $db);
 
                 // petty_list
                 $query = "update tag_item
@@ -233,7 +235,7 @@ if (!isset($jwt)) {
             return $ret;
         }
         
-        function show_diff($pre_item, $item)
+        function show_diff($pre_item, $item, $db)
         {
             $diff = [];
 
@@ -246,7 +248,10 @@ if (!isset($jwt)) {
             foreach($pre_item as $it) {
                 foreach($item as $i) {
                     if($it['id'] == $i['id'] && $it['item_name'] != $i['item_name'])
+                    {
                         $diff[] =  $it['item_name'] . "," . $i['item_name'];
+                        UpdateProductTags($it['item_name'], $i['item_name'], $db);
+                    }
                 }
             }
             // 3. check if the key is deleted
@@ -261,4 +266,55 @@ if (!isset($jwt)) {
             }
 
             return $diff;
+        }
+
+        function UpdateProductTags($old_item, $new_item, $db)
+        {
+            if($GLOBALS['tag_read'] == false)
+            {
+                $GLOBALS['product_tags'] = ReadProductTags($db);
+                $GLOBALS['tag_read'] = true;
+            }
+
+            for($i = 0; $i < count($GLOBALS['product_tags']); $i++)
+            {
+                $tags = explode(",", $GLOBALS['product_tags'][$i]['tags']);
+                for($j = 0; $j < count($tags); $j++)
+                {
+                    if($tags[$j] == $old_item)
+                    {
+                        $tags[$j] = $new_item;
+                        UpdateProductTableTags($db, $GLOBALS['product_tags'][$i]['id'], implode(",", $tags));
+                        break;
+                    }
+                }
+            }
+        }
+
+        function ReadProductTags($db)
+        {
+            $query = "SELECT id, tags from product_category where status <> -1";
+
+            // prepare the query
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+            
+            $result = array();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $result[] = $row;
+            }
+
+            return $result;
+        }
+
+        function UpdateProductTableTags($db, $id, $tags)
+        {
+            $query = "update product_category set tags = :tags where id = :id";
+
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':tags', $tags);
+            $stmt->bindParam(':id', $id);
+            
+            $stmt->execute();
+
         }

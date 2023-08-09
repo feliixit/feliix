@@ -152,8 +152,17 @@ header( 'location:index' );
             font-weight: bold;
         }
 
+        body.gray header{
+            position: fixed;
+            z-index: 999;
+        }
+
         body.gray select {
             background-image: url(../images/ui/icon_form_select_arrow_gray.svg);
+        }
+
+        body.gray .mainContent{
+            padding: 185px 12px 30px;
         }
 
         body.gray .mainContent > .block {
@@ -1275,14 +1284,20 @@ header( 'location:index' );
             cursor: pointer;
         }
 
+        #header_dialog, #footer_dialog, #total_dialog, #approval_dialog{
+            zoom: 95%;
+        }
+
         #page_dialog, #subtotal_dialog, #terms_dialog, #payment_dialog {
             min-width: 1000px;
             pointer-events: auto;
+            zoom: 95%;
         }
 
         #signature_dialog {
             min-width: 700px;
             pointer-events: auto;
+            zoom: 95%;
         }
 
         #total_dialog {
@@ -1762,6 +1777,14 @@ header( 'location:index' );
             font-size: 14px;
             width: 100px;
             margin: 5px 0;
+        }
+
+        .functionbar{
+            position: fixed;
+            z-index: 998;
+            width: 100%;
+            background: rgb(230, 230, 230);
+            padding: 80px 12px 0;
         }
 
         .list_function.main {
@@ -2379,7 +2402,7 @@ header( 'location:index' );
             }
 
             .mainContent {
-                padding: 0;
+                padding: 0 !important;
                 background-color: #FFF !important;
             }
 
@@ -2417,7 +2440,9 @@ header( 'location:index' );
     <!-- header -->
     <header class="noPrint">header</header>
     <!-- header end -->
-    <div class="mainContent" style="background-color: rgb(230,230,230)">
+
+    <!-- Function Bar start-->
+    <div class="functionbar noPrint">
 
         <div class="list_function main noPrint">
 
@@ -2540,7 +2565,7 @@ header( 'location:index' );
                                                @click="set_down(page.id, block_index, block.id)"></i>
 
                                             <i class="fas fa-copy" @click="page_copy(page.id, block.id)"></i>
-                                           
+
                                             <i class="fas fa-trash-alt" @click="del_block(page.id, block.id)"></i>
                                         </li>
                                     </ul>
@@ -2826,7 +2851,7 @@ header( 'location:index' );
                                     <div class="pub-con" ref="bg">
                                         <div class="input-zone">
                                             <span class="upload-des">choose file</span>
-                                            <input class="input" type="file" :ref="'approve_file'" name="approve_file" 
+                                            <input class="input" type="file" :ref="'approve_file'" name="approve_file"
                                                 placeholder="choose file" @change="approve_changeFile()"
                                                 multiple/>
                                         </div>
@@ -2861,7 +2886,7 @@ header( 'location:index' );
                                                 <div class="file-item" v-for="(item,index) in project_approves" :key="index">
                                                     <p>
                                                         <a :href="img_url + item.gcp_name" target="_blank">{{item.filename}}</a>
-                                                       
+
                                                         <span @click="deleteFileItems_before(item.id)" class="upload-delete">
                                                             <i class="fas fa-backspace"></i>
                                                         </span>
@@ -2887,6 +2912,12 @@ header( 'location:index' );
 
             </div>
         </div>
+    </div>
+
+    <!-- Function Bar end-->
+
+
+    <div class="mainContent" style="background-color: rgb(230,230,230)">
 
         <table class="qn_page" v-for="(pg, index) in pages">
 

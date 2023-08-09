@@ -742,6 +742,8 @@ var app = new Vue({
           desc: "",
           pid: this.product.id,
           discount : 0,
+
+          notes: "",
           
           v1:this.v1,
           v2:this.v2,
@@ -905,6 +907,8 @@ var app = new Vue({
             v1: this.v1,
             v2: this.v2,
             v3: this.v3,
+
+            notes: "",
 
             discount : 0,
            
@@ -2252,6 +2256,8 @@ Installation:`;
                 v2:"",
                 v3:"",
                 status:"",
+
+                notes:"",
         };
 
         items.push(item);
@@ -2326,6 +2332,8 @@ Installation:`;
           num:"",
           pid:0,
           ratio:1.0,
+
+          notes:"",
         };
 
         items.push(item);

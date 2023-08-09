@@ -95,6 +95,7 @@ switch ($method) {
                     `qty` = :qty,
                     `price` = :price,
                     `ratio` = :ratio,
+                    `notes` = :notes,
                     `discount` = :discount,
                     `amount` = :amount,
                     `desc` = :desc,
@@ -127,6 +128,7 @@ switch ($method) {
                 $qty = isset($block_array[$i]['qty']) ? $block_array[$i]['qty'] : '';
                 $price = isset($block_array[$i]['price']) ? $block_array[$i]['price'] : '';
                 $ratio = isset($block_array[$i]['ratio']) ? $block_array[$i]['ratio'] : 0;
+                $notes = isset($block_array[$i]['notes']) ? $block_array[$i]['notes'] : '';
                 $amount = isset($block_array[$i]['amount']) ? $block_array[$i]['amount'] : 0;
                 $discount = isset($block_array[$i]['discount']) ? $block_array[$i]['discount'] : 0;
                 $desc = isset($block_array[$i]['desc']) ? $block_array[$i]['desc'] : '';
@@ -159,6 +161,7 @@ switch ($method) {
                 $stmt->bindParam(':qty', $qty);
                 $stmt->bindParam(':price', $price);
                 $stmt->bindParam(':ratio', $ratio);
+                $stmt->bindParam(':notes', $notes);
                 $stmt->bindParam(':discount', $discount);
                 $stmt->bindParam(':amount', $amount);
                 $stmt->bindParam(':desc', $desc);

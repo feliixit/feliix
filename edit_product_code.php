@@ -1,3 +1,97 @@
+<?php
+$jwt = (isset($_COOKIE['jwt']) ?  $_COOKIE['jwt'] : null);
+$uid = (isset($_COOKIE['uid']) ?  $_COOKIE['uid'] : null);
+if ( !isset( $jwt ) ) {
+  header( 'location:index' );
+}
+
+include_once 'api/config/core.php';
+include_once 'api/libs/php-jwt-master/src/BeforeValidException.php';
+include_once 'api/libs/php-jwt-master/src/ExpiredException.php';
+include_once 'api/libs/php-jwt-master/src/SignatureInvalidException.php';
+include_once 'api/libs/php-jwt-master/src/JWT.php';
+include_once 'api/config/database.php';
+
+use \Firebase\JWT\JWT;
+
+try {
+        // decode jwt
+        try {
+            // decode jwt
+            $decoded = JWT::decode($jwt, $key, array('HS256'));
+            $user_id = $decoded->data->id;
+            $username = $decoded->data->username;
+
+            $database = new Database();
+            $db = $database->getConnection();
+
+            $tag_group = array();
+
+            $query = "SELECT id,
+                            `group_name`, 
+                            sn
+                            FROM tag_group
+                            WHERE status <> -1 order by sn
+                            ";
+                            
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+
+            $group = "";
+            $items = array();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $group = $row['group_name'];
+                $items = GetItems($row['id'], $db);
+
+                $tag_group[] = array(
+                    "group" => $group,
+                    "items" => $items,
+                );
+
+            }
+        }
+        catch (Exception $e){
+
+            header( 'location:index' );
+        }
+
+
+        //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
+        //    header( 'location:index.php' );
+    }
+    // if decode fails, it means jwt is invalid
+    catch (Exception $e){
+    
+        header( 'location:index' );
+    }
+
+
+    function GetItems($group_id, $db) 
+    {
+        $query = "SELECT id,
+                        `item_name`, 
+                        sn
+                        FROM tag_item
+                        WHERE status <> -1 and group_id = :group_id  order by sn
+                        ";
+
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':group_id', $group_id);
+        $stmt->execute();
+
+        $items = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $items[] = $row;
+        }
+
+        return $items;
+    }
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -676,23 +770,34 @@
                 <li>
                     Tag
                 </li>
-                <li v-show="category == '10000000'">
+                <li>
                 <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected"
         id="tag01">
 
+        <?php
+            for ($x = 0; $x < count($tag_group); $x++) {
+                echo "<optgroup label='" . $tag_group[$x]["group"] . "'>";
+            
+                for($j=0; $j < count($tag_group[$x]['items']); $j++) {
+                    echo "<option value='" . $tag_group[$x]['items'][$j]['item_name'] . "'>" . $tag_group[$x]['items'][$j]['item_name'] . "</option>";
+                }
+                echo "</optgroup>";
+            }
+        ?>
+<!--
         <optgroup v-for="(group, index) in tag_group" :label="group.group">
             
             <option v-for="(it, index2) in group.items" :value="it.item_name">{{ it.item_name }}</option>
 
         </optgroup>
-
+        -->
 </select>
                 </li>
-                <li v-show="category == '20000000'">
+                <!-- <li v-show="category == '20000000'">
                     <select class="selectpicker" multiple data-live-search="true" data-size="8" data-width="96%" title="No tag selected">
 
                     </select>
-                </li>
+                </li> -->
             </ul>
 
             <ul>

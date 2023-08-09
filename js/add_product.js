@@ -912,10 +912,10 @@ var app = new Vue({
 
           let tag01 = $('#tag01').val();
          // let tag02 = $('#tag02').val();
-          if( _this.category === '10000000')
+          //if( _this.category === '10000000')
             form_Data.append("tags", tag01.join());
-          else
-            form_Data.append("tags", "");
+          // else
+          //   form_Data.append("tags", "");
 
           form_Data.append("code", _this.code);
           form_Data.append("price_ntd", _this.price_ntd);
