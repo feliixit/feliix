@@ -931,12 +931,24 @@ header( 'location:index' );
         }
 
         .tb_format1 tbody tr.desc2 td {
-            text-align: center;
-            vertical-align: middle;
             max-width: 495px;
         }
 
-        .tb_format1 tbody tr.desc2 td img {
+        .tb_format1 tbody tr.desc2 td div.notes {
+            text-align: left;
+            color: red;
+            margin: 0 5px 8px;
+            white-space: pre-line;
+            font-weight: 600;
+        }
+
+        .tb_format1 tbody tr.desc2 td div.picbox {
+            text-align: center;
+            vertical-align: middle;
+            margin-top: 8px;
+        }
+
+        .tb_format1 tbody tr.desc2 td div.picbox img {
             max-height: 120px;
             max-width: 220px;
             margin: 0 5px;
@@ -2475,7 +2487,8 @@ header( 'location:index' );
                                             <input type="number" v-model="block.amount"><br>
                                             <span>Description:</span> <textarea rows="2"
                                                                                 v-model="block.desc"></textarea><br>
-                                            <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea>
+                                            <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea><br>
+                                            <span>Notes:</span> <textarea rows="2" v-model="block.notes"></textarea>
                                         </li>
                                         <li>
                                             <i class="fas fa-arrow-alt-circle-up"
@@ -3105,21 +3118,29 @@ header( 'location:index' );
                                             <tr class="desc2">
                                                 <!-- 第一個option -->
                                                 <td class="pic" colspan="3">
-
-                                                    <img v-if="row.gp1.url2 !==''" :src="row.gp1.url2">
-                                                    <img v-if="row.gp1.url3 !==''" :src="row.gp1.url3">
+                                                    <div class="notes">{{ bk.notes }}</div>
+                                                    <div class="picbox">
+                                                        <img v-if="row.gp1.url2 !==''" :src="row.gp1.url2">
+                                                        <img v-if="row.gp1.url3 !==''" :src="row.gp1.url3">
+                                                    </div>
                                                 </td>
 
                                                 <!-- 第二個option -->
                                                 <td class="pic" colspan="3">
-                                                    <img v-if="row.gp2.url2 !==''" :src="row.gp2.url2">
-                                                    <img v-if="row.gp2.url3 !==''" :src="row.gp2.url3">
+                                                    <div class="notes">{{ bk.notes }}</div>
+                                                    <div class="picbox">
+                                                        <img v-if="row.gp2.url2 !==''" :src="row.gp2.url2">
+                                                        <img v-if="row.gp2.url3 !==''" :src="row.gp2.url3">
+                                                    </div>
                                                 </td>
 
                                                 <!-- 第三個option -->
                                                 <td class="pic" colspan="3" v-if="org_options.length == 3 && org_options.length == 3">
-                                                    <img v-if="row.gp3.url2 !=='' && org_options.length == 3" :src="row.gp3.url2">
-                                                    <img v-if="row.gp3.url3 !=='' && org_options.length == 3" :src="row.gp3.url3">
+                                                    <div class="notes">{{ bk.notes }}</div>
+                                                    <div class="picbox">
+                                                        <img v-if="row.gp3.url2 !=='' && org_options.length == 3" :src="row.gp3.url2">
+                                                        <img v-if="row.gp3.url3 !=='' && org_options.length == 3" :src="row.gp3.url3">
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </template>

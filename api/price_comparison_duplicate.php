@@ -626,6 +626,7 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     `qty` = :qty,
     `price` = :price,
     `ratio` = :ratio,
+    `notes` = :notes,
     `amount` = :amount,
     `desc` = :desc,
     `pid` = :pid,
@@ -633,6 +634,7 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     `v2` = :v2,
     `v3` = :v3,
     `discount` = :discount,
+    `notes` = :notes,
     `status` = 0,
     `create_id` = :create_id,
     `created_at` =  now() ";
@@ -654,6 +656,7 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     $stmt->bindParam(':qty', $gp['qty']);
     $stmt->bindParam(':price', $gp['price']);
     $stmt->bindParam(':ratio', $gp['ratio']);
+    $stmt->bindParam(':notes', $gp['notes']);
     $stmt->bindParam(':amount', $gp['amount']);
     $stmt->bindParam(':desc', $gp['desc']);
     $stmt->bindParam(':pid', $gp['pid']);
@@ -661,6 +664,7 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     $stmt->bindParam(':v2', $gp['v2']);
     $stmt->bindParam(':v3', $gp['v3']);
     $stmt->bindParam(':discount', $gp['discount']);
+    $stmt->bindParam(':notes', $gp['notes']);
     $stmt->bindParam(':create_id', $user_id);
     
     
@@ -846,6 +850,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
             'url1' => "",
             'url2' => "",
             'url3' => "",
+            'notes' => '',
         );
         
         if($i < count($gp2_item))
@@ -876,6 +881,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
             'url1' => "",
             'url2' => "",
             'url3' => "",
+            'notes' => '',
         );
         
         if($i < count($gp3_item))
@@ -906,6 +912,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
             'url1' => "",
             'url2' => "",
             'url3' => "",
+            'notes' => '',
         );
         
         $row_item[] = array(
@@ -937,6 +944,7 @@ function GetItems($option_id, $legend_id, $db){
     discount,
     amount,
     `desc`,
+    `notes`,
     pid,
     v1,
     v2,
@@ -972,6 +980,7 @@ function GetItems($option_id, $legend_id, $db){
         
         $price = $row['price'];
         $ratio = $row['ratio'];
+        $notes = $row['notes'];
         
         $discount = $row['discount'];
         
@@ -1003,6 +1012,7 @@ function GetItems($option_id, $legend_id, $db){
             'qty' => $qty,
             'price' => $price,
             'ratio' => $ratio,
+            'notes' => $notes,
             'discount' => $discount,
             'amount' => $amount,
             'desc' => $desc,
@@ -1776,6 +1786,7 @@ function GetBlocks($qid, $db){
     photo,
     qty,
     ratio,
+    notes,
     price,
     discount,
     amount,
@@ -1801,6 +1812,7 @@ function GetBlocks($qid, $db){
         $photo = $row['photo'];
         $qty = $row['qty'];
         $ratio = $row['ratio'];
+        $notes = $row['notes'];
         $price = $row['price'];
         $discount = $row['discount'];
         $amount = $row['amount'];
@@ -1820,6 +1832,7 @@ function GetBlocks($qid, $db){
             "url" => $url,
             "qty" => $qty,
             "ratio" => $ratio,
+            "notes" => $notes,
             "price" => $price,
             "discount" => $discount,
             "amount" => $amount,
