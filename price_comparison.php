@@ -3118,7 +3118,7 @@ header( 'location:index' );
                                             <tr class="desc2">
                                                 <!-- 第一個option -->
                                                 <td class="pic" colspan="3">
-                                                    <div class="notes">{{ bk.notes }}</div>
+                                                    <div class="notes">{{ row.gp1.notes }}</div>
                                                     <div class="picbox">
                                                         <img v-if="row.gp1.url2 !==''" :src="row.gp1.url2">
                                                         <img v-if="row.gp1.url3 !==''" :src="row.gp1.url3">
@@ -3127,7 +3127,7 @@ header( 'location:index' );
 
                                                 <!-- 第二個option -->
                                                 <td class="pic" colspan="3">
-                                                    <div class="notes">{{ bk.notes }}</div>
+                                                    <div class="notes">{{ row.gp2.notes }}</div>
                                                     <div class="picbox">
                                                         <img v-if="row.gp2.url2 !==''" :src="row.gp2.url2">
                                                         <img v-if="row.gp2.url3 !==''" :src="row.gp2.url3">
@@ -3136,7 +3136,7 @@ header( 'location:index' );
 
                                                 <!-- 第三個option -->
                                                 <td class="pic" colspan="3" v-if="org_options.length == 3 && org_options.length == 3">
-                                                    <div class="notes">{{ bk.notes }}</div>
+                                                    <div class="notes">{{ row.gp3.notes }}</div>
                                                     <div class="picbox">
                                                         <img v-if="row.gp3.url2 !=='' && org_options.length == 3" :src="row.gp3.url2">
                                                         <img v-if="row.gp3.url3 !=='' && org_options.length == 3" :src="row.gp3.url3">
