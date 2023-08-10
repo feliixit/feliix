@@ -130,8 +130,9 @@ var app = new Vue({
     print_srp: 'true',
     print_qp: 'true',
 
-    $out : "",
-    $out_cnt : 0,
+    out : "",
+    out_cnt : 0,
+    phased_out_text : [],
   },
 
   created() {
@@ -259,6 +260,36 @@ var app = new Vue({
       console.log("edit category");
     },
 
+    PhaseOutAlert(){
+      hl = "";
+      for(var i = 0; i < this.phased_out_text.length; i++)
+      {
+        hl += "(" + Number(i+1) + ") " + this.phased_out_text[i] + "<br/>";
+      }
+
+      Swal.fire({
+        title: 'Phased Out Variants:',
+        html: hl,
+        confirmButtonText: 'OK',
+        });
+      
+    },
+
+    RelatedPhaseOutAlert(phased_out_text){
+      hl = "";
+      for(var i = 0; i < phased_out_text.length; i++)
+      {
+        hl += "(" + Number(i+1) + ") " + phased_out_text[i] + "<br/>";
+      }
+
+      Swal.fire({
+        title: 'Phased Out Variants:',
+        html: hl,
+        confirmButtonText: 'OK',
+        });
+      
+    },
+
     change_v(){
       let item_product = this.shallowCopy(
         this.variation_product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
@@ -284,6 +315,12 @@ var app = new Vue({
 
         this.out = item_product.enabled == 1 ? "" : "Y";
         this.out_cnt = 0;
+
+        if(this.record[0]['out'] == 'Y')
+        {
+          this.out = "Y";
+          this.out_cnt = 0;
+        }
       }
       else
       {
@@ -479,6 +516,7 @@ var app = new Vue({
 
             _this.out = _this.record[0]['out'];
             _this.out_cnt = _this.record[0]['phased_out_cnt'];
+            _this.phased_out_text = _this.record[0]['phased_out_text'];
 
             //var select_items = _this.record[0]['tags'].split(',');
 

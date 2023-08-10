@@ -160,12 +160,28 @@ else
 
                 $product = GetProduct($id, $db, $currency);
                 $phased_out_cnt = 0;
+                $phased_out_text = [];
                 for($i = 0; $i < count($product); $i++)
                 {
                     if($product[$i]['enabled'] != 1)
+                    {
+                        $key_value_text = "";
+
                         $phased_out_cnt++;
+                        if($product[$i]['v1'] != "")
+                            $key_value_text .= $product[$i]['k1'] . " = " . $product[$i]['v1'] . ", ";
+                        if($product[$i]['v2'] != "")
+                            $key_value_text .= $product[$i]['k2'] . " = " . $product[$i]['v2'] . ", ";
+                        if($product[$i]['v3'] != "")
+                            $key_value_text .= $product[$i]['k3'] . " = " . $product[$i]['v3'] . ", ";
+
+                        $key_value_text = substr($key_value_text, 0, -2);
+
+                        array_push($phased_out_text, $key_value_text);
+                    }
+                        
                 }
-                $phased_out_cnt = $phased_out_cnt;
+                //$phased_out_cnt = $phased_out_cnt;
 
                 $related_product = GetRelatedProductCode($id, $db);
 
@@ -484,6 +500,8 @@ else
 
                                     "out" => $out,
                                     "phased_out_cnt" => $phased_out_cnt,
+
+                                    "phased_out_text" => $phased_out_text,
 
             );
             }
@@ -952,6 +970,36 @@ function GetRelatedProductCode($id, $db){
     $stmt->execute();
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_id = $row['id'];
+        $currency = $row['currency'];
+
+        $product = GetProduct($_id, $db, $currency);
+        $phased_out_cnt = 0;
+        $phased_out_text = [];
+        for($i = 0; $i < count($product); $i++)
+        {
+            if($product[$i]['enabled'] != 1)
+            {
+                $key_value_text = "";
+
+                $phased_out_cnt++;
+                if($product[$i]['v1'] != "")
+                    $key_value_text .= $product[$i]['k1'] . " = " . $product[$i]['v1'] . ", ";
+                if($product[$i]['v2'] != "")
+                    $key_value_text .= $product[$i]['k2'] . " = " . $product[$i]['v2'] . ", ";
+                if($product[$i]['v3'] != "")
+                    $key_value_text .= $product[$i]['k3'] . " = " . $product[$i]['v3'] . ", ";
+
+                $key_value_text = substr($key_value_text, 0, -2);
+
+                array_push($phased_out_text, $key_value_text);
+            }
+                
+        }
+
+        $row['phased_out_cnt'] = $phased_out_cnt;
+        $row['phased_out_text'] = $phased_out_text;
+        
         $merged_results[] = $row;
     }
 
