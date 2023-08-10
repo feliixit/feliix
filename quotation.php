@@ -3745,9 +3745,9 @@ header( 'location:index' );
                         </div>
                         <div class="infobox">
                             <div class="basic_info">
-                                <span class="phasedout" v-if="product.out == 'Y' && product.phased_out_cnt == 0">Phased Out</span>
-                                <span class="phasedout1" v-if="product.phased_out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
-                                <span class="phasedout1" v-if="product.phased_out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ product.phased_out_cnt }} variants are phased out</span>
+                                <span class="phasedout" v-if="out == 'Y' && out_cnt == 0">Phased Out</span>
+                                <span class="phasedout1" v-if="out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
+                                <span class="phasedout1" v-if="out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ out_cnt }} variants are phased out</span>
                             <h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
                                 {{product.brand}}</h6>
                                 <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
@@ -3909,9 +3909,9 @@ header( 'location:index' );
 
                         <div class="infobox">
                             <div class="basic_info">
-                                <span class="phasedout" v-if="product.out == 'Y' && product.phased_out_cnt == 0">Phased Out</span>
-                                <span class="phasedout1" v-if="product.phased_out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
-                                <span class="phasedout1" v-if="product.phased_out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ product.phased_out_cnt }} variants are phased out</span>
+                                <span class="phasedout" v-if="out == 'Y' && out_cnt == 0">Phased Out</span>
+                                <span class="phasedout1" v-if="out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
+                                <span class="phasedout1" v-if="out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ out_cnt }} variants are phased out</span>
 
                                 <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6>
                                 <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>

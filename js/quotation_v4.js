@@ -1098,6 +1098,9 @@ var app = new Vue({
         this.v2 = "";
         this.v3 = "";
 
+        this.out = product.out;
+        this.out_cnt = product.phased_out_cnt;
+
         this.chunk(this.related_product, 4);
 
         this.set_up_variants();
@@ -3352,6 +3355,12 @@ Installation:`;
 
           this.out = item_product.enabled == 1 ? "" : "Y";
           this.out_cnt = 0;
+
+          if(this.product['out'] == 'Y')
+          {
+              this.out = "Y";
+              this.out_cnt = 0;
+          }
         }
         else
         {
@@ -3361,8 +3370,8 @@ Installation:`;
           this.quoted_price = this.product['quoted_price'];
           this.phased = 0;
 
-          this.out = this.record[0]['out'];
-          this.out_cnt = this.record[0]['phased_out_cnt'];
+          this.out = this.product['out'];
+          this.out_cnt = this.product['phased_out_cnt'];
         }
   
       },
