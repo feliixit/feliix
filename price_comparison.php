@@ -1854,6 +1854,34 @@ header( 'location:index' );
             border-radius: 10px;
         }
 
+        .infobox .basic_info span.phasedout1{
+            font-size: 16px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-bottom: 3px;
+            padding: 0 7px 3px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .middle_section span.phasedout2{
+            font-size: 16px;
+            font-weight: 500;
+            background-color: red;
+            color: white;
+            display: inline-block;
+            margin-bottom: 3px;
+            padding: 0 7px 2px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .phasedout2:hover{
+            cursor: pointer;
+        }
+
         .infobox .basic_info div.tags {
             margin-bottom: 0.5rem;
         }
@@ -3862,7 +3890,11 @@ header( 'location:index' );
                             </div>
                         </div>
                         <div class="infobox">
-                            <div class="basic_info"><span class="phasedout" v-if="phased == 1">Phased Out</span><h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
+                            <div class="basic_info">
+                        <span class="phasedout" v-if="out == 'Y' && out_cnt == 0">Phased Out</span>
+                                <span class="phasedout1" v-if="out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
+                                <span class="phasedout1" v-if="out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ out_cnt }} variants are phased out</span>
+                        <h3 style="word-break: break-all;">{{product.code}}</h3> <h6>
                                 {{product.brand}}</h6>
                                 <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
                                 <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
@@ -3966,6 +3998,12 @@ header( 'location:index' );
                                                     {{ item.code }}
                                                 </a>
                                             </div>
+					    <div>
+                                                <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -4016,7 +4054,10 @@ header( 'location:index' );
 
 
                         <div class="infobox">
-                            <div class="basic_info"><span class="phasedout" v-if="phased == 1">Phased Out</span>
+                            <div class="basic_info">
+                                <span class="phasedout" v-if="out == 'Y' && out_cnt == 0">Phased Out</span>
+                                <span class="phasedout1" v-if="out_cnt == 1" @click="PhaseOutAlert(product.phased_out_text1)">1 variant is phased out</span>
+                                <span class="phasedout1" v-if="out_cnt > 1" @click="PhaseOutAlert(product.phased_out_text1)">{{ out_cnt }} variants are phased out</span>
                                 <h3>{{product.code}}</h3> <h6>{{product.brand}}</h6>
                                 <h6 v-if="category == 'Lighting'">{{ product.category}}</h6>
                                 <h6 v-if="category != 'Lighting'">{{ product.category}} >> {{
@@ -4173,6 +4214,12 @@ header( 'location:index' );
                                                 <a @click="getSingleProduct(item.id)">
                                                     {{ item.code }}
                                                 </a>
+                                            </div>
+<div>
+                                                <!-- 網頁載入時，對於每一個相關產品，會根據「該產品是否停產」以及「有多少子規格停產」，來決定下面三個<span class="phasedout2">結構要顯示哪一個 -->
+                                                <span class="phasedout2" v-if="item.out == 'Y' && item.phased_out_cnt == 0">Phased Out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt == 1" @click="PhaseOutAlert(item.phased_out_text)">1 variant is phased out</span>
+                                                <span class="phasedout2" v-if="item.phased_out_cnt > 1" @click="PhaseOutAlert(item.phased_out_text)">{{ item.phased_out_cnt }} variants are phased out</span>
                                             </div>
                                         </div>
 
