@@ -298,6 +298,9 @@ var app = new Vue({
         phased : 0,
         fil_k : '',
         tag_group : [],
+
+        out : "",
+        out_cnt : 0,
     },
   
     created() {
@@ -1277,6 +1280,15 @@ var app = new Vue({
           this.price = "PHP " + Number(item_product.price).toLocaleString();
           this.quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
           this.phased = item_product.enabled == 0 ? 1 : 0;
+
+          this.out = item_product.enabled == 1 ? "" : "Y";
+          this.out_cnt = 0;
+
+          if(this.product['out'] == 'Y')
+          {
+              this.out = "Y";
+              this.out_cnt = 0;
+          }
         }
         else
         {
@@ -1285,10 +1297,28 @@ var app = new Vue({
           this.price = this.product['price'];
           this.quoted_price = this.product['quoted_price'];
           this.phased = 0;
+
+          this.out = this.product['out'];
+          this.out_cnt = this.product['phased_out_cnt'];
         }
   
       },
 
+      PhaseOutAlert(phased_out_text){
+        hl = "";
+        for(var i = 0; i < phased_out_text.length; i++)
+        {
+          hl += "(" + Number(i+1) + ") " + phased_out_text[i] + "<br/>";
+        }
+  
+        Swal.fire({
+          title: 'Phased Out Variants:',
+          html: hl,
+          confirmButtonText: 'OK',
+          });
+        
+      },
+      
       phased_out_info: function(info) {
         Swal.fire({
           title: "<i>Phased-out Variants:</i>", 
@@ -1742,6 +1772,9 @@ var app = new Vue({
         this.v1 = "";
         this.v2 = "";
         this.v3 = "";
+
+        this.out = product.out;
+        this.out_cnt = product.phased_out_cnt;
 
         this.chunk(this.related_product, 4);
 
