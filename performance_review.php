@@ -97,6 +97,12 @@ try {
                 }
             }
 
+            if(trim(strtoupper($position)) == 'VALUE DELIVERY MANAGER')
+            {
+                $access6 = true;
+            }
+
+
 
         }
         catch (Exception $e){

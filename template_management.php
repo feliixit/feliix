@@ -96,6 +96,11 @@ try {
                 }
             }
 
+            if(trim(strtoupper($position)) == 'VALUE DELIVERY MANAGER')
+            {
+                $access6 = true;
+            }
+
             if($access6 == false)
                 header( 'location:index' );
         }

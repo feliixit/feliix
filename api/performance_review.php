@@ -65,6 +65,11 @@ if (!isset($jwt)) {
         }
     }
 
+    if(trim(strtoupper($position)) == 'VALUE DELIVERY MANAGER')
+    {
+        $access6 = true;
+    }
+
 
     $merged_results = array();
     $return_result = array();
