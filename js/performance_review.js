@@ -1048,6 +1048,9 @@ var app = new Vue({
           can_save = true;
       }
 
+      if(this.title.trim().toUpperCase() == 'VALUE DELIVERY MANAGER')
+        can_save = true;
+
       // if(this.username.trim().toUpperCase() == 'EDNEIL FERNANDEZ' || this.username.trim().toUpperCase() == 'AIZA EISMA')
       // {
       //   can_save = true;

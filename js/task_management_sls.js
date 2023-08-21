@@ -1152,7 +1152,7 @@ var app = new Vue({
 
         this.record.pre_items = JSON.parse(JSON.stringify(this.record.items));
 
-        if (!this.CanAccess(this.record.creator_title)  && (this.record.creator_id != this._uid)) {
+        if (!this.CanAccess(this.record.creator_title) && this.record.creator != this.username) {
           Swal.fire({
             text:
               "It is not allowed to edit/delete the selected task.",
@@ -1520,7 +1520,7 @@ var app = new Vue({
           );
 
 
-        if (!this.CanAccess(this.record.creator_title) && (this.record.creator_id != this._uid)) {
+        if (!this.CanAccess(this.record.creator_title)  && this.record.creator != this.username) {
           Swal.fire({
             text:
               "It is not allowed to edit/delete the selected task.",

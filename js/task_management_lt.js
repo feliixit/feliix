@@ -129,6 +129,8 @@ var app = new Vue({
     fileArray_i: [],
     editfileArray_i: [],
 
+    user_id : 0,
+
   },
 
   created() {
@@ -835,7 +837,7 @@ var app = new Vue({
       }
     },
 
-    CanAccess(creator_title) {
+    CanAccess(creator_title, creator_id) {
       var can_save = false;
 
       var _creator_title = creator_title.trim().toUpperCase();
@@ -864,7 +866,10 @@ var app = new Vue({
           can_save = true;
       }
 
-      if(this.username == "dereck")
+      if(this.username == "dereck" || this.username == "Cristina Matining")
+        can_save = true;
+
+      if(creator_id == this.user_id)
         can_save = true;
 
       return can_save;
@@ -924,6 +929,7 @@ var app = new Vue({
         .then(function(response) {
           //handle success
           _this.username = response.data.username;
+          _this.user_id = response.data.user_id;
           _this.my_department = response.data.department.trim().toUpperCase();
           _this.my_title = response.data.title.trim().toUpperCase();
         })
@@ -1117,7 +1123,7 @@ var app = new Vue({
 
         this.record.pre_items = JSON.parse(JSON.stringify(this.record.items));
 
-        if (!this.CanAccess(this.record.creator_title)  && (this.record.creator_id != this._uid)) {
+        if (!this.CanAccess(this.record.creator_title, this.record.creator_id)) {
           Swal.fire({
             text:
               "It is not allowed to edit/delete the task which was created by user with higher position.",
@@ -1487,7 +1493,7 @@ var app = new Vue({
         .then(function(response) {
           //handle success
           if (response.data["ret"] != 0) {
-            _this.org_uid = _this.uid;
+            _this.org_uid = _this.user_id;
 
             Swal.fire({
               text: "Duplicated",
@@ -1522,7 +1528,7 @@ var app = new Vue({
             )
           );
 
-        if (!this.CanAccess(this.record.creator_title)) {
+        if (!this.CanAccess(this.record.creator_title, this.record.creator_id)) {
           Swal.fire({
             text:
               "It is not allowed to edit/delete the task which was created by user with higher position.",
@@ -1575,7 +1581,7 @@ var app = new Vue({
         .then(function(response) {
           //handle success
           if (response.data["ret"] != 0) {
-            _this.org_uid = _this.uid;
+            _this.org_uid = _this.user_id;
 
             Swal.fire({
               text: "Deleted",
