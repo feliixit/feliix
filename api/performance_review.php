@@ -67,9 +67,7 @@ if (!isset($jwt)) {
 
     if(trim(strtoupper($position)) == 'VALUE DELIVERY MANAGER')
     {
-       
-            $access6 = true;
-        
+        $access6 = true;
     }
 
 

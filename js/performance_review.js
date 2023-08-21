@@ -979,6 +979,9 @@ var app = new Vue({
         if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
+
+      if(this.title.trim().toUpperCase() == 'VALUE DELIVERY MANAGER')
+          can_save = true;
       
       return can_save;
     },
@@ -1047,6 +1050,9 @@ var app = new Vue({
         if(this.title.trim().toUpperCase() == 'CHIEF ADVISOR')
           can_save = true;
       }
+
+      if(this.title.trim().toUpperCase() == 'VALUE DELIVERY MANAGER')
+          can_save = true;
 
       if(this.title.trim().toUpperCase() == 'VALUE DELIVERY MANAGER')
         can_save = true;

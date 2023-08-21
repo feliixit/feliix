@@ -866,7 +866,7 @@ var app = new Vue({
           can_save = true;
       }
 
-      if(this.username == "dereck" || this.username == "Cristina Matining")
+      if(this.username == "dereck")
         can_save = true;
 
       if(creator_id == this.user_id)
