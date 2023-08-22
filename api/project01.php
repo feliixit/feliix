@@ -134,7 +134,7 @@ if($fp != "")
     $query_cnt = $query_cnt . " and pm.priority_id = " . $fp . " ";
 }
 
-if($fs != "" && $fs != "downpayment")
+if($fs != "" && $fs != "downpayment" && $fs != "without")
 {
     $query = $query . " and pm.project_status_id = '" . $fs . "' ";
     $query_cnt = $query_cnt . " and pm.project_status_id = " . $fs . " ";
@@ -142,8 +142,14 @@ if($fs != "" && $fs != "downpayment")
 
 if($fs == "downpayment")
 {
-    $query = $query . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0) > 0 ";
-    $query_cnt = $query_cnt . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0) > 0 ";
+    $query = $query . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0 and project_proof.kind <> 2) > 0 ";
+    $query_cnt = $query_cnt . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0 and project_proof.kind <> 2) > 0 ";
+}
+
+if($fs == "without")
+{
+    $query = $query . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0 and project_proof.kind <> 2) = 0 ";
+    $query_cnt = $query_cnt . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0 and project_proof.kind <> 2) = 0 ";
 }
 
 if($ft == "s")

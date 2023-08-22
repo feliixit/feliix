@@ -310,6 +310,7 @@ $(function(){
                                         {{ item.project_status }}
                                     </option>
                                     <option value="downpayment">Verified Downpayment</option>
+                                    <option value="without">Without Verified Downpayment</option>
                                     </select>
                                 </dd>
 
