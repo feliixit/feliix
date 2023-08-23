@@ -204,9 +204,9 @@ try {
             content: "";
         }
 
-        .meetingform-item.colorpicker > div > input[type=color] {
+        .meetingform-item.colorpicker > div > input[type='color'] {
             margin-left: 5px;
-            width: 30px;
+            width: 30px !important;
             padding: 2px;
             margin-bottom: 5px;
         }
@@ -848,9 +848,44 @@ try {
 
                         $("#oldSubject").val(obj_meeting.title);
 
-                        $("#old_sc_color").val(info.event.extendedProps.description.color);
-                        //$("#oldTextColor").val(info.event.extendedProps.description.text_color);
-                        $("#old_sc_color_other").val(info.event.extendedProps.description.color_other);
+                        // $("#old_sc_color").val(info.event.extendedProps.description.color);
+                        // //$("#oldTextColor").val(info.event.extendedProps.description.text_color);
+                        // $("#old_sc_color_other").val(info.event.extendedProps.description.color_other);
+
+                        document.getElementById("old_sc_color").value = info.event.extendedProps.description.color;
+
+                        if(info.event.extendedProps.description.color_other != "")
+                        {
+                            document.getElementById("old_sc_color").value = info.event.extendedProps.description.color_other;
+                            document.getElementById("old_sc_color_other").checked = true;
+                        }
+                        else
+                        {
+                            document.getElementById("old_sc_color").value = "#000000";
+                            document.getElementById("old_sc_color_other").checked = false;
+                        }
+
+                        if(info.event.extendedProps.description.color != "")
+                        {
+                            var checked = 0;
+                            var colors = document.getElementsByName("old_sc_color");
+
+                            for(var i = 0; i < colors.length; i++)
+                            {
+                                if(colors[i].value == info.event.extendedProps.description.color)
+                                {
+                                    checked = 1;
+                                    colors[i].checked = true;
+                                }
+                            }
+
+                            if(checked == 0 && info.event.extendedProps.description.color_other == "")
+                            {
+                                document.getElementById("old_sc_color").value = info.event.extendedProps.description.color;
+                                document.getElementById("old_sc_color_other").checked = true;
+                            }
+                        }
+                        
                  
                         $('#oldProject').attr("placeholder", obj_meeting.project_name);
 
