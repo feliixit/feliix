@@ -22,6 +22,11 @@ class WorkCalenderMeetings
     public $created_by;
     public $updated_by;
     public $deleted_by;
+
+    public $color;
+    public $color_other;
+    public $text_color;
+
     // constructor
     public function __construct($db)
     {
@@ -39,6 +44,9 @@ class WorkCalenderMeetings
                 location = :location,
                 start_time = :start_time, 
                 end_time = :end_time, 
+                color = :color,
+                color_other = :color_other,
+                text_color = :text_color,
                 updated_at = now(), updated_by = :updated_by where id = :id";
 
         // prepare the query
@@ -54,6 +62,10 @@ class WorkCalenderMeetings
         $this->start_time = htmlspecialchars(strip_tags($this->start_time)); 
         $this->end_time = htmlspecialchars(strip_tags($this->end_time)); 
         $this->updated_by = htmlspecialchars(strip_tags($this->updated_by));
+
+        $this->color = htmlspecialchars(strip_tags($this->color));
+        $this->color_other = htmlspecialchars(strip_tags($this->color_other));
+        $this->text_color = htmlspecialchars(strip_tags($this->text_color));
         
 
         // bind the values
@@ -65,6 +77,9 @@ class WorkCalenderMeetings
         $stmt->bindParam(':location', $this->location);
         $stmt->bindParam(':start_time', $this->start_time);
         $stmt->bindParam(':end_time', $this->end_time);
+        $stmt->bindParam(':color', $this->color);
+        $stmt->bindParam(':color_other', $this->color_other);
+        $stmt->bindParam(':text_color', $this->text_color);
         $stmt->bindParam(':updated_by', $this->updated_by);
 
     try {
@@ -93,8 +108,8 @@ class WorkCalenderMeetings
         $last_id = 0;
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
-                (`subject`,`project_name`,`message`,`attendee`,`location`,`start_time`,`end_time`,`is_enabled`,`created_at`,`created_by`) 
-                VALUES (:subject, :project_name, :message, :attendee, :location, :start_time, :end_time, 1, now(), :created_by)";
+                (`subject`,`project_name`,`message`,`attendee`,`location`,`start_time`,`end_time`,`is_enabled`,`created_at`,`created_by`, `color`, `color_other`, `text_color`) 
+                VALUES (:subject, :project_name, :message, :attendee, :location, :start_time, :end_time, 1, now(), :created_by, :color, :color_other, :text_color)";
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
@@ -109,17 +124,21 @@ class WorkCalenderMeetings
             $stmt->bindParam(':start_time', $this->start_time);
             $stmt->bindParam(':end_time', $this->end_time);
             $this->created_by = htmlspecialchars(strip_tags($this->created_by));
+            $stmt->bindParam(':created_by', $this->created_by);
+            $stmt->bindParam(':color', $this->color);
+            $stmt->bindParam(':color_other', $this->color_other);
+            $stmt->bindParam(':text_color', $this->text_color);
 
            
             // bind the values
-            $stmt->bindParam(':subject', $this->subject);
-            $stmt->bindParam(':project_name', $this->project_name);
-            $stmt->bindParam(':message', $this->message);
-            $stmt->bindParam(':attendee', $this->attendee);
-            $stmt->bindParam(':location', $this->location);
-            $stmt->bindParam(':start_time', $this->start_time);
-            $stmt->bindParam(':end_time', $this->end_time);
-            $stmt->bindParam(':created_by', $this->created_by);
+            // $stmt->bindParam(':subject', $this->subject);
+            // $stmt->bindParam(':project_name', $this->project_name);
+            // $stmt->bindParam(':message', $this->message);
+            // $stmt->bindParam(':attendee', $this->attendee);
+            // $stmt->bindParam(':location', $this->location);
+            // $stmt->bindParam(':start_time', $this->start_time);
+            // $stmt->bindParam(':end_time', $this->end_time);
+            // $stmt->bindParam(':created_by', $this->created_by);
             
 
         try {

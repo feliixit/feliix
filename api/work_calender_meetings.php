@@ -22,6 +22,11 @@ $is_enabled = (isset($_POST['is_enabled']) && $_POST['is_enabled'] === "true"? 1
 $created_by = (isset($_POST['created_by']) ?  $_POST['created_by'] : '');
 $updated_by = (isset($_POST['updated_by']) ?  $_POST['updated_by'] : '');
 $deleted_by = (isset($_POST['deleted_by']) ?  $_POST['deleted_by'] : '');
+
+$color = (isset($_POST['color']) ?  $_POST['color'] : '');
+$color_other = (isset($_POST['color_other']) ?  $_POST['color_other'] : '');
+$text_color = (isset($_POST['text_color']) ?  $_POST['text_color'] : '');
+
 $merged_results = array();
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -83,6 +88,10 @@ else
             $updated_by = "";
             $deleted_by = "";
 
+            $color = "";
+            $color_other = "";
+            $text_color = "";
+
             $attach = [];
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -105,6 +114,10 @@ else
                         "deleted_by" => $deleted_by,
                         "items" => $items,
                         "attach" => $attach,
+
+                        "color" => $color,
+                        "color_other" => $color_other,
+                        "text_color" => $text_color,
                         
                     );
     
@@ -128,6 +141,10 @@ else
                 $created_by = $row['created_by'];
                 $updated_by = $row['updated_by'];
                 $deleted_by = $row['deleted_by'];
+
+                $color = $row['color'];
+                $color_other = $row['color_other'];
+                $text_color = $row['text_color'];
 
                 $attach = GetItem($row['id'], $db, 'meeting');
 
@@ -154,6 +171,10 @@ else
                     "deleted_by" => $deleted_by,
                     "items" => $items,
                     "attach" => $attach,
+
+                    "color" => $color,
+                    "color_other" => $color_other,
+                    "text_color" => $text_color,
                 );
             }
 
@@ -191,6 +212,11 @@ else
             $updated_by = "";
             $deleted_by = "";
 
+            $color = "";
+            $color_other = "";
+            $text_color = "";
+
+
             $attach = [];
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -213,6 +239,10 @@ else
                         "deleted_by" => $deleted_by,
                         "items" => $items,
                         "attach" => $attach,
+
+                        "color" => $color,
+                        "color_other" => $color_other,
+                        "text_color" => $text_color,
                         
                     );
     
@@ -236,6 +266,10 @@ else
                 $created_by = $row['created_by'];
                 $updated_by = $row['updated_by'];
                 $deleted_by = $row['deleted_by'];
+
+                $color = $row['color'];
+                $color_other = $row['color_other'];
+                $text_color = $row['text_color'];
 
                 $attach = GetItem($row['id'], $db, 'meeting');
 
@@ -262,6 +296,10 @@ else
                     "deleted_by" => $deleted_by,
                     "items" => $items,
                     "attach" => $attach,
+
+                    "color" => $color,
+                    "color_other" => $color_other,
+                    "text_color" => $text_color,
                 );
             }
 
@@ -289,6 +327,11 @@ else
             $workCalenderMeetings->end_time = $end_time;
             $workCalenderMeetings->is_enabled = $is_enabled;
             $workCalenderMeetings->created_by = $created_by;
+
+            $workCalenderMeetings->color = $color;
+            $workCalenderMeetings->color_other = $color_other;
+            $workCalenderMeetings->text_color = $text_color;
+
             $arr = $workCalenderMeetings->create();
 
 
@@ -428,6 +471,11 @@ else
             $workCalenderMeetings->end_time = $end_time;
             $workCalenderMeetings->is_enabled = $is_enabled;
             $workCalenderMeetings->updated_by = $updated_by;
+
+            $workCalenderMeetings->color = $color;
+            $workCalenderMeetings->color_other = $color_other;
+            $workCalenderMeetings->text_color = $text_color;
+
             $arr = $workCalenderMeetings->update();
 
             if($remove != "")

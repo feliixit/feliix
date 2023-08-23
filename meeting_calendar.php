@@ -61,6 +61,7 @@ try {
     <link rel="stylesheet" type="text/css" href="css/ui.css"/>
     <link rel="stylesheet" type="text/css" href="css/case.css"/>
     <link rel="stylesheet" type="text/css" href="css/mediaqueries.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="css/vue-select.css" type="text/css">
 
@@ -164,6 +165,47 @@ try {
             opacity: 1;
         }
 
+        .meetingform-item.colorpicker > div {
+            display: flex;
+            align-items: center;
+        }
+
+        .meetingform-item.colorpicker > div > div.custom-control {
+            display: inline-block;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .meetingform-item.colorpicker > div > div.custom-control:first-of-type {
+            margin-left: 0;
+        }
+
+        .meetingform-item.colorpicker > div > div.custom-control:last-of-type {
+            margin-bottom: 5px;
+        }
+
+        .meetingform-item.colorpicker > div > div.custom-control > label.custom-control-label {
+            width: 18px;
+            height: 18px;
+            margin-left: 2px;
+        }
+
+        .meetingform-item.colorpicker > div > div.custom-control:last-of-type > label.custom-control-label {
+            font-size: 14px;
+            width: 40px;
+        }
+
+        .meetingform-item.colorpicker > div > div.custom-control:last-of-type > input[type=radio]+Label::before{
+            content: "";
+        }
+
+        .meetingform-item.colorpicker > div > input[type=color] {
+            margin-left: 5px;
+            width: 30px;
+            padding: 2px;
+            margin-bottom: 5px;
+        }
+
         .file-container {
             display: flex;
             flex-direction: column;
@@ -212,6 +254,22 @@ try {
             border-color: #d1dbe5;   
         }
 
+        #vs1__combobox, #vs2__combobox, #vs3__combobox, #vs4__combobox, #vs5__combobox, #vs6__combobox, #vs7__combobox, #vs8__combobox, #vs9__combobox, #vs10__combobox, #vs11__combobox, #vs12__combobox {
+            border: 1px solid #707070;
+            border-radius: 0;
+        }
+
+        #vs1__listbox, #vs2__listbox, #vs3__listbox, #vs4__listbox, #vs5__listbox, #vs6__listbox, #vs7__listbox, #vs8__listbox, #vs9__listbox, #vs10__listbox, #vs11__listbox, #vs12__listbox {
+            border: none;
+            border-radius: 0;
+            margin-top: 0;
+        }
+
+        #vs1__listbox li, #vs2__listbox li, #vs3__listbox li, #vs4__listbox li, #vs5__listbox li, #vs6__listbox li, #vs7__listbox li, #vs8__listbox li, #vs9__listbox li, #vs10__listbox li, #vs11__listbox li, #vs12__listbox li {
+            border-right: 2px solid #707070;
+            font-size: 12px;
+        }
+
         @media (min-width: 576px) {
 
             .modal-xl {
@@ -253,7 +311,7 @@ try {
 <div id='app' style='padding-bottom: 20px;'>
 <form id="addmeeting-form" style="display: none;">
     <fieldset>
-        <legend> Meeting Information</legend>
+        <legend style="max-width: 250px;">Meeting Information</legend>
 
         <div class="meetingform-item">
             <label>Subject:</label>
@@ -263,6 +321,51 @@ try {
         <div class="meetingform-item">
             <label>Project:</label>
             <input type="text" id="newProject" placeholder="Project name will be added ahead of subject if filled in">
+        </div>
+
+        <div class="meetingform-item colorpicker">
+            <label>Color:</label>
+            <div>
+
+                <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" name="new_sc_color" id="new_sc_color_orange" value="#FECC28" onchange="new_enable_forOther(this);" >
+                    <label class="custom-control-label" for="new_sc_color_orange" style="background-color: #FECC28;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="new_sc_color" id="new_sc_color_red" value="#4EB5BB" onchange="new_enable_forOther(this);" >
+                     <label class="custom-control-label" for="new_sc_color_red" style="background-color: #4EB5BB;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="new_sc_color" id="new_sc_color_purple" value="#009858" onchange="new_enable_forOther(this);" >
+                     <label class="custom-control-label" for="new_sc_color_purple" style="background-color: #009858;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="new_sc_color" id="new_sc_color_green" value="#A671AD" onchange="new_enable_forOther(this);" >
+                     <label class="custom-control-label" for="new_sc_color_green" style="background-color: #A671AD;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="new_sc_color" id="new_sc_color_blue" value="#F19DB4" onchange="new_enable_forOther(this);" >
+                     <label class="custom-control-label" for="new_sc_color_blue" style="background-color: #F19DB4;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="new_sc_color" id="new_sc_color_teal" value="#141415" onchange="new_enable_forOther(this);" >
+                     <label class="custom-control-label" for="new_sc_color_teal" style="background-color: #141415;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="new_sc_color" id="new_sc_color_other" value="1" onchange="new_enable_forOther(this);" >
+                     <label class="custom-control-label" for="new_sc_color_other">Other </label>
+                </div>
+
+                <input type="color" class="form-control" id="new_sc_color">
+
+            </div>
+
         </div>
 
         <div class="meetingform-item">
@@ -313,7 +416,7 @@ try {
 
 <form id="editmeeting-form" style="display: none;">
     <fieldset disabled>
-        <legend> Meeting Information</legend>
+        <legend style="max-width: 250px;">Meeting Information</legend>
 
         <div class="meetingform-item">
             <label>Subject:</label>
@@ -323,6 +426,51 @@ try {
         <div class="meetingform-item">
             <label>Project:</label>
             <input type="text" id="oldProject" placeholder="Project name will be added ahead of subject if filled in">
+        </div>
+
+        <div class="meetingform-item colorpicker">
+            <label>Color:</label>
+            <div>
+
+                <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" name="old_sc_color" id="old_sc_color_orange" value="#FECC28" onchange="old_enable_forOther(this);" >
+                    <label class="custom-control-label" for="old_sc_color_orange" style="background-color: #FECC28;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="old_sc_color" id="old_sc_color_red" value="#4EB5BB" onchange="old_enable_forOther(this);" >
+                     <label class="custom-control-label" for="old_sc_color_red" style="background-color: #4EB5BB;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="old_sc_color" id="old_sc_color_purple" value="#009858" onchange="old_enable_forOther(this);" >
+                     <label class="custom-control-label" for="old_sc_color_purple" style="background-color: #009858;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="old_sc_color" id="old_sc_color_green" value="#A671AD" onchange="old_enable_forOther(this);" >
+                     <label class="custom-control-label" for="old_sc_color_green" style="background-color: #A671AD;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="old_sc_color" id="old_sc_color_blue" value="#F19DB4" onchange="old_enable_forOther(this);" >
+                     <label class="custom-control-label" for="old_sc_color_blue" style="background-color: #F19DB4;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="old_sc_color" id="old_sc_color_teal" value="#141415" onchange="old_enable_forOther(this);" >
+                     <label class="custom-control-label" for="old_sc_color_teal" style="background-color: #141415;"></label>
+                </div>
+
+                <div class="custom-control custom-radio">
+                     <input type="radio" class="custom-control-input" name="old_sc_color" id="old_sc_color_other" value="1" onchange="old_enable_forOther(this);" >
+                     <label class="custom-control-label" for="old_sc_color_other">Other </label>
+                </div>
+
+                <input type="color" class="form-control" id="old_sc_color">
+
+            </div>
+
         </div>
 
         <div class="meetingform-item">
@@ -435,6 +583,9 @@ try {
                         var obj_description = {
                             title: obj[i].subject.trim(),
                             project_name: obj[i].project_name.trim(),
+                            color: obj[i].color.trim(),
+                            color_other: obj[i].color_other.trim(),
+                            text_color: obj[i].text_color.trim(),
                             attendee: obj[i].attendee.trim(),
                             items: obj[i].items,
                             attach:attach,
@@ -448,6 +599,8 @@ try {
                         var obj_meeting = {
                             id: obj[i].id,
                             title: title,
+                            borderColor: obj[i].color.trim(),
+                            backgroundColor: obj[i].color.trim(),
                             start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
                             end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
                             description: obj_description,
@@ -528,6 +681,9 @@ try {
                                                 var obj_description = {
                                                     title: obj[i].subject.trim(),
                                                     project_name: obj[i].project_name.trim(),
+                                                    color: obj[i].color.trim(),
+                                                    color_other: obj[i].color_other.trim(),
+                                                    text_color: obj[i].text_color.trim(),
                                                     attendee: obj[i].attendee.trim(),
                                                     items: obj[i].items,
                                                     attach: attach,
@@ -541,6 +697,8 @@ try {
                                                 var obj_meeting = {
                                                     id: obj[i].id,
                                                     title: title,
+                                                    borderColor: obj[i].color.trim(),
+                                                    backgroundColor: obj[i].color.trim(),
                                                     start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
                                                     end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
                                                     description: obj_description,
@@ -609,6 +767,9 @@ try {
                                                 var obj_description = {
                                                     title: obj[i].subject.trim(),
                                                     project_name: obj[i].project_name.trim(),
+                                                    color: obj[i].color.trim(),
+                                                    color_other: obj[i].color_other.trim(),
+                                                    text_color: obj[i].text_color.trim(),
                                                     attendee: obj[i].attendee.trim(),
                                                     items: obj[i].items,
                                                     attach: attach,
@@ -622,6 +783,8 @@ try {
                                                 var obj_meeting = {
                                                     id: obj[i].id,
                                                     title: title,
+                                                    borderColor: obj[i].color.trim(),
+                                                    backgroundColor: obj[i].color.trim(),
                                                     start: moment(obj[i].start_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].start_time).format('HH:mm'),
                                                     end: moment(obj[i].end_time).format('YYYY-MM-DD') + 'T' + moment(obj[i].end_time).format('HH:mm'),
                                                     description: obj_description,
@@ -679,8 +842,13 @@ try {
                             return;
 
                         $("#oldSubject").val(obj_meeting.title);
-                        $("#oldProject").val(obj_meeting.project_name);
+
+                        $("#old_sc_color").val(info.event.extendedProps.description.color);
+                        //$("#oldTextColor").val(info.event.extendedProps.description.text_color);
+                        $("#old_sc_color_other").val(info.event.extendedProps.description.color_other);
+                 
                         $('#oldProject').attr("placeholder", obj_meeting.project_name);
+
                         $("#oldCreator").val(info.event.extendedProps.description.creator);
                         $("#oldAttendee").val(info.event.extendedProps.description.items);
                         $("#oldLocation").val(info.event.extendedProps.description.location);
@@ -793,6 +961,9 @@ try {
         var obj_meeting = eventObj.extendedProps.description;
         $("#oldSubject").val(obj_meeting.title);
         $("#oldProject").val(obj_meeting.project_name);
+        $("#old_sc_color").val(obj_meeting.color);
+        //$("#oldProject").val(obj_meeting.text_color);
+        $("#old_sc_color_other").val(obj_meeting.color_other);
         $("#oldCreator").val(obj_meeting.creator);
         $("#oldAttendee").val(obj_meeting.attendee);
         $("#oldLocation").val(obj_meeting.location);
@@ -890,6 +1061,25 @@ try {
         form_Data.append('end_time', $("#oldDate").val() + "T" + $("#oldEndTime").val());
         form_Data.append('is_enabled', true);
 
+        form_Data.append("color", $("#old_sc_color").val().trim());
+
+        if(document.getElementById("old_sc_color").checked)
+            form_Data.append("color_other", $("#old_sc_color").val().trim());
+        else
+            form_Data.append("color_other", "");
+
+        if($("#old_sc_color").val().trim() == "" && !document.getElementById("old_sc_color").checked)
+        {
+            Swal.fire({
+                text: JSON.stringify("Please choose color for meeting."),
+                icon: "warning",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+
+        form_Data.append("text_color", "white");
+
         var item = 0;
         for(let i = 0;i < file_elements.length; i++)
         {
@@ -938,6 +1128,9 @@ try {
                 var obj_meeting = {
                     title: $("#oldSubject").val().trim(),
                     project_name: $("#oldProject").val().trim(),
+                    color: $("#old_sc_color").val().trim(),
+                    color_other: $("#old_sc_color_other").val().trim(),
+                    text_color: "white",
                     attendee: names.toString().trim(),
                     items: _func.old_attendee,
                     start: $("#oldDate").val() + "T" + $("#oldStartTime").val(),
@@ -958,6 +1151,8 @@ try {
                 eventObj.setStart(obj_meeting.start);
                 eventObj.setEnd(obj_meeting.end);
                 eventObj.setProp("title", title);
+                eventObj.setProp("borderColor", obj_meeting.Color);
+                eventObj.setProp("backgroundColor", obj_meeting.Color);
                 eventObj.setExtendedProp("description", obj_meeting);
 
                 refreshFileList(attach);
@@ -1126,6 +1321,35 @@ try {
         form_Data.append('is_enabled', true);
         form_Data.append('created_by', "<?php echo $GLOBALS['username'] ?>");
 
+             
+        if(document.getElementById("new_sc_color_other").checked)
+                form_Data.append("color_other", $("#new_sc_color").val());
+            else
+                form_Data.append("color_other", "");
+
+            var colors = document.getElementsByName("new_sc_color");
+            var color = "";
+            for(var i=0; i<colors.length; i++)
+            {
+                if(colors[i].checked)
+                    color = colors[i].value;
+            }
+            if(color == "" && !document.getElementById("new_sc_color_other").checked)
+            {
+                Swal.fire({
+                    text: JSON.stringify("Please choose color for schedule."),
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                });
+                return;
+            }
+
+            form_Data.append("color", color);
+
+            form_Data.append("text_color", "white");
+
+
+
         var file_elements = document.getElementsByName("file_elements");
         var item = 0;
         for(let i = 0;i < file_elements.length; i++)
@@ -1174,6 +1398,9 @@ try {
                         id: obj.id,
                         title: $("#newSubject").val().trim(),
                         project_name: $("#newProject").val().trim(),
+                        color: $("#new_sc_color").val().trim(),
+                        color_other: $("#new_sc_color_other").val().trim(),
+                        text_color: "white",
                         attendee: names.toString().trim(),
                         items: _app1.attendee,
                         start: $("#newDate").val() + "T" + $("#newStartTime").val(),
@@ -1188,6 +1415,8 @@ try {
                     calendar.addEvent({
                         id: obj.id,
                         title: title,
+                        borderColor : obj_meeting.color,
+                        backgroundColor : obj_meeting.color,
                         start: obj_meeting.start,
                         end: obj_meeting.end,
                         description: obj_meeting
@@ -1292,6 +1521,28 @@ try {
             }
         }
     }
+</script>
+
+<script>
+
+    function new_enable_forOther(selector){
+        if(selector.value != "1")
+            document.getElementById("new_sc_color").disabled = true;
+        else
+            document.getElementById("new_sc_color").disabled = false;
+        
+        console.log(selector.value);
+    }
+
+    function old_enable_forOther(selector){
+        if(selector.value != "1")
+            document.getElementById("old_sc_color").disabled = true;
+        else
+            document.getElementById("old_sc_color").disabled = false;
+        
+        console.log(selector.value);
+    }
+
 </script>
 
 <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
