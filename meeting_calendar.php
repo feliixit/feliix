@@ -133,6 +133,11 @@ try {
             margin: 0 20px;
             width: 80px;
             text-align: center;
+            color: white;
+        }
+
+        .meetingform-buttons a:hover {
+            color: white;
         }
 
         .meetingform-item {
@@ -165,6 +170,10 @@ try {
             opacity: 1;
         }
 
+        .meetingform-item.colorpicker {
+            margin-top: 17px;
+        }
+
         .meetingform-item.colorpicker > div {
             display: flex;
             align-items: center;
@@ -180,10 +189,6 @@ try {
             margin-left: 0;
         }
 
-        .meetingform-item.colorpicker > div > div.custom-control:last-of-type {
-            margin-bottom: 5px;
-        }
-
         .meetingform-item.colorpicker > div > div.custom-control > label.custom-control-label {
             width: 18px;
             height: 18px;
@@ -195,7 +200,7 @@ try {
             width: 40px;
         }
 
-        .meetingform-item.colorpicker > div > div.custom-control:last-of-type > input[type=radio]+Label::before{
+        .meetingform-item.colorpicker input[type=radio]+Label::before {
             content: "";
         }
 
