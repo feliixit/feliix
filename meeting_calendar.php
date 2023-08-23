@@ -140,6 +140,23 @@ try {
             color: white;
         }
 
+        .meetingform-buttons_edit {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .meetingform-buttons_edit a {
+            margin: 0 20px;
+            width: 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .meetingform-buttons_edit a:hover {
+            color: white;
+        }
+
         .meetingform-item {
             display: flex;
             align-items: center;
@@ -520,8 +537,8 @@ try {
         <input id="sc_product_files_hide" style="display: none;" value="">
 
 
-
-        <div class="meetingform-buttons">
+        </fieldset>
+        <div class="meetingform-buttons_edit">
             <a class="btn small" href="javascript: void(0)" onclick="hideWindow('#editmeeting-form')"
                id="btn_close">Close</a>
             <a class="btn small" id="btn_delete">Delete</a>
@@ -530,7 +547,7 @@ try {
             <a class="btn small green" id="btn_save">Save</a>
         </div>
 
-    </fieldset>
+    
 </form>
 </div>
 
@@ -835,6 +852,7 @@ try {
                         $('#editmeeting-form').trigger("reset");
                         $('#addmeeting-form').hide();
                         $('#editmeeting-form > fieldset').prop('disabled', true);
+
                         $("#oldAttendee").addClass("select_disabled");
                         $('#sc_product_files').empty();
                         _app1.attachments = [];
@@ -1101,12 +1119,27 @@ try {
         form_Data.append('end_time', $("#oldDate").val() + "T" + $("#oldEndTime").val());
         form_Data.append('is_enabled', true);
 
-        form_Data.append("color", $("#old_sc_color").val().trim());
-
-        if(document.getElementById("old_sc_color").checked)
-            form_Data.append("color_other", $("#old_sc_color").val().trim());
+        var Color_Other = "";
+        var Color = "";
+        if(document.getElementById("old_sc_color_other").checked)
+            Color_Other = document.getElementById("old_sc_color").value;
         else
-            form_Data.append("color_other", "");
+            Color_Other = "";
+
+        var colors = document.getElementsByName("old_sc_color");
+        for(var i=0; i<colors.length; i++)
+        {
+            if(colors[i].checked)
+                Color = colors[i].value;
+        }
+
+        form_Data.append("color", Color);
+        form_Data.append("color_other", Color_Other);
+
+        // if(document.getElementById("old_sc_color").checked)
+        //     form_Data.append("color_other", $("#old_sc_color").val().trim());
+        // else
+        //     form_Data.append("color_other", "");
 
         if($("#old_sc_color").val().trim() == "" && !document.getElementById("old_sc_color").checked)
         {
@@ -1168,8 +1201,8 @@ try {
                 var obj_meeting = {
                     title: $("#oldSubject").val().trim(),
                     project_name: $("#oldProject").val().trim(),
-                    color: $("#old_sc_color").val().trim(),
-                    color_other: $("#old_sc_color_other").val().trim(),
+                    color: Color,
+                    color_other: Color_Other,
                     text_color: "white",
                     attendee: names.toString().trim(),
                     items: _func.old_attendee,
@@ -1191,8 +1224,8 @@ try {
                 eventObj.setStart(obj_meeting.start);
                 eventObj.setEnd(obj_meeting.end);
                 eventObj.setProp("title", title);
-                eventObj.setProp("borderColor", obj_meeting.Color);
-                eventObj.setProp("backgroundColor", obj_meeting.Color);
+                eventObj.setProp("borderColor", obj_meeting.color);
+                eventObj.setProp("backgroundColor", obj_meeting.color);
                 eventObj.setExtendedProp("description", obj_meeting);
 
                 refreshFileList(attach);
