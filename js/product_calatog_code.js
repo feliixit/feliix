@@ -566,7 +566,7 @@ var app = new Vue({
       let _this = this;
 
       Swal.fire({
-        title: "Delete",
+        title: "Duplicate",
         text: "Are you sure to duplicate?",
         icon: "warning",
         showCancelButton: true,
