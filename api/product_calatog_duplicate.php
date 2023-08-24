@@ -86,19 +86,19 @@ else
             $stmt1->bindParam(':id', $id);
 
             if($stmt1->execute()) {
-                $query = "update product_category set price_change = '" . date("Y-m-d") . " 00:00:00', max_price_change = '" . date("Y-m-d") . " 00:00:00', min_price_change = '" . date("Y-m-d") . " 00:00:00' where id = :id";
-                $stmt2 = $db->prepare($query);
-                $stmt2->bindParam(':id', $last_id);
-                if($stmt2->execute()) {
-                    //$db->commit();
-                } else {
-                    $arr = $stmt2->errorInfo();
-                    error_log($arr[2]);
-                    //$db->rollback();
-                    http_response_code(501);
-                    echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
-                    die();
-                }
+                // $query = "update product_category set price_change = '" . date("Y-m-d") . " 00:00:00', max_price_change = '" . date("Y-m-d") . " 00:00:00', min_price_change = '" . date("Y-m-d") . " 00:00:00' where id = :id";
+                // $stmt2 = $db->prepare($query);
+                // $stmt2->bindParam(':id', $last_id);
+                // if($stmt2->execute()) {
+                //     //$db->commit();
+                // } else {
+                //     $arr = $stmt2->errorInfo();
+                //     error_log($arr[2]);
+                //     //$db->rollback();
+                //     http_response_code(501);
+                //     echo json_encode("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]);
+                //     die();
+                // }
             } else {
                 $arr = $stmt1->errorInfo();
                 error_log($arr[2]);
