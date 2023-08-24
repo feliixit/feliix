@@ -380,7 +380,7 @@ try {
                 </div>
 
                 <div class="custom-control custom-radio">
-                     <input type="radio" class="custom-control-input" name="new_sc_color" id="new_sc_color_other" value="1" onchange="new_enable_forOther(this);" >
+                     <input type="radio" class="custom-control-input" id="new_sc_color_other" value="1" onchange="new_enable_forOther(this);" >
                      <label class="custom-control-label" for="new_sc_color_other">Other </label>
                 </div>
 
@@ -1122,14 +1122,14 @@ try {
         var Color_Other = "";
         var Color = "";
         if(document.getElementById("old_sc_color_other").checked)
-            Color_Other = document.getElementById("old_sc_color").value;
+            Color = document.getElementById("old_sc_color").value;
         else
             Color_Other = "";
 
         var colors = document.getElementsByName("old_sc_color");
         for(var i=0; i<colors.length; i++)
         {
-            if(colors[i].checked)
+            if(colors[i].checked && colors[i].value != "1")
                 Color = colors[i].value;
         }
 
@@ -1394,14 +1394,18 @@ try {
         form_Data.append('is_enabled', true);
         form_Data.append('created_by', "<?php echo $GLOBALS['username'] ?>");
 
+        var color = "";
              
         if(document.getElementById("new_sc_color_other").checked)
-                form_Data.append("color_other", $("#new_sc_color").val());
+        {
+                //form_Data.append("color_other", $("#new_sc_color").val());
+                color = $("#new_sc_color").val();
+        }
             else
                 form_Data.append("color_other", "");
 
             var colors = document.getElementsByName("new_sc_color");
-            var color = "";
+            
             for(var i=0; i<colors.length; i++)
             {
                 if(colors[i].checked)
@@ -1471,8 +1475,8 @@ try {
                         id: obj.id,
                         title: $("#newSubject").val().trim(),
                         project_name: $("#newProject").val().trim(),
-                        color: $("#new_sc_color").val().trim(),
-                        color_other: $("#new_sc_color_other").val().trim(),
+                        color: color,
+                        color_other: color,
                         text_color: "white",
                         attendee: names.toString().trim(),
                         items: _app1.attendee,
