@@ -2551,7 +2551,7 @@ header( 'location:index' );
                                         <br>
                                         <span>Discount: </span> <input type="number" v-model="block.discount" min="0" max="100"
                                                          @change="chang_amount(block)" oninput="this.value|=0"> Amount:
-                                        <input type="number" v-model="block.amount"><br>
+                                        <input type="number" v-model="block.amount" @change="chang_my_amount(block)"><br>
                                         <span>Description:</span> <textarea rows="2"
                                                                             v-model="block.desc"></textarea><br>
                                         <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea><br>
@@ -2596,7 +2596,7 @@ header( 'location:index' );
                                         Discount: <input
                                             type="number" v-model="block.discount" @change="chang_discount(block)"
                                             min="0" max="100" oninput="this.value|=0"> Amount: <input type="number"
-                                                                                                      v-model="block.amount"><br>
+                                                                                                      v-model="block.amount" @change="chang_my_amount(block)"><br>
                                         <!-- <span>Discount:</span> <input type="number" v-model="block.discount" @change="chang_discount(block)" min="0" max="100" oninput="this.value|=0"> Amount: <input type="number" v-model="block.amount"><br> -->
                                         <span>Description:</span> <textarea rows="2"
                                                                             v-model="block.desc"></textarea><br>
