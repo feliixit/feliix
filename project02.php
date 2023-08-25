@@ -1332,8 +1332,11 @@ if ($access6 == true) {
                                            class="attch">{{item.filename}}</a>
                                     </span>
 
-                                <span v-if="receive_record.type == 'p'">
+                                <span v-if="receive_record.type == 'p' && receive_record.pageless == '' ">
                                         <a :href="'quotation?id=' + receive_record.id" target="_blank" class="attch">https://feliix.myvnc.com/quotation?id={{receive_record.id}}</a>
+                                    </span>
+                                <span v-if="receive_record.type == 'p' && receive_record.pageless == 'Y' ">
+                                        <a :href="'quotation_pageless?id=' + receive_record.id" target="_blank" class="attch">https://feliix.myvnc.com/quotation_pageless?id={{receive_record.id}}</a>
                                     </span>
                                 <br>({{ receive_record.username }} at {{ receive_record.created_at }})
                             </div>
