@@ -2169,10 +2169,13 @@ var app = new Vue({
       },
 
       chang_my_amount : function(row) {
+
+        let charge = (Number(row.price) * Number(row.ratio) * (100 - Math.floor(row.discount)) / 100).toFixed(2);
+
         if(row.amount < row.srp * Number(row.qty))
         {
           Swal.fire({
-            text: "Warning!! Current discounted product price (P " + row.amount + ") is already lower than SRP (P " + row.srp + ").",
+            text: "Warning!! Current discounted product price (P " + row.amount  / Number(row.qty) + ") is already lower than SRP (P " + row.srp + ").",
             icon: "warning",
             confirmButtonText: "OK",
           });
@@ -2200,10 +2203,12 @@ var app = new Vue({
 
         row.amount = charge.toFixed(2);
 
+        let ss =  Number(row.price) * Number(row.ratio)  * ((100 - Math.floor(row.discount)) / 100);
+
         if(charge < row.srp * Number(row.qty))
         {
           Swal.fire({
-            text: "Warning!! Current discounted product price (P " + charge + ") is already lower than SRP (P " + row.srp + ").",
+            text: "Warning!! Current discounted product price (P " + row.amount / Number(row.qty) + ") is already lower than SRP (P " + row.srp + ").",
             icon: "warning",
             confirmButtonText: "OK",
           });
