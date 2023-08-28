@@ -787,7 +787,7 @@
                         <button id="edit01" @click="btnEditClick(item.id)"><i class="fas fa-edit"></i>
                         </button>
 
-                        <!--<button id="copy01" @click="btnDuplicateClick(item.id)"><i class="fas fa-copy"></i></button>-->
+                        <button id="copy01" @click="btnDuplicateClick(item.id)" v-if="name == 'dereck' || name == 'Dennis Lin'"><i class="fas fa-copy"></i></button>
 
                         <button @click="btnDelClick(item.id)"><i class="fas fa-times"></i></button>
 

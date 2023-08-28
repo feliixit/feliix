@@ -4102,3 +4102,13 @@ ADD COLUMN `tag_management` text COLLATE utf8mb4_unicode_ci;
 -- 20230809 notes
 ALTER TABLE price_comparison_item
 ADD COLUMN `notes` VARCHAR(1024) DEFAULT '';
+
+-- Meeting Calendar 2021/7/19
+ALTER TABLE work_calendar_meetings
+ADD COLUMN `color` varchar(100) COLLATE utf8mb4_unicode_ci default '';
+
+ALTER TABLE work_calendar_meetings
+ADD COLUMN `text_color` varchar(100) COLLATE utf8mb4_unicode_ci default '';
+
+ALTER TABLE work_calendar_meetings
+ADD COLUMN `color_other` varchar(100) COLLATE utf8mb4_unicode_ci default '';

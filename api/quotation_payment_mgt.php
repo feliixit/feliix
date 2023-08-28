@@ -141,10 +141,22 @@ if($fc != "" && $fc != "0")
     $query_cnt = $query_cnt . " and pm.catagory_id = " . $fc . " ";
 }
 
-if($fs != "" && $fs != "0")
+if($fs != "" && $fs != "0" && $fs != "v" && $fs != "w")
 {
     $query = $query . " and pm.project_status_id = '" . $fs . "' ";
     $query_cnt = $query_cnt . " and pm.project_status_id = '" . $fs . "' ";
+}
+
+if($fs == "v")
+{
+    $query = $query . " and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status > 0  AND pp.`kind` <> 2) > 0 ";
+    $query_cnt = $query_cnt . " and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status  > 0  AND pp.`kind` <> 2) > 0 ";
+}
+
+if($fs == "w")
+{
+    $query = $query . " and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status  > 0  AND pp.`kind` <> 2) = 0 ";
+    $query_cnt = $query_cnt . " and (SELECT count(*) FROM   project_proof pp  WHERE  pp.project_id = pm.id  AND pp.status  > 0  AND pp.`kind` <> 2) = 0 ";
 }
 
 if($ft != "" && $ft != "0")
