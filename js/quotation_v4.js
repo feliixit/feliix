@@ -256,6 +256,8 @@ var app = new Vue({
 
         out : "",
         out_cnt : 0,
+
+        is_load : false,
     },
   
     created() {
@@ -2012,6 +2014,8 @@ var app = new Vue({
         this.edit_type_b_noimage = false;
 
         this.block_value = [];
+
+        this.is_load = false;
       },
 
       block_b_up: function(fromIndex, eid) {
@@ -2270,6 +2274,8 @@ Installation:`;
 
       load_block() {
         var value = this.block_value;
+
+        this.is_load = true;
         
         if(value.type == 'A')
         {
@@ -3098,6 +3104,8 @@ Installation:`;
 
       reload : function() {
         this.close_all();
+
+        this.is_load = false;
 
         if(this.l_id == 0 && this.id != 0) 
         {

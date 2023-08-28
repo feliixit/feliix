@@ -2616,7 +2616,7 @@ header( 'location:index' );
                         <div class="formbox">
                             <div class="btnbox">
                                 <a class="btn small" @click="subtotal_close()">Close</a>
-                                <a class="btn small green" @click="subtotal_save()">Save</a>
+                                <a class="btn small green" @click="subtotal_save()" v-if="is_load">Save</a>
                             </div>
                         </div>
 
