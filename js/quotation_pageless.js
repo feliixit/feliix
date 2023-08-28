@@ -271,6 +271,8 @@ var app = new Vue({
 
         out : "",
         out_cnt : 0,
+
+        is_load : false,
     },
   
     created() {
@@ -544,6 +546,8 @@ var app = new Vue({
         var price = "";
         var list = "";
 
+        var srp = 0;
+
         let item_product = this.shallowCopy(
           this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
         )
@@ -563,6 +567,7 @@ var app = new Vue({
 
             // price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
             price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
+            srp =  Number(item_product.price);
             if(this.v1 != "")
               list += (item_product.k1 + ': ' + item_product.v1) + "\n";
             if(this.v2 != "")
@@ -577,6 +582,7 @@ var app = new Vue({
           photo3 = this.product.photo3;
           // price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
           price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
+          srp = Number(this.product.price_org);
           list = "";
         }
 
@@ -601,11 +607,14 @@ var app = new Vue({
 
           if(this.product.srp !== null || this.product.srp_quoted !== null)
             price = this.product.srp_quoted !== null ? this.product.srp_quoted : this.product.srp;
+
+          srp = this.product.srp;
             //price = this.product.srp !== null ? this.product.srp : this.product.srp_quoted;
 
           if(price == null)
             //price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
             price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
+            
         }
 
         for(var i=0; i<this.specification.length; i++)
@@ -627,6 +636,9 @@ var app = new Vue({
         if(price == null)
           price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
           // price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
+
+        if(srp == null)
+          srp = 0;
 
         var block_a_image = 'image';
         var sn = 0;
@@ -663,6 +675,7 @@ var app = new Vue({
             photo3: photo3,
             qty: "",
             price: price,
+            srp: srp,
             discount: "0",
             amount: "",
             desc: "",
@@ -682,10 +695,15 @@ var app = new Vue({
           item = {
             id: sn,
             
+            url:  '',
+            url2 : '',
+            url3 : '',
+
             code: "",
             photo: photo,
             qty: "1",
             price: price,
+            srp: srp,
             ratio:1.0,
             discount: "0",
             amount: "",
@@ -711,6 +729,8 @@ var app = new Vue({
         var price = "";
         var list = "";
 
+        var srp = 0;
+
         let item_product = this.shallowCopy(
           this.product.product.find((element) => element.v1 == this.v1 && element.v2 == this.v2 && element.v3 == this.v3)
         )
@@ -726,6 +746,7 @@ var app = new Vue({
             photo = item_product.photo;
             //price = Number(item_product.price) != 0 ? Number(item_product.price) : Number(item_product.quoted_price);
             price = Number(item_product.quoted_price) != 0 ? Number(item_product.quoted_price) : Number(item_product.price);
+            srp =  Number(item_product.price);
             if(this.v1 != "")
               list += (item_product.k1 + ': ' + item_product.v1) + "\n";
             if(this.v2 != "")
@@ -738,6 +759,7 @@ var app = new Vue({
           photo = this.product.photo1;
           //price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
           price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
+          srp = Number(this.product.price_org);
           list = "";
         }
 
@@ -765,11 +787,17 @@ var app = new Vue({
           if(price == null)
             //price = this.product.price_org !== null ? this.product.price_org : this.product.quoted_price_org;
             price = this.product.quoted_price_org !== null ? this.product.quoted_price_org : this.product.price_org;
+            
+            
+          srp = this.product.srp;
         }
 
         if(price == null)
           price = this.product.srp_quoted !== 0 ?  this.product.srp_quoted : this.product.srp;
           //price = this.product.srp !== 0 ?  this.product.srp : this.product.srp_quoted;
+
+        if(srp == null)
+          srp = 0;
 
         for(var i=0; i<this.specification.length; i++)
         {
@@ -820,6 +848,7 @@ var app = new Vue({
             photo: "",
             qty: "",
             price: price,
+            srp: srp,
             discount: "0",
             amount: "",
             desc: "",
@@ -839,10 +868,15 @@ var app = new Vue({
           item = {
             id: sn,
             
+            url: '',
+            url2 : '',
+            url3 : '',
+
             code: this.product.code,
             photo: "",
             qty: "1",
             price: price,
+            srp: srp,
             ratio:1.0,
             discount: "0",
             amount: "",
@@ -2019,6 +2053,8 @@ var app = new Vue({
         this.edit_type_b_noimage = false;
 
         this.block_value = [];
+
+        this.is_load = false;
       },
 
       block_b_up: function(fromIndex, eid) {
@@ -2120,7 +2156,27 @@ var app = new Vue({
 
         let charge = (Number(row.price) * Number(row.ratio) * (100 - Math.floor(row.discount)) / 100).toFixed(2);
           row.amount = charge;
+
+          if(charge < row.srp)
+        {
+          Swal.fire({
+            text: "Warning!! Current discounted product price (P " + charge + ") is already lower than SRP (P " + row.srp + ").",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+        }
        
+      },
+
+      chang_my_amount : function(row) {
+        if(row.amount < row.srp * Number(row.qty))
+        {
+          Swal.fire({
+            text: "Warning!! Current discounted product price (P " + row.amount + ") is already lower than SRP (P " + row.srp + ").",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+        }
       },
 
       chang_amount: function(row) {
@@ -2143,6 +2199,15 @@ var app = new Vue({
           charge = charge * 1.12;
 
         row.amount = charge.toFixed(2);
+
+        if(charge < row.srp * Number(row.qty))
+        {
+          Swal.fire({
+            text: "Warning!! Current discounted product price (P " + charge + ") is already lower than SRP (P " + row.srp + ").",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+        }
       },
 
       add_block_a() {
@@ -2227,6 +2292,10 @@ Installation:`;
 
         item = {
           id: sn,
+
+          url: "",
+          url2: "",
+          url3: "",
           
           code: "",
           photo: "",
@@ -2260,6 +2329,8 @@ Installation:`;
           this.edit_type_b_noimage = false;
 
           this.temp_block_a = this.block_value.blocks;
+
+          this.is_load = true;
         }
 
         if(value.type == 'B')
@@ -2273,6 +2344,8 @@ Installation:`;
           this.edit_type_b_noimage = false;
 
           this.temp_block_b = this.block_value.blocks;
+
+          this.is_load = true;
         }
       
       },
@@ -3090,6 +3163,8 @@ Installation:`;
 
       reload : function() {
         this.close_all();
+
+        this.is_load = false;
 
         if(this.l_id == 0 && this.id != 0) 
         {
