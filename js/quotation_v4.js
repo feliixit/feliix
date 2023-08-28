@@ -2129,7 +2129,7 @@ var app = new Vue({
           if(charge < row.srp)
         {
           Swal.fire({
-            text: "Warning!! Current discounted product price (P " + charge  + ") is already lower than SRP (P " + row.srp + ").",
+            text: "Warning!! Current discounted product price (P " + charge  + ") is already lower than SRP (P " + Number(row.srp).toFixed(2) + ").",
             icon: "warning",
             confirmButtonText: "OK",
           });
@@ -2144,7 +2144,7 @@ var app = new Vue({
         if(row.amount < row.srp * Number(row.qty))
         {
           Swal.fire({
-            text: "Warning!! Current discounted product price (P " + (row.amount / Number(row.qty)).toFixed(2) + ") is already lower than SRP (P " + row.srp + ").",
+            text: "Warning!! Current discounted product price (P " + (row.amount / Number(row.qty)).toFixed(2) + ") is already lower than SRP (P " + Number(row.srp).toFixed(2) + ").",
             icon: "warning",
             confirmButtonText: "OK",
           });
@@ -2176,7 +2176,7 @@ var app = new Vue({
         if(charge < row.srp * Number(row.qty))
         {
           Swal.fire({
-            text: "Warning!! Current discounted product price (P " + (row.amount / Number(row.qty)).toFixed(2) + ") is already lower than SRP (P " + row.srp + ").",
+            text: "Warning!! Current discounted product price (P " + (row.amount / Number(row.qty)).toFixed(2) + ") is already lower than SRP (P " + Number(row.srp).toFixed(2) + ").",
             icon: "warning",
             confirmButtonText: "OK",
           });
