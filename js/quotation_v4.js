@@ -706,6 +706,10 @@ var app = new Vue({
           item = {
             id: sn,
             
+            url:  '',
+            url2 : '',
+            url3 : '',
+
             code: "",
             photo: photo,
             qty: "1",
@@ -876,6 +880,10 @@ var app = new Vue({
           item = {
             id: sn,
             
+            url: '',
+            url2 : '',
+            url3 : '',
+
             code: this.product.code,
             photo: "",
             qty: "1",
@@ -2226,6 +2234,7 @@ Installation:`;
       },
 
       add_block_b() {
+        
       
         var sn = 0;
         var items = this.temp_block_b;
@@ -2253,6 +2262,10 @@ Installation:`;
 
         item = {
           id: sn,
+
+          url: "",
+          url2: "",
+          url3: "",
           
           code: "",
           photo: "",
