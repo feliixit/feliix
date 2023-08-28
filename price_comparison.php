@@ -2512,7 +2512,7 @@ header( 'location:index' );
                                                                            min="0" max="100"
                                                                            @change="chang_amount(block)"
                                                                            oninput="this.value|=0"> Amount:
-                                            <input type="number" v-model="block.amount"><br>
+                                            <input type="number" v-model="block.amount" @change="chang_my_amount(block)"><br>
                                             <span>Description:</span> <textarea rows="2"
                                                                                 v-model="block.desc"></textarea><br>
                                             <span>Listing:</span> <textarea rows="4" v-model="block.list"></textarea><br>
@@ -2535,7 +2535,7 @@ header( 'location:index' );
                         <div class="formbox">
                             <div class="btnbox">
                                 <a class="btn small" @click="subtotal_close()">Close</a>
-                                <a class="btn small green" @click="subtotal_save()">Save</a>
+                                <a class="btn small green" @click="subtotal_save()" v-if="is_load">Save</a>
                             </div>
                         </div>
 
