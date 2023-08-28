@@ -2274,8 +2274,6 @@ Installation:`;
 
       load_block() {
         var value = this.block_value;
-
-        this.is_load = true;
         
         if(value.type == 'A')
         {
@@ -2288,6 +2286,8 @@ Installation:`;
           this.edit_type_b_noimage = false;
 
           this.temp_block_a = this.block_value.blocks;
+
+          this.is_load = true;
         }
 
         if(value.type == 'B')
@@ -2301,6 +2301,8 @@ Installation:`;
           this.edit_type_b_noimage = false;
 
           this.temp_block_b = this.block_value.blocks;
+
+          this.is_load = true;
         }
       
       },
