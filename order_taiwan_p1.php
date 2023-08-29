@@ -691,6 +691,10 @@ try {
             margin-bottom: 25px;
         }
 
+        .msg_block .msgbox .msgtext {
+            white-space: pre-line;
+        }
+
         .msg_block .msgbox a.attch {
             display: block;
             color: #25a2b8;
@@ -1582,7 +1586,7 @@ try {
             <td>
                 <div class="msg_block">
                     <div :class="['msgbox', (note.status == -1 ? 'deleted' : '')]" v-for="note in item.notes">
-                        • {{ note.message }}
+                        <div class="msgtext">• {{ note.message }}</div>
 
                         <template v-for="file in note.attachs">
                             <a class="attch" :href="img_url + file.gcp_name" target="_blank">{{file.filename}}</a>
