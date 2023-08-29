@@ -105,7 +105,8 @@ else
                         pm.bank_name,
                         pm.check_number,
                         pm.bank_account,
-                        pm.invoice     
+                        pm.invoice,
+                        COALESCE(p.final_amount, 0) final_amount     
                 FROM project_proof pm 
                 left join user u on u.id = pm.create_id 
                 LEFT JOIN project_main p ON p.id = pm.project_id  
@@ -133,6 +134,7 @@ else
     $check_number = "";
     $bank_account = "";
     $invoice = "";
+    $final_amount = 0;
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $special = $row['special'];
@@ -155,6 +157,7 @@ else
         $bank_account = $row['bank_account'];
 
         $invoice = $row['invoice'];
+        $final_amount = $row['final_amount'];
     }
 
 
@@ -174,7 +177,7 @@ else
                                 $bank_name,
                                 $check_number,
                                 $bank_account,
-                                $invoice, $special);
+                                $invoice, $special, $final_amount);
 }
 
 http_response_code(200);

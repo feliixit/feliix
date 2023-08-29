@@ -184,7 +184,8 @@ $(function(){
                                 <dd>
                                     <select v-model="special">
                                       <option value="">Normal</option>
-                                      <option value="s">Speical</option>
+                                      <option value="s">Speical --- X-Deal</option>
+                                      <option value="sn">Speical --- No DP</option>
                                     </select>
                                 </dd>
                                 <div class="half">

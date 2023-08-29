@@ -772,7 +772,7 @@ function send_review_mail_single($s_date, $adm_id, $emp_id, $dead_date){
     }
 }
 
-function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date, $send_mail, $payment_method, $bank_name, $check_number, $bank_account, $invoice, $special)
+function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subtime, $reason, $status, $category, $kind, $amount, $receive_date, $send_mail, $payment_method, $bank_name, $check_number, $bank_account, $invoice, $special, $final_amount)
 {
     $conf = new Conf();
 
@@ -861,10 +861,33 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
                         </tr>
                         <tr>
                             <td style="font-size: 20px; padding: 0 0 20px 5px; text-align: justify;">';
+
+
+    // 判斷 Project Type 和 Proof Kind 和 Project Final Amount 來決定 稱呼者名稱
+    // Project Type = Normal
     if($special == "")
-        $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+	$content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+
+    // Project Type = X-Deal
     if($special == "s")
         $content = $content . "Boss has checked " . $payment . " proof, Please check details below:";
+
+    // Project Type = No DP and Kind = 0 and Amount <= 10萬
+    if($special == "sn" && $kind == 0 && $final_amount <= 100000)
+        $content = $content . "Kristel has checked " . $payment . " proof, Please check details below:";
+
+    // Project Type = No DP and Kind = 0 and Amount > 10萬
+    if($special == "sn" && $kind == 0 && $final_amount > 100000)
+        $content = $content . "Boss has checked " . $payment . " proof, Please check details below:";
+
+    // Project Type = No DP and Kind = 1 or 2 and Amount <= 10萬
+    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount <= 100000)
+        $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+
+    // Project Type = No DP and Kind = 1 or 2 and Amount > 10萬
+    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount > 100000)
+        $content = $content . "Glen has checked " . $payment . " proof, Please check details below:";
+
 
     $content = $content . '</td>
                         </tr>
@@ -1228,7 +1251,7 @@ function send_check_notify_mail_new($name, $email1, $projectname, $remark, $subt
 
 // }
 
-function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special)
+function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special, $final_amount)
 {
     $conf = new Conf();
 
@@ -1251,10 +1274,48 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
 
     $mail->IsHTML(true);
 
-    if($special == "s")
-        $mail->AddAddress('kuan@feliix.com', 'Kuan');
-    if($special == "")
+    // 判斷 Project Type 和 Proof Kind 和 Project Final Amount 來決定 收件者和cc收件者
+    // Project Type = Normal
+    if($special == ""){
         $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+	$mail->AddCC('kuan@feliix.com', 'Kuan');
+	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    }
+
+    // Project Type = X-Deal
+    if($special == "s"){
+        $mail->AddAddress('kuan@feliix.com', 'Kuan');
+	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+	$mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    }
+
+    // Project Type = No DP and Kind = 0 and Amount <= 10萬
+    if($special == "sn" && $kind == 0 && $final_amount <= 100000){
+        $mail->AddAddress('kristel@feliix.com', 'Kristel Tan');
+	$mail->AddCC('kuan@feliix.com', 'Kuan');
+	$mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    }
+
+    // Project Type = No DP and Kind = 0 and Amount > 10萬
+    if($special == "sn" && $kind == 0 && $final_amount > 100000){
+        $mail->AddAddress('kuan@feliix.com', 'Kuan');
+	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+	$mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
+    }
+
+    // Project Type = No DP and Kind = 1 or 2 and Amount <= 10萬
+        if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount <= 100000){
+        $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+	$mail->AddCC('kuan@feliix.com', 'Kuan');
+	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    }
+
+    // Project Type = No DP and Kind = 1 or 2 and Amount > 10萬
+    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount > 100000){
+        $mail->AddAddress('glen@feliix.com', 'Glendon Wendell Co');
+	$mail->AddCC('kuan@feliix.com', 'Kuan');
+	$mail->AddCC('kristel@feliix.com', 'Kristel Tan');
+    }
 
 
     if($category == '1')
@@ -1270,12 +1331,7 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
     if($kind == 2)
         $pay = "2307";
 
-    if($special == "s")
-        $mail->AddCC('glen@feliix.com', 'Glendon Wendell Co');
-    if($special == "")
-        $mail->AddCC('kuan@feliix.com', 'Kuan');
 
-    $mail->AddCC('kristel@feliix.com', 'Kristel Tan');
     $mail->AddCC($email1, $name);
     //$mail->AddCC('wren@feliix.com', 'Thalassa Wren Benzon');
 
@@ -1303,10 +1359,32 @@ function send_pay_notify_mail_new($name, $email1,  $leaver, $projectname, $remar
                         <tr>
                             <td style="font-size: 20px; padding: 20px 0 20px 5px;"> ';
 
+   
+    // 判斷 Project Type 和 Proof Kind 和 Project Final Amount 來決定 稱呼者名稱
+    // Project Type = Normal
+    if($special == "")
+	$content = $content . ' Dear Glendon, ';
+
+    // Project Type = X-Deal
     if($special == "s")
         $content = $content . ' Dear Boss, ';
-    if($special == "")
+
+    // Project Type = No DP and Kind = 0 and Amount <= 10萬
+    if($special == "sn" && $kind == 0 && $final_amount <= 100000)
+        $content = $content . ' Dear Kristel, ';
+
+    // Project Type = No DP and Kind = 0 and Amount > 10萬
+    if($special == "sn" && $kind == 0 && $final_amount > 100000)
+        $content = $content . ' Dear Boss, ';
+
+    // Project Type = No DP and Kind = 1 or 2 and Amount <= 10萬
+        if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount <= 100000)
         $content = $content . ' Dear Glendon, ';
+
+    // Project Type = No DP and Kind = 1 or 2 and Amount > 10萬
+    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount > 100000)
+        $content = $content . ' Dear Glendon, ';
+
 
     $content = $content . '
                             </td>
@@ -7910,7 +7988,7 @@ return false;
 }
 }
 
-function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special)
+function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $remark, $subtime, $category, $kind, $special, $final_amount)
 {
     $conf = new Conf();
 
@@ -7967,10 +8045,34 @@ function send_pay_reminder_mail_new($name, $email1,  $leaver, $projectname, $rem
                         <tbody>
                         <tr>
                             <td style="font-size: 20px; padding: 20px 0 20px 5px;">';
+
+
+    // 判斷 Project Type 和 Proof Kind 和 Project Final Amount 來決定 稱呼者名稱
+    // Project Type = Normal
     if($special == "")
-        $content = $content . " Dear Glendon, ";
+	$content = $content . ' Dear Glendon, ';
+
+    // Project Type = X-Deal
     if($special == "s")
-        $content = $content . " Dear Boss, ";
+        $content = $content . ' Dear Boss, ';
+
+    // Project Type = No DP and Kind = 0 and Amount <= 10萬
+    if($special == "sn" && $kind == 0 && $final_amount <= 100000)
+        $content = $content . ' Dear Kristel, ';
+
+    // Project Type = No DP and Kind = 0 and Amount > 10萬
+    if($special == "sn" && $kind == 0 && $final_amount > 100000)
+        $content = $content . ' Dear Boss, ';
+
+    // Project Type = No DP and Kind = 1 or 2 and Amount <= 10萬
+        if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount <= 100000)
+        $content = $content . ' Dear Glendon, ';
+
+    // Project Type = No DP and Kind = 1 or 2 and Amount > 10萬
+    if($special == "sn" && ($kind == 1 || $kind == 2) && $final_amount > 100000)
+        $content = $content . ' Dear Glendon, ';
+
+
     $content = $content . ' </td>
                         </tr>
                         <tr>
@@ -14735,24 +14837,24 @@ function GetProjectCategoryByProjectId($id)
 
 function SetupMail($mail, $conf)
 {
-    $mail->SMTPDebug  = 0;
-    $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = "ssl";
-    $mail->Port       = 465;
-    $mail->SMTPKeepAlive = true;
-    $mail->Host       = $conf::$mail_host;
-    $mail->Username   = $conf::$mail_username;
-    $mail->Password   = $conf::$mail_password;
-
-
     // $mail->SMTPDebug  = 0;
     // $mail->SMTPAuth   = true;
-    // $mail->SMTPSecure = "tls";
-    // $mail->Port       = 587;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
     // $mail->SMTPKeepAlive = true;
-    // $mail->Host       = 'smtp.ethereal.email';
-    // $mail->Username   = 'jermey.wilkinson@ethereal.email';
-    // $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+
+    $mail->SMTPDebug  = 0;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->SMTPKeepAlive = true;
+    $mail->Host       = 'smtp.ethereal.email';
+    $mail->Username   = 'jermey.wilkinson@ethereal.email';
+    $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
 
     return $mail;
 
