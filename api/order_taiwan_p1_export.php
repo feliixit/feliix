@@ -659,10 +659,20 @@ if($jwt){
             $short_brand = "";
             if(strtoupper($brand) == 'COLORS')
                 $short_brand = "CL";
+            if(strtoupper($brand) == 'DANCELIGHT')
+                $short_brand = "DL";
+            if(strtoupper($brand) == 'ELITES')
+                $short_brand = "ET";
             if(strtoupper($brand) == 'EVERLIGHT')
                 $short_brand = "EL";
             if(strtoupper($brand) == 'GENTECH')
                 $short_brand = "GT";
+            if(strtoupper($brand) == 'HUANG GONG')
+                $short_brand = "HG";
+            if(strtoupper($brand) == 'LEDOUX')
+                $short_brand = "LD";
+            if(strtoupper($brand) == 'ROOSTER')
+                $short_brand = "RT";
             if(strtoupper($brand) == 'SEEDDESIGN')
                 $short_brand = "SD";
             if(strtoupper($brand) == 'SHAN BEN')
@@ -673,16 +683,13 @@ if($jwt){
                 $short_brand = "TYG";
             if(strtoupper($brand) == 'TONS')
                 $short_brand = "TONS";
-            if(strtoupper($brand) == 'XCELLENT')
-                $short_brand = "XL";
-            if(strtoupper($brand) == 'DANCELIGHT')
-                $short_brand = "DL";
-            if(strtoupper($brand) == 'LEDOUX')
-                $short_brand = "LD";
-            if(strtoupper($brand) == 'HUANG GONG')
-                $short_brand = "HG";
             if(strtoupper($brand) == 'WENHUI')
                 $short_brand = "WH";
+            if(strtoupper($brand) == 'XCELLENT')
+                $short_brand = "XL";
+            if(strtoupper($brand) == 'YUDA')
+                $short_brand = "YD";
+
 
             $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
             $payable = $richText->createTextRun('FELIIX');
@@ -775,7 +782,7 @@ if($jwt){
 
             $sheet->getRowDimension($i)->setRowHeight(34.2);
             $sheet->setCellValue('B' . $i, '請貼上菲律賓收件人:');
-            $sheet->mergeCells('B' . $i . ':C' . $i);
+            $sheet->mergeCells('B' . $i . ':D' . $i);
             $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
             $sheet->getStyle('B' . $i)->getFont()->setSize(18);
             $sheet->getStyle('B' . $i)->getFont()->setBold(true);
