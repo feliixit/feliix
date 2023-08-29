@@ -624,7 +624,6 @@ if($jwt){
             $sheet->getRowDimension($i)->setRowHeight(28.2);
             $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setSize(20);
             $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setName('M+ 1c regular');
-            $k = $i;
             $i++;
 
 
@@ -646,7 +645,7 @@ if($jwt){
             // footer_middle
             $sheet->getRowDimension($i)->setRowHeight(34.2);
             $sheet->setCellValue('B' . $i, '每箱請貼上麥頭:');
-            $sheet->mergeCells('B' . $i . ':C' . $i);
+            $sheet->mergeCells('B' . $i . ':D' . $i);
             $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
             $sheet->getStyle('B' . $i)->getFont()->setSize(18);
             $sheet->getStyle('B' . $i)->getFont()->setBold(true);
@@ -707,7 +706,7 @@ if($jwt){
             if($cfs == "1"){
                 $sheet->getRowDimension($i)->setRowHeight(34.2);
                 $sheet->setCellValue('B' . $i, '請寄到卡菲斯:');
-                $sheet->mergeCells('B' . $i . ':C' . $i);
+                $sheet->mergeCells('B' . $i . ':D' . $i);
                 $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
                 $sheet->getStyle('B' . $i)->getFont()->setSize(18);
                 $sheet->getStyle('B' . $i)->getFont()->setBold(true);
@@ -730,7 +729,7 @@ if($jwt){
             if($ssit == "1"){
                 $sheet->getRowDimension($i)->setRowHeight(34.2);
                 $sheet->setCellValue('B' . $i, '請寄到盛盛:');
-                $sheet->mergeCells('B' . $i . ':C' . $i);
+                $sheet->mergeCells('B' . $i . ':D' . $i);
                 $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
                 $sheet->getStyle('B' . $i)->getFont()->setSize(18);
                 $sheet->getStyle('B' . $i)->getFont()->setBold(true);
@@ -753,7 +752,7 @@ if($jwt){
             if($dy == "1"){
                 $sheet->getRowDimension($i)->setRowHeight(34.2);
                 $sheet->setCellValue('B' . $i, '請寄到東渝:');
-                $sheet->mergeCells('B' . $i . ':C' . $i);
+                $sheet->mergeCells('B' . $i . ':D' . $i);
                 $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
                 $sheet->getStyle('B' . $i)->getFont()->setSize(18);
                 $sheet->getStyle('B' . $i)->getFont()->setBold(true);
