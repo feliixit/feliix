@@ -376,20 +376,21 @@ if($jwt){
             $sheet->setTitle("盛盛訂購單");
 
 
-            $sheet->getStyle('A1:J300')->getAlignment()->setHorizontal('center');
-            $sheet->getStyle('A1:J300')->getAlignment()->setVertical('center');
+            $sheet->getStyle('A1:K300')->getAlignment()->setHorizontal('center');
+            $sheet->getStyle('A1:K300')->getAlignment()->setVertical('center');
 
 
             $sheet->getColumnDimension('A')->setWidth(17.15);
-            $sheet->getColumnDimension('B')->setWidth(35.71);
-            $sheet->getColumnDimension('C')->setWidth(40.82);
-            $sheet->getColumnDimension('D')->setWidth(50.82);
-            $sheet->getColumnDimension('E')->setWidth(20.72);
+            $sheet->getColumnDimension('B')->setWidth(20.00);
+            $sheet->getColumnDimension('C')->setWidth(35.71);
+            $sheet->getColumnDimension('D')->setWidth(40.82);
+            $sheet->getColumnDimension('E')->setWidth(50.82);
             $sheet->getColumnDimension('F')->setWidth(20.72);
-            $sheet->getColumnDimension('G')->setWidth(25.72);
-            $sheet->getColumnDimension('H')->setWidth(20.72);
+            $sheet->getColumnDimension('G')->setWidth(20.72);
+            $sheet->getColumnDimension('H')->setWidth(25.72);
             $sheet->getColumnDimension('I')->setWidth(20.72);
             $sheet->getColumnDimension('J')->setWidth(20.72);
+            $sheet->getColumnDimension('K')->setWidth(20.72);
 
 
 
@@ -397,12 +398,12 @@ if($jwt){
 
             // header
             $sheet->setCellValue('B1', '訂          購          單');
-            $sheet->mergeCells('B1:I2');
+            $sheet->mergeCells('B1:J2');
             $sheet->getRowDimension(1)->setRowHeight(28.2);
             $sheet->getRowDimension(2)->setRowHeight(28.2);
-            $sheet->getStyle('B1:I2')->getFont()->setSize(48);
-            $sheet->getStyle('B1:I2')->getFont()->setBold(true);
-            $sheet->getStyle('B1:I2')->getFont()->setName('M+ 1c regular');
+            $sheet->getStyle('B1:J2')->getFont()->setSize(48);
+            $sheet->getStyle('B1:J2')->getFont()->setBold(true);
+            $sheet->getStyle('B1:J2')->getFont()->setName('M+ 1c regular');
 
 
             $sheet->getRowDimension(3)->setRowHeight(28.2);
@@ -421,7 +422,7 @@ if($jwt){
             $sheet->setCellValue('B6', '專案名稱:');
             $sheet->setCellValue('B7', '訂單日期:');
             $sheet->setCellValue('B8', '需求日期:');
-            $sheet->getStyle('B5:B8')->getAlignment()->setHorizontal('right');
+            $sheet->getStyle('B5:B8')->getAlignment()->setHorizontal('left');
             $sheet->getStyle('B5:B8')->getFont()->setSize(20);
             $sheet->getStyle('B5:B8')->getFont()->setName('微軟正黑體');
             $sheet->getRowDimension(5)->setRowHeight(28.2);
@@ -442,22 +443,28 @@ if($jwt){
             $sheet->getStyle('C5:D8')->getFont()->setSize(20);
             $sheet->getStyle('C5:D8')->getFont()->setName('M+ 1c regular');
 
-            $sheet->getStyle('B4:I8')->applyFromArray($bold_border_style);
+            $sheet->getStyle('B4:J8')->applyFromArray($bold_border_style);
 
 
             $sheet->getRowDimension(9)->setRowHeight(28.2);
 
 
             // body title
-            $sheet->setCellValue('B10', '圖示' . "\n" . 'IMAGE');
-            $sheet->setCellValue('C10', '品名/型號' . "\n" . 'CODE'); $sheet->setCellValue('D10', '顏色/規格' . "\n" . 'COLOR/SPEC'); $sheet->setCellValue('E10', '數量' . "\n" . 'QTY');
-            $sheet->setCellValue('F10', '單價' . "\n" . 'PRICE'); $sheet->setCellValue('G10', '總價' . "\n" . 'AMOUNT'); $sheet->setCellValue('H10', '交期' . "\n" . 'DELIVERY');
-            $sheet->setCellValue('I10', '寄送地址'); $sheet->setCellValue('J10', '海運或空運');
+            $sheet->setCellValue('B10', '項次' . "\n" . 'ITEM NO.');
+            $sheet->setCellValue('C10', '圖示' . "\n" . 'IMAGE');
+            $sheet->setCellValue('D10', '品名/型號' . "\n" . 'CODE');
+            $sheet->setCellValue('E10', '顏色/規格' . "\n" . 'COLOR/SPEC');
+            $sheet->setCellValue('F10', '數量' . "\n" . 'QTY');
+            $sheet->setCellValue('G10', '單價' . "\n" . 'PRICE');
+            $sheet->setCellValue('H10', '總價' . "\n" . 'AMOUNT');
+            $sheet->setCellValue('I10', '交期' . "\n" . 'DELIVERY');
+            $sheet->setCellValue('J10', '寄送地址');
+            $sheet->setCellValue('K10', '海運或空運');
 
-            $sheet->getStyle('B10:J10')->getFont()->setSize(20);
-            $sheet->getStyle('B10:J10')->getFont()->setName('M+ 1c regular');
-            $sheet->getStyle('B10:I10')->applyFromArray($boldandthin_border_style);
-            $sheet->getStyle('J10:J10')->applyFromArray($bold_border_style);
+            $sheet->getStyle('B10:K10')->getFont()->setSize(20);
+            $sheet->getStyle('B10:K10')->getFont()->setName('M+ 1c regular');
+            $sheet->getStyle('B10:J10')->applyFromArray($boldandthin_border_style);
+            $sheet->getStyle('K10:K10')->applyFromArray($bold_border_style);
 
 
 
@@ -470,6 +477,7 @@ if($jwt){
             $sheet->getStyle('H10')->getAlignment()->setWrapText(true);
             $sheet->getStyle('I10')->getAlignment()->setWrapText(true);
             $sheet->getStyle('J10')->getAlignment()->setWrapText(true);
+            $sheet->getStyle('K10')->getAlignment()->setWrapText(true);
             
             // body
             $i = 11;
@@ -479,6 +487,10 @@ if($jwt){
 
             foreach($merged_results as $row)
             {
+                $j = $i - 10;
+                $sheet->setCellValue('B'. $i, $j);
+                $sheet->getStyle('B'. $i)->getAlignment()->setWrapText(true);
+
                 if($row['photo1'] != '')
                 {
 
@@ -491,7 +503,7 @@ if($jwt){
                     $objDrawing->setName('photo1');
                     $objDrawing->setDescription('photo1');
                     $objDrawing->setPath($conf::$upload_path  . preg_replace('/[^A-Za-z0-9]/', '', $row['photo1']));
-                    $objDrawing->setCoordinates('B' . $i);
+                    $objDrawing->setCoordinates('C' . $i);
                     $objDrawing->setWidthAndHeight(100, 100);
                     $objDrawing->setResizeProportional(true);
                     $objDrawing->setOffsetX(80);
@@ -500,15 +512,15 @@ if($jwt){
 
                     $sheet->getRowDimension($i)->setRowHeight(120);
 
-                    $sheet->getStyle('B'. $i)->applyFromArray($center_style);
+                    $sheet->getStyle('C'. $i)->applyFromArray($center_style);
                 }
 
 
-                $sheet->setCellValue('C'. $i, ($row['pid'] != "0" ? "ID: " . $row['pid'] . "\n" : "") . $row['code']);
-                $sheet->getStyle('C'. $i)->getAlignment()->setWrapText(true);
-
-                $sheet->setCellValue('D'. $i, $row['brief'] . "\n" . $row['listing']);
+                $sheet->setCellValue('D'. $i, ($row['pid'] != "0" ? "ID: " . $row['pid'] . "\n" : "") . $row['code']);
                 $sheet->getStyle('D'. $i)->getAlignment()->setWrapText(true);
+
+                $sheet->setCellValue('E'. $i, $row['brief'] . "\n" . $row['listing']);
+                $sheet->getStyle('E'. $i)->getAlignment()->setWrapText(true);
 
                 $qq = "";
                 if($row['qty'] != "")
@@ -519,10 +531,10 @@ if($jwt){
                 {
                     $qq += intval($row['backup_qty']);
                 }
-                
 
-                $sheet->setCellValue('E' . $i, $qq);
-                $sheet->getStyle('E'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('F' . $i, $qq);
+                $sheet->getStyle('F'. $i)->applyFromArray($center_style);
+
 
                 $price = "";
                 if($row['product'] != "") {
@@ -533,18 +545,18 @@ if($jwt){
                     }
                 }
 
-                $sheet->setCellValue('F' . $i, $price);
-                $sheet->getStyle('F'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('G' . $i, $price);
+                $sheet->getStyle('G'. $i)->applyFromArray($center_style);
 
                 $amount = "";
                 if($qq != '' && $price != '') {
                     $amount = $price * $qq;
                 }
 
-                $sheet->setCellValue('G' . $i, $amount);
-                $sheet->getStyle('G'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('H' . $i, $amount);
+                $sheet->getStyle('H'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('H' . $i, '');
+                $sheet->setCellValue('I' . $i, '');
 
                 $vendor = "";
                 if($row['shipping_vendor'] == 'ssit'){
@@ -559,74 +571,83 @@ if($jwt){
                     $vendor = "東渝";
                     $dy = "1";
                 }
-                $sheet->setCellValue('I' . $i, $vendor);
-                $sheet->getStyle('I'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('J' . $i, $vendor);
+                $sheet->getStyle('J'. $i)->applyFromArray($center_style);
 
                 $shipway = "";
                 if($row['shipping_way'] == 'sea')
                     $shipway = "海運";
                 if($row['shipping_way'] == 'air')
                     $shipway = "空運";
-                $sheet->setCellValue('J' . $i, $shipway);
-                $sheet->getStyle('J'. $i)->applyFromArray($center_style);
+                $sheet->setCellValue('K' . $i, $shipway);
+                $sheet->getStyle('K'. $i)->applyFromArray($center_style);
 
-                $sheet->getStyle('D' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
-                $sheet->getStyle('F' . $i . ':G' . $i)->getAlignment()->setHorizontal('right');
-                $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setSize(18);
-                $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setName('M+ 1c regular');
-                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($boldandthin_border_style1);
-                $sheet->getStyle('J' . $i . ':J' . $i)->applyFromArray($bold_border_style);
+                $sheet->getStyle('E' . $i . ':E' . $i)->getAlignment()->setHorizontal('left');
+                $sheet->getStyle('G' . $i . ':H' . $i)->getAlignment()->setHorizontal('right');
+                $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setSize(18);
+                $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setName('M+ 1c regular');
+                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($boldandthin_border_style1);
+                $sheet->getStyle('K' . $i . ':K' . $i)->applyFromArray($bold_border_style);
 
                 $i++;
             }
 
             // footer_top
-            $sheet->setCellValue('B' . $i, '稅');
-            $sheet->getStyle('B'. $i)->applyFromArray($center_style);
-            $sheet->mergeCells('C' . $i . ':E' . $i);
+            $j = $i + 2;
+            $sheet->mergeCells('B' . $i . ':E' . $j );
 
-            $sheet->setCellValue('F' . $i, '5%');
+            $sheet->setCellValue('F' . $i, '小計');
             $sheet->getStyle('F'. $i)->applyFromArray($center_style);
-            $sheet->mergeCells('G' . $i . ':I' . $i);
+            $sheet->mergeCells('G' . $i . ':J' . $i);
+
+            if($total_price_ntd != '')
+                $sheet->setCellValue('G' . $i, $total_price_ntd );
+
+            $sheet->getRowDimension($i)->setRowHeight(28.2);
+            $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setSize(20);
+            $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setName('M+ 1c regular');
+            $k = $i;
+            $i++;
+
+
+            $sheet->setCellValue('F' . $i, '稅 5%');
+            $sheet->getStyle('F'. $i)->applyFromArray($center_style);
+            $sheet->mergeCells('G' . $i . ':J' . $i);
 
             if($total_price_ntd != '')
                 $sheet->setCellValue('G' . $i, $total_price_ntd * 0.05);
 
             $sheet->getRowDimension($i)->setRowHeight(28.2);
-            $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setSize(20);
-            $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setName('M+ 1c regular');
-            $k = $i;
+            $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setSize(20);
+            $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setName('M+ 1c regular');
             $i++;
 
 
-            $sheet->setCellValue('B' . $i, '總計');
-            $sheet->getStyle('B'. $i)->applyFromArray($center_style);
-            $sheet->mergeCells('C' . $i . ':E' . $i);
-
-            $sheet->setCellValue('F' . $i, '含稅');
+            $sheet->setCellValue('F' . $i, '總計');
             $sheet->getStyle('F'. $i)->applyFromArray($center_style);
-            $sheet->mergeCells('G' . $i . ':I' . $i);
+            $sheet->mergeCells('G' . $i . ':J' . $i);
 
             if($total_price_ntd != '')
                 $sheet->setCellValue('G' . $i, $total_price_ntd * 1.05);
 
             $sheet->getRowDimension($i)->setRowHeight(28.2);
-            $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setSize(20);
-            $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setBold(true);
-            $sheet->getStyle('B' . $i . ':J' . $i)->getFont()->setName('M+ 1c regular');
-            $sheet->getStyle('B' . $k . ':I' . $i)->applyFromArray($boldandthin_border_style);
+            $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setSize(20);
+            $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setBold(true);
+            $sheet->getStyle('B' . $i . ':K' . $i)->getFont()->setName('M+ 1c regular');
+            $sheet->getStyle('B' . $k . ':J' . $i)->applyFromArray($boldandthin_border_style);
             $i++;
 
 
             // footer_middle
             $sheet->getRowDimension($i)->setRowHeight(34.2);
             $sheet->setCellValue('B' . $i, '每箱請貼上麥頭:');
+            $sheet->mergeCells('B' . $i . ':D' . $i);
             $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
             $sheet->getStyle('B' . $i)->getFont()->setSize(18);
             $sheet->getStyle('B' . $i)->getFont()->setBold(true);
             $sheet->getStyle('B' . $i)->getFont()->setUnderline('double');
             $sheet->getStyle('B' . $i)->getFont()->setName('微軟正黑體');
-            $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+            $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
             $i++;
 
             $sheet->getRowDimension($i)->setRowHeight(109.8);
@@ -634,10 +655,20 @@ if($jwt){
             $short_brand = "";
             if(strtoupper($brand) == 'COLORS')
                 $short_brand = "CL";
+            if(strtoupper($brand) == 'DANCELIGHT')
+                $short_brand = "DL";
+            if(strtoupper($brand) == 'ELITES')
+                $short_brand = "ET";
             if(strtoupper($brand) == 'EVERLIGHT')
                 $short_brand = "EL";
             if(strtoupper($brand) == 'GENTECH')
                 $short_brand = "GT";
+            if(strtoupper($brand) == 'HUANG GONG')
+                $short_brand = "HG";
+            if(strtoupper($brand) == 'LEDOUX')
+                $short_brand = "LD";
+            if(strtoupper($brand) == 'ROOSTER')
+                $short_brand = "RT";
             if(strtoupper($brand) == 'SEEDDESIGN')
                 $short_brand = "SD";
             if(strtoupper($brand) == 'SHAN BEN')
@@ -648,14 +679,13 @@ if($jwt){
                 $short_brand = "TYG";
             if(strtoupper($brand) == 'TONS')
                 $short_brand = "TONS";
+            if(strtoupper($brand) == 'WENHUI')
+                $short_brand = "WH";
             if(strtoupper($brand) == 'XCELLENT')
                 $short_brand = "XL";
-            if(strtoupper($brand) == 'DANCELIGHT')
-                $short_brand = "DL";
-            if(strtoupper($brand) == 'LEDOUX')
-                $short_brand = "LD";
-            if(strtoupper($brand) == 'HUANG GONG')
-                $short_brand = "HG";
+            if(strtoupper($brand) == 'YUDA')
+                $short_brand = "YD";
+
 
             $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
             $payable = $richText->createTextRun('FELIIX');
@@ -670,8 +700,8 @@ if($jwt){
             $payable->getFont()->setSize(18);
             $payable->getFont()->setName('M+ 1c regular');
             $sheet->getCell('B' . $i)->setValue($richText);
-            $sheet->mergeCells('B' . $i . ':C' . $i);
-            $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+            $sheet->mergeCells('B' . $i . ':D' . $i);
+            $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
             $sheet->getStyle('B'. $i)->applyFromArray($center_style);
             $sheet->getStyle('B'. $i)->getAlignment()->setWrapText(true);
             $i++;
@@ -679,21 +709,22 @@ if($jwt){
             if($cfs == "1"){
                 $sheet->getRowDimension($i)->setRowHeight(34.2);
                 $sheet->setCellValue('B' . $i, '請寄到卡菲斯:');
+                $sheet->mergeCells('B' . $i . ':D' . $i);
                 $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
                 $sheet->getStyle('B' . $i)->getFont()->setSize(18);
                 $sheet->getStyle('B' . $i)->getFont()->setBold(true);
                 $sheet->getStyle('B' . $i)->getFont()->setUnderline('double');
                 $sheet->getStyle('B' . $i)->getFont()->setName('微軟正黑體');
-                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
                 $i++;
 
                 $sheet->getRowDimension($i)->setRowHeight(84);
                 $sheet->setCellValue('B' . $i, '116 台北市文山區羅斯福路六段142巷82號一樓' . "\n" . '電話：02-2935-1589' . "\n" . '(寄件人: 盛盛國際 林巧雯)');
-                $sheet->mergeCells('B' . $i . ':C' . $i);
-                $sheet->getStyle('B' . $i . ':C' . $i)->getAlignment()->setHorizontal('left');
-                $sheet->getStyle('B' . $i . ':C' . $i)->getFont()->setSize(18);
-                $sheet->getStyle('B' . $i . ':C' . $i)->getFont()->setName('微軟正黑體');
-                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+                $sheet->mergeCells('B' . $i . ':D' . $i);
+                $sheet->getStyle('B' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
+                $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setSize(18);
+                $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setName('微軟正黑體');
+                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
                 $sheet->getStyle('B'. $i)->getAlignment()->setWrapText(true);
                 $i++;
             }
@@ -701,21 +732,22 @@ if($jwt){
             if($ssit == "1"){
                 $sheet->getRowDimension($i)->setRowHeight(34.2);
                 $sheet->setCellValue('B' . $i, '請寄到盛盛:');
+                $sheet->mergeCells('B' . $i . ':D' . $i);
                 $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
                 $sheet->getStyle('B' . $i)->getFont()->setSize(18);
                 $sheet->getStyle('B' . $i)->getFont()->setBold(true);
                 $sheet->getStyle('B' . $i)->getFont()->setUnderline('double');
                 $sheet->getStyle('B' . $i)->getFont()->setName('微軟正黑體');
-                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
                 $i++;
 
                 $sheet->getRowDimension($i)->setRowHeight(84);
                 $sheet->setCellValue('B' . $i, '50089 台灣彰化市金馬路1段80之1號' . "\n" . '電話：04-7274745' . "\n" . '(寄件人: 盛盛國際 林巧雯)');
-                $sheet->mergeCells('B' . $i . ':C' . $i);
-                $sheet->getStyle('B' . $i . ':C' . $i)->getAlignment()->setHorizontal('left');
-                $sheet->getStyle('B' . $i . ':C' . $i)->getFont()->setSize(18);
-                $sheet->getStyle('B' . $i . ':C' . $i)->getFont()->setName('微軟正黑體');
-                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+                $sheet->mergeCells('B' . $i . ':D' . $i);
+                $sheet->getStyle('B' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
+                $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setSize(18);
+                $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setName('微軟正黑體');
+                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
                 $sheet->getStyle('B'. $i)->getAlignment()->setWrapText(true);
                 $i++;
             }
@@ -723,21 +755,22 @@ if($jwt){
             if($dy == "1"){
                 $sheet->getRowDimension($i)->setRowHeight(34.2);
                 $sheet->setCellValue('B' . $i, '請寄到東渝:');
+                $sheet->mergeCells('B' . $i . ':D' . $i);
                 $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
                 $sheet->getStyle('B' . $i)->getFont()->setSize(18);
                 $sheet->getStyle('B' . $i)->getFont()->setBold(true);
                 $sheet->getStyle('B' . $i)->getFont()->setUnderline('double');
                 $sheet->getStyle('B' . $i)->getFont()->setName('微軟正黑體');
-                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
                 $i++;
 
                 $sheet->getRowDimension($i)->setRowHeight(109.8);
                 $sheet->setCellValue('B' . $i, '249005 新北市八里區文昌路89-3號' . "\n" . '電話：02-2292-3936' . "\n" . '收件人: Mia' . "\n" . '(寄件人: 盛盛國際 林巧雯)');
-                $sheet->mergeCells('B' . $i . ':C' . $i);
-                $sheet->getStyle('B' . $i . ':C' . $i)->getAlignment()->setHorizontal('left');
-                $sheet->getStyle('B' . $i . ':C' . $i)->getFont()->setSize(18);
-                $sheet->getStyle('B' . $i . ':C' . $i)->getFont()->setName('微軟正黑體');
-                $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+                $sheet->mergeCells('B' . $i . ':D' . $i);
+                $sheet->getStyle('B' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
+                $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setSize(18);
+                $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setName('微軟正黑體');
+                $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
                 $sheet->getStyle('B'. $i)->getAlignment()->setWrapText(true);
                 $i++;
             }
@@ -745,12 +778,13 @@ if($jwt){
 
             $sheet->getRowDimension($i)->setRowHeight(34.2);
             $sheet->setCellValue('B' . $i, '請貼上菲律賓收件人:');
+            $sheet->mergeCells('B' . $i . ':D' . $i);
             $sheet->getStyle('B' . $i)->getAlignment()->setHorizontal('left');
             $sheet->getStyle('B' . $i)->getFont()->setSize(18);
             $sheet->getStyle('B' . $i)->getFont()->setBold(true);
             $sheet->getStyle('B' . $i)->getFont()->setUnderline('double');
             $sheet->getStyle('B' . $i)->getFont()->setName('微軟正黑體');
-            $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style1);
+            $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style1);
             $i++;
 
             $sheet->getRowDimension($i)->setRowHeight(126.6);
@@ -774,7 +808,7 @@ if($jwt){
             $sheet->getStyle('B' . $i . ':D' . $i)->getAlignment()->setHorizontal('left');
             $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setSize(18);
             $sheet->getStyle('B' . $i . ':D' . $i)->getFont()->setName('M+ 1c regular');
-            $sheet->getStyle('B' . $i . ':I' . $i)->applyFromArray($bold_border_style2);
+            $sheet->getStyle('B' . $i . ':J' . $i)->applyFromArray($bold_border_style2);
             $sheet->getStyle('B'. $i)->getAlignment()->setWrapText(true);
             $i++;
 
@@ -785,12 +819,12 @@ if($jwt){
 
             // footer_bottom
             $k = $i + 6;
-            $sheet->getStyle('B' . $i . ':B' . $k)->getAlignment()->setHorizontal('right');
+            $sheet->getStyle('B' . $i . ':B' . $k)->getAlignment()->setHorizontal('left');
             $sheet->getStyle('C' . $i . ':C' . $k)->getAlignment()->setHorizontal('left');
             $sheet->getStyle('B' . $i . ':C' . $k)->getFont()->setSize(20);
             $sheet->getStyle('B' . $i . ':B' . $k)->getFont()->setName('微軟正黑體');
             $sheet->getStyle('C' . $i . ':C' . $k)->getFont()->setName('M+ 1c regular');
-            $sheet->getStyle('B' . $i . ':I' . $k)->applyFromArray($bold_border_style);
+            $sheet->getStyle('B' . $i . ':J' . $k)->applyFromArray($bold_border_style);
 
 
             $sheet->getRowDimension($i)->setRowHeight(28.2);
@@ -805,7 +839,7 @@ if($jwt){
             $objDrawing->setName('invoice');
             $objDrawing->setDescription('invoice');
             $objDrawing->setPath($conf::$upload_path ."invoice.png");
-            $objDrawing->setCoordinates('G' . $i);
+            $objDrawing->setCoordinates('H' . $i);
             $objDrawing->setWidthAndHeight(300, 300);
             $objDrawing->setResizeProportional(true);
             $objDrawing->setOffsetX(15);
