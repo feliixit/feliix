@@ -13,6 +13,10 @@ $amount = (isset($_POST['amount']) ?  $_POST['amount'] : 0);
 $tax_withheld = (isset($_POST['tax_withheld']) ?  $_POST['tax_withheld'] : 0);
 $billing_name = (isset($_POST['billing_name']) ?  $_POST['billing_name'] : "");
 
+$amount = ($amount == '' ? 0 : $amount);
+$tax_withheld = ($tax_withheld == '' ? 0 : $tax_withheld);
+
+
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
 include_once 'libs/php-jwt-master/src/ExpiredException.php';

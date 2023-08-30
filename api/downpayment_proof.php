@@ -180,6 +180,8 @@ $pid = 0;
 $status_string = "";
 $special = "";
 
+$who_color = "black";
+
 $items = [];
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -218,6 +220,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 "status_string" => $status_string,
                                 "special" => $special,
                                 "cnt" => $cnt,
+                                "who_color" => $who_color,
         );
 
         $items = [];
@@ -252,6 +255,13 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $final_amount = $row['final_amount'];
     $special = $row['special'];
 
+    $who_color = "black";
+    if($special == 'sn' && $kind == 0 && $final_amount <= 100000)
+        $who_color = "orange";
+    if($special == 'sn' && $kind == 0 && $final_amount > 100000)
+        $who_color = "red";
+    if($special == 's')
+        $who_color = "red";
 
     $final_quotation = GetFinalQuote($row['pid'], $db);
 
@@ -295,6 +305,7 @@ if($id != 0)
                                 "status_string" => $status_string,
                                 "special" => $special,
                                 "cnt" => $cnt,
+                                "who_color" => $who_color,
             );
 }
 

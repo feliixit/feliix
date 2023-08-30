@@ -246,7 +246,7 @@ $(function(){
                        
                         <li>{{ record.created_at }}</li>
                         <li>{{ record.username }}</li>
-                        <li :style='{color:record.special==="s" ? "red" : "black"}'>{{ record.project_name }}</li>
+                        <li :style='{color:record.who_color}'>{{ record.project_name }}</li>
                         <li>{{ (record.status == 0) ? "Under Checking" : ((record.status == 1) ? "Checked: True" : ((record.status == -1) ? "Checked: False" : 'Under Checking')) }}</li>
                     </ul>
                 </div>
@@ -256,6 +256,10 @@ $(function(){
                     <ul class="head">
                         <li class="head">Project Name</li>
                         <li><a :href="'quotation_and_payment_mgt?id=' + record.pid" target="_blank"  class="attch" >{{ record.project_name }}</a></li>
+                    </ul>
+                    <ul class="head">
+                        <li class="head">Project Type</li>
+                        <li>{{ record.special == 's' ? 'SPECIAL --- X-DEAL' : ( record.special == 'sn' ? 'SPECIAL --- NO DP' : 'NORMAL') }}</li>
                     </ul>
                     <ul class="head">
                         <li class="head">Amount</li>
