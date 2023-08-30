@@ -516,7 +516,7 @@ header('location:index');
 
 
                 <!-- tag -->
-                <b class="tag focus">{{ special == 's' ? 'SPECIAL PROJECT' : 'PROJECT' }}</b>
+                <b class="tag focus">{{ special == 's' ? 'SPECIAL PROJECT: X-DEAL' : ( special == 'sn' ? 'SPECIAL PROJECT: NO DP' : 'PROJECT') }}</b>
                 <a v-if="project_status == 'Disapproved' " href="project01_disapproved"><b class="tag">{{ project_name
                     }}</b></a>
                 <a v-if="project_status != 'Disapproved' " href="project01"><b class="tag">{{ project_name }}</b></a>
