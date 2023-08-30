@@ -133,7 +133,7 @@ if($ft == "s" || $ft == "sn")
 
 if($ft == "n")
 {
-    $query = $query . " and pm.special <> 's' ";
+    $query = $query . " and pm.special <> 's' and pm.special <> 'sn' ";
 }
 
 if($gp != "")
@@ -329,7 +329,7 @@ if($fcs != "")
     
     if($ft == "n")
     {
-        $query = $query . " and pm.special <> 's' ";
+        $query = $query . " and pm.special <> 's' and pm.special <> 'sn' ";
     }
 
     if($fpt != "")

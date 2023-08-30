@@ -160,8 +160,8 @@ if($ft == "s" || $ft == "sn")
 
 if($ft == "n")
 {
-    $query = $query . " and pm.special <> 's' ";
-    $query_cnt = $query_cnt . " and pm.special <> 's' ";
+    $query = $query . " and pm.special <> 's' and pm.special <> 'sn' ";
+    $query_cnt = $query_cnt . " and pm.special <> 's' and pm.special <> 'sn' ";
 }
 
 if($gp != "")
