@@ -152,7 +152,7 @@ if($fs == "without")
     $query_cnt = $query_cnt . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0 and project_proof.kind <> 2) = 0 ";
 }
 
-if($ft == "s")
+if($ft == "s" || $ft == "sn")
 {
     $query = $query . " and pm.special = '" . $ft . "' ";
     $query_cnt = $query_cnt . " and pm.special = '" . $ft . "' ";
@@ -417,7 +417,7 @@ if($fcs != "")
         $query_cnt = $query_cnt . " and pm.project_status_id = '" . $fs . "' ";
     }
 
-    if($ft == "s")
+    if($ft == "s" || $ft == "sn")
     {
         $query = $query . " and pm.special = '" . $ft . "' ";
         $query_cnt = $query_cnt . " and pm.special = '" . $ft . "' ";
