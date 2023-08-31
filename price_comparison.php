@@ -4488,11 +4488,11 @@ header( 'location:index' );
 <script>
 
     function move_left() {
-        document.getElementsByClassName('qn_page')[0].scrollLeft -= 400;
+        document.getElementsByClassName('mainContent')[0].scrollLeft -= 400;
     };
 
     function move_right() {
-        document.getElementsByClassName('"qn_page')[0].scrollLeft += 400;
+        document.getElementsByClassName('mainContent')[0].scrollLeft += 400;
     };
 
     $(".btn").click(function () {
