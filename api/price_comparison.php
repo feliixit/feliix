@@ -590,6 +590,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
+                'srp' => '',
             );
 
         if($i < count($gp2_item))
@@ -621,6 +622,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
+                'srp' => '',
             );
 
         if($i < count($gp3_item))
@@ -652,6 +654,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
+                'srp' => '',
             );
 
         $row_item[] = array(
@@ -726,6 +729,8 @@ function GetItems($option_id, $legend_id, $db){
         $amount = $row['amount'];
         $desc = $row['desc'];
         $pid = $row['pid'];
+
+        $srp = GetProductPrice($row['pid'], $db);
       
         $v1 = $row['v1'];
         $v2 = $row['v2'];
@@ -762,12 +767,39 @@ function GetItems($option_id, $legend_id, $db){
             'url1' => $url1,
             'url2' => $url2,
             'url3' => $url3,
+
+            "srp" => $srp,
         );
     }
 
     return $merged_results;
 }
 
+
+function GetProductPrice($pid, $db)
+{
+    $srp = 0;
+
+    $query = "
+        SELECT price
+        FROM   product_category
+        WHERE  id = " . $pid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($row !== false)
+    {
+        $srp = $row['price'];
+    }
+
+    return $srp;
+}
 
 function FloorGroups($groups)
 {
@@ -811,6 +843,7 @@ function FloorGroups($groups)
                         'list' => "",
                         'qty' => 0,
                         'price' => 0,
+                        'srp' => 0,
                         'ratio' => 0,
                         'notes' => "",
                         'amount' => 0,

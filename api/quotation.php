@@ -1015,6 +1015,8 @@ function GetBlocks($qid, $db){
         $v2 = $row['v2'];
         $v3 = $row['v3'];
         $listing = $row['listing'];
+
+        $srp = GetProductPrice($row['pid'], $db);
     
         $type == "" ? "" : "image";
         $url = $photo == "" ? "" : "https://storage.googleapis.com/feliiximg/" . $photo;
@@ -1046,11 +1048,36 @@ function GetBlocks($qid, $db){
             "v2" => $v2,
             "v3" => $v3,
             "list" => $listing,
-          
+            "srp" => $srp,
         );
     }
 
     return $merged_results;
+}
+
+function GetProductPrice($pid, $db)
+{
+    $srp = 0;
+
+    $query = "
+        SELECT price
+        FROM   product_category
+        WHERE  id = " . $pid . "
+        AND `status` <> -1 
+        ORDER BY id
+    ";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($row !== false)
+    {
+        $srp = $row['price'];
+    }
+
+    return $srp;
 }
 
 
