@@ -175,8 +175,17 @@ header( 'location:index' );
             font-weight: bold;
         }
 
+        body.gray header{
+            position: fixed;
+            z-index: 999;
+        }
+
         body.gray select {
             background-image: url(../images/ui/icon_form_select_arrow_gray.svg);
+        }
+
+        body.gray .mainContent{
+            padding: 185px 12px 30px;
         }
 
         body.gray .mainContent > .block {
@@ -1204,18 +1213,25 @@ header( 'location:index' );
             cursor: pointer;
         }
 
+        #header_dialog, #footer_dialog{
+            zoom: 85%;
+        }
+
         #option_dialog, #group_dialog, #legend_dialog, #terms_dialog, #payment_dialog {
             min-width: 1000px;
             pointer-events: auto;
+            zoom: 85%;
         }
 
         #signature_dialog {
             min-width: 700px;
             pointer-events: auto;
+            zoom: 85%;
         }
 
         #total_dialog {
             pointer-events: auto;
+            zoom: 85%;
         }
 
         #option_dialog h6, #group_dialog h6 {
@@ -1694,6 +1710,14 @@ header( 'location:index' );
             margin: 5px 0;
         }
 
+        .functionbar{
+            position: fixed;
+            z-index: 998;
+            width: 100%;
+            background: rgb(230, 230, 230);
+            padding: 80px 12px 0;
+        }
+
         .list_function.main {
             border-color: #00811e;
         }
@@ -2115,7 +2139,7 @@ header( 'location:index' );
             }
 
             .mainContent {
-                padding: 0;
+                padding: 0 !important;
                 background-color: #FFF !important;
             }
 
@@ -2171,7 +2195,9 @@ header( 'location:index' );
     <!-- header -->
     <header class="noPrint">header</header>
     <!-- header end -->
-    <div class="mainContent" style="background-color: rgb(230,230,230); overflow-x: auto;">
+
+    <!-- Function Bar start-->
+    <div class="functionbar noPrint">
 
         <div class="list_function main noPrint">
 
@@ -2940,6 +2966,12 @@ header( 'location:index' );
             </div>
         </div>
 
+    </div>
+
+    <!-- Function Bar end-->
+
+
+    <div class="mainContent" style="background-color: rgb(230,230,230); overflow-x: auto;">
 
         <table class="qn_page" :style="org_options.length == 2 ? 'width: 2420px;' : 'width: 3560px;'">
 
