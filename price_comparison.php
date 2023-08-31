@@ -175,8 +175,17 @@ header( 'location:index' );
             font-weight: bold;
         }
 
+        body.gray header{
+            position: fixed;
+            z-index: 999;
+        }
+
         body.gray select {
             background-image: url(../images/ui/icon_form_select_arrow_gray.svg);
+        }
+
+        body.gray .mainContent{
+            padding: 185px 12px 30px;
         }
 
         body.gray .mainContent > .block {
@@ -1204,18 +1213,25 @@ header( 'location:index' );
             cursor: pointer;
         }
 
+        #header_dialog, #footer_dialog{
+            zoom: 85%;
+        }
+
         #option_dialog, #group_dialog, #legend_dialog, #terms_dialog, #payment_dialog {
             min-width: 1000px;
             pointer-events: auto;
+            zoom: 85%;
         }
 
         #signature_dialog {
             min-width: 700px;
             pointer-events: auto;
+            zoom: 85%;
         }
 
         #total_dialog {
             pointer-events: auto;
+            zoom: 85%;
         }
 
         #option_dialog h6, #group_dialog h6 {
@@ -1694,6 +1710,14 @@ header( 'location:index' );
             margin: 5px 0;
         }
 
+        .functionbar{
+            position: fixed;
+            z-index: 998;
+            width: 100%;
+            background: rgb(230, 230, 230);
+            padding: 80px 12px 0;
+        }
+
         .list_function.main {
             border-color: #00811e;
         }
@@ -1734,6 +1758,19 @@ header( 'location:index' );
 
         .list_function.main a.print:hover, .list_function.main a.specification:hover {
             background-color: #707071;
+        }
+
+        button.quick_move{
+            position: fixed;
+            top: calc(50vh + 30px);
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            border: 1px solid rgb(153,153,153);
+            font-size: 23px;
+            font-weight: 500;
+            background-color: rgba(7, 220, 237, 0.5);
+            z-index: 999;
         }
 
         .modal .modal_function .left_function {
@@ -2115,7 +2152,7 @@ header( 'location:index' );
             }
 
             .mainContent {
-                padding: 0;
+                padding: 0 !important;
                 background-color: #FFF !important;
             }
 
@@ -2166,12 +2203,18 @@ header( 'location:index' );
 
 <div class="bodybox" id="app">
 
+    <!-- move-left/right shortcut -->
+    <button class="quick_move" style="left: 5px;" onclick="move_left();">←</button>
+    <button class="quick_move" style="right: 5px;" onclick="move_right();">→</button>
+
     <div class="mask" :ref="'mask'"></div>
 
     <!-- header -->
     <header class="noPrint">header</header>
     <!-- header end -->
-    <div class="mainContent" style="background-color: rgb(230,230,230); overflow-x: auto;">
+
+    <!-- Function Bar start-->
+    <div class="functionbar noPrint">
 
         <div class="list_function main noPrint">
 
@@ -2940,6 +2983,12 @@ header( 'location:index' );
             </div>
         </div>
 
+    </div>
+
+    <!-- Function Bar end-->
+
+
+    <div class="mainContent" style="background-color: rgb(230,230,230); overflow-x: auto;">
 
         <table class="qn_page" :style="org_options.length == 2 ? 'width: 2420px;' : 'width: 3560px;'">
 
@@ -4437,6 +4486,15 @@ header( 'location:index' );
 </body>
 
 <script>
+
+    function move_left() {
+        document.getElementsByClassName('mainContent')[0].scrollLeft -= 400;
+    };
+
+    function move_right() {
+        document.getElementsByClassName('mainContent')[0].scrollLeft += 400;
+    };
+
     $(".btn").click(function () {
 
         if ($("#collapseme").hasClass("show")) {

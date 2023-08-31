@@ -590,6 +590,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
+                'srp' => '',
             );
 
         if($i < count($gp2_item))
@@ -621,6 +622,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
+                'srp' => '',
             );
 
         if($i < count($gp3_item))
@@ -652,6 +654,7 @@ function GetItemMaxtrix($legend_id, $db, $options){
                 'url1' => "",
                 'url2' => "",
                 'url3' => "",
+                'srp' => '',
             );
 
         $row_item[] = array(
@@ -726,6 +729,8 @@ function GetItems($option_id, $legend_id, $db){
         $amount = $row['amount'];
         $desc = $row['desc'];
         $pid = $row['pid'];
+
+        $srp = GetProductPrice($row['pid'], $row['v1'], $row['v2'], $row['v3'], $db);
       
         $v1 = $row['v1'];
         $v2 = $row['v2'];
@@ -762,12 +767,95 @@ function GetItems($option_id, $legend_id, $db){
             'url1' => $url1,
             'url2' => $url2,
             'url3' => $url3,
+
+            "srp" => $srp,
         );
     }
 
     return $merged_results;
 }
 
+
+function GetProducts($pid, $v1, $v2, $v3, $db)  {
+
+    $query = "SELECT price,
+            1st_variation,
+            2rd_variation,
+            3th_variation
+        FROM   product
+        WHERE  product_id = " . $pid . "
+        AND `status` <> -1 
+        ORDER BY id";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    $price = 0;
+    $val1 = "";
+    $val2 = "";
+    $val3 = "";
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $price = $row['price'];
+        $val1 = GetValue($row['1st_variation']);
+        $val2 = GetValue($row['2rd_variation']);
+        $val3 = GetValue($row['3th_variation']);
+
+        if($val1 == $v1 && $val2 == $v2 && $val3 == $v3)
+            break;
+    }
+
+    return $price;
+
+}
+
+function GetValue($str)
+{
+    if(trim($str) == '')
+        return "";
+    
+    $obj = explode('=>', $str);
+
+    return isset($obj[1]) ? $obj[1] : "";
+}
+
+function GetProductPrice($pid, $v1, $v2, $v3, $db)
+{
+    $srp = 0;
+    $p_srp = 0;
+
+    if($v1 != '' || $v2 != '' || $v3 != '')
+     $p_srp = GetProducts($pid, $v1, $v2, $v3, $db);
+
+    if($p_srp > 0)
+    {
+        $srp = $p_srp;
+    }
+    else
+    {
+        
+        $query = "
+            SELECT price
+            FROM   product_category
+            WHERE  id = " . $pid . "
+            AND `status` <> -1 
+            ORDER BY id
+        ";
+
+        // prepare the query
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row !== false)
+        {
+            $srp = $row['price'];
+        }
+    }
+
+    return $srp;
+}
 
 function FloorGroups($groups)
 {
@@ -811,6 +899,7 @@ function FloorGroups($groups)
                         'list' => "",
                         'qty' => 0,
                         'price' => 0,
+                        'srp' => 0,
                         'ratio' => 0,
                         'notes' => "",
                         'amount' => 0,

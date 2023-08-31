@@ -187,7 +187,7 @@ var app = new Vue({
 
     show_proof : function() {
     
-      if(this.record.special == 's')
+      if(this.record.special == 's' || this.record.special == 'sn')
         this.view_proof = false;
       else
         this.view_proof = true;
@@ -433,6 +433,15 @@ var app = new Vue({
       if(this.record.special == 's' && this.name == 'Kuan')
         this.who_detail = 's';
       if(this.record.special == '' && this.name == 'Glendon Wendell Co')
+        this.who_detail = 'g';
+
+      if(this.record.special == 'sn' && this.name == 'Kristel Tan' && this.record.kind == '0' && this.record.final_amount <= 100000)
+        this.who_detail = 't';
+
+      if(this.record.special == 'sn' && this.name == 'Kuan' && this.record.kind == '0' && this.record.final_amount > 100000)
+        this.who_detail = 's';
+
+      if(this.record.special == 'sn' && (this.record.kind == '1' || this.record.kind == '2') && this.name == 'Glendon Wendell Co')
         this.who_detail = 'g';
 
       // if(this.name == 'dereck')

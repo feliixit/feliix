@@ -1956,6 +1956,17 @@ var app = new Vue({
         return;
       }
 
+      if(this.record.special == "sn" && this.record.final_amount == null)
+      {
+        Swal.fire({
+          text: "Please encode the amount of this project before uploading the proof.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+
+        return;
+      }
+
       _this.submit = true;
 
       var form_Data = new FormData();

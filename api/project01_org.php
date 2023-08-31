@@ -126,14 +126,14 @@ if($fs == "downpayment")
     $query = $query . " and (SELECT count(*) FROM project_proof where project_proof.project_id = pm.id AND project_proof.`status` > 0) > 0 ";
 }
 
-if($ft == "s")
+if($ft == "s" || $ft == "sn")
 {
     $query = $query . " and pm.special = '" . $ft . "' ";
 }
 
 if($ft == "n")
 {
-    $query = $query . " and pm.special <> 's' ";
+    $query = $query . " and pm.special <> 's' and pm.special <> 'sn' ";
 }
 
 if($gp != "")
@@ -322,14 +322,14 @@ if($fcs != "")
         $query = $query . " and pm.project_status_id = '" . $fs . "' ";
     }
 
-    if($ft == "s")
+    if($ft == "s" || $ft == "sn")
     {
         $query = $query . " and pm.special = '" . $ft . "' ";
     }
     
     if($ft == "n")
     {
-        $query = $query . " and pm.special <> 's' ";
+        $query = $query . " and pm.special <> 's' and pm.special <> 'sn' ";
     }
 
     if($fpt != "")

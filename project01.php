@@ -184,7 +184,8 @@ $(function(){
                                 <dd>
                                     <select v-model="special">
                                       <option value="">Normal</option>
-                                      <option value="s">Speical</option>
+                                      <option value="s">Special --- X-Deal</option>
+                                      <option value="sn">Special --- No DP</option>
                                     </select>
                                 </dd>
                                 <div class="half">
@@ -319,9 +320,8 @@ $(function(){
                                     <select v-model="fil_type">
                                         <option value=""></option>
                                         <option value="n">Normal</option>
-                                        <option value="s">
-                                            Speical
-                                        </option>
+                                        <option value="s">Special --- X-Deal</option>
+                                        <option value="sn">Special --- No DP</option>
                                     </select>
                                 </dd>
 

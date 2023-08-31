@@ -242,7 +242,7 @@ function SendNotifyMail($bid)
     $database = new Database();
     $db = $database->getConnection();
 
-    $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, p.catagory_id, pm.kind FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status <> -2 ";
+    $sql = "SELECT p.project_name, pm.remark, u.username, u.email, pm.created_at, p.catagory_id, pm.kind, p.special, COALESCE(p.final_amount, 0) final_amount FROM project_proof pm left join user u on u.id = pm.create_id LEFT JOIN project_main p ON p.id = pm.project_id  WHERE pm.id = " . $bid . " and pm.status <> -2 ";
 
     $stmt = $db->prepare( $sql );
     $stmt->execute();
@@ -254,6 +254,8 @@ function SendNotifyMail($bid)
     $email1 = "";
     $category = "";
     $kind = 0;
+    $special = "";
+    $final_amount = "";
 
     while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $project_name = $row['project_name'];
@@ -263,7 +265,9 @@ function SendNotifyMail($bid)
         $email1 = $row['email'];
         $category = $row['catagory_id'];
         $kind = $row['kind'];
+        $special = $row['special'];
+        $final_amount = $row['final_amount'];
     }
 
-    send_pay_notify_mail_new($leaver, $email1, $leaver, $project_name, $remark, $subtime, $category, $kind);
+    send_pay_notify_mail_new($leaver, $email1, $leaver, $project_name, $remark, $subtime, $category, $kind, $special, $final_amount);
 }

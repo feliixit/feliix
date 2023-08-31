@@ -516,7 +516,7 @@ header('location:index');
 
 
                 <!-- tag -->
-                <b class="tag focus">{{ special == 's' ? 'SPECIAL PROJECT' : 'PROJECT' }}</b>
+                <b class="tag focus">{{ special == 's' ? 'SPECIAL PROJECT: X-DEAL' : ( special == 'sn' ? 'SPECIAL PROJECT: NO DP' : 'PROJECT') }}</b>
                 <a v-if="project_status == 'Disapproved' " href="project01_disapproved"><b class="tag">{{ project_name
                     }}</b></a>
                 <a v-if="project_status != 'Disapproved' " href="project01"><b class="tag">{{ project_name }}</b></a>
@@ -585,7 +585,8 @@ header('location:index');
                                     <dd style="margin-bottom: 0;">
                                         <select v-model="edit_special">
                                             <option value="">Normal</option>
-                                            <option value="s">Special</option>
+                                            <option value="s">Special --- X-Deal</option>
+                                            <option value="sn">Special --- No DP</option>
                                         </select>
                                     </dd>
                                     <div class="half">
