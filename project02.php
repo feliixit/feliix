@@ -585,8 +585,8 @@ header('location:index');
                                     <dd style="margin-bottom: 0;">
                                         <select v-model="edit_special">
                                             <option value="">Normal</option>
-                                            <option value="s">Speical --- X-Deal</option>
-                                            <option value="sn">Speical --- No DP</option>
+                                            <option value="s">Special --- X-Deal</option>
+                                            <option value="sn">Special --- No DP</option>
                                         </select>
                                     </dd>
                                     <div class="half">
