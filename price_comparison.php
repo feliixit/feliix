@@ -1760,6 +1760,19 @@ header( 'location:index' );
             background-color: #707071;
         }
 
+        button.quick_move{
+            position: fixed;
+            top: calc(50vh + 30px);
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            border: 1px solid rgb(153,153,153);
+            font-size: 23px;
+            font-weight: 500;
+            background-color: rgba(7, 220, 237, 0.5);
+            z-index: 999;
+        }
+
         .modal .modal_function .left_function {
             width: 90%;
             margin-right: 20px;
@@ -2189,6 +2202,10 @@ header( 'location:index' );
 <body class="gray">
 
 <div class="bodybox" id="app">
+
+    <!-- move-left/right shortcut -->
+    <button class="quick_move" style="left: 5px;" onclick="move_left();">←</button>
+    <button class="quick_move" style="right: 5px;" onclick="move_right();">→</button>
 
     <div class="mask" :ref="'mask'"></div>
 
@@ -4469,6 +4486,15 @@ header( 'location:index' );
 </body>
 
 <script>
+
+    function move_left() {
+        document.getElementsByClassName('qn_page')[0].scrollLeft -= 400;
+    };
+
+    function move_right() {
+        document.getElementsByClassName('"qn_page')[0].scrollLeft += 400;
+    };
+
     $(".btn").click(function () {
 
         if ($("#collapseme").hasClass("show")) {
