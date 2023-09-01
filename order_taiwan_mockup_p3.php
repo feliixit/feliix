@@ -2346,10 +2346,10 @@ try {
                         <div class="btnbox">
                             <ul>
                                 <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image()" :disabled="phased==1">Add with Image</button>
+                                    <button class="btn btn-info" @click="add_with_image()" v-if="out==''">Add with Image</button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info" @click="add_without_image()" :disabled="phased==1">Add without Image
+                                    <button class="btn btn-info" @click="add_without_image()" v-if="out==''">Add without Image
                                     </button>
                                 </li>
                             </ul>
@@ -2556,10 +2556,10 @@ try {
                         <div class="btnbox">
                             <ul>
                                 <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image()" :disabled="phased==1">Add with Image</button>
+                                    <button class="btn btn-info" @click="add_with_image()" v-if="out==''">Add with Image</button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info" @click="add_without_image()" :disabled="phased==1">Add without Image
+                                    <button class="btn btn-info" @click="add_without_image()" v-if="out==''">Add without Image
                                     </button>
                                 </li>
                             </ul>

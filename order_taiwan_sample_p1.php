@@ -2128,10 +2128,10 @@ try {
                         <div class="btnbox">
                             <ul>
                                 <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image()" :disabled="phased==1">Add with Image</button>
+                                    <button class="btn btn-info" @click="add_with_image()" v-if="out==''">Add with Image</button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info" @click="add_without_image()" :disabled="phased==1">Add without Image
+                                    <button class="btn btn-info" @click="add_without_image()" v-if="out==''">Add without Image
                                     </button>
                                 </li>
                             </ul>
@@ -2139,12 +2139,12 @@ try {
                             <!--
                             <ul v-if="product.variation_mode == 1">
                                 <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with
+                                    <button class="btn btn-info" @click="add_with_image('all')"  v-if="product.out == '' && (out=='' || product.variation_mode == 1)">> with
                                         Image
                                     </button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info" @click="add_without_image('all')">Add all spec.
+                                    <button class="btn btn-info" @click="add_without_image('all')" v-if="product.out == '' && (out=='' || product.variation_mode == 1)">
                                         without Image
                                     </button>
                                 </li>
@@ -2338,10 +2338,10 @@ try {
                         <div class="btnbox">
                             <ul>
                                 <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image()" :disabled="phased==1">Add with Image</button>
+                                    <button class="btn btn-info" @click="add_with_image()" v-if="out==''">Add with Image</button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info" @click="add_without_image()" :disabled="phased==1">Add without Image
+                                    <button class="btn btn-info" @click="add_without_image()" v-if="out==''">Add without Image
                                     </button>
                                 </li>
                             </ul>
@@ -2349,12 +2349,12 @@ try {
                             <!--
                             <ul>
                                 <li v-if="toggle_type == 'A'">
-                                    <button class="btn btn-info" @click="add_with_image('all')">Add all spec. with
+                                    <button class="btn btn-info" @click="add_with_image('all')"  v-if="product.out == '' && (out=='' || product.variation_mode == 1)">> with
                                         Image
                                     </button>
                                 </li>
                                 <li>
-                                    <button class="btn btn-info" @click="add_without_image('all')">Add all spec.
+                                    <button class="btn btn-info" @click="add_without_image('all')" v-if="product.out == '' && (out=='' || product.variation_mode == 1)">
                                         without Image
                                     </button>
                                 </li>
