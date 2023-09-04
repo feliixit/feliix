@@ -297,10 +297,19 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     `vat` = :vat,
     `show_vat` = :show_vat,
     `show_t` = :show_t,
-    `valid` = :valid,
-    `total1` = :total1,
-    `total2` = :total2,
-    `total3` = :total3,
+    `valid` = :valid, ";
+    if($total_info['total1'] != "")
+    {
+        $query = $query . " `total1` = :total1, ";
+    }
+    if($total_info['total2'] != "")
+    {
+        $query = $query . " `total2` = :total2, ";
+    }
+    if($total_info['total3'] != "")
+    {
+        $query = $query . " `total3` = :total3, ";
+    }
     `status` = 0,
     `create_id` = :create_id,
     `created_at` =  now() ";
@@ -315,13 +324,18 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     $stmt->bindParam(':show_vat', $total_info['show_vat']);
     $stmt->bindParam(':show_t', $total_info['show_t']);
 
-    $total_info['total1'] == "" ? $total_info['total1'] = 0 : $total_info['total1'] = $total_info['total1'];
-    $total_info['total2'] == "" ? $total_info['total2'] = 0 : $total_info['total2'] = $total_info['total2'];
-    $total_info['total3'] == "" ? $total_info['total3'] = 0 : $total_info['total3'] = $total_info['total3'];
-
-    $stmt->bindParam(':total1', $total_info['total1']);
-    $stmt->bindParam(':total2', $total_info['total2']);
-    $stmt->bindParam(':total3', $total_info['total3']);
+    if($total_info['total1'] != "")
+    {
+        $stmt->bindParam(':total1', $total_info['total1']);
+    }
+    if($total_info['total2'] != "")
+    {
+        $stmt->bindParam(':total2', $total_info['total2']);
+    }
+    if($total_info['total3'] != "")
+    {
+        $stmt->bindParam(':total3', $total_info['total3']);
+    }
 
     $stmt->bindParam(':valid', $total_info['valid']);
 
