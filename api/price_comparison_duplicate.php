@@ -310,6 +310,8 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     {
         $query = $query . " `total3` = :total3, ";
     }
+    
+    $query = $query . "
     `status` = 0,
     `create_id` = :create_id,
     `created_at` =  now() ";
