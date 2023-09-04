@@ -266,12 +266,12 @@ try {
             <div class="modal-body">
 
                 <!-- 指派車輛管理者填寫的表單 -->
-                <div id="approval_section" style="margin: 20px 0; border-bottom: 1px solid #dee2e6;">
+                <div id="approval_section" style="margin: 0 0 20px; padding-bottom: 20px; border-bottom: 3px solid #dee2e6;">
 
                     <div class="row">
                         <div class="col-12" style="text-align: center;">
 
-                            <h4 style="background: palegreen; padding: 8px; margin: 0 20px 25px;">Request Review</h4>
+                            <h4 style="background: palegreen; padding: 8px; margin: 0 20px 5px;">Request Review</h4>
 
                         </div>
 
@@ -304,7 +304,7 @@ try {
 
                         <div class="col-10">
 
-                            <input type="time" class="form-control" style="width:40%; margin-left:5%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime" disabled> to <input type="time" class="form-control" style="width:40%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime" disabled>
+                            <input type="time" class="form-control" style="width:40%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime"> to <input type="time" class="form-control" style="width:40%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime">
 
                         </div>
 
@@ -374,6 +374,16 @@ try {
 
 
                 <!-- 申請用車人填寫的表單 -->
+                <div class="row">
+
+                    <div class="col-12" style="text-align: center;">
+
+                        <h4 style="background: #dee2e6; padding: 8px; margin: 0 20px 5px;">Content of Request</h4>
+
+                    </div>
+
+                </div>
+                
                 <div class="row">
                     <div class="col-2 align-self-center" style="text-align: center;">
 
@@ -959,12 +969,12 @@ try {
             <div class="modal-body">
 
                 <!-- 指派車輛管理者填寫的表單 -->
-                <div id="approval_section" style="margin: 20px 0; border-bottom: 1px solid #dee2e6;">
+                <div id="approval_section" style="margin: 0 0 20px; padding-bottom: 20px; border-bottom: 3px solid #dee2e6;">
 
                     <div class="row">
                         <div class="col-12" style="text-align: center;">
 
-                            <h4 style="background: palegreen; padding: 8px; margin: 0 20px 25px;">Request Review</h4>
+                            <h4 style="background: palegreen; padding: 8px; margin: 0 20px 5px;">Request Review</h4>
 
                         </div>
 
@@ -997,7 +1007,7 @@ try {
 
                         <div class="col-10">
 
-                            <input type="time" class="form-control" style="width:40%; margin-left:5%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime" disabled> to <input type="time" class="form-control" style="width:40%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime" disabled>
+                            <input type="time" class="form-control" style="width:40%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime"> to <input type="time" class="form-control" style="width:40%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime">
 
                         </div>
 
@@ -1067,6 +1077,16 @@ try {
 
 
                 <!-- 申請用車人填寫的表單 -->
+                <div class="row">
+
+                    <div class="col-12" style="text-align: center;">
+
+                        <h4 style="background: #dee2e6; padding: 8px; margin: 0 20px 5px;">Content of Request</h4>
+
+                    </div>
+
+                </div>
+
                 <div class="row">
                     <div class="col-2 align-self-center" style="text-align: center;">
 
@@ -1183,8 +1203,8 @@ try {
                             <tr>
                                 <td style="padding-bottom: 10pt;"><input type="text" class="form-control" style="border:none; border-bottom: 1px solid black; border-radius: 0;" id="sc_tb_location"></td>
                                 <td style="padding-bottom: 10pt;"><input type="text" class="form-control" style="border:none; border-bottom: 1px solid black; border-radius: 0;" id="sc_tb_agenda"></td>
-                                <td style="padding-bottom: 10pt;"><input type="time" class="form-control" style="border:none; border-bottom: 1px solid black; border-radius: 0;" id="sc_tb_appointtime"></td>
-                                <td style="padding-bottom: 10pt;"><input type="time" class="form-control" style="border:none; border-bottom: 1px solid black; border-radius: 0;" id="sc_tb_endtime"></td>
+                                <td style="padding-bottom: 10pt;"><input type="text" class="form-control" style="border:none; border-bottom: 1px solid black; border-radius: 0;" id="sc_tb_appointtime"></td>
+                                <td style="padding-bottom: 10pt;"><input type="text" class="form-control" style="border:none; border-bottom: 1px solid black; border-radius: 0;" id="sc_tb_endtime"></td>
                                 <td style="padding-bottom: 10pt;"><i class="fas fa-plus-circle" id="add_agenda"></i></td>
 
                             </tr>
