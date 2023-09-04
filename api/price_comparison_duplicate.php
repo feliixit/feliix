@@ -315,6 +315,10 @@ function insert_total_info($price_id, $user_id, $total_info, $db)
     $stmt->bindParam(':show_vat', $total_info['show_vat']);
     $stmt->bindParam(':show_t', $total_info['show_t']);
 
+    $total_info['total1'] == "" ? $total_info['total1'] = 0 : $total_info['total1'] = $total_info['total1'];
+    $total_info['total2'] == "" ? $total_info['total2'] = 0 : $total_info['total2'] = $total_info['total2'];
+    $total_info['total3'] == "" ? $total_info['total3'] = 0 : $total_info['total3'] = $total_info['total3'];
+
     $stmt->bindParam(':total1', $total_info['total1']);
     $stmt->bindParam(':total2', $total_info['total2']);
     $stmt->bindParam(':total3', $total_info['total3']);
