@@ -634,7 +634,6 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     `v2` = :v2,
     `v3` = :v3,
     `discount` = :discount,
-    `notes` = :notes,
     `status` = 0,
     `create_id` = :create_id,
     `created_at` =  now() ";
@@ -664,7 +663,6 @@ function insert_gp($price_id, $option_id, $legend_id, $sn, $gp, $user_id, $db) {
     $stmt->bindParam(':v2', $gp['v2']);
     $stmt->bindParam(':v3', $gp['v3']);
     $stmt->bindParam(':discount', $gp['discount']);
-    $stmt->bindParam(':notes', $gp['notes']);
     $stmt->bindParam(':create_id', $user_id);
     
     
