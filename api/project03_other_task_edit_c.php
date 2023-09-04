@@ -164,7 +164,7 @@ try{
                     break;
             }
             $_record = GetTaskDetail($task_id, $db);
-            task_notify_admin_c("edit", $_record[0]["project_name"], $_record[0]["task_name"], $_record[0]["task_status"], $uid, $assignee, $collaborator, $due_date . " " . $due_time, $detail, $task_id, $uid, 0, $_record[0]["created_at"]);
+            task_notify_admin_c("edit", $_record[0]["project_name"], $_record[0]["task_name"], $_record[0]["task_status"], $uid, $assignee, $collaborator, $due_date . " " . $due_time, $detail, $_record[0]["stage_id"], $uid, 0, $_record[0]["created_at"]);
         }
 
         $returnArray = array('batch_id' => $task_id);

@@ -144,7 +144,7 @@ function SendNotifyMail($review_start_date, $review_end_date, $kind, $db)
                     task_notify_admin_sv("notify", $project_name, $task_name, $stages, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
                     break;
                 case "_c":
-                    task_notify_admin_c("notify", $project_name, $task_name, $task_status, $create_id, $assignee, $collaborator, $due_date, $detail, $id, 0, 0, $created_at);
+                    task_notify_admin_c("notify", $project_name, $task_name, $task_status, $create_id, $assignee, $collaborator, $due_date, $detail, $stage_id, 0, 0, $created_at);
                     break;
             }
         }
