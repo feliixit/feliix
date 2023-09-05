@@ -264,7 +264,12 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_at = $row['updated_at'];
     $pageless = $row['pageless'];
    
-    $post = GetRecentPost($row['id'], $db);
+    // $post = GetRecentPost($row['id'], $db);
+
+    $post = array(
+        "updated_at" => $row['updated_at'],
+        "username" => $row['username'],
+    );
 
     $merged_results[] = array(
         "is_edited" => 1,
