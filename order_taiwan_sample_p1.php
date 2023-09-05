@@ -2537,14 +2537,14 @@ try {
 
                 <div class="list_function" style="margin: 7px 0;">
                     <div class="pagenation">
-                        <a class="prev" :disabled="product_page_quo == 1" @click="pre_page_quo(); ">Prev
+                        <a class="prev" :disabled="product_page_quo == 1" @click="pre_page_quo(); getQuoMasterRecords();">Prev
                             10</a>
-                        <a class="page" v-for="pg_quo in product_pages_10_quo" @click="product_page_quo=pg_quo; "
+                        <a class="page" v-for="pg_quo in product_pages_10_quo" @click="product_page_quo=pg_quo; getQuoMasterRecords();"
                            v-bind:style="[pg_quo == product_page_quo ? { 'background':'#707071', 'color': 'white'} : { }]">{{
                             pg_quo
                             }}</a>
                         <a class="next" :disabled="product_page_quo == product_pages_quo.length"
-                           @click="nex_page_quo(); ">Next
+                           @click="nex_page_quo(); getQuoMasterRecords();">Next
                             10</a>
                     </div>
                 </div>

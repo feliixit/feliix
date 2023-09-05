@@ -299,6 +299,8 @@ var app = new Vue({
 
         out : "",
         out_cnt : 0,
+
+        quotation_total : 0,
     },
   
     created() {
@@ -866,7 +868,7 @@ var app = new Vue({
       setPagesQuo () {
         console.log('setPagesQuo');
         this.product_pages_quo = [];
-        let numberOfPages = Math.ceil(this.receive_records_quo_master.length / this.perPage);
+        let numberOfPages = Math.ceil(this.quotation_total / this.perPage);
 
         if(numberOfPages == 1)
           this.product_page_quo = 1;
@@ -894,7 +896,8 @@ var app = new Vue({
       from = this.product_page_quo * this.perPage - this.perPage;
       to = this.product_page_quo * this.perPage;
 
-        return  this.receive_records_quo_master.slice(from, to);
+      return  this.receive_records_quo_master;
+        //return  this.receive_records_quo_master.slice(from, to);
       },
 
       getQuoMasterRecords: function(keyword) {
@@ -914,6 +917,9 @@ var app = new Vue({
                   op2: _this.od_opt2,
                   od2: _this.od_ord2,
 
+                  page: _this.product_page_quo,
+                  size: 10,
+
                   all: 'all',
               };
   
@@ -926,6 +932,9 @@ var app = new Vue({
                 .then(
                 (res) => {
                     _this.receive_records_quo_master = res.data;
+
+                    if(_this.receive_records_quo_master.length > 0)
+                      _this.quotation_total = _this.receive_records_quo_master[0].cnt;
   
                     if(_this.pg_quo !== 0)
                     { 
@@ -1529,6 +1538,8 @@ var app = new Vue({
     filter_apply_new_quo: function() {
       let _this = this;
 
+      this.product_page_quo = 1;
+
       const params = {
 
                 fc : _this.fil_project_category,
@@ -1543,6 +1554,9 @@ var app = new Vue({
                 op2: _this.od_opt2,
                 od2: _this.od_ord2,
 
+                page: _this.product_page_quo,
+                  size: 10,
+
                 all: 'all',
             };
 
@@ -1555,6 +1569,9 @@ var app = new Vue({
               .then(
               (res) => {
                   _this.receive_records_quo_master = res.data;
+
+                  if(_this.receive_records_quo_master.length > 0)
+                    _this.quotation_total = _this.receive_records_quo_master[0].cnt;
 
                   if(_this.pg_quo !== 0)
                     { 
