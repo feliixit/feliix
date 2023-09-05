@@ -264,16 +264,16 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_at = $row['updated_at'];
     $pageless = $row['pageless'];
    
-    // $post = GetRecentPost($row['id'], $db);
+    $post = GetRecentPost($row['id'], $db);
 
-    $sorted_result = [];
+    // $sorted_result = [];
 
-    $sorted_result[] = array(
-        "updated_at" => $row['updated_at'],
-        "username" => $row['updated_by'],
+    // $sorted_result[] = array(
+    //     "updated_at" => $row['updated_at'],
+    //     "username" => $row['updated_by'],
     
-    );
-    $post = $sorted_result;
+    // );
+    // $post = $sorted_result;
 
     $merged_results[] = array(
         "is_edited" => 1,
