@@ -269,8 +269,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $sorted_result = [];
 
     $sorted_result[] = array(
-        "updated_at" => $row['created_at'],
-        "username" => $row['created_by'],
+        "updated_at" => $row['updated_at'],
+        "username" => $row['updated_by'],
     
     );
     $post = $sorted_result;
