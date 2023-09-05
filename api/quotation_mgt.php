@@ -266,6 +266,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
    
     // $post = GetRecentPost($row['id'], $db);
 
+    $sorted_result = [];
+
     $sorted_result[] = array(
         "updated_at" => $row['created_at'],
         "username" => $row['created_by'],
