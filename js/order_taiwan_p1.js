@@ -1533,6 +1533,8 @@ var app = new Vue({
     filter_apply_new_quo: function() {
       let _this = this;
 
+      this.product_page_quo = 1;
+
       const params = {
 
                 fc : _this.fil_project_category,

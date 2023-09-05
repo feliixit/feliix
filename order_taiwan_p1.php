@@ -2533,7 +2533,7 @@ try {
                                placeholder="Input Keyword Here (only for quotation name, project name or quotation no.)">
                     </div>
 
-                    <a class="btn small green" @click="getQuoMasterRecords()">Search</a>
+                    <a class="btn small green" @click="filter_apply_new_quo()">Search</a>
 
                 </div>
 
