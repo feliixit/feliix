@@ -112,7 +112,8 @@ switch ($method) {
                 $stmt = $db->prepare($query);
 
                 $confirm = 'N';
-                $brand = '';
+                //$brand = '';
+                $brand = GetBrandInfo($block_array[$i]['pid'], $db);
                 $brand_other = '';
 
                 $photo1 = isset($block_array[$i]['photo']) ? $block_array[$i]['photo'] : '';
@@ -120,6 +121,10 @@ switch ($method) {
                 $photo3 = '';
 
                 $code = isset($block_array[$i]['code']) ? $block_array[$i]['code'] : '';
+
+                if($brand == '')
+                    $brand = MatchBrandPattern($code);
+
                 $brief = isset($block_array[$i]['desc']) ? $block_array[$i]['desc'] : '';
                 $listing = isset($block_array[$i]['list']) ? $block_array[$i]['list'] : '';
 
@@ -499,4 +504,66 @@ function GetMaxSn($od_id, $db)
         echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
         die();
     }
+}
+
+function GetBrandInfo($pid, $db)
+{
+    $brand = "";
+    $query = "SELECT brand FROM `product_category` WHERE id = :pid";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':pid', $pid);
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $brand = $row['brand'];
+        
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+    
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+   
+    }
+
+    return $brand;
+}
+
+function MatchBrandPattern($code){
+    $patterns = ['FELIIX CL ==> COLORS',
+    'FELIIX DL ==>DANCELIGHT',
+    'FELIIX ET ==>ELITES',
+    'FELIIX EL ==>EVERLIGHT',
+    'FELIIX GT ==>GENTECH',
+    'FELIIX HG ==>HUANG GONG',
+    'FELIIX LD ==>LEDOUX',
+    'FELIIX RT ==>ROOSTER',
+    'FELIIX SD ==>SEEDDESIGN',
+    'FELIIX SB ==>SHAN BEN',
+    'FELIIX ST ==>SHINE TOP',
+    'FELIIX TYG ==>TAYAGI',
+    'FELIIX TONS ==>TONS',
+    'FELIIX WH ==>WENHUI',
+    'FELIIX XL ==>XCELLENT',
+    'FELIIX YD ==>YUDA'];
+    $brand = "";
+    foreach($patterns as $pattern)
+    {
+        $pattern_array = explode("==>", $pattern);
+
+        // if code contains pattern
+        if(strpos($code, $pattern_array[0]) !== false)
+        {
+            $brand = $pattern_array[1];
+            break;
+        }
+    }
+    return $brand;
 }
