@@ -105,6 +105,14 @@ if($jwt){
                 )
             );
 
+            $left_style = array(
+                'alignment' => array(
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                )
+            );
+
+
             $spreadsheet = new Spreadsheet();
 
 
@@ -121,94 +129,50 @@ if($jwt){
             $sheet->getMergeCells();
 
             $i = 1;
-            foreach($merged_results as $row)
+            foreach($merged_results as $pages)
             {
-                // date
-                $sheet->setCellValue('A'. $i, $row["date"]);
-                // title 
-                $i = $i + 1;
-                $sheet->setCellValue('A'. $i, 'Sales Person');
-                $sheet->setCellValue('B'. $i, 'Category');
-                $sheet->setCellValue('C'. $i, 'Customer Name');
-                $sheet->setCellValue('D'. $i, 'Project Name');
-                $sheet->setCellValue('E'. $i, 'Created Time');
-                $sheet->setCellValue('F'. $i, 'Amount');
-                $sheet->setCellValue('G'. $i, 'A/R');
-                $sheet->setCellValue('H'. $i, 'Down Payment');
-                $sheet->setCellValue('I'. $i, 'Full Payment');
-                $sheet->setCellValue('J'. $i, 'Total Down Payment');
-                $sheet->setCellValue('K'. $i, 'Total Full Payment');
-                $sheet->setCellValue('L'. $i, 'Net Amount');
-                $sheet->setCellValue('M'. $i, 'Tax Withheld');
-                $sheet->getStyle('A' . $i . ':' . 'M' . $i)->getFont()->setBold(true);
-
-                foreach($row['report'] as $rp)
+                foreach($pages['pages'] as $page)
                 {
-                    foreach ($rp['l_catagory'] as $low)
+                    foreach($page['types'] as $type)
                     {
+                        $sheet->setCellValue('A'. $i, $type["name"]);
+                        $sheet->mergeCells('A'. $i . ':D'. $i);
+
+                        $sheet->getStyle('A'. $i. ':' . 'D' . $i)->applyFromArray($styleArray);
+                        $sheet->getStyle('A'. $i. ':' . 'D' . $i)->applyFromArray($center_style);
+
                         $i = $i + 1;
-                        $sheet->setCellValue('A' . $i, $low['username']);
-                        $sheet->setCellValue('B' . $i, 'Ligthing');
-                        $sheet->setCellValue('C' . $i, $low['client']);
-                        $sheet->setCellValue('D' . $i, $low['project_name']);
-                        $sheet->setCellValue('E' . $i, $low['created_at']);
-                        $sheet->setCellValue('F' . $i, number_format((float)$low['final_amount'], 2, '.', ''));
-                        $sheet->setCellValue('G' . $i, number_format((float)$low['ar'], 2, '.', ''));
-                        $sheet->setCellValue('H' . $i, number_format((float)$low['dsum'], 2, '.', ''));
-                        $sheet->setCellValue('I' . $i, number_format((float)$low['psum'], 2, '.', ''));
-                        $sheet->setCellValue('J' . $i, number_format((float)$low['total_dsum'], 2, '.', ''));
-                        $sheet->setCellValue('K' . $i, number_format((float)$low['total_psum'], 2, '.', ''));
-                        $sheet->setCellValue('L' . $i, number_format((float)$low['net_amount'], 2, '.', ''));
-                        $sheet->setCellValue('M' . $i, number_format((float)$low['tax_withheld'], 2, '.', ''));
+                        
+                        $sheet->setCellValue('A'. $i, "#");
+                        $sheet->setCellValue('B'. $i, "No");
+                        $sheet->setCellValue('C'. $i, "Code");
+                        $sheet->setCellValue('D'. $i, "Qty");
+
+                        $sheet->getStyle('A'. $i. ':' . 'D' . $i)->applyFromArray($styleArray);
+                        $sheet->getStyle('A'. $i. ':' . 'D' . $i)->applyFromArray($center_style);
+
+                        $i = $i + 1;
+
+                        $item = 1;
+                        foreach($type['blocks'] as $block)
+                        {
+                            $sheet->setCellValue('A'. $i, $item);
+                            $sheet->setCellValue('B'. $i, $block['num']);
+                            $sheet->setCellValue('C'. $i, $block['code']);
+                            $sheet->setCellValue('D'. $i, $block['qty']);
+                            
+                            $sheet->getStyle('A'. $i. ':' . 'D' . $i)->applyFromArray($styleArray);
+                            $sheet->getStyle('B'. $i. ':' . 'C' . $i)->applyFromArray($left_style);
+
+                            $i = $i + 1;
+                            $item += 1;
+                        }
+
+                        $i = $i + 1;
                     }
 
-                    foreach ($rp['o_catagory'] as $oow)
-                    {
-                        $i = $i + 1;
-                        $sheet->setCellValue('A' . $i, $oow['username']);
-                        $sheet->setCellValue('B' . $i, 'Office Systems');
-                        $sheet->setCellValue('C' . $i, $oow['client']);
-                        $sheet->setCellValue('D' . $i, $oow['project_name']);
-                        $sheet->setCellValue('E' . $i, $low['created_at']);
-                        $sheet->setCellValue('F' . $i, number_format((float)$oow['final_amount'], 2, '.', ''));
-                        $sheet->setCellValue('G' . $i, number_format((float)$oow['ar'], 2, '.', ''));
-                        $sheet->setCellValue('H' . $i, number_format((float)$oow['dsum'], 2, '.', ''));
-                        $sheet->setCellValue('I' . $i, number_format((float)$oow['psum'], 2, '.', ''));
-                        $sheet->setCellValue('J' . $i, number_format((float)$oow['total_dsum'], 2, '.', ''));
-                        $sheet->setCellValue('K' . $i, number_format((float)$oow['total_psum'], 2, '.', ''));
-                        $sheet->setCellValue('L' . $i, number_format((float)$oow['net_amount'], 2, '.', ''));
-                        $sheet->setCellValue('M' . $i, number_format((float)$oow['tax_withheld'], 2, '.', ''));
-                    }
-
-                    $i = $i + 1;
-                    $sheet->setCellValue('E' . $i, "Sub Total:");
-                    $sheet->setCellValue('F' . $i, number_format((float)$rp['sub_amount'], 2, '.', ''));
-                    $sheet->setCellValue('G' . $i, number_format((float)$rp['sub_ar'], 2, '.', ''));
-                    $sheet->setCellValue('H' . $i, number_format((float)$rp['sub_d'], 2, '.', ''));
-                    $sheet->setCellValue('I' . $i, number_format((float)$rp['sub_p'], 2, '.', ''));
-                    $sheet->setCellValue('J' . $i, number_format((float)$rp['total_d'], 2, '.', ''));
-                    $sheet->setCellValue('K' . $i, number_format((float)$rp['total_p'], 2, '.', ''));
-                    $sheet->setCellValue('L' . $i, number_format((float)$rp['sub_net_amount'], 2, '.', ''));
-                    $sheet->setCellValue('M' . $i, number_format((float)$rp['sub_tax_withheld'], 2, '.', ''));
-
-                    $sheet->getStyle('A' . $i . ':' . 'M' . $i)->getFont()->setBold(true);
+                    $i = $i + 2;
                 }
-
-                $i = $i + 1;
-                $sheet->setCellValue('E' . $i, "Total:");
-                $sheet->setCellValue('F' . $i, number_format((float)$row['total']['total_amount'], 2, '.', ''));
-                $sheet->setCellValue('G' . $i, number_format((float)$row['total']['total_ar'], 2, '.', ''));
-                $sheet->setCellValue('H' . $i, number_format((float)$row['total']['total_d'], 2, '.', ''));
-                $sheet->setCellValue('I' . $i, number_format((float)$row['total']['total_p'], 2, '.', ''));
-                $sheet->setCellValue('J' . $i, number_format((float)$row['total']['total_dsum'], 2, '.', ''));
-                $sheet->setCellValue('K' . $i, number_format((float)$row['total']['total_psum'], 2, '.', ''));
-                $sheet->setCellValue('L' . $i, number_format((float)$row['total']['total_net_amount'], 2, '.', ''));
-                $sheet->setCellValue('M' . $i, number_format((float)$row['total']['total_tax_withheld'], 2, '.', ''));
-
-                $sheet->getStyle('A' . $i . ':' . 'M' . $i)->getFont()->setBold(true);
-                //$sheet->getStyle('A'. $i. ':' . 'J' . $i)->applyFromArray($styleArray);
-
-                $i = $i + 2;
             }
 
             
@@ -429,7 +393,7 @@ function GetBlocks($qid, $db){
             "v2" => $v2,
             "v3" => $v3,
             "list" => $listing,
-            "srp" => $srp,
+         
         );
     }
 
