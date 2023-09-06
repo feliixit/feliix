@@ -2281,7 +2281,7 @@ header( 'location:index' );
                 </div>
 
                 <div class="popupblock">
-                    <a id="" class="export_excel" title="Export Simple Item List into Excel" @click="???()"></a>
+                    <a id="" class="export_excel" title="Export Simple Item List into Excel" @click="export_excel()"></a>
                 </div>
 
                 <div class="popupblock">

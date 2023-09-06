@@ -3465,6 +3465,10 @@ Installation:`;
         });
       },
 
+      export_excel() {
+
+      },
+
       print_me() {
  
         html2canvas(document.querySelector(".company_signature"), { proxy: "html2canvasproxy", useCORS: false, logging: true, allowTaint: true}).then(canvas => {
