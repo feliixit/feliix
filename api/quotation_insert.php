@@ -396,7 +396,7 @@ else
             {
                 $title = "Terms and Conditions";
                 $brief = "";
-                $list = "1. Warranty: 2 years upon delivery and lifetime service warranty. This limited warranty does not cover those defects brought about by normal wear and tear. During the Warranty Period, Feliix Inc. will repair or replace products or parts of a product that proves defective because of improper material or workmanship under normal use and maintenance.
+                $list = "1. Warranty: 5 years upon delivery and lifetime service warranty. This limited warranty does not cover those defects brought about by normal wear and tear. During the Warranty Period, Feliix Inc. will repair or replace products or parts of a product that proves defective because of improper material or workmanship under normal use and maintenance.
 2. Quotation valid for 2 Weeks.
 3. Leadtime:30- 45 Days (Start production upon P.O and down payment)
 4. Above price is subject to change without prior notice due to exchange rate of Dollar to Peso.
