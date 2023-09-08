@@ -2342,11 +2342,11 @@ header( 'location:index' );
             <div class="block">
                 <!-- print -->
                 <div class="popupblock">
-                    <a id="" class="print" @click="print_page()"></a>
+                    <a id="" class="print" title="Export Whole Quotation into PDF" @click="print_page()"></a>
                 </div>
 
                 <div class="popupblock">
-                    <a id="" class="specification" @click="specification_sheet()"></a>
+                    <a id="" class="specification" title="Export Specification Sheet into PDF" @click="specification_sheet()"></a>
                 </div>
 
                 <div class="popupblock">
@@ -2354,7 +2354,7 @@ header( 'location:index' );
                 </div>
 
                 <div class="popupblock">
-                    <a id="" class="approvalform" @click="approval_form_post()"></a>
+                    <a id="" class="approvalform" title="Generate Corresponding Approval Form" @click="approval_form_post()"></a>
                 </div>
             </div>
 
