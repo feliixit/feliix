@@ -1919,7 +1919,7 @@ try {
                     <th>Brand</th>
                     <th colspan="2">Description</th>
                     <th>Qty Needed</th>
-                    <th>Amount</th>
+                    <th style="display: none;">Amount</th>
                     <th>Date Needed by Client</th>
                     <th>Notes</th>
                     <th>Action</th>

@@ -228,14 +228,21 @@ if($jwt){
             $sheet->setCellValue('J1', 'Description');
             $sheet->setCellValue('K1', 'Qty Needed');
             $sheet->setCellValue('L1', 'Backup Qty');
-            $sheet->setCellValue('M1', 'Amount');
-            $sheet->setCellValue('N1', 'Date Needed by Client');
-            $sheet->setCellValue('O1', 'Shipping Way');
-            $sheet->setCellValue('P1', 'ETA');
-            $sheet->setCellValue('Q1', 'Arrival Date');
-            $sheet->setCellValue('R1', 'Warehouse In Charge');
-            $sheet->setCellValue('S1', 'Testing');
-            $sheet->setCellValue('T1', 'Delivery');
+            // $sheet->setCellValue('M1', 'Amount');
+            // $sheet->setCellValue('N1', 'Date Needed by Client');
+            // $sheet->setCellValue('O1', 'Shipping Way');
+            // $sheet->setCellValue('P1', 'ETA');
+            // $sheet->setCellValue('Q1', 'Arrival Date');
+            // $sheet->setCellValue('R1', 'Warehouse In Charge');
+            // $sheet->setCellValue('S1', 'Testing');
+            // $sheet->setCellValue('T1', 'Delivery');
+            $sheet->setCellValue('M1', 'Date Needed by Client');
+            $sheet->setCellValue('N1', 'Shipping Way');
+            $sheet->setCellValue('O1', 'ETA');
+            $sheet->setCellValue('P1', 'Arrival Date');
+            $sheet->setCellValue('Q1', 'Warehouse In Charge');
+            $sheet->setCellValue('R1', 'Testing');
+            $sheet->setCellValue('S1', 'Delivery');
 
             $sheet->getColumnDimension('A')->setWidth(4.82);
             $sheet->getColumnDimension('B')->setWidth(12.82);
@@ -249,14 +256,21 @@ if($jwt){
             $sheet->getColumnDimension('J')->setWidth(40.82);
             $sheet->getColumnDimension('K')->setWidth(15.82);
             $sheet->getColumnDimension('L')->setWidth(15.82);
-            $sheet->getColumnDimension('M')->setWidth(15.82);
-            $sheet->getColumnDimension('N')->setWidth(20.82);
-            $sheet->getColumnDimension('O')->setWidth(22.82);
+            // $sheet->getColumnDimension('M')->setWidth(15.82);
+            // $sheet->getColumnDimension('N')->setWidth(20.82);
+            // $sheet->getColumnDimension('O')->setWidth(22.82);
+            // $sheet->getColumnDimension('P')->setWidth(13.82);
+            // $sheet->getColumnDimension('Q')->setWidth(13.82);
+            // $sheet->getColumnDimension('R')->setWidth(30.82);
+            // $sheet->getColumnDimension('S')->setWidth(30.82);
+            // $sheet->getColumnDimension('T')->setWidth(30.82);
+            $sheet->getColumnDimension('M')->setWidth(20.82);
+            $sheet->getColumnDimension('N')->setWidth(22.82);
+            $sheet->getColumnDimension('O')->setWidth(13.82);
             $sheet->getColumnDimension('P')->setWidth(13.82);
-            $sheet->getColumnDimension('Q')->setWidth(13.82);
+            $sheet->getColumnDimension('Q')->setWidth(30.82);
             $sheet->getColumnDimension('R')->setWidth(30.82);
             $sheet->getColumnDimension('S')->setWidth(30.82);
-            $sheet->getColumnDimension('T')->setWidth(30.82);
 
             $i = 2;
             foreach($merged_results as $row)
@@ -349,41 +363,41 @@ if($jwt){
                 $sheet->setCellValue('L' . $i, $row['backup_qty']);
                 $sheet->getStyle('L'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('M' . $i, ($row['srp'] != '' ? "₱ " . $row['srp'] : ''));
+                // $sheet->setCellValue('M' . $i, ($row['srp'] != '' ? "₱ " . $row['srp'] : ''));
+                // $sheet->getStyle('M'. $i)->applyFromArray($center_style);
+
+                $sheet->setCellValue('M' . $i,  $row['date_needed']);
                 $sheet->getStyle('M'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('N' . $i,  $row['date_needed']);
+                $sheet->setCellValue('N' . $i,  $row['shipping_way'] . "\n" . $row['shipping_number']);
                 $sheet->getStyle('N'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('O' . $i,  $row['shipping_way'] . "\n" . $row['shipping_number']);
+                $sheet->setCellValue('O' . $i,  $row['eta']);
                 $sheet->getStyle('O'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('P' . $i,  $row['eta']);
+                $sheet->setCellValue('P' . $i,  $row['arrive']);
                 $sheet->getStyle('P'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('Q' . $i,  $row['arrive']);
+                $sheet->setCellValue('Q'. $i, "Confirm Arrival: " . ($row['charge'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark'] );
+                $sheet->getStyle('Q'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('Q'. $i)->applyFromArray($center_style);
 
-                $sheet->setCellValue('R'. $i, "Confirm Arrival: " . ($row['charge'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark'] );
+                //$sheet->setCellValue('R'. $i, "Assignee: " . $row['test'] . "\n" . "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
+                $sheet->setCellValue('R'. $i, "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
                 $sheet->getStyle('R'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('R'. $i)->applyFromArray($center_style);
 
-                //$sheet->setCellValue('R'. $i, "Assignee: " . $row['test'] . "\n" . "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
-                $sheet->setCellValue('S'. $i, "Testing Result is Normal: " . ($row['check_t'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_t'] );
+                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
+                $sheet->setCellValue('S'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
                 $sheet->getStyle('S'. $i)->getAlignment()->setWrapText(true);
                 $sheet->getStyle('S'. $i)->applyFromArray($center_style);
-
-                //$sheet->setCellValue('S'. $i, "Assignee: " . $row['delivery'] . "\n" . "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                $sheet->setCellValue('T'. $i, "Delivery is OK: " . ($row['check_d'] == 1 ? 'Y' : '').  "\n" . "Remarks: " . $row['remark_d'] );
-                $sheet->getStyle('T'. $i)->getAlignment()->setWrapText(true);
-                $sheet->getStyle('T'. $i)->applyFromArray($center_style);
 
 
                 $i++;
             }
         
-            $sheet->getStyle('A1:' . 'T1')->getFont()->setBold(true);
-            $sheet->getStyle('A1:' . 'T' . --$i)->applyFromArray($styleArray);
+            $sheet->getStyle('A1:' . 'S1')->getFont()->setBold(true);
+            $sheet->getStyle('A1:' . 'S' . --$i)->applyFromArray($styleArray);
 
             ob_end_clean();
 
