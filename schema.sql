@@ -4112,3 +4112,6 @@ ADD COLUMN `text_color` varchar(100) COLLATE utf8mb4_unicode_ci default '';
 
 ALTER TABLE work_calendar_meetings
 ADD COLUMN `color_other` varchar(100) COLLATE utf8mb4_unicode_ci default '';
+
+-- Modify Length 20230906
+ALTER TABLE price_record MODIFY `pic_url` varchar(4096);

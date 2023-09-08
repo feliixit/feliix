@@ -2182,6 +2182,37 @@ var app = new Vue({
         }
       },
 
+      export_excel() {
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+        let _this = this;
+        form_Data.append("jwt", token);
+        form_Data.append("id", this.id);
+  
+  
+        axios({
+          method: "post",
+          url: "api/quotation_export_excel",
+          data: form_Data,
+          responseType: "blob",
+        })
+            .then(function(response) {
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                 
+                  link.setAttribute('download', 'Quotation Export_' + _this.quotation_no + '.xlsx');
+                 
+                  document.body.appendChild(link);
+                  link.click();
+  
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            });
+      },
+
       chang_amount: function(row) {
         if(row.qty == '')
           return;

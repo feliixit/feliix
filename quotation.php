@@ -67,7 +67,7 @@ header( 'location:index' );
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>FELIIX template</title>
+    <title>Quotation Form</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -1791,7 +1791,7 @@ header( 'location:index' );
             border-bottom-color: rgb(230, 230, 230);
         }
 
-        .list_function.main a.print, .list_function.main a.specification, .list_function.main a.approvalform {
+        .list_function.main a.print, .list_function.main a.specification, .list_function.main a.approvalform, .list_function.main a.export_excel {
             width: 30px;
             height: 30px;
             background-color: #00811e;
@@ -1821,6 +1821,19 @@ header( 'location:index' );
             left: 4px;
         }
 
+        .list_function.main a.export_excel::after {
+            content: " ";
+            background: url(images/ui/btn_export_excel.svg);
+            background-size: 22px 22px;
+            background-repeat: no-repeat;
+            width: 45px;
+            height: 45px;
+            position: absolute;
+            top: 0.5px;
+            left: 0.5px;
+            zoom: 130%;
+        }
+
         .list_function.main a.approvalform::after {
             content: " ";
             background: url(images/ui/btn_approvalform.svg);
@@ -1834,7 +1847,7 @@ header( 'location:index' );
         }
 
 
-        .list_function.main a.print:hover, .list_function.main a.specification:hover, .list_function.main a.approvalform:hover {
+        .list_function.main a.print:hover, .list_function.main a.specification:hover, .list_function.main a.approvalform:hover, .list_function.main a.export_excel:hover {
             background-color: #707071;
         }
 
@@ -2261,15 +2274,19 @@ header( 'location:index' );
             <div class="block">
                 <!-- print -->
                 <div class="popupblock">
-                    <a id="" class="print" @click="print_page()"></a>
+                    <a id="" class="print" title="Export Whole Quotation into PDF" @click="print_page()"></a>
                 </div>
 
                 <div class="popupblock">
-                    <a id="" class="specification" @click="specification_sheet()"></a>
+                    <a id="" class="specification" title="Export Specification Sheet into PDF" @click="specification_sheet()"></a>
                 </div>
 
                 <div class="popupblock">
-                    <a id="" class="approvalform" @click="approval_form_post()"></a>
+                    <a id="" class="export_excel" title="Export Simple Item List into Excel" @click="export_excel()"></a>
+                </div>
+
+                <div class="popupblock">
+                    <a id="" class="approvalform" title="Generate Corresponding Approval Form" @click="approval_form_post()"></a>
                 </div>
             </div>
 
