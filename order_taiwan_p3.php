@@ -512,15 +512,17 @@ try {
             min-width: 130px;
         }
 
+        <!--
         .block.C .tb_order thead tr th:nth-of-type(8), .block.C .tb_order tbody tr td:nth-of-type(9) {
             min-width: 180px;
         }
+        -->
 
-        .block.C .tb_order thead tr th:nth-of-type(9), .block.C .tb_order tbody tr td:nth-of-type(10) {
+        .block.C .tb_order thead tr th:nth-of-type(8), .block.C .tb_order tbody tr td:nth-of-type(9) {
             min-width: 200px;
         }
 
-        .block.C .tb_order thead tr th:nth-of-type(10), .block.C .tb_order tbody tr td:nth-of-type(11) {
+        .block.C .tb_order thead tr th:nth-of-type(9), .block.C .tb_order tbody tr td:nth-of-type(10) {
             min-width: 450px;
         }
 
@@ -528,23 +530,23 @@ try {
             min-width: 120px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(12) {
+        .block.C .tb_order tbody tr td:nth-of-type(11) {
             min-width: 450px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(13) {
+        .block.C .tb_order tbody tr td:nth-of-type(12) {
             min-width: 220px;
         }
 
-        .block.C .tb_order tbody tr td:nth-of-type(14),
-        .block.C .tb_order tbody tr td:nth-of-type(15) {
+        .block.C .tb_order tbody tr td:nth-of-type(13),
+        .block.C .tb_order tbody tr td:nth-of-type(14) {
             min-width: 180px;
         }
 
+        .block.C .tb_order tbody tr td:nth-of-type(15),
         .block.C .tb_order tbody tr td:nth-of-type(16),
         .block.C .tb_order tbody tr td:nth-of-type(17),
-        .block.C .tb_order tbody tr td:nth-of-type(18),
-        .block.C .tb_order tbody tr td:nth-of-type(19) {
+        .block.C .tb_order tbody tr td:nth-of-type(18) {
             min-width: 400px;
         }
 
@@ -1506,7 +1508,7 @@ try {
                         <th colspan="2">Description</th>
                         <th>Qty Needed</th>
                         <th>Backup Qty</th>
-                        <th>Amount</th>
+                        <th style="display: none;">Amount</th>
                         <th>Date Needed by Client</th>
                         <th>Notes</th>
                         <th>Notes (Only for Approved Stage)</th>
@@ -1618,7 +1620,7 @@ try {
                 </div>
             </td>
 
-            <td>
+            <td style="display: none;">
                 <div class="read_block" v-if="!item.is_edit">
                     {{ item.srp != '' ? '₱ ' + item.srp : '' }}
                 </div>
@@ -2257,7 +2259,7 @@ try {
                             </td>
                             <td>
                                 <span v-show="show_ntd === true">CP: {{ item.price_ntd }} <br v-if="item.str_price_ntd_change"> {{ item.str_price_ntd_change ?  item.str_price_ntd_change : '' }}<br></span>
-                                <span>Amount: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
+                                <span>SRP: {{ item.price }}<br v-if="item.str_price_change"> {{ item.str_price_change ?  item.str_price_change : '' }}<br></span>
                                 <span>QP: {{ item.quoted_price }} <br v-if="item.str_quoted_price_change"> {{ item.str_quoted_price_change ? item.str_quoted_price_change : '' }}<br></span>
                             </td>
                             <td>
