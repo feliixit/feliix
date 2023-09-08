@@ -1855,7 +1855,7 @@ header( 'location:index' );
             border-bottom-color: rgb(230, 230, 230);
         }
 
-        .list_function.main a.print, .list_function.main a.specification, .list_function.main a.approvalform {
+        .list_function.main a.print, .list_function.main a.specification, .list_function.main a.approvalform, .list_function.main a.export_excel {
             width: 30px;
             height: 30px;
             background-color: #00811e;
@@ -1885,6 +1885,19 @@ header( 'location:index' );
             left: 4px;
         }
 
+        .list_function.main a.export_excel::after {
+            content: " ";
+            background: url(images/ui/btn_specification.svg);
+            background-size: 22px 22px;
+            background-repeat: no-repeat;
+            width: 45px;
+            height: 45px;
+            position: absolute;
+            top: 0.5px;
+            left: 0.5px;
+            zoom: 130%;
+        }
+
         .list_function.main a.approvalform::after {
             content: " ";
             background: url(images/ui/btn_approvalform.svg);
@@ -1898,7 +1911,7 @@ header( 'location:index' );
         }
 
 
-        .list_function.main a.print:hover, .list_function.main a.specification:hover, .list_function.main a.approvalform:hover {
+        .list_function.main a.print:hover, .list_function.main a.specification:hover, .list_function.main a.approvalform:hover, .list_function.main a.export_excel:hover {
             background-color: #707071;
         }
 
@@ -2334,6 +2347,10 @@ header( 'location:index' );
 
                 <div class="popupblock">
                     <a id="" class="specification" @click="specification_sheet()"></a>
+                </div>
+
+                <div class="popupblock">
+                    <a id="" class="export_excel" title="Export Simple Item List into Excel" @click="export_excel()"></a>
                 </div>
 
                 <div class="popupblock">
