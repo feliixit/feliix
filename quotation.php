@@ -67,7 +67,7 @@ header( 'location:index' );
     <link rel="apple-touch-icon" href="images/iosicon.png"/>
 
     <!-- SEO -->
-    <title>FELIIX template</title>
+    <title>Quotation Form</title>
     <meta name="keywords" content="FELIIX">
     <meta name="Description" content="FELIIX">
     <meta name="robots" content="all"/>
@@ -1829,8 +1829,9 @@ header( 'location:index' );
             width: 45px;
             height: 45px;
             position: absolute;
-            top: 3px;
-            left: 4px;
+            top: 0.5px;
+            left: 0.5px;
+            zoom: 130%;
         }
 
         .list_function.main a.approvalform::after {
