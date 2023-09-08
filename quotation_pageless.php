@@ -1887,7 +1887,7 @@ header( 'location:index' );
 
         .list_function.main a.export_excel::after {
             content: " ";
-            background: url(images/ui/btn_specification.svg);
+            background: url(images/ui/btn_export_excel.svg);
             background-size: 22px 22px;
             background-repeat: no-repeat;
             width: 45px;
