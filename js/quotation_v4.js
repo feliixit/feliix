@@ -3484,7 +3484,7 @@ Installation:`;
                   const link = document.createElement('a');
                   link.href = url;
                  
-                    link.setAttribute('download', 'Quotation Export.xlsx');
+                    link.setAttribute('download', 'Quotation Export_' + _this.quotation_no + '.xlsx');
                  
                   document.body.appendChild(link);
                   link.click();
