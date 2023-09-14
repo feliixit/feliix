@@ -321,6 +321,8 @@ function getLeaveType($type){
         $leave_type = "Unpaid Leave";
     if($type =="D")
         $leave_type = "Absence";
+    if($type =="H")
+        $leave_type = "Manager Halfday Planning";
     
     return $leave_type;
 }

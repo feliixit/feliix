@@ -1091,7 +1091,7 @@ function GetValue($str)
     
     $obj = explode('=>', $str);
 
-    return isset($obj[1]) ? $obj[1] : "";
+    return isset($obj[1]) ? trim($obj[1]) : "";
 }
 
 function GetProductMain($id, $v1, $v2, $v3, $db)
@@ -1117,7 +1117,7 @@ function GetProductMain($id, $v1, $v2, $v3, $db)
     return $price_ntd;
 }
 
-function GetProduct($id, $v1, $v2, $v3, $db){
+function GetProduct($id, $pv1, $pv2, $pv3, $db){
     $sql = "SELECT *, CONCAT('https://storage.cloud.google.com/feliiximg/' , photo) url FROM product WHERE product_id = ". $id . " and STATUS <> -1";
 
     $merged_results = array();
@@ -1182,7 +1182,7 @@ function GetProduct($id, $v1, $v2, $v3, $db){
     // find in merged_results with v1, v2 and v3
     $price_ntd = "";
     foreach($merged_results as $item) {
-        if($item['v1'] == $v1 && $item['v2'] == $v2 && $item['v3'] == $v3) {
+        if($item['v1'] == $pv1 && $item['v2'] == $pv2 && $item['v3'] == $pv3) {
             if($item['price_ntd'] != '')
                 $price_ntd = $item['price_ntd'];
         }

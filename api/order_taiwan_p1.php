@@ -66,6 +66,9 @@ if (!isset($jwt)) {
                     shipping_number,
                     shipping_vendor,
                     pid,
+                    v1,
+                    v2,
+                    v3,
                     eta,
                     arrive,
                     remark,
@@ -159,6 +162,10 @@ if (!isset($jwt)) {
 
         $pid = $row['pid'];
 
+        $v1 = $row['v1'];
+        $v2 = $row['v2'];
+        $v3 = $row['v3'];
+
         $serial_number = $row['serial_number'];
 
         $test_updated_name = $row['test_updated_name'];
@@ -196,6 +203,9 @@ if (!isset($jwt)) {
             "shipping_number" => $shipping_number,
             "shipping_vendor" => $shipping_vendor,
             "pid" => $pid,
+            "v1" => $v1,
+            "v2" => $v2,
+            "v3" => $v3,
             "eta" => $eta,
             "arrive" => $arrive,
             "remark" => $remark,
