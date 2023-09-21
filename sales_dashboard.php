@@ -36,7 +36,7 @@ try {
         $access6 = true;
     }
 
-    if($username == "Kristel Tan" || $username == "Kuan" || $username == "Dennis Lin" || $username == "Ronnie Fernando Dela Cruz" || $username == "Gina Donato")
+    if($username == "Kristel Tan" || $username == "Kuan" || $username == "Dennis Lin")
     {
         $access6 = true;
     }
@@ -313,7 +313,7 @@ background-color: #94BABB;
             <!-- tags js在 main.js -->
             <div class="tags">
                 <a class="tag A focus">Sales Dashboard</a>
-                <a class="tag B"  href="sales_dashboard_1" v-if="access6">Sales Dashboard 1</a>
+                <a class="tag B"  href="sales_dashboard_1" v-if="!access7">Sales Dashboard 1</a>
             </div>
             <!-- Blocks -->
             <div class="block A focus">
