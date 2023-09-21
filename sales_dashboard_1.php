@@ -25,6 +25,14 @@ try {
     $position = $decoded->data->position;
     $department = $decoded->data->department;
 
+    $access7 = false;
+
+    // 針對 sales_dashboard.php 這個頁面，需要新加入兩位使用者有權限可以看到和存取 sales_dashboard 這個分頁，但新加入的這兩個人不能看到 "Sales Dashboard 1 這個分頁
+    if($username == "Ronnie Fernando Dela Cruz" || $username == "Gina Donato")
+    {
+        $access7 = true;
+    }
+
     //if(passport_decrypt( base64_decode($uid)) !== $decoded->data->username )
     //    header( 'location:index.php' );
 
@@ -43,8 +51,8 @@ try {
     //     $access6 = true;
     // }
 
-    // if($access6 == false)
-    //     header( 'location:index' );
+    if($access7 == true)
+        header( 'location:index' );
 
     
 }

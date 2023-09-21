@@ -29,18 +29,24 @@ try {
     //    header( 'location:index.php' );
 
     $access6 = false;
+    $access7 = false;
 
     if(trim(strtoupper($department)) == 'SALES')
     {
         $access6 = true;
     }
 
-    if($username == "Kristel Tan" || $username == "Kuan" || $username == "Dennis Lin")
+    if($username == "Kristel Tan" || $username == "Kuan" || $username == "Dennis Lin" || $username == "Ronnie Fernando Dela Cruz" || $username == "Gina Donato")
     {
         $access6 = true;
     }
 
-    if($access6 == false)
+    if($username == "Ronnie Fernando Dela Cruz" || $username == "Gina Donato")
+    {
+        $access7 = true;
+    }
+
+    if($access6 == false && $access7 == false)
         header( 'location:index' );
 
     
@@ -307,7 +313,7 @@ background-color: #94BABB;
             <!-- tags js在 main.js -->
             <div class="tags">
                 <a class="tag A focus">Sales Dashboard</a>
-                <a class="tag B"  href="sales_dashboard_1">Sales Dashboard 1</a>
+                <a class="tag B"  href="sales_dashboard_1" v-if="access6">Sales Dashboard 1</a>
             </div>
             <!-- Blocks -->
             <div class="block A focus">
