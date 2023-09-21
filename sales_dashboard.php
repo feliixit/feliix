@@ -313,7 +313,7 @@ background-color: #94BABB;
             <!-- tags js在 main.js -->
             <div class="tags">
                 <a class="tag A focus">Sales Dashboard</a>
-                <a class="tag B"  href="sales_dashboard_1" v-if="access6">Sales Dashboard 1</a>
+                <?php if($access6) echo '<a class="tag B"  href="sales_dashboard_1">Sales Dashboard 1</a>'; ?>
             </div>
             <!-- Blocks -->
             <div class="block A focus">
