@@ -2435,7 +2435,7 @@ header( 'location:index' );
             }
 
             .qn_page {
-                zoom: 82%;
+                zoom: 93%;
                 margin: 1px 0px 0px 7px;
                 page-break-after: always;
                 overflow-y: hidden;
@@ -2451,7 +2451,7 @@ header( 'location:index' );
         }
 
         @page {
-            size: A4 portrait;
+            size: A3 portrait;
             margin: 0;
         }
 
