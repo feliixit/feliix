@@ -168,7 +168,7 @@ try {
             display: inline!important;
         }
 
-        div.fc-event-title.fc-sticky > i.fa-check-square{
+        div.fc-event-title.fc-sticky > i.fa-check-square, div.fc-event-title.fc-sticky > i.fa-car, div.fc-event-title.fc-sticky > i.fa-question-circle {
             font-size: 18px;
             margin: 0 5px 0 2px;
             color: white;
@@ -286,7 +286,97 @@ try {
 
             <div class="modal-body">
 
+                <!-- 指派車輛管理者填寫的表單 -->
+                <div id="approval_section" style="margin: 0 0 20px; padding-bottom: 20px; border-bottom: 3px solid #dee2e6;">
 
+                    <div class="row">
+                        <div class="col-12" style="text-align: center;">
+
+                            <h4 style="background: palegreen; padding: 8px; margin: 0 20px 5px;">Request Review</h4>
+
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-2 align-self-center" style="text-align: center;">
+
+                            <label>Date</label>
+
+                        </div>
+
+                        <div class="col-10">
+
+                            <input type="date" class="form-control" style="width:40%;" id="sc_date" disabled>
+
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="form-inline row">
+                        <div class="col-2 align-self-center" style="text-align: center;">
+
+                            <label>Time</label>
+
+                        </div>
+
+                        <div class="col-10">
+
+                            <input type="time" class="form-control" style="width:40%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime" disabled> to <input type="time" class="form-control" style="width:40%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime" disabled>
+
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-2 align-self-center" style="text-align: center;">
+
+                        <label>Assigned Car</label>
+
+                        </div>
+
+                        <div class="col-10">
+
+                            <Select class="form-control" style="width:40%;" id="???" disabled>
+                                <option value="0">Choose One</option>
+                                <option value="Alphard">Alphard</option>
+                                <option value="Avanza">Avanza</option>
+                                <option value="Travis 1">Travis 1</option>
+                                <option value="Travis 2">Travis 2</option>
+                                <option value="Toyota Rush">Toyota Rush</option>
+                            </Select>
+
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-2 align-self-center" style="text-align: center;">
+
+                            <label>Assigned Driver</label>
+
+                        </div>
+
+                        <div class="col-10">
+
+                            <input type="text" class="form-control" style="width:90%;" id="???" disabled>
+                            <input type="text" class="form-control" style="display: none;" id="???" disabled>
+
+                        </div>
+                    </div>
+
+                    <br>
+
+                </div>
+
+
+                <!-- 申請用車人填寫的表單 -->
                 <div class="row">
                     <div class="col-2 align-self-center" style="text-align: center;">
 
@@ -690,15 +780,18 @@ try {
                     <div class="col-10">
 
 
-                        <Select class="form-control" style="width:40%;" id="sc_service">
-                            <option value="0">Choose One</option>
-                            <option value="1">innova</option>
-                            <option value="2">avanza gold</option>
-                            <option value="3">avanza gray</option>
-                            <option value="4">L3001</option>
-                            <option value="5">L3002</option>
-                            <option value="6">Grab</option>
-                        </Select>
+                    <Select class="form-control" style="width:40%;" id="sc_service">
+                        <option value="0">Choose One</option>
+                        <option value="Innova">Innova</option>
+                        <option value="Avanza">Avanza</option>
+                        <option value="Traviz 1">Traviz 1</option>
+                        <option value="Traviz 2">Traviz 2</option>
+                        <option value="Alphard">Alphard</option>
+                        <option value="Toyota Rush">Toyota Rush</option>
+                        <option value="Grab">Grab</option>
+                        <option disabled="disabled">___________________</option>
+                        <option value="Avanza Gold">Avanza Gold</option>
+                    </Select>
 
                     </div>
 
@@ -832,6 +925,10 @@ try {
                     <button class="btn btn-info" id="btn_confirm">Confirmed</button>
 
                     <button class="btn btn-info" id="btn_unconfirm">Unconfirmed</button>
+
+                    <button class="btn btn-info" id="btn_request">Send Request</button>
+
+                    <button class="btn btn-info" id="btn_withdraw">Withdraw Request</button>
 
                 </div>
 

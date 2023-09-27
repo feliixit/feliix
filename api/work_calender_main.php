@@ -135,7 +135,7 @@ if (!isset($jwt)) {
                             main.service, main.driver, main.driver_other, main.back_up_driver, main.back_up_driver_other,
                             main.notes, main.`lock`, main.related_project_id, main.related_stage_id,
                             main.created_by, main.created_at, main.updated_by, main.updated_at, main.confirm,
-                            detail.main_id, detail.agenda, detail.appoint_time, detail.end_time, detail.sort, detail.location  
+                            detail.main_id, detail.agenda, detail.appoint_time, detail.end_time, detail.sort, detail.location, main.status
                         from work_calendar_main main 
                         left join work_calendar_details detail on detail.main_id = main.id and detail.is_enabled = true
                         where main.is_enabled = true ";
@@ -194,6 +194,7 @@ if (!isset($jwt)) {
             $created_at = "";
             $updated_by = "";
             $updated_at = "";
+            $status = 0;
 
             $confirm = "";
 
@@ -251,7 +252,8 @@ if (!isset($jwt)) {
                         "created_at" => $created_at,
                         "updated_by" => $updated_by,
                         "updated_at" => $updated_at,
-                        "detail" => $detail_array
+                        "detail" => $detail_array,
+                        "status" => $status
                     );
 
                     $detail_array = array();
@@ -292,6 +294,8 @@ if (!isset($jwt)) {
                 $created_at = $row['created_at'];
                 $updated_by = $row['updated_by'];
                 $updated_at = $row['updated_at'];
+
+                $status = $row['status'];
 
                 $main_id = $row['main_id'];
                 $agenda = $row['agenda'];
@@ -356,7 +360,8 @@ if (!isset($jwt)) {
                     "created_at" => $created_at,
                     "updated_by" => $updated_by,
                     "updated_at" => $updated_at,
-                    "detail" => $detail_array
+                    "detail" => $detail_array,
+                    "status" => $status
                 );
             }
             

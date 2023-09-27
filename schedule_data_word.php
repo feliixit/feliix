@@ -417,7 +417,7 @@ else
 }
 
     function getService($type){
-        $leave_type = '';
+        $leave_type = $type;
     
         if($type =="1")
             $leave_type = "innova";

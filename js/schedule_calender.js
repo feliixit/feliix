@@ -599,18 +599,27 @@ var app = new Vue({
                             if(element.trim() !== '')
                                 files += file_str;
                         });
+
+                        let symbol = "";
+                        if (response.data[i].status == "1") 
+                            symbol = 'fa-question-circle';
+                        if (response.data[i].status == "2")
+                            symbol = 'fa-car';
+
                         _this.items.push({
                             id: response.data[i].id,
                             title: response.data[i].title,
                             Date: moment(response.data[i].start_time).format("YYYY-MM-DD"),
                             start: moment(response.data[i].start_time).format(
-                                "YYYY-MM-DDTHH:mm"
+                               "YYYY-MM-DDTHH:mm"
                             ), // will be parsed
                             end: moment(response.data[i].end_time).format("YYYY-MM-DDTHH:mm"),
                             color: response.data[i].color,
                             color_other: response.data[i].color_other,
-                            allDay: isAll,
+                            //allDay: isAll,
+                            allDay: true,
                             description: {
+                                icon: symbol,
                                 Title: UnescapeHTML(response.data[i].title),
                                 Color: response.data[i].color,
                                 Color_Other: response.data[i].color_other,
@@ -658,6 +667,7 @@ var app = new Vue({
 
                                 Related_project_id : response.data[i].related_project_id,
                                 Related_stage_id : response.data[i].related_stage_id,
+                                created_by : response.data[i].created_by,
                             },
                         });
                     }
@@ -766,18 +776,27 @@ var app = new Vue({
                         });
 
                         files = "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + files + "</div>";
+
+                        let symbol = "";
+                        if (response.data[i].status == "1") 
+                            symbol = 'fa-question-circle';
+                        if (response.data[i].status == "2")
+                            symbol = 'fa-car';
+
                         _this.items.push({
                             id: response.data[i].id,
                             title: response.data[i].title,
                             Date: moment(response.data[i].start_time).format("YYYY-MM-DD"),
                             start: moment(response.data[i].start_time).format(
-                                "YYYY-MM-DDTHH:mm"
+                               "YYYY-MM-DDTHH:mm"
                             ), // will be parsed
                             end: moment(response.data[i].end_time).format("YYYY-MM-DDTHH:mm"),
                             color: ((response.data[i].color_other !== '') ? response.data[i].color_other : response.data[i].color),
                             // color_other: response.data[i].color_other,
-                            allDay: isAll,
+                            //allDay: isAll,
+                            allDay: true,
                             description: {
+                                icon: symbol,
                                 Title: UnescapeHTML(response.data[i].title),
                                 Color: response.data[i].color,
                                 Color_Other: response.data[i].color_other,
@@ -824,6 +843,7 @@ var app = new Vue({
                                 Lasteditor: Lasteditor,
                                 Related_project_id: response.data[i].related_project_id,
                                 Related_stage_id: response.data[i].related_stage_id,
+                                created_by: response.data[i].created_by,
                             },
                         });
                     }
@@ -1246,6 +1266,21 @@ var app = new Vue({
                         document.getElementById("btn_unconfirm").style.display = "none";
                     }
 
+                    if(sc_content.created_by == app.name)
+                    {
+                        if(sc_content.status == '1')
+                        {
+                            document.getElementById("btn_request").style.display = "none";
+                            document.getElementById("btn_withdraw").style.display = "inline";
+                        }
+
+                        if(sc_content.status == '0')
+                        {
+                            document.getElementById("btn_request").style.display = "inline";
+                            document.getElementById("btn_withdraw").style.display = "none";
+                        }
+                    }
+
                     app.filename = [];
                     app.fileArray = [];
 
@@ -1576,6 +1611,9 @@ var initial = async (_id) =>  {
                     document.getElementById("btn_confirm").style.display = "none";
                     document.getElementById("btn_unconfirm").style.display = "none";
 
+                    document.getElementById("btn_request").style.display = "none";
+                    document.getElementById("btn_withdraw").style.display = "none";
+
                     document.getElementById("sc_product_files").innerHTML = "";
                     document.getElementById("upload_input").style =
                         "display: flex; align-items: center; margin-top:1%;";
@@ -1831,6 +1869,21 @@ var initial = async (_id) =>  {
                 document.getElementById("btn_unconfirm").style.display = "none";
             }
 
+            if(sc_content.created_by == app.name)
+            {
+                if(sc_content.status == '1')
+                {
+                    document.getElementById("btn_request").style.display = "none";
+                    document.getElementById("btn_withdraw").style.display = "inline";
+                }
+
+                if(sc_content.status == '0')
+                {
+                    document.getElementById("btn_request").style.display = "inline";
+                    document.getElementById("btn_withdraw").style.display = "none";
+                }
+            }
+
             $("#exampleModalScrollable").modal("toggle");
         },
 
@@ -1843,6 +1896,18 @@ var initial = async (_id) =>  {
 
                 let icon = document.createElement("i");
                 icon.classList.add('fa', 'fa-check-square');
+
+                if( arg.el.querySelector(".fc-event-title-container") ){
+                    arg.el.querySelector(".fc-event-title").prepend(icon);
+                }
+                else {
+                    arg.el.prepend(icon);
+                }
+            }
+            if( arg.event.extendedProps.description.icon != '' ){
+
+                let icon = document.createElement("i");
+                icon.classList.add('fa', arg.event.extendedProps.description.icon);
 
                 if( arg.el.querySelector(".fc-event-title-container") ){
                     arg.el.querySelector(".fc-event-title").prepend(icon);

@@ -4115,3 +4115,14 @@ ADD COLUMN `color_other` varchar(100) COLLATE utf8mb4_unicode_ci default '';
 
 -- Modify Length 20230906
 ALTER TABLE price_record MODIFY `pic_url` varchar(4096);
+
+-- 20230926
+update work_calendar_main set service = 'Innova' where service = '1';
+update work_calendar_main set service = 'Avanza Gold' where service = '2';
+update work_calendar_main set service = 'Avanza' where service = '3';
+update work_calendar_main set service = 'Traviz 2' where service = '4';
+update work_calendar_main set service = 'Traviz 1' where service = '5';
+update work_calendar_main set service = 'Grab' where service = '6';
+
+ALTER TABLE work_calendar_main
+ADD COLUMN `status` int(11) DEFAULT 0;
