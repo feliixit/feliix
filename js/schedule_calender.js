@@ -844,6 +844,7 @@ var app = new Vue({
                                 Related_project_id: response.data[i].related_project_id,
                                 Related_stage_id: response.data[i].related_stage_id,
                                 created_by: response.data[i].created_by,
+                                status : response.data[i].status,
                             },
                         });
                     }
@@ -1408,6 +1409,68 @@ var app = new Vue({
                 });
         },
 
+        request: function(id) {
+            let _this = this;
+
+            this.action = 87; //request
+            var token = localStorage.getItem("token");
+            var form_Data = new FormData();
+
+            form_Data.append("jwt", token);
+            form_Data.append("id", id);
+            form_Data.append("action", _this.action);
+            form_Data.append("status", "1");
+            axios({
+                    method: "post",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    url: "api/work_calender_main",
+                    data: form_Data,
+                })
+                .then(function (response) {
+                    //handle success
+                    //_this.items = response.data
+                    eventObj.extendedProps.description.status = "1";
+                    $("#exampleModalScrollable").modal("toggle");
+                    reload(id);
+                })
+                .catch(function (response) {
+                    //handle error
+                });
+        },
+
+        withdraw: function(id) {
+            let _this = this;
+
+            this.action = 88; //request
+            var token = localStorage.getItem("token");
+            var form_Data = new FormData();
+
+            form_Data.append("jwt", token);
+            form_Data.append("id", id);
+            form_Data.append("action", _this.action);
+            form_Data.append("status", "0");
+            axios({
+                    method: "post",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    url: "api/work_calender_main",
+                    data: form_Data,
+                })
+                .then(function (response) {
+                    //handle success
+                    //_this.items = response.data
+                    eventObj.extendedProps.description.status = "0";
+                    $("#exampleModalScrollable").modal("toggle");
+                    reload(id);
+                })
+                .catch(function (response) {
+                    //handle error
+                });
+        },
+
         deleteMe: function(id) {
             let _this = this;
 
@@ -1869,6 +1932,7 @@ var initial = async (_id) =>  {
                 document.getElementById("btn_unconfirm").style.display = "none";
             }
 
+
             if(sc_content.created_by == app.name)
             {
                 if(sc_content.status == '1')
@@ -1882,6 +1946,20 @@ var initial = async (_id) =>  {
                     document.getElementById("btn_request").style.display = "inline";
                     document.getElementById("btn_withdraw").style.display = "none";
                 }
+            }
+            if(sc_content.status != '2')
+            {
+                document.getElementById("approval_section").style.display = "none";
+            }
+
+            if (app.name == "guest" ||
+                app.name != "Glendon Wendell Co" ||
+                app.name != "Mary Jude Jeng Articulo" ||
+                app.name != "Stefanie Mika C. Santos" ||
+                app.name != "Edneil Fernandez" 
+            ) {
+                document.getElementById("btn_request").style.display = "none";
+                document.getElementById("btn_withdraw").style.display = "none";
             }
 
             $("#exampleModalScrollable").modal("toggle");
@@ -2770,6 +2848,16 @@ $(document).on("click", "#btn_unconfirm", async function () {
 
     reload();
 
+});
+
+$(document).on("click", "#btn_request", async function () {
+     app.request(eventObj.id);
+    
+});
+
+$(document).on("click", "#btn_withdraw", async function () {
+     app.withdraw(eventObj.id);
+    
 });
 
 $(document).on("click", "#btn_save", function () {

@@ -309,7 +309,7 @@ try {
 
                         <div class="col-10">
 
-                            <input type="date" class="form-control" style="width:40%;" id="sc_date" disabled>
+                            <input type="date" class="form-control" style="width:40%;" id="sc_date_check" disabled>
 
                         </div>
                     </div>
@@ -325,7 +325,7 @@ try {
 
                         <div class="col-10">
 
-                            <input type="time" class="form-control" style="width:40%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime" disabled> to <input type="time" class="form-control" style="width:40%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime" disabled>
+                            <input type="time" class="form-control" style="width:40%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime_check" disabled> to <input type="time" class="form-control" style="width:40%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime_check" disabled>
 
                         </div>
 
@@ -342,12 +342,12 @@ try {
 
                         <div class="col-10">
 
-                            <Select class="form-control" style="width:40%;" id="???" disabled>
+                            <Select class="form-control" style="width:40%;" id="car_use_check" disabled>
                                 <option value="0">Choose One</option>
                                 <option value="Alphard">Alphard</option>
                                 <option value="Avanza">Avanza</option>
-                                <option value="Travis 1">Travis 1</option>
-                                <option value="Travis 2">Travis 2</option>
+                                <option value="Traviz 1">Traviz 1</option>
+                                <option value="Traviz 2">Traviz 2</option>
                                 <option value="Toyota Rush">Toyota Rush</option>
                             </Select>
 
@@ -365,8 +365,8 @@ try {
 
                         <div class="col-10">
 
-                            <input type="text" class="form-control" style="width:90%;" id="???" disabled>
-                            <input type="text" class="form-control" style="display: none;" id="???" disabled>
+                            <input type="text" class="form-control" style="width:90%;" id="driver_check" disabled>
+                            <input type="text" class="form-control" style="display: none;" id="d_driver_check" disabled>
 
                         </div>
                     </div>

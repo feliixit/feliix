@@ -67,6 +67,8 @@ $today = (isset($_POST['today']) ?  $_POST['today'] : '');
 $sdate = (isset($_POST['sdate']) ?  $_POST['sdate'] : '');
 $edate = (isset($_POST['edate']) ?  $_POST['edate'] : '');
 
+$status = (isset($_POST['status']) ?  $_POST['status'] : 0);
+
 $merged_results = array();
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -584,7 +586,49 @@ if (!isset($jwt)) {
 
             echo json_encode(array("message" => "Access denied."));
         }
-    } else if ($action == 9) {
+    } else if ($action == 87) {
+        //update
+        try {
+            // decode jwt
+            //$key = 'myKey';
+            //$decoded = JWT::decode($jwt, $key, array('HS256'));
+            $workCalenderMain->id = $id;
+            $workCalenderMain->status = $status;
+
+            $arr = $workCalenderMain->updateRequestStatus();
+
+            http_response_code(200);
+            echo json_encode(array($arr));
+            echo json_encode(array("message" => " request success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        } // if decode fails, it means jwt is invalid
+        catch (Exception $e) {
+
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Access denied."));
+        }
+    }  else if ($action == 88) {
+        //update
+        try {
+            // decode jwt
+            //$key = 'myKey';
+            //$decoded = JWT::decode($jwt, $key, array('HS256'));
+            $workCalenderMain->id = $id;
+            $workCalenderMain->status = $status;
+
+            $arr = $workCalenderMain->updateRequestStatus();
+
+            http_response_code(200);
+            echo json_encode(array($arr));
+            echo json_encode(array("message" => " request success at " . date("Y-m-d") . " " . date("h:i:sa")));
+        } // if decode fails, it means jwt is invalid
+        catch (Exception $e) {
+
+            http_response_code(401);
+
+            echo json_encode(array("message" => "Access denied."));
+        }
+    }  else if ($action == 9) {
         //update
         try {
             // decode jwt

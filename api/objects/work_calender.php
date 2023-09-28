@@ -43,6 +43,7 @@ class WorkCalenderMain
     public $deleted_by;
     public $related_project_id;
     public $related_stage_id;
+    public $status;
     // constructor
     public function __construct($db)
     {
@@ -63,6 +64,40 @@ class WorkCalenderMain
         // bind the values
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':lock', $this->lock);
+
+    try {
+        // execute the query, also check if query was successful
+            if ($stmt->execute()) {
+                return true;
+            }
+            else
+            {
+                $arr = $stmt->errorInfo();
+                error_log($arr[2]);
+                return false;
+            }
+        }
+        catch (Exception $e)
+        {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    function updateRequestStatus()
+    {
+        $query = "UPDATE " . $this->table_name . " set `status` = :status where id = :id";
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // bind the values
+        $this->id = (int)$this->id;
+        $this->status = htmlspecialchars(strip_tags($this->status));
+
+        // bind the values
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':status', $this->status);
 
     try {
         // execute the query, also check if query was successful
