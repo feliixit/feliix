@@ -1953,10 +1953,10 @@ var initial = async (_id) =>  {
             }
 
             if (app.name == "guest" ||
-                app.name != "Glendon Wendell Co" ||
-                app.name != "Mary Jude Jeng Articulo" ||
-                app.name != "Stefanie Mika C. Santos" ||
-                app.name != "Edneil Fernandez" 
+                app.name == "Glendon Wendell Co" ||
+                app.name == "Mary Jude Jeng Articulo" ||
+                app.name == "Stefanie Mika C. Santos" ||
+                app.name == "Edneil Fernandez" 
             ) {
                 document.getElementById("btn_request").style.display = "none";
                 document.getElementById("btn_withdraw").style.display = "none";
