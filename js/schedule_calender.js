@@ -1947,6 +1947,12 @@ var initial = async (_id) =>  {
                     document.getElementById("btn_withdraw").style.display = "none";
                 }
             }
+            else
+            {
+                document.getElementById("btn_request").style.display = "none";
+                document.getElementById("btn_withdraw").style.display = "none";
+            }
+
             if(sc_content.status != '2')
             {
                 document.getElementById("approval_section").style.display = "none";
