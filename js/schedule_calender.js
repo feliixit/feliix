@@ -56,6 +56,8 @@ var app = new Vue({
         users_org: [],
 
         schedule_confirm: false,
+
+        content : {},
     },
     created() {
 
@@ -1267,15 +1269,15 @@ var app = new Vue({
                         document.getElementById("btn_unconfirm").style.display = "none";
                     }
 
-                    if(sc_content.created_by == app.name)
+                    if(app.content.created_by == app.name)
     {
-        if(sc_content.status == '1')
+        if(app.content.status == '1')
         {
             document.getElementById("btn_request").style.display = "none";
             document.getElementById("btn_withdraw").style.display = "inline";
         }
 
-        if(sc_content.status == '0')
+        if(app.content.status == '0')
         {
             document.getElementById("btn_request").style.display = "inline";
             document.getElementById("btn_withdraw").style.display = "none";
@@ -1287,12 +1289,12 @@ var app = new Vue({
         document.getElementById("btn_withdraw").style.display = "none";
     }
 
-    if(sc_content.status != '0')
+    if(app.content.status != '0')
     {
         document.getElementById("btn_edit").style.display = "none";
     }
 
-    if(sc_content.status != '2')
+    if(app.content.status != '2')
     {
         document.getElementById("approval_section").style.display = "none";
     }
@@ -1313,19 +1315,24 @@ var app = new Vue({
         app.name == "Kristel Tan" ||
         app.name == "Alleah Belmonte" 
     ) {
-        if(sc_content.status == '1')
+        if(app.content.status == '1')
         {
             document.getElementById("btn_request").style.display = "none";
             document.getElementById("btn_withdraw").style.display = "inline";
         }
 
-        if(sc_content.status == '0')
+        if(app.content.status == '0')
         {
             document.getElementById("btn_request").style.display = "inline";
             document.getElementById("btn_withdraw").style.display = "none";
         }
     }
 
+    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
                     app.filename = [];
                     app.fileArray = [];
 
@@ -1760,6 +1767,9 @@ var initial = async (_id) =>  {
             app.id = eventObj.id;
             var sc_content = eventObj.extendedProps.description;
 
+            // copy to app.content 
+            app.content = JSON.parse(JSON.stringify(sc_content));
+
             document.getElementById("sc_title").value = sc_content.Title;
             document.getElementById("sc_color").value = sc_content.Color;
 
@@ -2033,6 +2043,12 @@ var initial = async (_id) =>  {
             document.getElementById("btn_request").style.display = "inline";
             document.getElementById("btn_withdraw").style.display = "none";
         }
+    }
+
+    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
     }
 
             $("#exampleModalScrollable").modal("toggle");
@@ -2930,6 +2946,12 @@ $(document).on("click", "#btn_cancel", async function () {
             document.getElementById("btn_withdraw").style.display = "none";
         }
     }
+
+    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
 });
 
 $(document).on("click", "#btn_lock", async function () {
@@ -2988,6 +3010,18 @@ $(document).on("click", "#btn_unconfirm", async function () {
 });
 
 $(document).on("click", "#btn_request", async function () {
+    if(eventObj.extendedProps.description.Service == '0' || eventObj.extendedProps.description.Project == '' || eventObj.extendedProps.description.Date == '' )
+    {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Info',
+            text: 'Columns of Project, Date and Service cannot be blank.',
+        });
+
+        return;
+    }
+
+
      app.request(eventObj.id);
     
 });
