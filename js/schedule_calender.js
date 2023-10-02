@@ -1268,19 +1268,63 @@ var app = new Vue({
                     }
 
                     if(sc_content.created_by == app.name)
-                    {
-                        if(sc_content.status == '1')
-                        {
-                            document.getElementById("btn_request").style.display = "none";
-                            document.getElementById("btn_withdraw").style.display = "inline";
-                        }
+    {
+        if(sc_content.status == '1')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
 
-                        if(sc_content.status == '0')
-                        {
-                            document.getElementById("btn_request").style.display = "inline";
-                            document.getElementById("btn_withdraw").style.display = "none";
-                        }
-                    }
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+    else
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if(sc_content.status != '0')
+    {
+        document.getElementById("btn_edit").style.display = "none";
+    }
+
+    if(sc_content.status != '2')
+    {
+        document.getElementById("approval_section").style.display = "none";
+    }
+
+    if (app.name == "guest" ||
+        app.name == "Glendon Wendell Co" ||
+        app.name == "Mary Jude Jeng Articulo" ||
+        app.name == "Stefanie Mika C. Santos" ||
+        app.name == "Edneil Fernandez" 
+    ) {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if (app.name == "Dennis Lin" ||
+        app.name == "dereck" ||
+        app.name == "Aiza Eisma" ||
+        app.name == "Kristel Tan" ||
+        app.name == "Alleah Belmonte" 
+    ) {
+        if(sc_content.status == '1')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
 
                     app.filename = [];
                     app.fileArray = [];
@@ -1932,51 +1976,68 @@ var initial = async (_id) =>  {
                 document.getElementById("btn_unconfirm").style.display = "none";
             }
 
-
             if(sc_content.created_by == app.name)
-            {
-                if(sc_content.status == '1')
-                {
-                    document.getElementById("btn_request").style.display = "none";
-                    document.getElementById("btn_withdraw").style.display = "inline";
-                }
+    {
+        if(sc_content.status == '1')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
 
-                if(sc_content.status == '0')
-                {
-                    document.getElementById("btn_request").style.display = "inline";
-                    document.getElementById("btn_withdraw").style.display = "none";
-                }
-            }
-            else
-            {
-                document.getElementById("btn_request").style.display = "none";
-                document.getElementById("btn_withdraw").style.display = "none";
-            }
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+    else
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
 
-            if(sc_content.status != '0')
-            {
-                document.getElementById("btn_edit").style.display = "none";
-            }
+    if(sc_content.status != '0')
+    {
+        document.getElementById("btn_edit").style.display = "none";
+    }
 
-            if(sc_content.status != '2')
-            {
-                document.getElementById("approval_section").style.display = "none";
-            }
+    if(sc_content.status != '2')
+    {
+        document.getElementById("approval_section").style.display = "none";
+    }
 
-            if (app.name == "guest" ||
-                app.name == "Glendon Wendell Co" ||
-                app.name == "Mary Jude Jeng Articulo" ||
-                app.name == "Stefanie Mika C. Santos" ||
-                app.name == "Edneil Fernandez" 
-            ) {
-                document.getElementById("btn_request").style.display = "none";
-                document.getElementById("btn_withdraw").style.display = "none";
-            }
+    if (app.name == "guest" ||
+        app.name == "Glendon Wendell Co" ||
+        app.name == "Mary Jude Jeng Articulo" ||
+        app.name == "Stefanie Mika C. Santos" ||
+        app.name == "Edneil Fernandez" 
+    ) {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if (app.name == "Dennis Lin" ||
+        app.name == "dereck" ||
+        app.name == "Aiza Eisma" ||
+        app.name == "Kristel Tan" ||
+        app.name == "Alleah Belmonte" 
+    ) {
+        if(sc_content.status == '1')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
 
             $("#exampleModalScrollable").modal("toggle");
         },
 
-        
 
         //載入日曆初始化時，如果 Schedule 的 confirmed 為True，則加上一個checkbox圖示在 日曆上的 Schedule 前方。
         eventDidMount: function (arg) {
@@ -2609,7 +2670,13 @@ $(document).on("click", "#btn_edit", function () {
     //切換元件成為可修改狀態
     Change_Schedule_State(false, eventObj.extendedProps.description.Allday);
     icon_function_enable = true;
+
+    // send and withdraw
+    document.getElementById("btn_request").style.display = "none";
+    document.getElementById("btn_withdraw").style.display = "none";
+
 });
+
 
 $(document).on("click", "#btn_delete", function () {
     app.deleteMe(eventObj.id);
@@ -2803,6 +2870,65 @@ $(document).on("click", "#btn_cancel", async function () {
     for(let i = 0;i < file_elements.length; i++)
     {
         file_elements[i].checked = true;
+    }
+
+    if(sc_content.created_by == app.name)
+    {
+        if(sc_content.status == '1')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+    else
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if(sc_content.status != '0')
+    {
+        document.getElementById("btn_edit").style.display = "none";
+    }
+
+    if(sc_content.status != '2')
+    {
+        document.getElementById("approval_section").style.display = "none";
+    }
+
+    if (app.name == "guest" ||
+        app.name == "Glendon Wendell Co" ||
+        app.name == "Mary Jude Jeng Articulo" ||
+        app.name == "Stefanie Mika C. Santos" ||
+        app.name == "Edneil Fernandez" 
+    ) {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if (app.name == "Dennis Lin" ||
+        app.name == "dereck" ||
+        app.name == "Aiza Eisma" ||
+        app.name == "Kristel Tan" ||
+        app.name == "Alleah Belmonte" 
+    ) {
+        if(sc_content.status == '1')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
     }
 });
 
