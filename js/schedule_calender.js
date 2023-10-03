@@ -1746,6 +1746,7 @@ var initial = async (_id) =>  {
                         $('#sc_related_stage_id').val(0);
                     }
                     
+                    document.getElementById("approval_section").style.display = "none";
 
                     Change_Schedule_State(false, true);
                     icon_function_enable = true;
@@ -3205,6 +3206,8 @@ $(document).on("click", "#btn_save", function () {
 
         Related_project_id: $("#sc_related_project_id").val(),
         Related_stage_id: $("#sc_related_stage_id").val(),
+        icon : app.content.icon,
+        status : app.content.status,
     };
 
     if (sc_content.Allday) {
