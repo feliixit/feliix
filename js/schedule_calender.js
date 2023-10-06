@@ -848,6 +848,8 @@ var app = new Vue({
                                 Related_stage_id: response.data[i].related_stage_id,
                                 created_by: response.data[i].created_by,
                                 status : response.data[i].status,
+                                check1 : response.data[i].check1,
+                                check2 : response.data[i].check2,
                             },
                         });
                     }
@@ -1484,7 +1486,8 @@ var app = new Vue({
                 .then(function (response) {
                     //handle success
                     //_this.items = response.data
-                    eventObj.extendedProps.description.status = "1";
+                    var status = response.data.status;
+                    eventObj.extendedProps.description.status = status;
                     $("#exampleModalScrollable").modal("toggle");
                     reload(id);
                 })
@@ -2012,11 +2015,31 @@ var initial = async (_id) =>  {
     if(sc_content.status != '0')
     {
         document.getElementById("btn_edit").style.display = "none";
+
+        if(sc_content.check1.length > 0)
+        {
+            document.getElementById("sc_date_check").value = moment(sc_content.check1[0].date_use).format("YYYY-MM-DD");
+            document.getElementById("sc_stime_check").value = moment(sc_content.check1[0].time_out).format("HH:mm");
+            document.getElementById("sc_etime_check").value = moment(sc_content.check1[0].time_in).format("HH:mm");
+            document.getElementById("car_use_check").value = sc_content.check1[0].car_use;
+            document.getElementById("driver_check").value = sc_content.check1[0].driver;
+
+        }
+
+        if(sc_content.check2.length > 0)
+        {
+            document.getElementById("driver_check").value = sc_content.check1[0].driver;
+
+        }
     }
 
     if(sc_content.status != '2')
     {
         document.getElementById("approval_section").style.display = "none";
+    }
+    else
+    {
+        document.getElementById("approval_section").style.display = "inline";
     }
 
     if (app.name == "guest" ||

@@ -131,6 +131,10 @@ if (!isset($jwt)) {
     }
     else if ($action == 10) {
         //select all
+
+        $database_sea = new Database_Sea();
+        $db_sea = $database_sea->getConnection();
+
         try {
             $query = "SELECT main.id, main.title, main.start_time, main.end_time, 
                             main.color, main.color_other, main.text_color, main.all_day, main.photoshoot_request, 
@@ -203,6 +207,9 @@ if (!isset($jwt)) {
             $updated_at = "";
             $status = 0;
 
+            $check1 = array();
+            $check2 = array();
+
             $confirm = "";
 
             // detail
@@ -261,7 +268,10 @@ if (!isset($jwt)) {
                         "updated_by" => $updated_by,
                         "updated_at" => $updated_at,
                         "detail" => $detail_array,
-                        "status" => $status
+                        "status" => $status,
+
+                        "check1" => $check1,
+                        "check2" => $check2,
                     );
 
                     $detail_array = array();
@@ -305,6 +315,9 @@ if (!isset($jwt)) {
                 $created_at = $row['created_at'];
                 $updated_by = $row['updated_by'];
                 $updated_at = $row['updated_at'];
+
+                $check1 = GetCheck($db_sea, $row['id'], "1", "1");
+                $check2 = GetCheck($db_sea, $row['id'], "2", "1");
 
                 $status = $row['status'];
 
@@ -373,7 +386,10 @@ if (!isset($jwt)) {
                     "updated_by" => $updated_by,
                     "updated_at" => $updated_at,
                     "detail" => $detail_array,
-                    "status" => $status
+                    "status" => $status,
+                    
+                    "check1" => $check1,
+                    "check2" => $check2,
                 );
             }
             
@@ -599,19 +615,18 @@ if (!isset($jwt)) {
     } else if ($action == 87) {
         //update
         try {
-            $auto_pass = false;
+            $auto_pass = true;
             $database_sea = new Database_Sea();
             $db_sea = $database_sea->getConnection();
 
             if($status == '1')
             {
-                $sql = "select count(*) as cnt 
-                            from car_calendar_check ck left join car_calendar_main cm on ck.sid = cm.id
-                        where ck.`feliix` = 0 
+                $sql = "select ck.sid
+                            from car_calendar_check ck
+                        where ck.`feliix` = 1 
                         and ck.car_use = :car_use 
                         and ck.date_use = :date_use 
-                        and ck.status <> -1
-                        and cm.status = 2 ";
+                        and ck.status <> -1 ";
 
                 $stmt = $db_sea->prepare($sql);
 
@@ -620,14 +635,19 @@ if (!isset($jwt)) {
 
                 $stmt->execute();
 
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $sql = "select * from work_calendar_main where id = " . $row['sid'] . " and status = 2 and is_enabled = 1";
+                    $stmt = $db->prepare($sql);
 
-                
-                if($row['cnt'] == 0)
-                {
-                    $status = 2;
-                    $auto_pass = true;
+                    $stmt->execute();
+
+                    while ($row_feliix = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $auto_pass = false;
+                    }
                 }
+
+                if($auto_pass)
+                    $status = 2;
                 
             }
 
@@ -677,8 +697,8 @@ if (!isset($jwt)) {
             }
 
             http_response_code(200);
-            echo json_encode(array($arr));
-            echo json_encode(array("message" => " request success at " . date("Y-m-d") . " " . date("h:i:sa")));
+            //echo json_encode(array($arr));
+            echo json_encode(array("status" => $status));
         } // if decode fails, it means jwt is invalid
         catch (Exception $e) {
 
@@ -1518,6 +1538,23 @@ function addMultiLineText($cell, $text)
         $cell->addText($v);
     }
     
+}
+
+function GetCheck($db, $sid, $kind, $feliix)
+{
+    $result = array();
+
+    $query = "SELECT * from car_calendar_check 
+              where `feliix` = " . $feliix . " and `status` <> -1 and kind = '" . $kind . "' and sid = " . $sid . " order by id desc limit 1";
+
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $result[] = $row;
+    }
+
+    return $result;
 }
 
 function grab_image($image_url,$image_file){

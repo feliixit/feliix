@@ -287,8 +287,8 @@ try {
             <div class="modal-body">
 
                 <!-- 指派車輛管理者填寫的表單 -->
-                <div id="approval_section" style="margin: 0 0 20px; padding-bottom: 20px; border-bottom: 3px solid #dee2e6;">
-
+                <div style="margin: 0 0 20px; padding-bottom: 20px; border-bottom: 3px solid #dee2e6;">
+                  <div id="approval_section">
                     <div class="row">
                         <div class="col-12" style="text-align: center;">
 
@@ -341,15 +341,7 @@ try {
                         </div>
 
                         <div class="col-10">
-
-                            <Select class="form-control" style="width:40%;" id="car_use_check" disabled>
-                                <option value="0">Choose One</option>
-                                <option value="Alphard">Alphard</option>
-                                <option value="Avanza">Avanza</option>
-                                <option value="Traviz 1">Traviz 1</option>
-                                <option value="Traviz 2">Traviz 2</option>
-                                <option value="Toyota Rush">Toyota Rush</option>
-                            </Select>
+                            <input type="text" class="form-control" style="width:90%;" id="car_use_check" disabled>
 
                         </div>
                     </div>
@@ -372,7 +364,7 @@ try {
                     </div>
 
                     <br>
-
+    </div>
                 </div>
 
 
