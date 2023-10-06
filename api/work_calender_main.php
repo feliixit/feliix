@@ -69,6 +69,10 @@ $edate = (isset($_POST['edate']) ?  $_POST['edate'] : '');
 
 $status = (isset($_POST['status']) ?  $_POST['status'] : 0);
 
+$check_info = (isset($_POST['check_info']) ?  $_POST['check_info'] : '[]');
+$check_info_ary = json_decode($check_info, true);
+
+
 $merged_results = array();
 include_once 'config/core.php';
 include_once 'libs/php-jwt-master/src/BeforeValidException.php';
@@ -137,7 +141,7 @@ if (!isset($jwt)) {
                             main.service, main.driver, main.driver_other, main.back_up_driver, main.back_up_driver_other,
                             main.notes, main.`lock`, main.related_project_id, main.related_stage_id,
                             main.created_by, main.created_at, main.updated_by, main.updated_at, main.confirm,
-                            detail.main_id, detail.agenda, detail.appoint_time, detail.end_time, detail.sort, detail.location, main.status
+                            detail.main_id, detail.agenda, detail.appoint_time, detail.end_time d_end_time, detail.sort, detail.location, main.status
                         from work_calendar_main main 
                         left join work_calendar_details detail on detail.main_id = main.id and detail.is_enabled = true
                         where main.is_enabled = true ";
@@ -186,6 +190,7 @@ if (!isset($jwt)) {
             $service = "";
             $driver = "";
             $driver_other = "";
+            $driver_text = "";
             $back_up_driver = "";
             $back_up_driver_other = "";
             $notes = "";
@@ -204,7 +209,7 @@ if (!isset($jwt)) {
             $main_id = 0;
             $agenda = "";
             $appoint_time = "";
-            $end_time = "";
+            $d_end_time = "";
             $sort = "";
             $location = "";
 
@@ -243,6 +248,7 @@ if (!isset($jwt)) {
                         "products_to_bring_files" => $products_to_bring_files,
                         "service" => $service,
                         "driver" => $driver,
+                        "driver_text" => $driver_text,
                         "driver_other" => $driver_other,
                         "back_up_driver" => $back_up_driver,
                         "back_up_driver_other" => $back_up_driver_other,
@@ -285,6 +291,9 @@ if (!isset($jwt)) {
                 $products_to_bring_files = $row['products_to_bring_files'];
                 $service = $row['service'];
                 $driver = $row['driver'];
+
+                $driver_text = getDriver($driver);
+
                 $driver_other = $row['driver_other'];
                 $back_up_driver = $row['back_up_driver'];
                 $back_up_driver_other = $row['back_up_driver_other'];
@@ -302,7 +311,7 @@ if (!isset($jwt)) {
                 $main_id = $row['main_id'];
                 $agenda = $row['agenda'];
                 $appoint_time = $row['appoint_time'];
-                $end_time = $row['end_time'];
+                $d_end_time = $row['d_end_time'];
                 $sort = $row['sort'];
                 $location = $row['location'];
 
@@ -312,7 +321,7 @@ if (!isset($jwt)) {
                     "main_id" => $main_id,
                     "agenda" => $agenda,
                     "appoint_time" => $appoint_time,
-                    "end_time" => $end_time,
+                    "end_time" => $d_end_time,
                     "sort" => $sort,
                     "location" => $location
                 );
@@ -352,6 +361,7 @@ if (!isset($jwt)) {
                     "service" => $service,
                     "driver" => $driver,
                     "driver_other" => $driver_other,
+                    "driver_text" => $driver_text,
                     "back_up_driver" => $back_up_driver,
                     "back_up_driver_other" => $back_up_driver_other,
                     "notes" => $notes,
@@ -605,8 +615,8 @@ if (!isset($jwt)) {
 
                 $stmt = $db_sea->prepare($sql);
 
-                $stmt->bindParam(':car_use', $car_use);
-                $stmt->bindParam(':date_use', $service);
+                $stmt->bindParam(':car_use', $check_info_ary['Service']);
+                $stmt->bindParam(':date_use', $check_info_ary['Date']);
 
                 $stmt->execute();
 
@@ -627,6 +637,14 @@ if (!isset($jwt)) {
             $workCalenderMain->id = $id;
             $workCalenderMain->status = $status;
 
+            $tout = $check_info_ary['Date'] . " " . $check_info_ary['Starttime'];
+            $tin = $check_info_ary['Date'] . " " . $check_info_ary['Endtime'];
+
+            if($check_info_ary['Allday'] == true)
+            {
+                $tout = $check_info_ary['Date'] . " 00:00:00";
+                $tin = $check_info_ary['Date'] . " 23:59:59";
+            }
 
             $arr = $workCalenderMain->updateRequestStatus();
 
@@ -634,19 +652,19 @@ if (!isset($jwt)) {
             {
                 try {
                     $sql = "insert into car_calendar_check
-                                (sid, kind, date_use, car_use, driver, time_out, time_in,  created_by, created_at)
+                                (sid, kind, date_use, car_use, driver, time_out, time_in,  created_by, created_at, feliix)
                             values
-                                (:sid, '1', :date_use, :car_use, :driver, :time_out, :time_in, :created_by, now())";
+                                (:sid, '1', :date_use, :car_use, :driver, :time_out, :time_in, :created_by, now(), '1')";
 
                     $stmt = $db_sea->prepare($sql);
 
-                    $stmt->bindParam(':sid', $sid);
-                    $stmt->bindParam(':date_use', $date_use);
-                    $stmt->bindParam(':car_use', $car_use);
-                    $stmt->bindParam(':driver', $driver);
+                    $stmt->bindParam(':sid', $id);
+                    $stmt->bindParam(':date_use', $check_info_ary['Date']);
+                    $stmt->bindParam(':car_use', $check_info_ary['Service']);
+                    $stmt->bindParam(':driver', $check_info_ary['Driver_Text']);
                     $stmt->bindParam(':time_out',  $tout);
                     $stmt->bindParam(':time_in',  $tin);
-                    $stmt->bindParam(':created_by', $user_name);
+                    $stmt->bindParam(':created_by', $check_info_ary['created_by']);
 
 
                     $stmt->execute();
@@ -1459,6 +1477,7 @@ function getService($type){
     return $leave_type;
 }
 
+
 function getDriver($type){
     $leave_type = '';
 
@@ -1574,3 +1593,4 @@ function RefactorInstallerNeeded($merged_results, $db)
 
     return $merged_results;
 }
+

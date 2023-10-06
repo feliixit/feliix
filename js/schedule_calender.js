@@ -835,6 +835,7 @@ var app = new Vue({
                                 Service: response.data[i].service,
                                 Driver: response.data[i].driver,
                                 Driver_Other: response.data[i].driver_other,
+                                Driver_Text : response.data[i].driver_text,
                                 Back_up_Driver: response.data[i].back_up_driver,
                                 Back_up_Driver_Other: response.data[i].back_up_driver_other,
                                 Photoshoot_Request: photoshoot,
@@ -1460,7 +1461,7 @@ var app = new Vue({
                 });
         },
 
-        request: function(id, service) {
+        request: function(id, check_info) {
             let _this = this;
 
             this.action = 87; //request
@@ -1470,7 +1471,7 @@ var app = new Vue({
             form_Data.append("jwt", token);
             form_Data.append("id", id);
             form_Data.append("action", _this.action);
-            form_Data.append("service", service);
+            form_Data.append("check_info", JSON.stringify(check_info));
             form_Data.append("status", "1");
             axios({
                     method: "post",
@@ -3024,7 +3025,7 @@ $(document).on("click", "#btn_request", async function () {
     }
 
 
-     app.request(eventObj.id, eventObj.extendedProps.description.Service);
+     app.request(eventObj.id, eventObj.extendedProps.description);
     
 });
 
