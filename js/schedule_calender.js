@@ -1460,7 +1460,7 @@ var app = new Vue({
                 });
         },
 
-        request: function(id) {
+        request: function(id, service) {
             let _this = this;
 
             this.action = 87; //request
@@ -1470,6 +1470,7 @@ var app = new Vue({
             form_Data.append("jwt", token);
             form_Data.append("id", id);
             form_Data.append("action", _this.action);
+            form_Data.append("service", service);
             form_Data.append("status", "1");
             axios({
                     method: "post",
@@ -3023,7 +3024,7 @@ $(document).on("click", "#btn_request", async function () {
     }
 
 
-     app.request(eventObj.id);
+     app.request(eventObj.id, eventObj.extendedProps.description.Service);
     
 });
 

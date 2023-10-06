@@ -589,13 +589,74 @@ if (!isset($jwt)) {
     } else if ($action == 87) {
         //update
         try {
+            $auto_pass = false;
+            $database_sea = new Database_Sea();
+            $db_sea = $database_sea->getConnection();
+
+            if($status == '1')
+            {
+                $sql = "select count(*) as cnt 
+                            from car_calendar_check ck left join car_calendar_main cm on ck.sid = cm.id
+                        where ck.`feliix` = 0 
+                        and ck.car_use = :car_use 
+                        and ck.date_use = :date_use 
+                        and ck.status <> -1
+                        and cm.status = 2 ";
+
+                $stmt = $db_sea->prepare($sql);
+
+                $stmt->bindParam(':car_use', $car_use);
+                $stmt->bindParam(':date_use', $service);
+
+                $stmt->execute();
+
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                
+                if($row['cnt'] == 0)
+                {
+                    $status = 2;
+                    $auto_pass = true;
+                }
+                
+            }
+
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
             $workCalenderMain->id = $id;
             $workCalenderMain->status = $status;
 
+
             $arr = $workCalenderMain->updateRequestStatus();
+
+            if($auto_pass)
+            {
+                try {
+                    $sql = "insert into car_calendar_check
+                                (sid, kind, date_use, car_use, driver, time_out, time_in,  created_by, created_at)
+                            values
+                                (:sid, '1', :date_use, :car_use, :driver, :time_out, :time_in, :created_by, now())";
+
+                    $stmt = $db_sea->prepare($sql);
+
+                    $stmt->bindParam(':sid', $sid);
+                    $stmt->bindParam(':date_use', $date_use);
+                    $stmt->bindParam(':car_use', $car_use);
+                    $stmt->bindParam(':driver', $driver);
+                    $stmt->bindParam(':time_out',  $tout);
+                    $stmt->bindParam(':time_in',  $tin);
+                    $stmt->bindParam(':created_by', $user_name);
+
+
+                    $stmt->execute();
+                } catch (Exception $e) {
+                    http_response_code(501);
+                    echo json_encode(array("insertion error" => $e->getMessage()));
+                    die();
+                }
+
+            }
 
             http_response_code(200);
             echo json_encode(array($arr));
