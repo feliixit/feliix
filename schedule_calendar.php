@@ -303,7 +303,7 @@ try {
 
                 <!-- 指派車輛管理者填寫的表單 -->
 
-                <div id="approval_section" style="margin: 0 0 20px; padding-bottom: 20px; border-bottom: 3px solid #dee2e6;">
+                <div id="approval_section" style="margin: 0 0 20px; padding-bottom: 15px; border-bottom: 3px solid #dee2e6;">
                     <div class="row">
                         <div class="col-12" style="text-align: center;">
                             <h4 style="background: palegreen; padding: 8px; margin: 0 20px 5px;">Request Review</h4>
@@ -372,8 +372,6 @@ try {
                         <h4 style="background: #dee2e6; padding: 8px; margin: 0 20px 20px;">Content of Request</h4>
                     </div>
                 </div>
-
-                <br>
 
                 <div class="row">
                     <div class="col-2 align-self-center" style="text-align: center;">

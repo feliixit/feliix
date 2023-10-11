@@ -1300,6 +1300,7 @@ var app = new Vue({
     if(app.content.status != '2')
     {
         document.getElementById("approval_section").style.display = "none";
+        document.getElementById("cotent_request_title").style.display = "none";
     }
 
     if (app.name == "guest" ||
@@ -1752,6 +1753,7 @@ var initial = async (_id) =>  {
                     }
                     
                     document.getElementById("approval_section").style.display = "none";
+                    document.getElementById("cotent_request_title").style.display = "none";
 
                     Change_Schedule_State(false, true);
                     icon_function_enable = true;
@@ -2036,10 +2038,12 @@ var initial = async (_id) =>  {
     if(sc_content.status != '2')
     {
         document.getElementById("approval_section").style.display = "none";
+        document.getElementById("cotent_request_title").style.display = "none";
     }
     else
     {
-        document.getElementById("approval_section").style.display = "inline";
+        document.getElementById("approval_section").style.display = "block";
+        document.getElementById("cotent_request_title").style.display = "block";
     }
 
     if (app.name == "guest" ||
@@ -2942,6 +2946,7 @@ $(document).on("click", "#btn_cancel", async function () {
     if(sc_content.status != '2')
     {
         document.getElementById("approval_section").style.display = "none";
+        document.getElementById("cotent_request_title").style.display = "none";
     }
 
     if (app.name == "guest" ||
