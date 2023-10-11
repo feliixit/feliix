@@ -219,6 +219,21 @@ try {
             border-color: #d1dbe5;   
         }
 
+        .customSwalBtn{
+            background-color: rgb(48, 133, 214);
+            border-left-color: rgb(48, 133, 214);
+            border-right-color: rgb(48, 133, 214);
+            border: 0;
+            border-radius: 3px;
+            box-shadow: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 30px 5px 0px 5px;
+            padding: 10px 20px;
+        }
+
     </style>
 
 </head>
@@ -287,30 +302,23 @@ try {
             <div class="modal-body">
 
                 <!-- 指派車輛管理者填寫的表單 -->
-                <div style="margin: 0 0 20px; padding-bottom: 20px; border-bottom: 3px solid #dee2e6;">
-                  <div id="approval_section">
+
+                <div id="approval_section" style="margin: 0 0 20px; padding-bottom: 20px; border-bottom: 3px solid #dee2e6;">
                     <div class="row">
                         <div class="col-12" style="text-align: center;">
-
                             <h4 style="background: palegreen; padding: 8px; margin: 0 20px 5px;">Request Review</h4>
-
                         </div>
-
                     </div>
 
                     <br>
 
                     <div class="row">
                         <div class="col-2 align-self-center" style="text-align: center;">
-
                             <label>Date</label>
-
                         </div>
 
                         <div class="col-10">
-
                             <input type="date" class="form-control" style="width:40%;" id="sc_date_check" disabled>
-
                         </div>
                     </div>
 
@@ -318,31 +326,23 @@ try {
 
                     <div class="form-inline row">
                         <div class="col-2 align-self-center" style="text-align: center;">
-
                             <label>Time</label>
-
                         </div>
 
                         <div class="col-10">
-
                             <input type="time" class="form-control" style="width:40%; margin-right:1%; padding-right: 0; text-align: center;" id="sc_stime_check" disabled> to <input type="time" class="form-control" style="width:40%; margin-left:1%; padding-right: 0; text-align: center;" id="sc_etime_check" disabled>
-
                         </div>
-
                     </div>
 
                     <br>
 
                     <div class="row">
                         <div class="col-2 align-self-center" style="text-align: center;">
-
-                        <label>Assigned Car</label>
-
+                            <label>Assigned Car</label>
                         </div>
 
                         <div class="col-10">
                             <input type="text" class="form-control" style="width:90%;" id="car_use_check" disabled>
-
                         </div>
                     </div>
 
@@ -350,25 +350,31 @@ try {
 
                     <div class="row">
                         <div class="col-2 align-self-center" style="text-align: center;">
-
                             <label>Assigned Driver</label>
-
                         </div>
 
                         <div class="col-10">
-
                             <input type="text" class="form-control" style="width:90%;" id="driver_check" disabled>
                             <input type="text" class="form-control" style="display: none;" id="d_driver_check" disabled>
-
                         </div>
-                    </div>
+                     </div>
 
                     <br>
-    </div>
+
                 </div>
 
 
+
+
                 <!-- 申請用車人填寫的表單 -->
+                <div class="row" id="cotent_request_title">
+                    <div class="col-12" style="text-align: center;">
+                        <h4 style="background: #dee2e6; padding: 8px; margin: 0 20px 20px;">Content of Request</h4>
+                    </div>
+                </div>
+
+                <br>
+
                 <div class="row">
                     <div class="col-2 align-self-center" style="text-align: center;">
 
@@ -920,7 +926,7 @@ try {
 
                     <button class="btn btn-info" id="btn_request">Send Request</button>
 
-                    <button class="btn btn-info" id="btn_withdraw">Withdraw Request</button>
+                    <button class="btn btn-info" style="width: 155px" id="btn_withdraw">Withdraw Request</button>
 
                 </div>
 
