@@ -827,12 +827,15 @@ function CombineWithC($db, $my_department, $my_level, $my_id)
                         pm.stage_id,
                         pm.create_id, 
                         'C' category, 
-                        '' project_name, 
+                        p.project_name, 
                         pm.collaborator, 
                         pm.assignee,
                         pm.priority,
                         ut.title user_title
                 from project_other_task_c pm 
+                LEFT JOIN project_stages ps ON pm.stage_id = ps.id
+                LEFT JOIN project_main p ON ps.project_id = p.id
+                LEFT JOIN project_category pc ON p.catagory_id = pc.id
                 LEFT JOIN user u on pm.create_id = u.id
                 LEFT JOIN user_title ut ON u.title_id = ut.id
                 where pm.`status` <> -1 AND pm.due_date <> '' ";
@@ -864,7 +867,7 @@ function CombineWithC($db, $my_department, $my_level, $my_id)
             $title = $row['due_time'] . ' ' .
                     '[' . $priority . ']' . 
                     '[C]' .
-                    
+                    '[ ' . $row['project_name'] . ' ] ' .
                      $row['title'];
             $due_date = $row['due_date'];
             $due_time = $row['due_time'];
