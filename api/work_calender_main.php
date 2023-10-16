@@ -72,6 +72,8 @@ $status = (isset($_POST['status']) ?  $_POST['status'] : 0);
 $check_info = (isset($_POST['check_info']) ?  $_POST['check_info'] : '[]');
 $check_info_ary = json_decode($check_info, true);
 
+$user_id = 0;
+$user_name = "";
 
 $merged_results = array();
 include_once 'config/core.php';
@@ -107,6 +109,11 @@ if (!isset($jwt)) {
     echo json_encode(array("message" => "Access denied1."));
     die();
 } else {
+
+    $decoded = JWT::decode($jwt, $key, array('HS256'));
+    $user_id = $decoded->data->id;
+    $user_name = $decoded->data->username;
+
     if($action == 1){
         //select all
         try {
@@ -648,8 +655,52 @@ if (!isset($jwt)) {
 
                 if($auto_pass)
                     $status = 2;
-                
             }
+
+
+            $database_1 = new Database();
+            $db_1 = $database_1->getConnection();
+
+                // for requestor
+                $requestor = "";
+                $sql = "select requestor from work_calendar_main where id = :id";
+
+                $stmt = $db_1->prepare($sql);
+
+                $stmt->bindParam(':id', $id);
+                $stmt->execute();
+
+                // read old and append into array
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $requestor = $row['requestor'];
+                }
+                
+                if($requestor == "")
+                    $requestor = $user_name;
+                else
+                    $requestor = $requestor . "," . $user_name;
+
+                // update requestor
+                try {
+                    $sql = "update 
+                    work_calendar_main
+                            set 
+                                requestor = :requestor
+                            where id = :id";
+
+                    $stmt = $db_1->prepare($sql);
+
+                    $stmt->bindParam(':requestor', $requestor);
+                    $stmt->bindParam(':id', $id);
+
+                    $stmt->execute();
+
+                } catch (Exception $e) {
+                    http_response_code(501);
+                    echo json_encode(array("insertion error" => $e->getMessage()));
+                    die();
+                }
+
 
             // decode jwt
             //$key = 'myKey';

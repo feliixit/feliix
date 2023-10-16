@@ -34,13 +34,14 @@ $database = new Database();
 $db = $database->getConnection();
 
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
+$content_type = (isset($_GET['content_type']) ?  $_GET['content_type'] : 0);
 
 $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
         project_in_charge, project_relevant, installer_needed, installer_needed_other, things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, driver_other,
         back_up_driver, back_up_driver_other, photoshoot_request, notes, detail.location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
         DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files,
-        coalesce(pm.project_name, '') project_name, coalesce(pst.stage, '') stage_name, coalesce(`sequence`, '') sequence
+        coalesce(pm.project_name, '') project_name, coalesce(pst.stage, '') stage_name, coalesce(`sequence`, '') sequence, main.status
         from work_calendar_main main 
         left join work_calendar_details detail on detail.main_id = main.id 
         left join project_main pm on pm.id = main.related_project_id
@@ -82,6 +83,8 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $stage_name = '';
     $sequence = '';
 
+    $status = '';
+
     $onrecord = 0;
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
@@ -119,6 +122,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
     $project_name = $row['project_name'];
     $stage_name = $row['stage_name'];
     $sequence = $row['sequence'];
+
+    $status = $row['status'];
 
     break;
 }
@@ -185,6 +190,88 @@ $phpWord = new PhpOffice\PhpWord\PhpWord();
 $section = $phpWord->addSection();
 // Adding Text element to the Section having font styled by default...
 $section->addText($weekday . ", " . $start_time . " Schedule");
+
+if($content_type == '2' && $status == '2')
+{
+    $database_sea = new Database_Sea();
+    $db_sea = $database_sea->getConnection();
+
+    $check_date_use = "";
+    $check_car_use = "";
+    $check_driver = "";
+    $check_time_out = "";
+    $check_time_in = "";
+
+    $sql = "select date_use, car_use, driver, time_out, time_in from car_calendar_check where sid = " . $id;
+
+    $stmt = $db_sea->prepare( $sql );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+    {
+        $check_date_use = $row['date_use'];
+        $check_car_use = $row['car_use'];
+        $check_driver = $row['driver'];
+        $check_time_out = $row['time_out'];
+        $check_time_in = $row['time_in'];
+
+        break;
+    }
+
+    $check_dateString = "";
+
+    $check_tout = "";
+    if($check_date_use != "" && $check_time_out != "")
+    {
+        $check_dateString = new DateTime($check_date_use);
+        $check_tout = date('h:i A', strtotime( $check_time_out));
+    }
+
+    $check_tin = "";
+    if($check_date_use != "" && $check_time_in != "")
+    {
+        $check_dateString = new DateTime($check_date_use);
+        $check_tin = date('h:i A', strtotime($check_time_in));
+    }
+
+    $table2 = $section->addTable('table2', [
+        'borderSize' => 6, 
+        'borderColor' => 'F73605', 
+        'afterSpacing' => 0, 
+        'Spacing'=> 0, 
+        'cellMargin'=> 0
+    ]);
+
+
+    $table2->addRow();
+    $cell = $table2->addCell(10500, ['borderSize' => 6]);
+    $cell->getStyle()->setGridSpan(2);
+    $cell->addText("Request Review", array('bold' => true, 'size' => 12), array('align' => 'center', 'valign' => 'center'));
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_date_use);
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Time:", array('bold' => true));
+    $TextRun = $table2->addCell(8500, ['borderSize' => 6])->addTextRun();
+    $TextRun->addText($check_tout);
+    $TextRun->addText(" to ");
+    $TextRun->addText($check_tin);
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Assigned Car:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_car_use);
+    
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Assigned Driver:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_driver);
+
+    $section->addText("");
+    $section->addText("");
+
+}
+
+
 
 $section->addText("");
 

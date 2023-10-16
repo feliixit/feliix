@@ -1026,7 +1026,7 @@ var app = new Vue({
                 });
         },
 
-        export: function () {
+        export: function (content_type) {
             var form_Data = new FormData();
 
             const filename = "attendance";
@@ -1036,7 +1036,7 @@ var app = new Vue({
 
             axios({
                     method: "get",
-                    url: "schedule_data_word?id=" + app.id,
+                    url: "schedule_data_word?id=" + app.id + "&content_type=" + content_type,
                     data: form_Data,
                     responseType: "blob", // important
                 })
@@ -2760,7 +2760,49 @@ $(document).on("click", "#btn_duplicate", function () {
 });
 
 $(document).on("click", "#btn_export", function () {
-    app.export();
+    let _this = this;
+
+    let buttons = "Which do you want to export?" +
+    "<br>" +
+    '<button type="button" role="button" tabindex="0" class="SwalBtn1 customSwalBtn">' + 'Only “Content of Request”' + '</button>' +
+    '<button type="button" role="button" tabindex="0" class="SwalBtn2 customSwalBtn">' + '”Request Review” and “Content of Request”' + '</button>' + 
+    '<button type="button" role="button" tabindex="0" class="SwalBtn3 customSwalBtn">' + 'Cancel' + '</button>';
+
+    if(this.status == "0")
+    {
+        buttons = "Which do you want to export?" +
+        "<br>" +
+        '<button type="button" role="button" tabindex="0" class="SwalBtn1 customSwalBtn">' + 'Only “Content of Request”' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="SwalBtn3 customSwalBtn">' + 'Cancel' + '</button>';
+    }
+
+    Swal.fire({
+        title: "Export",
+        icon: "warning",
+        html: buttons,
+        showCancelButton: false,
+        showConfirmButton: false
+        })
+    // app.export();
+});
+
+$(document).on('click', '.SwalBtn1', function() {
+    //Some code 1
+    console.log('Button 1');
+    app.export("1");
+    swal.clickConfirm();
+});
+$(document).on('click', '.SwalBtn2', function() {
+    //Some code 2 
+    console.log('Button 2');
+    app.export("2");
+    swal.clickConfirm();
+});
+$(document).on('click', '.SwalBtn3', function() {
+    //Some code 2 
+    console.log('Button 3');
+   
+    swal.clickConfirm();
 });
 
 $(document).on("click", "#btn_cancel", async function () {
