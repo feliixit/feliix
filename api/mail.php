@@ -14835,6 +14835,85 @@ function GetProjectCategoryByProjectId($id)
     return $catagory_id;
 }
 
+function send_car_approval_mail($project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($relevants);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetNotifiersByName($updated_by);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $notifior = GetNotifiersByName($creator);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] Your request of car schedule has been approved";
+    $content =  "<p>Dear all,</p>";
+    $content = $content . "<p>Your request of car schedule has been approved. Below is the details:</p>";
+    $content = $content . "<p>Approved Result</p>";
+    $content = $content . "<p>Date: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Assigned Car: " . $service . "</p>";
+    $content = $content . "<p>Assigned Driver: " . $driver . "</p>";
+    $content = $content . "<p>------------------------------------------------------------------------------</p>";
+    $content = $content . "<p>Content of Request</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $project_in_charge . "</p>";
+    $content = $content . "<p>Time: " . $relevants . "</p>";
+    $content = $content . "<p>Car Use: " . $relevants . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 function SetupMail($mail, $conf)
 {
     $mail->SMTPDebug  = 0;
