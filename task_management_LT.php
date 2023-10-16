@@ -4985,6 +4985,8 @@ catch (Exception $e) {
                                                 window.open('https://feliix.myvnc.com/task_management_SLS?sid=' + info.event.id, "_blank");
                                             else if(info.event.extendedProps.category == 'ENG')
                                                 window.open('https://feliix.myvnc.com/task_management_SVC?sid=' + info.event.id, "_blank");
+                                            else if(info.event.extendedProps.category == 'C')
+                                                window.open('https://feliix.myvnc.com/project03_client_v2?sid=' + info.event.extendedProps.stage_id, "_blank");
                                             else
                                                 window.open('https://feliix.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
                                         }, 400);
