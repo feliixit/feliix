@@ -7208,6 +7208,71 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
 
 }
 
+function GetCarCheckers()
+{
+    $database = new Database_Sea();
+    $db = $database->getConnection();
+
+    $names = [];
+    $result = "";
+
+    // get car_access1, car_access2 split by comma
+    $sql = "select car_access1, car_access2  from access_control ";
+    while ($row = $db->query($sql)->fetch()) {
+        $names[] = explode(',', $row['car_access1']);
+        $names[] = explode(',', $row['car_access2']);
+    }
+
+    $result = "'" . implode ( "', '", $names ) . "'";
+
+    $sql = "SELECT user.id, username, email, title, department FROM user 
+    LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id
+        WHERE user.username in (" . $result . ") and user.status = 1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
+function GetCarChecker1()
+{
+    $database = new Database_Sea();
+    $db = $database->getConnection();
+
+    $names = [];
+    $result = "";
+
+    // get car_access1, car_access2 split by comma
+    $sql = "select car_access1  from access_control ";
+    while ($row = $db->query($sql)->fetch()) {
+        $names[] = explode(',', $row['car_access1']);
+    }
+
+    $result = "'" . implode ( "', '", $names ) . "'";
+
+    $sql = "SELECT user.id, username, email, title, department FROM user 
+    LEFT JOIN user_department ON user.apartment_id = user_department.id LEFT JOIN user_title ON user.title_id = user_title.id
+        WHERE user.username in (" . $result . ") and user.status = 1";
+
+    $merged_results = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $merged_results[] = $row;
+    }
+
+    return $merged_results;
+}
+
 function GetNotifiersByName($names)
 {
     $database = new Database();
@@ -14835,7 +14900,7 @@ function GetProjectCategoryByProjectId($id)
     return $catagory_id;
 }
 
-function send_car_approval_mail($project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att)
+function send_car_approval_mail($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att)
 {
     $conf = new Conf();
 
@@ -14862,19 +14927,19 @@ function send_car_approval_mail($project, $creator, $date_check, $time_check, $s
     $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
 
     $notifior = array();
-    $notifior = GetNotifiersByName($relevants);
+    $notifior = GetNotifiersByName($to);
     foreach($notifior as &$list)
     {
         $mail->AddAddress($list["email"], $list["username"]);
     }
 
-    $notifior = GetNotifiersByName($updated_by);
+    $notifior = GetNotifiersByName($cc);
     foreach($notifior as &$list)
     {
         $mail->AddCC($list["email"], $list["username"]);
     }
 
-    $notifior = GetNotifiersByName($creator);
+    $notifior = GetCarCheckers();
     foreach($notifior as &$list)
     {
         $mail->AddCC($list["email"], $list["username"]);
@@ -14886,17 +14951,160 @@ function send_car_approval_mail($project, $creator, $date_check, $time_check, $s
     $content =  "<p>Dear all,</p>";
     $content = $content . "<p>Your request of car schedule has been approved. Below is the details:</p>";
     $content = $content . "<p>Approved Result</p>";
-    $content = $content . "<p>Date: " . $date . "</p>";
-    $content = $content . "<p>Time: " . $time . "</p>";
-    $content = $content . "<p>Assigned Car: " . $service . "</p>";
-    $content = $content . "<p>Assigned Driver: " . $driver . "</p>";
+    $content = $content . "<p>Date: " . $date_check . "</p>";
+    $content = $content . "<p>Time: " . $time_check . "</p>";
+    $content = $content . "<p>Assigned Car: " . $service_check . "</p>";
+    $content = $content . "<p>Assigned Driver: " . $driver_check . "</p>";
     $content = $content . "<p>------------------------------------------------------------------------------</p>";
     $content = $content . "<p>Content of Request</p>";
     $content = $content . "<p>Schedule Name: " . $project . "</p>";
     $content = $content . "<p>Creator: " . $creator . "</p>";
-    $content = $content . "<p>Date Use: " . $project_in_charge . "</p>";
-    $content = $content . "<p>Time: " . $relevants . "</p>";
-    $content = $content . "<p>Car Use: " . $relevants . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function send_car_request_mail($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    $notifior = GetCarChecker1();
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] A request of car schedule is waiting for your approval";
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>A request of car schedule is waiting for your approval. Below is the details:</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+function withdraw_car_request_mail($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    $notifior = GetCarChecker1();
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] A request of car schedule is waiting for your approval";
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>A request of car schedule is waiting for your approval. Below is the details:</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
 
     $content = $content . "<p></p>";
 

@@ -662,8 +662,16 @@ if (!isset($jwt)) {
             $db_1 = $database_1->getConnection();
 
                 // for requestor
+                $project = "";
+                $all_day = "";
+                $start_time = "";
+                $end_time = "";
+                $created_by = "";
+                $project_relevant = "";
+                $service = "";
                 $requestor = "";
-                $sql = "select requestor from work_calendar_main where id = :id";
+
+                $sql = "select project, all_day, start_time, end_time, created_by, project_relevant, service, requestor from work_calendar_main where id = :id";
 
                 $stmt = $db_1->prepare($sql);
 
@@ -672,6 +680,13 @@ if (!isset($jwt)) {
 
                 // read old and append into array
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $project = $row['project'];
+                    $all_day = $row['all_day'];
+                    $start_time = $row['start_time'];
+                    $end_time = $row['end_time'];
+                    $created_by = $row['created_by'];
+                    $project_relevant = $row['project_relevant'];
+                    $service = $row['service'];
                     $requestor = $row['requestor'];
                 }
                 
@@ -745,6 +760,30 @@ if (!isset($jwt)) {
                     die();
                 }
 
+            }
+
+            $to = $created_by . "," . $requestor;
+            $cc = $project_relevant;
+            $creator = $created_by;
+            $date_check = $check_info_ary['Date'];
+            $time_check = date("H:i", strtotime($tout)) . " to " . date("H:i", strtotime($tin));
+            $service_check = $check_info_ary['Service'];
+            $driver_check = $check_info_ary['Driver_Text'];
+
+            $date = date("Y-m-d", strtotime($start_time));
+            $time = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $service = $service;
+
+            if($status == 2)
+            {
+                $att = get_schedule_file($id);
+                send_car_approval_mail($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att);
+            }
+
+            if($status == 1)
+            {
+                $att = get_schedule_file($id);
+                send_car_request_mail($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att);
             }
 
             http_response_code(200);
