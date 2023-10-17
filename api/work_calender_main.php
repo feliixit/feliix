@@ -579,6 +579,43 @@ if (!isset($jwt)) {
     } else if ($action == 7) {
         //delete
         try {
+            $database_1 = new Database();
+            $db_1 = $database_1->getConnection();
+
+            // for requestor
+            $project = "";
+            $all_day = "";
+            $start_time = "";
+            $end_time = "";
+            $created_by = "";
+            $project_relevant = "";
+            $service = "";
+            $requestor = "";
+            $driver = "";
+            $_status = 0;
+
+            $sql = "select project, all_day, start_time, end_time, created_by, project_relevant, service, requestor, status, driver from work_calendar_main where id = :id";
+
+            $stmt = $db_1->prepare($sql);
+
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
+            // read old and append into array
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $project = $row['project'];
+                $all_day = $row['all_day'];
+                $start_time = $row['start_time'];
+                $end_time = $row['end_time'];
+                $created_by = $row['created_by'];
+                $project_relevant = $row['project_relevant'];
+                $service = $row['service'];
+                $requestor = $row['requestor'];
+                $_status = $row['status'];
+                $driver = $row['driver'];
+            }
+
+
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -587,6 +624,52 @@ if (!isset($jwt)) {
             $arr = $workCalenderMain->delete();
 
             SendDelMail($id, $deleted_by);
+
+
+            // for mail
+            $database_sea = new Database_Sea();
+            $db_sea = $database_sea->getConnection();
+
+            $check1 = GetCheck($db_sea, $id, "1", "1");
+            $check2 = GetCheck($db_sea, $id, "2", "1");
+
+            $date_check = date("Y-m-d", strtotime($start_time));
+            $time_check = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $service_check = $service;
+            $driver_check = $driver;
+            if(count($check1) > 0)
+            {
+                $date_check = date("Y-m-d", strtotime($check1[0]["date_use"]));
+                $time_check = date("H:i", strtotime($check1[0]["time_out"])) . " to " . date("H:i", strtotime($check1[0]["time_in"]));
+                $service_check = $check1[0]["car_use"];
+                $driver_check = $check1[0]["driver"];
+            }
+            if(count($check2) > 0)
+            {
+                $driver_check = $check2[0]["driver"];
+            }
+
+            
+            $to = $created_by . "," . $requestor . "," . $project_relevant;
+            $cc = $project_relevant;
+            $creator = $created_by;
+
+
+            $date = date("Y-m-d", strtotime($start_time));
+            $time = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $service = $service;
+
+            if($_status == 2)
+            {
+                $att = get_schedule_file($id);
+                delete_car_approval_mail_5($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
+            }
+
+            if($_status == 1)
+            {
+                $att = get_schedule_file($id);
+                delete_car_request_mail_6($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
+            }
 
             http_response_code(200);
             echo json_encode(array($arr));
@@ -777,13 +860,13 @@ if (!isset($jwt)) {
             if($status == 2)
             {
                 $att = get_schedule_file($id);
-                send_car_approval_mail($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att);
+                send_car_approval_mail_1($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att);
             }
 
             if($status == 1)
             {
                 $att = get_schedule_file($id);
-                send_car_request_mail($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att);
+                send_car_request_mail_2($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att);
             }
 
             http_response_code(200);
@@ -799,6 +882,43 @@ if (!isset($jwt)) {
     }  else if ($action == 88) {
         //update
         try {
+
+            $database_1 = new Database();
+            $db_1 = $database_1->getConnection();
+
+            // for requestor
+            $project = "";
+            $all_day = "";
+            $start_time = "";
+            $end_time = "";
+            $created_by = "";
+            $project_relevant = "";
+            $service = "";
+            $requestor = "";
+            $driver = "";
+            $_status = 0;
+
+            $sql = "select project, all_day, start_time, end_time, created_by, project_relevant, service, requestor, status, driver from work_calendar_main where id = :id";
+
+            $stmt = $db_1->prepare($sql);
+
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
+            // read old and append into array
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $project = $row['project'];
+                $all_day = $row['all_day'];
+                $start_time = $row['start_time'];
+                $end_time = $row['end_time'];
+                $created_by = $row['created_by'];
+                $project_relevant = $row['project_relevant'];
+                $service = $row['service'];
+                $requestor = $row['requestor'];
+                $_status = $row['status'];
+                $driver = $row['driver'];
+            }
+
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -806,6 +926,52 @@ if (!isset($jwt)) {
             $workCalenderMain->status = $status;
 
             $arr = $workCalenderMain->updateRequestStatus();
+
+            // for mail
+            $database_sea = new Database_Sea();
+            $db_sea = $database_sea->getConnection();
+
+            $check1 = GetCheck($db_sea, $id, "1", "1");
+            $check2 = GetCheck($db_sea, $id, "2", "1");
+
+            $date_check = date("Y-m-d", strtotime($start_time));
+            $time_check = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $service_check = $service;
+            $driver_check = $driver;
+            if(count($check1) > 0)
+            {
+                $date_check = date("Y-m-d", strtotime($check1[0]["date_use"]));
+                $time_check = date("H:i", strtotime($check1[0]["time_out"])) . " to " . date("H:i", strtotime($check1[0]["time_in"]));
+                $service_check = $check1[0]["car_use"];
+                $driver_check = $check1[0]["driver"];
+            }
+            if(count($check2) > 0)
+            {
+                $driver_check = $check2[0]["driver"];
+            }
+
+            
+            $to = $created_by . "," . $requestor . "," . $project_relevant;
+            $cc = $project_relevant;
+            $creator = $created_by;
+
+
+            $date = date("Y-m-d", strtotime($start_time));
+            $time = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $service = $service;
+
+            if($_status == 2)
+            {
+                $att = get_schedule_file($id);
+                withdraw_car_approval_mail_3($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
+            }
+
+            if($_status == 1)
+            {
+                $att = get_schedule_file($id);
+                withdraw_car_request_mail_4($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
+            }
+
 
             http_response_code(200);
             echo json_encode(array($arr));
