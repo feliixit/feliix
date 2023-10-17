@@ -222,19 +222,19 @@ if($content_type == '2' && $status == '2')
         break;
     }
 
-    $check_dateString = "";
+    $check_dateString = date('Y-m-d', strtotime( $check_date_use));
 
     $check_tout = "";
     if($check_date_use != "" && $check_time_out != "")
     {
-        $check_dateString = new DateTime($check_date_use);
+        //$check_dateString = new DateTime($check_date_use);
         $check_tout = date('h:i A', strtotime( $check_time_out));
     }
 
     $check_tin = "";
     if($check_date_use != "" && $check_time_in != "")
     {
-        $check_dateString = new DateTime($check_date_use);
+        //$check_dateString = new DateTime($check_date_use);
         $check_tin = date('h:i A', strtotime($check_time_in));
     }
 
@@ -254,7 +254,7 @@ if($content_type == '2' && $status == '2')
 
     $table2->addRow();
     $table2->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
-    $table2->addCell(8500, ['borderSize' => 6])->addText($check_date_use);
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_dateString);
 
     $table2->addRow();
     $table2->addCell(2000, ['borderSize' => 6])->addText("Time:", array('bold' => true));
