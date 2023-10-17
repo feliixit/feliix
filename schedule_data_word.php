@@ -189,7 +189,12 @@ $phpWord = new PhpOffice\PhpWord\PhpWord();
 // Adding an empty Section to the document...
 $section = $phpWord->addSection();
 // Adding Text element to the Section having font styled by default...
-$section->addText($weekday . ", " . $start_time . " Schedule");
+if($content_type != '2' || $status != '2')
+{
+    $section->addText($weekday . ", " . $start_time . " Schedule");
+    $section->addText("");
+}
+
 
 if($content_type == '2' && $status == '2')
 {
@@ -273,7 +278,6 @@ if($content_type == '2' && $status == '2')
 
 
 
-$section->addText("");
 
 $table = $section->addTable('table', [
     'borderSize' => 6, 
@@ -290,13 +294,22 @@ if($related_project == " - : ")
     $related_project = "";
 }
 
-$table->addRow();
-$table->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($start_time);
+
+if($content_type == '2' && $status == '2')
+{
+    $table->addRow();
+    $cell = $table->addCell(10500, ['borderSize' => 6]);
+    $cell->getStyle()->setGridSpan(2);
+    $cell->addText("Content of Request", array('bold' => true, 'size' => 12), array('align' => 'center', 'valign' => 'center'));
+}
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Project:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($title);
+
+$table->addRow();
+$table->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
+$table->addCell(8500, ['borderSize' => 6])->addText($start_time);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Related Project:", array('bold' => true));
@@ -307,11 +320,11 @@ $table->addCell(2000, ['borderSize' => 6])->addText("Sales Executive:", array('b
 $table->addCell(8500, ['borderSize' => 6])->addText($sales_executive);
 
 $table->addRow();
-$table->addCell(2000, ['borderSize' => 6])->addText("project_in_charge:", array('bold' => true));
+$table->addCell(2000, ['borderSize' => 6])->addText("Project_in_charge:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($project_in_charge);
 
 $table->addRow();
-$table->addCell(2000, ['borderSize' => 6])->addText("project_relevant:", array('bold' => true));
+$table->addCell(2000, ['borderSize' => 6])->addText("Relevant Persons:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
 
 // CONCAT installer_needed and installer_needed_other and remove duplicate
