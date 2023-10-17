@@ -634,13 +634,13 @@ if (!isset($jwt)) {
             $check2 = GetCheck($db_sea, $id, "2", "1");
 
             $date_check = date("Y-m-d", strtotime($start_time));
-            $time_check = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $time_check = date("h:i A", strtotime($start_time)) . " to " . date("h:i A", strtotime($end_time));
             $service_check = $service;
             $driver_check = $driver;
             if(count($check1) > 0)
             {
                 $date_check = date("Y-m-d", strtotime($check1[0]["date_use"]));
-                $time_check = date("H:i", strtotime($check1[0]["time_out"])) . " to " . date("H:i", strtotime($check1[0]["time_in"]));
+                $time_check = date("h:i A", strtotime($check1[0]["time_out"])) . " to " . date("h:i A", strtotime($check1[0]["time_in"]));
                 $service_check = $check1[0]["car_use"];
                 $driver_check = $check1[0]["driver"];
             }
@@ -656,7 +656,7 @@ if (!isset($jwt)) {
 
 
             $date = date("Y-m-d", strtotime($start_time));
-            $time = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $time = date("h:i A", strtotime($start_time)) . " to " . date("h:i A", strtotime($end_time));
             $service = $service;
 
             if($_status == 2)
@@ -849,12 +849,12 @@ if (!isset($jwt)) {
             $cc = $project_relevant;
             $creator = $created_by;
             $date_check = $check_info_ary['Date'];
-            $time_check = date("H:i", strtotime($tout)) . " to " . date("H:i", strtotime($tin));
+            $time_check = date("h:i A", strtotime($tout)) . " to " . date("h:i A", strtotime($tin));
             $service_check = $check_info_ary['Service'];
             $driver_check = $check_info_ary['Driver_Text'];
 
             $date = date("Y-m-d", strtotime($start_time));
-            $time = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $time = date("h:i A", strtotime($start_time)) . " to " . date("h:i A", strtotime($end_time));
             $service = $service;
 
             if($status == 2)
@@ -935,13 +935,13 @@ if (!isset($jwt)) {
             $check2 = GetCheck($db_sea, $id, "2", "1");
 
             $date_check = date("Y-m-d", strtotime($start_time));
-            $time_check = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $time_check = date("h:i A", strtotime($start_time)) . " to " . date("h:i A", strtotime($end_time));
             $service_check = $service;
             $driver_check = $driver;
             if(count($check1) > 0)
             {
                 $date_check = date("Y-m-d", strtotime($check1[0]["date_use"]));
-                $time_check = date("H:i", strtotime($check1[0]["time_out"])) . " to " . date("H:i", strtotime($check1[0]["time_in"]));
+                $time_check = date("h:i A", strtotime($check1[0]["time_out"])) . " to " . date("h:i A", strtotime($check1[0]["time_in"]));
                 $service_check = $check1[0]["car_use"];
                 $driver_check = $check1[0]["driver"];
             }
@@ -957,7 +957,7 @@ if (!isset($jwt)) {
 
 
             $date = date("Y-m-d", strtotime($start_time));
-            $time = date("H:i", strtotime($start_time)) . " to " . date("H:i", strtotime($end_time));
+            $time = date("h:i A", strtotime($start_time)) . " to " . date("h:i A", strtotime($end_time));
             $service = $service;
 
             if($_status == 2)
@@ -1641,7 +1641,7 @@ function get_schedule_file($id)
     
     $table->addRow();
     $table->addCell(2000, ['borderSize' => 6])->addText("Service:", array('bold' => true));
-    $table->addCell(8500, ['borderSize' => 6])->addText(getService($service));
+    $table->addCell(8500, ['borderSize' => 6])->addText($service);
     
     $table->addRow();
     $table->addCell(2000, ['borderSize' => 6])->addText("Driver:", array('bold' => true));
@@ -1904,19 +1904,19 @@ function get_schedule_file_full($id)
         break;
     }
 
-    $check_dateString = "";
+    $check_dateString = date('Y-m-d', strtotime( $check_date_use));
 
     $check_tout = "";
     if($check_date_use != "" && $check_time_out != "")
     {
-        $check_dateString = new DateTime($check_date_use);
+        //$check_dateString = new DateTime($check_date_use);
         $check_tout = date('h:i A', strtotime( $check_time_out));
     }
 
     $check_tin = "";
     if($check_date_use != "" && $check_time_in != "")
     {
-        $check_dateString = new DateTime($check_date_use);
+        //$check_dateString = new DateTime($check_date_use);
         $check_tin = date('h:i A', strtotime($check_time_in));
     }
 
@@ -1936,7 +1936,7 @@ function get_schedule_file_full($id)
 
     $table2->addRow();
     $table2->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
-    $table2->addCell(8500, ['borderSize' => 6])->addText($check_date_use);
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_dateString);
 
     $table2->addRow();
     $table2->addCell(2000, ['borderSize' => 6])->addText("Time:", array('bold' => true));
@@ -2033,7 +2033,7 @@ function get_schedule_file_full($id)
     
     $table->addRow();
     $table->addCell(2000, ['borderSize' => 6])->addText("Service:", array('bold' => true));
-    $table->addCell(8500, ['borderSize' => 6])->addText(getService($service));
+    $table->addCell(8500, ['borderSize' => 6])->addText($service);
     
     $table->addRow();
     $table->addCell(2000, ['borderSize' => 6])->addText("Driver:", array('bold' => true));

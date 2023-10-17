@@ -371,7 +371,7 @@ else
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Service:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText(getService($service));
+$table->addCell(8500, ['borderSize' => 6])->addText($service);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Driver:", array('bold' => true));

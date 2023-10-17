@@ -4128,4 +4128,4 @@ ALTER TABLE work_calendar_main
 ADD COLUMN `status` int(11) DEFAULT 0;
 
 
-ALTER TABLE work_calendar_main ADD COLUMN `requestor` text COLLATE utf8mb4_unicode_ci  default '';
+ALTER TABLE work_calendar_main ADD COLUMN `requestor` text COLLATE utf8mb4_unicode_ci;
