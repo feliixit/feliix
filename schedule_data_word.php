@@ -207,7 +207,7 @@ if($content_type == '2' && $status == '2')
     $check_time_out = "";
     $check_time_in = "";
 
-    $sql = "select date_use, car_use, driver, time_out, time_in from car_calendar_check where sid = " . $id;
+    $sql = "select date_use, car_use, driver, time_out, time_in from car_calendar_check  where feliix = 1 and  sid = " . $id;
 
     $stmt = $db_sea->prepare( $sql );
     $stmt->execute();

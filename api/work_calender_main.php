@@ -661,7 +661,7 @@ if (!isset($jwt)) {
 
             if($_status == 2)
             {
-                $att = get_schedule_file($id);
+                $att = get_schedule_file_full($id);
                 delete_car_approval_mail_5($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
             }
 
@@ -859,7 +859,7 @@ if (!isset($jwt)) {
 
             if($status == 2)
             {
-                $att = get_schedule_file($id);
+                $att = get_schedule_file_full($id);
                 send_car_approval_mail_1($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att);
             }
 
@@ -962,7 +962,7 @@ if (!isset($jwt)) {
 
             if($_status == 2)
             {
-                $att = get_schedule_file($id);
+                $att = get_schedule_file_full($id);
                 withdraw_car_approval_mail_3($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
             }
 
@@ -1733,6 +1733,399 @@ function get_schedule_file($id)
     return $path . "schedule" . $id . ".docx";
 
 }
+
+
+
+
+function get_schedule_file_full($id)
+{
+    $database = new Database();
+    $db = $database->getConnection();
+ 
+    $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
+            project_in_charge, project_relevant, installer_needed, installer_needed_other, things_to_bring, installer_needed_location, things_to_bring_location, 
+            products_to_bring, service, driver, driver_other,
+            back_up_driver, back_up_driver_other, photoshoot_request, notes, location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
+            DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files
+            from work_calendar_main main 
+            left join work_calendar_details detail on detail.main_id = main.id where coalesce(detail.is_enabled, 1) = 1 and main.id = " . $id . " order by sort " ;
+    
+        $stmt = $db->prepare( $sql );
+        $stmt->execute();
+    
+        $weekday = '';
+        $start_time = '';
+        $title = '';
+        $sales_executive = '';
+        $project_in_charge = '';
+        $project_relevant = '';
+        $installer_needed = '';
+        $installer_needed_other = '';
+        $things_to_bring = '';
+        $installer_needed_location = '';
+        $things_to_bring_location = '';
+        $products_to_bring = '';
+        $service = '';
+        $driver = '';
+        $driver_other = '';
+        $back_up_driver = '';
+        $back_up_driver_other = '';
+        $photoshoot_request = '';
+        $notes = '';
+    
+        $products_to_bring_files = '';
+    
+        $location = '';
+        $agenda = '';
+        $appoint_time = '';
+        $end_time = '';
+    
+        $onrecord = 0;
+    
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+    {
+        $onrecord = $onrecord + 1;
+    
+        $weekday = $row['weekday'];
+        $start_time = $row['start_time'];
+        $title = $row['title'];
+        $sales_executive = $row['sales_executive'];
+        $project_in_charge = $row['project_in_charge'];
+        $project_relevant = $row['project_relevant'];
+        $installer_needed = $row['installer_needed'];
+        $installer_needed_other = $row['installer_needed_other'];
+        $things_to_bring = $row['things_to_bring'];
+        $installer_needed_location = $row['installer_needed_location'];
+        $things_to_bring_location = $row['things_to_bring_location'];
+        $products_to_bring = $row['products_to_bring'];
+        $service = $row['service'];
+        $driver = $row['driver'];
+        $driver_other = $row['driver_other'];
+        $back_up_driver = $row['back_up_driver'];
+        $back_up_driver_other = $row['back_up_driver_other'];
+        $photoshoot_request = $row['photoshoot_request'];
+        $notes = $row['notes'];
+    
+        $products_to_bring_files = $row['products_to_bring_files'];
+    
+    
+        $location = $row['location'];
+        $agenda = $row['agenda'];
+        $appoint_time = $row['appoint_time'];
+        $end_time = $row['end_time'];
+    
+        break;
+    }
+    
+    if($onrecord == 0)
+    {
+        $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
+            project_in_charge, project_relevant, installer_needed, installer_needed_other,things_to_bring, installer_needed_location, things_to_bring_location, 
+            products_to_bring, service, driver, driver_other,
+            back_up_driver, back_up_driver_other, photoshoot_request, notes, '' location, '' agenda, '' appoint_time, 
+            '' end_time, products_to_bring_files
+            from work_calendar_main main 
+            where main.id = " . $id . " " ;
+    
+            $stmt = $db->prepare( $sql );
+            $stmt->execute();
+    
+    
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+        {
+            $weekday = $row['weekday'];
+            $start_time = $row['start_time'];
+            $title = $row['title'];
+            $sales_executive = $row['sales_executive'];
+            $project_in_charge = $row['project_in_charge'];
+            $project_relevant = $row['project_relevant'];
+            $installer_needed = $row['installer_needed'];
+            $installer_needed_other = $row['installer_needed_other'];
+            $things_to_bring = $row['things_to_bring'];
+            $installer_needed_location = $row['installer_needed_location'];
+            $things_to_bring_location = $row['things_to_bring_location'];
+            $products_to_bring = $row['products_to_bring'];
+            $service = $row['service'];
+            $driver = $row['driver'];
+            $driver_other = $row['driver_other'];
+            $back_up_driver = $row['back_up_driver'];
+            $back_up_driver_other = $row['back_up_driver_other'];
+            $photoshoot_request = $row['photoshoot_request'];
+            $notes = $row['notes'];
+    
+            $products_to_bring_files = $row['products_to_bring_files'];
+    
+    
+            $location = $row['location'];
+            $agenda = $row['agenda'];
+            $appoint_time = $row['appoint_time'];
+            $end_time = $row['end_time'];
+    
+            break;
+        }
+    }
+    
+    // Creating the new document...
+    $phpWord = new PhpOffice\PhpWord\PhpWord();
+    
+    /* Note: any element you append to a document must reside inside of a Section. */
+    
+    // Adding an empty Section to the document...
+    $section = $phpWord->addSection();
+    // Adding Text element to the Section having font styled by default...
+    $section->addText($weekday . ", " . $start_time . " Schedule");
+    
+    $section->addText("");
+
+
+
+
+    $database_sea = new Database_Sea();
+    $db_sea = $database_sea->getConnection();
+
+    $check_date_use = "";
+    $check_car_use = "";
+    $check_driver = "";
+    $check_time_out = "";
+    $check_time_in = "";
+
+    $sql = "select date_use, car_use, driver, time_out, time_in from car_calendar_check where feliix = 1 and sid = " . $id;
+
+    $stmt = $db_sea->prepare( $sql );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+    {
+        $check_date_use = $row['date_use'];
+        $check_car_use = $row['car_use'];
+        $check_driver = $row['driver'];
+        $check_time_out = $row['time_out'];
+        $check_time_in = $row['time_in'];
+
+        break;
+    }
+
+    $check_dateString = "";
+
+    $check_tout = "";
+    if($check_date_use != "" && $check_time_out != "")
+    {
+        $check_dateString = new DateTime($check_date_use);
+        $check_tout = date('h:i A', strtotime( $check_time_out));
+    }
+
+    $check_tin = "";
+    if($check_date_use != "" && $check_time_in != "")
+    {
+        $check_dateString = new DateTime($check_date_use);
+        $check_tin = date('h:i A', strtotime($check_time_in));
+    }
+
+    $table2 = $section->addTable('table2', [
+        'borderSize' => 6, 
+        'borderColor' => 'F73605', 
+        'afterSpacing' => 0, 
+        'Spacing'=> 0, 
+        'cellMargin'=> 0
+    ]);
+
+
+    $table2->addRow();
+    $cell = $table2->addCell(10500, ['borderSize' => 6]);
+    $cell->getStyle()->setGridSpan(2);
+    $cell->addText("Request Review", array('bold' => true, 'size' => 12), array('align' => 'center', 'valign' => 'center'));
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_date_use);
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Time:", array('bold' => true));
+    $TextRun = $table2->addCell(8500, ['borderSize' => 6])->addTextRun();
+    $TextRun->addText($check_tout);
+    $TextRun->addText(" to ");
+    $TextRun->addText($check_tin);
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Assigned Car:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_car_use);
+    
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Assigned Driver:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_driver);
+
+    $section->addText("");
+    $section->addText("");
+
+
+
+
+    
+    $table = $section->addTable('table', [
+        'borderSize' => 6, 
+        'borderColor' => 'F73605', 
+        'afterSpacing' => 0, 
+        'Spacing'=> 0, 
+        'cellMargin'=> 0
+    ]);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText($start_time);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Project:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText($title);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Sales Executive:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText($sales_executive);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("project_in_charge:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText($project_in_charge);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("project_relevant:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Installer needed:", array('bold' => true));
+
+    // CONCAT installer_needed and installer_needed_other and remove duplicate
+    //$installer_needed_other = str_replace(" ", "", $installer_needed_other);
+    //$installer_needed = str_replace(" ", "", $installer_needed);
+    $installer_needed_other_array = explode(",", $installer_needed_other);
+    $installer_needed_array = explode(",", $installer_needed);
+    $installer_needed_array = array_merge($installer_needed_array, $installer_needed_other_array);
+    $installer_needed_array = array_unique($installer_needed_array);
+   
+    $merged_installer = trim(implode(", ", $installer_needed_array), ", ");
+
+    $merged_installer = str_replace("  ", " ", $merged_installer);
+
+    $table->addCell(8500, ['borderSize' => 6])->addText($merged_installer);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Things to Bring:", array('bold' => true));
+    if($things_to_bring_location != "")
+    {
+        $cell = $table->addCell(8500, ['borderSize' => 6]);
+        addMultiLineText($cell, "From " . $things_to_bring_location . "\n" . $things_to_bring);
+    }
+    else
+    {
+        $cell = $table->addCell(8500, ['borderSize' => 6]);
+        addMultiLineText($cell, $things_to_bring);
+    }
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Products to Bring:", array('bold' => true));
+    if($installer_needed_location != "")
+    {
+        $cell = $table->addCell(8500, ['borderSize' => 6]);
+        addMultiLineText($cell, "From " . $installer_needed_location . "\n" . $products_to_bring);
+    }
+    else
+    {
+        $cell = $table->addCell(8500, ['borderSize' => 6]);
+        addMultiLineText($cell, $products_to_bring);
+    }
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Service:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText(getService($service));
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Driver:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText(getDriver($driver) . ' ' . $driver_other);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Back-up Driver:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText(getDriver($back_up_driver) . ' ' . $back_up_driver_other);
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Photoshoot Request:", array('bold' => true));
+    $table->addCell(8500, ['borderSize' => 6])->addText(getRequest($photoshoot_request));
+    
+    $table->addRow();
+    $table->addCell(2000, ['borderSize' => 6])->addText("Note/s:", array('bold' => true));
+    $cell = $table->addCell(8500, ['borderSize' => 6]);
+    addMultiLineText($cell, $notes);
+    
+    $section->addText("");
+    
+    $table1 = $section->addTable('table1', [
+        'borderSize' => 6, 
+        'borderColor' => 'F73605', 
+        'afterSpacing' => 0, 
+        'Spacing'=> 0, 
+        'cellMargin'=> 0,
+        'textAlign' => 'center'
+    ]);
+    
+    $table1->addRow();
+    $table1->addCell(2600, ['borderSize' => 6])->addText("Location", ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText("Agenda",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText("Appoint Time",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText("End Time",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    
+    
+    $table1->addRow();
+    $table1->addCell(2600, ['borderSize' => 6])->addText($location,  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+    {
+        $location = $row['location'];
+        $agenda = $row['agenda'];
+        $appoint_time = $row['appoint_time'];
+        $end_time = $row['end_time'];
+    
+        $table1->addRow();
+        $table1->addCell(2600, ['borderSize' => 6])->addText($location, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+        $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+        $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+        $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    
+    }
+    
+    // Adding Text element with font customized using explicitly created font style object...
+    $fontStyle = new \PhpOffice\PhpWord\Style\Font();
+    $fontStyle->setBold(true);
+    $fontStyle->setName('Tahoma');
+    $fontStyle->setSize(13);
+    // $myTextElement = $section->addText('"Believe you can and you\'re halfway there." (Theodor Roosevelt)');
+    //$myTextElement->setFontStyle($fontStyle);
+    
+    ob_end_clean();
+    // Saving the document as OOXML file...
+    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007', $download = true);
+    
+    $conf = new Conf();
+
+    $path = $conf::$upload_path . "tmp/";
+
+    if (!file_exists($path)) {
+        mkdir($path, 0777, true);
+    }
+    else
+    {
+        $files = glob($path . "*"); // get all file names
+        foreach($files as $file){ // iterate files
+            if(is_file($file)) {
+                unlink($file); // delete file
+            }
+        }
+    }
+
+    $objWriter->save($path . "schedule" . $id . ".docx");
+
+    return $path . "schedule" . $id . ".docx";
+
+}
+
 
 function getService($type){
     $leave_type = '';
