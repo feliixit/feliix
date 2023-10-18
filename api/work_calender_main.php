@@ -1547,11 +1547,11 @@ function get_schedule_file($id)
     $table->addCell(8500, ['borderSize' => 6])->addText($sales_executive);
     
     $table->addRow();
-    $table->addCell(2000, ['borderSize' => 6])->addText("project_in_charge:", array('bold' => true));
+    $table->addCell(2000, ['borderSize' => 6])->addText("Project_in_charge:", array('bold' => true));
     $table->addCell(8500, ['borderSize' => 6])->addText($project_in_charge);
     
     $table->addRow();
-    $table->addCell(2000, ['borderSize' => 6])->addText("project_relevant:", array('bold' => true));
+    $table->addCell(2000, ['borderSize' => 6])->addText("Relevant Persons:", array('bold' => true));
     $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
     
     $table->addRow();
@@ -1790,10 +1790,6 @@ function get_schedule_file_full($id)
     // Adding an empty Section to the document...
     $section = $phpWord->addSection();
     // Adding Text element to the Section having font styled by default...
-    $section->addText($weekday . ", " . $start_time . " Schedule");
-    
-    $section->addText("");
-
 
 
 
@@ -1884,6 +1880,11 @@ function get_schedule_file_full($id)
         'Spacing'=> 0, 
         'cellMargin'=> 0
     ]);
+
+    $table->addRow();
+    $cell = $table->addCell(10500, ['borderSize' => 6]);
+    $cell->getStyle()->setGridSpan(2);
+    $cell->addText("Content of Request", array('bold' => true, 'size' => 12), array('align' => 'center', 'valign' => 'center'));
     
     $table->addRow();
     $table->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
@@ -1898,11 +1899,11 @@ function get_schedule_file_full($id)
     $table->addCell(8500, ['borderSize' => 6])->addText($sales_executive);
     
     $table->addRow();
-    $table->addCell(2000, ['borderSize' => 6])->addText("project_in_charge:", array('bold' => true));
+    $table->addCell(2000, ['borderSize' => 6])->addText("Project_in_charge:", array('bold' => true));
     $table->addCell(8500, ['borderSize' => 6])->addText($project_in_charge);
     
     $table->addRow();
-    $table->addCell(2000, ['borderSize' => 6])->addText("project_relevant:", array('bold' => true));
+    $table->addCell(2000, ['borderSize' => 6])->addText("Relevant Persons:", array('bold' => true));
     $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
     
     $table->addRow();
