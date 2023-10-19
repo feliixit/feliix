@@ -650,7 +650,7 @@ if (!isset($jwt)) {
             }
 
             
-            $to = $created_by . "," . $requestor . "," . $project_relevant;
+            
             $cc = $project_relevant;
             $creator = $created_by;
 
@@ -661,12 +661,14 @@ if (!isset($jwt)) {
 
             if($_status == 2)
             {
+                $to = $created_by . "," . $requestor . "," . $project_relevant . "," . $user_name;
                 $att = get_schedule_file_full($id);
                 delete_car_approval_mail_5($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
             }
 
             if($_status == 1)
             {
+                $to = $created_by . "," . $requestor  . "," . $user_name;
                 $att = get_schedule_file($id);
                 delete_car_request_mail_6($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
             }
@@ -845,7 +847,7 @@ if (!isset($jwt)) {
 
             }
 
-            $to = $created_by . "," . $requestor;
+            $to = $created_by . "," . $user_name;
             $cc = $project_relevant;
             $creator = $created_by;
             $date_check = $check_info_ary['Date'];
@@ -865,6 +867,7 @@ if (!isset($jwt)) {
 
             if($status == 1)
             {
+                $to = $created_by . "," . $user_name;
                 $att = get_schedule_file($id);
                 send_car_request_mail_2($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att);
             }
@@ -951,10 +954,7 @@ if (!isset($jwt)) {
             }
 
             
-            $to = $created_by . "," . $requestor . "," . $project_relevant;
-            $cc = $project_relevant;
             $creator = $created_by;
-
 
             $date = date("Y-m-d", strtotime($start_time));
             $time = date("h:i A", strtotime($start_time)) . " to " . date("h:i A", strtotime($end_time));
@@ -962,12 +962,14 @@ if (!isset($jwt)) {
 
             if($_status == 2)
             {
+                $to = $created_by . "," . $requestor . "," . $project_relevant . "," . $user_name;
                 $att = get_schedule_file_full($id);
                 withdraw_car_approval_mail_3($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
             }
 
             if($_status == 1)
             {
+                $to = $created_by . "," . $requestor . "," . $user_name;
                 $att = get_schedule_file($id);
                 withdraw_car_request_mail_4($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $user_name);
             }
@@ -1802,7 +1804,7 @@ function get_schedule_file_full($id)
     $check_time_out = "";
     $check_time_in = "";
 
-    $sql = "select date_use, car_use, driver, time_out, time_in from car_calendar_check where feliix = 1 and sid = " . $id;
+    $sql = "select date_use, car_use, driver, time_out, time_in from car_calendar_check where feliix = 1 and sid = " . $id . " order by id desc limit 1";
 
     $stmt = $db_sea->prepare( $sql );
     $stmt->execute();
