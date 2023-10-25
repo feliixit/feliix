@@ -3063,7 +3063,7 @@ $(document).on("click", "#btn_confirm", async function () {
     document.getElementById("btn_confirm").style.display = "none";
     document.getElementById("btn_unconfirm").style.display = "inline";
 
-    reload();
+    reload(app.id);
 });
 
 $(document).on("click", "#btn_unconfirm", async function () {
@@ -3076,7 +3076,7 @@ $(document).on("click", "#btn_unconfirm", async function () {
     document.getElementById("btn_confirm").style.display = "inline";
     document.getElementById("btn_unconfirm").style.display = "none";
 
-    reload();
+    reload(app.id);
 
 });
 
