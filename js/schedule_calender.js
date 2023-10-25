@@ -2060,6 +2060,26 @@ var initial = async (_id) =>  {
         }
     }
 
+    if(sc_content.created_by == app.name)
+    {
+        if(sc_content.status == '1' || sc_content.status == '2')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+    else
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
     if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
     {
         document.getElementById("btn_request").style.display = "none";
