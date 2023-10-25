@@ -2074,11 +2074,6 @@ var initial = async (_id) =>  {
             document.getElementById("btn_withdraw").style.display = "none";
         }
     }
-    else
-    {
-        document.getElementById("btn_request").style.display = "none";
-        document.getElementById("btn_withdraw").style.display = "none";
-    }
 
     if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
     {
