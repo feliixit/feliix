@@ -2773,12 +2773,10 @@ $(document).on("click", "#btn_export", function () {
     '<button type="button" role="button" tabindex="0" class="SwalBtn2 customSwalBtn">' + '”Request Review” and “Content of Request”' + '</button>' + 
     '<button type="button" role="button" tabindex="0" class="SwalBtn3 customSwalBtn">' + 'Cancel' + '</button>';
 
-    if(this.status == "0")
+    if(eventObj.extendedProps.description.status == "0" || eventObj.extendedProps.description.status == "1")
     {
-        buttons = "Which do you want to export?" +
-        "<br>" +
-        '<button type="button" role="button" tabindex="0" class="SwalBtn1 customSwalBtn">' + 'Only “Content of Request”' + '</button>' +
-        '<button type="button" role="button" tabindex="0" class="SwalBtn3 customSwalBtn">' + 'Cancel' + '</button>';
+        app.export(1);
+        return;
     }
 
     Swal.fire({

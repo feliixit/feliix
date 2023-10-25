@@ -782,6 +782,7 @@ try {
                         <option value="Avanza">Avanza</option>
                         <option value="Traviz 1">Traviz 1</option>
                         <option value="Traviz 2">Traviz 2</option>
+                        <option value="Traviz 3">Traviz 3</option>
                         <option value="Alphard">Alphard</option>
                         <option value="Toyota Rush">Toyota Rush</option>
                         <option value="Grab">Grab</option>
