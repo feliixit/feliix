@@ -2130,14 +2130,14 @@ var initial = async (_id) =>  {
     if (app.name === "guest") {
         document.getElementsByClassName(
             "fc-addEventButton-button"
-        )[0].style.display = "none";
+        )[0].style.visibility = "hidden";
 
-        document.getElementById("add_message").style.display = "none";
+        document.getElementById("add_message").style.visibility = "hidden";
 
-        document.getElementById("btn_duplicate").style.display = "none";
+        document.getElementById("btn_duplicate").style.visibility = "hidden";
         // document.getElementById("btn_export").style.visibility="hidden";
-        document.getElementById("btn_delete").style.display = "none";
-        document.getElementById("btn_edit").style.display = "none";
+        document.getElementById("btn_delete").style.visibility = "hidden";
+        document.getElementById("btn_edit").style.visibility = "hidden";
     }
 
     if (
@@ -2150,15 +2150,15 @@ var initial = async (_id) =>  {
         app.name != "Aiza Eisma" &&
         app.name != "Kristel Tan"
     ) {
-        document.getElementById("btn_lock").style.display = "none";
-        document.getElementById("btn_unlock").style.display = "none";
+        document.getElementById("btn_lock").style.visibility = "hidden";
+        document.getElementById("btn_unlock").style.visibility = "hidden";
     }
 
     if (
         app.schedule_confirm != true 
     ) {
-        document.getElementById("btn_confirm").style.display = "none";
-        document.getElementById("btn_unconfirm").style.display = "none";
+        document.getElementById("btn_confirm").style.visibility = "hidden";
+        document.getElementById("btn_unconfirm").style.visibility = "hidden";
     }
 
     
@@ -3063,7 +3063,7 @@ $(document).on("click", "#btn_confirm", async function () {
     document.getElementById("btn_confirm").style.display = "none";
     document.getElementById("btn_unconfirm").style.display = "inline";
 
-    reload(app.id);
+    reload();
 });
 
 $(document).on("click", "#btn_unconfirm", async function () {
@@ -3076,7 +3076,7 @@ $(document).on("click", "#btn_unconfirm", async function () {
     document.getElementById("btn_confirm").style.display = "inline";
     document.getElementById("btn_unconfirm").style.display = "none";
 
-    reload(app.id);
+    reload();
 
 });
 
