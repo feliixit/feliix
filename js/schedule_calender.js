@@ -1274,7 +1274,7 @@ var app = new Vue({
 
                     if(app.content.created_by == app.name)
     {
-        if(app.content.status == '1')
+        if(app.content.status == '1' || app.content.status == '2')
         {
             document.getElementById("btn_request").style.display = "none";
             document.getElementById("btn_withdraw").style.display = "inline";
@@ -1319,7 +1319,7 @@ var app = new Vue({
         app.name == "Kristel Tan" ||
         app.name == "Alleah Belmonte" 
     ) {
-        if(app.content.status == '1')
+        if(app.content.status == '1' || app.content.status == '2')
         {
             document.getElementById("btn_request").style.display = "none";
             document.getElementById("btn_withdraw").style.display = "inline";
@@ -1998,60 +1998,6 @@ var initial = async (_id) =>  {
             document.getElementById("btn_request").style.display = "none";
             document.getElementById("btn_withdraw").style.display = "none";
 
-            if (app.name == "guest" ||
-                app.name == "Glendon Wendell Co" ||
-                app.name == "Mary Jude Jeng Articulo" ||
-                app.name == "Stefanie Mika C. Santos" ||
-                app.name == "Edneil Fernandez" 
-            ) {
-                document.getElementById("btn_request").style.display = "none";
-                document.getElementById("btn_withdraw").style.display = "none";
-            }
-
-            if (app.name == "Dennis Lin" ||
-                app.name == "dereck" ||
-                app.name == "Aiza Eisma" ||
-                app.name == "Kristel Tan" ||
-                app.name == "Alleah Belmonte" 
-            ) {
-                if(sc_content.status == '1')
-                {
-                    document.getElementById("btn_request").style.display = "none";
-                    document.getElementById("btn_withdraw").style.display = "inline";
-                }
-
-                if(sc_content.status == '0')
-                {
-                    document.getElementById("btn_request").style.display = "inline";
-                    document.getElementById("btn_withdraw").style.display = "none";
-                }
-            }
-
-            if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
-            {
-                document.getElementById("btn_request").style.display = "none";
-                document.getElementById("btn_withdraw").style.display = "none";
-            }
-
-            if(sc_content.created_by == app.name)
-            {
-                if(sc_content.status == '1')
-                {
-                    document.getElementById("btn_request").style.display = "none";
-                    document.getElementById("btn_withdraw").style.display = "inline";
-                }
-
-                if(sc_content.status == '0')
-                {
-                    document.getElementById("btn_request").style.display = "inline";
-                    document.getElementById("btn_withdraw").style.display = "none";
-                }
-            }
-            else
-            {
-                document.getElementById("btn_request").style.display = "none";
-                document.getElementById("btn_withdraw").style.display = "none";
-            }
 
     if(sc_content.status != '0')
     {
@@ -2101,7 +2047,7 @@ var initial = async (_id) =>  {
         app.name == "Kristel Tan" ||
         app.name == "Alleah Belmonte" 
     ) {
-        if(sc_content.status == '1')
+        if(sc_content.status == '1' || sc_content.status == '2')
         {
             document.getElementById("btn_request").style.display = "none";
             document.getElementById("btn_withdraw").style.display = "inline";
@@ -3046,7 +2992,7 @@ $(document).on("click", "#btn_cancel", async function () {
         app.name == "Kristel Tan" ||
         app.name == "Alleah Belmonte" 
     ) {
-        if(sc_content.status == '1')
+        if(sc_content.status == '1' || sc_content.status == '2')
         {
             document.getElementById("btn_request").style.display = "none";
             document.getElementById("btn_withdraw").style.display = "inline";
