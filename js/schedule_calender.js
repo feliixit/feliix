@@ -1995,6 +1995,8 @@ var initial = async (_id) =>  {
             }
 
 
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "none";
 
             if (app.name == "guest" ||
                 app.name == "Glendon Wendell Co" ||
@@ -2031,25 +2033,25 @@ var initial = async (_id) =>  {
                 document.getElementById("btn_withdraw").style.display = "none";
             }
 
-    //         if(sc_content.created_by == app.name)
-    // {
-    //     if(sc_content.status == '1')
-    //     {
-    //         document.getElementById("btn_request").style.display = "none";
-    //         document.getElementById("btn_withdraw").style.display = "inline";
-    //     }
+            if(sc_content.created_by == app.name)
+            {
+                if(sc_content.status == '1')
+                {
+                    document.getElementById("btn_request").style.display = "none";
+                    document.getElementById("btn_withdraw").style.display = "inline";
+                }
 
-    //     if(sc_content.status == '0')
-    //     {
-    //         document.getElementById("btn_request").style.display = "inline";
-    //         document.getElementById("btn_withdraw").style.display = "none";
-    //     }
-    // }
-    // else
-    // {
-    //     document.getElementById("btn_request").style.display = "none";
-    //     document.getElementById("btn_withdraw").style.display = "none";
-    // }
+                if(sc_content.status == '0')
+                {
+                    document.getElementById("btn_request").style.display = "inline";
+                    document.getElementById("btn_withdraw").style.display = "none";
+                }
+            }
+            else
+            {
+                document.getElementById("btn_request").style.display = "none";
+                document.getElementById("btn_withdraw").style.display = "none";
+            }
 
     if(sc_content.status != '0')
     {
