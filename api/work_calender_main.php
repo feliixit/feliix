@@ -717,7 +717,7 @@ if (!isset($jwt)) {
                             from car_calendar_check ck
                         where ck.`feliix` = 1 
                         and ck.car_use = :car_use 
-                        and ck.date_use = :date_use 
+                        and DATE(ck.date_use) = :date_use 
                         and ck.status <> -1 ";
 
                 $stmt = $db_sea->prepare($sql);
