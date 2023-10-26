@@ -729,11 +729,11 @@ if (!isset($jwt)) {
 
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $sql = "select * from work_calendar_main where id = " . $row['sid'] . " and status = 2 and is_enabled = 1";
-                    $stmt = $db->prepare($sql);
+                    $stmt1 = $db->prepare($sql);
 
-                    $stmt->execute();
+                    $stmt1->execute();
 
-                    while ($row_feliix = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    while ($row_feliix = $stmt1->fetch(PDO::FETCH_ASSOC)) {
                         $auto_pass = false;
                     }
                 }
