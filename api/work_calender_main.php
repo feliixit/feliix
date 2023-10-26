@@ -717,7 +717,7 @@ if (!isset($jwt)) {
                             from car_calendar_check ck
                         where ck.`feliix` = 1 
                         and ck.car_use = :car_use 
-                        and DATE(ck.date_use) = :date_use 
+                        and ck.date_use = :date_use 
                         and ck.status <> -1 ";
 
                 $stmt = $db_sea->prepare($sql);
@@ -729,11 +729,11 @@ if (!isset($jwt)) {
 
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $sql = "select * from work_calendar_main where id = " . $row['sid'] . " and status = 2 and is_enabled = 1";
-                    $stmt1 = $db->prepare($sql);
+                    $stmt = $db->prepare($sql);
 
-                    $stmt1->execute();
+                    $stmt->execute();
 
-                    while ($row_feliix = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                    while ($row_feliix = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         $auto_pass = false;
                     }
                 }
