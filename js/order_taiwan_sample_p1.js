@@ -2736,7 +2736,7 @@ var app = new Vue({
 
       },
 
-      close_single: function() {
+      p_close_single: function() {
         $('#modal_product_display_simple').modal('toggle');
       },
 

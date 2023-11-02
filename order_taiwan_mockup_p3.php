@@ -2768,7 +2768,7 @@ try {
                                     <!-- 當主產品沒有停產，但使用者選擇到的 特定子規格是 停產狀態，則 Save 按鈕要變成隱藏狀態 -->
                                     <!-- Save 要顯示或隱藏的規則，規則和之前設定在 p_product Display 完整版的 Add with Image 按鈕一模一樣 -->
                                     <button class="btn btn-info"  @click="save_single()">Save</button>
-                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                    <button class="btn btn-warning" @click="p_close_single()">Cancel</button>
                                 </li>
                             </ul>
                         </div>
@@ -2886,7 +2886,7 @@ try {
                                     <!-- 當主產品沒有停產，但使用者選擇到的 特定子規格是 停產狀態，則 Save 按鈕要變成隱藏狀態 -->
                                     <!-- Save 要顯示或隱藏的規則，規則和之前設定在 p_product Display 完整版的 Add with Image 按鈕一模一樣 -->
                                     <button class="btn btn-info"  @click="save_single()">Save</button>
-                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                    <button class="btn btn-warning" @click="p_close_single()">Cancel</button>
                                 </li>
 
                             </ul>
