@@ -304,6 +304,142 @@ var app = new Vue({
 
         out : "",
         out_cnt : 0,
+
+        
+        // product information
+        p_product : {},
+
+        p_baseURL: "https://storage.cloud.google.com/feliiximg/",
+
+        p_category: "",
+        p_sub_category: "",
+        p_sub_category_name: "",
+        p_sub_cateory_item: [],
+
+        //
+        p_id:-1,
+        p_record: [],
+        p_tags: [],
+
+        p_cateory_item: [],
+
+        p_special_infomation: [],
+        p_special_infomation_detail: [],
+
+        p_accessory_infomation: [],
+        p_sub_accessory_item: [],
+        p_attributes:[],
+
+        //
+        p_accessory_item: [],
+
+        p_edit_mode: true,
+
+        p_title: [],
+
+        p_title_id: 0,
+
+        p_url: null,
+        p_url1: null,
+        p_url2: null,
+        p_url3: null,
+
+        // data
+        p_pid : "",
+        p_brand: "",
+        p_code: "",
+        p_price_ntd: "",
+        p_price: "",
+        p_price_quoted: "",
+        p_price_ntd_change: "",
+        p_price_change: "",
+        p_price_ntd_org: "",
+        p_price_org: "",
+        p_description: "",
+        p_notes: "",
+        p_accessory_mode: false,
+        p_variation_mode: false,
+
+        p_quoted_price:"",
+        p_quoted_price_org:"",
+        p_quoted_price_change:"",
+        p_moq:"",
+        p_currency: "",
+
+        p_str_quoted_price_change: "",
+        p_str_price_ntd_change: "",
+        p_str_price_change: "",
+
+        p_phased_out: "",
+
+        p_sheet_url: "",
+
+        // accessory
+
+        // variation
+        p_variation1: "",
+        p_variation2: "",
+        p_variation3: "",
+        p_variation1_custom: "",
+        p_variation2_custom: "",
+        p_variation3_custom: "",
+
+        p_variation1_text: "1st Variation",
+        p_variation2_text: "2nd Variation",
+        p_variation3_text: "3rd Variation",
+
+        p_variation1_value: [],
+        p_variation2_value: [],
+        p_variation3_value: [],
+
+        p_variation_product: [],
+
+        p_related_product : [],
+        p_nColumns: 4,
+        p_groupedItems: [],
+
+        p_show_accessory: false,
+
+        p_v1:"",
+        p_v2:"",
+        p_v3:"",
+
+        // bulk insert
+        p_code_checked:'',
+        p_bulk_code:'',
+        p_price_ntd_checked:'',
+        p_bulk_price_ntd:'',
+        p_price_ntd_action :'',
+        p_price_checked:'',
+        p_bulk_price:'',
+        p_price_action:'',
+        p_image_checked:'',
+        p_bulk_url:'',
+        p_status_checked:'',
+        p_bulk_status:'',
+        p_currency:'',
+
+        p_submit: false,
+
+        p_specification: [],
+
+        // info
+        p_name :"",
+        p_title: "",
+        p_is_manager: "",
+
+        p_toggle: true,
+
+        p_print_pid: 'true',
+        p_print_brand: 'true',
+        p_print_srp: 'true',
+        p_print_qp: 'true',
+
+        p_out : "",
+        p_out_cnt : 0,
+        p_phased_out_text : [],
+
+        p_item_product : {},
     },
   
     created() {
@@ -2953,6 +3089,368 @@ var app = new Vue({
         });
       
       },
+
+      
+      
+      toggle_normal: function(pid, id) {
+
+        this.get_records(pid, id);
+        $('#modal_product_display_simple').modal('toggle');
+
+      },
+
+      close_single: function() {
+        $('#modal_product_display_simple').modal('toggle');
+      },
+
+      change_url: function(url) {
+        this.p_url = url;
+    },
+
+    p_PhaseOutAlert(){
+      hl = "";
+      for(var i = 0; i < this.p_phased_out_text.length; i++)
+      {
+        hl += "(" + Number(i+1) + ") " + this.p_phased_out_text[i] + "<br/>";
+      }
+
+      Swal.fire({
+        title: 'Phased Out Variants:',
+        html: hl,
+        confirmButtonText: 'OK',
+        });
+      
+    },
+
+    p_change_v(){
+      let item_product = this.shallowCopy(
+        this.p_product.product.find((element) => element.v1 == this.p_v1 && element.v2 == this.p_v2 && element.v3 == this.p_v3)
+      )
+
+      if(item_product.id != undefined)
+      {
+        if(item_product.photo != "")
+          this.p_url = this.img_url + item_product.photo;
+        else
+          this.p_url = "";
+        this.p_price_ntd = "NTD " + Number(item_product.price_ntd).toLocaleString();
+        this.p_price = "PHP " + Number(item_product.price).toLocaleString();
+        this.p_quoted_price = "PHP " + Number(item_product.quoted_price).toLocaleString();
+        this.p_phased = item_product.enabled == 0 ? 1 : 0;
+
+        this.p_out = item_product.enabled == 1 ? "" : "Y";
+        this.p_out_cnt = 0;
+
+        if(this.p_product['out'] == 'Y')
+        {
+            this.p_out = "Y";
+            this.p_out_cnt = 0;
+        }
+
+        this.p_item_product = item_product;
+      }
+      else
+      {
+        this.p_url = this.img_url + this.p_product['photo1'];
+        this.p_price_ntd = this.p_product['price_ntd'];
+        this.p_price = this.p_product['price'];
+        this.p_quoted_price = this.p_product['quoted_price'];
+        this.p_phased = 0;
+
+        this.p_out = this.p_product['out'];
+        this.p_out_cnt = this.p_product['phased_out_cnt'];
+
+        this.p_item_product = {};
+      }
+
+    },
+
+
+    save_single: function() {
+
+      let _this = this;
+      var form_Data = new FormData();
+
+      if(this.p_item_product.id == undefined)
+      {
+        Swal.fire({
+          text: "Please choose an option for each attribute.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      if(this.p_out == 'Y')
+      {
+        Swal.fire({
+          text: "What you chose is a phased-out variation!! Please choose another variation.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      var v1 = this.p_item_product.v1;
+      var v2 = this.p_item_product.v2;
+      var v3 = this.p_item_product.v3;
+
+      form_Data.append('id', this.p_id);
+      form_Data.append('v1', v1);
+      form_Data.append('v2', v2);
+      form_Data.append('v3', v3);
+
+
+      axios({
+        method: "post",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        url: "api/order_taiwan_p1_normal_update",
+        data: form_Data,
+      })
+        .then(function(response) {
+          //handle success
+          $('#modal_product_display_simple').modal('toggle');
+          _this.getRecord();
+
+        })
+        .catch(function(error) {
+      
+
+        });
+      },
+
+
+      
+    get_records: function(id, item_id) {
+      let _this = this;
+
+      this.p_id = item_id;
+
+      if(id === -1)
+          return;
+
+      const params = {
+        id: id,
+      };
+
+      let token = localStorage.getItem("accessToken");
+
+      axios
+        .get("api/product_display_code", {
+          params,
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(function(response) {
+          console.log(response.data);
+          _this.p_record = response.data;
+
+          _this.p_product = _this.p_record[0];
+
+          _this.p_category = _this.p_record[0]['category'];
+          _this.p_sub_category = _this.p_record[0]['sub_category'];
+          _this.p_sub_category_name = _this.p_record[0]['sub_category_name'];
+
+          _this.p_sub_cateory_item = _this.p_record[0]['sub_category_item'];
+
+          _this.p_tags = _this.p_record[0]['tags'];
+
+          _this.p_special_infomation = _this.p_record[0]['special_information'][0].lv3[0];
+          _this.p_accessory_infomation = _this.p_record[0]['accessory_information'];
+
+          _this.p_pid = _this.p_record[0]['id'];
+          _this.p_brand = _this.p_record[0]['brand'];
+          _this.p_code = _this.p_record[0]['code'];
+          _this.p_price_ntd = _this.p_record[0]['price_ntd'];
+          _this.p_price = _this.p_record[0]['price'];
+          _this.p_price_quoted = _this.p_record[0]['price_quoted'];
+          _this.p_price_ntd_change = _this.p_record[0]['price_ntd_change'];
+          _this.p_price_change = _this.p_record[0]['price_change'];
+          _this.p_price_ntd_org = _this.p_record[0]['price_ntd_org'];
+          _this.p_price_org = _this.p_record[0]['price_org'];
+          _this.p_description = _this.p_record[0]['description'];
+          _this.p_notes = _this.p_record[0]['notes'];
+          _this.p_accessory_mode = _this.p_record[0]['accessory_mode'];
+          _this.p_variation_mode = _this.p_record[0]['variation_mode'];
+
+          _this.p_quoted_price = _this.p_record[0]['quoted_price'];
+          _this.p_quoted_price_org = _this.p_record[0]['quoted_price_org'];
+          _this.p_quoted_price_change = _this.p_record[0]['quoted_price_change'];
+          _this.p_moq = _this.p_record[0]['moq'];
+
+          _this.p_currency = _this.p_record[0]['currency'];
+
+          _this.p_str_price_ntd_change = _this.p_record[0]['str_price_ntd_change'];
+          _this.p_str_price_change = _this.p_record[0]['str_price_change'];
+          _this.p_str_quoted_price_change = _this.p_record[0]['str_quoted_price_change'];
+
+          _this.p_sheet_url = 'product_spec_sheet?sd=' + _this.p_record[0]['id'];
+
+          _this.p_out = _this.p_record[0]['out'];
+          _this.p_out_cnt = _this.p_record[0]['phased_out_cnt'];
+          _this.p_phased_out_text = _this.p_record[0]['phased_out_text'];
+
+          //var select_items = _this.record[0]['tags'].split(',');
+
+          // if(_this.category === '10000000')
+          //   $('#tag01').selectpicker('val', select_items);
+          // if(_this.category === '20000000')
+          //   $('#tag02').selectpicker('val', select_items);
+          
+          
+          // if(_this.variation_mode == 1)
+          //     $("#variation_mode").bootstrapToggle("on");
+          // if(_this.accessory_mode == 1)
+          //     $("#accessory_mode").bootstrapToggle("on");
+
+          if(_this.p_record[0]['photo1'].trim() !== '')
+              _this.p_url1 = _this.p_baseURL + _this.p_record[0]['photo1'];
+          if(_this.p_record[0]['photo2'].trim() !== '')
+              _this.p_url2 = _this.p_baseURL + _this.p_record[0]['photo2'];
+          if(_this.p_record[0]['photo3'].trim() !== '')
+              _this.p_url3 = _this.p_baseURL + _this.p_record[0]['photo3'];
+
+          _this.p_url = _this.p_url1;
+
+          _this.p_attributes = JSON.parse(_this.p_record[0]['attributes']);
+          _this.p_variation_product = _this.p_record[0]['product'];
+
+          _this.p_variation1_text = _this.p_record[0]['variation1_text'];
+          _this.p_variation2_text = _this.p_record[0]['variation2_text'];
+          _this.p_variation3_text = _this.p_record[0]['variation3_text'];
+
+          _this.p_variation1_value = _this.p_record[0]['variation1_value'];
+          _this.p_variation2_value = _this.p_record[0]['variation2_value'];
+          _this.p_variation3_value = _this.p_record[0]['variation3_value'];
+
+          _this.p_related_product = _this.p_record[0]['related_product'];
+          _this.p_chunk(_this.p_related_product, 4);
+
+          _this.p_variation1 = _this.p_record[0]['variation1'];
+          _this.p_variation2 = _this.p_record[0]['variation2'];
+          _this.p_variation3 = _this.p_record[0]['variation3'];
+
+          _this.p_variation1_custom = _this.p_record[0]['variation1_custom'];
+          _this.p_variation2_custom = _this.p_record[0]['variation2_custom'];
+          _this.p_variation3_custom = _this.p_record[0]['variation3_custom'];
+          
+          _this.p_set_up_variants();
+          _this.p_set_up_specification();
+
+          _this.p_v1 = "";
+          _this.p_v2 = "";
+          _this.p_v3 = "";
+
+          _this.p_change_v();
+
+          _this.p_edit_mode = true;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+
+    p_chunk: function(arr, size) {
+      var newArr = [];
+      for (var i=0; i<arr.length; i+=size) {
+        newArr.push(arr.slice(i, i+size));
+      }
+      this.groupedItems  = newArr;
+    },
+
+    p_set_up_variants() {
+      for(var i=0; i<this.p_variation1_value.length; i++)
+      {
+        $('#variation1_value').tagsinput('add', this.p_variation1_value[i]);
+      }
+      for(var i=0; i<this.p_variation2_value.length; i++)
+      {
+        $('#variation2_value').tagsinput('add', this.p_variation2_value[i]);
+      }
+      for(var i=0; i<this.p_variation3_value.length; i++)
+      {
+        $('#variation3_value').tagsinput('add', this.p_variation3_value[i]);
+      }
+
+      
+    },
+
+    
+    p_set_up_specification() {
+      let k1 = '';
+      let k2 = '';
+
+      let v1 = '';
+      let v2 = '';
+
+     for(var i=0; i < this.p_special_infomation.length; i++)
+     {
+       if(this.p_special_infomation[i].value != "")
+       {
+         if(k1 == "")
+         {
+           k1 = this.p_special_infomation[i].category;
+           v1 = this.p_special_infomation[i].value;
+         }else if(k1 !== "" && k2 == "")
+         {
+           k2 = this.p_special_infomation[i].category;
+           v2 = this.p_special_infomation[i].value;
+
+           obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+           this.p_specification.push(obj);
+           k1  = '';
+           k2  = '';
+           v1  = '';
+           v2  = '';
+         }
+       }
+     }
+
+     if(k1 == "" && this.p_record[0]['moq'] !== "")
+     {
+       k1 = 'MOQ';
+       v1 = this.p_record[0]['moq'];
+     }else if(k1 !== "" && k2 == "" && this.p_record[0]['moq'] !== "")
+     {
+       k2 = 'MOQ';
+       v2 = this.p_record[0]['moq'];
+   
+       obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+       this.p_specification.push(obj);
+       k1  = '';
+       k2  = '';
+       v1  = '';
+       v2  = '';
+     }
+/*
+     if(k1 == "" && this.record[0]['notes'] !== "")
+     {
+       k1 = 'Notes';
+       v1 = this.record[0]['notes'];
+     }else if(k1 !== "" && k2 == "" && this.record[0]['notes'] !== "")
+     {
+       k2 = 'Notes';
+       v2 = this.record[0]['notes'];
+   
+       obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+       this.specification.push(obj);
+       k1  = '';
+       k2  = '';
+       v1  = '';
+       v2  = '';
+     }
+*/
+     if(k1 !== "" && k2 == "")
+     {
+       k2 = '';
+       v2 = '';
+   
+       obj = {k1: k1, v1: v1, k2: k2, v2: v2};
+       this.p_specification.push(obj);
+     
+     }
+   },
 
     }
   

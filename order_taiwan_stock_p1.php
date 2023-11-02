@@ -325,6 +325,10 @@ try {
             color: #0056b3;
         }
 
+        .tb_order tbody tr.need_revise > td {
+            background: rgba(255, 255, 0, 0.2);
+        }
+
 
         .NTD_price {
 
@@ -542,6 +546,10 @@ try {
             font-size: 16px;
             font-weight: 800;
             text-align: left;
+        }
+
+        .read_block .code > i.fa-edit {
+            color: red;
         }
 
         .read_block .brief {
@@ -1471,7 +1479,7 @@ try {
                     </thead>
 
                     <tbody>
-                    <tr v-for="(item, index) in items" :class="['print_area_' + item.id]">
+                    <tr v-for="(item, index) in items" :class="['print_area_' + item.id, item.normal == 1 ? 'need_revise' : '']">
                         <td><input type="checkbox" class="alone" :value="item.index" :true-value="1" v-model:checked="item.is_checked"></td>
                         <td> {{item.serial_number}} </td>
                         <td>
@@ -1537,7 +1545,7 @@ try {
             <td>
                 <div class="read_block" v-if="!item.is_edit">
                     <div class="id">ID: {{ item.pid != 0 ? item.pid : ''}}</div>
-                    <div class="code">{{ item.code }}</div>
+                    <div class="code">{{ item.code }} <i class="fas fa-edit" v-if="item.normal == 1" style="cursor: pointer;" @click="toggle_normal(item.pid, item.id)"></i></div>
                     <div class="brief">{{ item.brief }}</div>
                     <div class="listing">{{ item.listing }}
                     </div>
@@ -2464,6 +2472,214 @@ try {
                     </div>
                     -->
                 </div>
+            </template>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- Product Display 簡易版 -->
+<div class="modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true" id="modal_product_display_simple">
+
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1200px;">
+
+        <div class="modal-content"
+             style="height: calc( 100vh - 3.75rem); overflow-y: auto; border: none; padding-bottom: 20px;">
+
+            <template v-if="p_product.variation_mode != 1">
+                <div class="upper_section">
+                    <div class="imagebox">
+                        <div class="selected_image">
+                            <img :src="p_url" v-if="p_url !== ''">
+                        </div>
+                        <div class="image_list">
+                            <img v-if="p_product.photo1" :src="img_url + p_product.photo1"
+                                 @click="change_url(p_product.photo1)"/>
+                            <img v-if="p_product.photo2" :src="img_url + p_product.photo2"
+                                 @click="change_url(p_product.photo2)"/>
+                            <img v-if="p_product.photo3" :src="img_url + p_product.photo3"
+                                 @click="change_url(p_product.photo3)"/>
+                            <!-- <img v-for="(item, index) in variation_p_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                        </div>
+                    </div>
+                    <div class="infobox">
+                        <div class="basic_info">
+                        <span class="phasedout" v-if="p_out == 'Y' && p_out_cnt == 0">Phased Out</span>
+                                <span class="phasedout1" v-if="p_out_cnt == 1" @click="p_PhaseOutAlert(p_product.phased_out_text1)">1 variant is phased out</span>
+                                <span class="phasedout1" v-if="p_out_cnt > 1" @click="p_PhaseOutAlert(p_product.phased_out_text1)">{{ p_out_cnt }} variants are phased out</span>
+                        <h3 style="word-break: break-all;">{{p_product.code}}</h3> <h6>
+                            {{p_product.brand}}</h6>
+                            <h6 v-if="p_category == 'Lighting'">{{ p_product.category}}</h6>
+                            <h6 v-if="p_category != 'Lighting'">{{ p_product.category}} >> {{
+                                p_product.sub_category_name}}</h6>
+                            <!---->
+                            <div class="tags"><span v-for="(it, index) in p_product.tags">{{ it }}</span></div>
+                        </div>
+                        <ul class="price_stock">
+                            <li>
+                                Suggested Retail Price: <span>{{p_price}}</span><span></span></li>
+                            <li>
+                                Quoted Price: <span>{{p_quoted_price}}</span><span></span></li>
+                        </ul>
+
+                        <ul class="variants" style="display: none;">
+                            <li>
+                                Select:
+                            </li>
+                            <li>Beam Angle</li><!---->
+                            <li><select class="form-control">
+                                <option value=""></option>
+                            </select></li>
+                            <li>CCT</li><!---->
+                            <li style="display: none;"><select class="form-control">
+                                <option value=""></option>
+                            </select></li> <!---->
+                            <li>Color Finish</li>
+                            <li style="display: none;"><select class="form-control">
+                                <option value=""></option>
+                            </select></li> <!----><!----><!----></ul>
+
+
+                        <div class="btnbox">
+                            <ul>
+                                <li>
+                                    <!-- 當主產品停產，則 Save 按鈕則是永遠隱藏起來 -->
+                                    <!-- 當主產品沒有停產，但使用者選擇到的 特定子規格是 停產狀態，則 Save 按鈕要變成隱藏狀態 -->
+                                    <!-- Save 要顯示或隱藏的規則，規則和之前設定在 p_product Display 完整版的 Add with Image 按鈕一模一樣 -->
+                                    <button class="btn btn-info"  @click="save_single()">Save</button>
+                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </template>
+            <template v-if="p_product.variation_mode == 1">
+                <div class="upper_section">
+
+                    <div class="imagebox">
+                        <div class="selected_image">
+                            <img :src="p_url" v-if="p_url !== ''">
+                        </div>
+                        <div class="image_list">
+                            <img v-if="p_product.photo1" :src="img_url + p_product.photo1"
+                                 @click="change_url(p_product.photo1)"/>
+                            <img v-if="p_product.photo2" :src="img_url + p_product.photo2"
+                                 @click="change_url(p_product.photo2)"/>
+                            <img v-if="p_product.photo3" :src="img_url + p_product.photo3"
+                                 @click="change_url(p_product.photo3)"/>
+                            <!-- <img v-for="(item, index) in variation_p_product" v-if="item.url" :src="item.url" @click="change_url(item.url)"> -->
+                        </div>
+
+                    </div>
+
+
+                    <div class="infobox">
+                        <div class="basic_info">
+                                <span class="phasedout" v-if="p_out == 'Y' && p_out_cnt == 0">Phased Out</span>
+                                <span class="phasedout1" v-if="p_out_cnt == 1" @click="p_PhaseOutAlert(p_product.phased_out_text1)">1 variant is phased out</span>
+                                <span class="phasedout1" v-if="p_out_cnt > 1" @click="p_PhaseOutAlert(p_product.phased_out_text1)">{{ p_out_cnt }} variants are phased out</span>
+
+                            <h3>{{p_product.code}}</h3> <h6>{{p_product.brand}}</h6>
+                            <h6 v-if="p_category == 'Lighting'">{{ p_product.category}}</h6>
+                            <h6 v-if="p_category != 'Lighting'">{{ p_product.category}} >> {{
+                                p_product.sub_category_name}}</h6>
+                            <div class="tags" v-if="p_product.tags !== undefined ? p_product.tags[0] !== '' : false">
+                                <span v-for="(it, index) in p_product.tags">{{ it }}</span>
+                            </div>
+                        </div>
+
+                        <ul class="price_stock">
+
+                            <li>
+                                Suggested Retail Price: <span>{{p_price}}</span><span></span>
+                            </li>
+
+                            <li>
+                                Quoted Price: <span>{{p_quoted_price}}</span><span></span>
+                            </li>
+
+                        </ul>
+
+                        <ul class="variants">
+                            <li>
+                                Select:
+                            </li>
+                            <li v-if="p_product.variation1_value[0] !== '' && p_product.variation1_value[0] !== undefined">
+                                {{ p_product.variation1 !== 'custom' ? p_product.variation1 :
+                                p_product.variation1_custom}}
+                            </li>
+                            <li v-show="p_product.variation1_value[0] !== '' && p_product.variation1_value[0] !== undefined">
+                                <select class="form-control" v-model="p_v1" @change="p_change_v()">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in p_product.variation1_value" :value="item"
+                                            :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+                            <li v-if="p_product.variation2_value[0] !== '' && p_product.variation2_value[0] !== undefined">
+                                {{ p_product.variation2 !== 'custom' ? p_product.variation2 : p_product.variation2_custom
+                                }}
+                            </li>
+                            <li v-show="p_product.variation2_value[0] !== '' && p_product.variation2_value[0] !== undefined">
+                                <select class="form-control" v-model="p_v2" @change="p_change_v()">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in p_product.variation2_value" :value="item"
+                                            :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+                            <li v-if="p_product.variation3_value[0] !== '' && p_product.variation3_value[0] !== undefined">
+                                {{ p_product.variation3 !== 'custom' ? p_product.variation3 : p_product.variation3_custom
+                                }}
+                            </li>
+                            <li v-show="p_product.variation3_value[0] !== '' && p_product.variation3_value[0] !== undefined">
+                                <select class="form-control" v-model="p_v3" @change="p_change_v()">
+                                    <option value=""></option>
+                                    <option v-for="(item, index) in p_product.variation3_value" :value="item"
+                                            :key="item">{{item}}
+                                    </option>
+                                </select>
+                            </li>
+
+                            <template v-for="(item, index) in p_product.accessory_infomation" v-if="p_show_accessory">
+                                <li>{{ item.category }}</li>
+                                <li>
+                                    <select class="selectpicker" data-width="100%" :id="'tag'+index">
+                                        <option :data-thumbnail="detail.url"
+                                                v-for="(detail, index) in item.detail[0]">
+                                            {{detail.code}}
+                                        </option>
+                                    </select>
+                                </li>
+                            </template>
+
+                        </ul>
+
+                        <div class="btnbox">
+
+                            <ul>
+                                <li>
+                                    <!-- 當主產品停產，則 Save 按鈕則是永遠隱藏起來 -->
+                                    <!-- 當主產品沒有停產，但使用者選擇到的 特定子規格是 停產狀態，則 Save 按鈕要變成隱藏狀態 -->
+                                    <!-- Save 要顯示或隱藏的規則，規則和之前設定在 p_product Display 完整版的 Add with Image 按鈕一模一樣 -->
+                                    <button class="btn btn-info"  @click="save_single()">Save</button>
+                                    <button class="btn btn-warning" @click="close_single()">Cancel</button>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </template>
 
         </div>

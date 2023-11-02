@@ -1303,7 +1303,7 @@ var app = new Vue({
           can_save = true;
       }
 
-      if(this.username.trim() == 'Mary Jude Jeng Articulo')
+      if(this.username.trim() == 'Ronnie Fernando Dela Cruz')
       can_save = true;
       
       if(this.username.trim() == this.record.username.trim())
@@ -1384,7 +1384,7 @@ var app = new Vue({
           can_save = true;
       }
 
-      if(this.username.trim() == 'Mary Jude Jeng Articulo')
+      if(this.username.trim() == 'Ronnie Fernando Dela Cruz')
       can_save = true;
     
       return can_save;

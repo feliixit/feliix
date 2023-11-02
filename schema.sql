@@ -4129,3 +4129,6 @@ ADD COLUMN `status` int(11) DEFAULT 0;
 
 
 ALTER TABLE work_calendar_main ADD COLUMN `requestor` text COLLATE utf8mb4_unicode_ci;
+
+-- 20231030 od_item normal
+ALTER TABLE od_item add column `normal` int(11) DEFAULT 0;

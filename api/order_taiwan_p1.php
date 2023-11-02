@@ -89,7 +89,8 @@ if (!isset($jwt)) {
                     test_updated_name,
                     test_updated_at,
                     delivery_updated_name,
-                    delivery_updated_at
+                    delivery_updated_at,
+                    normal
                     FROM od_item, 
                     (SELECT @a:=@a+1 serial_number, id FROM od_item, (SELECT @a:= 0) AS a WHERE status <> -1 and od_id=$id order by ABS(sn)) b
                     WHERE status <> -1 and od_id=$id and od_item.id = b.id
@@ -176,6 +177,9 @@ if (!isset($jwt)) {
         $btn2 = $row['btn2'];
 
         $status = $row['status'];
+
+        $normal = $row['normal'];
+
         $notes = GetNotes($row['id'], $db);
 
         $notes_a = GetNotesA($row['id'], $db);
@@ -231,6 +235,7 @@ if (!isset($jwt)) {
             "notes" => $notes,
             "notes_a" => $notes_a,
             "serial_number" => $serial_number,
+            "normal" => $normal,
         );
     }
 
