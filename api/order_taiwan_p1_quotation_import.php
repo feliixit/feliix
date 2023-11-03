@@ -105,6 +105,7 @@ switch ($method) {
                     `v2` = :v2,
                     `v3` = :v3,
                     `status` = 0,
+                    `normal` = :normal,
                     `create_id` = :create_id,
                     `created_at` = now()";
 
@@ -132,10 +133,14 @@ switch ($method) {
                 $srp = isset($block_array[$i]['amount']) ? $block_array[$i]['amount'] : '';
                 $date_needed =  '';
                 $pid = isset($block_array[$i]['pid']) ? $block_array[$i]['pid'] : 0;
-       
+
+
                 $v1 = isset($block_array[$i]['v1']) ? $block_array[$i]['v1'] : '';
                 $v2 = isset($block_array[$i]['v2']) ? $block_array[$i]['v2'] : '';
                 $v3 = isset($block_array[$i]['v3']) ? $block_array[$i]['v3'] : '';
+
+                // check if normal product
+                $is_normal = IsNormalProduct($pid, $v1, $v2, $v3, $db);
 
                 // bind the values
                 $stmt->bindParam(':od_id', $od_id);
@@ -158,6 +163,8 @@ switch ($method) {
                 $stmt->bindParam(':v1', $v1);
                 $stmt->bindParam(':v2', $v2);
                 $stmt->bindParam(':v3', $v3);
+
+                $stmt->bindParam(':normal', $is_normal);
               
                 $stmt->bindParam(':create_id', $user_id);
                
@@ -534,6 +541,43 @@ function GetBrandInfo($pid, $db)
     }
 
     return $brand;
+}
+
+function IsNormalProduct($pid, $v1, $v2, $v3, $db){
+    $is_normal = 0;
+    $variation_mode = 0;
+
+    if($pid == 0)
+        return $is_normal;
+
+    $query = "SELECT variation_mode FROM `product_category` WHERE id = :pid";
+
+    // prepare the query
+    $stmt = $db->prepare($query);
+
+    // bind the values
+    $stmt->bindParam(':pid', $pid);
+
+    try {
+        // execute the query, also check if query was successful
+        if ($stmt->execute()) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $variation_mode = $row['variation_mode'];
+        
+        } else {
+            $arr = $stmt->errorInfo();
+            error_log($arr[2]);
+    
+        }
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+   
+    }
+
+    if($variation_mode == 1 && $v1 == '' && $v2 == '' && $v3 == '')
+        $is_normal = 1;
+
+    return $is_normal;
 }
 
 function MatchBrandPattern($code){
