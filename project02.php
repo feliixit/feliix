@@ -39,7 +39,7 @@ $department = $decoded->data->department;
 $test_manager = $decoded->data->test_manager;
 
 // 5. 針對 Reporting Section的內容，只有 Kristel Tan 和Thalassa Wren Benzon 和 Dennis Lin有權限可以進入和看到 幫Mary Jude Jeng Articulo(9) 和 Glendon Wendell Co(41)
-if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 4 || $user_id == 9 || $user_id == 41 || $user_id == 99)
+if($user_id == 1 || $user_id == 6 || $user_id == 2 || $user_id == 3 || $user_id == 41 || $user_id == 139)
 $access5 = true;
 
 // QOUTE AND PAYMENT Management
