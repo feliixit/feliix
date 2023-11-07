@@ -4132,3 +4132,26 @@ ALTER TABLE work_calendar_main ADD COLUMN `requestor` text COLLATE utf8mb4_unico
 
 -- 20231030 od_item normal
 ALTER TABLE od_item add column `normal` int(11) DEFAULT 0;
+
+-- 20231103 individual calendar
+CREATE TABLE IF NOT EXISTS `work_calendar_idv` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `subject` varchar(128) COLLATE utf8mb4_unicode_ci  default '',
+  `message` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `attendee` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `is_enabled` bool default false,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `updated_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `deleted_by` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `project_name` varchar(512) COLLATE utf8mb4_unicode_ci  default '',
+  `location` varchar(256) COLLATE utf8mb4_unicode_ci  default '',
+  `color` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `text_color` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  `color_other` varchar(100) COLLATE utf8mb4_unicode_ci  default '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
