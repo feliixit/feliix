@@ -16,8 +16,8 @@
 
     <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css'>
     <link rel='stylesheet' href='https://unpkg.com/@fullcalendar/core@4.3.0/main.min.css'>
-    <script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
-    <script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
 
     <script src="js/moment.js"></script>
 
@@ -345,7 +345,7 @@
         <option v-for="user in users" :value="user.id">{{user.username}}</option>
     </select>
 
-    <button class="btn btn-primary" onclick="app.getInitial()">Query</button>
+    <button class="btn btn-primary" @click="getInitial()">Query</button>
 </div>
 
 
@@ -720,6 +720,14 @@
 
 <script>
 
+    var calendar_task;
+    var eventObj;
+    var event_array_task = [];
+
+    var my_id = 0;
+    var my_level = 0;
+    var my_department = "";
+
     function CanClose(uid, creator_id, level, creator_level, department){
         let can_close = false;
 
@@ -1032,98 +1040,110 @@
                 var calendarT1 = document.getElementById('task_calendar');
 
                 let clickCnt = 0;
-                let my_id = 0;
-                let my_level = 0;
-                let my_department = "";
+                
 
-                let event_array_task = [];
-                //將Task從資料庫中加入array
-                //需要讀出task的 (1)專案名稱 (2)task名稱 (3) task 的due date (4) task 所在的 project03_other頁面網址 (5) task 在日曆中的顏色 (6) task 的 creator
-                //event的對應格式請參考下方的events範例
+                // event_array_task = [];
+                // //將Task從資料庫中加入array
+                // //需要讀出task的 (1)專案名稱 (2)task名稱 (3) task 的due date (4) task 所在的 project03_other頁面網址 (5) task 在日曆中的顏色 (6) task 的 creator
+                // //event的對應格式請參考下方的events範例
 
-                /* 會議加入array的格式如下： */
-                var token = localStorage.getItem('token');
+                // /* 會議加入array的格式如下： */
+                // var token = localStorage.getItem('token');
 
-                localStorage.getItem('token');
-                var form_Data = new FormData();
-                form_Data.append('jwt', token);
-                form_Data.append('uid', 1);
+                // localStorage.getItem('token');
+                // var form_Data = new FormData();
+                // form_Data.append('jwt', token);
+                // form_Data.append('uid', filter.user_id);
+                // form_Data.append('sdate', $('#sdate').value);
+                // form_Data.append('edate', $('#edate').value);
 
-                $.ajax({
-                    url: "api/project03_other_task_calendar_dep",
-                    type: "POST",
-                    contentType: 'multipart/form-data',
-                    processData: false,
-                    contentType: false,
-                    data: form_Data,
+                // $.ajax({
+                //     url: "api/project03_other_task_calendar_idv",
+                //     type: "POST",
+                //     contentType: 'multipart/form-data',
+                //     processData: false,
+                //     contentType: false,
+                //     data: form_Data,
 
-                    success: function(result) {
-                        console.log(result);
-                        var obj = JSON.parse(result);
-                        if (obj !== undefined) {
-                            var arrayLength = obj.length;
-                            for (var i = 0; i < arrayLength; i++) {
-                                //console.log(obj[i]);
+                //     success: function(result) {
+                //         console.log(result);
+                //         var obj = JSON.parse(result);
+                //         if (obj !== undefined) {
+                //             var arrayLength = obj.length;
+                //             for (var i = 0; i < arrayLength; i++) {
+                //                 //console.log(obj[i]);
 
-                                var obj_meeting = {
-                                    id: obj[i].id,
-                                    title: obj[i].title,
-                                    //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                    start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                    backgroundColor: obj[i].color,
-                                    borderColor: obj[i].color,
-                                    extendedProps: {
-                                        create_id:obj[i].create_id,
-                                        category:obj[i].category,
-                                        level:obj[i].level,
-                                        task_status:obj[i].task_status,
-                                        stage_id:obj[i].stage_id,
-                                    },
-                                };
+                //                 var obj_meeting = {
+                //                     id: obj[i].id,
+                //                     title: obj[i].title,
+                //                     //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
+                //                     start: moment(obj[i].due_date).format('YYYY-MM-DD'),
+                //                     backgroundColor: obj[i].color,
+                //                     borderColor: obj[i].color,
+                //                     extendedProps: {
+                //                         create_id:obj[i].create_id,
+                //                         category:obj[i].category,
+                //                         level:obj[i].level,
+                //                         task_status:obj[i].task_status,
+                //                         stage_id:obj[i].stage_id,
+                //                     },
+                //                 };
 
-                                event_array_task.push(obj_meeting);
-                            }
+                //                 event_array_task.push(obj_meeting);
+                //             }
 
-                            if(arrayLength > 0)
-                            {
-                                my_level = obj[0].my_l;
-                                my_id = obj[0].my_i;
-                                my_department = obj[0].my_d;
-                            }
-                        }
-/*
-                        let FullCalendarActions = {
-                            currentTime: null,
-                            isDblClick: function () {
-                                let prevTime =
-                                typeof FullCalendarActions.currentTime === null
-                                    ? new Date().getTime() - 1000000
-                                    : FullCalendarActions.currentTime;
-                                FullCalendarActions.currentTime = new Date().getTime();
-                                return FullCalendarActions.currentTime - prevTime < 500;
-                            },
-                        }
-*/
-                        var calendar_task = new FullCalendar.Calendar(calendarT1, {
+                //             if(arrayLength > 0)
+                //             {
+                //                 my_level = obj[0].my_l;
+                //                 my_id = obj[0].my_i;
+                //                 my_department = obj[0].my_d;
+                //             }
+                //         }
 
-                            plugins: [ 'dayGrid' ],
-                            timeZone: 'UTC',
-                            defaultView: 'dayGridMonth',
 
-                            contentHeight: 'auto',
 
-                            titleFormat: { // will produce something like "Tuesday, September 18, 2018"
-                                month: '2-digit',
-                                year: 'numeric',
-                                day: '2-digit'
-                            },
+                        
 
-                            header: {
-                                left: 'prev,next addEventButton',
-                                center: 'title',
-                                right: 'individual,admin,design,lighting,furniture,sls,eng,tw,overall dayGridMonth,timeGridWeek',
-                            },
+                        // var calendar_task = new FullCalendar.Calendar(calendarT1, {
 
+                        //     plugins: [ 'dayGrid' ],
+                        //     timeZone: 'UTC',
+                        //     defaultView: 'dayGridMonth',
+
+                        //     contentHeight: 'auto',
+
+                        //     titleFormat: { // will produce something like "Tuesday, September 18, 2018"
+                        //         month: '2-digit',
+                        //         year: 'numeric',
+                        //         day: '2-digit'
+                        //     },
+
+                        //     header: {
+                        //         left: 'prev,next addEventButton',
+                        //         center: 'title',
+                        //         right: 'dayGridMonth, timeGridWeek',
+                        //     },
+
+                            calendar_task = new FullCalendar.Calendar(calendarT1, {
+                                plugins: [ 'dayGrid' ],
+                                timeZone: 'UTC',
+                                defaultView: 'dayGridMonth',
+
+                                contentHeight: 'auto',
+
+                                titleFormat: { // will produce something like "Tuesday, September 18, 2018"
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    day: '2-digit'
+                                },
+
+                                header: {
+                                    left: 'prev,next today addEventButton',
+                                    center: 'title',
+                                    right: 'dayGridMonth',
+                                },
+
+ 
                             //Individual按鈕：只顯示出Creator、Assignee或Collaborator是當前使用者的task在日曆上
                             //Lighting按鈕：只顯示出專案的category為Lighting的task在日曆上
                             //Office Systems按鈕：只顯示出專案的category為Office Systems的task在日曆上
@@ -1150,664 +1170,6 @@
                                     }
                                 },
 
-
-                                individual: {
-                                    text: 'Individual',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-                                        form_Data.append('uid', 1);
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                },
-
-                                admin: {
-                                    text: 'AD',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-                                        form_Data.append('category', 'ad');
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/task_management_AD?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                },
-
-                                design: {
-                                    text: 'DS',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-                                        form_Data.append('category', 'ds');
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/task_management_DS?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                },
-
-
-                                lighting: {
-                                    text: 'LT',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-                                        form_Data.append('category', 'lt');
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                },
-
-                                furniture: {
-                                    text: 'OS',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-                                        form_Data.append('category', 'os');
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                },
-
-                                sls: {
-                                    text: 'SLS',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-                                        form_Data.append('category', 'sls');
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                },
-
-                                eng: {
-                                    text: 'ENG',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-                                        form_Data.append('category', 'eng');
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                },
-
-                                tw: {
-                                    text: 'TW',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-                                        form_Data.append('category', 'tw');
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                },
-
-                                overall: {
-                                    text: 'All',
-                                    click: function() {
-
-                                        //刪除當前在日曆上的所有任務資訊
-                                        calendar_task.removeAllEvents();
-
-                                        //從資料庫中取出符合當前條件的任務
-
-                                        let temp = [];
-                                        //將符合條件的任務加入到日曆中
-                                        // task status = Pending，則該任務顏色為 gray
-                                        // task status = Close，則該任務顏色為 green
-                                        // task status = Ongoing 且 開啟頁面的時間 <= 該任務的due date ，則該任務顏色為 blue
-                                        // task status = Ongoing 且 開啟頁面的時間 > 該任務的due date ，則該任務顏色為 red
-                                        var token = localStorage.getItem('token');
-
-                                        localStorage.getItem('token');
-                                        var form_Data = new FormData();
-
-
-                                        $.ajax({
-                                            url: "api/project03_other_task_calendar_dep",
-                                            type: "POST",
-                                            contentType: 'multipart/form-data',
-                                            processData: false,
-                                            contentType: false,
-                                            data: form_Data,
-
-                                            success: function(result) {
-                                                //console.log(result);
-                                                var obj = JSON.parse(result);
-                                                if (obj !== undefined) {
-                                                    var arrayLength = obj.length;
-                                                    for (var i = 0; i < arrayLength; i++) {
-                                                        //console.log(obj[i]);
-
-                                                        var obj_meeting = {
-                                                            id: obj[i].id,
-                                                            title: obj[i].title,
-                                                            //url: 'https://feliix.myvnc.com/project03_other?sid=' + obj[i].stage_id,
-                                                            start: moment(obj[i].due_date).format('YYYY-MM-DD'),
-                                                            backgroundColor: obj[i].color,
-                                                            borderColor: obj[i].color,
-                                                            extendedProps: {
-                                                                create_id:obj[i].create_id,
-                                                                category:obj[i].category,
-                                                                level:obj[i].level,
-                                                                task_status:obj[i].task_status,
-                                                                stage_id:obj[i].stage_id,
-                                                            },
-                                                        };
-
-                                                        temp.push(obj_meeting);
-                                                    }
-
-                                                    if(arrayLength > 0)
-                                                    {
-                                                        my_level = obj[0].my_l;
-                                                        my_id = obj[0].my_i;
-                                                        my_department = obj[0].my_d;
-                                                    }
-                                                }
-
-                                                event_array_task = temp;
-                                                calendar_task.addEventSource(temp);
-
-                                            }
-                                        });
-                                    }
-                                }
                             },
 
                             events: event_array_task,
@@ -1820,22 +1182,137 @@
                                     if (clickCnt === 1) {
                                         oneClickTimer = setTimeout(function() {
                                             clickCnt = 0;
-                                            if(info.event.extendedProps.category == 'AD')
-                                                window.open('https://feliix.myvnc.com/task_management_AD?sid=' + info.event.id, "_blank");
-                                            else if(info.event.extendedProps.category == 'DS')
-                                                window.open('https://feliix.myvnc.com/task_management_DS?sid=' + info.event.id, "_blank");
-                                            else if(info.event.extendedProps.category == 'LT_T')
-                                                window.open('https://feliix.myvnc.com/task_management_LT?sid=' + info.event.id, "_blank");
-                                            else if(info.event.extendedProps.category == 'OS_T')
-                                                window.open('https://feliix.myvnc.com/task_management_OS?sid=' + info.event.id, "_blank");
-                                            else if(info.event.extendedProps.category == 'SLS')
-                                                window.open('https://feliix.myvnc.com/task_management_SLS?sid=' + info.event.id, "_blank");
-                                            else if(info.event.extendedProps.category == 'ENG')
-                                                window.open('https://feliix.myvnc.com/task_management_SVC?sid=' + info.event.id, "_blank");
-                                            else if(info.event.extendedProps.category == 'C')
-                                                window.open('https://feliix.myvnc.com/project03_client_v2?sid=' + info.event.extendedProps.stage_id, "_blank");
-                                            else
-                                                window.open('https://feliix.myvnc.com/project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
+
+                                            if(info.event.id.startsWith("t"))
+                                            {
+                                                if(info.event.extendedProps.category == 'AD')
+                                                    window.open('task_management_AD?sid=' + info.event.id, "_blank");
+                                                else if(info.event.extendedProps.category == 'DS')
+                                                    window.open('task_management_DS?sid=' + info.event.id, "_blank");
+                                                else if(info.event.extendedProps.category == 'LT_T')
+                                                    window.open('task_management_LT?sid=' + info.event.id, "_blank");
+                                                else if(info.event.extendedProps.category == 'OS_T')
+                                                    window.open('task_management_OS?sid=' + info.event.id, "_blank");
+                                                else if(info.event.extendedProps.category == 'SLS')
+                                                    window.open('task_management_SLS?sid=' + info.event.id, "_blank");
+                                                else if(info.event.extendedProps.category == 'ENG')
+                                                    window.open('task_management_SVC?sid=' + info.event.id, "_blank");
+                                                else if(info.event.extendedProps.category == 'C')
+                                                    window.open('project03_client_v2?sid=' + info.event.extendedProps.stage_id, "_blank");
+                                                else
+                                                    window.open('project03_other?sid=' + info.event.extendedProps.stage_id, "_blank");
+                                            }
+
+                                            if(info.event.id.startsWith("m"))
+                                            {
+                                                $('#editmeeting-form').trigger("reset");
+                                                $('#addmeeting-form').hide();
+                                                $('#editmeeting-form > fieldset').prop('disabled', true);
+
+                                                $("#oldAttendee").addClass("select_disabled");
+                                                $('#sc_product_files').empty();
+                                                _app1.attachments = [];
+
+                                                //取得點擊的meeting資訊並載入表單
+                                                eventObj = info.event;
+                                                var obj_meeting = eventObj.extendedProps.description;
+
+                                                if (obj_meeting === undefined)
+                                                    return;
+
+                                                $("#oldSubject").val(obj_meeting.title);
+
+                                                // $("#old_sc_color").val(info.event.extendedProps.description.color);
+                                                // //$("#oldTextColor").val(info.event.extendedProps.description.text_color);
+                                                // $("#old_sc_color_other").val(info.event.extendedProps.description.color_other);
+
+                                                document.getElementById("old_sc_color").value = info.event.extendedProps.description.color;
+
+                                                if(info.event.extendedProps.description.color_other != "")
+                                                {
+                                                    document.getElementById("old_sc_color").value = info.event.extendedProps.description.color_other;
+                                                    document.getElementById("old_sc_color_other").checked = true;
+                                                }
+                                                else
+                                                {
+                                                    document.getElementById("old_sc_color").value = "#000000";
+                                                    document.getElementById("old_sc_color_other").checked = false;
+                                                }
+
+                                                if(info.event.extendedProps.description.color != "")
+                                                {
+                                                    var checked = 0;
+                                                    var colors = document.getElementsByName("old_sc_color");
+
+                                                    for(var i = 0; i < colors.length; i++)
+                                                    {
+                                                        if(colors[i].value == info.event.extendedProps.description.color)
+                                                        {
+                                                            checked = 1;
+                                                            colors[i].checked = true;
+                                                        }
+                                                    }
+
+                                                    if(checked == 0 && info.event.extendedProps.description.color_other == "")
+                                                    {
+                                                        document.getElementById("old_sc_color").value = info.event.extendedProps.description.color;
+                                                        document.getElementById("old_sc_color_other").checked = true;
+                                                    }
+                                                }
+                                                
+                                        
+                                                $('#oldProject').attr("placeholder", obj_meeting.project_name);
+
+                                                $("#oldCreator").val(info.event.extendedProps.description.creator);
+                                                $("#oldAttendee").val(info.event.extendedProps.description.items);
+                                                $("#oldLocation").val(info.event.extendedProps.description.location);
+                                                _app1.old_attendee = info.event.extendedProps.description.items;
+                                                $("#oldDate").val(obj_meeting.start.split("T")[0]);
+                                                $("#oldStartTime").val(obj_meeting.start.split("T")[1]);
+                                                $("#oldEndTime").val(obj_meeting.end.split("T")[1]);
+                                                $("#oldContent").val(obj_meeting.content);
+
+                                                _app1.users = _app1.users_org.concat(_app1.old_attendee);
+
+                                                _app1.users = _app1.users.filter((value, index, self) =>
+                                                    index === self.findIndex((t) => (
+                                                    t.username === value.username && t.id === value.id
+                                                    ))
+                                                )
+
+                                                _app1.users.sort(function (a, b) {
+                                                    return a.username.toLowerCase().localeCompare(b.username.toLowerCase());
+                                                });
+
+                                                var container = $("#sc_product_files_old");
+                                                container.empty();
+
+                                                if(obj_meeting.attach !== "")
+                                                {
+                                                    var files = obj_meeting.attach.split(",");
+                                                    files.forEach((element) => {
+                                                        var elm = '<div class="file-element">' +
+                                                            '<input type="checkbox" id="' + element + '" name="file_elements_old" value="' + element + '" checked disabled>' +
+                                                            '<label for="' + element + '">' + 
+                                                                '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                                                            '</label>' +
+                                                        '</div>';
+                                    
+                                                        $(elm).appendTo(container);
+                                                    });
+                                                }
+
+                                                //設定出現和隱藏按鈕，和出現視窗
+                                                $("#btn_close").show();
+                                                $("#btn_delete").show();
+                                                $("#btn_edit").show();
+                                                $("#btn_cancel").hide();
+                                                $("#btn_save").hide();
+                                                $("#editmeeting-form").show();
+                                            }
+
+
+
                                         }, 400);
                                         
                                     } else if (clickCnt === 2) {
@@ -1887,9 +1364,7 @@
                                     
                                     }          
                                 });
-                            },
-
-                            
+                                },
 
                             editable: false,
                           
@@ -1897,9 +1372,8 @@
                         });
 
                         calendar_task.render();
-                    },
-                });
-            });
+                    });
+
 
 
 </script>
