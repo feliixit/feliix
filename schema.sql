@@ -4134,7 +4134,7 @@ ALTER TABLE work_calendar_main ADD COLUMN `requestor` text COLLATE utf8mb4_unico
 ALTER TABLE od_item add column `normal` int(11) DEFAULT 0;
 
 -- 20231103 individual calendar
-CREATE TABLE IF NOT EXISTS `work_calendar_idv` (
+CREATE TABLE IF NOT EXISTS `work_calendar_notes` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `subject` varchar(128) COLLATE utf8mb4_unicode_ci  default '',
   `message` varchar(1024) COLLATE utf8mb4_unicode_ci  default '',

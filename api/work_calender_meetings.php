@@ -311,6 +311,156 @@ else
             echo json_encode(array("message" => ".$e."));
         }
     }
+    else if($action == 12){
+        //select my meeting
+        $uid = (isset($_POST['uid']) ?  $_POST['uid'] : '');
+        $sdate = (isset($_POST['sdate']) ?  $_POST['sdate'] : '');
+        $edate = (isset($_POST['edate']) ?  $_POST['edate'] : '');
+
+        $query = "select username from user where id = " . $uid;
+        $stmt = $db->prepare( $query );
+        $stmt->execute();
+
+        $user_name = "";
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user_name = $row['username'];
+        }
+
+        try{
+            $query = "SELECT * from work_calendar_meetings where is_enabled = true and (attendee like '%" . $user_name ."%') ";
+
+            if($sdate != ""){
+                $query .= " and start_time >= '" . $sdate . "-01 00:00:00' ";
+            }
+            
+            if($edate != ""){
+                // edate be the last day of the month
+                $edate = date("Y-m-t", strtotime($edate . "-01"));
+            
+                $query .= " and end_time <= '" . $edate . " 23:59:59' ";
+                
+            }
+
+            $stmt = $db->prepare( $query );
+            $stmt->execute();
+
+            $items = [];
+
+            $id = 0;
+            $subject = "";
+            $project_name = "";
+            $message = "";
+            $attendee = "";
+            $location = "";
+            $start_time = "";
+            $end_time = "";
+            $is_enabled = 0;
+            $created_at = '';
+            $updated_at = '';
+            $deleted_at = "";
+            $created_by = "";
+            $updated_by = "";
+            $deleted_by = "";
+
+            $color = "";
+            $color_other = "";
+            $text_color = "";
+
+
+            $attach = [];
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if ($id != $row['id'] && $id != 0) {
+                    $merged_results[] = array(
+                        "id" => $id,
+                        "subject" => $subject,
+                        "project_name" => $project_name,
+                        "message" => $message,
+                        "attendee" => $attendee,
+                        "location" => $location,
+                        "start_time" => $start_time,
+                        "end_time" => $end_time,
+                        "is_enabled" => $is_enabled,
+                        "created_at" => $created_at,
+                        "updated_at" => $updated_at,
+                        "deleted_at" => $deleted_at,
+                        "created_by" => $created_by,
+                        "updated_by" => $updated_by,
+                        "deleted_by" => $deleted_by,
+                        "items" => $items,
+                        "attach" => $attach,
+
+                        "color" => $color,
+                        "color_other" => $color_other,
+                        "text_color" => $text_color,
+                        
+                    );
+    
+                    $items = [];
+                }
+    
+                $id = $row['id'];
+                $subject = $row['subject'];
+                $project_name = $row['project_name'];
+                $message = $row['message'];
+                $attendee = $row['attendee'];
+                $location = $row['location'];
+                $start_time = $row['start_time'];
+                $end_time = $row['end_time'];
+                $is_enabled = $row['is_enabled'];
+
+                $created_at = $row['created_at'];
+                $updated_at = $row['updated_at'];
+                $deleted_at = $row['deleted_at'];
+
+                $created_by = $row['created_by'];
+                $updated_by = $row['updated_by'];
+                $deleted_by = $row['deleted_by'];
+
+                $color = $row['color'];
+                $color_other = $row['color_other'];
+                $text_color = $row['text_color'];
+
+                $attach = GetItem($row['id'], $db, 'meeting');
+
+                if(!empty($attendee ))
+                    $items = GetUserInfo($row['attendee'], $db);
+            }
+
+            if ($id != 0) {
+                $merged_results[] = array(
+                    "id" => $id,
+                    "subject" => $subject,
+                    "project_name" => $project_name,
+                    "message" => $message,
+                    "attendee" => $attendee,
+                    "location" => $location,
+                    "start_time" => $start_time,
+                    "end_time" => $end_time,
+                    "is_enabled" => $is_enabled,
+                    "created_at" => $created_at,
+                    "updated_at" => $updated_at,
+                    "deleted_at" => $deleted_at,
+                    "created_by" => $created_by,
+                    "updated_by" => $updated_by,
+                    "deleted_by" => $deleted_by,
+                    "items" => $items,
+                    "attach" => $attach,
+
+                    "color" => $color,
+                    "color_other" => $color_other,
+                    "text_color" => $text_color,
+                );
+            }
+
+            echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+        }
+        catch(Exception $e){
+            http_response_code(401);
+
+            echo json_encode(array("message" => ".$e."));
+        }
+    }
     else if($action == 2) {
         //add
         try {
