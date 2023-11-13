@@ -1391,11 +1391,73 @@ try {
 
         });
 
+        $(document).on("click", "#btn_delete", function () {
+
+            var _memo = memo;
+            if ($("#oldCreator_note")[0].value !== "<?php echo $GLOBALS['username'] ?>") {
+                memo.warning('Only note creator can execute this action!');
+                return;
+            }
+
+            Swal.fire({
+                title: "Delete",
+                text: "Are you sure to delete?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $("#editnotes-form").hide();
+
+                    //##從資料庫中刪除該會議
+                    var id = eventObj.id.substring(1);
+
+                    token = localStorage.getItem('token');
+                    var form_Data = new FormData();
+                    form_Data.append('jwt', token);
+                    form_Data.append('action', 7);
+
+                    form_Data.append('id', id);
+
+                    //DELETE table_name WHERE ID=id;
+                    $.ajax({
+                        url: "api/work_calender_notes",
+                        type: "POST",
+                        contentType: 'multipart/form-data',
+                        processData: false,
+                        contentType: false,
+                        data: form_Data,
+
+                        success: function (result) {
+                            console.log(result);
+
+                            //從日曆中刪除該會議
+                            eventObj.remove();
+
+                            //_memo.notify_mail(id, 3);
+                        },
+
+                        // show error message to user
+                        error: function (xhr, resp, text) {
+
+                        }
+                    });
+
+                } else {
+
+                }
+            });
+
+
+            });
 
     $(document).on("click", "#btn_edit", function () {
 
         if ($("#oldCreator_note")[0].value !== "<?php echo $GLOBALS['username'] ?>") {
-            memo.warning('Only meeting creator can execute this action!');
+            memo.warning('Only note creator can execute this action!');
             return;
         }
 
