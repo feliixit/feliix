@@ -151,7 +151,7 @@ var filter = new Vue({
                 var form_Data2 = new FormData();
                 form_Data2.append('jwt', token);
                 form_Data2.append('action', 12);
-                form_Data2.append('uid', this.my_id);
+                form_Data2.append('uid', this.user_id);
                 form_Data2.append('sdate', $('#sdate').val());
                 form_Data2.append('edate', $('#edate').val());
 
