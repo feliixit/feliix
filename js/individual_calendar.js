@@ -46,6 +46,7 @@ var filter = new Vue({
                         _this.title == "Service Manager" || 
                         _this.title == "Operations Manager" ||
                         _this.title == "Store Manager" ||
+                        _this.title == "Engineering Manager" ||
                         _this.title == "Supply Chain Manager" )
                     _this.getLeadMan(_this.department);
                 else
