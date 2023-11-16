@@ -2158,6 +2158,9 @@ try {
 
                                                 $("#oldAttendee").addClass("select_disabled");
                                                 $('#sc_product_files').empty();
+
+                                                
+
                                                 _memo.attachments = [];
 
                                                 //取得點擊的meeting資訊並載入表單
@@ -2249,10 +2252,18 @@ try {
                                                     });
                                                 }
 
+                                                if ($("#oldCreator_note")[0].value !== "<?php echo $GLOBALS['username'] ?>") {
+                                                    $("#btn_delete").hide();
+                                                    $("#btn_edit").hide();
+                                                }
+                                                else
+                                                {
+                                                    $("#btn_delete").show();
+                                                    $("#btn_edit").show();
+                                                }
+
                                                 //設定出現和隱藏按鈕，和出現視窗
                                                 $("#btn_close").show();
-                                                $("#btn_delete").show();
-                                                $("#btn_edit").show();
                                                 $("#btn_cancel").hide();
                                                 $("#btn_save").hide();
                                                 $("#editnotes-form").show();
