@@ -405,7 +405,7 @@ var app = new Vue({
 
               //DELETE table_name WHERE ID=id;
               $.ajax({
-                  url: "api/soa_form_quotation_duplicate",
+                  url: "api/soal_form_quotation_duplicate",
                   type: "POST",
                   contentType: 'multipart/form-data',
                   processData: false,

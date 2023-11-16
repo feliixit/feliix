@@ -53,7 +53,7 @@ if($jwt){
         $db = $database->getConnection();
         $db->beginTransaction();
 
-        $query = "update soa_form_quotation
+        $query = "update soa_quotation
             SET
                 `title` = :title,
                 `kind` = :kind,
