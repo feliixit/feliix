@@ -57,7 +57,7 @@ else
             $size = (isset($_GET['size']) ?  $_GET['size'] : "");
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
-            $sql = "SELECT distinct 0 as is_checked, create_id id, u2.username FROM soa_form_quotation pm left join `user` u2  on pm.create_id = u2.id where pm.status <> -1 ";
+            $sql = "SELECT distinct 0 as is_checked, create_id id, u2.username FROM soa_quotation pm left join `user` u2  on pm.create_id = u2.id where pm.status <> -1 ";
 
             if(!empty($_GET['page'])) {
                 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);

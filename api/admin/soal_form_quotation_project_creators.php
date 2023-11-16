@@ -58,7 +58,7 @@ else
             $keyword = (isset($_GET['keyword']) ?  $_GET['keyword'] : "");
 
             $sql = "SELECT distinct 0 as is_checked, p.create_id id, u2.username 
-                    FROM soa_form_quotation pm 
+                    FROM soa_quotation pm 
                     left join project_main p on pm.project_id = p.id
                     left join `user` u2  on p.create_id = u2.id where pm.status <> -1 ";
 

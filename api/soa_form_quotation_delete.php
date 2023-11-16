@@ -44,7 +44,7 @@ if (!isset($jwt)) {
 
         $user_id = $decoded->data->id;
 
-        $query = "update soa_form_quotation 
+        $query = "update soa_quotation 
                     set status = -1,
                     updated_id = :updated_id,
                     updated_at = now()
