@@ -10,6 +10,8 @@ var app = new Vue({
       p_pid:0,
       p_brand:0,
 
+      soa: false,
+
       //img_url: 'https://storage.cloud.google.com/feliiximg/',
 
       img_url: 'https://storage.googleapis.com/feliiximg/',
@@ -343,6 +345,8 @@ var app = new Vue({
       this.get_brands();
       this.get_signature();
       this.getTagGroup();
+
+      this.getAccess();
     },
   
     computed: {
@@ -491,6 +495,15 @@ var app = new Vue({
           this.position.find((element) => element.did == this.department)
         ).items;
   
+      },
+
+      temp_mode() {
+        if(this.temp_mode) {
+          if(this.temp_mode != 'other')
+            this.temp_mode_content = (this.temp_mode == 'mode' ? 'Mode of Payment' : 'Terms of Payment');
+          else
+            this.temp_mode_content = '';
+        }
       },
   
     },
@@ -3812,6 +3825,39 @@ Installation:`;
 */
 
 
+      },
+
+      
+      getAccess: function() {
+        var token = localStorage.getItem('token');
+        var form_Data = new FormData();
+        let _this = this;
+  
+        form_Data.append('jwt', token);
+  
+        axios({
+            method: 'get',
+
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            url: 'api/soa_access_control?kind=soa',
+
+        })
+        .then(function(response) {
+            //handle success
+            _this.soa = response.data.soa;
+          
+  
+        })
+        .catch(function(response) {
+            //handle error
+            Swal.fire({
+              text: JSON.stringify(response),
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
+        });
       },
 
 

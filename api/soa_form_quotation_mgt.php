@@ -101,7 +101,7 @@ $query = "SELECT pm.id,
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
                 left join project_main p on pm.project_id = p.id
-                where pm.status <> -1 and pageless = '' ";
+                where pm.status <> -1 ";
 
 // if($all != "all")
 // {
@@ -113,7 +113,7 @@ $query_cnt = "SELECT count(*) cnt
                 LEFT JOIN user c_user ON pm.create_id = c_user.id 
                 LEFT JOIN user u_user ON pm.updated_id = u_user.id 
                 left join project_main p on pm.project_id = p.id
-                where pm.status <> -1 and pageless = '' ";
+                where pm.status <> -1 ";
 
 if($fpt != "")
 {

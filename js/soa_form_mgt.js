@@ -299,7 +299,7 @@ var app = new Vue({
       let token = localStorage.getItem('accessToken');
 
       axios
-          .get('api/admin/soa_form_quotation_project_creators', { headers: {"Authorization" : `Bearer ${token}`} })
+          .get('api/admin/soal_form_quotation_project_creators', { headers: {"Authorization" : `Bearer ${token}`} })
           .then(
           (res) => {
               _this.users = res.data;

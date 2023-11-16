@@ -2369,7 +2369,7 @@ header( 'location:index' );
                 </div>
 
                 <div class="popupblock">
-                    <a id="" class="export_soa" title="Generate Corresponding Statement of Account" @click=""></a>
+                    <a id="" class="export_soa" title="Generate Corresponding Statement of Account" @click="soa_post()"></a>
                 </div>
             </div>
 

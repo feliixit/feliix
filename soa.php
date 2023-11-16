@@ -2119,7 +2119,7 @@ header( 'location:index' );
                                         <option value="term">Terms of Payment</option>
                                         <option value="other">Other</option>
                                     </select>
-                                    <input type="text" placeholder="Caption for Other" v-model="temp_caption">
+                                    <input type="text" placeholder="Caption for Other" v-model="temp_caption" v-if="1 == 0">
                                     <input type="text" placeholder="Content" v-model="temp_mode_content">
                                 </dd>
 
@@ -2147,7 +2147,7 @@ header( 'location:index' );
                 </div>
 
 
-                <div class="popupblock">
+                <div class="popupblock" v-if="soa">
 
                     <?php
                     if ($test_manager[0]  == "1")
@@ -2219,7 +2219,7 @@ header( 'location:index' );
                 </div>
 
 
-                <div class="popupblock">
+                <div class="popupblock" v-if="soa">
 
                     <?php
                     if ($test_manager[0]  == "1")
@@ -2400,7 +2400,7 @@ header( 'location:index' );
                 </div>
 
 
-                <div class="popupblock">
+                <div class="popupblock" v-if="soa">
 
                     <?php
                     if ($test_manager[0]  == "1")
@@ -2713,18 +2713,18 @@ header( 'location:index' );
                             <li>{{ statement_date }}</li>
                         </ul>
 
-                        <ul class="soa_info_2ndline">
+                        <ul class="soa_info_2ndline" v-if="quotation_no != ''">
                             <li>Quotation Number:</li>
                             <li>{{ quotation_no }}</li>
                         </ul>
 
-                        <ul class="soa_info_3rdline">
+                        <ul class="soa_info_3rdline" v-if="po != ''">
                             <li>P.O. Number:</li>
                             <li>{{ po }}</li>
                         </ul>
 
-                        <ul class="soa_info_4thline">
-                            <li>Mode of Payment / Terms of Payment / Other選項所填的文字:</li>
+                        <ul class="soa_info_4thline"  v-if="mode_content != ''">
+                            <!-- <li>Mode of Payment / Terms of Payment / Other選項所填的文字:</li> -->
                             <li>{{ mode_content }}</li>
                         </ul>
 
