@@ -113,6 +113,8 @@ if (!isset($jwt)) {
                     signature_page,
                     signature_pixel,
                     contact,
+                    pixa_p,
+                    show_p,
                     pixa_t,
                     show_t,
                     (SELECT COUNT(*) FROM " . $prefix . "quotation_page WHERE quotation_id = " . $prefix . "quotation.id and " . $prefix . "quotation_page.status <> -1) page_count
@@ -206,6 +208,9 @@ if (!isset($jwt)) {
         $pixa_t = $row['pixa_t'];
         $show_t = $row['show_t'];
 
+        $pixa_p = $row['pixa_p'];
+        $show_p = $row['show_p'];
+
         // print
         $product_array = GetProductItems($pages, $row['id'], $db, $prefix);
 
@@ -261,6 +266,8 @@ if (!isset($jwt)) {
             "contact" => $contact,
             "pixa_t" => $pixa_t,
             "show_t" => $show_t,
+            "pixa_p" => $pixa_p,
+            "show_p" => $show_p,
 
             "product_array" => $product_array,
         );
@@ -1141,7 +1148,6 @@ function GetTotal($qid, $page, $db, $prefix){
         total
         FROM " . $prefix . "quotation_total
         WHERE  quotation_id = " . $qid . "
-        AND  page = " . $page . "
         AND `status` <> -1 
         ORDER BY id
     ";
@@ -1187,7 +1193,6 @@ function GetTerm($qid, $page, $db, $prefix){
         list 
         FROM " . $prefix . "quotation_term
         WHERE  quotation_id = " . $qid . "
-        AND  page = " . $page . "
         AND `status` <> -1 
         ORDER BY id
     ";
@@ -1228,7 +1233,6 @@ function GetPaymentTerm($qid, $page, $db, $prefix){
         list 
         FROM " . $prefix . "quotation_payment_term
         WHERE  quotation_id = " . $qid . "
-        AND  page = " . $page . "
         AND `status` <> -1 
         ORDER BY id
     ";
@@ -1556,7 +1560,9 @@ function GetTotalInfo($qid, $db, $prefix){
         vat,
         show_vat,
         valid,
-        total
+        total,
+        `show`,
+        pixa
         FROM  " . $prefix . "quotation_total
         WHERE  quotation_id = " . $qid . "
         AND `status` <> -1 
@@ -1576,6 +1582,8 @@ function GetTotalInfo($qid, $db, $prefix){
     $show_vat = '';
     $valid = '';
     $total = '';
+    $show = '';
+    $pixa = '';
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
@@ -1585,8 +1593,8 @@ function GetTotalInfo($qid, $db, $prefix){
         $show_vat = $row['show_vat'];
         $valid = $row['valid'];
         $total = $row['total'];
-        
-        
+        $show = $row['show'];
+        $pixa = $row['pixa'];
     }
 
     if($prefix == '')
@@ -1603,6 +1611,9 @@ function GetTotalInfo($qid, $db, $prefix){
         "show_vat" => $show_vat,
         "valid" => $valid,
         "total" => $total,
+
+        "show" => $show,
+        "pixa" => $pixa,
         
         "real_total" => 0,
 

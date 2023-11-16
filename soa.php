@@ -2427,7 +2427,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head" v-if="show == ''">Distance from Previous Block: <input type="number"
+                                <dt class="head" v-if="total.show == ''">Distance from Previous Block: <input type="number"
                                                                                                         v-model="total.pixa">
                                     pixel
                                 </dt>
@@ -2977,25 +2977,15 @@ header( 'location:index' );
                         </tbody>
 
                         <tfoot>
-                        <tr>
+                        <tr  v-for="(te, index) in pag.term">
                             <!-- rowspan 這裡需要看有幾條 description -->
-                            <td rowspan="3">
+                            <td>
                             </td>
-                            <td>Less: 30% Downpayment</td>
-                            <td><span class="numbers">₱ {{ total.back_total !== undefined ? Number(subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Less: 20% Progress Bill</td>
-                            <td><span class="numbers">₱ {{ total.back_total !== undefined ? Number(subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
+                            <td>{{ te.title }}</td>
+                            <td><span class="numbers">{{ te.brief }}</span>
                             </td>
                         </tr>
-                        <tr>
-                            <td>REMAINING BALANCE</td>
-                            <td><span class="numbers">₱ {{ total.back_total !== undefined ? Number(subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
-                            </td>
-                        </tr>
-
+                    
 
                         </tfoot>
                     </table>
