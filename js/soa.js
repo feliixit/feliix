@@ -1977,8 +1977,8 @@ var app = new Vue({
         form_Data.append("show_vat", this.total.show_vat);
         form_Data.append("valid", this.total.valid);
         form_Data.append("total", this.total.total);
-        form_Data.append("pixa", this.pixa);
-        form_Data.append("show", this.show);
+        form_Data.append("pixa", this.total.pixa);
+        form_Data.append("show", this.total.show);
         form_Data.append("pageless", 'Y');
       
         axios({

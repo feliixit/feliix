@@ -2421,14 +2421,14 @@ header( 'location:index' );
                             <dl style="margin-bottom: 0px; border-bottom: 1px solid black;">
                                 <dt class="head">Choose whether to show the block of grand total in this document:</dt>
                                 <dd>
-                                    <select v-model="show">
+                                    <select v-model="total.show">
                                         <option value="N">No</option>
                                         <option value="">Yes</option>
                                     </select>
                                 </dd>
 
                                 <dt class="head" v-if="show == ''">Distance from Previous Block: <input type="number"
-                                                                                                        v-model="pixa">
+                                                                                                        v-model="total.pixa">
                                     pixel
                                 </dt>
                             </dl>
