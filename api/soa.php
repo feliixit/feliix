@@ -174,6 +174,7 @@ if (!isset($jwt)) {
         $pages = GetPages($row['id'], $db, $prefix);
 
         $block_names = GetBlockNames($row['id'], $db, $prefix);
+        
         $total_info = GetTotalInfo($row['id'], $db, $prefix);
         $term_info = GetTermInfo($row['id'], $db, $prefix);
         $payment_term_info = GetPaymentTermInfo($row['id'], $db, $prefix);
@@ -242,6 +243,7 @@ if (!isset($jwt)) {
             "page_count" => $page_count,
             "pages" => $pages,
             "block_names" => $block_names,
+
             "total_info" => $total_info,
             "term_info" => $term_info,
             "payment_term_info" => $payment_term_info,
@@ -845,6 +847,7 @@ function GetQuotation($id, $db, $prefix) {
             "page_count" => $page_count,
             "pages" => $pages,
             "block_names" => $block_names,
+          
             "total_info" => $total_info,
             "term_info" => $term_info,
             "sig_info" => $sig_info,
@@ -854,6 +857,22 @@ function GetQuotation($id, $db, $prefix) {
     }
 
     return $merged_results;
+}
+
+function GetAllBlocks($pages)
+{
+    $blocks = array();
+
+    for($i=0 ; $i < count($pages) ; $i++)
+    {
+        $types = $pages[$i]['types'];
+        for($j=0 ; $j < count($types) ; $j++)
+        {
+            $blocks = array_merge($blocks, $types[$j]['blocks']);
+        }
+    }
+
+    return $blocks;
 }
 
 function GetSubTotalInfo($qid, $db, $prefix)
@@ -1631,7 +1650,8 @@ function GetTypes($qid, $db, $prefix){
         not_show,
         real_amount
         FROM  " . $prefix . "quotation_page_type
-        WHERE `status` <> -1 
+        WHERE  page_id = " . $qid . "
+        AND `status` <> -1 
         ORDER BY id
     ";
 

@@ -2759,169 +2759,170 @@ header( 'location:index' );
                 <div class="area_subtotal">
 
                     <!-- 預設 margin-top = 30px; 因為最短距離就是30px -->
-                    <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']"
-                           v-bind:style="{ 'margin-top': (tp.pixa == '' ? 0 : tp.pixa) + 'px' }"
-                           v-for="(tp, index) in pag.types">
+                    <template v-for="(pa, index) in pages">
+                        <table :class="[tp.type == 'A' ? 'tb_format1' : 'tb_format2', product_vat == 'P' ? 'vat' : '']"
+                            v-bind:style="{ 'margin-top': (tp.pixa == '' ? 0 : tp.pixa) + 'px' }"
+                            v-for="(tp, index) in pa.types">
 
-                        <tbody>
+                            <tbody>
 
-                        <!-- 表格標題列 -->
+                            <!-- 表格標題列 -->
 
-                        <tr class="thead1" v-if="tp.type == 'A'">
-                            <td class="title" :colspan="product_vat == 'P' ? 7 : 6">{{ tp.name }}</td>
-                        </tr>
-
-                        <tr class="thead2" v-if="tp.type == 'A'">
-                            <td>#</td>
-                            <td colspan="2">DESCRIPTION</td>
-                            <td>QTY</td>
-                            <td>PRICE</td>
-                            <td v-if="product_vat == 'P'">12% VAT</td>
-                            <td>AMOUNT</td>
-                        </tr>
-
-                        <tr class="thead1" v-if="tp.type == 'B'">
-                            <td class="title" :colspan="product_vat == 'P' ? 4 : 4">{{ tp.name }}</td>
-                        </tr>
-
-                        <tr class="thead2" v-if="tp.type == 'B'">
-                            <td>#</td>
-                            <td colspan="2">DESCRIPTION</td>
-                            <td>AMOUNT</td>
-                        </tr>
-
-
-                        <template v-for="(bk, index) in tp.blocks" v-if="tp.type == 'A'">
-                            <!-- 表格內容物 -->
-
-                            <tr class="desc1">
-
-                                <td v-if="bk.type == 'image' || bk.type == '' || bk.type== 'noimage'">{{ bk.num }}</td>
-
-                                <td v-if="bk.type == 'image' || bk.type == '' || bk.type== 'noimage'" colspan="2">
-                                    <!--
-                                    <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
-                                    -->
-                                    <div class="code">{{ bk.code }}</div>
-                                </td>
-                                <td>
-                                    <span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
-                                </td>
-                                <td>
-                                    <span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                    <span class="numbers deleted"
-                                          v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ (bk.price * bk.ratio  !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                            v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                        v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">
-                                    <span class="numbers"
-                                          v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio - (bk.price * bk.ratio * (bk.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                    <span class="numbers"
-                                          v-if="bk.discount != 0 && (bk.discount == 100 || bk.amount == '0.00')">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                </td>
-                                <td v-if="product_vat == 'P'">
-                                    <span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                    <span class="numbers" v-if="bk.discount != 0 && bk.amount != '0.00'">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio - (bk.price * bk.ratio * (bk.discount / 100))) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                    <span class="numbers" v-if="bk.discount != 0 && bk.amount == '0.00'">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
-                                </td>
-
-                                <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                    <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
-                                </td>
-
-                                <td v-if="bk.amount == '0.00' && product_vat == 'P'">
-                                    <span class="numbers deleted">₱ {{ (bk.qty * bk.ratio * bk.price  !== undefined ? Number(bk.qty * bk.ratio * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
-                                    <span class="numbers red">FREE AS PACKAGE!</span>
-                                </td>
-
-
-                                <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
-                                    <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
-                                </td>
-
-                                <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
-                                    <span class="numbers deleted">₱ {{ (bk.qty * bk.ratio * bk.price  !== undefined ? Number(bk.qty * bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
-                                    <span class="numbers red">FREE AS PACKAGE!</span>
-                                </td>
+                            <tr class="thead1" v-if="tp.type == 'A'">
+                                <td class="title" :colspan="product_vat == 'P' ? 7 : 6">{{ tp.name }}</td>
                             </tr>
 
-                        </template>
-
-
-                        <template v-if="tp.type == 'B'">
-                            <tr v-for="(bk, index) in tp.blocks">
-                                <td>{{ bk.num }}</td>
-                                <td colspan="2">
-                                    <!--
-                                    <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
-                                    -->
-                                    <div class="code">{{ bk.code }}</div>
-                                </td>
-
-                                <td v-if="bk.amount != '0.00' && product_vat == 'P'">
-                                        <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.ratio * bk.price  !== undefined ? (Number(bk.ratio * bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                                v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                        v-if="bk.discount != 0">
-                                    <span class="numbers">₱ {{ bk.amount !== undefined ? (Number(bk.amount)).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
-                                </td>
-
-                                <td v-if="bk.amount == '0.00' && product_vat == 'P'">
-                                    <span class="numbers deleted">₱ {{ (bk.ratio * bk.price  !== undefined ? (Number(bk.ratio * bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
-                                    <span class="numbers red">FREE AS PACKAGE!</span>
-                                </td>
-
-
-                                <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
-                                        <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.ratio * bk.price  !== undefined ? Number(bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
-                                                v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
-                                        v-if="bk.discount != 0">
-                                    <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
-                                </td>
-
-                                <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
-                                    <span class="numbers deleted">₱ {{ (bk.ratio * bk.price  !== undefined ? Number(bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
-                                    <span class="numbers red">FREE AS PACKAGE!</span>
-                                </td>
+                            <tr class="thead2" v-if="tp.type == 'A'">
+                                <td>#</td>
+                                <td colspan="2">DESCRIPTION</td>
+                                <td>QTY</td>
+                                <td>PRICE</td>
+                                <td v-if="product_vat == 'P'">12% VAT</td>
+                                <td>AMOUNT</td>
                             </tr>
 
-                        </template>
-
-                        <!-- 表格尾端，每一個 subtotal 小計金額的部分 -->
-                        <template v-if="tp.type == 'A' && tp.not_show != '1'">
-                            <tr class="tfoot1">
-                                <td :colspan="product_vat == 'P' ? 5 : 4"></td>
-                                <td>SUBTOTAL</td>
-                                <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
-                                    Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
-                                    "$1,") : '0.00' }}
-                                </td>
-                                <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
-                                    Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
-                                    "$1,") : '0.00' }}
-                                </td>
+                            <tr class="thead1" v-if="tp.type == 'B'">
+                                <td class="title" :colspan="product_vat == 'P' ? 4 : 4">{{ tp.name }}</td>
                             </tr>
 
-                        </template>
-
-                        <template v-if="tp.type == 'B' && tp.not_show != '1'">
-                            <tr class="tfoot1">
-                                <td :colspan="product_vat == 'P' ? 2 : 2"></td>
-                                <td>SUBTOTAL</td>
-                                <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
-                                    Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
-                                    "$1,") : '0.00' }}
-                                </td>
-                                <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
-                                    Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
-                                    "$1,") : '0.00' }}
-                                </td>
+                            <tr class="thead2" v-if="tp.type == 'B'">
+                                <td>#</td>
+                                <td colspan="2">DESCRIPTION</td>
+                                <td>AMOUNT</td>
                             </tr>
 
-                        </template>
 
-                        </tbody>
+                            <template v-for="(bk, index) in tp.blocks" v-if="tp.type == 'A'">
+                                <!-- 表格內容物 -->
 
-                    </table>
+                                <tr class="desc1">
 
+                                    <td v-if="bk.type == 'image' || bk.type == '' || bk.type== 'noimage'">{{ bk.num }}</td>
+
+                                    <td v-if="bk.type == 'image' || bk.type == '' || bk.type== 'noimage'" colspan="2">
+                                        <!--
+                                        <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
+                                        -->
+                                        <div class="code">{{ bk.code }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="numbers">{{ bk.qty !== undefined ? Math.floor(bk.qty).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                        <span class="numbers deleted"
+                                            v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ (bk.price * bk.ratio  !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                                v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                            v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">
+                                        <span class="numbers"
+                                            v-if="bk.discount != 0 && (bk.discount != 100 && bk.amount != '0.00')">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio - (bk.price * bk.ratio * (bk.discount / 100))).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                        <span class="numbers"
+                                            v-if="bk.discount != 0 && (bk.discount == 100 || bk.amount == '0.00')">₱ {{ bk.price * bk.ratio !== undefined ? Number(bk.price * bk.ratio).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                    </td>
+                                    <td v-if="product_vat == 'P'">
+                                        <span class="numbers" v-if="bk.discount == 0">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                        <span class="numbers" v-if="bk.discount != 0 && bk.amount != '0.00'">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio - (bk.price * bk.ratio * (bk.discount / 100))) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                        <span class="numbers" v-if="bk.discount != 0 && bk.amount == '0.00'">₱ {{ bk.price * bk.ratio !== undefined ? (Number(bk.price * bk.ratio) * 0.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }}</span>
+                                    </td>
+
+                                    <td v-if="bk.amount != '0.00' && product_vat == 'P'">
+                                        <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
+                                    </td>
+
+                                    <td v-if="bk.amount == '0.00' && product_vat == 'P'">
+                                        <span class="numbers deleted">₱ {{ (bk.qty * bk.ratio * bk.price  !== undefined ? Number(bk.qty * bk.ratio * bk.price * 1.12).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                        <span class="numbers red">FREE AS PACKAGE!</span>
+                                    </td>
+
+
+                                    <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
+                                        <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00' }} </span>
+                                    </td>
+
+                                    <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
+                                        <span class="numbers deleted">₱ {{ (bk.qty * bk.ratio * bk.price  !== undefined ? Number(bk.qty * bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                        <span class="numbers red">FREE AS PACKAGE!</span>
+                                    </td>
+                                </tr>
+
+                            </template>
+
+
+                            <template v-if="tp.type == 'B'">
+                                <tr v-for="(bk, index) in tp.blocks">
+                                    <td>{{ bk.num }}</td>
+                                    <td colspan="2">
+                                        <!--
+                                        <div class="pid noPrint" v-if="bk.pid != 0">{{ "ID: " + bk.pid }}</div>
+                                        -->
+                                        <div class="code">{{ bk.code }}</div>
+                                    </td>
+
+                                    <td v-if="bk.amount != '0.00' && product_vat == 'P'">
+                                            <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.ratio * bk.price  !== undefined ? (Number(bk.ratio * bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                                    v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                            v-if="bk.discount != 0">
+                                        <span class="numbers">₱ {{ bk.amount !== undefined ? (Number(bk.amount)).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
+                                    </td>
+
+                                    <td v-if="bk.amount == '0.00' && product_vat == 'P'">
+                                        <span class="numbers deleted">₱ {{ (bk.ratio * bk.price  !== undefined ? (Number(bk.ratio * bk.price) * 1 ).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                        <span class="numbers red">FREE AS PACKAGE!</span>
+                                    </td>
+
+
+                                    <td v-if="bk.amount != '0.00' && product_vat !== 'P'">
+                                            <span class="numbers deleted" v-if="bk.discount != 0">₱ {{ (bk.ratio * bk.price  !== undefined ? Number(bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}<span
+                                                    v-if="bk.discount != 0">{{ bk.discount !== undefined ? Math.floor(bk.discount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "" }}% OFF</span></span><br
+                                            v-if="bk.discount != 0">
+                                        <span class="numbers">₱ {{ bk.amount !== undefined ? Number(bk.amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") : '0.00' }}</span>
+                                    </td>
+
+                                    <td v-if="bk.amount == '0.00' && product_vat !== 'P'">
+                                        <span class="numbers deleted">₱ {{ (bk.ratio * bk.price  !== undefined ? Number(bk.ratio * bk.price).toFixed(2).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0.00') }}</span><br>
+                                        <span class="numbers red">FREE AS PACKAGE!</span>
+                                    </td>
+                                </tr>
+
+                            </template>
+
+                            <!-- 表格尾端，每一個 subtotal 小計金額的部分 -->
+                            <template v-if="tp.type == 'A' && tp.not_show != '1'">
+                                <tr class="tfoot1">
+                                    <td :colspan="product_vat == 'P' ? 5 : 4"></td>
+                                    <td>SUBTOTAL</td>
+                                    <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
+                                        Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                        "$1,") : '0.00' }}
+                                    </td>
+                                    <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
+                                        Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                        "$1,") : '0.00' }}
+                                    </td>
+                                </tr>
+
+                            </template>
+
+                            <template v-if="tp.type == 'B' && tp.not_show != '1'">
+                                <tr class="tfoot1">
+                                    <td :colspan="product_vat == 'P' ? 2 : 2"></td>
+                                    <td>SUBTOTAL</td>
+                                    <td v-if="tp.real_amount == 0">₱ {{ tp.subtotal !== undefined ?
+                                        Number(tp.subtotal).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                        "$1,") : '0.00' }}
+                                    </td>
+                                    <td v-if="tp.real_amount != 0">₱ {{ tp.real_amount !== undefined ?
+                                        Number(tp.real_amount).toFixed(2).toLocaleString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g,
+                                        "$1,") : '0.00' }}
+                                    </td>
+                                </tr>
+
+                            </template>
+
+                            </tbody>
+
+                        </table>
+                    </template>
                 </div>
 
                 <!-- 預設 margin-top = 30px; 因為最短距離就是30px -->
