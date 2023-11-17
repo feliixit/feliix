@@ -1631,8 +1631,7 @@ function GetTypes($qid, $db, $prefix){
         not_show,
         real_amount
         FROM  " . $prefix . "quotation_page_type
-        WHERE  page_id = " . $qid . "
-        AND `status` <> -1 
+        WHERE `status` <> -1 
         ORDER BY id
     ";
 
