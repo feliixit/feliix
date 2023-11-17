@@ -1382,6 +1382,27 @@ try {
         $("#oldStartTime_note").val(obj_meeting.start.split("T")[1]);
         $("#oldEndTime_note").val(obj_meeting.end.split("T")[1]);
         $("#oldContent_note").val(obj_meeting.content);
+        
+        $("#fileload_old_note").val("");
+        
+        var container = $("#sc_product_files_old_note");
+        container.empty();
+
+        if(obj_meeting.attach !== "")
+        {
+            var files = obj_meeting.attach.split(",");
+            files.forEach((element) => {
+                var elm = '<div class="file-element">' +
+                    '<input type="checkbox" id="' + element + '" name="file_elements_old_note" value="' + element + '" checked disabled>' +
+                    '<label for="' + element + '">' + 
+                        '<a href="https://storage.cloud.google.com/feliiximg/' + element + '" target="_blank">' + element + '</a>' + 
+                    '</label>' +
+                '</div>';
+
+                $(elm).appendTo(container);
+            });
+        }
+
         //按鈕也會改變
         $("#btn_cancel").hide();
         $("#btn_save").hide();
