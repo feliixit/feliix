@@ -25,7 +25,7 @@ if (!isset($jwt)) {
     try {
         // decode jwt
         $decoded = JWT::decode($jwt, $key, array('HS256'));
-        $user_id = $decoded->data->id;
+        $uid = $decoded->data->id;
 
         $department = $decoded->data->department;
         $position = $decoded->data->position;
@@ -180,33 +180,31 @@ if($edate != ""){
                 "color" => $color,
                 "my_d" => $my_department,
                 "my_l" => $my_level,
-                "my_i" => $user_id,
+                "my_i" => $uid,
                 "apartment_id" => $row['apartment_id'],
             );
         }
 
-        $merged_results = array_merge($merged_results, CombineWithAD($db, $my_department, $my_level, $user_id, $uid, $sdate, $edate));
+        $merged_results = array_merge($merged_results, CombineWithAD($db, $my_department, $my_level, $uid, $uid, $sdate, $edate));
         
-        $merged_results = array_merge($merged_results, CombineWithDS($db, $my_department, $my_level, $user_id, $uid, $sdate, $edate));
+        $merged_results = array_merge($merged_results, CombineWithDS($db, $my_department, $my_level, $uid, $uid, $sdate, $edate));
         
-        $merged_results = array_merge($merged_results, CombineWithLT($db, $my_department, $my_level, $user_id, $uid, $sdate, $edate));
+        $merged_results = array_merge($merged_results, CombineWithLT($db, $my_department, $my_level, $uid, $uid, $sdate, $edate));
         
-        $merged_results = array_merge($merged_results, CombineWithOS($db, $my_department, $my_level, $user_id, $uid, $sdate, $edate));
+        $merged_results = array_merge($merged_results, CombineWithOS($db, $my_department, $my_level, $uid, $uid, $sdate, $edate));
 
-        $merged_results = array_merge($merged_results, CombineWithSLS($db, $my_department, $my_level, $user_id, $uid, $sdate, $edate));
+        $merged_results = array_merge($merged_results, CombineWithSLS($db, $my_department, $my_level, $uid, $uid, $sdate, $edate));
         
-        $merged_results = array_merge($merged_results, CombineWithSVC($db, $my_department, $my_level, $user_id, $uid, $sdate, $edate));
+        $merged_results = array_merge($merged_results, CombineWithSVC($db, $my_department, $my_level, $uid, $uid, $sdate, $edate));
         
-        $merged_results = array_merge($merged_results, CombineWithC($db, $my_department, $my_level, $user_id, $uid, $sdate, $edate));
+        $merged_results = array_merge($merged_results, CombineWithC($db, $my_department, $my_level, $uid, $uid, $sdate, $edate));
         
 
         if($uid != 0)
         {
             foreach ($merged_results as &$value) {
                 if(
-                    in_array($user_id , $value['assignee']) ||
-                    in_array($user_id , $value['collaborator'])  || 
-                    $user_id == $value['create_id'])
+                    in_array($uid , $value['assignee']) )
                 {
                     $return_result[] = $value;
                 }
