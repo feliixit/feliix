@@ -586,6 +586,7 @@ header( 'location:index' );
         .qn_header .right_block .soa_account .soa_account_summary li:last-of-type {
             width: 50%;
             text-align: right;
+            padding-right: 7px;
         }
 
         .qn_header .right_block .soa_account .soa_account_1stline,
@@ -595,6 +596,11 @@ header( 'location:index' );
             font-size: 13px;
             width: calc( 100% - 45px);
             margin-left: 6px;
+            margin-bottom: 2px;
+        }
+
+        .qn_header .right_block .soa_account .soa_account_2ndline {
+            margin-bottom: 20px;
         }
 
         .qn_header .right_block .soa_account .soa_account_1stline li:first-of-type,
@@ -649,13 +655,9 @@ header( 'location:index' );
             font-weight: 800;
         }
 
-        .tb_total tfoot tr:nth-of-type(1) td:nth-of-type(1) {
+        .tb_total tfoot tr td:nth-of-type(1) {
             border-left: 2px solid #A0A0A0;
-        }
-
-        .tb_total tfoot tr:last-of-type td {
-            background-color: rgb(78, 181, 187);
-            color: white;
+            border-bottom: none;
         }
 
         .tb_total tbody tr td:nth-last-of-type(2), .tb_total tfoot tr td:nth-last-of-type(2) {
@@ -668,6 +670,15 @@ header( 'location:index' );
             width: 210px;
             padding: 5px 15px;
             text-align: right;
+        }
+
+        .tb_total tfoot tr:last-of-type td:nth-of-type(1) {
+            border-bottom: 2px solid #A0A0A0;
+        }
+
+        .tb_total tfoot tr:last-of-type td:nth-last-of-type(2), .tb_total tfoot tr:last-of-type td:nth-last-of-type(1) {
+            background-color: rgb(78, 181, 187);
+            color: white;
         }
 
         .area_payment {
@@ -844,7 +855,7 @@ header( 'location:index' );
             text-align: center;
             font-weight: 600;
             font-size: 16px;
-            padding: 5px 20px;
+            padding: 7px 20px;
         }
 
         .tb_format1 tbody tr.tfoot1 td:nth-of-type(1) {
@@ -2709,17 +2720,17 @@ header( 'location:index' );
                     <div class="soa_info">
 
                         <ul class="soa_info_1stline">
-                            <li>Statement Date:</li>
+                            <li>Statement Date: </li>
                             <li>{{ statement_date }}</li>
                         </ul>
 
                         <ul class="soa_info_2ndline" v-if="quotation_no != ''">
-                            <li>Quotation Number:</li>
+                            <li>Quotation Number: </li>
                             <li>{{ quotation_no }}</li>
                         </ul>
 
                         <ul class="soa_info_3rdline" v-if="po != ''">
-                            <li>P.O. Number:</li>
+                            <li>P.O. Number: </li>
                             <li>{{ po }}</li>
                         </ul>
 
@@ -2979,7 +2990,6 @@ header( 'location:index' );
 
                         <tfoot>
                         <tr  v-for="(te, index) in pag.term">
-                            <!-- rowspan 這裡需要看有幾條 description -->
                             <td>
                             </td>
                             <td>{{ te.title }}</td>
