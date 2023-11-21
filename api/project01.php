@@ -649,12 +649,11 @@ else
 $filter_result = $merged_results;
 echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
 
-
 function GetRecentPost($project_id, $db, $key){
 
     if(file_exists('cache' . $project_id . '.txt'))
     {
-        if (filemtime('cache' . $project_id . '.txt') > time()-1*1800 ) {
+        if (filemtime('cache' . $project_id . '.txt') < time()-1*1800 ) {
             
             $query = "(SELECT u.username, pm.created_at, '' `url` FROM project_stage_client pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id WHERE p.project_id = " . $project_id . " and pm.status <> -1  limit 1)
             UNION all
@@ -738,7 +737,7 @@ function GetRecentPost($project_id, $db, $key){
             return $sorted_result;
         }
         else {
-          $data = unserialize(file_get_contents('cache' . $project_id . '.txt'));
+          $data = json_decode(unserialize(file_get_contents('cache' . $project_id . '.txt')));
           return $data;
         }
     }else

@@ -4354,3 +4354,9 @@ ALTER TABLE soa_quotation ADD COLUMN `contact` varchar(512) CHARACTER SET utf8mb
 -- 20231115 access
 ALTER TABLE access_control
 ADD COLUMN `soa` text COLLATE utf8mb4_unicode_ci;
+
+-- 20231120 project01 optimize
+CREATE INDEX idx_project_est_prob_project_id
+ON project_est_prob (project_id);
+CREATE INDEX idx_project_stages_project_id
+ON project_stages (project_id);
