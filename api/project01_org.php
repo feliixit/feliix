@@ -492,6 +492,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $updated_at = $row['updated_at'];
     $stage = $row['stage'];
     $recent = GetRecentPost($row['id'], $db, $key);
+    //$recent = [];
 
     $merged_results[] = array(
         "id" => $id,
@@ -529,7 +530,6 @@ else
     $filter_result = $merged_results;
 
 echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
-
 
 function GetRecentPost($project_id, $db, $key){
     $query = "(SELECT u.username, pm.created_at, '' `url` FROM project_stage_client pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id WHERE p.project_id = " . $project_id . " and pm.status <> -1 limit 1)

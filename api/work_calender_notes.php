@@ -35,7 +35,7 @@ include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 
 include_once 'config/database.php';
-include_once 'objects/work_calender_meetings.php';
+include_once 'objects/work_calender_notes.php';
 include_once 'config/conf.php';
 require_once '../vendor/autoload.php';
 
@@ -45,7 +45,7 @@ $conf = new Conf();
 
 use Google\Cloud\Storage\StorageClient;
 
-$workCalenderMeetings = new WorkCalenderMeetings($db);
+$workCalenderNotes = new WorkCalenderNotes($db);
 $user_name = "";
 //$le = new Leave($db);
 
@@ -65,7 +65,7 @@ else
     if($action == 1){
         //select all
         try{
-            $query = "SELECT * from work_calendar_meetings where is_enabled = true";
+            $query = "SELECT * from work_calendar_notes where is_enabled = true";
 
             $stmt = $db->prepare( $query );
             $stmt->execute();
@@ -146,7 +146,7 @@ else
                 $color_other = $row['color_other'];
                 $text_color = $row['text_color'];
 
-                $attach = GetItem($row['id'], $db, 'meeting');
+                $attach = GetItem($row['id'], $db, 'meeting_notes');
 
                 if(!empty($attendee ))
                     $items = GetUserInfo($row['attendee'], $db);
@@ -187,9 +187,21 @@ else
         }
     }
     else if($action == 11){
-        //select my meeting
+        //select my meeting_notes
         try{
-            $query = "SELECT * from work_calendar_meetings where is_enabled = true and (created_by = '" . $user_name . "' or attendee like '%" . $user_name ."%') ";
+            $query = "SELECT * from work_calendar_notes where is_enabled = true and (created_by = '" . $user_name . "' ) ";
+
+            if($sdate != ""){
+                $query .= " and main.start_time >= '" . $sdate . "-01 00:00:00' ";
+            }
+
+            if($edate != ""){
+                // edate be the last day of the month
+                $edate = date("Y-m-t", strtotime($edate . "-01"));
+
+                $query .= " and main.start_time < '" . $edate . " 23:59:59' ";
+                
+            }
 
             $stmt = $db->prepare( $query );
             $stmt->execute();
@@ -271,7 +283,7 @@ else
                 $color_other = $row['color_other'];
                 $text_color = $row['text_color'];
 
-                $attach = GetItem($row['id'], $db, 'meeting');
+                $attach = GetItem($row['id'], $db, 'meeting_notes');
 
                 if(!empty($attendee ))
                     $items = GetUserInfo($row['attendee'], $db);
@@ -312,7 +324,7 @@ else
         }
     }
     else if($action == 12){
-        //select my meeting
+        //select my meeting_notes
         $uid = (isset($_POST['uid']) ?  $_POST['uid'] : '');
         $sdate = (isset($_POST['sdate']) ?  $_POST['sdate'] : '');
         $edate = (isset($_POST['edate']) ?  $_POST['edate'] : '');
@@ -327,7 +339,8 @@ else
         }
 
         try{
-            $query = "SELECT * from work_calendar_meetings where is_enabled = true and (attendee like '%" . $user_name ."%') ";
+
+            $query = "SELECT * from work_calendar_notes where is_enabled = true and (created_by like '%" . $user_name ."%') ";
 
             if($sdate != ""){
                 $query .= " and start_time >= '" . $sdate . "-01 00:00:00' ";
@@ -421,7 +434,7 @@ else
                 $color_other = $row['color_other'];
                 $text_color = $row['text_color'];
 
-                $attach = GetItem($row['id'], $db, 'meeting');
+                $attach = GetItem($row['id'], $db, 'meeting_notes');
 
                 if(!empty($attendee ))
                     $items = GetUserInfo($row['attendee'], $db);
@@ -468,25 +481,25 @@ else
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
 
-            $workCalenderMeetings->subject = $subject;
-            $workCalenderMeetings->project_name = $project_name;
-            $workCalenderMeetings->message = $message;
-            $workCalenderMeetings->attendee = $attendee;
-            $workCalenderMeetings->location = $location;
-            $workCalenderMeetings->start_time = $start_time;
-            $workCalenderMeetings->end_time = $end_time;
-            $workCalenderMeetings->is_enabled = $is_enabled;
-            $workCalenderMeetings->created_by = $created_by;
+            $workCalenderNotes->subject = $subject;
+            $workCalenderNotes->project_name = $project_name;
+            $workCalenderNotes->message = $message;
+            $workCalenderNotes->attendee = $attendee;
+            $workCalenderNotes->location = $location;
+            $workCalenderNotes->start_time = $start_time;
+            $workCalenderNotes->end_time = $end_time;
+            $workCalenderNotes->is_enabled = $is_enabled;
+            $workCalenderNotes->created_by = $created_by;
 
-            $workCalenderMeetings->color = $color;
-            $workCalenderMeetings->color_other = $color_other;
-            $workCalenderMeetings->text_color = $text_color;
+            $workCalenderNotes->color = $color;
+            $workCalenderNotes->color_other = $color_other;
+            $workCalenderNotes->text_color = $text_color;
 
-            $arr = $workCalenderMeetings->create();
+            $arr = $workCalenderNotes->create();
 
 
             $batch_id = $arr;
-            $batch_type = 'meeting';
+            $batch_type = 'meeting_notes';
 
             $_pic_url = "";
             $_real_url = "";
@@ -611,22 +624,22 @@ else
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
-            $workCalenderMeetings->id = $id;
-            $workCalenderMeetings->subject = $subject;
-            $workCalenderMeetings->project_name = $project_name;
-            $workCalenderMeetings->message = $message;
-            $workCalenderMeetings->attendee = $attendee;
-            $workCalenderMeetings->location = $location;
-            $workCalenderMeetings->start_time = $start_time;
-            $workCalenderMeetings->end_time = $end_time;
-            $workCalenderMeetings->is_enabled = $is_enabled;
-            $workCalenderMeetings->updated_by = $updated_by;
+            $workCalenderNotes->id = $id;
+            $workCalenderNotes->subject = $subject;
+            $workCalenderNotes->project_name = $project_name;
+            $workCalenderNotes->message = $message;
+            $workCalenderNotes->attendee = $attendee;
+            $workCalenderNotes->location = $location;
+            $workCalenderNotes->start_time = $start_time;
+            $workCalenderNotes->end_time = $end_time;
+            $workCalenderNotes->is_enabled = $is_enabled;
+            $workCalenderNotes->updated_by = $updated_by;
 
-            $workCalenderMeetings->color = $color;
-            $workCalenderMeetings->color_other = $color_other;
-            $workCalenderMeetings->text_color = $text_color;
+            $workCalenderNotes->color = $color;
+            $workCalenderNotes->color_other = $color_other;
+            $workCalenderNotes->text_color = $text_color;
 
-            $arr = $workCalenderMeetings->update();
+            $arr = $workCalenderNotes->update();
 
             if($remove != "")
             {
@@ -657,7 +670,7 @@ else
             }
 
             $batch_id = $id;
-            $batch_type = 'meeting';
+            $batch_type = 'meeting_notes';
 
             $_pic_url = "";
             $_real_url = "";
@@ -779,7 +792,7 @@ else
     }else if($action == 4) {//未處理
         //select by date
         try{
-            $query = "SELECT * from work_calendar_meetings where is_enabled = true ";
+            $query = "SELECT * from work_calendar_notes where is_enabled = true ";
             /*
             if($start_date!='') {
                 $query = $query . " and paid_date >= '$start_date' ";
@@ -830,7 +843,7 @@ else
     }else if($action == 6){
         //select by id
         try{
-            $query = "SELECT * from work_calendar_meetings where id = ".$id;
+            $query = "SELECT * from work_calendar_notes where id = ".$id;
             $stmt = $db->prepare( $query );
             $stmt->execute();
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -849,9 +862,9 @@ else
             // decode jwt
             //$key = 'myKey';
             //$decoded = JWT::decode($jwt, $key, array('HS256'));
-            $workCalenderMeetings->id = $id;
-            $workCalenderMeetings->deleted_by = $deleted_by;
-            $arr = $workCalenderMeetings->delete();
+            $workCalenderNotes->id = $id;
+            $workCalenderNotes->deleted_by = $deleted_by;
+            $arr = $workCalenderNotes->delete();
 
             http_response_code(200);
             echo json_encode(array($arr));
