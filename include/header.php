@@ -286,6 +286,7 @@ try {
                 <a class="list" href="schedule_calendar">Schedule Calendar</a>
                 <a class="list" href="task_calendar">Task Due Date Calendar</a>
                 <a class="list" href="meeting_calendar">Meeting Calendar</a>
+                <a class="list" href="individual_calendar">Personal Datebook Calendar</a>
                 <a class="list" href="signature_codebook">Signature Codebook</a>
             </li>
             <!--
