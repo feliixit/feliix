@@ -441,6 +441,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     `block_name` = :block_name,
                     `not_show` = :not_show,
                     `real_amount` = :real_amount,
+                    `pixa` = :pixa,
                     `status` = 0,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -456,6 +457,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
 
                 $stmt->bindParam(':not_show', $types_array[$j]['not_show']);
                 $stmt->bindParam(':real_amount', $types_array[$j]['real_amount']);
+
+                $stmt->bindParam(':pixa', $types_array[$j]['pixa']);
               
                 $stmt->bindParam(':create_id', $user_id);
             
@@ -598,7 +601,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                 `show_vat` = :show_vat,
                 `valid` = :valid,
                 `total` = :total,
-            
+                `pixa` = :pixa,
                 `status` = 0,
                 `create_id` = :create_id,
                 `created_at` =  now() ";
@@ -615,6 +618,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             $stmt->bindParam(':show_vat', $total["show_vat"]);
             $stmt->bindParam(':valid', $total["valid"]);
             $stmt->bindParam(':total', $tt);
+            $stmt->bindParam(':pixa', $total["pixa"]);
 
             $stmt->bindParam(':create_id', $user_id);
         
@@ -1164,7 +1168,8 @@ function GetTotal($qid, $page, $db, $prefix){
         vat,
         show_vat,
         valid,
-        total
+        total,
+        pixa
         FROM " . $prefix . "quotation_total
         WHERE  quotation_id = " . $qid . "
         AND `status` <> -1 
@@ -1186,6 +1191,7 @@ function GetTotal($qid, $page, $db, $prefix){
         $show_vat = $row['show_vat'];
         $valid = $row['valid'];
         $total = $row['total'];
+        $pixa = $row['pixa'];
 
         $merged_results[] = array(
             "page" => $page,
@@ -1194,7 +1200,7 @@ function GetTotal($qid, $page, $db, $prefix){
             "show_vat" => $show_vat,
             "valid" => $valid,
             "total" => $total,
-            
+            "pixa" => $pixa,
             
         );
     }
@@ -1616,11 +1622,11 @@ function GetTotalInfo($qid, $db, $prefix){
         $pixa = $row['pixa'];
     }
 
-    if($prefix == '')
-    {
-        $vat = '';
-        $show_vat = '';
-    }
+    // if($prefix == '')
+    // {
+    //     $vat = '';
+    //     $show_vat = '';
+    // }
 
     $merged_results = array(
         "id" => $id,
@@ -1648,7 +1654,8 @@ function GetTypes($qid, $db, $prefix){
         block_type,
         block_name,
         not_show,
-        real_amount
+        real_amount,
+        pixa
         FROM  " . $prefix . "quotation_page_type
         WHERE  page_id = " . $qid . "
         AND `status` <> -1 
@@ -1669,11 +1676,12 @@ function GetTypes($qid, $db, $prefix){
 
         $not_show = $row['not_show'];
         $real_amount = $row['real_amount'];
+        $pixa = $row['pixa'];
 
-        if($prefix == ''){
-            $not_show = '';
-            $real_amount = 0;
-        }
+        // if($prefix == ''){
+        //     $not_show = '';
+        //     $real_amount = 0;
+        // }
 
         $blocks = [];
 
@@ -1687,6 +1695,7 @@ function GetTypes($qid, $db, $prefix){
             "name" => $block_name,
             "not_show" => $not_show,
             "real_amount" => $real_amount,
+            "pixa" => $pixa,
             "blocks" => $blocks,
             "subtotal" => $subtotal,
         );

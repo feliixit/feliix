@@ -500,9 +500,12 @@ var app = new Vue({
       temp_mode() {
         if(this.temp_mode) {
           if(this.temp_mode != 'other')
-            this.temp_mode_content = (this.temp_mode == 'mode' ? 'Mode of Payment' : 'Terms of Payment');
-          else
             this.temp_mode_content = '';
+          else
+          {
+            this.temp_caption = '';
+            this.temp_mode_content = '';
+          }
         }
       },
   

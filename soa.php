@@ -2130,7 +2130,7 @@ header( 'location:index' );
                                         <option value="term">Terms of Payment</option>
                                         <option value="other">Other</option>
                                     </select>
-                                    <input type="text" placeholder="Caption for Other" v-model="temp_caption" v-if="1 == 0">
+                                    <input type="text" placeholder="Caption for Other" v-model="temp_caption" v-if="temp_mode == 'other'">
                                     <input type="text" placeholder="Content" v-model="temp_mode_content">
                                 </dd>
 
@@ -2735,7 +2735,7 @@ header( 'location:index' );
                         </ul>
 
                         <ul class="soa_info_4thline"  v-if="mode_content != ''">
-                            <!-- <li>Mode of Payment / Terms of Payment / Other選項所填的文字:</li> -->
+                            <li>{{ (mode == 'mode' ? 'Mode of Payment' : (mode == 'term' ? 'Terms of Payment' : caption)) }}:</li>
                             <li>{{ mode_content }}</li>
                         </ul>
 
