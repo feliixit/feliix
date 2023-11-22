@@ -505,17 +505,17 @@ var app = new Vue({
   
       },
 
-      temp_mode() {
-        if(this.temp_mode) {
-          if(this.temp_mode != 'other')
-            this.temp_mode_content = '';
-          else
-          {
-            this.temp_caption = '';
-            this.temp_mode_content = '';
-          }
-        }
-      },
+      // temp_mode() {
+      //   if(this.temp_mode) {
+      //     if(this.temp_mode != 'other')
+      //       this.temp_mode_content = '';
+      //     else
+      //     {
+      //       this.temp_caption = '';
+      //       this.temp_mode_content = '';
+      //     }
+      //   }
+      // },
   
     },
   
@@ -2840,7 +2840,24 @@ Installation:`;
 
               // page
               _this.pages = _this.receive_records[0].pages;
-              _this.pag = _this.receive_records[0].pages[0];
+
+              if(_this.pages.length > 0)
+                _this.pag = _this.receive_records[0].pages[0];
+              else
+              {
+                _this.pag = {
+                  page: 0,
+                  total: [],
+                  term: [],
+                  payment_term: {
+                    list: [],
+                  },
+                  types: [],
+                };
+              }
+
+              
+
               _this.temp_pages = JSON.parse(JSON.stringify(_this.pages));
 
               // block_names(subtotal)

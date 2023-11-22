@@ -112,6 +112,9 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
     $signature_page = $merged_results[0]['signature_page'];
     $signature_pixel = $merged_results[0]['signature_pixel'];
 
+    $pixa_t = $merged_results[0]['pixa_t'];
+    $pixa_p = $merged_results[0]['pixa_p'];
+
     $pages_array = $merged_results[0]['pages'];
 
     $query = "INSERT INTO soa_quotation
@@ -155,7 +158,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             `content_second_line` = :content_second_line,
             `contact` = :contact,
 
-
+            `pixa_t` = :pixa_t,
+            `pixa_p` = :pixa_p,
 
             `status` = 0,
             `create_id` = :create_id,
@@ -204,6 +208,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
         $stmt->bindParam(':content_second_line', $content_second_line);
         $stmt->bindParam(':contact', $contact);
 
+        $stmt->bindParam(':pixa_t', $pixa_t);
+        $stmt->bindParam(':pixa_p', $pixa_p);
 
         $stmt->bindParam(':create_id', $user_id);
        
@@ -286,6 +292,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                     `block_name` = :block_name,
                     `not_show` = :not_show,
                     `real_amount` = :real_amount,
+                    `pixa` = :pixa,
                     `status` = 0,
                     `create_id` = :create_id,
                     `created_at` = now()";
@@ -301,6 +308,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
 
                 $stmt->bindParam(':not_show', $types_array[$j]['not_show']);
                 $stmt->bindParam(':real_amount', $types_array[$j]['real_amount']);
+
+                $stmt->bindParam(':pixa', $types_array[$j]['pixa']);
               
                 $stmt->bindParam(':create_id', $user_id);
             
@@ -443,7 +452,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                 `show_vat` = :show_vat,
                 `valid` = :valid,
                 `total` = :total,
-            
+                `pixa` = :pixa,
+                `show` = :show,
                 `status` = 0,
                 `create_id` = :create_id,
                 `created_at` =  now() ";
@@ -460,6 +470,8 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             $stmt->bindParam(':show_vat', $total["show_vat"]);
             $stmt->bindParam(':valid', $total["valid"]);
             $stmt->bindParam(':total', $tt);
+            $stmt->bindParam(':pixa', $total["pixa"]);
+            $stmt->bindParam(':show', $total["show"]);
 
             $stmt->bindParam(':create_id', $user_id);
         
@@ -652,7 +664,9 @@ function GetQuotation($id, $db) {
                     content_first_line,
                     caption_second_line,
                     content_second_line,
-                    contact
+                    contact,
+                    pixa_t,
+                    pixa_p
                     FROM soa_quotation
                     WHERE status <> -1 and id=$id";
 
@@ -711,6 +725,8 @@ function GetQuotation($id, $db) {
         $caption_second_line = $row['caption_second_line'];
         $content_second_line = $row['content_second_line'];
         $contact = $row['contact'];
+        $pixa_t = $row['pixa_t'];
+        $pixa_p = $row['pixa_p'];
 
         $subtotal_info = GetSubTotalInfo($row['id'], $db);
 
@@ -759,6 +775,8 @@ function GetQuotation($id, $db) {
             "caption_second_line" => $caption_second_line,
             "content_second_line" => $content_second_line,
             "contact" => $contact,
+            "pixa_t" => $pixa_t,
+            "pixa_p" => $pixa_p,
         );
     }
 
@@ -799,7 +817,8 @@ function GetBlockNames($qid, $db){
                 block_name,
                 not_show,
                 real_amount,
-                page_id
+                page_id,
+                pixa
             FROM  soa_quotation_page_type qpt
             left join soa_quotation_page qp on qpt.page_id = qp.id
             WHERE  qpt.quotation_id = " . $qid . "
@@ -822,6 +841,7 @@ function GetBlockNames($qid, $db){
         $page_id = $row['page_id'];
         $not_show = $row['not_show'];
         $real_amount = $row['real_amount'];
+        $pixa = $row['pixa'];
 
         $blocks = [];
 
@@ -838,6 +858,7 @@ function GetBlockNames($qid, $db){
             "blocks" => $blocks,
             "page_id" => $page_id,
             "subtotal" => $subtotal,
+            "pixa" => $pixa,
         );
     }
 
@@ -899,7 +920,9 @@ function GetTotal($qid, $page, $db){
         vat,
         show_vat,
         valid,
-        total
+        total,
+        pixa,
+        `show`
         FROM   soa_quotation_total
         WHERE  quotation_id = " . $qid . "
         AND  page = " . $page . "
@@ -923,6 +946,9 @@ function GetTotal($qid, $page, $db){
         $valid = $row['valid'];
         $total = $row['total'];
 
+        $pixa = $row['pixa'];
+        $show = $row['show'];
+
         $merged_results[] = array(
             "page" => $page,
             "discount" => $discount,
@@ -930,7 +956,8 @@ function GetTotal($qid, $page, $db){
             "show_vat" => $show_vat,
             "valid" => $valid,
             "total" => $total,
-            
+            "pixa" => $pixa,
+            "show" => $show,
             
         );
     }
@@ -1218,7 +1245,9 @@ function GetTotalInfo($qid, $db){
         vat,
         show_vat,
         valid,
-        total
+        total,
+        pixa,
+        `show`
         FROM   soa_quotation_total
         WHERE  quotation_id = " . $qid . "
         AND `status` <> -1 
@@ -1238,6 +1267,8 @@ function GetTotalInfo($qid, $db){
     $show_vat = '';
     $valid = '';
     $total = '';
+    $pixa = '';
+    $show = '';
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $id = $row['id'];
@@ -1248,7 +1279,8 @@ function GetTotalInfo($qid, $db){
         $valid = $row['valid'];
         $total = $row['total'];
 
-        
+        $pixa = $row['pixa'];
+        $show = $row['show'];
     }
 
     $merged_results = array(
@@ -1260,7 +1292,8 @@ function GetTotalInfo($qid, $db){
         "valid" => $valid,
         "total" => $total,
         
-        
+        "pixa" => $pixa,
+        "show" => $show,
     );
 
     return $merged_results;
@@ -1272,7 +1305,8 @@ function GetTypes($qid, $db){
         block_type,
         block_name,
         not_show,
-        real_amount
+        real_amount,
+        pixa
         FROM   soa_quotation_page_type
         WHERE  page_id = " . $qid . "
         AND `status` <> -1 
@@ -1293,6 +1327,7 @@ function GetTypes($qid, $db){
 
         $not_show = $row['not_show'];
         $real_amount = $row['real_amount'];
+        $pixa = $row['pixa'];
 
         $blocks = [];
 
@@ -1306,6 +1341,7 @@ function GetTypes($qid, $db){
             "name" => $block_name,
             "not_show" => $not_show,
             "real_amount" => $real_amount,
+            "pixa" => $pixa,
             "blocks" => $blocks,
             "subtotal" => $subtotal,
         );
