@@ -573,8 +573,8 @@ $(function(){
                 </ul>
 
                 <div class="btnbox">
-                <a class="btn" @click="cancel(21)">Cancel</a>
-                    <a class="btn" @click="save(21)">Save</a>
+                <a class="btn" @click="cancel(22)">Cancel</a>
+                    <a class="btn" @click="save(22)">Save</a>
                 </div>
 
             </div>

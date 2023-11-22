@@ -331,10 +331,20 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
             `footer_first_line` = :footer_first_line,
             `footer_second_line` = :footer_second_line,
             `pageless` = :pageless,
+            `contact` = :contact,
 
             `status` = 0,
             `create_id` = :create_id,
             `created_at` =  now() ";
+
+$contact = "MAIN OFFICE
+25-E, 25th Flr., BDO Towers Valero,
+8741 Paseo De Roxas,
+1226 Makati City, Metro Manila,
+Philippines
+
+E: info@feliix.com
+T: (+63) 2 8525-6288";
 
         // prepare the query
         $stmt = $db->prepare($query);
@@ -358,6 +368,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
         $stmt->bindParam(':footer_first_line', $footer_first_line);
         $stmt->bindParam(':footer_second_line', $footer_second_line);
         $stmt->bindParam(':pageless', $pageless);
+        $stmt->bindParam(':contact', $contact);
 
         $stmt->bindParam(':create_id', $user_id);
 
@@ -683,27 +694,36 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                 echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                 die();
             }
-
+*/
             // payment term
             $query = "INSERT INTO soa_quotation_payment_term
-                    (
-                        quotation_id,
-                        page,
-                        payment_method,
-                        brief,
-                        list,
-                        `create_id`,
-                        created_at
-                    )
-                        select " . $quotation_id . ", page, payment_method, brief, list, :create_id, now() 
+                    SET
+                        quotation_id = :quotation_id,
+                        page = 1,
+                        payment_method = :payment_method,
+                        brief = :brief,
+                        list = :list,
+                        `create_id` = :create_id,
+                        `status` = 0,
+                        created_at = now() ";
+                    
+                        $t = "select " . $quotation_id . ", page, payment_method, brief, list, :create_id, now() 
                     from quotation_payment_term where quotation_id = :quotation_id";
             // prepare the query
             $stmt = $db->prepare($query);
 
+            $payment_method = 'Cash; Cheque; Credit Card; Bank Wiring;';
+            $brief = '50% Downpayment & another 50% balance a day before the delivery';
+            $list = '[{"id":"0", "bank_name": "BDO", "first_line":"Acct. Name: Feliix Inc. Acct no: 006910116614", "second_line":"Branch: V.A Rufino", "third_line":""}, {"id":"1", "bank_name": "SECURITY BANK", "first_line":"Acct. Name: Feliix Inc. Acct no: 0000018155245", "second_line":"Swift code: SETCPHMM", "third_line":""}]';        
+
             // bind the values
-            $stmt->bindParam(':quotation_id', $id);
+            $stmt->bindParam(':quotation_id', $quotation_id);
+            $stmt->bindParam(':payment_method', $payment_method);
+            $stmt->bindParam(':brief', $brief);
+            $stmt->bindParam(':list', $list);
+
             $stmt->bindParam(':create_id', $user_id);
-              
+
             try {
                 // execute the query, also check if query was successful
                 if ($stmt->execute()) {
@@ -723,7 +743,7 @@ function InsertQuotation($id, $user_id, $merged_results, $db)
                 echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                 die();
             }
-
+/*
             // signature
             $query = "INSERT INTO soa_quotation_signature
                     (

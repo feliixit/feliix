@@ -2221,7 +2221,7 @@ header( 'location:index' );
 
                         <div class="formbox">
                             <div class="btnbox">
-                                <a class="btn small" @click="show_page = false">Close</a>
+                                <a class="btn small" @click="reset_page()">Close</a>
                                 <a class="btn small green" @click="page_save()">Save</a>
                             </div>
                         </div>
@@ -2658,7 +2658,7 @@ header( 'location:index' );
                                     </select>
                                 </dd>
 
-                                <dt class="head" v-if="show_t == ''">Distance from Previous Block: <input type="number"
+                                <dt class="head" v-if="temp_show_t == ''">Distance from Previous Block: <input type="number"
                                                                                                           v-model="temp_pixa_t">
                                     pixel
                                 </dt>
@@ -3004,8 +3004,8 @@ header( 'location:index' );
 
 
                 <!-- 預設 margin-top = 30px; 因為最短距離就是30px -->
-                <div class="area_payment" v-bind:style="{ 'margin-top': (show_p == '' ? pixa_p : 0) + 'px' }"
-                     v-if="pag.payment_term !== undefined && show_p == ''">
+                <div class="area_payment" v-bind:style="{ 'margin-top': (org_show_p == '' ? org_pixa_p : 0) + 'px' }"
+                     v-if="pag.payment_term !== undefined && org_show_p == ''">
 
                     <b>Payment Details:</b>
 

@@ -109,6 +109,8 @@ var app = new Vue({
       block_names : [],
       block_value : [],
 
+      org_block_names : [],
+
       // blocks
       blocks : [],
 
@@ -165,12 +167,16 @@ var app = new Vue({
         pixa: 0,
       },
 
+      org_total: {},
+
       
       term:
       {
         page: 0,
         item: [],
       },
+
+      org_term: {},
 
       payment_term:
       {
@@ -184,6 +190,8 @@ var app = new Vue({
           third_line : '',
         },
       },
+
+      org_payment_term: {},
 
 
       sig:
@@ -1767,6 +1775,14 @@ var app = new Vue({
 
       close_contact() {
         this.show_contact = false;
+
+        this.reset_contact();
+      },
+
+      reset_contact() {
+        this.temp_contact = this.receive_records[0].contact;
+        this.temp_pixa_t = this.receive_records[0].pixa_t;
+        this.temp_show_t = this.receive_records[0].show_t;
       },
       
       payment_term_save: async function() {
@@ -1829,12 +1845,22 @@ var app = new Vue({
 
       close_balance() {
         this.show_balance = false;
+        this.reset_balance();
+      },
 
+      reset_balance() {
+        this.term = JSON.parse(JSON.stringify(this.org_term));
       },
 
       close_payment_term() {
         this.show_payment_term = false;
+        this.reset_payment_term();
+      },
 
+      reset_payment_term() {
+        this.payment_term = JSON.parse(JSON.stringify(this.org_payment_term));
+        this.show_p = this.org_show_p;
+        this.pixa_p = this.org_pixa_p;
       },
 
       term_item_del: function(fromIndex) {
@@ -1931,6 +1957,7 @@ var app = new Vue({
         this.payment_term.item.push(obj);
       },
 
+
       close_total() {
         this.show_total = false;
 
@@ -1948,6 +1975,12 @@ var app = new Vue({
             show: '',
           };
         }
+
+        this.reset_total();
+      },
+
+      reset_total() {
+        this.total = JSON.parse(JSON.stringify(this.org_total));
       },
 
       save_total: async function() {
@@ -2175,6 +2208,12 @@ var app = new Vue({
         return true;
       },
 
+      reset_subtotal()
+      {
+        this.block_names = JSON.parse(JSON.stringify(this.org_block_names));
+
+      },
+
       subtotal_close() {
         this.show_subtotal = false;
         this.edit_type_a = false;
@@ -2190,6 +2229,8 @@ var app = new Vue({
         this.block_value = [];
 
         this.is_load = false;
+
+        this.reset_subtotal();
       },
 
       block_b_up: function(fromIndex, eid) {
@@ -2574,6 +2615,37 @@ Installation:`;
 
       cancel_header() {
         this.show_header = false;
+        this.reset_header();
+      },
+
+      reset_header() {
+        this.temp_first_line = this.first_line;
+        this.temp_second_line = this.second_line;
+        this.temp_third_line = this.third_line;
+
+        this.temp_statement_date = this.statement_date;
+        this.temp_po = this.po;
+        this.temp_mode = this.mode;
+        this.temp_caption = this.caption;
+        this.temp_mode_content = this.mode_content;
+        this.temp_account_summary = this.account_summary;
+
+        this.temp_caption_first_line = this.caption_first_line;
+        this.temp_caption_second_line = this.caption_second_line;
+        this.temp_content_first_line = this.content_first_line;
+        this.temp_content_second_line = this.content_second_line;
+
+        this.temp_project_category = this.project_category;
+        this.temp_quotation_no = this.quotation_no;
+        this.temp_quotation_date = this.quotation_date;
+
+        this.temp_prepare_for_first_line = this.prepare_for_first_line;
+        this.temp_prepare_for_second_line = this.prepare_for_second_line;
+        this.temp_prepare_for_third_line = this.prepare_for_third_line;
+
+        this.temp_prepare_by_first_line = this.prepare_by_first_line;
+        this.temp_prepare_by_second_line = this.prepare_by_second_line;
+
       },
 
       save_header() {
@@ -2773,6 +2845,7 @@ Installation:`;
 
               // block_names(subtotal)
               _this.block_names = _this.receive_records[0].block_names;
+              _this.org_block_names = JSON.parse(JSON.stringify(_this.block_names));
               
               _this.subtotal = _this.receive_records[0].subtotal_info;
               _this.subtotal_novat_a = _this.receive_records[0].subtotal_novat_a;
@@ -2780,6 +2853,8 @@ Installation:`;
 
               // total
               _this.total = _this.receive_records[0].total_info;
+              _this.org_total = JSON.parse(JSON.stringify(_this.total));
+
               _this.pixa = _this.total.pixa;
               _this.show = _this.total.show;
 
@@ -2792,9 +2867,14 @@ Installation:`;
 
               // term
               _this.term = _this.receive_records[0].term_info;
+              _this.org_term = JSON.parse(JSON.stringify(_this.term));
 
               // term
               _this.payment_term = _this.receive_records[0].payment_term_info;
+              _this.org_payment_term = JSON.parse(JSON.stringify(_this.payment_term));
+
+              _this.org_show_p = _this.receive_records[0].show_p;
+              _this.org_pixa_p = _this.receive_records[0].pixa_p;
 
               // sig
               _this.sig = _this.receive_records[0].sig_info;
@@ -3316,6 +3396,11 @@ Installation:`;
 
       },
 
+      reset_page() {
+        this.show_page = false;
+        this.temp_pages = JSON.parse(JSON.stringify(this.pages));
+      },
+
       page_save : function() {
         if (this.submit == true) return;
 
@@ -3465,6 +3550,16 @@ Installation:`;
         this.show_balance = false;
         this.show_payment_term = false;
         this.show_header = false;
+        this.show_contact = false;
+
+        this.reset_header();
+        this.reset_page();
+        this.reset_subtotal();
+        this.reset_total();
+        this.reset_balance();
+        this.reset_payment_term();
+        this.reset_contact();
+
         console.log("close all");
       },
 
