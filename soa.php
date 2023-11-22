@@ -569,6 +569,10 @@ header( 'location:index' );
             margin: 0;
         }
 
+        .qn_header .right_block .soa_info ul > li:first-of-type {
+            margin-right: 7px;
+        }
+
         .qn_header .right_block .soa_account .soa_account_summary {
             font-size: 18px;
             background-color: rgb(78, 181, 187);
@@ -576,7 +580,7 @@ header( 'location:index' );
             color: white;
             padding: 1px 0 4px 4px;
             font-weight: 500;
-            margin: 20px 27px 0 0;
+            margin: 20px 27px 2px 0;
         }
 
         .qn_header .right_block .soa_account .soa_account_summary li:first-of-type {
@@ -880,7 +884,7 @@ header( 'location:index' );
         }
 
         .tb_format1 tbody tr.thead2 td:nth-of-type(1), .tb_format1 tbody tr.desc1 td:nth-of-type(1) {
-            width: 70px;
+            width: 90px;
             text-align: center;
         }
 
@@ -1053,7 +1057,7 @@ header( 'location:index' );
         }
 
         .tb_format2 tbody tr td:nth-of-type(1) {
-            width: 70px;
+            width: 90px;
             text-align: center;
         }
 
