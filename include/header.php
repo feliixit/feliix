@@ -270,6 +270,7 @@ try {
                 <a class="list" href="quotation_pageless_mgt">Quotation Creation and Management (Pageless)</a>
                 <a class="list" href="approval_form_mgt">Approval Form Management</a>
                 <a class="list" href="approval_form_pageless_mgt">Approval Form Management (Pageless)</a>
+                <a class="list" href="soa_form_mgt">SOA Management (Page/Pageless)</a>
             <?php 
             if($access6 == true)
             {

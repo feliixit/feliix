@@ -65,7 +65,7 @@ else
         if($_id == 0)
         {
         
-            $query = "INSERT INTO quotation_total
+            $query = "INSERT INTO soa_quotation_total
             SET
                 `quotation_id` = :quotation_id,
                 `page` = :page,
@@ -119,10 +119,11 @@ else
                 die();
             }
 
+            
             // recaculate prduct amount with vat
             if($vat == 'P')
             {
-                $query = "update quotation_page_type_block
+                $query = "update soa_quotation_page_type_block
                     SET
                         `amount` = qty * price * 1.12 * (1 - discount / 100) * ratio
                 
@@ -156,7 +157,7 @@ else
             if($vat == 'P')
             {
                 // update quotation_page_type.real_amount
-                $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block where `status` <> -1 GROUP BY type_id) as s
+                $query = "UPDATE soa_quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM soa_quotation_page_type_block where `status` <> -1 GROUP BY type_id) as s
                             SET p.real_amount = s.mysum
                             WHERE p.id = s.type_id
                             and p.quotation_id = :id
@@ -189,7 +190,7 @@ else
         }
         else
         {
-            $query = "update quotation_total
+            $query = "update soa_quotation_total
                 SET
                     `page` = :page,
                     `discount` = :discount,
@@ -245,7 +246,7 @@ else
         // recaculate prduct amount with vat
         if($pre_vat != 'P' && $vat == 'P')
         {
-            $query = "update quotation_page_type_block
+            $query = "update soa_quotation_page_type_block
                 SET
                     `amount` = qty * price * 1.12 * (1 - discount / 100) * ratio
              
@@ -278,7 +279,7 @@ else
 
         if($pre_vat == 'P' && $vat !== 'P')
         {
-            $query = "update quotation_page_type_block
+            $query = "update soa_quotation_page_type_block
                 SET
                     `amount` = qty * price * (1 - discount / 100) * ratio
              
@@ -312,7 +313,7 @@ else
         if(($pre_vat == 'P' && $vat !== 'P') || ($pre_vat != 'P' && $vat == 'P'))
         {
             // update quotation_page_type.real_amount
-            $query = "UPDATE quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM quotation_page_type_block where `status` <> -1 GROUP BY type_id) as s
+            $query = "UPDATE soa_quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM soa_quotation_page_type_block where `status` <> -1 GROUP BY type_id) as s
                         SET p.real_amount = s.mysum
                         WHERE p.id = s.type_id
                         and p.quotation_id = :id
@@ -343,7 +344,7 @@ else
             }
         }
         
-        $query = "UPDATE quotation SET `pageless` = :pageless WHERE `id` = :id";
+        $query = "UPDATE soa_quotation SET `pageless` = :pageless WHERE `id` = :id";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':pageless', $pageless);
         $stmt->bindParam(':id', $quotation_id);
@@ -378,7 +379,7 @@ else
 
 function IsExist($quotation_id, &$pre_vat, $db)
 {
-    $sql = "SELECT id, vat from quotation_total where quotation_id = :quotation_id";
+    $sql = "SELECT id, vat from soa_quotation_total where quotation_id = :quotation_id";
            
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':quotation_id',  $quotation_id);

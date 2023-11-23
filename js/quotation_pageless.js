@@ -533,6 +533,32 @@ var app = new Vue({
 
       },
 
+      soa_post : async function() {
+
+        var token = localStorage.getItem("token");
+        var form_Data = new FormData();
+
+        var parameters = {qid: this.id};
+
+        let res = await axios({
+          method: 'get',
+          url: 'api/soa',
+          params: parameters,
+          data: form_Data,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        var newid = 0;
+        if(res.data.length > 0)
+        {
+          var newid = res.data[0].id;
+          window.open("soa?id=" + newid, '_blank');
+        }
+
+      },
+
         specification_sheet() {
             $('#modal_specification_sheet').modal('toggle');
         },

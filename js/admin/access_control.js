@@ -33,6 +33,7 @@ var app = new Vue({
     schedule_confirm:[],
     halfday: [],
     tag_management: [],
+    soa: [],
   },
 
   created() {
@@ -145,6 +146,10 @@ var app = new Vue({
               _this.tag_management = res.data[0]["tag_management"].split(",").filter(function (el) {
                 return el != "";
               });
+              if (kind === 22 || kind === undefined)
+              _this.soa = res.data[0]["soa"].split(",").filter(function (el) {
+                return el != "";
+              });
 
           },
           (err) => {
@@ -211,6 +216,7 @@ var app = new Vue({
       form_Data.append("schedule_confirm", this.schedule_confirm.toString());
       form_Data.append("halfday", this.halfday.toString());
       form_Data.append("tag_management", this.tag_management.toString());
+      form_Data.append("soa", this.soa.toString());
 
       axios({
         method: "post",
