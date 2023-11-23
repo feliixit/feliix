@@ -118,6 +118,75 @@ else
                 echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
                 die();
             }
+
+            
+            // recaculate prduct amount with vat
+            if($vat == 'P')
+            {
+                $query = "update soa_quotation_page_type_block
+                    SET
+                        `amount` = qty * price * 1.12 * (1 - discount / 100) * ratio
+                
+                        where quotation_id = :id and type in ('image', 'noimage') ";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+
+                $stmt->bindParam(':id', $quotation_id, PDO::PARAM_INT);
+
+                // execute the query, also check if query was successful
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+            }
+
+            if($vat == 'P')
+            {
+                // update quotation_page_type.real_amount
+                $query = "UPDATE soa_quotation_page_type p,( SELECT type_id, sum(amount)  as mysum FROM soa_quotation_page_type_block where `status` <> -1 GROUP BY type_id) as s
+                            SET p.real_amount = s.mysum
+                            WHERE p.id = s.type_id
+                            and p.quotation_id = :id
+                            and p.block_type = 'A' ";
+
+                // prepare the query
+                $stmt = $db->prepare($query);
+
+                $stmt->bindParam(':id', $quotation_id, PDO::PARAM_INT);
+
+                // execute the query, also check if query was successful
+                try {
+                    // execute the query, also check if query was successful
+                    if (!$stmt->execute()) {
+                        $arr = $stmt->errorInfo();
+                        error_log($arr[2]);
+                        $db->rollback();
+                        http_response_code(501);
+                        echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $arr[2]));
+                        die();
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                    $db->rollback();
+                    http_response_code(501);
+                    echo json_encode(array("Failure at " . date("Y-m-d") . " " . date("h:i:sa") . " " . $e->getMessage()));
+                    die();
+                }
+            }
         }
         else
         {
