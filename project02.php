@@ -220,7 +220,7 @@ header('location:index');
 
     <style>
         .mainContent {
-            min-height: 150vh;
+            min-height: 160vh;
         }
 
         .tablebox.s2.edit > div {
@@ -655,6 +655,17 @@ header('location:index');
                                             </select>
                                             <!-- <button @click="change_project_creator">Change</button> -->
                                         </div>
+                                    </dd>
+
+                                    
+                                    <dt>Client Target Date:</dt>
+                                    <dd>
+                                        <input type="date" v-model="edit_target_date">
+                                    </dd>
+
+                                    <dt>Actual Delivery/Installation Date:</dt>
+                                    <dd>
+                                        <input type="date" v-model="edit_real_date">
                                     </dd>
 
 
@@ -1229,6 +1240,17 @@ header('location:index');
                         <li>{{ pic1 }}</li>
                         <li>{{ pic2 }}</li>
                         <li>{{ created_at }} ~ {{ end_at }}</li>
+                    </ul>
+                </div>
+
+                <div class="tablebox lv2a b-2">
+                    <ul class="head">
+                        <li style="text-align: center !important;">Client Target Date</li>
+                        <li style="text-align: center !important;">Actual Delivery/Installation Date</li>
+                    </ul>
+                    <ul>
+                        <li style="text-align: center !important;">{{ target_date }}</li>
+                        <li style="text-align: center !important;">{{ real_date }}</li>
                     </ul>
                 </div>
 

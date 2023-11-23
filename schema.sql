@@ -4360,3 +4360,10 @@ CREATE INDEX idx_project_est_prob_project_id
 ON project_est_prob (project_id);
 CREATE INDEX idx_project_stages_project_id
 ON project_stages (project_id);
+
+-- 20231123ˇ project02 stages
+insert into project_stage(stage, status, `order`) values('Client - 80% Pre-Order Meeting', 0, 55);
+insert into project_stage(stage, status, `order`) values('Client - 90% Pre-Order Meeting', 0, 56);
+
+ALTER TABLE project_main ADD COLUMN `target_date` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '';
+ALTER TABLE project_main ADD COLUMN `real_date` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '';
