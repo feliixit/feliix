@@ -117,6 +117,47 @@ foreach ($de_party_contactor as &$value) {
     $stmt->execute();
 }
 
+// get previous block confirm
+$query = "select target_date, real_date from project_main where id = :id";
+$stmt = $db->prepare($query);
+$stmt->bindParam(':id', $pid);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$pre_target_date = $row['target_date'];
+$pre_real_date = $row['real_date'];
+
+$edit_date_log = "";
+if($pre_target_date != $target_date || $pre_real_date != $real_date)
+{
+    if($pre_target_date != $target_date)
+    {
+        $edit_date_log .= "[Client Date] change from " . $pre_target_date . " to " . $target_date . " ";
+    }
+    
+    if($pre_real_date != $real_date)
+    {
+        $edit_date_log .= "[Actual Date] change from " . $pre_real_date . " to " . $real_date . " ";
+    }
+
+    $query = "INSERT INTO project_edit_info
+                SET
+                    project_id = :project_id,
+                    reason = :reason,
+                   
+                    create_id = :create_id,
+                    created_at = now()";
+    
+        // prepare the query
+        $stmt = $db->prepare($query);
+    
+        // bind the values
+        $stmt->bindParam(':project_id', $pid);
+        $stmt->bindParam(':reason', $edit_date_log);
+        $stmt->bindParam(':create_id', $user_id);
+
+        $stmt->execute();
+}
+
 $query = "INSERT INTO project_edit_info
                 SET
                     project_id = :project_id,
