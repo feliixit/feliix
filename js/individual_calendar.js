@@ -9,11 +9,16 @@ var filter = new Vue({
         my_id : 0,
         department: "",
         title: "",
+        
+
     },created() {
     
         this.getUserName();
+        
     },
     methods: {
+        
+
         getUserName: function() {
             var token = localStorage.getItem("token");
             var form_Data = new FormData();
@@ -878,6 +883,10 @@ var memo = new Vue({
       attachments:[],
   
       project_name:'',
+
+      access3 : false,
+
+      orders: [],
     
     },
   
@@ -886,7 +895,8 @@ var memo = new Vue({
   
       this.getUsers();
       //this.getMeetings();
-  
+      this.getAccess3();
+      this.getOrders();
     },
   
     computed: {
@@ -907,6 +917,34 @@ var memo = new Vue({
   
   
     methods: {
+        getAccess3: async function() {
+            var token = localStorage.getItem('token');
+
+            let res = await axios.get('api/access_control_kind_get', { headers: { "Authorization": `Bearer ${token}` }, params: { kind: 'access3' } });
+            this.access3 = res.data.access3;
+        },
+
+        getOrders() {
+  
+            let _this = this;
+      
+            let token = localStorage.getItem('accessToken');
+      
+            axios
+              .get('api/order_taiwan_to_approve', { headers: { "Authorization": `Bearer ${token}` } })
+              .then(
+                (res) => {
+                  _this.orders = res.data;
+                },
+                (err) => {
+                  alert(err.response);
+                },
+              )
+              .finally(() => {
+      
+              });
+          },
+
       getUsers() {
   
         let _this = this;
