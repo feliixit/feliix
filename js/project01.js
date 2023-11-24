@@ -94,6 +94,7 @@ var app = new Vue({
               _this.fil_type = decodeURI(tmp[1]);
               break;
             case "fcs":
+              //tmp[1] = tmp[1].replace(/%/g, '%25');
               _this.fil_stage = decodeURI(tmp[1]);
               break;
             case "fpt":
@@ -695,7 +696,7 @@ var app = new Vue({
           "&ft=" +
           _this.fil_type +
           "&fcs=" +
-          _this.fil_stage +
+          encodeURI(_this.fil_stage) +
           "&fpt=" +
           _this.fil_creator +
           "&flo=" +
@@ -797,7 +798,7 @@ var app = new Vue({
           "&ft=" +
           _this.fil_type +
           "&fcs=" +
-          _this.fil_stage +
+          encodeURI(_this.fil_stage) +
           "&fpt=" +
           _this.fil_creator +
           "&flo=" +
@@ -841,7 +842,7 @@ var app = new Vue({
             "&ft=" +
             _this.fil_type +
             "&fcs=" +
-            _this.fil_stage +
+            encodeURI(_this.fil_stage) +
             "&fpt=" +
             _this.fil_creator +
             "&flo=" +

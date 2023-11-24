@@ -651,7 +651,7 @@ var app = new Vue({
           "&fs=" +
           _this.fil_status +
           "&fcs=" +
-          _this.fil_stage +
+          encodeURI(_this.fil_stage) +
           "&fpt=" +
           _this.fil_creator +
           "&flo=" +
@@ -742,7 +742,7 @@ var app = new Vue({
           "&fs=" +
           _this.fil_status +
           "&fcs=" +
-          _this.fil_stage +
+          encodeURI(_this.fil_stage) +
           "&fpt=" +
           _this.fil_creator +
           "&flo=" +
@@ -781,7 +781,7 @@ var app = new Vue({
           "&fs=" +
           _this.fil_status +
           "&fcs=" +
-          _this.fil_stage +
+          encodeURI(_this.fil_stage) +
           "&fpt=" +
           _this.fil_creator +
           "&flo=" +

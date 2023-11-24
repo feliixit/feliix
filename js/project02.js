@@ -105,6 +105,12 @@ var app = new Vue({
     pic1:'',
     pic2:'',
 
+    edit_target_date:'',
+    target_date:'',
+
+    edit_real_date:'',
+    real_date:'',
+
     // extend
     edit_project_name:'',
     edit_designer:'',
@@ -1209,6 +1215,12 @@ var app = new Vue({
                   _this.org_pic1 = res.data[0].uid_pic1;
                   _this.org_pic2 = res.data[0].uid_pic2;
 
+                  _this.target_date = res.data[0].target_date;
+                  _this.real_date = res.data[0].real_date;
+
+                  _this.edit_target_date = res.data[0].target_date;
+                  _this.edit_real_date = res.data[0].real_date;
+
               },
               (err) => {
                   alert(err.response);
@@ -1757,6 +1769,9 @@ var app = new Vue({
 
             this.uid_pic1 = this.org_uid_pic1;
             this.uid_pic2 = this.org_uid_pic2;
+
+            this.edit_target_date = this.target_date;
+            this.edit_real_date = this.real_date;
             
             document.getElementById('project_dialog').classList.remove("show");
             document.getElementById('project_fn2').classList.remove("focus");
@@ -2600,6 +2615,9 @@ var app = new Vue({
 
             form_Data.append('pic1', this.uid_pic1);
             form_Data.append('pic2', this.uid_pic2);
+
+            form_Data.append('target_date', this.edit_target_date);
+            form_Data.append('real_date', this.edit_real_date);
 
             const token = sessionStorage.getItem('token');
 

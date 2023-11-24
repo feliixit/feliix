@@ -93,7 +93,9 @@ $query = "SELECT pm.id,
             pic1.username                         pic1,
             pm.pic1                               uid_pic1,
             pic2.username                         pic2,
-            pm.pic2                               uid_pic2
+            pm.pic2                               uid_pic2,
+            pm.target_date,
+            pm.real_date
             FROM   project_main pm
             LEFT JOIN project_group pg
                 ON pm.group_id = pg.id
