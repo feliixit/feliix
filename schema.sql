@@ -4367,3 +4367,16 @@ insert into project_stage(stage, status, `order`) values('Client - 90% Pre-Order
 
 ALTER TABLE project_main ADD COLUMN `target_date` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '';
 ALTER TABLE project_main ADD COLUMN `real_date` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '';
+
+-- 20231127 project01 cache
+CREATE TABLE IF NOT EXISTS `project_main_recent` (
+  `id` bigint(20)  NOT NULL AUTO_INCREMENT,
+  `project_id` bigint(20)  DEFAULT 0 NOT NULL,
+  `project_name` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `url` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kind` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='utf8mb4_unicode_ci';
+

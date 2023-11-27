@@ -297,6 +297,15 @@ var app = new Vue({
                 (res) => {
                     _this.receive_records = res.data;
 
+                    if(_this.receive_records.length == 0)
+                    {
+                      Swal.fire({
+                        text: "No Result Found!!",
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                      })
+                    }
+
                     if(_this.pg !== 0)
                     { 
                       _this.page = _this.pg;
@@ -323,7 +332,16 @@ var app = new Vue({
                 .then(
                 (res) => {
                     _this.receive_records = res.data;
+                    if(_this.receive_records.length == 0)
+                    {
+                      Swal.fire({
+                        text: "No Result Found!!",
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                      })
+                    }
                     _this.total = _this.receive_records[0].cnt;
+
 
                     if(_this.pg !== 0)
                     { 

@@ -90,14 +90,23 @@ $query = "SELECT pm.id,
                             FROM project_stages 
                             LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id 
                             WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 
-                            ORDER BY `sequence` desc LIMIT 1), '') stage 
+                            ORDER BY `sequence` desc LIMIT 1), '') stage,
+                pm.last_client_stage_id,
+                pm.last_client_created_at,
+                ul.username recent_username,
+                pm.last_client_message  
                 FROM project_main pm 
                 LEFT JOIN project_category pc ON pm.catagory_id = pc.id 
                 LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id 
                 LEFT JOIN project_priority pp ON pm.priority_id = pp.id 
                 LEFT JOIN project_status ps ON pm.project_status_id = ps.id 
                 LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
+                LEFT JOIN user ul ON pm.last_client_created_id = ul.id
                 LEFT JOIN user ON pm.create_id = user.id where 1=1 ";
+if($key != "")
+{
+    $query = $query . " and (pm.project_name = '" . addslashes($key) . "' or ul.username = '" . addslashes($key) . "' )";
+}
 
 if($fpc != "")
 {
@@ -290,7 +299,13 @@ if($fcs != "")
                      ON        pm.stage_id = pst.id
                      LEFT JOIN user
                      ON        pm.create_id = user.id
+                     LEFT JOIN user ul ON pm.last_client_created_id = ul.id
                      WHERE     1=1 ";
+
+    if($key != "")
+    {
+        $query = $query . " and (pm.project_name = '" . addslashes($key) . "' or ul.username = '" . addslashes($key) . "' )";
+    }
 
     if($fpc != "")
     {
@@ -470,7 +485,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
     $stage = $row['stage'];
-    $recent = GetRecentPost($row['id'], $db, $key);
+    //$recent = GetRecentPost($row['id'], $db, $key);
+    $recent = GetRecentPost_cache($row['last_client_stage_id'], $row['recent_username'], $row['last_client_created_at'], $row['last_client_message']);
 
     if(count($recent) > 0)
     {
@@ -513,6 +529,22 @@ else
 
 echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
 
+function GetRecentPost_cache($last_client_stage_id, $username, $last_client_created_at, $last_client_message)
+{
+    $sorted_result = [];
+
+    if($last_client_stage_id != "")
+    {
+        $sorted_result[] = array(
+            "last_client_stage_id" => $last_client_stage_id,
+            "username" => $username,
+            "last_client_created_at" => $last_client_created_at,
+            "last_client_message" => $last_client_message,
+        );
+    }
+
+    return $sorted_result;
+}
 
 function GetRecentPost($project_id, $db, $key){
 
