@@ -7208,6 +7208,97 @@ function task_notify02_type_inquiry($old_status, $task_status, $project_name, $t
 
 }
 
+function GetCarCheckers()
+{
+    $database = new Database_Sea();
+    $db = $database->getConnection();
+
+    $names = [];
+    $result = "";
+
+    // get car_access1, car_access2 split by comma
+    $sql = "select car_access1, car_access2  from access_control ";
+    $rs = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $rs[] = $row;
+    }
+
+    foreach($rs as &$list)
+    {
+        $arr = explode(',', $list['car_access1']);
+        $result = "'" . implode ( "', '", $arr ) . "'";
+
+        $arr = explode(',', $list['car_access2']);
+        $result .= ",'" . implode ( "', '", $arr ) . "'";
+
+    }
+
+    if($result != "")
+    {
+        $sql = "SELECT user.id, username, email FROM user 
+            WHERE user.username in (" . $result . ") and user.status = 1";
+    
+        $merged_results = array();
+    
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+    
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $merged_results[] = $row;
+        }
+    }
+
+    return $merged_results;
+}
+
+function GetCarChecker1()
+{
+    $database = new Database_Sea();
+    $db = $database->getConnection();
+
+    $names = [];
+    $result = "";
+
+    // get car_access1, car_access2 split by comma
+    $sql = "select car_access1  from access_control ";
+    $rs = array();
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $rs[] = $row;
+    }
+
+    foreach($rs as &$list)
+    {
+        $arr = explode(',', $list['car_access1']);
+        $result = "'" . implode ( "', '", $arr ) . "'";
+    }
+
+
+    if($result != "")
+    {
+        $sql = "SELECT user.id, username, email FROM user 
+            WHERE user.username in (" . $result . ") and user.status = 1";
+    
+        $merged_results = array();
+    
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+    
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $merged_results[] = $row;
+        }
+    }
+
+    return $merged_results;
+}
+
 function GetNotifiersByName($names)
 {
     $database = new Database();
@@ -14835,6 +14926,460 @@ function GetProjectCategoryByProjectId($id)
     return $catagory_id;
 }
 
+function send_car_approval_mail_1($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+    }
+
+    $notifior = GetNotifiersByName($cc);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $notifior = GetCarCheckers();
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] Your request of car schedule has been approved";
+    $content =  "<p>Dear all,</p>";
+    $content = $content . "<p>Your request of car schedule has been approved. Below is the details:</p>";
+    $content = $content . "<p>Approved Result</p>";
+    $content = $content . "<p>Date: " . $date_check . "</p>";
+    $content = $content . "<p>Time: " . $time_check . "</p>";
+    $content = $content . "<p>Assigned Car: " . $service_check . "</p>";
+    $content = $content . "<p>Assigned Driver: " . $driver_check . "</p>";
+    $content = $content . "<p>------------------------------------------------------------------------------</p>";
+    $content = $content . "<p>Content of Request</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function send_car_request_mail_2($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    $notifior = GetCarChecker1();
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] A request of car schedule is waiting for your approval";
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>A request of car schedule is waiting for your approval. Below is the details:</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+function withdraw_car_approval_mail_3($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $requestor)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    $notifior = GetCarCheckers();
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] An approved request of car schedule was withdrawn by " . $requestor;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . "<p>An approved request of car schedule was withdrawn by " . $requestor . ". Below is the details:</p>";
+    $content = $content . "<p>Previous Approved Result</p>";
+    $content = $content . "<p>Date: " . $date_check . "</p>";
+    $content = $content . "<p>Time: " . $time_check . "</p>";
+    $content = $content . "<p>Assigned Car: " . $service_check . "</p>";
+    $content = $content . "<p>Assigned Driver: " . $driver_check . "</p>";
+    $content = $content . "<p>------------------------------------------------------------------------------</p>";
+    $content = $content . "<p>Content of Request</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function withdraw_car_request_mail_4($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $requestor)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    $notifior = GetCarChecker1();
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] A request of car schedule was withdrawn by " . $requestor;
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>A request of car schedule was withdrawn by " . $requestor . ". Below is the details:</p>";
+    $content = $content . "<p>Content of Request</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function delete_car_approval_mail_5($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $requestor)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    $notifior = GetCarCheckers();
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] An approved request of car schedule was withdrawn and deleted by " . $requestor;
+    $content =  "<p>Dear all,</p>";
+    $content = $content . "<p>An approved request of car schedule was withdrawn and deleted by " . $requestor . ". Below is the details:</p>";
+    $content = $content . "<p>Previous Approved Result</p>";
+    $content = $content . "<p>Date: " . $date_check . "</p>";
+    $content = $content . "<p>Time: " . $time_check . "</p>";
+    $content = $content . "<p>Assigned Car: " . $service_check . "</p>";
+    $content = $content . "<p>Assigned Driver: " . $driver_check . "</p>";
+    $content = $content . "<p>------------------------------------------------------------------------------</p>";
+    $content = $content . "<p>Content of Request</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
+
+function delete_car_request_mail_6($to, $cc, $project, $creator, $date_check, $time_check, $service_check, $driver_check, $date, $time, $service, $att, $requestor)
+{
+    $conf = new Conf();
+
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "ssl";
+    // $mail->Port       = 465;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = $conf::$mail_host;
+    // $mail->Username   = $conf::$mail_username;
+    // $mail->Password   = $conf::$mail_password;
+
+    $mail = SetupMail($mail, $conf);
+
+    $mail->IsHTML(true);
+
+    $mail->SetFrom("feliix.it@gmail.com", "Feliix.System");
+    $mail->AddReplyTo("feliix.it@gmail.com", "Feliix.System");
+
+    $notifior = array();
+    $notifior = GetNotifiersByName($to);
+    foreach($notifior as &$list)
+    {
+        $mail->AddCC($list["email"], $list["username"]);
+    }
+
+
+    $notifior = GetCarChecker1();
+    $checker1 = "";
+    foreach($notifior as &$list)
+    {
+        $mail->AddAddress($list["email"], $list["username"]);
+        $checker1 .= $list["username"] . ", ";
+    }
+
+    $checker1 = rtrim($checker1, ", ");
+
+    $mail->addAttachment($att);
+
+    $mail->Subject = "[Car Schedule] A request of car schedule was withdrawn and deleted by " . $requestor;
+    $content =  "<p>Dear " . $checker1 . ",</p>";
+    $content = $content . "<p>A request of car schedule was withdrawn and deleted by " . $requestor . ". Below is the details:</p>";
+    $content = $content . "<p>Content of Request</p>";
+    $content = $content . "<p>Schedule Name: " . $project . "</p>";
+    $content = $content . "<p>Creator: " . $creator . "</p>";
+    $content = $content . "<p>Date Use: " . $date . "</p>";
+    $content = $content . "<p>Time: " . $time . "</p>";
+    $content = $content . "<p>Car Use: " . $service . "</p>";
+
+    $content = $content . "<p></p>";
+
+    $mail->MsgHTML($content);
+    if($mail->Send()) {
+        logMail($creator, $content);
+        return true;
+//        echo "Error while sending Email.";
+//        var_dump($mail);
+    } else {
+        logMail($creator, $mail->ErrorInfo . $content);
+        return false;
+//        echo "Email sent successfully";
+    }
+
+}
+
 function SetupMail($mail, $conf)
 {
     $mail->SMTPDebug  = 0;
@@ -14855,6 +15400,15 @@ function SetupMail($mail, $conf)
     // $mail->Host       = 'smtp.ethereal.email';
     // $mail->Username   = 'jermey.wilkinson@ethereal.email';
     // $mail->Password   = 'zXX3N6QwJ5AYZUjbKe';
+
+    // $mail->SMTPDebug  = 0;
+    // $mail->SMTPAuth   = true;
+    // $mail->SMTPSecure = "tls";
+    // $mail->Port       = 587;
+    // $mail->SMTPKeepAlive = true;
+    // $mail->Host       = 'smtp.ethereal.email';
+    // $mail->Username   = 'calista.lubowitz@ethereal.email';
+    // $mail->Password   = 'VzkRWsx6FszvrQ1ZTW';
 
     return $mail;
 

@@ -34,19 +34,18 @@ $database = new Database();
 $db = $database->getConnection();
 
 $id = (isset($_GET['id']) ?  $_GET['id'] : 0);
+$content_type = (isset($_GET['content_type']) ?  $_GET['content_type'] : 0);
 
 $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
         project_in_charge, project_relevant, installer_needed, installer_needed_other, things_to_bring, installer_needed_location, things_to_bring_location, 
         products_to_bring, service, driver, driver_other,
-        back_up_driver, back_up_driver_other, photoshoot_request, notes, detail.location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
-        DATE_FORMAT(detail.end_time, '%I:%i %p') end_time, products_to_bring_files,
-        coalesce(pm.project_name, '') project_name, coalesce(pst.stage, '') stage_name, coalesce(`sequence`, '') sequence
+        back_up_driver, back_up_driver_other, photoshoot_request, notes, products_to_bring_files,
+        coalesce(pm.project_name, '') project_name, coalesce(pst.stage, '') stage_name, coalesce(`sequence`, '') sequence, main.status
         from work_calendar_main main 
-        left join work_calendar_details detail on detail.main_id = main.id 
         left join project_main pm on pm.id = main.related_project_id
         left join project_stages ps on ps.id = main.related_stage_id
         LEFT JOIN project_stage pst ON ps.stage_id = pst.id
-        where coalesce(detail.is_enabled, 1) = 1 and main.id = " . $id . " order by sort " ;
+        where  main.id = " . $id;
 
     $stmt = $db->prepare( $sql );
     $stmt->execute();
@@ -82,7 +81,11 @@ $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') s
     $stage_name = '';
     $sequence = '';
 
+    $status = '';
+
     $onrecord = 0;
+
+    $details = array();
 
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
 {
@@ -110,70 +113,20 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 
     $products_to_bring_files = $row['products_to_bring_files'];
 
+    $details = GetDetails($id, $db);
 
-    $location = $row['location'];
-    $agenda = $row['agenda'];
-    $appoint_time = $row['appoint_time'];
-    $end_time = $row['end_time'];
+    // $location = $row['location'];
+    // $agenda = $row['agenda'];
+    // $appoint_time = $row['appoint_time'];
+    // $end_time = $row['end_time'];
 
     $project_name = $row['project_name'];
     $stage_name = $row['stage_name'];
     $sequence = $row['sequence'];
 
+    $status = $row['status'];
+
     break;
-}
-
-if($onrecord == 0)
-{
-    $sql = "select DAYNAME(start_time) weekday, DATE_FORMAT(start_time,'%d %M %Y') start_time, title, sales_executive, 
-        project_in_charge, project_relevant, installer_needed, installer_needed_other,things_to_bring, installer_needed_location, things_to_bring_location, 
-        products_to_bring, service, driver, driver_other,
-		back_up_driver, back_up_driver_other, photoshoot_request, notes, '' location, '' agenda, '' appoint_time, 
-		'' end_time, products_to_bring_files,
-        '' project_name, '' stage_name, '' sequence
-		from work_calendar_main main 
-		where main.id = " . $id . " " ;
-
-        $stmt = $db->prepare( $sql );
-        $stmt->execute();
-
-
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
-    {
-        $weekday = $row['weekday'];
-        $start_time = $row['start_time'];
-        $title = $row['title'];
-        $sales_executive = $row['sales_executive'];
-        $project_in_charge = $row['project_in_charge'];
-        $project_relevant = $row['project_relevant'];
-        $installer_needed = $row['installer_needed'];
-        $installer_needed_other = $row['installer_needed_other'];
-        $things_to_bring = $row['things_to_bring'];
-        $installer_needed_location = $row['installer_needed_location'];
-        $things_to_bring_location = $row['things_to_bring_location'];
-        $products_to_bring = $row['products_to_bring'];
-        $service = $row['service'];
-        $driver = $row['driver'];
-        $driver_other = $row['driver_other'];
-        $back_up_driver = $row['back_up_driver'];
-        $back_up_driver_other = $row['back_up_driver_other'];
-        $photoshoot_request = $row['photoshoot_request'];
-        $notes = $row['notes'];
-
-        $products_to_bring_files = $row['products_to_bring_files'];
-
-
-        $location = $row['location'];
-        $agenda = $row['agenda'];
-        $appoint_time = $row['appoint_time'];
-        $end_time = $row['end_time'];
-
-        $project_name = $row['project_name'];
-        $stage_name = $row['stage_name'];
-        $sequence = $row['sequence'];
-
-        break;
-    }
 }
 
 // Creating the new document...
@@ -184,9 +137,95 @@ $phpWord = new PhpOffice\PhpWord\PhpWord();
 // Adding an empty Section to the document...
 $section = $phpWord->addSection();
 // Adding Text element to the Section having font styled by default...
-$section->addText($weekday . ", " . $start_time . " Schedule");
+if($content_type != '2' || $status != '2')
+{
+    $section->addText($weekday . ", " . $start_time . " Schedule");
+    $section->addText("");
+}
 
-$section->addText("");
+
+if($content_type == '2' && $status == '2')
+{
+    $database_sea = new Database_Sea();
+    $db_sea = $database_sea->getConnection();
+
+    $check_date_use = "";
+    $check_car_use = "";
+    $check_driver = "";
+    $check_time_out = "";
+    $check_time_in = "";
+
+    $sql = "select date_use, car_use, driver, time_out, time_in from car_calendar_check  where feliix = 1 and  sid = " . $id . " order by id desc limit 1";
+
+    $stmt = $db_sea->prepare( $sql );
+    $stmt->execute();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+    {
+        $check_date_use = $row['date_use'];
+        $check_car_use = $row['car_use'];
+        $check_driver = $row['driver'];
+        $check_time_out = $row['time_out'];
+        $check_time_in = $row['time_in'];
+
+        break;
+    }
+
+    $check_dateString = date('Y-m-d', strtotime( $check_date_use));
+
+    $check_tout = "";
+    if($check_date_use != "" && $check_time_out != "")
+    {
+        //$check_dateString = new DateTime($check_date_use);
+        $check_tout = date('h:i A', strtotime( $check_time_out));
+    }
+
+    $check_tin = "";
+    if($check_date_use != "" && $check_time_in != "")
+    {
+        //$check_dateString = new DateTime($check_date_use);
+        $check_tin = date('h:i A', strtotime($check_time_in));
+    }
+
+    $table2 = $section->addTable('table2', [
+        'borderSize' => 6, 
+        'borderColor' => 'F73605', 
+        'afterSpacing' => 0, 
+        'Spacing'=> 0, 
+        'cellMargin'=> 0
+    ]);
+
+
+    $table2->addRow();
+    $cell = $table2->addCell(10500, ['borderSize' => 6]);
+    $cell->getStyle()->setGridSpan(2);
+    $cell->addText("Request Review", array('bold' => true, 'size' => 12), array('align' => 'center', 'valign' => 'center'));
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_dateString);
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Time:", array('bold' => true));
+    $TextRun = $table2->addCell(8500, ['borderSize' => 6])->addTextRun();
+    $TextRun->addText($check_tout);
+    $TextRun->addText(" to ");
+    $TextRun->addText($check_tin);
+
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Assigned Car:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_car_use);
+    
+    $table2->addRow();
+    $table2->addCell(2000, ['borderSize' => 6])->addText("Assigned Driver:", array('bold' => true));
+    $table2->addCell(8500, ['borderSize' => 6])->addText($check_driver);
+
+    $section->addText("");
+    $section->addText("");
+
+}
+
+
+
 
 $table = $section->addTable('table', [
     'borderSize' => 6, 
@@ -203,13 +242,22 @@ if($related_project == " - : ")
     $related_project = "";
 }
 
-$table->addRow();
-$table->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText($start_time);
+
+if($content_type == '2' && $status == '2')
+{
+    $table->addRow();
+    $cell = $table->addCell(10500, ['borderSize' => 6]);
+    $cell->getStyle()->setGridSpan(2);
+    $cell->addText("Content of Request", array('bold' => true, 'size' => 12), array('align' => 'center', 'valign' => 'center'));
+}
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Project:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($title);
+
+$table->addRow();
+$table->addCell(2000, ['borderSize' => 6])->addText("Date:", array('bold' => true));
+$table->addCell(8500, ['borderSize' => 6])->addText($start_time);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Related Project:", array('bold' => true));
@@ -220,11 +268,11 @@ $table->addCell(2000, ['borderSize' => 6])->addText("Sales Executive:", array('b
 $table->addCell(8500, ['borderSize' => 6])->addText($sales_executive);
 
 $table->addRow();
-$table->addCell(2000, ['borderSize' => 6])->addText("project_in_charge:", array('bold' => true));
+$table->addCell(2000, ['borderSize' => 6])->addText("Project_in_charge:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($project_in_charge);
 
 $table->addRow();
-$table->addCell(2000, ['borderSize' => 6])->addText("project_relevant:", array('bold' => true));
+$table->addCell(2000, ['borderSize' => 6])->addText("Relevant Persons:", array('bold' => true));
 $table->addCell(8500, ['borderSize' => 6])->addText($project_relevant);
 
 // CONCAT installer_needed and installer_needed_other and remove duplicate
@@ -271,7 +319,7 @@ else
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Service:", array('bold' => true));
-$table->addCell(8500, ['borderSize' => 6])->addText(getService($service));
+$table->addCell(8500, ['borderSize' => 6])->addText($service);
 
 $table->addRow();
 $table->addCell(2000, ['borderSize' => 6])->addText("Driver:", array('bold' => true));
@@ -308,18 +356,18 @@ $table1->addCell(2600, ['borderSize' => 6])->addText("Appoint Time",  ['bold' =>
 $table1->addCell(2600, ['borderSize' => 6])->addText("End Time",  ['bold' => true], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
 
-    $table1->addRow();
-    $table1->addCell(2600, ['borderSize' => 6])->addText($location,  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
-    $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    // $table1->addRow();
+    // $table1->addCell(2600, ['borderSize' => 6])->addText($location,  [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    // $table1->addCell(2600, ['borderSize' => 6])->addText($agenda, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    // $table1->addCell(2600, ['borderSize' => 6])->addText($appoint_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
+    // $table1->addCell(2600, ['borderSize' => 6])->addText($end_time, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
 
-while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+foreach ($details as &$value)
 {
-    $location = $row['location'];
-    $agenda = $row['agenda'];
-    $appoint_time = $row['appoint_time'];
-    $end_time = $row['end_time'];
+    $location = $value['location'];
+    $agenda = $value['agenda'];
+    $appoint_time = $value['appoint_time'];
+    $end_time = $value['end_time'];
 
     $table1->addRow();
     $table1->addCell(2600, ['borderSize' => 6])->addText($location, [], ['align' => \PhpOffice\PhpWord\Style\Cell::VALIGN_CENTER]);
@@ -417,7 +465,7 @@ else
 }
 
     function getService($type){
-        $leave_type = '';
+        $leave_type = $type;
     
         if($type =="1")
             $leave_type = "innova";
@@ -499,6 +547,42 @@ else
         curl_exec ($ch);
         curl_close ($ch);
         fclose($fp);
+    }
+
+    function GetDetails($id, $db)
+    {
+        $merged_details = array();
+
+        $sql = "select detail.location, agenda, DATE_FORMAT(appoint_time, '%I:%i %p') appoint_time, 
+                DATE_FORMAT(detail.end_time, '%I:%i %p') end_time
+                from work_calendar_details detail
+                where coalesce(detail.is_enabled, 1) = 1  and main_id = " . $id . " order by sort " ;
+
+        $stmt = $db->prepare( $sql );
+        $stmt->execute();
+
+        $location = '';
+        $agenda = '';
+        $appoint_time = '';
+        $end_time = '';
+
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
+        {
+            $location = $row['location'];
+            $agenda = $row['agenda'];
+            $appoint_time = $row['appoint_time'];
+            $end_time = $row['end_time'];
+
+            $merged_details[] = array(
+                'location' => $location,
+                'agenda' => $agenda,
+                'appoint_time' => $appoint_time,
+                'end_time' => $end_time
+            );
+        }
+
+        return $merged_details;
+
     }
 
 ?>

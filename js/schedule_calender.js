@@ -56,6 +56,8 @@ var app = new Vue({
         users_org: [],
 
         schedule_confirm: false,
+
+        content : {},
     },
     created() {
 
@@ -599,18 +601,27 @@ var app = new Vue({
                             if(element.trim() !== '')
                                 files += file_str;
                         });
+
+                        let symbol = "";
+                        if (response.data[i].status == "1") 
+                            symbol = 'fa-question-circle';
+                        if (response.data[i].status == "2")
+                            symbol = 'fa-car';
+
                         _this.items.push({
                             id: response.data[i].id,
                             title: response.data[i].title,
                             Date: moment(response.data[i].start_time).format("YYYY-MM-DD"),
                             start: moment(response.data[i].start_time).format(
-                                "YYYY-MM-DDTHH:mm"
+                               "YYYY-MM-DDTHH:mm"
                             ), // will be parsed
                             end: moment(response.data[i].end_time).format("YYYY-MM-DDTHH:mm"),
                             color: response.data[i].color,
                             color_other: response.data[i].color_other,
-                            allDay: isAll,
+                            //allDay: isAll,
+                            allDay: true,
                             description: {
+                                icon: symbol,
                                 Title: UnescapeHTML(response.data[i].title),
                                 Color: response.data[i].color,
                                 Color_Other: response.data[i].color_other,
@@ -658,6 +669,7 @@ var app = new Vue({
 
                                 Related_project_id : response.data[i].related_project_id,
                                 Related_stage_id : response.data[i].related_stage_id,
+                                created_by : response.data[i].created_by,
                             },
                         });
                     }
@@ -766,18 +778,27 @@ var app = new Vue({
                         });
 
                         files = "<div class='custom-control custom-checkbox' style='padding-top: 1%;'>" + files + "</div>";
+
+                        let symbol = "";
+                        if (response.data[i].status == "1") 
+                            symbol = 'fa-question-circle';
+                        if (response.data[i].status == "2")
+                            symbol = 'fa-car';
+
                         _this.items.push({
                             id: response.data[i].id,
                             title: response.data[i].title,
                             Date: moment(response.data[i].start_time).format("YYYY-MM-DD"),
                             start: moment(response.data[i].start_time).format(
-                                "YYYY-MM-DDTHH:mm"
+                               "YYYY-MM-DDTHH:mm"
                             ), // will be parsed
                             end: moment(response.data[i].end_time).format("YYYY-MM-DDTHH:mm"),
                             color: ((response.data[i].color_other !== '') ? response.data[i].color_other : response.data[i].color),
                             // color_other: response.data[i].color_other,
-                            allDay: isAll,
+                            //allDay: isAll,
+                            allDay: true,
                             description: {
+                                icon: symbol,
                                 Title: UnescapeHTML(response.data[i].title),
                                 Color: response.data[i].color,
                                 Color_Other: response.data[i].color_other,
@@ -814,6 +835,7 @@ var app = new Vue({
                                 Service: response.data[i].service,
                                 Driver: response.data[i].driver,
                                 Driver_Other: response.data[i].driver_other,
+                                Driver_Text : response.data[i].driver_text,
                                 Back_up_Driver: response.data[i].back_up_driver,
                                 Back_up_Driver_Other: response.data[i].back_up_driver_other,
                                 Photoshoot_Request: photoshoot,
@@ -824,6 +846,10 @@ var app = new Vue({
                                 Lasteditor: Lasteditor,
                                 Related_project_id: response.data[i].related_project_id,
                                 Related_stage_id: response.data[i].related_stage_id,
+                                created_by: response.data[i].created_by,
+                                status : response.data[i].status,
+                                check1 : response.data[i].check1,
+                                check2 : response.data[i].check2,
                             },
                         });
                     }
@@ -1000,7 +1026,7 @@ var app = new Vue({
                 });
         },
 
-        export: function () {
+        export: function (content_type) {
             var form_Data = new FormData();
 
             const filename = "attendance";
@@ -1010,7 +1036,7 @@ var app = new Vue({
 
             axios({
                     method: "get",
-                    url: "schedule_data_word?id=" + app.id,
+                    url: "schedule_data_word?id=" + app.id + "&content_type=" + content_type,
                     data: form_Data,
                     responseType: "blob", // important
                 })
@@ -1246,6 +1272,71 @@ var app = new Vue({
                         document.getElementById("btn_unconfirm").style.display = "none";
                     }
 
+                    if(app.content.created_by == app.name)
+    {
+        if(app.content.status == '1' || app.content.status == '2')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(app.content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+    else
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if(app.content.status != '0')
+    {
+        document.getElementById("btn_edit").style.display = "none";
+    }
+
+    if(app.content.status != '2')
+    {
+        document.getElementById("approval_section").style.display = "none";
+        document.getElementById("cotent_request_title").style.display = "none";
+    }
+
+    if (app.name == "guest" ||
+        app.name == "Glendon Wendell Co" ||
+        app.name == "Mary Jude Jeng Articulo" ||
+        app.name == "Stefanie Mika C. Santos" ||
+        app.name == "Edneil Fernandez" 
+    ) {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if (app.name == "Dennis Lin" ||
+        app.name == "dereck" ||
+        app.name == "Aiza Eisma" ||
+        app.name == "Kristel Tan" ||
+        app.name == "Alleah Belmonte" 
+    ) {
+        if(app.content.status == '1' || app.content.status == '2')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(app.content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+
+    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
                     app.filename = [];
                     app.fileArray = [];
 
@@ -1367,6 +1458,70 @@ var app = new Vue({
                 .then(function (response) {
                     //handle success
                     _this.addDetails(mainId, addDetails, date);
+                })
+                .catch(function (response) {
+                    //handle error
+                });
+        },
+
+        request: function(id, check_info) {
+            let _this = this;
+
+            this.action = 87; //request
+            var token = localStorage.getItem("token");
+            var form_Data = new FormData();
+
+            form_Data.append("jwt", token);
+            form_Data.append("id", id);
+            form_Data.append("action", _this.action);
+            form_Data.append("check_info", JSON.stringify(check_info));
+            form_Data.append("status", "1");
+            axios({
+                    method: "post",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    url: "api/work_calender_main",
+                    data: form_Data,
+                })
+                .then(function (response) {
+                    //handle success
+                    //_this.items = response.data
+                    var status = response.data.status;
+                    eventObj.extendedProps.description.status = status;
+                    $("#exampleModalScrollable").modal("toggle");
+                    reload(id);
+                })
+                .catch(function (response) {
+                    //handle error
+                });
+        },
+
+        withdraw: function(id) {
+            let _this = this;
+
+            this.action = 88; //request
+            var token = localStorage.getItem("token");
+            var form_Data = new FormData();
+
+            form_Data.append("jwt", token);
+            form_Data.append("id", id);
+            form_Data.append("action", _this.action);
+            form_Data.append("status", "0");
+            axios({
+                    method: "post",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    url: "api/work_calender_main",
+                    data: form_Data,
+                })
+                .then(function (response) {
+                    //handle success
+                    //_this.items = response.data
+                    eventObj.extendedProps.description.status = "0";
+                    $("#exampleModalScrollable").modal("toggle");
+                    reload(id);
                 })
                 .catch(function (response) {
                     //handle error
@@ -1576,6 +1731,9 @@ var initial = async (_id) =>  {
                     document.getElementById("btn_confirm").style.display = "none";
                     document.getElementById("btn_unconfirm").style.display = "none";
 
+                    document.getElementById("btn_request").style.display = "none";
+                    document.getElementById("btn_withdraw").style.display = "none";
+
                     document.getElementById("sc_product_files").innerHTML = "";
                     document.getElementById("upload_input").style =
                         "display: flex; align-items: center; margin-top:1%;";
@@ -1594,6 +1752,8 @@ var initial = async (_id) =>  {
                         $('#sc_related_stage_id').val(0);
                     }
                     
+                    document.getElementById("approval_section").style.display = "none";
+                    document.getElementById("cotent_request_title").style.display = "none";
 
                     Change_Schedule_State(false, true);
                     icon_function_enable = true;
@@ -1614,6 +1774,9 @@ var initial = async (_id) =>  {
             resetSchedule();
             app.id = eventObj.id;
             var sc_content = eventObj.extendedProps.description;
+
+            // copy to app.content 
+            app.content = JSON.parse(JSON.stringify(sc_content));
 
             document.getElementById("sc_title").value = sc_content.Title;
             document.getElementById("sc_color").value = sc_content.Color;
@@ -1831,10 +1994,96 @@ var initial = async (_id) =>  {
                 document.getElementById("btn_unconfirm").style.display = "none";
             }
 
+
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "none";
+
+
+    if(sc_content.status != '0')
+    {
+        document.getElementById("btn_edit").style.display = "none";
+
+        if(sc_content.check1.length > 0)
+        {
+            document.getElementById("sc_date_check").value = moment(sc_content.check1[0].date_use).format("YYYY-MM-DD");
+            document.getElementById("sc_stime_check").value = moment(sc_content.check1[0].time_out).format("HH:mm");
+            document.getElementById("sc_etime_check").value = moment(sc_content.check1[0].time_in).format("HH:mm");
+            document.getElementById("car_use_check").value = sc_content.check1[0].car_use;
+            document.getElementById("driver_check").value = sc_content.check1[0].driver;
+
+        }
+
+        if(sc_content.check2.length > 0)
+        {
+            document.getElementById("driver_check").value = sc_content.check1[0].driver;
+
+        }
+    }
+
+    if(sc_content.status != '2')
+    {
+        document.getElementById("approval_section").style.display = "none";
+        document.getElementById("cotent_request_title").style.display = "none";
+    }
+    else
+    {
+        document.getElementById("approval_section").style.display = "block";
+        document.getElementById("cotent_request_title").style.display = "block";
+    }
+
+    if (app.name == "guest" ||
+        app.name == "Glendon Wendell Co" ||
+        app.name == "Mary Jude Jeng Articulo" ||
+        app.name == "Stefanie Mika C. Santos" ||
+        app.name == "Edneil Fernandez" 
+    ) {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if (app.name == "Dennis Lin" ||
+        app.name == "dereck" ||
+        app.name == "Aiza Eisma" ||
+        app.name == "Kristel Tan" ||
+        app.name == "Alleah Belmonte" 
+    ) {
+        if(sc_content.status == '1' || sc_content.status == '2')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+
+    if(sc_content.created_by == app.name)
+    {
+        if(sc_content.status == '1' || sc_content.status == '2')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+
+    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
             $("#exampleModalScrollable").modal("toggle");
         },
 
-        
 
         //載入日曆初始化時，如果 Schedule 的 confirmed 為True，則加上一個checkbox圖示在 日曆上的 Schedule 前方。
         eventDidMount: function (arg) {
@@ -1843,6 +2092,18 @@ var initial = async (_id) =>  {
 
                 let icon = document.createElement("i");
                 icon.classList.add('fa', 'fa-check-square');
+
+                if( arg.el.querySelector(".fc-event-title-container") ){
+                    arg.el.querySelector(".fc-event-title").prepend(icon);
+                }
+                else {
+                    arg.el.prepend(icon);
+                }
+            }
+            if( arg.event.extendedProps.description.icon != '' ){
+
+                let icon = document.createElement("i");
+                icon.classList.add('fa', arg.event.extendedProps.description.icon);
 
                 if( arg.el.querySelector(".fc-event-title-container") ){
                     arg.el.querySelector(".fc-event-title").prepend(icon);
@@ -2144,6 +2405,7 @@ var initial = async (_id) =>  {
                 document.getElementById("btn_confirm").style.display = "none";
                 document.getElementById("btn_unconfirm").style.display = "none";
             }
+
 
             $("#exampleModalScrollable").modal("toggle");
     }
@@ -2454,7 +2716,13 @@ $(document).on("click", "#btn_edit", function () {
     //切換元件成為可修改狀態
     Change_Schedule_State(false, eventObj.extendedProps.description.Allday);
     icon_function_enable = true;
+
+    // send and withdraw
+    document.getElementById("btn_request").style.display = "none";
+    document.getElementById("btn_withdraw").style.display = "none";
+
 });
+
 
 $(document).on("click", "#btn_delete", function () {
     app.deleteMe(eventObj.id);
@@ -2492,7 +2760,47 @@ $(document).on("click", "#btn_duplicate", function () {
 });
 
 $(document).on("click", "#btn_export", function () {
-    app.export();
+    let _this = this;
+
+    let buttons = "Which do you want to export?" +
+    "<br>" +
+    '<button type="button" role="button" tabindex="0" class="SwalBtn1 customSwalBtn">' + 'Only “Content of Request”' + '</button>' +
+    '<button type="button" role="button" tabindex="0" class="SwalBtn2 customSwalBtn">' + '”Request Review” and “Content of Request”' + '</button>' + 
+    '<button type="button" role="button" tabindex="0" class="SwalBtn3 customSwalBtn">' + 'Cancel' + '</button>';
+
+    if(eventObj.extendedProps.description.status == "0" || eventObj.extendedProps.description.status == "1")
+    {
+        app.export(1);
+        return;
+    }
+
+    Swal.fire({
+        title: "Export",
+        icon: "warning",
+        html: buttons,
+        showCancelButton: false,
+        showConfirmButton: false
+        })
+    // app.export();
+});
+
+$(document).on('click', '.SwalBtn1', function() {
+    //Some code 1
+    console.log('Button 1');
+    app.export("1");
+    swal.clickConfirm();
+});
+$(document).on('click', '.SwalBtn2', function() {
+    //Some code 2 
+    console.log('Button 2');
+    app.export("2");
+    swal.clickConfirm();
+});
+$(document).on('click', '.SwalBtn3', function() {
+    //Some code 2 
+    console.log('Button 3');
+   
+    swal.clickConfirm();
 });
 
 $(document).on("click", "#btn_cancel", async function () {
@@ -2649,6 +2957,72 @@ $(document).on("click", "#btn_cancel", async function () {
     {
         file_elements[i].checked = true;
     }
+
+    if(sc_content.created_by == app.name)
+    {
+        if(sc_content.status == '1')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+    else
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if(sc_content.status != '0')
+    {
+        document.getElementById("btn_edit").style.display = "none";
+    }
+
+    if(sc_content.status != '2')
+    {
+        document.getElementById("approval_section").style.display = "none";
+        document.getElementById("cotent_request_title").style.display = "none";
+    }
+
+    if (app.name == "guest" ||
+        app.name == "Glendon Wendell Co" ||
+        app.name == "Mary Jude Jeng Articulo" ||
+        app.name == "Stefanie Mika C. Santos" ||
+        app.name == "Edneil Fernandez" 
+    ) {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
+
+    if (app.name == "Dennis Lin" ||
+        app.name == "dereck" ||
+        app.name == "Aiza Eisma" ||
+        app.name == "Kristel Tan" ||
+        app.name == "Alleah Belmonte" 
+    ) {
+        if(sc_content.status == '1' || sc_content.status == '2')
+        {
+            document.getElementById("btn_request").style.display = "none";
+            document.getElementById("btn_withdraw").style.display = "inline";
+        }
+
+        if(sc_content.status == '0')
+        {
+            document.getElementById("btn_request").style.display = "inline";
+            document.getElementById("btn_withdraw").style.display = "none";
+        }
+    }
+
+    if(sc_content.Service == 'Innova' || sc_content.Service == 'Grab' || sc_content.Service == 'Avanza Gold')
+    {
+        document.getElementById("btn_request").style.display = "none";
+        document.getElementById("btn_withdraw").style.display = "none";
+    }
 });
 
 $(document).on("click", "#btn_lock", async function () {
@@ -2704,6 +3078,28 @@ $(document).on("click", "#btn_unconfirm", async function () {
 
     reload();
 
+});
+
+$(document).on("click", "#btn_request", async function () {
+    if(eventObj.extendedProps.description.Service == '0' || eventObj.extendedProps.description.Project == '' || eventObj.extendedProps.description.Date == '' )
+    {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Info',
+            text: 'Columns of Project, Date and Service cannot be blank.',
+        });
+
+        return;
+    }
+
+
+     app.request(eventObj.id, eventObj.extendedProps.description);
+    
+});
+
+$(document).on("click", "#btn_withdraw", async function () {
+     app.withdraw(eventObj.id);
+    
 });
 
 $(document).on("click", "#btn_save", function () {
@@ -2880,6 +3276,8 @@ $(document).on("click", "#btn_save", function () {
 
         Related_project_id: $("#sc_related_project_id").val(),
         Related_stage_id: $("#sc_related_stage_id").val(),
+        icon : app.content.icon,
+        status : app.content.status,
     };
 
     if (sc_content.Allday) {

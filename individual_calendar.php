@@ -442,6 +442,35 @@ try {
             font-size: 12px;
         }
 
+        div.order_for_approval {
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            padding: 20px 30px 10px;
+            font-family: "M PLUS 1p", Arial, Helvetica, "LiHei Pro", 微軟正黑體, "Microsoft JhengHei", 新細明體, sans-serif;
+            font-weight: 300;
+            max-width: 90%;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        div.order_for_approval > span {
+            display: inline-block;
+            position: absolute;
+            font-size: 22px;
+            background: white;
+            top: -17px;
+            left: 45px;
+            padding: 0 10px;
+        }
+
+        div.order_for_approval > a {
+            font-size: 16px;
+            color: rgb(243, 112, 88);
+            display: block;
+            min-width: 180px;
+            margin: 5px 0;
+        }
+
         @media (min-width: 576px) {
 
             .modal-xl {
@@ -857,6 +886,12 @@ try {
 
 
     </form>
+
+    <!-- 具有 Order for Taiwan (Role 3) 權限的人，才能看到以下區塊 -->
+    <div class="order_for_approval" v-if="access3">
+        <span>Order for Approval</span>
+        <a :href="od.order_type = 'taiwan' ? 'order_taiwan_p2?id=' + od.id : 'order_taiwan_stock_p2?id=' + od.id" target="_blank" v-for="(od, index) in orders">• {{ od.serial_name }}  {{ od.od_name }}</a>
+    </div>
 
 </div>
 
