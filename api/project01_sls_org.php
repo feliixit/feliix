@@ -285,7 +285,11 @@ if($fcs != "")
                                         WHERE     project_stages.project_id = pm.id
                                         AND       project_stages.stages_status_id = 1
                                         ORDER BY  `sequence` DESC
-                                        LIMIT     1), '') stage
+                                        LIMIT     1), '') stage,
+                pm.last_client_stage_id,
+                pm.last_client_created_at,
+                ul.username recent_username,
+                pm.last_client_message
                      FROM      project_main pm
                      LEFT JOIN project_category pc
                      ON        pm.catagory_id = pc.id
@@ -485,7 +489,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
     $stage = $row['stage'];
-    //$recent = GetRecentPost($row['id'], $db, $key);
+    // $recent = GetRecentPost($row['id'], $db, $key);
     $recent = GetRecentPost_cache($row['last_client_stage_id'], $row['recent_username'], $row['last_client_created_at'], $row['last_client_message']);
 
     if(count($recent) > 0)

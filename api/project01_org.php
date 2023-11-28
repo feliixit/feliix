@@ -295,7 +295,10 @@ if($fcs != "")
                                         WHERE     project_stages.project_id = pm.id
                                         AND       project_stages.stages_status_id = 1
                                         ORDER BY  `sequence` DESC
-                                        LIMIT     1), '') stage
+                                        LIMIT     1), '') stage,
+                pr.created_at recent_created_at,
+                pr.username recent_username,
+                pr.url recent_url
                      FROM      project_main pm
                      LEFT JOIN project_category pc
                      ON        pm.catagory_id = pc.id
