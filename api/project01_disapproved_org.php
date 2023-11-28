@@ -90,14 +90,23 @@ $query = "SELECT pm.id,
                             FROM project_stages 
                             LEFT JOIN project_stage ON project_stage.id = project_stages.stage_id 
                             WHERE project_stages.project_id = pm.id and project_stages.stages_status_id = 1 
-                            ORDER BY `sequence` desc LIMIT 1), '') stage 
+                            ORDER BY `sequence` desc LIMIT 1), '') stage,
+                pr.created_at recent_created_at,
+                pr.username recent_username,
+                pr.url recent_url
                 FROM project_main pm 
                 LEFT JOIN project_category pc ON pm.catagory_id = pc.id 
                 LEFT JOIN project_client_type pct ON pm.client_type_id = pct.id 
                 LEFT JOIN project_priority pp ON pm.priority_id = pp.id 
                 LEFT JOIN project_status ps ON pm.project_status_id = ps.id 
                 LEFT JOIN project_stage pst ON pm.stage_id = pst.id 
-                LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id = 6 ";
+                LEFT JOIN user ON pm.create_id = user.id  
+                LEFT JOIN project_main_recent pr ON pr.project_id = pm.id 
+                WHERE pm.project_status_id = 6 ";
+if($key != "")
+{
+    $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
+}
 
 if($fpc != "")
 {
@@ -254,7 +263,10 @@ if($fcs != "")
                                         WHERE     project_stages.project_id = pm.id
                                         AND       project_stages.stages_status_id = 1
                                         ORDER BY  `sequence` DESC
-                                        LIMIT     1), '') stage
+                                        LIMIT     1), '') stage,
+                pr.created_at recent_created_at,
+                pr.username recent_username,
+                pr.url recent_url
                      FROM      project_main pm
                      LEFT JOIN project_category pc
                      ON        pm.catagory_id = pc.id
@@ -268,7 +280,12 @@ if($fcs != "")
                      ON        pm.stage_id = pst.id
                      LEFT JOIN user
                      ON        pm.create_id = user.id
-                     WHERE     pm.project_status_id = 6 ";
+                     LEFT JOIN project_main_recent pr ON pr.project_id = pm.id 
+                     WHERE pm.project_status_id = 6 ";
+    if($key != "")
+    {
+        $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
+    }
 
     if($fpc != "")
     {
@@ -401,7 +418,7 @@ if($fcs != "")
     else
         $query = $query . " order by t.created_at desc ";
 }
-
+/*
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
     if(false === $page) {
@@ -421,7 +438,7 @@ if(!empty($_GET['size'])) {
 
     $query = $query . " LIMIT " . $offset . "," . $size;
 }
-
+*/
 
 $stmt = $db->prepare( $query );
 $stmt->execute();
@@ -444,7 +461,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $created_at = $row['created_at'];
     $updated_at = $row['updated_at'];
     $stage = $row['stage'];
-    $recent = GetRecentPost($row['id'], $db, $key);
+    $recent = GetRecentPost_cache($row['id'], $row['recent_created_at'], $row['recent_username'], $row['recent_url']);
+    //$recent = [];
     $reason = GetReason($row['id'], $db, $key);
 
     $merged_results[] = array(
@@ -466,25 +484,40 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     );
 }
 
-$filter_result = [];
+// $filter_result = [];
 
-if($key != "")
+// if($key != "")
+// {
+//     foreach ($merged_results as &$value) {
+//         if(
+//             preg_match("/{$key}/i", $value['project_name']) ||
+//             $key == (count($value['recent']) == 1 ? substr($value['recent'][0]['created_at'], 0, 10) : "") ||
+//             preg_match("/{$key}/i", (count($value['recent']) == 1 ? $value['recent'][0]['username'] : "")))
+//         {
+//             $filter_result[] = $value;
+//         }
+//     }
+// }
+// else
+//     $filter_result = $merged_results;
+
+echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
+
+function GetRecentPost_cache($project_id, $recent_created_at, $recent_username, $recent_url)
 {
-    foreach ($merged_results as &$value) {
-        if(
-            preg_match("/{$key}/i", $value['project_name']) ||
-            $key == (count($value['recent']) == 1 ? substr($value['recent'][0]['created_at'], 0, 10) : "") ||
-            preg_match("/{$key}/i", (count($value['recent']) == 1 ? $value['recent'][0]['username'] : "")))
-        {
-            $filter_result[] = $value;
-        }
+    $sorted_result = [];
+
+    if($recent_created_at != "")
+    {
+        $sorted_result[] = array(
+            "created_at" => $recent_created_at,
+            "username" => $recent_username,
+            "url" => $recent_url,
+        );
     }
+
+    return $sorted_result;
 }
-else
-    $filter_result = $merged_results;
-
-echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
-
 
 function GetRecentPost($project_id, $db, $key){
     $query = "SELECT u.username, pm.created_at, '' `url` FROM project_stage_client pm left join user u on u.id = pm.create_id LEFT JOIN project_stages p ON pm.stage_id = p.id WHERE p.project_id = " . $project_id . " and pm.status <> -1  
