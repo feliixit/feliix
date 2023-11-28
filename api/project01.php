@@ -121,6 +121,13 @@ if($key != "")
     $query_cnt = $query_cnt . " and pm.project_name like '%" . $key . "%' ";
 }
 */
+if($key != "")
+{
+    $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
+    $query_cnt = $query_cnt . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' ) ";
+}
+
+
 if($fpc != "")
 {
     $query = $query . " and pm.catagory_id = " . $fpc . " ";
@@ -397,6 +404,12 @@ if($fcs != "")
         $query_cnt = $query_cnt . " and pm.project_name like '%" . $key . "%' ";
     }
 */
+    if($key != "")
+    {
+        $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
+        $query_cnt = $query_cnt . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' ) ";
+    }
+
     if($fpc != "")
     {
         $query = $query . " and pm.catagory_id = " . $fpc . " ";

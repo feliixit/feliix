@@ -418,7 +418,7 @@ if($fcs != "")
     else
         $query = $query . " order by t.created_at desc ";
 }
-
+/*
 if(!empty($_GET['page'])) {
     $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
     if(false === $page) {
@@ -438,7 +438,7 @@ if(!empty($_GET['size'])) {
 
     $query = $query . " LIMIT " . $offset . "," . $size;
 }
-
+*/
 
 $stmt = $db->prepare( $query );
 $stmt->execute();

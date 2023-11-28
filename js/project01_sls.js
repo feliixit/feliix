@@ -195,8 +195,8 @@ var app = new Vue({
 
       let numberOfPages = Math.ceil(this.total / this.perPage);
 
-      if(this.fil_keyword != '')
-        numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
+      // if(this.fil_keyword != '')
+      //   numberOfPages = Math.ceil(this.receive_records.length / this.perPage);
 
       if(numberOfPages == 1)
         this.page = 1;
@@ -223,9 +223,9 @@ var app = new Vue({
 
             this.pages_10 = this.pages.slice(from, to);
 
-          if(this.fil_keyword != '')
-            return this.receive_records.slice(from, to);
-          else
+          // if(this.fil_keyword != '')
+          //   return this.receive_records.slice(from, to);
+          // else
             return  this.receive_records;
         },
 
@@ -289,44 +289,44 @@ var app = new Vue({
     
           let token = localStorage.getItem('accessToken');
     
-          if(this.fil_keyword != '')
-          {
-            axios
-                .get('api/project01_sls_org', { params, headers: {"Authorization" : `Bearer ${token}`} })
-                .then(
-                (res) => {
-                    _this.receive_records = res.data;
+          // if(this.fil_keyword != '')
+          // {
+          //   axios
+          //       .get('api/project01_sls_org', { params, headers: {"Authorization" : `Bearer ${token}`} })
+          //       .then(
+          //       (res) => {
+          //           _this.receive_records = res.data;
 
-                    if(_this.receive_records.length == 0)
-                    {
-                      Swal.fire({
-                        text: "No Result Found!!",
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                      })
-                    }
+          //           if(_this.receive_records.length == 0)
+          //           {
+          //             Swal.fire({
+          //               text: "No Result Found!!",
+          //               icon: 'warning',
+          //               confirmButtonText: 'OK'
+          //             })
+          //           }
 
-                    if(_this.pg !== 0)
-                    { 
-                      _this.page = _this.pg;
-                      _this.setPages();
-                    }
-                    else
-                    {
-                      _this.page = 1;
-                      _this.setPages();
-                    }
-                },
-                (err) => {
-                    alert(err.response);
-                },
-                )
-                .finally(() => {
+          //           if(_this.pg !== 0)
+          //           { 
+          //             _this.page = _this.pg;
+          //             _this.setPages();
+          //           }
+          //           else
+          //           {
+          //             _this.page = 1;
+          //             _this.setPages();
+          //           }
+          //       },
+          //       (err) => {
+          //           alert(err.response);
+          //       },
+          //       )
+          //       .finally(() => {
                     
-                });
-            }
-              else
-            {
+          //       });
+          //   }
+          //     else
+          //   {
               axios
               .get('api/project01_sls', { params, headers: {"Authorization" : `Bearer ${token}`} })
               .then(
@@ -361,7 +361,7 @@ var app = new Vue({
               .finally(() => {
                   
               });
-            }
+          //  }
       },
 
     getProjectCategorys () {

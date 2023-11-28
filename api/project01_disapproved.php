@@ -113,6 +113,12 @@ LEFT JOIN project_stage pst ON pm.stage_id = pst.id
 LEFT JOIN project_main_recent pr ON pr.project_id = pm.id 
 LEFT JOIN user ON pm.create_id = user.id where pm.project_status_id = 6 ";
 
+if($key != "")
+{
+    $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
+    $query_cnt = $query_cnt . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
+}
+
 if($fpc != "")
 {
     $query = $query . " and pm.catagory_id = " . $fpc . " ";
@@ -344,6 +350,12 @@ if($fcs != "")
                      ON        pm.create_id = user.id
                      LEFT JOIN project_main_recent pr ON pr.project_id = pm.id 
                      WHERE     pm.project_status_id = 6 ";
+
+    if($key != "")
+    {
+        $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
+        $query_cnt = $query_cnt . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
+    }
 
     if($fpc != "")
     {

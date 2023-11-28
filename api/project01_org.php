@@ -171,10 +171,6 @@ if($fup != "" && $fup != "0")
                                     order by created_at desc limit 1), pm.estimate_close_prob) <= " . $fup . " ";
 }
 
-if($key != "")
-{
-
-}
 
 $sOrder = "";
 if($op1 != "" && $op1 != "0")
