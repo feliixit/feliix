@@ -20,7 +20,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 // task = ''
-$query = "delete from project_main_recent where kind = ''";
+$query = "delete from project_main_recent_tmp where kind = ''";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -33,14 +33,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($id != $row['id'] && $row['id'] != null)
     {
         $id = $row['id'];
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', '', '')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', '', '')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'task'
-$query = "delete from project_main_recent where kind = 'task'";
+$query = "delete from project_main_recent_tmp where kind = 'task'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -53,14 +53,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($id != $row['id'] && $row['id'] != null)
     {
         $id = $row['id'];
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'task', '" . $row['url'] . "')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'task', '" . $row['url'] . "')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'task_comment'
-$query = "delete from project_main_recent where kind = 'task_comment'";
+$query = "delete from project_main_recent_tmp where kind = 'task_comment'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -73,14 +73,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($id != $row['id'] && $row['id'] != null)
     {
         $id = $row['id'];
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'task_comment', '" . $row['url'] . "')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'task_comment', '" . $row['url'] . "')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'other'
-$query = "delete from project_main_recent where kind = 'other'";
+$query = "delete from project_main_recent_tmp where kind = 'other'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -93,14 +93,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($id != $row['id'] && $row['id'] != null)
     {
         $id = $row['id'];
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other', '" . $row['url'] . "')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other', '" . $row['url'] . "')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'other_message'
-$query = "delete from project_main_recent where kind = 'other_message'";
+$query = "delete from project_main_recent_tmp where kind = 'other_message'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -113,14 +113,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($id != $row['id'] && $row['id'] != null)
     {
         $id = $row['id'];
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_message', '" . $row['url'] . "')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_message', '" . $row['url'] . "')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'other_message_reply'
-$query = "delete from project_main_recent where kind = 'other_message_reply'";
+$query = "delete from project_main_recent_tmp where kind = 'other_message_reply'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -133,14 +133,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($id != $row['id'] && $row['id'] != null)
     {
         $id = $row['id'];
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_message_reply', '" . $row['url'] . "')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_message_reply', '" . $row['url'] . "')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'other_r'
-$query = "delete from project_main_recent where kind = 'other_r'";
+$query = "delete from project_main_recent_tmp where kind = 'other_r'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -153,14 +153,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($id != $row['id'] && $row['id'] != null)
     {
         $id = $row['id'];
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_r', '" . $row['url'] . "')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_r', '" . $row['url'] . "')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'other_message_r'
-$query = "delete from project_main_recent where kind = 'other_message_r'";
+$query = "delete from project_main_recent_tmp where kind = 'other_message_r'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -173,14 +173,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($id != $row['id'] && $row['id'] != null)
     {
         $id = $row['id'];
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_message_r', '" . $row['url'] . "')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_message_r', '" . $row['url'] . "')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'other_message_reply_r'
-$query = "delete from project_main_recent where kind = 'other_message_reply_r'";
+$query = "delete from project_main_recent_tmp where kind = 'other_message_reply_r'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -194,14 +194,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     {
         $id = $row['id'];
 
-        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_message_reply_r', '" . $row['url'] . "')";
+        $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'other_message_reply_r', '" . $row['url'] . "')";
         $stmt1 = $db->prepare($query);
         $stmt1->execute();
     }
 }
 
 // task = 'action_comment'
-$query = "delete from project_main_recent where kind = 'action_comment'";
+$query = "delete from project_main_recent_tmp where kind = 'action_comment'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -212,13 +212,13 @@ $stmt->execute();
 $id = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-    $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'action_comment', '" . $row['url'] . "')";
+    $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'action_comment', '" . $row['url'] . "')";
     $stmt1 = $db->prepare($query);
     $stmt1->execute();
 }
 
 // task = 'est_prob'
-$query = "delete from project_main_recent where kind = 'est_prob'";
+$query = "delete from project_main_recent_tmp where kind = 'est_prob'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -229,13 +229,13 @@ $stmt->execute();
 $id = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-    $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'est_prob', '" . $row['url'] . "')";
+    $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'est_prob', '" . $row['url'] . "')";
     $stmt1 = $db->prepare($query);
     $stmt1->execute();
 }
 
 // task = 'action_detail'
-$query = "delete from project_main_recent where kind = 'action_detail'";
+$query = "delete from project_main_recent_tmp where kind = 'action_detail'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -246,13 +246,13 @@ $stmt->execute();
 $id = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-    $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'action_detail', '" . $row['url'] . "')";
+    $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'action_detail', '" . $row['url'] . "')";
     $stmt1 = $db->prepare($query);
     $stmt1->execute();
 }
 
 // task = 'approve'
-$query = "delete from project_main_recent where kind = 'approve'";
+$query = "delete from project_main_recent_tmp where kind = 'approve'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -263,13 +263,13 @@ $stmt->execute();
 $id = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-    $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'approve', '" . $row['url'] . "')";
+    $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'approve', '" . $row['url'] . "')";
     $stmt1 = $db->prepare($query);
     $stmt1->execute();
 }
 
 // task = 'ameeting'
-$query = "delete from project_main_recent where kind = 'ameeting'";
+$query = "delete from project_main_recent_tmp where kind = 'ameeting'";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
@@ -280,9 +280,28 @@ $stmt->execute();
 $id = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-    $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'ameeting', '" . $row['url'] . "')";
+    $query = "insert into project_main_recent_tmp (project_id, project_name, username, created_at, kind, url) values (" . $row['id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', 'ameeting', '" . $row['url'] . "')";
     $stmt1 = $db->prepare($query);
     $stmt1->execute();
 }
 
+$query = "truncate table project_main_recent";
+$stmt = $db->prepare($query);
+$stmt->execute();
 
+$query = "select * from project_main_recent_tmp order by id, created_at desc";
+$stmt = $db->prepare($query);
+$stmt->execute();
+
+$project_id = 0;
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+    if($project_id != $row['project_id'])
+    {
+        $project_id = $row['project_id'];
+        $query = "insert into project_main_recent (project_id, project_name, username, created_at, kind, url) values (" . $row['project_id'] . ", '" . $row['project_name'] . "', '" . $row['username'] . "', '" . $row['created_at'] . "', '" . $row['kind'] . "', '" . $row['url'] . "')";
+        $stmt1 = $db->prepare($query);
+        $stmt1->execute();
+    }
+
+}
