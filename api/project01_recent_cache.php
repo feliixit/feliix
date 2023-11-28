@@ -289,7 +289,7 @@ $query = "truncate table project_main_recent";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
-$query = "select * from project_main_recent_tmp order by id, created_at desc";
+$query = "select * from project_main_recent_tmp order by project_id, created_at desc";
 $stmt = $db->prepare($query);
 $stmt->execute();
 
