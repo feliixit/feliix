@@ -14,28 +14,6 @@ include_once 'libs/php-jwt-master/src/ExpiredException.php';
 include_once 'libs/php-jwt-master/src/SignatureInvalidException.php';
 include_once 'libs/php-jwt-master/src/JWT.php';
 use \Firebase\JWT\JWT;
-if ( !isset( $jwt ) ) {
-    http_response_code(401);
-
-    echo json_encode(array("message" => "Access denied."));
-    die();
-}
-else
-{
-    try {
-        // decode jwt
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
-        $user_id = $decoded->data->id;
-    }
-        // if decode fails, it means jwt is invalid
-    catch (Exception $e){
-
-        http_response_code(401);
-
-        echo json_encode(array("message" => "Access denied."));
-        die();
-    }
-}
 
 include_once 'config/database.php';
 $database = new Database();
