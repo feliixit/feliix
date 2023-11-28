@@ -105,7 +105,7 @@ $query = "SELECT pm.id,
                 LEFT JOIN user ON pm.create_id = user.id where 1=1 ";
 if($key != "")
 {
-    $query = $query . " and (pm.project_name = '" . addslashes($key) . "' or ul.username = '" . addslashes($key) . "' )";
+    $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or ul.username like '%" . addslashes($key) . "%' )";
 }
 
 if($fpc != "")
@@ -304,7 +304,7 @@ if($fcs != "")
 
     if($key != "")
     {
-        $query = $query . " and (pm.project_name = '" . addslashes($key) . "' or ul.username = '" . addslashes($key) . "' )";
+        $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or ul.username like '%" . addslashes($key) . "%' )";
     }
 
     if($fpc != "")
@@ -508,7 +508,7 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         );
     }
 }
-
+/*
 $filter_result = [];
 
 if($key != "")
@@ -528,6 +528,8 @@ else
     $filter_result = $merged_results;
 
 echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
+*/
+echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
 function GetRecentPost_cache($last_client_stage_id, $username, $last_client_created_at, $last_client_message)
 {

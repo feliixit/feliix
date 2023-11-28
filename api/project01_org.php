@@ -107,7 +107,7 @@ $query = "SELECT pm.id,
                 WHERE pm.project_status_id <> 6 ";
 if($key != "")
 {
-    $query = $query . " and (pm.project_name = '" . addslashes($key) . "' or pr.username = '" . addslashes($key) . "' )";
+    $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
 }
 
 if($fpc != "")
@@ -313,7 +313,7 @@ if($fcs != "")
                      WHERE pm.project_status_id <> 6 ";
     if($key != "")
     {
-        $query = $query . " and (pm.project_name = '" . addslashes($key) . "' or pr.username = '" . addslashes($key) . "' )";
+        $query = $query . " and (pm.project_name like '%" . addslashes($key) . "%' or pr.username like '%" . addslashes($key) . "%' )";
     }
 
     if($fpc != "")
@@ -531,24 +531,24 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     );
 }
 
-$filter_result = [];
+// $filter_result = [];
 
-if($key != "")
-{
-    foreach ($merged_results as &$value) {
-        if(
-            preg_match("/{$key}/i", $value['project_name']) ||
-            $key == (count($value['recent']) == 1 ? substr($value['recent'][0]['created_at'], 0, 10) : "") ||
-            preg_match("/{$key}/i", (count($value['recent']) == 1 ? $value['recent'][0]['username'] : "")))
-        {
-            $filter_result[] = $value;
-        }
-    }
-}
-else
-    $filter_result = $merged_results;
+// if($key != "")
+// {
+//     foreach ($merged_results as &$value) {
+//         if(
+//             preg_match("/{$key}/i", $value['project_name']) ||
+//             $key == (count($value['recent']) == 1 ? substr($value['recent'][0]['created_at'], 0, 10) : "") ||
+//             preg_match("/{$key}/i", (count($value['recent']) == 1 ? $value['recent'][0]['username'] : "")))
+//         {
+//             $filter_result[] = $value;
+//         }
+//     }
+// }
+// else
+//     $filter_result = $merged_results;
 
-echo json_encode($filter_result, JSON_UNESCAPED_SLASHES);
+echo json_encode($merged_results, JSON_UNESCAPED_SLASHES);
 
 function GetRecentPost_cache($project_id, $recent_created_at, $recent_username, $recent_url)
 {
